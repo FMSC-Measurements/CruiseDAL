@@ -1,0 +1,54 @@
+<#@ template language="C#v3.5"  debug="true" hostSpecific="true" #>
+<#@ output extension=".cs" #>
+<#@ Assembly Name="System.Core.dll" #>
+<#@ Assembly Name="System.Windows.Forms.dll" #>
+<#@ import namespace="System" #>
+<#@ import namespace="System.IO" #>
+<#@ import namespace="System.Diagnostics" #>
+<#@ import namespace="System.Linq" #>
+<#@ import namespace="System.Collections" #>
+<#@ import namespace="System.Collections.Generic" #>
+<#@ include file="..\\..\\..\\DataDictionaryReader.tt" #>
+<#
+DataDictionaryReader dr = new DataDictionaryReader(Host.ResolvePath(@"..\\..\\..\DataDictionary.csv"));
+List<Table> TableList = dr.Read();
+#>
+using System;
+using CruiseDAL;
+
+namespace CruiseDAL.Schema
+{
+<#
+PushIndent("\t");
+foreach( Table table in TableList)
+{
+	if(table.IsDepreciated == true) { continue; }
+    MakeSchemaClass(table);
+}
+PopIndent();
+WriteLine("}");
+
+#>
+
+<#+
+        public void MakeSchemaClass(Table table)
+        {
+            WriteLine("public static class {0}", table.Name.ToUpper());
+            WriteLine("{");
+            this.PushIndent("\t");
+            WriteLine("public const string _NAME = \"{0}\";", table.Name);
+            foreach(Field f in table.Fields)
+            {
+                WriteLine("public const string {0} = \"{1}\";", f.Name.ToUpper(), f.Name);
+            }
+            String[] quoteEnclosedFieldNames = (from Field f in table.Fields select "\"" + f.Name + "\"").ToArray();
+            String[] fieldNames = (from Field f in table.Fields select  f.Name).ToArray();
+            String[] upperFieldNames = (from Field f in table.Fields select  f.Name.ToUpper()).ToArray();
+            WriteLine("public static string[] _ALL = new string []{{ {0} }};", String.Join(", ", upperFieldNames));
+            
+            WriteLine("public enum {0}_FIELDS {{ {1} }};", table.Name.ToUpper(), String.Join(", ", fieldNames)); 
+            PopIndent();
+            WriteLine("}\n");
+        }
+ #>
+

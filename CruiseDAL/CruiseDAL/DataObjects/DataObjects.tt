@@ -1,0 +1,327 @@
+﻿<#@ template language="C#v3.5" debug="True" hostspecific="True" #>
+<#@ import namespace="System.Diagnostics" #>
+<#@ import namespace="System.IO" #>
+<#@ import namespace="System.Collections.Generic" #>
+<#@ include file="..\\..\\..\\DataDictionaryReader.tt" #>
+<#
+DataDictionaryReader dr = new DataDictionaryReader(Host.ResolvePath(@"..\\..\\..\DataDictionary.csv"));
+List<Table> TableList = dr.Read();
+#>
+using System;
+using CruiseDAL.Schema;
+using System.Xml.Serialization;
+using System.Reflection;
+namespace CruiseDAL.DataObjects
+{
+<#
+PushIndent("\t");
+foreach(Table curTable in TableList)
+{
+		if(curTable.IsDepreciated == true) { continue; }
+        MakeClass(curTable);
+}
+PopIndent();
+ #>
+}
+
+
+
+
+<#+
+public void MakeClass(Table table)
+{#>
+[Table(TableName = "<#=table.Name#>")]
+public partial class <#=table.Name#>DO : DataObject
+{
+<#+  PushIndent("\t");#>
+//private static Persister persister;
+private static RowValidator _validator;
+//private static PropertyInfo[] _propertyInfo;
+
+[XmlIgnore]
+public new DAL DAL
+{
+	get { return (DAL)base.DAL; }
+	set { base.DAL = value; }
+}
+
+[XmlIgnore]
+public override RowValidator Validator
+{
+    get
+    {
+        return _validator;
+    }
+}
+
+//[XmlIgnore]
+//public override Persister Persister
+//{
+    //get{ return persister; }
+//}
+
+#region Ctor
+static <#=table.Name#>DO()
+{
+    //persister = new <#=table.Name#>Persister();
+    _validator = new RowValidator();
+    
+<#+
+//bool hasRowValidator= false;
+PushIndent("\t");
+foreach(Field f in table.Fields)
+{             
+    //if(f.IsDepreciated) { continue; }   
+    if(f.Name == "CreatedBy") { continue; }                  
+    if (!string.IsNullOrEmpty(f.ErrorMessage))
+    {
+        //if(!hasRowValidator)
+        //{
+            //hasRowValidator = true;
+            //WriteLine("_validator = new RowValidator();");
+         //}
+        WriteLine("_validator.Add(new FieldValidator(\"{0}\", \"{1}\", \"{2}\", {3}, {4}, {5}, {6}));", 
+            f.Name, 
+            table.Name, 
+            f.ErrorMessage, 
+            (f.Min!= null)? f.Min.ToString() : "double.NaN" , 
+            (f.Max != null)? f.Max.ToString() : "double.NaN", 
+            (f.IsReq)? "true" : "false", 
+            (string.IsNullOrEmpty(f.Values)) ? "null" : '"' + f.Values + '"');
+    }
+    else if(f.IsReq)
+    {
+        WriteLine("_validator.Add(new NotNullRule(\"{0}\", \"{1}\", \"{2}\"));", 
+            f.Name, 
+            table.Name, 
+            f.Name + " is Required" );
+    }
+    
+}
+PopIndent();
+#>
+}
+
+public <#=table.Name#>DO() {}
+
+public <#=table.Name#>DO(<#=table.Name#>DO obj) : this()
+{
+    SetValues(obj);
+}
+
+public <#=table.Name#>DO(DAL DAL) : base(DAL)
+{}
+#endregion
+<#+     
+        foreach(Field f in table.PKFields)
+        {
+            MakePrimaryKeyProperty(f);
+        }
+
+        foreach(Field f in table.FKFields)
+        {
+            MakeForeignKey(f, table);
+        }
+
+        foreach(Field f in table.DataFields)
+        {
+			if(f.IsDepreciated) { continue; }
+            MakeProperty(f, table, true);
+        }
+
+        MakeValidate(table);
+        //MakeGetValidator(table);
+        MakeGetPropertyInfo();
+        MakeSetValues(table);
+        PopIndent();
+        WriteLine("}");
+ }// end feture method MakeClass
+#>
+
+<#+public void MakePrimaryKeyProperty(Field field)
+ {
+            WriteLine("[XmlIgnore]");
+            WriteLine("public Int64? {0}", field.Name);
+            WriteLine("{");
+            PushIndent("\t");
+            WriteLine("get{ return base.rowID; }");
+            PopIndent();
+            WriteLine("}");
+}
+#>
+
+<#+
+    public void MakeValidate(Table table)
+    {
+        WriteLine("protected override bool DoValidate()");
+        WriteLine("{");
+        PushIndent("\t");
+        #>
+if(_errorsLoaded == false)
+{
+    this.PopulateErrorList();
+}
+<#+
+        WriteLine("bool isValid = true;");
+        foreach(Field f in table.DataFields)
+        {
+			if(f.IsDepreciated) { continue; } 
+            WriteLine(String.Format("isValid = ValidateProperty(\"{0}\", this.{0}) && isValid;",f.Name));
+        }
+        foreach(Field f in table.FKFields)
+        {
+			//if(f.IsDepreciated) { continue; } 
+            WriteLine(String.Format("isValid = ValidateProperty(\"{0}\", this.{0}) && isValid ;",f.Name));
+        }
+        
+        WriteLine("return isValid;");
+        PopIndent();
+        WriteLine("}");
+    }
+#>
+
+<#+
+public void MakeGetValidator(Table table)
+{
+ #>
+protected override RowValidator GetValidator()
+{
+    return DAL.GetTableValidator("<#=table.Name#>");
+}
+<#+
+} //end feature method MakeGetValidator
+#>
+
+<#+
+public void MakeGetPropertyInfo()
+{
+ #>
+//protected override PropertyInfo[] GetPropertieInfo()
+//{
+    //if(_propertyInfo == null)
+    //{
+        //_propertyInfo = this.GetType().GetProperties(BindingFlags.Instance | BindingFlags.Public);
+    //}
+    //return _propertyInfo;
+//}
+<#+
+}//end feature method MakeGetPropertyInfo
+ #>
+
+
+<#+
+public void MakeSetValues(Table table) 
+{
+
+        WriteLine("public override void SetValues(DataObject obj)");
+        WriteLine("{");
+        PushIndent("\t");
+        WriteLine("this.SetValues(obj as {0}DO);", table.Name);
+        PopIndent();
+        WriteLine("}");
+        WriteLine("");
+        WriteLine("public void SetValues({0}DO obj)", table.Name);
+        WriteLine("{");
+        PushIndent("\t");
+        WriteLine("if(obj == null) { return; }");
+        foreach(Field f in table.DataFields)
+        {
+			if(f.IsDepreciated) { continue; }
+            if(f.Name == "CreatedBy" || f.Name == "ModifiedBy" || f.Name == "CreatedDate" || f.Name == "ModifiedDate")
+                {continue;}
+            WriteLine("{0} = obj.{0};", f.Name, table.Name);
+        }
+        PopIndent();
+        WriteLine("}");
+}
+#>
+
+
+
+<#+ 
+public void MakeForeignKey(Field field, Table table)
+{
+    MakeProperty(field, table, false);
+#>
+public virtual <#=field.Ref#>DO Get<#=field.Ref#>()
+{
+    if(DAL == null) { return null; }
+    return DAL.ReadSingleRow<<#=field.Ref#>DO>(<#=field.Ref.ToUpper()#>._NAME, this.<#=field.Name#>);
+}
+ 
+private <#=field.Ref#>DO _<#=field.Ref.ToLower()#> = null;
+[XmlIgnore]
+public <#=field.Ref#>DO <#=field.Ref#>
+{
+    get
+    {
+        if(_<#=field.Ref.ToLower()#> == null)
+        {
+            _<#=field.Ref.ToLower()#> = Get<#=field.Ref#>();
+        }
+        return _<#=field.Ref.ToLower()#>;
+    }
+    set
+    {
+        if(_<#=field.Ref.ToLower()#> == value) { return; }
+        _<#=field.Ref.ToLower()#> = value;
+        <#=field.Name#> = (value != null) ? value.<#=field.Name#> : null;
+    }
+}
+<#+}//end feture method MakeForeignKey #>
+
+
+
+
+<#+
+public void MakeProperty(Field field, Table table, bool isSerializable)
+{#>
+private <#=field.NullableType#> _<#=field.Name.ToLower()#> = <#=(field.IsFK) ? "null" : (field.Type.StartsWith("ENUM:")) ? "0" : field.DefaultValue ?? "null"#>;
+<#+        if(isSerializable == false)
+            {
+            WriteLine("[XmlIgnore]");
+            }
+            else
+            {
+            WriteLine("[XmlElement]");
+            }
+ #>
+[Field (FieldName = "<#=field.Name#>",
+ IsUnique = <#=field.IsUnique ? "true" : "false"#>,
+ IsPersisted = <#=(!field.IsPK &&  !field.Name.StartsWith("Modified") && !field.Name.StartsWith("Created"))? "true" : "false" #>,
+ SpecialFieldType = <#=(field.Name == "CreatedBy") ? "SepcialFieldType.CreatedBy" : (field.Name == "ModifiedBy") ? "SepcialFieldType.ModifiedBy" : "0"#>)]
+public virtual <#=field.NullableType#> <#=field.Name#>
+{
+    get 
+    { 
+        <#+if (field.IsFK) { #> 
+        if(_<#=field.Ref.ToLower()#> != null)
+        {
+            return _<#=field.Ref.ToLower()#>.<#=field.Name#>;
+        }
+        <#+} #>
+            
+
+        return _<#=field.Name.ToLower()#>; 
+    }
+    set 
+    {
+        if(_<#=field.Name.ToLower()#> == value) { return; }
+<#+
+        if(field.IsFK)
+        {
+            WriteLine(string.Format("        if(value == null || value.Value == 0) {{ _{0} = null;  }}", field.Ref.ToLower()));
+        }
+ #>
+        _<#=field.Name.ToLower()#> = value;
+        this.ValidateProperty(<#=table.Name.ToUpper()#>.<#=field.Name.ToUpper()#>, _<#=field.Name.ToLower()#>);
+        this.NotifyPropertyChanged(<#=table.Name.ToUpper()#>.<#=field.Name.ToUpper()#>, _<#=field.Name.ToLower()#>);
+    }
+}
+<#+}//end feture method MakeProperty#>
+
+
+
+
+
+

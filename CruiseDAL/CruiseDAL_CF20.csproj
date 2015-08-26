@@ -1,0 +1,169 @@
+﻿<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="3.5">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>9.0.21022</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{DC8A4894-F4A8-4554-B475-2EBAD49AF148}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>CruiseDAL</RootNamespace>
+    <AssemblyName>CruiseDAL</AssemblyName>
+    <ProjectTypeGuids>{4D628B5B-2FBC-4AA6-8C16-197242AEB884};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
+    <PlatformFamilyName>WindowsCE</PlatformFamilyName>
+    <PlatformID>E2BECB1F-8C8C-41ba-B736-9BE7D946A398</PlatformID>
+    <OSVersion>5.0</OSVersion>
+    <DeployDirSuffix>CruiseDAL_CF20CE</DeployDirSuffix>
+    <TargetFrameworkVersion>v2.0</TargetFrameworkVersion>
+    <NativePlatformName>Windows CE</NativePlatformName>
+    <FormFactorID>
+    </FormFactorID>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\CF20\</OutputPath>
+    <DefineConstants>TRACE;DEBUG;WindowsCE, Mobile</DefineConstants>
+    <NoStdLib>true</NoStdLib>
+    <NoConfig>true</NoConfig>
+    <ErrorReport>prompt</ErrorReport>
+    <FileAlignment>512</FileAlignment>
+    <WarningLevel>4</WarningLevel>
+    <GenerateSerializationAssemblies>Off</GenerateSerializationAssemblies>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\CF20\</OutputPath>
+    <DefineConstants>TRACE;WindowsCE Mobile</DefineConstants>
+    <NoStdLib>true</NoStdLib>
+    <NoConfig>true</NoConfig>
+    <ErrorReport>prompt</ErrorReport>
+    <FileAlignment>512</FileAlignment>
+    <WarningLevel>4</WarningLevel>
+    <GenerateSerializationAssemblies>Off</GenerateSerializationAssemblies>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release PC|AnyCPU' ">
+    <NoStdLib>true</NoStdLib>
+    <NoConfig>true</NoConfig>
+    <GenerateSerializationAssemblies>Off</GenerateSerializationAssemblies>
+    <OutputPath>bin\Release PC\</OutputPath>
+    <DefineConstants>TRACE;WindowsCE Mobile</DefineConstants>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="mscorlib" />
+    <Reference Include="System" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Data.SQLite, Version=1.0.85.0, Culture=neutral, PublicKeyToken=1fdb50b1b62b4c84, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\SQLite\Mobile_CF20\System.Data.SQLite.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="..\Services\*.cs" />
+    <Compile Include="BaseDAL\ColumnInfo.cs" />
+    <Compile Include="BaseDAL\DataObjectAttributes.cs" />
+    <Compile Include="BaseDAL\DataObjectDiscription.cs" />
+    <Compile Include="BaseDAL\DataObjectFactory.cs" />
+    <Compile Include="BaseDAL\DataObjects_Base.cs" />
+    <Compile Include="BaseDAL\DatastoreBase.cs" />
+    <Compile Include="BaseDAL\ObjectCache.cs" />
+    <Compile Include="BaseDAL\Validator.cs" />
+    <Compile Include="CruiseDAL\DAL.AutoGen.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>DAL.AutoGen.tt</DependentUpon>
+    </Compile>
+    <Compile Include="CruiseDAL\DAL.cs" />
+    <Compile Include="CruiseDAL\DataObjects\AuditValue_partial.cs" />
+    <Compile Include="CruiseDAL\DataObjects\CruiseMethod_partial.cs" />
+    <Compile Include="CruiseDAL\DataObjects\CuttingUnit_partial.cs" />
+    <Compile Include="CruiseDAL\DataObjects\DataObjects.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>DataObjects.tt</DependentUpon>
+    </Compile>
+    <Compile Include="CruiseDAL\DataObjects\Globals_partial.cs" />
+    <Compile Include="CruiseDAL\DataObjects\LogMatrix_partial.cs" />
+    <Compile Include="CruiseDAL\DataObjects\Plot_partial.cs" />
+    <Compile Include="CruiseDAL\DataObjects\Sale_partial.cs" />
+    <Compile Include="CruiseDAL\DataObjects\SampleGroupStats_partial.cs" />
+    <Compile Include="CruiseDAL\DataObjects\SampleGroup_partial.cs" />
+    <Compile Include="CruiseDAL\DataObjects\StrataStats_partal.cs" />
+    <Compile Include="CruiseDAL\DataObjects\Strata_partal.cs" />
+    <Compile Include="CruiseDAL\DataObjects\TreeAuditValue_partial.cs" />
+    <Compile Include="CruiseDAL\DataObjects\TreeDefaultValue_partial.cs" />
+    <Compile Include="CruiseDAL\DataObjects\Tree_partial.cs" />
+    <Compile Include="CruiseDAL\Enums.cs" />
+    <Compile Include="CruiseDAL\MappingCollections\MappingCollections.cs" />
+    <Compile Include="CruiseDAL\MappingCollections\MappingColliction_Base.cs" />
+    <Compile Include="CruiseDAL\Schema\Constants.cs" />
+    <Compile Include="CruiseDAL\Schema\Schema.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Schema.tt</DependentUpon>
+    </Compile>
+    <Compile Include="CruiseDAL\Updater.cs" />
+    <Compile Include="Logger\Logger.cs" />
+    <Compile Include="Properties\AssemblyInfo_CF20.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="CruiseDAL\CruiseCreate.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>CruiseCreate.sql</LastGenOutput>
+    </None>
+    <None Include="CruiseDAL\DAL.AutoGen.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>DAL.AutoGen.cs</LastGenOutput>
+    </None>
+    <None Include="CruiseDAL\DataObjects\DataObjects.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>DataObjects.cs</LastGenOutput>
+    </None>
+    <None Include="CruiseDAL\Schema\Schema.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>Schema.cs</LastGenOutput>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Service Include="{B4F97281-0DBD-4835-9ED8-7DFB966E87FF}" />
+  </ItemGroup>
+  <ItemGroup>
+	<EmbeddedResource Include="CruiseDAL\CruiseCreate.sql">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>CruiseCreate.tt</DependentUpon>
+    </EmbeddedResource>
+    <Content Include="..\SQLite\Mobile_CF20\SQLite.Interop.094.dll">
+      <Link>SQLite.Interop.094.dll</Link>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\FMSC.Utility\trunk\FMSC.Utility\FMSCUtil_CE_CF20.csproj">
+      <Project>{DEB40DFB-8D9F-4269-9141-18D71F8E849E}</Project>
+      <Name>FMSCUtil_CE_CF20</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CompactFramework.CSharp.targets" />
+  <ProjectExtensions>
+    <VisualStudio>
+      <FlavorProperties GUID="{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}">
+        <HostingProcess disable="1" />
+      </FlavorProperties>
+    </VisualStudio>
+  </ProjectExtensions>
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

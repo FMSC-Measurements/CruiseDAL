@@ -1,0 +1,118 @@
+﻿<#@ template language="C#v3.5"  debug="true" hostSpecific="true" #>
+<#@ output extension=".sql" #>
+<#@ Assembly Name="System.Core.dll" #>
+<#@ Assembly Name="System.Windows.Forms.dll" #>
+<#@ import namespace="System" #>
+<#@ import namespace="System.IO" #>
+<#@ import namespace="System.Diagnostics" #>
+<#@ import namespace="System.Linq" #>
+<#@ import namespace="System.Collections" #>
+<#@ import namespace="System.Collections.Generic" #>
+<#@ include file="..\\..\\DataDictionaryReader.tt" #>
+<#
+DataDictionaryReader dr = new DataDictionaryReader(Host.ResolvePath(@"..\\..\DataDictionary.csv"));
+List<Table> TableList = dr.Read();
+#>
+
+PRAGMA foreign_keys = ON;
+
+
+<#
+    foreach (Table curTable in TableList)
+    {
+        MakeCreateTable(curTable);
+        if (curTable.hasCreatedBy == true)
+        {
+            MakeTriggers(curTable);
+        }
+    }//end foreach
+
+
+
+    //foreach (Table curTable in TableList) //make audit values
+    //{
+        //foreach( Field f in curTable.AuditFields)
+        //{
+            //MakeAuditValue(f, curTable);
+        //}
+    //}
+#>
+
+INSERT INTO Globals (Block, Key, Value) VALUES ("Database", "Version", "<#=dr.DBVersion#>"); 
+
+CREATE TRIGGER OnDeleteTree AFTER DELETE ON Tree BEGIN 
+			INSERT INTO MessageLog (Message, Date, Time) VALUES (('Tree (' || OLD.Tree_CN || ') Deleted CU_cn:' || OLD.CuttingUnit_CN || ' St_cn:' || OLD.Stratum_CN || ' Plt_CN:' || ifnull(OLD.Plot_CN,'-') || ' T#:' || OLD.TreeNumber), date('now'), time('now')); END;
+
+CREATE TRIGGER OnDeletePlot AFTER DELETE ON Plot BEGIN 
+			INSERT INTO MessageLog (Message, Date, Time) VALUES (('Plot (' || OLD.Plot_CN || ') Deleted CU_cn:' || OLD.CuttingUnit_CN  || ' St_cn:' || OLD.Stratum_CN || ' Plt#:' || OLD.PlotNumber), date('now'), time('now')); END;
+
+
+<#+   
+        //public void MakeAuditValue(Field field, Table table)
+        //{
+            //WriteLine("INSERT INTO AuditValue (TableName, Field, Min, Max, ValueSet, ErrorMessage) VALUES (\"{0}\", \"{1}\", {2}, {3}, {4}, {5});",
+                //table.Name,
+                //field.Name,
+                //(field.Min != null)? field.Min.ToString():"NULL",
+                //(field.Max != null)? field.Max.ToString(): "NULL",
+                //(!String.IsNullOrEmpty(field.Values))? "\"" +field.Values + "\"" : "NULL",
+                //(!String.IsNullOrEmpty(field.ErrorMessage))? "\"" +field.ErrorMessage + "\"" : "NULL");
+        //} 
+#>
+
+
+<#+
+    public void MakeCreateTable(Table table)
+    {
+#>
+    CREATE TABLE <#=table.Name#> (
+<#+
+        List<String> cols = new List<String>();
+        foreach (Field f in table.Fields)
+        {
+            string defaultOpt = "";
+            if(!String.IsNullOrEmpty(f.DefaultValue) && f.IsReq == false && f.IsPK == false && f.IsFK == false)
+                {
+                    defaultOpt= " Default " + f.DefaultValue.TrimEnd('f','L');
+                }
+            if(f.Type == "Bool")
+                {
+                    defaultOpt = " Default 0";
+                }
+            cols.Add(String.Format("\t\t\t\t{0} {1}{2}{3}{4}{5}{6}", //col Name, type, is Primay key, is auto increment, references, not null, zero as default value for numbers
+                f.Name,
+                f.DBType,
+                (f.IsPK == true) ? " PRIMARY KEY" : "",
+                (f.IsAutoI) ? " AUTOINCREMENT" :"",
+                (f.IsFK)? " REFERENCES " + f.Ref : "",
+                (f.IsReq) ? " NOT NULL":"",
+                defaultOpt
+                //(f.IsReq == false && f.IsPK == false && f.IsFK == false &&(f.DBType == "INTEGER" || f.DBType == "REAL" || f.DBType == "DOUBLE")) ? //use default value 0 and 0.0 if value is a integer 
+                //    " Default " + (( f.DBType == "INTEGER" ) ? "0" : "0.0") : ""        //or floating point value, respectively
+                    ));
+       
+        }
+        Write(String.Join(",\n", cols.ToArray()));
+
+		if (table.UniqueFields.Count > 0)
+		{
+			var uniques = (from Field fld in table.UniqueFields select fld.Name).ToArray();
+			Write(",\n\t\t\t\tUNIQUE (" + string.Join(", ", uniques) + ")");
+		}
+        WriteLine(");");
+        WriteLine("");
+    }//end feature method MakeCreateTable #>
+
+<#+
+    public void MakeTriggers(Table table)
+    {
+#>
+	CREATE TRIGGER OnNew<#= table.Name#> AFTER INSERT ON <#= table.Name#> BEGIN 
+			UPDATE <#=table.Name#> SET CreatedDate = datetime(current_timestamp, 'localtime') WHERE rowID = new.rowID; END;
+
+	CREATE TRIGGER OnUpdate<#= table.Name#> UPDATE ON <#= table.Name #> BEGIN
+			UPDATE <#= table.Name #> SET ModifiedDate = datetime(current_timestamp, 'localtime') WHERE rowID = new.rowID; END;
+
+<#+
+     }//end feature method MakeTriggers
+#>

@@ -1,0 +1,9 @@
+﻿Bugs:
+
+if the unique fields of a object are modified and then read is called, retrieving the same row, it will create a new object insted of using the same object because the id for the existing object is different.
+-solution. we can either save objects automaticly whenever a unique is changed, or ids can be changed to be calculated using row id.
+ 
+
+
+
+

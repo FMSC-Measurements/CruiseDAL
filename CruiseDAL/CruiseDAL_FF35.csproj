@@ -1,0 +1,160 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="3.5" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <ProductVersion>9.0.21022</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{BAF1842E-F8C5-47A5-94C6-ADABA8A4B3AF}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>CruiseDAL</RootNamespace>
+    <AssemblyName>CruiseDAL</AssemblyName>
+    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <SignAssembly>false</SignAssembly>
+    <AssemblyOriginatorKeyFile>
+    </AssemblyOriginatorKeyFile>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\x86\Debug\net35\</OutputPath>
+    <DefineConstants>TRACE;DEBUG;FullFramework</DefineConstants>
+    <DebugType>full</DebugType>
+    <PlatformTarget>x86</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
+    <OutputPath>bin\x86\Release\net35\</OutputPath>
+    <DefineConstants>TRACE;FullFramework</DefineConstants>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>x86</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release with args|x86' ">
+    <OutputPath>bin\x86\Release with args\net35\</OutputPath>
+    <DefineConstants>TRACE;FullFramework</DefineConstants>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>x86</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug with args|x86' ">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\x86\Debug with args\net35\</OutputPath>
+    <DefineConstants>TRACE;DEBUG;FullFramework</DefineConstants>
+    <DebugType>full</DebugType>
+    <PlatformTarget>x86</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+  </PropertyGroup>
+  <ItemGroup>
+    <!--
+    <Reference Include="Logger, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\Logger\Logger\bin\Release\Logger.dll</HintPath>
+    </Reference>
+	-->
+    <Reference Include="System" />
+    <Reference Include="System.Core">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="System.Data" />
+    <Reference Include="System.Data.SQLite, Version=1.0.81.0, Culture=neutral, PublicKeyToken=db937bc2d44ff139, processorArchitecture=x86">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\SQLite\System.Data.SQLite.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml.Linq">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="System.Data.DataSetExtensions">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <!-- Added Code to include all code files in project directory -->
+  <ItemGroup>
+    <Compile Include="..\Services\*.cs" />
+    <Compile Include="BaseDAL\ColumnInfo.cs" />
+    <Compile Include="BaseDAL\DataObjectAttributes.cs" />
+    <Compile Include="BaseDAL\DataObjectDiscription.cs" />
+    <Compile Include="BaseDAL\DataObjectFactory.cs" />
+    <Compile Include="BaseDAL\DataObjects_Base.cs" />
+    <Compile Include="BaseDAL\DatastoreBase.cs" />
+    <Compile Include="BaseDAL\ObjectCache.cs" />
+    <Compile Include="BaseDAL\Validator.cs" />
+    <Compile Include="CruiseDAL\DAL.AutoGen.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>DAL.AutoGen.tt</DependentUpon>
+    </Compile>
+    <Compile Include="CruiseDAL\DAL.cs" />
+    <Compile Include="CruiseDAL\DataObjects\AuditValue_partial.cs" />
+    <Compile Include="CruiseDAL\DataObjects\CruiseMethod_partial.cs" />
+    <Compile Include="CruiseDAL\DataObjects\CuttingUnit_partial.cs" />
+    <Compile Include="CruiseDAL\DataObjects\DataObjects.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>DataObjects.tt</DependentUpon>
+    </Compile>
+    <Compile Include="CruiseDAL\DataObjects\Globals_partial.cs" />
+    <Compile Include="CruiseDAL\DataObjects\LogMatrix_partial.cs" />
+    <Compile Include="CruiseDAL\DataObjects\Plot_partial.cs" />
+    <Compile Include="CruiseDAL\DataObjects\Sale_partial.cs" />
+    <Compile Include="CruiseDAL\DataObjects\SampleGroupStats_partial.cs" />
+    <Compile Include="CruiseDAL\DataObjects\SampleGroup_partial.cs" />
+    <Compile Include="CruiseDAL\DataObjects\StrataStats_partal.cs" />
+    <Compile Include="CruiseDAL\DataObjects\Strata_partal.cs" />
+    <Compile Include="CruiseDAL\DataObjects\TreeAuditValue_partial.cs" />
+    <Compile Include="CruiseDAL\DataObjects\TreeDefaultValue_partial.cs" />
+    <Compile Include="CruiseDAL\DataObjects\Tree_partial.cs" />
+    <Compile Include="CruiseDAL\Enums.cs" />
+    <Compile Include="CruiseDAL\MappingCollections\MappingCollections.cs" />
+    <Compile Include="CruiseDAL\MappingCollections\MappingColliction_Base.cs" />
+    <Compile Include="CruiseDAL\Schema\Constants.cs" />
+    <Compile Include="CruiseDAL\Schema\Schema.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Schema.tt</DependentUpon>
+    </Compile>
+    <Compile Include="CruiseDAL\Updater.cs" />
+    <Compile Include="Logger\Logger.cs" />
+    <Compile Include="Properties\AssemblyInfo_FF35.cs" />
+  </ItemGroup>
+  <!-- end Added Code -->
+  <ItemGroup>
+    <EmbeddedResource Include="CruiseDAL\CruiseCreate.sql">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>CruiseCreate.tt</DependentUpon>
+    </EmbeddedResource>
+    <None Include="CruiseDAL\CruiseCreate.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>CruiseCreate.sql</LastGenOutput>
+    </None>
+    <None Include="CruiseDAL\DAL.AutoGen.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>DAL.AutoGen.cs</LastGenOutput>
+    </None>
+    <None Include="CruiseDAL\DataObjects\DataObjects.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>DataObjects.cs</LastGenOutput>
+    </None>
+    <None Include="CruiseDAL\Schema\Schema.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>Schema.cs</LastGenOutput>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Service Include="{B4F97281-0DBD-4835-9ED8-7DFB966E87FF}" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>
