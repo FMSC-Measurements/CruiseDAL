@@ -20,8 +20,9 @@ namespace CruiseDAL
     {
 
         #region fields
-        private List<ChildWraper> _children;
-        private List<ChildWraper> _toBeDeleted; 
+        private List<ChildType> _unpersistedChildren = new List<ChildType>();
+        private List<ChildType> _persistedChildren = new List<ChildType>(0); 
+        private List<ChildType> _toBeDeleted = new List<ChildType>(); 
         #endregion 
 
         #region indexer & properties 
@@ -30,7 +31,18 @@ namespace CruiseDAL
         //read only
         public ChildType this[int index]
         {
-            get { return _children[index].Value; }
+            get 
+            { 
+                int pCount = _persistedChildren.Count;
+                if (index >= pCount)
+                {
+                    return _unpersistedChildren[index - pCount];
+                }
+                else
+                {
+                    return _persistedChildren[index];
+                }
+            }
             set
             {
                 throw new NotImplementedException();
@@ -63,8 +75,8 @@ namespace CruiseDAL
         {
             Parent = parent;
             _DAL = parent.DAL;
-            _children = new List<ChildWraper>();
-            _toBeDeleted = new List<ChildWraper>();
+            //_children = new List<ChildWraper>();
+            //_toBeDeleted = new List<ChildWraper>();
             IsPopulated = false;
         }
         #endregion
@@ -74,25 +86,21 @@ namespace CruiseDAL
         protected void ResetChildStates()
         {
             _toBeDeleted.Clear();
-            foreach (ChildWraper child in _children)
+            foreach (ChildType child in _persistedChildren)
             {
-                child.State = ChildState.NotPersisted;
+                _unpersistedChildren.Add(child);
             }
         }
 
         public void Populate()
         {
             if (this.Parent.IsPersisted == false) { return; }
-            //_children.Clear();
-            //_toBeDeleted.Clear();
-
-            foreach (ChildType c in retrieveChildList())
+            this._persistedChildren = retrieveChildList();
+            foreach (ChildType c in _toBeDeleted)
             {
-                if(!this.Contains(c))
-                {
-                    _children.Add(new ChildWraper(c, ChildState.Persisted));
-                }
+                    _persistedChildren.Remove(c);
             }
+
             IsPopulated = true;
         }
 
@@ -103,39 +111,39 @@ namespace CruiseDAL
                 throw new InvalidOperationException("DAL is null");
             }
 
-            foreach (ChildWraper c in _children)
+            foreach (ChildType c in _unpersistedChildren)
             {
-                saveChild(c);
+                addMap(c);
+                _persistedChildren.Add(c);   
             }
+            _unpersistedChildren.Clear();
 
-            foreach (ChildWraper c in _toBeDeleted)
+            foreach (ChildType c in _toBeDeleted)
             {
-                saveChild(c);
+                DeleteMap(c);
             }
             _toBeDeleted.Clear();
 
         }
 
-        protected void saveChild(ChildWraper child)
-        {
-            if (child.State == ChildState.Persisted)
-            {
-                return;
-            }
-            else if (child.State == ChildState.NotPersisted)
-            {
-                addMap(child.Value);
-                child.State = ChildState.Persisted;
-            }
-            else if (child.State == ChildState.Deleted)
-            {
-                deleteMap(child.Value);
-            }
-        }
+        //protected void SaveChild(ChildType child)
+        //{
+        //    addMap(child);
+        //    _persistedChildren.Add(child);          
+        //}
 
-        protected void deleteMap(ChildType child)
+        //protected void DeleteChild(ChildType child)
+        //{
+        //    if (child.State == ChildState.Persisted)
+        //    {
+        //        DeleteMap(child.Value);
+        //    }
+        //}
+
+        protected void DeleteMap(ChildType child)
         {
             var map = retrieveMapObject(child);
+            System.Diagnostics.Debug.Assert(map != null);
             if (map != null)
             {
                 map.Delete();
@@ -156,94 +164,79 @@ namespace CruiseDAL
             {
                 throw new ArgumentNullException("child");
             }
-            var item = findItem(_toBeDeleted, child);
-            //check to see if child is in the to be deleted list
-            if (item != null)
+            if (_unpersistedChildren.Contains(child)) { return; }
+            if (_persistedChildren.Contains(child)) { return; }
+
+            if(_toBeDeleted.Remove(child))
             {
-                //if so remove from the to be delected list 
-                _toBeDeleted.Remove(item);
-                item.State = ChildState.Persisted;
-                //and add back to the child list
-                _children.Add(item);
+                _persistedChildren.Add(child);
             }
-            //if the child is not in the tobe deleted list 
-            //and is not in the child list
-            else if (!containsItem(_children, child))
+            else
             {
-                //then add it to the child list
-                item = new ChildWraper(child);
-                _children.Add(item);
-            }
-            //otherwise do nothing
+                _unpersistedChildren.Add(child);
+            }            
         }
 
         public bool Remove(ChildType child)
         {
-            var item = findItem(_children, child);
-            //first check to see if it is in the child list
-            if (item != null)
+            if (_persistedChildren.Remove(child))
             {
-                //if so check its state 
-                //if it is persisted add it to the tobe deleted list 
-                if (item.State == ChildState.Persisted)
-                {
-                    item.State = ChildState.Deleted;
-                    _toBeDeleted.Add(item);
-                }
-                //if not persisted then just remove it from the child list
-                _children.Remove(item);
-                return true; 
+                _toBeDeleted.Add(child);
+                return true;
             }
-            return false; 
+            else
+            {
+                return _unpersistedChildren.Remove(child);
+            }
         }
 
 
         public bool Contains(ChildType child)
         {
-            return containsItem(_children, child);
+            return _persistedChildren.Contains(child) || _unpersistedChildren.Contains(child);
         }
 
 
         public int Count
         {
-            get { return _children.Count; }
+            get { return _persistedChildren.Count + _unpersistedChildren.Count; }
         }
 
-        protected static ChildWraper findItem(List<ChildWraper> list, ChildType obj)
-        {
-            foreach (ChildWraper c in list)
-            {
-                if (Object.ReferenceEquals(c.Value, obj))
-                {
-                    return c;
-                }
-            }
-            return null;
-        }
+        //protected static ChildWraper findItem(List<ChildWraper> list, ChildType obj)
+        //{
+        //    foreach (ChildWraper c in list)
+        //    {
+        //        if (Object.ReferenceEquals(c.Value, obj))
+        //        {
+        //            return c;
+        //        }
+        //    }
+        //    return null;
+        //}
 
-        protected static bool containsItem(List<ChildWraper> list, ChildType obj)
-        {
-            foreach ( ChildWraper c in list) 
-            {
-                if( Object.ReferenceEquals(c.Value, obj))
-                {
-                    return true; 
-                }
-            }
-            return false;
-        }
+        //protected static bool containsItem(List<ChildWraper> list, ChildType obj)
+        //{
+        //    foreach ( ChildWraper c in list) 
+        //    {
+        //        if( Object.ReferenceEquals(c.Value, obj))
+        //        {
+        //            return true; 
+        //        }
+        //    }
+        //    return false;
+        //}
 
-        protected int indexOfItem(List<ChildWraper> list, ChildType obj)
-        {
-            for (int i = 0; i < list.Count; i++)
-            {
-                if (Object.ReferenceEquals(list[i].Value, obj))
-                {
-                    return i;
-                }
-            }
-            return -1;
-        }
+        //protected int indexOfItem(List<ChildWraper> list, ChildType obj)
+        //{
+        //    for (int i = 0; i < list.Count; i++)
+        //    {
+        //        if (Object.ReferenceEquals(list[i].Value, obj))
+        //        {
+        //            return i;
+        //        }
+        //    }
+        //    return -1;
+        //}
 
 
         #endregion
@@ -252,7 +245,7 @@ namespace CruiseDAL
 
         public IEnumerator<ChildType> GetEnumerator()
         {
-            return new ChildEnum(_children);
+            return new ChildEnum(this);
         }
 
         #endregion
@@ -268,29 +261,33 @@ namespace CruiseDAL
 
         protected internal class ChildEnum : IEnumerator<ChildType>
         {
-            private List<ChildWraper> list;
-            private int currentIndex;
-            private ChildType current;
+            private MappingCollection<MapType, ParentType, ChildType> _mc;
+            private int _size = -1;
+            private int _currentIndex = -1;
+            private ChildType _current;
 
-            public ChildEnum(List<ChildWraper> list)
+            public ChildEnum(MappingCollection<MapType, ParentType, ChildType> collection)
             {
-                this.list = list;
-                currentIndex = -1;
-                current = null;
+                _mc = collection;
+                _size = _mc.Count;
             }
 
             #region IEnumerator<ChildType> Members
 
             public ChildType Current
             {
-                get { return current; }
+                get { return _current; }
             }
 
             #endregion
 
             #region IDisposable Members
-
-            public void Dispose() { }
+            
+            public void Dispose() 
+            {
+                _mc = null;
+                _current = null;
+            }
 
 
             #endregion
@@ -299,14 +296,14 @@ namespace CruiseDAL
 
             object System.Collections.IEnumerator.Current
             {
-                get { return current; }
+                get { return _current; }
             }
 
             public bool MoveNext()
             {
-                if (++currentIndex < list.Count)
+                if (++_currentIndex < _size)
                 {
-                    current = list[currentIndex].Value;
+                    _current = _mc[_currentIndex];
                     return true;
                 }
                 else
@@ -317,38 +314,48 @@ namespace CruiseDAL
 
             public void Reset()
             {
-                currentIndex = -1;
-                current = null;
+                _currentIndex = -1;
+                _current = null;
             }
 
             #endregion
         }
 
-        protected internal enum ChildState {NotPersisted = 0, Persisted, Deleted};
+        //protected internal enum ChildState {NotPersisted = 0, Persisted, Deleted};
 
-        protected internal class ChildWraper
-        {
-            public ChildType Value { get; set; } 
-            public ChildState State { get; set; }
+        //protected internal class ChildWraper
+        //{
+        //    public ChildType Value { get; set; } 
+        //    public ChildState State { get; set; }
 
-            public ChildWraper(ChildType value)
-            {
-                this.Value = value;
-                this.State = ChildState.NotPersisted;
-            }
+        //    public ChildWraper(ChildType value)
+        //    {
+        //        this.Value = value;
+        //        this.State = ChildState.NotPersisted;
+        //    }
 
-            public ChildWraper(ChildType value, ChildState state)
-            {
-                this.Value = value;
-                this.State = state;
-            }
-        }
+        //    public ChildWraper(ChildType value, ChildState state)
+        //    {
+        //        this.Value = value;
+        //        this.State = state;
+        //    }
+        //}
 
         #region IList<ChildType> Members
 
         public int IndexOf(ChildType item)
         {
-            return indexOfItem(_children, item);
+            int indexOf = _persistedChildren.IndexOf(item);
+            if (indexOf != -1)
+            {
+                return indexOf;
+            }
+            indexOf = _unpersistedChildren.IndexOf(item);
+            if (indexOf != -1)
+            {
+                return indexOf + _persistedChildren.Count;
+            }
+            return -1;
         }
 
         public void Insert(int index, ChildType item)
@@ -370,24 +377,21 @@ namespace CruiseDAL
 
         public void Clear()
         {
-            foreach (ChildWraper child in _children)
+            foreach (ChildType child in _persistedChildren)
             {
-                if (child.State == MappingCollection<MapType,ParentType,ChildType>.ChildState.Persisted)
-                {
-                    child.State = MappingCollection<MapType, ParentType, ChildType>.ChildState.Deleted;
-                    _toBeDeleted.Add(child);
-                }
+                _toBeDeleted.Add(child);
             }
-            _children.Clear();
+            _unpersistedChildren.Clear();            
         }
 
         public void CopyTo(ChildType[] array, int arrayIndex)
         {
-            //array = new ChildType[_children.Count - arrayIndex];
-            for (int i = arrayIndex, j = 0; i < _children.Count; j++, i++)
-            {
-                array.SetValue(_children[i].Value, j);
-            }
+            ////array = new ChildType[_children.Count - arrayIndex];
+            //for (int i = arrayIndex, j = 0; i < this.Count; j++, i++)
+            //{
+            //    array.SetValue(this[i], j);
+            //}
+            ((ICollection)this).CopyTo(array, arrayIndex);
         }
 
         public bool IsReadOnly
@@ -481,9 +485,9 @@ namespace CruiseDAL
 
         void ICollection.CopyTo(Array array, int index)
         {
-            for (int i = index, j = 0; j < _children.Count && j < array.Length; j++, i++)
+            for (int i = index, j = 0; j < this.Count && j < array.Length; j++, i++)
             {
-                array.SetValue(_children[i].Value, j);
+                array.SetValue(this[i], j);
             }
         }
 
@@ -499,7 +503,7 @@ namespace CruiseDAL
 
         object ICollection.SyncRoot
         {
-            get { return ((ICollection)this._children).SyncRoot; }
+            get { return this; }
         }
 
         #endregion

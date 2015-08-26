@@ -12,6 +12,7 @@ using SQLiteParameter = Mono.Data.Sqlite.SqliteParameter;
 using SQLiteConnection = Mono.Data.Sqlite.SqliteConnection;
 #else
 using System.Data.SQLite;
+using System.Diagnostics;
 #endif
 
 namespace CruiseDAL
@@ -20,17 +21,19 @@ namespace CruiseDAL
 
     public abstract class DatastoreBase
     {
+        private const String LOG_LEV_DB_CONTROL_VERBOSE = "DB_Control_Verbose";
+        private const String LOG_LEV_DB_CONTROL = "DB_Control";
+        private const String LOG_LEV_DS_EVENT = "DS_Event"; 
+
         protected delegate void AsyncBuildSchemaCaller();
 
         protected DbConnection _Connection;
 
         //protected Dictionary<int, DbConnection> _connectionTracker = new Dictionary<int, DbConnection>();
         protected int _holdConnection = 0;
-        protected int _openConnectionCount = 0;
+        //protected int _openConnectionCount = 0;
         protected Object _connectionSyncLock = new object();
-        protected DbTransaction _currTransaction;
-        protected Object _transactionSyncLock = new object();
-        protected int _holdTransaction = 0;
+        protected Stack<DbTransaction> _transactionStack = new Stack<DbTransaction>(); 
         protected AsyncBuildSchemaCaller _buildSchemaCallerHandle;
 
         internal ObjectCache _IDTable;
@@ -129,11 +132,11 @@ namespace CruiseDAL
         /// </code></example>
         /// <param name="callbackFunct">optional</param>
         /// <returns></returns>
-        public IAsyncResult BeginCreate(AsyncCallback callbackFunct)
-        {
-            _buildSchemaCallerHandle = new AsyncBuildSchemaCaller(this.BuildDBFile);
-            return _buildSchemaCallerHandle.BeginInvoke(callbackFunct, null);
-        }
+        //public IAsyncResult BeginCreate(AsyncCallback callbackFunct)
+        //{
+        //    _buildSchemaCallerHandle = new AsyncBuildSchemaCaller(this.BuildDBFile);
+        //    return _buildSchemaCallerHandle.BeginInvoke(callbackFunct, null);
+        //}
 
         /// <summary>
         /// Waits for BeginCreate to end 
@@ -209,7 +212,7 @@ namespace CruiseDAL
                 }
                 finally
                 {
-                    this.CloseConnection();
+                    this.ReleaseConnection();
                 }
             }            
         }
@@ -245,12 +248,19 @@ namespace CruiseDAL
                     int nameOrd = reader.GetOrdinal("name");
                     int dbTypeOrd = reader.GetOrdinal("type");
                     int pkOrd = reader.GetOrdinal("pk");
+                    int notNullOrd = reader.GetOrdinal("notnull");
+                    int defaultValOrd = reader.GetOrdinal("dflt_value");
                     while (reader.Read())
                     {
                         ColumnInfo colInfo = new ColumnInfo();
                         colInfo.Name = reader.GetString(nameOrd);
                         colInfo.DBType = reader.GetString(dbTypeOrd);
                         colInfo.IsPK = reader.GetBoolean(pkOrd);
+                        colInfo.IsRequired = reader.GetBoolean(notNullOrd);
+                        if (!reader.IsDBNull(defaultValOrd))
+                        {
+                            colInfo.Default = reader.GetString(defaultValOrd);
+                        }
                         colList.Add(colInfo);
                     }
                 }
@@ -262,7 +272,7 @@ namespace CruiseDAL
                 {
                     if (reader != null) { reader.Dispose(); }
                     if (command != null) { command.Dispose(); }
-                    CloseConnection();
+                    ReleaseConnection();
                 }
                 return colList;
             }
@@ -306,79 +316,124 @@ namespace CruiseDAL
         #endregion
 
         #region Transaction Management
-        public void BeginTransaction()
+        public DbTransaction BeginTransaction()
         {
-            lock (_transactionSyncLock)
+            lock (_transactionStack)
             {
-                System.Diagnostics.Debug.WriteLine("Begin Transaction. ThreadID:" + System.Threading.Thread.CurrentThread.ManagedThreadId.ToString());
-                this.EnterTransactionHold();
-                if (this._currTransaction != null)
+                DbConnection conn = null; 
+                try
                 {
-                    return;
-                    //throw new InvalidOperationException("call EndTransaction or CancelTransaction before calling BeginTransaction again");
+                    Debug.WriteLine("Transaction Started", LOG_LEV_DB_CONTROL);
+                    conn = this.OpenConnection();
+                    DbTransaction transaction = conn.BeginTransaction();
+                    this._transactionStack.Push(transaction);
+                    return transaction;
                 }
-                DbConnection conn = this.OpenConnection();
-                this._currTransaction = conn.BeginTransaction();
+                catch(Exception e)
+                {
+                    throw this.ThrowDatastoreExceptionHelper(conn, null, e);
+                }
             }
         }
 
         public void CancelTransaction()
         {
-            lock (_transactionSyncLock)
+            lock (_transactionStack)
             {
                 try
                 {
-                    System.Diagnostics.Debug.WriteLine("Transaction Canceled. ThreadID:" + System.Threading.Thread.CurrentThread.ManagedThreadId.ToString());
-                    this.ReleaseTransactionHold();
-                    if (this._currTransaction != null)
-                    {
-                        this._currTransaction.Rollback();
-                        this._currTransaction.Dispose();
-                    }
+                    DbTransaction top = _transactionStack.Peek();
+                    this.CancelTransaction(top);
                 }
-                finally
+                catch (InvalidOperationException)//handle stack empty
                 {
-                    this._currTransaction = null;
-                    CloseConnection();
+                    Debug.Fail("transaction stack empty, are you missing a BeginTransaction"); 
                 }
             }
         }
+
+        public void CancelTransaction(DbTransaction transaction)
+        {
+            lock (_transactionStack)
+            {
+                Debug.Assert(this._transactionStack.Contains(transaction), "transaction not on stack");
+                try
+                {
+                    DbTransaction top = null;
+                    do
+                    {
+                        try
+                        {
+                            top = _transactionStack.Pop();
+                            top.Rollback();
+                            Debug.WriteLine("Transaction Canceled", LOG_LEV_DB_CONTROL);
+                        }
+                        catch(InvalidOperationException)//handel stack empty
+                        {
+                            break; 
+                        }                        
+                    } while (!Object.ReferenceEquals(top, transaction));
+                }
+                catch (Exception e)
+                {
+                    throw this.ThrowDatastoreExceptionHelper(this._Connection, null, e);
+                }
+            }
+        }
+
+        
 
         public void EndTransaction()
         {
-            lock (_transactionSyncLock)
+            lock (_transactionStack)
             {
                 try
                 {
-                    if (this._holdTransaction == 0 || this._currTransaction == null)
-                    {
-                        throw new InvalidOperationException("call BeginTransaction before calling EndTransaction");
-                    }
-                    System.Diagnostics.Debug.WriteLine("Transaction Ended. ThreadID:" + System.Threading.Thread.CurrentThread.ManagedThreadId.ToString());
-                    this.ExitTransactionHold();
-
-                    if (this._holdTransaction == 0)
-                    {
-                        this._currTransaction.Commit();
-                    }
+                    DbTransaction top = _transactionStack.Peek();
+                    this.EndTransaction(top);
                 }
-                finally
+                catch (InvalidOperationException)//handle stack empty
                 {
-                    if (this._holdTransaction == 0)
-                    {
-                        this._currTransaction.Dispose();
-                        this._currTransaction = null;
-                    }
-
-                    CloseConnection();
+                    Debug.Fail("transaction stack empty, are you missing a BeginTransaction");
                 }
             }
 
         }
+
+        public void EndTransaction(DbTransaction transaction)
+        {
+            lock (_transactionStack)
+            {
+                Debug.Assert(this._transactionStack.Contains(transaction), "transaction not on stack");
+                try
+                {
+                    DbTransaction top = null;
+                    do
+                    {
+                        try
+                        {
+                            top = _transactionStack.Pop();
+                            top.Commit();
+                            Debug.WriteLine("Transaction Ended", LOG_LEV_DB_CONTROL);
+                        }
+                        catch(InvalidOperationException)//handel stack empty
+                        {
+                            break; 
+                        }                        
+                    } while (!Object.ReferenceEquals(top, transaction));
+                }
+                catch (Exception e)
+                {
+                    throw this.ThrowDatastoreExceptionHelper(this._Connection, null, e);
+                }
+            }
+        }
+
         #endregion 
 
 
         #region Persistance Methods
+
         /// <summary>
         /// 
         /// </summary>
@@ -386,18 +441,6 @@ namespace CruiseDAL
         /// <param name="option"></param>
         /// <exception cref="DatabaseExecutionException"></exception>
         public void Save(DataObject data, OnConflictOption option)
-        {
-            this.Save(data, false, option);
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="data"></param>
-        /// <param name="setRowID"></param>
-        /// <param name="option"></param>
-        /// <exception cref="DatabaseExecutionException"></exception>
-        public void Save(DataObject data, bool setRowID, OnConflictOption option)
         {
             lock (data)
             {
@@ -407,15 +450,39 @@ namespace CruiseDAL
 
                 if (data.IsPersisted)
                 {
-                    ExecuteSQL(DatastoreBase.GetObjectDiscription(data.GetType()).CreateSQLUpdate(data, User, option));
+                    this.Update(data, option); 
                 }
                 else
                 {
-                    data.rowID = Convert.ToInt64(ExecuteScalar(DatastoreBase.GetObjectDiscription(data.GetType()).CreateSQLInsert(data, User, setRowID, option)));
+                    this.Insert(data, false, option);
                     this._IDTable.Add(data, ObjectCache.AddBehavior.OVERWRITE);
-                    data.IsPersisted = true;
                 }
-                data.HasChanges = false;
+            }
+        }
+
+        public void Insert(DataObject data, bool usePresetRowID, OnConflictOption option)
+        {
+            using (DbCommand command = DatastoreBase.GetObjectDiscription(data.GetType()).CreateSQLInsert(data, User, usePresetRowID, option))
+            {
+                object result = ExecuteScalar(command);
+                data.rowID = Convert.ToInt64(result);
+            }
+           
+            data.IsPersisted = true;
+            data.HasChanges = false;
+        }
+
+        public void Update(DataObject data, OnConflictOption option)
+        {
+            this.Update(data, data.rowID, option);
+        }
+
+        public void Update(DataObject data, object key, OnConflictOption option)
+        {
+            Debug.Assert(key != null);
+            using (DbCommand command = DatastoreBase.GetObjectDiscription(data.GetType()).CreateSQLUpdate(data, key, User, option))
+            {
+                ExecuteSQL(command);
             }
         }
 
@@ -463,10 +530,11 @@ namespace CruiseDAL
                 if (data.IsPersisted)
                 {
                     Logger.Log.V(string.Format("Deleting DO | {0:20} | {1:15} | IsPersisted = {2}\r\n", data.GetType().Name, data.GetID(), data.IsPersisted));
-
-                    ExecuteSQL(DatastoreBase.GetObjectDiscription(data.GetType()).CreateSQLDelete(data));
+                    using (DbCommand command = DatastoreBase.GetObjectDiscription(data.GetType()).CreateSQLDelete(data))
+                    {
+                        ExecuteSQL(command);
+                    }
                     _IDTable.Remove(data);
-
                     data.IsDeleted = true;
                 }
             }
@@ -482,7 +550,7 @@ namespace CruiseDAL
                     throw new InvalidOperationException("Can't change row id on unsaved data");
                 }
                 DataObjectInfo doi = DatastoreBase.GetObjectDiscription(data.GetType());
-                string command = string.Format("UPDATE OR {3} {0} SET rowid = {2} WHERE rowID = {1};", doi.TableName, data.rowID, newRowID, option.ToString());
+                string command = string.Format("UPDATE OR {3} {0} SET rowid = {2} WHERE rowID = {1};", doi.ReadSource, data.rowID, newRowID, option.ToString());
                 this.Execute(command);
                 data.rowID = newRowID;
             }
@@ -541,6 +609,28 @@ namespace CruiseDAL
             return ThrowDatastoreExceptionHelper(conn, comm, innerException, false);
         }
 
+        protected string GetDataStoreVitals()
+        {
+            string connectionString = String.Empty; 
+            string connectionState = String.Empty;
+            try
+            {
+                connectionString = (this._Connection != null) ? this._Connection.ConnectionString : "n/a";
+                connectionState = (this._Connection != null) ? this._Connection.State.ToString() : "n/a";
+            }
+            catch (ObjectDisposedException)
+            {
+                connectionState = "Disposed";
+            }
+
+            return String.Format("ConnStr:{0} ConnState:{1} HoldConn:{2} TransactionStackSize:{3}",
+                connectionString,
+                connectionState,
+                this._holdConnection,
+                this._transactionStack.Count);
+
+        }
+
         //protected virtual void ThrowDatabaseExecutionHelper(DbConnection conn, DbCommand comm, Exception innerException)
         //{
         //    string message = String.Format("Read/Write Error Command:{0} ConnStr:{1} ConnState:{2} HoldConn:{3} OpenConnCount:{4}",
@@ -565,78 +655,50 @@ namespace CruiseDAL
         //}
 
         #region Connection managment 
-        public void EnterConnectionHold()
+        protected void EnterConnectionHold()
         {
-            System.Diagnostics.Debug.WriteLine("Connection hold incremented by " + System.Threading.Thread.CurrentThread.ManagedThreadId.ToString());
             System.Threading.Interlocked.Increment(ref this._holdConnection);
         }
 
-        public void ExitConnectionHold()
-        {
-            System.Diagnostics.Debug.WriteLine("Connection hold decremented by " + System.Threading.Thread.CurrentThread.ManagedThreadId.ToString());
+        protected void ExitConnectionHold()
+        {            
             if (this._holdConnection > 0)
             {
                 System.Threading.Interlocked.Decrement(ref this._holdConnection);
             }
         }
 
-        public void ReleaseConnectionHold()
+        protected void ReleaseConnectionHold()
         {
             this._holdConnection = 0;
         }
 
-        protected void EnterTransactionHold()
-        {
-            EnterConnectionHold();
-            System.Threading.Interlocked.Increment(ref this._holdTransaction);
-        }
 
-        protected void ExitTransactionHold()
+        void _Connection_StateChange(object sender, System.Data.StateChangeEventArgs e)
         {
-            ExitConnectionHold();
-            if (this._holdTransaction > 0)
-            {
-                System.Threading.Interlocked.Decrement(ref this._holdTransaction);
-            }
-        }
-
-        protected void ReleaseTransactionHold()
-        {
-            ReleaseConnectionHold();
-            this._holdTransaction = 0;
-        }
-
-        private void IncrementConnectionCount()
-        {
-            System.Threading.Interlocked.Increment(ref this._openConnectionCount);
-        }
-
-        private void DecrementConnectionCount()
-        {
-            if (this._openConnectionCount <= 0)
-            {
-                throw new InvalidOperationException();
-            }
-            System.Threading.Interlocked.Decrement(ref this._openConnectionCount);
+            Debug.WriteLine("Connection state changed From " + e.OriginalState.ToString() + " to " + e.CurrentState.ToString(), LOG_LEV_DS_EVENT);
         }
 
         protected virtual DbConnection OpenConnection()
         {
+            this.EnterConnectionHold();
             try
             {
                 lock (this._connectionSyncLock)
                 {
+
+                    Debug.WriteLine("Connection In Use", LOG_LEV_DB_CONTROL_VERBOSE);
                     if (this._Connection != null)
                     {
-                        System.Diagnostics.Debug.WriteLine("pre-existing connection used by threadID: " + System.Threading.Thread.CurrentThread.ManagedThreadId.ToString() + " Connection hold = " + this._holdConnection.ToString());
                         return this._Connection;
                     }
                     else
                     {
-                        System.Diagnostics.Debug.WriteLine("connection created by threadID: " + System.Threading.Thread.CurrentThread.ManagedThreadId.ToString());
+                        System.Diagnostics.Debug.WriteLine("Connection created, threadID: " + System.Threading.Thread.CurrentThread.ManagedThreadId.ToString(), LOG_LEV_DS_EVENT);
                         this._Connection = CreateConnection(this._ConnectionString);
-                        this.IncrementConnectionCount();
+                        this._Connection.StateChange += new System.Data.StateChangeEventHandler(_Connection_StateChange);
                         this._Connection.Open();
+                        
                         return this._Connection;
                     }
                 }
@@ -647,166 +709,23 @@ namespace CruiseDAL
             }            
         }
 
-        //protected DbConnection OpenConnection(String connectionString)
-        //{
-        //        System.Diagnostics.Debug.WriteLine("loose connection created by threadID: " + System.Threading.Thread.CurrentThread.ManagedThreadId.ToString());
-        //        DbConnection conn = CreateConnection(connectionString);
-        //        conn.Open();
-        //        return conn;
-            
-           
-
-
-        //    //try
-        //    //{
-        //    //    int threadID = System.Threading.Thread.CurrentThread.ManagedThreadId;
-        //    //    if (this._connectionTracker.ContainsKey(threadID))
-        //    //    {
-        //    //        DbConnection conn = _connectionTracker[threadID];
-        //    //        if (conn == null)
-        //    //        {
-        //    //            conn = CreateConnection(connectionString);
-        //    //            this._connectionTracker.Add(threadID, conn);
-        //    //            conn.Open();
-        //    //            this.IncrementConnectionCount();
-        //    //        }
-        //    //        return conn;
-        //    //    }
-        //    //    else
-        //    //    {
-        //    //        DbConnection conn = CreateConnection(connectionString);
-        //    //        this._connectionTracker.Add(threadID, conn);
-        //    //        conn.Open();
-        //    //        this.IncrementConnectionCount();
-        //    //        return conn;
-        //    //    }
-        //    //}
-        //    //catch
-        //    //{
-        //    //    if (_Connection == null)
-        //    //    {
-        //    //        //System.Threading.Monitor.Enter(_connectionSyncLock);
-        //    //        _Connection = CreateConnection(connectionString);
-        //    //        _Connection.Open();
-        //    //        this.IncrementConnectionCount();
-
-        //    //    }
-
-        //    //    return _Connection;
-        //    //}
-        //}
-                    
-
-
-
-                //if (_holdConnection > 0 && System.Threading.Monitor.TryEnter(_connectionSyncLock))
-                //{
-                //    if (_Connection == null)
-                //    {
-                //        //System.Threading.Monitor.Enter(_connectionSyncLock);
-                //        _Connection = CreateConnection(connectionString);
-                //        _Connection.Open();
-                //        this.IncrementConnectionCount();
-
-                //    }
-
-                //    return _Connection;
-                //}
-                //else
-                //{
-                //    DbConnection connection = CreateConnection(connectionString);
-                //    connection.Open();
-                //    IncrementConnectionCount();
-                //    return connection;
-                //}
-
-
-                //if (!(_Connection != null && 
-                //    _Connection.State == System.Data.ConnectionState.Open && 
-                //    _Connection.ConnectionString == connectionString))
-                //{
-                //    _Connection = new SQLiteConnection(connectionString);
-                //    _Connection.Open();
-                //}
-
-
-
-                //System.Threading.Monitor.Enter(_Connection);
-                //return _Connection;
-            //}
-            //catch (Exception e)
-            //{
-            //    _Connection = null;
-            //    string errorMsg = String.Format("Failed to open connection (ConncetionString:{0})", connectionString);
-            //    throw this.ThrowDatastoreExceptionHelper(errorMsg, e, false);
-            //}
-        //}
-
-
-        internal void CloseConnection()
-        {
-            if (this._holdConnection == 0)
+        
+        internal void ReleaseConnection()
+        {            
+            lock (this._connectionSyncLock)
             {
-                lock (this._connectionSyncLock)
+                Debug.WriteLine("Connection Released", LOG_LEV_DB_CONTROL_VERBOSE); 
+                if (this._holdConnection == 1)
                 {
-                    if (this._Connection != null)
-                    {
-
-                        System.Diagnostics.Debug.WriteLine("connection disposed by: " + System.Threading.Thread.CurrentThread.ManagedThreadId.ToString());
-                        this.DecrementConnectionCount();
-                        try
-                        {
-                            this._Connection.Dispose();
-                        }
-                        catch (Exception e)
-                        {
-                            throw this.ThrowDatastoreExceptionHelper(this._Connection, null, e);
-                        }
-                        finally
-                        {
-                            this._Connection = null;
-                        }
-                    }
+                    Debug.Assert(_Connection != null);
+                    _Connection.Dispose();
+                    _Connection = null; 
+                    Debug.WriteLine("Conection Closed", LOG_LEV_DS_EVENT);                         
                 }
+                this.ExitConnectionHold();
             }
-            System.Diagnostics.Debug.WriteLine("connection survived by: " + System.Threading.Thread.CurrentThread.ManagedThreadId.ToString());
-
-
-            //int threadID = System.Threading.Thread.CurrentThread.ManagedThreadId;
-            //if (this._connectionTracker.ContainsKey(threadID))
-            //{
-            //    if (this._holdConnection == 0)
-            //    {
-            //        DbConnection conn = this._connectionTracker[threadID];
-            //        conn.Dispose();
-            //        this._connectionTracker[threadID] = null;
-            //    }
-            //}
-            //else
-            //{
-            //    if (object.ReferenceEquals(_Connection, connection))
-            //    {
-            //        _Connection.Dispose();
-            //        _Connection = null;
-            //    }
-            //}
         }
                     
-            
-
-            //if (connection == null) { return; }
-            //if (_holdConnection == 0)
-            //{
-            //    connection.Dispose();
-            //    this.DecrementConnectionCount();
-
-            //    if (_Connection != null && object.ReferenceEquals(connection, _Connection))
-            //    {
-            //        System.Threading.Monitor.Exit(_connectionSyncLock);
-            //        _Connection = null;
-            //    }
-            //}
-        //}
 #endregion
 
         #region Read/Write Methods
@@ -846,7 +765,7 @@ namespace CruiseDAL
                 finally
                 {
                     if (command != null) { command.Dispose(); }
-                    CloseConnection();
+                    ReleaseConnection();
                 }
                 return result;
             }
@@ -856,7 +775,7 @@ namespace CruiseDAL
         internal List<T> Read<T>(DbCommand command, bool cache, DataObjectInfo des) where T : DataObject, new()
         {
             List<T> doList = new List<T>();
-            DbDataReader reader = null;
+            DbDataReader reader = null;            
             lock (this._connectionSyncLock)
             {
                 DbConnection conn = OpenConnection();
@@ -874,21 +793,22 @@ namespace CruiseDAL
                     des.StartRead(reader);
                     while (reader.Read())
                     {
-
                         DataObject currentDO = null;
-                        if (cache)
+                        bool skipRead = false;
+                        if (cache )
                         {
                             currentDO = _IDTable.GetByID<T>(des.ReadID(reader));
+                            skipRead = ((DataObject)currentDO).IsPersisted; //&& !((DataObject)currentDO).HasChanges;
                         }
                         else
                         {
                             currentDO = _doFactory.GetNew<T>();
                         }
-                        if (!cache || !(currentDO.IsPersisted && currentDO.HasChanges))
+                        if (!cache || !skipRead)
                         {
-                            currentDO.StartWrite();//disable notify property change on object
+                            currentDO.SuspendEvents();//disable notify property change on object
                             des.ReadData(reader, currentDO);
-                            currentDO.EndWrite();
+                            currentDO.ResumeEvents();
                         }
                         doList.Add((T)currentDO);
                     }
@@ -901,8 +821,7 @@ namespace CruiseDAL
                 finally
                 {
                     if (reader != null) { reader.Dispose(); }
-                    if (command != null) { command.Dispose(); }
-                    CloseConnection();
+                    ReleaseConnection();
                 }
                 return doList;
             }
@@ -911,20 +830,20 @@ namespace CruiseDAL
 
 
 
-        /// <summary>
-        /// Reads a collection of rows from the database and returns them as a list of dataobjects
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="tableName"></param>
-        /// <param name="selection"></param>
-        /// <param name="selectionArgs"></param>
-        /// <exception cref="DatabaseExecutionException"></exception>
-        /// <returns></returns>
-        public List<T> Read<T>(string tableName, String selection, params Object[] selectionArgs)
-            where T : DataObject, new()
-        {
-            return this.Read<T>(tableName, true, selection, selectionArgs);
-        }
+        ///// <summary>
+        ///// Reads a collection of rows from the database and returns them as a list of dataobjects
+        ///// </summary>
+        ///// <typeparam name="T"></typeparam>
+        ///// <param name="tableName"></param>
+        ///// <param name="selection"></param>
+        ///// <param name="selectionArgs"></param>
+        ///// <exception cref="DatabaseExecutionException"></exception>
+        ///// <returns></returns>
+        //public List<T> Read<T>(string tableName, String selection, params Object[] selectionArgs)
+        //    where T : ReadDataObject, new()
+        //{
+        //    return this.Read<T>(tableName, true, selection, selectionArgs);
+        //}
 
         /// <summary>
         /// Reads a collection of rows from the database and returns them as a list of dataobjects
@@ -935,12 +854,32 @@ namespace CruiseDAL
         /// <param name="selection"></param>
         /// <param name="selectionArgs"></param>
         /// <returns></returns>
-        public List<T> Read<T>(string tableName, bool cache, String selection, params Object[] selectionArgs)
+        public List<T> Read<T>(string tableName, String selection, params Object[] selectionArgs)
             where T : DataObject, new()
         {
             DataObjectInfo des = DatastoreBase.GetObjectDiscription(typeof(T));
+            bool cache = des.IsCached;
             string query = String.Format(des.GetSelectCommandFormat(), selection);
-            DbCommand command = this.CreateCommand(query);
+            using (DbCommand command = this.CreateCommand(query))
+            {
+
+                //Add selection Arugments to command parameter list
+                if (selectionArgs != null)
+                {
+                    foreach (object obj in selectionArgs)
+                    {
+                        command.Parameters.Add(this.CreateParameter(null, obj));
+                    }
+                }
+
+                return Read<T>(command, cache, des);
+            }
+        }
+
+        public T QuerySingleRecord<T>(String selectCommand, params Object[] selectionArgs) where T : new()
+        {
+            DataObjectInfo doi = DatastoreBase.GetObjectDiscription(typeof(T));
+            DbCommand command = this.CreateCommand(selectCommand);
 
             //Add selection Arugments to command parameter list
             if (selectionArgs != null)
@@ -951,8 +890,87 @@ namespace CruiseDAL
                 }
             }
 
-            return Read<T>(command, cache, des);
+            DbDataReader reader = null;
+            lock (this._connectionSyncLock)
+            {
+                T newDO = default(T);
+                DbConnection conn = OpenConnection();
+                try
+                {
+                    command.Connection = conn;
+                    reader = command.ExecuteReader();
+
+                    doi.StartRead(reader, true);
+                    if (reader.Read())
+                    {
+                        newDO = new T();
+                        doi.ReadData(reader, newDO);
+                    }
+                }
+                catch (Exception e)
+                {
+                    throw this.ThrowDatastoreExceptionHelper(conn, command, e);
+                }
+                finally
+                {
+                    if (reader != null) { reader.Dispose(); }
+                    if (command != null) { command.Dispose(); }
+                    ReleaseConnection();
+                }
+                return newDO;
+            }
+
         }
+
+        public List<T> Query<T>(String selectCommand, params Object[] selectionArgs) where T : new()
+        {
+            DataObjectInfo doi = DatastoreBase.GetObjectDiscription(typeof(T));
+            DbCommand command = this.CreateCommand(selectCommand);
+
+            //Add selection Arugments to command parameter list
+            if (selectionArgs != null)
+            {
+                foreach (object obj in selectionArgs)
+                {
+                    command.Parameters.Add(this.CreateParameter(null, obj));
+                }
+            }
+
+            List<T> dataList = new List<T>();
+            DbDataReader reader = null;
+            lock (this._connectionSyncLock)
+            {
+                DbConnection conn = OpenConnection();
+                try
+                {
+                    command.Connection = conn;
+                    reader = command.ExecuteReader();
+
+                    doi.StartRead(reader, true);
+                    while (reader.Read())
+                    {
+                        Object newDO = new T();
+                        doi.ReadData(reader, newDO);
+                        dataList.Add((T)newDO);
+                    }
+                }
+
+                catch (Exception e)
+                {
+                    throw this.ThrowDatastoreExceptionHelper(conn, command, e);
+                }
+                finally
+                {
+                    if (reader != null) { reader.Dispose(); }
+                    if (command != null) { command.Dispose(); }
+                    ReleaseConnection();
+                }
+                return dataList;
+            }
+
+        }
+
+
 
         internal T ReadSingleRow<T>(DbCommand command, bool cache, DataObjectInfo des) where T : DataObject, new()
         {
@@ -969,20 +987,21 @@ namespace CruiseDAL
 
                     if (reader.Read())
                     {
+                        bool skipRead = false;
                         if (cache)
                         {
                             row = _IDTable.GetByID<T>(des.ReadID(reader));
+                            skipRead = ((DataObject)row).IsPersisted; //&& ((DataObject)row).HasChanges;
                         }
                         else
                         {
                             row = _doFactory.GetNew<T>();
                         }
-
-                        if (!cache || !(row.IsPersisted && row.HasChanges))
+                        if (!cache || !skipRead)
                         {
-                            row.StartWrite();
+                            row.SuspendEvents();//disable notify property change on object
                             des.ReadData(reader, row);
-                            row.EndWrite();
+                            row.ResumeEvents();
                         }
                     }
                 }
@@ -993,8 +1012,7 @@ namespace CruiseDAL
                 finally
                 {
                     if (reader != null) { reader.Dispose(); }
-                    if (command != null) { command.Dispose(); }
-                    CloseConnection();
+                    ReleaseConnection();
                 }
                 return (T)row;
             }
@@ -1015,45 +1033,50 @@ namespace CruiseDAL
             { return null; }
             DataObjectInfo des = DatastoreBase.GetObjectDiscription(typeof(T));
             string query = String.Format(des.GetSelectCommandFormat(), "WHERE TableRowID = @RowID");
-            DbCommand command = this.CreateCommand(query);
-            command.Parameters.Add(this.CreateParameter("@RowID", rowID.Value));
+            using (DbCommand command = this.CreateCommand(query))
+            {
+                command.Parameters.Add(this.CreateParameter("@RowID", rowID.Value));
 
-            return ReadSingleRow<T>(command, true, des);
+                return ReadSingleRow<T>(command, true, des);
+            }
         }
 
-        /// <summary>
-        /// Retrieves a single row from the database Note: dataobject type must match the
-        /// table.
-        /// </summary>
-        /// <typeparam name="T">Type of dataobject to return</typeparam>
-        /// <param name="tableName">Name of table to read from</param>
-        /// <param name="selection">the where clause to define selection Note: only the first row from the resulting selection will be returned</param>
-        /// <param name="selectionArgs">array of paramatures to use with selection string</param>
-        /// <exception cref="DatabaseExecutionException"></exception>
-        /// <returns>a single dataobject</returns>
+        ///// <summary>
+        ///// Retrieves a single row from the database Note: dataobject type must match the
+        ///// table.
+        ///// </summary>
+        ///// <typeparam name="T">Type of dataobject to return</typeparam>
+        ///// <param name="tableName">Name of table to read from</param>
+        ///// <param name="selection">the where clause to define selection Note: only the first row from the resulting selection will be returned</param>
+        ///// <param name="selectionArgs">array of paramatures to use with selection string</param>
+        ///// <exception cref="DatabaseExecutionException"></exception>
+        ///// <returns>a single dataobject</returns>
+        //public T ReadSingleRow<T>(String tableName, String selection, params Object[] selectionArgs) where T : ReadDataObject, new()
+        //{
+        //    return ReadSingleRow<T>(tableName, true, selection, selectionArgs);
+        //}
+
         public T ReadSingleRow<T>(String tableName, String selection, params Object[] selectionArgs) where T : DataObject, new()
-        {
-            return ReadSingleRow<T>(tableName, true, selection, selectionArgs);
-        }
-
-        public T ReadSingleRow<T>(String tableName, bool cache, String selection, params Object[] selectionArgs) where T : DataObject, new()
         {
             if (tableName == null)
             {
                 return null;
             }
             DataObjectInfo des = DatastoreBase.GetObjectDiscription(typeof(T));
+            bool cache = des.IsCached;
             string query = String.Format(des.GetSelectCommandFormat(), selection);
-            DbCommand command = this.CreateCommand(query);
-            if (selectionArgs != null)
+            using (DbCommand command = this.CreateCommand(query))
             {
-                foreach (Object obj in selectionArgs)
+                if (selectionArgs != null)
                 {
-                    command.Parameters.Add(this.CreateParameter(null, obj));
+                    foreach (Object obj in selectionArgs)
+                    {
+                        command.Parameters.Add(this.CreateParameter(null, obj));
+                    }
                 }
-            }
 
-            return ReadSingleRow<T>(command, cache, des);
+                return ReadSingleRow<T>(command, cache, des);
+            }
         }
 
         #endregion
@@ -1065,15 +1088,22 @@ namespace CruiseDAL
         /// <returns></returns>
         public int? Execute(String command, params object[] parameters)
         {
-            DbCommand com = this.CreateCommand(command);
-            if(parameters != null)
+            using (DbCommand com = this.CreateCommand(command))
             {
-                foreach(object p in parameters)
+                return this.Execute(com, parameters);
+            }
+        }
+
+        public int? Execute(DbCommand command, params object[] parameters)
+        {
+            if (parameters != null)
+            {
+                foreach (object p in parameters)
                 {
-                    com.Parameters.Add(this.CreateParameter(null, p));
+                    command.Parameters.Add(this.CreateParameter(null, p));
                 }
             }
-            return ExecuteSQL(com);
+            return ExecuteSQL(command);
         }
 
         
@@ -1089,16 +1119,19 @@ namespace CruiseDAL
         /// <returns>value or null</returns>
         public object ExecuteScalar(string query, params object[] parameters)
         {
-            DbCommand comm = this.CreateCommand(query);
-            if (parameters != null)
+            using (DbCommand comm = this.CreateCommand(query))
             {
-                foreach (object val in parameters)
+                if (parameters != null)
                 {
-                    comm.Parameters.Add(this.CreateParameter(null, val));
+                    foreach (object val in parameters)
+                    {
+                        comm.Parameters.Add(this.CreateParameter(null, val));
+                    }
                 }
+                object value = ExecuteScalar(comm);
+                return (value is DBNull) ? null : value;
             }
-            object value = ExecuteScalar(comm);
-            return (value is DBNull) ? null : value;
+        
         }
 
         internal object ExecuteScalar(DbCommand command)
@@ -1108,7 +1141,6 @@ namespace CruiseDAL
                 DbConnection conn = OpenConnection();
                 try
                 {
-
                     command.Connection = conn;
                     return command.ExecuteScalar();
                 }
@@ -1122,8 +1154,7 @@ namespace CruiseDAL
                 }
                 finally
                 {
-                    command.Dispose();
-                    CloseConnection();
+                    ReleaseConnection();
                 }
             }
 
@@ -1140,8 +1171,7 @@ namespace CruiseDAL
                 }
                 finally
                 {
-                    command.Dispose();
-                    CloseConnection();
+                    ReleaseConnection();
                     
                 }
             }
@@ -1185,22 +1215,25 @@ namespace CruiseDAL
 
         protected virtual void Dispose(bool isDisposing)
         {
+            
             if (_disposed)
             {
                 return;
             }
+
             if (isDisposing)
             {
+                Debug.WriteLine("Datastore Disposing: " + GetDataStoreVitals(), LOG_LEV_DS_EVENT);
                 this.FlushCache();
             }
-            if (_currTransaction != null)
+            else
             {
-                this.CancelTransaction();
+                Debug.WriteLine("Datastore Finalized: " + GetDataStoreVitals(), LOG_LEV_DS_EVENT);
             }
             if (this._Connection != null)
             {
-                this._holdConnection = 0;
-                this.CloseConnection();
+                this._holdConnection = 1;
+                this.ReleaseConnection();
             }
 
             _disposed = true;
@@ -1213,66 +1246,9 @@ namespace CruiseDAL
 
     }
 
-    public class FileAccessException : System.IO.IOException
-    {
-        public FileAccessException(string message, System.Exception innerException)
-            : base(message + innerException.Message, innerException)
-        { }
+    
 
-        public FileAccessException(string message) : base(message) { }
+    
 
-    }
-
-    /// <summary>
-    /// Thrown when two processes try to access the same database using the DAL
-    /// </summary>
-    public class DatabaseShareException : System.IO.IOException
-    {
-        public DatabaseShareException(string message, System.Exception innerException)
-            : base(message, innerException)
-        { }
-
-        public DatabaseShareException(string message) : base(message) { }
-
-    }
-
-    /// <summary>
-    /// Thrown when an exception ocures in a internal mechinism of the DAL
-    /// </summary>
-    public class ORMException : Exception
-    {
-        public ORMException(string message, System.Exception innerException)
-            : base(message, innerException)
-        { }
-
-        public ORMException(string message) : base(message) { }
-    }
-
-    public class ReadOnlyException : DatabaseExecutionException
-    {
-        public ReadOnlyException(string message, System.Exception innerException)
-            : base(message, innerException)
-        { }
-
-        public ReadOnlyException(string message) : base(message)
-        {}
-    }
-
-    /// <summary>
-    /// Thrown when there is an error executing a command on the database
-    /// </summary>
-#if!Mobile
-    public class DatabaseExecutionException : System.Data.Common.DbException
-#else
-    public class DatabaseExecutionException : Exception
-#endif
-    {
-        public DatabaseExecutionException(string message, System.Exception innerException)
-            : base(message + innerException.Message, innerException)
-        { }
-
-        public DatabaseExecutionException(string message)
-            : base(message)
-        { }
-    }
+    
 }

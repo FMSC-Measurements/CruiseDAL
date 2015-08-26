@@ -112,7 +112,7 @@ namespace CruiseDAL.DataObjects
        protected override bool ValidateProperty(string name, object value)
        {
            bool isValid = true;
-           if (base.inWriteMode) { return isValid; }
+           if (PropertyChangedEventsDisabled) { return isValid; }
            isValid = base.ValidateProperty(name, value);
            if (name == "CutLeave")
            {
@@ -270,7 +270,6 @@ namespace CruiseDAL.DataObjects
            {
                isValid = false;
                error += pre + " Code can't be empty";
-               
            }
            if (sg.TreeDefaultValues.Count == 0)
            {

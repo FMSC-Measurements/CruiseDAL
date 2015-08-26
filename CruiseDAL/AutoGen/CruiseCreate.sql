@@ -1,8 +1,9 @@
-﻿
+﻿ 
 
-PRAGMA foreign_keys = ON;
+PRAGMA foreign_keys = ON;--is the nessicary? no data is being inserted yet.
 
 
+--Core Tables--
     CREATE TABLE Sale (
 				Sale_CN INTEGER PRIMARY KEY AUTOINCREMENT,
 				SaleNumber TEXT NOT NULL,
@@ -16,17 +17,12 @@ PRAGMA foreign_keys = ON;
 				LogGradingEnabled BOOLEAN Default 0,
 				Remarks TEXT,
 				DefaultUOM TEXT,
-				CreatedBy TEXT NOT NULL,
-				CreatedDate DATETIME,
-				ModifiedBy TEXT,
-				ModifiedDate DATETIME,
+				CreatedBy TEXT DEFAULT 'none',
+				CreatedDate DateTime DEFAULT (datetime('now')) ,
+				ModifiedBy TEXT ,
+				ModifiedDate DateTime ,
+				RowVersion INTEGER DEFAULT 0,
 				UNIQUE (SaleNumber));
-
-	CREATE TRIGGER OnNewSale AFTER INSERT ON Sale BEGIN 
-			UPDATE Sale SET CreatedDate = datetime(current_timestamp, 'localtime') WHERE rowID = new.rowID; END;
-
-	CREATE TRIGGER OnUpdateSale UPDATE ON Sale BEGIN
-			UPDATE Sale SET ModifiedDate = datetime(current_timestamp, 'localtime') WHERE rowID = new.rowID; END;
 
     CREATE TABLE CuttingUnit (
 				CuttingUnit_CN INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -36,17 +32,12 @@ PRAGMA foreign_keys = ON;
 				LoggingMethod TEXT,
 				PaymentUnit TEXT,
 				TallyHistory TEXT,
-				CreatedBy TEXT NOT NULL,
-				CreatedDate DATETIME,
-				ModifiedBy TEXT,
-				ModifiedDate DATETIME,
+				CreatedBy TEXT DEFAULT 'none',
+				CreatedDate DateTime DEFAULT (datetime('now')) ,
+				ModifiedBy TEXT ,
+				ModifiedDate DateTime ,
+				RowVersion INTEGER DEFAULT 0,
 				UNIQUE (Code));
-
-	CREATE TRIGGER OnNewCuttingUnit AFTER INSERT ON CuttingUnit BEGIN 
-			UPDATE CuttingUnit SET CreatedDate = datetime(current_timestamp, 'localtime') WHERE rowID = new.rowID; END;
-
-	CREATE TRIGGER OnUpdateCuttingUnit UPDATE ON CuttingUnit BEGIN
-			UPDATE CuttingUnit SET ModifiedDate = datetime(current_timestamp, 'localtime') WHERE rowID = new.rowID; END;
 
     CREATE TABLE Stratum (
 				Stratum_CN INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -58,23 +49,20 @@ PRAGMA foreign_keys = ON;
 				KZ3PPNT INTEGER Default 0,
 				Hotkey TEXT,
 				FBSCode TEXT,
+				YieldComponent TEXT Default "CL",
 				Month INTEGER Default 0,
 				Year INTEGER Default 0,
-				CreatedBy TEXT NOT NULL,
-				CreatedDate DATETIME,
-				ModifiedBy TEXT,
-				ModifiedDate DATETIME,
+				CreatedBy TEXT DEFAULT 'none',
+				CreatedDate DateTime DEFAULT (datetime('now')) ,
+				ModifiedBy TEXT ,
+				ModifiedDate DateTime ,
+				RowVersion INTEGER DEFAULT 0,
 				UNIQUE (Code));
-
-	CREATE TRIGGER OnNewStratum AFTER INSERT ON Stratum BEGIN 
-			UPDATE Stratum SET CreatedDate = datetime(current_timestamp, 'localtime') WHERE rowID = new.rowID; END;
-
-	CREATE TRIGGER OnUpdateStratum UPDATE ON Stratum BEGIN
-			UPDATE Stratum SET ModifiedDate = datetime(current_timestamp, 'localtime') WHERE rowID = new.rowID; END;
 
     CREATE TABLE CuttingUnitStratum (
 				CuttingUnit_CN INTEGER REFERENCES CuttingUnit NOT NULL,
 				Stratum_CN INTEGER REFERENCES Stratum NOT NULL,
+				StratumArea REAL,
 				UNIQUE (CuttingUnit_CN, Stratum_CN));
 
     CREATE TABLE SampleGroup (
@@ -90,30 +78,20 @@ PRAGMA foreign_keys = ON;
 				SamplingFrequency INTEGER Default 0,
 				InsuranceFrequency INTEGER Default 0,
 				KZ INTEGER Default 0,
-				BigBAF INTEGER Default 0,
-				TallyBySubPop BOOLEAN Default 0,
-				TallyMethod TEXT,
+				BigBAF REAL Default 0.0,
+				SmallFPS REAL Default 0.0,
+				TallyMethod TEXT Default 0,
 				Description TEXT,
 				SampleSelectorType TEXT,
 				SampleSelectorState TEXT,
 				MinKPI INTEGER Default 0,
 				MaxKPI INTEGER Default 0,
-				CreatedBy TEXT NOT NULL,
-				CreatedDate DATETIME,
-				ModifiedBy TEXT,
-				ModifiedDate DATETIME,
+				CreatedBy TEXT DEFAULT 'none',
+				CreatedDate DateTime DEFAULT (datetime('now')) ,
+				ModifiedBy TEXT ,
+				ModifiedDate DateTime ,
+				RowVersion INTEGER DEFAULT 0,
 				UNIQUE (Stratum_CN, Code));
-
-	CREATE TRIGGER OnNewSampleGroup AFTER INSERT ON SampleGroup BEGIN 
-			UPDATE SampleGroup SET CreatedDate = datetime(current_timestamp, 'localtime') WHERE rowID = new.rowID; END;
-
-	CREATE TRIGGER OnUpdateSampleGroup UPDATE ON SampleGroup BEGIN
-			UPDATE SampleGroup SET ModifiedDate = datetime(current_timestamp, 'localtime') WHERE rowID = new.rowID; END;
-
-    CREATE TABLE SampleGroupTreeDefaultValue (
-				TreeDefaultValue_CN INTEGER REFERENCES TreeDefaultValue,
-				SampleGroup_CN INTEGER REFERENCES SampleGroup,
-				UNIQUE (TreeDefaultValue_CN, SampleGroup_CN));
 
     CREATE TABLE TreeDefaultValue (
 				TreeDefaultValue_CN INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -135,30 +113,173 @@ PRAGMA foreign_keys = ON;
 				BarkThicknessRatio REAL Default 0.0,
 				AverageZ REAL Default 0.0,
 				ReferenceHeightPercent REAL Default 0.0,
+				CreatedBy TEXT DEFAULT 'none',
+				CreatedDate DateTime DEFAULT (datetime('now')) ,
+				ModifiedBy TEXT ,
+				ModifiedDate DateTime ,
+				RowVersion INTEGER DEFAULT 0,
 				UNIQUE (PrimaryProduct, Species, LiveDead, Chargeable));
 
-    CREATE TABLE TreeDefaultValueTreeAuditValue (
-				TreeAuditValue_CN INTEGER REFERENCES TreeAuditValue NOT NULL,
-				TreeDefaultValue_CN INTEGER REFERENCES TreeDefaultValue NOT NULL);
+    CREATE TABLE SampleGroupTreeDefaultValue (
+				TreeDefaultValue_CN INTEGER REFERENCES TreeDefaultValue,
+				SampleGroup_CN INTEGER REFERENCES SampleGroup,
+				UNIQUE (TreeDefaultValue_CN, SampleGroup_CN));
 
-    CREATE TABLE TreeAuditValue (
-				TreeAuditValue_CN INTEGER PRIMARY KEY AUTOINCREMENT,
-				Field TEXT NOT NULL,
-				Min REAL Default 0.0,
-				Max REAL Default 0.0,
-				ValueSet TEXT,
-				Required BOOLEAN Default 0,
-				ErrorMessage TEXT);
+    CREATE TABLE Plot (
+				Plot_CN INTEGER PRIMARY KEY AUTOINCREMENT,
+				Plot_GUID TEXT,
+				Stratum_CN INTEGER REFERENCES Stratum NOT NULL,
+				CuttingUnit_CN INTEGER REFERENCES CuttingUnit NOT NULL,
+				PlotNumber INTEGER NOT NULL,
+				IsEmpty TEXT,
+				Slope REAL Default 0.0,
+				KPI REAL Default 0.0,
+				Aspect REAL Default 0.0,
+				Remarks TEXT,
+				XCoordinate REAL Default 0.0,
+				YCoordinate REAL Default 0.0,
+				ZCoordinate REAL Default 0.0,
+				MetaData TEXT,
+				Blob BLOB,
+				CreatedBy TEXT DEFAULT 'none',
+				CreatedDate DateTime DEFAULT (datetime('now')) ,
+				ModifiedBy TEXT ,
+				ModifiedDate DateTime ,
+				RowVersion INTEGER DEFAULT 0,
+				UNIQUE (Stratum_CN, CuttingUnit_CN, PlotNumber));
 
-    CREATE TABLE AuditValue (
-				TableName TEXT,
-				Field TEXT,
-				Min REAL Default 0.0,
-				Max REAL Default 0.0,
-				ValueSet TEXT,
-				Required BOOLEAN Default 0,
-				ErrorMessage TEXT);
+    CREATE TABLE Tree (
+				Tree_CN INTEGER PRIMARY KEY AUTOINCREMENT,
+				Tree_GUID TEXT,
+				TreeDefaultValue_CN INTEGER REFERENCES TreeDefaultValue,
+				Stratum_CN INTEGER REFERENCES Stratum NOT NULL,
+				SampleGroup_CN INTEGER REFERENCES SampleGroup,
+				CuttingUnit_CN INTEGER REFERENCES CuttingUnit NOT NULL,
+				Plot_CN INTEGER REFERENCES Plot,
+				TreeNumber INTEGER NOT NULL,
+				Species TEXT,
+				CountOrMeasure TEXT,
+				TreeCount REAL Default 0.0,
+				KPI REAL Default 0.0,
+				STM TEXT Default "N",
+				SeenDefectPrimary REAL Default 0.0,
+				SeenDefectSecondary REAL Default 0.0,
+				RecoverablePrimary REAL Default 0.0,
+				HiddenPrimary REAL Default 0.0,
+				Initials TEXT,
+				LiveDead TEXT,
+				Grade TEXT,
+				HeightToFirstLiveLimb REAL Default 0.0,
+				PoleLength REAL Default 0.0,
+				ClearFace TEXT,
+				CrownRatio REAL Default 0.0,
+				DBH REAL Default 0.0,
+				DRC REAL Default 0.0,
+				TotalHeight REAL Default 0.0,
+				MerchHeightPrimary REAL Default 0.0,
+				MerchHeightSecondary REAL Default 0.0,
+				FormClass REAL Default 0.0,
+				UpperStemDOB REAL Default 0.0,
+				UpperStemDiameter REAL Default 0.0,
+				UpperStemHeight REAL Default 0.0,
+				DBHDoubleBarkThickness REAL Default 0.0,
+				TopDIBPrimary REAL Default 0.0,
+				TopDIBSecondary REAL Default 0.0,
+				DefectCode TEXT,
+				DiameterAtDefect REAL Default 0.0,
+				VoidPercent REAL Default 0.0,
+				Slope REAL Default 0.0,
+				Aspect REAL Default 0.0,
+				Remarks TEXT,
+				XCoordinate DOUBLE Default 0.0,
+				YCoordinate DOUBLE Default 0.0,
+				ZCoordinate DOUBLE Default 0.0,
+				MetaData TEXT,
+				IsFallBuckScale INTEGER Default 0,
+				ExpansionFactor REAL Default 0.0,
+				TreeFactor REAL Default 0.0,
+				PointFactor REAL Default 0.0,
+				CreatedBy TEXT DEFAULT 'none',
+				CreatedDate DateTime DEFAULT (datetime('now')) ,
+				ModifiedBy TEXT ,
+				ModifiedDate DateTime ,
+				RowVersion INTEGER DEFAULT 0,
+				UNIQUE (TreeDefaultValue_CN, Stratum_CN, SampleGroup_CN, CuttingUnit_CN, Plot_CN, TreeNumber));
 
+    CREATE TABLE Log (
+				Log_CN INTEGER PRIMARY KEY AUTOINCREMENT,
+				Log_GUID TEXT,
+				Tree_CN INTEGER REFERENCES Tree NOT NULL,
+				LogNumber TEXT NOT NULL,
+				Grade TEXT,
+				SeenDefect REAL Default 0.0,
+				PercentRecoverable REAL Default 0.0,
+				Length INTEGER Default 0,
+				ExportGrade TEXT,
+				SmallEndDiameter REAL Default 0.0,
+				LargeEndDiameter REAL Default 0.0,
+				GrossBoardFoot REAL Default 0.0,
+				NetBoardFoot REAL Default 0.0,
+				GrossCubicFoot REAL Default 0.0,
+				NetCubicFoot REAL Default 0.0,
+				BoardFootRemoved REAL Default 0.0,
+				CubicFootRemoved REAL Default 0.0,
+				DIBClass REAL Default 0.0,
+				BarkThickness REAL Default 0.0,
+				CreatedBy TEXT DEFAULT 'none',
+				CreatedDate DateTime DEFAULT (datetime('now')) ,
+				ModifiedBy TEXT ,
+				ModifiedDate DateTime ,
+				RowVersion INTEGER DEFAULT 0,
+				UNIQUE (Tree_CN, LogNumber));
+
+    CREATE TABLE Stem (
+				Stem_CN INTEGER PRIMARY KEY AUTOINCREMENT,
+				Stem_GUID TEXT,
+				Tree_CN INTEGER REFERENCES Tree,
+				Diameter REAL Default 0.0,
+				DiameterType TEXT,
+				CreatedBy TEXT DEFAULT 'none',
+				CreatedDate DateTime DEFAULT (datetime('now')) ,
+				ModifiedBy TEXT ,
+				ModifiedDate DateTime ,
+				RowVersion INTEGER DEFAULT 0,
+				UNIQUE (Tree_CN));
+
+    CREATE TABLE CountTree (
+				CountTree_CN INTEGER PRIMARY KEY AUTOINCREMENT,
+				SampleGroup_CN INTEGER REFERENCES SampleGroup NOT NULL,
+				CuttingUnit_CN INTEGER REFERENCES CuttingUnit NOT NULL,
+				Tally_CN INTEGER REFERENCES Tally,
+				TreeDefaultValue_CN INTEGER REFERENCES TreeDefaultValue,
+				Component_CN INTEGER REFERENCES Component,
+				TreeCount INTEGER Default 0,
+				SumKPI INTEGER Default 0,
+				CreatedBy TEXT DEFAULT 'none',
+				CreatedDate DateTime DEFAULT (datetime('now')) ,
+				ModifiedBy TEXT ,
+				ModifiedDate DateTime ,
+				RowVersion INTEGER DEFAULT 0,
+				UNIQUE (SampleGroup_CN, CuttingUnit_CN, TreeDefaultValue_CN, Component_CN));
+
+    CREATE TABLE Tally (
+				Tally_CN INTEGER PRIMARY KEY AUTOINCREMENT,
+				Hotkey TEXT NOT NULL,
+				Description TEXT NOT NULL,
+				IndicatorValue TEXT,
+				IndicatorType TEXT);
+
+    CREATE TABLE TreeEstimate (
+				TreeEstimate_CN INTEGER PRIMARY KEY AUTOINCREMENT,
+				CountTree_CN INTEGER REFERENCES CountTree,
+				TreeEstimate_GUID TEXT,
+				KPI REAL NOT NULL,
+				CreatedBy TEXT DEFAULT 'none',
+				CreatedDate DateTime DEFAULT (datetime('now')) ,
+				ModifiedBy TEXT ,
+				ModifiedDate DateTime );
+
+--Processing Tables--
     CREATE TABLE VolumeEquation (
 				Species TEXT NOT NULL,
 				PrimaryProduct TEXT NOT NULL,
@@ -199,230 +320,6 @@ PRAGMA foreign_keys = ON;
 				WeightFactorSecondary REAL Default 0.0,
 				UNIQUE (Species, Product, Component, LiveDead));
 
-    CREATE TABLE MessageLog (
-				Message_CN INTEGER PRIMARY KEY AUTOINCREMENT,
-				Program TEXT,
-				Message TEXT,
-				Date TEXT,
-				Time TEXT,
-				Level TEXT);
-
-    CREATE TABLE Globals (
-				Block TEXT,
-				Key TEXT,
-				Value TEXT,
-				UNIQUE (Block, Key));
-
-    CREATE TABLE Regression (
-				Regression_CN INTEGER PRIMARY KEY AUTOINCREMENT,
-				rVolume TEXT,
-				rVolType TEXT,
-				rSpeices TEXT,
-				rProduct TEXT,
-				rLiveDead TEXT,
-				CoefficientA REAL Default 0.0,
-				CoefficientB REAL Default 0.0,
-				CoefficientC REAL Default 0.0,
-				TotalTrees INTEGER Default 0,
-				MeanSE REAL Default 0.0,
-				Rsquared REAL Default 0.0,
-				RegressModel TEXT,
-				rMinDbh REAL Default 0.0,
-				rMaxDbh REAL Default 0.0);
-
-    CREATE TABLE CountTree (
-				CountTree_CN INTEGER PRIMARY KEY AUTOINCREMENT,
-				SampleGroup_CN INTEGER REFERENCES SampleGroup NOT NULL,
-				CuttingUnit_CN INTEGER REFERENCES CuttingUnit NOT NULL,
-				Tally_CN INTEGER REFERENCES Tally,
-				TreeDefaultValue_CN INTEGER REFERENCES TreeDefaultValue,
-				Component_CN INTEGER REFERENCES Component,
-				TreeCount INTEGER Default 0,
-				SumKPI INTEGER Default 0,
-				CreatedBy TEXT NOT NULL,
-				CreatedDate DATETIME,
-				ModifiedBy TEXT,
-				ModifiedDate DATETIME,
-				UNIQUE (SampleGroup_CN, CuttingUnit_CN, TreeDefaultValue_CN, Component_CN));
-
-	CREATE TRIGGER OnNewCountTree AFTER INSERT ON CountTree BEGIN 
-			UPDATE CountTree SET CreatedDate = datetime(current_timestamp, 'localtime') WHERE rowID = new.rowID; END;
-
-	CREATE TRIGGER OnUpdateCountTree UPDATE ON CountTree BEGIN
-			UPDATE CountTree SET ModifiedDate = datetime(current_timestamp, 'localtime') WHERE rowID = new.rowID; END;
-
-    CREATE TABLE Component (
-				Component_CN INTEGER PRIMARY KEY AUTOINCREMENT,
-				GUID TEXT,
-				LastMerge DATETIME,
-				FileName TEXT);
-
-    CREATE TABLE Tally (
-				Tally_CN INTEGER PRIMARY KEY AUTOINCREMENT,
-				Hotkey TEXT NOT NULL,
-				Description TEXT NOT NULL,
-				IndicatorValue TEXT,
-				IndicatorType TEXT);
-
-    CREATE TABLE TreeEstimate (
-				TreeEstimate_CN INTEGER PRIMARY KEY AUTOINCREMENT,
-				CountTree_CN INTEGER REFERENCES CountTree,
-				KPI REAL NOT NULL);
-
-    CREATE TABLE Tree (
-				Tree_CN INTEGER PRIMARY KEY AUTOINCREMENT,
-				TreeDefaultValue_CN INTEGER REFERENCES TreeDefaultValue,
-				Stratum_CN INTEGER REFERENCES Stratum NOT NULL,
-				SampleGroup_CN INTEGER REFERENCES SampleGroup,
-				CuttingUnit_CN INTEGER REFERENCES CuttingUnit NOT NULL,
-				Plot_CN INTEGER REFERENCES Plot,
-				TreeNumber INTEGER NOT NULL,
-				Species TEXT,
-				CountOrMeasure TEXT,
-				TreeCount REAL Default 0.0,
-				KPI REAL Default 0.0,
-				STM TEXT Default "N",
-				SeenDefectPrimary REAL Default 0.0,
-				SeenDefectSecondary REAL Default 0.0,
-				RecoverablePrimary REAL Default 0.0,
-				HiddenPrimary REAL Default 0.0,
-				Initials TEXT,
-				LiveDead TEXT,
-				Grade TEXT,
-				HeightToFirstLiveLimb REAL Default 0.0,
-				PoleLength REAL Default 0.0,
-				ClearFace TEXT,
-				CrownRatio REAL Default 0.0,
-				DBH REAL Default 0.0,
-				DRC REAL Default 0.0,
-				TotalHeight REAL Default 0.0,
-				MerchHeightPrimary REAL Default 0.0,
-				MerchHeightSecondary REAL Default 0.0,
-				FormClass REAL Default 0.0,
-				UpperStemDOB REAL Default 0.0,
-				UpperStemHeight REAL Default 0.0,
-				DBHDoubleBarkThickness REAL Default 0.0,
-				TopDIBPrimary REAL Default 0.0,
-				TopDIBSecondary REAL Default 0.0,
-				DefectCode TEXT,
-				DiameterAtDefect REAL Default 0.0,
-				VoidPercent REAL Default 0.0,
-				Slope REAL Default 0.0,
-				Aspect REAL Default 0.0,
-				Remarks TEXT,
-				XCoordinate DOUBLE Default 0.0,
-				YCoordinate DOUBLE Default 0.0,
-				ZCoordinate DOUBLE Default 0.0,
-				MetaData TEXT,
-				IsFallBuckScale INTEGER Default 0,
-				CreatedBy TEXT NOT NULL,
-				CreatedDate DATETIME,
-				ModifiedBy TEXT,
-				ModifiedDate DATETIME,
-				ExpansionFactor REAL Default 0.0,
-				TreeFactor REAL Default 0.0,
-				PointFactor REAL Default 0.0,
-				UNIQUE (TreeDefaultValue_CN, Stratum_CN, SampleGroup_CN, CuttingUnit_CN, Plot_CN, TreeNumber));
-
-	CREATE TRIGGER OnNewTree AFTER INSERT ON Tree BEGIN 
-			UPDATE Tree SET CreatedDate = datetime(current_timestamp, 'localtime') WHERE rowID = new.rowID; END;
-
-	CREATE TRIGGER OnUpdateTree UPDATE ON Tree BEGIN
-			UPDATE Tree SET ModifiedDate = datetime(current_timestamp, 'localtime') WHERE rowID = new.rowID; END;
-
-    CREATE TABLE Plot (
-				Plot_CN INTEGER PRIMARY KEY AUTOINCREMENT,
-				Stratum_CN INTEGER REFERENCES Stratum NOT NULL,
-				CuttingUnit_CN INTEGER REFERENCES CuttingUnit NOT NULL,
-				PlotNumber INTEGER NOT NULL,
-				IsEmpty TEXT,
-				Slope REAL Default 0.0,
-				KPI REAL Default 0.0,
-				Aspect REAL Default 0.0,
-				Remarks TEXT,
-				XCoordinate REAL Default 0.0,
-				YCoordinate REAL Default 0.0,
-				ZCoordinate REAL Default 0.0,
-				MetaData TEXT,
-				Blob BLOB,
-				CreatedBy TEXT NOT NULL,
-				CreatedDate DATETIME,
-				ModifiedBy TEXT,
-				ModifiedDate DATETIME,
-				UNIQUE (Stratum_CN, CuttingUnit_CN, PlotNumber));
-
-	CREATE TRIGGER OnNewPlot AFTER INSERT ON Plot BEGIN 
-			UPDATE Plot SET CreatedDate = datetime(current_timestamp, 'localtime') WHERE rowID = new.rowID; END;
-
-	CREATE TRIGGER OnUpdatePlot UPDATE ON Plot BEGIN
-			UPDATE Plot SET ModifiedDate = datetime(current_timestamp, 'localtime') WHERE rowID = new.rowID; END;
-
-    CREATE TABLE LogFieldSetup (
-				Stratum_CN INTEGER REFERENCES Stratum NOT NULL,
-				Field TEXT NOT NULL,
-				FieldOrder INTEGER Default 0,
-				ColumnType TEXT,
-				Heading TEXT,
-				Width REAL Default 0.0,
-				Format TEXT,
-				Behavior TEXT,
-				UNIQUE (Stratum_CN, Field));
-
-    CREATE TABLE TreeFieldSetup (
-				Stratum_CN INTEGER REFERENCES Stratum NOT NULL,
-				Field TEXT NOT NULL,
-				FieldOrder INTEGER Default 0,
-				ColumnType TEXT,
-				Heading TEXT,
-				Width REAL Default 0.0,
-				Format TEXT,
-				Behavior TEXT,
-				UNIQUE (Stratum_CN, Field));
-
-    CREATE TABLE Log (
-				Log_CN INTEGER PRIMARY KEY AUTOINCREMENT,
-				Tree_CN INTEGER REFERENCES Tree NOT NULL,
-				LogNumber TEXT NOT NULL,
-				Grade TEXT,
-				SeenDefect REAL Default 0.0,
-				PercentRecoverable REAL Default 0.0,
-				Length INTEGER Default 0,
-				ExportGrade TEXT,
-				SmallEndDiameter REAL Default 0.0,
-				LargeEndDiameter REAL Default 0.0,
-				GrossBoardFoot REAL Default 0.0,
-				NetBoardFoot REAL Default 0.0,
-				GrossCubicFoot REAL Default 0.0,
-				NetCubicFoot REAL Default 0.0,
-				BoardFootRemoved REAL Default 0.0,
-				CubicFootRemoved REAL Default 0.0,
-				DIBClass REAL Default 0.0,
-				BarkThickness REAL Default 0.0,
-				CreatedBy TEXT NOT NULL,
-				CreatedDate DATETIME,
-				ModifiedBy TEXT,
-				ModifiedDate DATETIME,
-				UNIQUE (Tree_CN, LogNumber));
-
-	CREATE TRIGGER OnNewLog AFTER INSERT ON Log BEGIN 
-			UPDATE Log SET CreatedDate = datetime(current_timestamp, 'localtime') WHERE rowID = new.rowID; END;
-
-	CREATE TRIGGER OnUpdateLog UPDATE ON Log BEGIN
-			UPDATE Log SET ModifiedDate = datetime(current_timestamp, 'localtime') WHERE rowID = new.rowID; END;
-
-    CREATE TABLE Reports (
-				ReportID TEXT NOT NULL,
-				Selected BOOLEAN Default 0,
-				Title TEXT,
-				UNIQUE (ReportID));
-
-    CREATE TABLE Stem (
-				Stem_CN INTEGER PRIMARY KEY AUTOINCREMENT,
-				Tree_CN INTEGER REFERENCES Tree,
-				Diameter REAL Default 0.0,
-				DiameterType TEXT,
-				UNIQUE (Tree_CN));
-
     CREATE TABLE ValueEquation (
 				Species TEXT NOT NULL,
 				PrimaryProduct TEXT NOT NULL,
@@ -449,15 +346,11 @@ PRAGMA foreign_keys = ON;
 				Coefficient6 REAL Default 0.0,
 				UNIQUE (Species, QualityAdjEq));
 
-    CREATE TABLE ErrorLog (
-				TableName TEXT NOT NULL,
-				CN_Number INTEGER NOT NULL,
-				ColumnName TEXT NOT NULL,
-				Level TEXT NOT NULL,
-				Message TEXT,
-				Program TEXT,
-				Suppress BOOLEAN Default 0,
-				UNIQUE (TableName, CN_Number, ColumnName, Level));
+    CREATE TABLE Reports (
+				ReportID TEXT NOT NULL,
+				Selected BOOLEAN Default 0,
+				Title TEXT,
+				UNIQUE (ReportID));
 
     CREATE TABLE TreeCalculatedValues (
 				TreeCalcValues_CN INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -644,17 +537,11 @@ PRAGMA foreign_keys = ON;
 				BarkThickness REAL Default 0.0,
 				BoardUtil REAL Default 0.0,
 				CubicUtil REAL Default 0.0,
-				CreatedBy TEXT NOT NULL,
-				CreatedDate DATETIME,
-				ModifiedBy TEXT,
-				ModifiedDate DATETIME,
+				CreatedBy TEXT DEFAULT 'none',
+				CreatedDate DateTime DEFAULT (datetime('now')) ,
+				ModifiedBy TEXT ,
+				ModifiedDate DateTime ,
 				UNIQUE (Tree_CN, LogNumber));
-
-	CREATE TRIGGER OnNewLogStock AFTER INSERT ON LogStock BEGIN 
-			UPDATE LogStock SET CreatedDate = datetime(current_timestamp, 'localtime') WHERE rowID = new.rowID; END;
-
-	CREATE TRIGGER OnUpdateLogStock UPDATE ON LogStock BEGIN
-			UPDATE LogStock SET ModifiedDate = datetime(current_timestamp, 'localtime') WHERE rowID = new.rowID; END;
 
     CREATE TABLE SampleGroupStats (
 				SampleGroupStats_CN INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -691,6 +578,11 @@ PRAGMA foreign_keys = ON;
 				ReconTrees INTEGER Default 0,
 				UNIQUE (StratumStats_CN, Code, SgSet));
 
+    CREATE TABLE SampleGroupStatsTreeDefaultValue (
+				TreeDefaultValue_CN INTEGER REFERENCES TreeDefaultValue,
+				SampleGroupStats_CN INTEGER REFERENCES SampleGroupStats,
+				UNIQUE (TreeDefaultValue_CN, SampleGroupStats_CN));
+
     CREATE TABLE StratumStats (
 				StratumStats_CN INTEGER PRIMARY KEY AUTOINCREMENT,
 				Stratum_CN INTEGER REFERENCES Stratum,
@@ -714,10 +606,73 @@ PRAGMA foreign_keys = ON;
 				Used INTEGER Default 0,
 				UNIQUE (Code, Method, SgSet));
 
-    CREATE TABLE SampleGroupStatsTreeDefaultValue (
-				TreeDefaultValue_CN INTEGER REFERENCES TreeDefaultValue,
-				SampleGroupStats_CN INTEGER REFERENCES SampleGroupStats,
-				UNIQUE (TreeDefaultValue_CN, SampleGroupStats_CN));
+    CREATE TABLE Regression (
+				Regression_CN INTEGER PRIMARY KEY AUTOINCREMENT,
+				rVolume TEXT,
+				rVolType TEXT,
+				rSpeices TEXT,
+				rProduct TEXT,
+				rLiveDead TEXT,
+				CoefficientA REAL Default 0.0,
+				CoefficientB REAL Default 0.0,
+				CoefficientC REAL Default 0.0,
+				TotalTrees INTEGER Default 0,
+				MeanSE REAL Default 0.0,
+				Rsquared REAL Default 0.0,
+				RegressModel TEXT,
+				rMinDbh REAL Default 0.0,
+				rMaxDbh REAL Default 0.0);
+
+    CREATE TABLE LogMatrix (
+				ReportNumber TEXT,
+				GradeDescription TEXT,
+				LogSortDescription TEXT,
+				Species TEXT,
+				LogGrade1 TEXT,
+				LogGrade2 TEXT,
+				LogGrade3 TEXT,
+				LogGrade4 TEXT,
+				LogGrade5 TEXT,
+				LogGrade6 TEXT,
+				SEDlimit TEXT,
+				SEDminimum DOUBLE Default 0.0,
+				SEDmaximum DOUBLE Default 0.0);
+
+--Settings Tables--
+    CREATE TABLE TreeDefaultValueTreeAuditValue (
+				TreeAuditValue_CN INTEGER REFERENCES TreeAuditValue NOT NULL,
+				TreeDefaultValue_CN INTEGER REFERENCES TreeDefaultValue NOT NULL);
+
+    CREATE TABLE TreeAuditValue (
+				TreeAuditValue_CN INTEGER PRIMARY KEY AUTOINCREMENT,
+				Field TEXT NOT NULL,
+				Min REAL Default 0.0,
+				Max REAL Default 0.0,
+				ValueSet TEXT,
+				Required BOOLEAN Default 0,
+				ErrorMessage TEXT);
+
+    CREATE TABLE LogFieldSetup (
+				Stratum_CN INTEGER REFERENCES Stratum NOT NULL,
+				Field TEXT NOT NULL,
+				FieldOrder INTEGER Default 0,
+				ColumnType TEXT,
+				Heading TEXT,
+				Width REAL Default 0.0,
+				Format TEXT,
+				Behavior TEXT,
+				UNIQUE (Stratum_CN, Field));
+
+    CREATE TABLE TreeFieldSetup (
+				Stratum_CN INTEGER REFERENCES Stratum NOT NULL,
+				Field TEXT NOT NULL,
+				FieldOrder INTEGER Default 0,
+				ColumnType TEXT,
+				Heading TEXT,
+				Width REAL Default 0.0,
+				Format TEXT,
+				Behavior TEXT,
+				UNIQUE (Stratum_CN, Field));
 
     CREATE TABLE LogFieldSetupDefault (
 				LogFieldSetupDefault_CN INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -744,6 +699,7 @@ PRAGMA foreign_keys = ON;
 				Behavior TEXT,
 				UNIQUE (Method, Field));
 
+--Lookup Tables--
     CREATE TABLE CruiseMethods (
 				CruiseMethods_CN INTEGER PRIMARY KEY AUTOINCREMENT,
 				Code TEXT,
@@ -781,28 +737,64 @@ PRAGMA foreign_keys = ON;
 				Name TEXT,
 				Number INTEGER Default 0);
 
-    CREATE TABLE LogMatrix (
-				ReportNumber TEXT,
-				GradeDescription TEXT,
-				LogSortDescription TEXT,
-				Species TEXT,
-				LogGrade1 TEXT,
-				LogGrade2 TEXT,
-				LogGrade3 TEXT,
-				LogGrade4 TEXT,
-				LogGrade5 TEXT,
-				LogGrade6 TEXT,
-				SEDlimit TEXT,
-				SEDminimum DOUBLE Default 0.0,
-				SEDmaximum DOUBLE Default 0.0);
+--Utility Tables--
+    CREATE TABLE ErrorLog (
+				TableName TEXT NOT NULL,
+				CN_Number INTEGER NOT NULL,
+				ColumnName TEXT NOT NULL,
+				Level TEXT NOT NULL,
+				Message TEXT,
+				Program TEXT,
+				Suppress BOOLEAN Default 0,
+				UNIQUE (TableName, CN_Number, ColumnName, Level));
+
+    CREATE TABLE MessageLog (
+				Message_CN INTEGER PRIMARY KEY AUTOINCREMENT,
+				Program TEXT,
+				Message TEXT,
+				Date TEXT,
+				Time TEXT,
+				Level TEXT);
+
+    CREATE TABLE Globals (
+				Block TEXT,
+				Key TEXT,
+				Value TEXT,
+				UNIQUE (Block, Key));
+
+    CREATE TABLE Component (
+				Component_CN INTEGER PRIMARY KEY AUTOINCREMENT,
+				GUID TEXT,
+				LastMerge DATETIME,
+				FileName TEXT);
 
 
-INSERT INTO Globals (Block, Key, Value) VALUES ("Database", "Version", "2015.01.05"); 
+CREATE TABLE Util_Tombstone (
+RecordID INTEGER ,
+RecordGUID TEXT, 
+TableName TEXT NOT NULL COLLATE NOCASE,
+Data TEXT, 
+DeletedDate DATETIME NON NULL);
 
-CREATE TRIGGER OnDeleteTree AFTER DELETE ON Tree BEGIN 
-			INSERT INTO MessageLog (Message, Date, Time) VALUES (('Tree (' || OLD.Tree_CN || ') Deleted CU_cn:' || OLD.CuttingUnit_CN || ' St_cn:' || OLD.Stratum_CN || ' Plt_CN:' || ifnull(OLD.Plot_CN,'-') || ' T#:' || OLD.TreeNumber), date('now'), time('now')); END;
+CREATE VIEW CountTree_View AS 
+SELECT Stratum.Code as StratumCode,
+Stratum.Method as Method, 
+SampleGroup.Code as SampleGroupCode,
+SampleGroup.PrimaryProduct as PrimaryProduct, 
+CountTree.* 
+FROM CountTree JOIN SampleGroup USING (SampleGroup_CN) JOIN Stratum USING (Stratum_CN);
+ 
+CREATE VIEW StratumAcres_View AS 
+SELECT CuttingUnit.Code as CuttingUnitCode, 
+Stratum.Code as StratumCode, 
+ifnull(Area, CuttingUnit.Area) as Area, 
+CuttingUnitStratum.* 
+FROM CuttingUnitStratum 
+JOIN CuttingUnit USING (CuttingUnit_CN) 
+JOIN Stratum USING (Stratum_CN);
 
-CREATE TRIGGER OnDeletePlot AFTER DELETE ON Plot BEGIN 
-			INSERT INTO MessageLog (Message, Date, Time) VALUES (('Plot (' || OLD.Plot_CN || ') Deleted CU_cn:' || OLD.CuttingUnit_CN  || ' St_cn:' || OLD.Stratum_CN || ' Plt#:' || OLD.PlotNumber), date('now'), time('now')); END;
+
+INSERT INTO Globals (Block, Key, Value) VALUES ("Database", "Version", "2015.08.19"); 
+PRAGMA user_version = 2;
 
 

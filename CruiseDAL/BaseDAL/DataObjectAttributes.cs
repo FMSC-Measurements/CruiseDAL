@@ -3,17 +3,24 @@ using System.Data;
 
 namespace CruiseDAL
 {
-    [AttributeUsage(AttributeTargets.Class, Inherited = true)]
-    public class TableAttribute : Attribute
-    {
-        string _tableName;
 
-        public string TableName
+
+
+    [AttributeUsage(AttributeTargets.Class, Inherited = true)]
+    public class SQLEntityAttribute : Attribute
+    {
+        string _readSource;
+
+        public bool IsCached { get; set; }
+        public string TableName { get; set; }
+
+        public string ReadSource
         {
-            get { return _tableName; }
-            set { _tableName = value; }
+            get { return _readSource ?? TableName; }
+            set { _readSource = value; }
         }
 
+        [Obsolete]
         public string JoinCommand
         {
             get;
@@ -48,13 +55,16 @@ namespace CruiseDAL
         public SepcialFieldType SpecialFieldType { get; set; }
         //TODO the fallowing properties do not affect behavior, but could 
         //could be use useful for new puropses later on
-        public object DefaultValue { get; set; } 
+        public object DefaultValue { get; set; }
+        public bool IsPrimaryKey { get; set; }
         public bool IsUnique { get; set; }
         public string References { get; set; }
         public bool IsDepreciated { get; set; }
         public bool AllowNull { get; set; }
         public int MinValue { get; set; }
         public int MaxValue { get; set; }
+
+        
 
 
         public string FieldName

@@ -74,11 +74,7 @@ namespace CruiseDAL
                     obj = (DataObject)wkRef.Target;
                     if (!(obj is defaultType))
                     {
-                        DataObject dObj = DOFactory.GetNew<defaultType>();
-                        dObj.StartWrite();
-                        dObj.SetValues(obj);
-                        dObj.EndWrite();
-                        obj = dObj;
+                        return DOFactory.GetNew<defaultType>();
                     }
                 }
                 else

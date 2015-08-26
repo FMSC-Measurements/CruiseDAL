@@ -1,9 +1,9 @@
-
 using System;
 using CruiseDAL;
 
 namespace CruiseDAL.Schema
 {
+	#region Core Tables
 	public static class SALE
 	{
 		public const string _NAME = "Sale";
@@ -19,12 +19,8 @@ namespace CruiseDAL.Schema
 		public const string LOGGRADINGENABLED = "LogGradingEnabled";
 		public const string REMARKS = "Remarks";
 		public const string DEFAULTUOM = "DefaultUOM";
-		public const string CREATEDBY = "CreatedBy";
-		public const string CREATEDDATE = "CreatedDate";
-		public const string MODIFIEDBY = "ModifiedBy";
-		public const string MODIFIEDDATE = "ModifiedDate";
-		public static string[] _ALL = new string []{ SALE_CN, SALENUMBER, NAME, PURPOSE, REGION, FOREST, DISTRICT, MEASUREMENTYEAR, CALENDARYEAR, LOGGRADINGENABLED, REMARKS, DEFAULTUOM, CREATEDBY, CREATEDDATE, MODIFIEDBY, MODIFIEDDATE };
-		public enum SALE_FIELDS { Sale_CN, SaleNumber, Name, Purpose, Region, Forest, District, MeasurementYear, CalendarYear, LogGradingEnabled, Remarks, DefaultUOM, CreatedBy, CreatedDate, ModifiedBy, ModifiedDate };
+		public static string[] _ALL = new string []{ SALE_CN, SALENUMBER, NAME, PURPOSE, REGION, FOREST, DISTRICT, MEASUREMENTYEAR, CALENDARYEAR, LOGGRADINGENABLED, REMARKS, DEFAULTUOM };
+		public enum SALE_FIELDS { Sale_CN, SaleNumber, Name, Purpose, Region, Forest, District, MeasurementYear, CalendarYear, LogGradingEnabled, Remarks, DefaultUOM };
 	}
 
 	public static class CUTTINGUNIT
@@ -37,12 +33,8 @@ namespace CruiseDAL.Schema
 		public const string LOGGINGMETHOD = "LoggingMethod";
 		public const string PAYMENTUNIT = "PaymentUnit";
 		public const string TALLYHISTORY = "TallyHistory";
-		public const string CREATEDBY = "CreatedBy";
-		public const string CREATEDDATE = "CreatedDate";
-		public const string MODIFIEDBY = "ModifiedBy";
-		public const string MODIFIEDDATE = "ModifiedDate";
-		public static string[] _ALL = new string []{ CUTTINGUNIT_CN, CODE, AREA, DESCRIPTION, LOGGINGMETHOD, PAYMENTUNIT, TALLYHISTORY, CREATEDBY, CREATEDDATE, MODIFIEDBY, MODIFIEDDATE };
-		public enum CUTTINGUNIT_FIELDS { CuttingUnit_CN, Code, Area, Description, LoggingMethod, PaymentUnit, TallyHistory, CreatedBy, CreatedDate, ModifiedBy, ModifiedDate };
+		public static string[] _ALL = new string []{ CUTTINGUNIT_CN, CODE, AREA, DESCRIPTION, LOGGINGMETHOD, PAYMENTUNIT, TALLYHISTORY };
+		public enum CUTTINGUNIT_FIELDS { CuttingUnit_CN, Code, Area, Description, LoggingMethod, PaymentUnit, TallyHistory };
 	}
 
 	public static class STRATUM
@@ -57,14 +49,11 @@ namespace CruiseDAL.Schema
 		public const string KZ3PPNT = "KZ3PPNT";
 		public const string HOTKEY = "Hotkey";
 		public const string FBSCODE = "FBSCode";
+		public const string YIELDCOMPONENT = "YieldComponent";
 		public const string MONTH = "Month";
 		public const string YEAR = "Year";
-		public const string CREATEDBY = "CreatedBy";
-		public const string CREATEDDATE = "CreatedDate";
-		public const string MODIFIEDBY = "ModifiedBy";
-		public const string MODIFIEDDATE = "ModifiedDate";
-		public static string[] _ALL = new string []{ STRATUM_CN, CODE, DESCRIPTION, METHOD, BASALAREAFACTOR, FIXEDPLOTSIZE, KZ3PPNT, HOTKEY, FBSCODE, MONTH, YEAR, CREATEDBY, CREATEDDATE, MODIFIEDBY, MODIFIEDDATE };
-		public enum STRATUM_FIELDS { Stratum_CN, Code, Description, Method, BasalAreaFactor, FixedPlotSize, KZ3PPNT, Hotkey, FBSCode, Month, Year, CreatedBy, CreatedDate, ModifiedBy, ModifiedDate };
+		public static string[] _ALL = new string []{ STRATUM_CN, CODE, DESCRIPTION, METHOD, BASALAREAFACTOR, FIXEDPLOTSIZE, KZ3PPNT, HOTKEY, FBSCODE, YIELDCOMPONENT, MONTH, YEAR };
+		public enum STRATUM_FIELDS { Stratum_CN, Code, Description, Method, BasalAreaFactor, FixedPlotSize, KZ3PPNT, Hotkey, FBSCode, YieldComponent, Month, Year };
 	}
 
 	public static class CUTTINGUNITSTRATUM
@@ -72,8 +61,9 @@ namespace CruiseDAL.Schema
 		public const string _NAME = "CuttingUnitStratum";
 		public const string CUTTINGUNIT_CN = "CuttingUnit_CN";
 		public const string STRATUM_CN = "Stratum_CN";
-		public static string[] _ALL = new string []{ CUTTINGUNIT_CN, STRATUM_CN };
-		public enum CUTTINGUNITSTRATUM_FIELDS { CuttingUnit_CN, Stratum_CN };
+		public const string STRATUMAREA = "StratumArea";
+		public static string[] _ALL = new string []{ CUTTINGUNIT_CN, STRATUM_CN, STRATUMAREA };
+		public enum CUTTINGUNITSTRATUM_FIELDS { CuttingUnit_CN, Stratum_CN, StratumArea };
 	}
 
 	public static class SAMPLEGROUP
@@ -92,28 +82,15 @@ namespace CruiseDAL.Schema
 		public const string INSURANCEFREQUENCY = "InsuranceFrequency";
 		public const string KZ = "KZ";
 		public const string BIGBAF = "BigBAF";
-		public const string TALLYBYSUBPOP = "TallyBySubPop";
+		public const string SMALLFPS = "SmallFPS";
 		public const string TALLYMETHOD = "TallyMethod";
 		public const string DESCRIPTION = "Description";
 		public const string SAMPLESELECTORTYPE = "SampleSelectorType";
 		public const string SAMPLESELECTORSTATE = "SampleSelectorState";
 		public const string MINKPI = "MinKPI";
 		public const string MAXKPI = "MaxKPI";
-		public const string CREATEDBY = "CreatedBy";
-		public const string CREATEDDATE = "CreatedDate";
-		public const string MODIFIEDBY = "ModifiedBy";
-		public const string MODIFIEDDATE = "ModifiedDate";
-		public static string[] _ALL = new string []{ SAMPLEGROUP_CN, STRATUM_CN, CODE, CUTLEAVE, UOM, PRIMARYPRODUCT, SECONDARYPRODUCT, BIOMASSPRODUCT, DEFAULTLIVEDEAD, SAMPLINGFREQUENCY, INSURANCEFREQUENCY, KZ, BIGBAF, TALLYBYSUBPOP, TALLYMETHOD, DESCRIPTION, SAMPLESELECTORTYPE, SAMPLESELECTORSTATE, MINKPI, MAXKPI, CREATEDBY, CREATEDDATE, MODIFIEDBY, MODIFIEDDATE };
-		public enum SAMPLEGROUP_FIELDS { SampleGroup_CN, Stratum_CN, Code, CutLeave, UOM, PrimaryProduct, SecondaryProduct, BiomassProduct, DefaultLiveDead, SamplingFrequency, InsuranceFrequency, KZ, BigBAF, TallyBySubPop, TallyMethod, Description, SampleSelectorType, SampleSelectorState, MinKPI, MaxKPI, CreatedBy, CreatedDate, ModifiedBy, ModifiedDate };
-	}
-
-	public static class SAMPLEGROUPTREEDEFAULTVALUE
-	{
-		public const string _NAME = "SampleGroupTreeDefaultValue";
-		public const string TREEDEFAULTVALUE_CN = "TreeDefaultValue_CN";
-		public const string SAMPLEGROUP_CN = "SampleGroup_CN";
-		public static string[] _ALL = new string []{ TREEDEFAULTVALUE_CN, SAMPLEGROUP_CN };
-		public enum SAMPLEGROUPTREEDEFAULTVALUE_FIELDS { TreeDefaultValue_CN, SampleGroup_CN };
+		public static string[] _ALL = new string []{ SAMPLEGROUP_CN, STRATUM_CN, CODE, CUTLEAVE, UOM, PRIMARYPRODUCT, SECONDARYPRODUCT, BIOMASSPRODUCT, DEFAULTLIVEDEAD, SAMPLINGFREQUENCY, INSURANCEFREQUENCY, KZ, BIGBAF, SMALLFPS, TALLYMETHOD, DESCRIPTION, SAMPLESELECTORTYPE, SAMPLESELECTORSTATE, MINKPI, MAXKPI };
+		public enum SAMPLEGROUP_FIELDS { SampleGroup_CN, Stratum_CN, Code, CutLeave, UOM, PrimaryProduct, SecondaryProduct, BiomassProduct, DefaultLiveDead, SamplingFrequency, InsuranceFrequency, KZ, BigBAF, SmallFPS, TallyMethod, Description, SampleSelectorType, SampleSelectorState, MinKPI, MaxKPI };
 	}
 
 	public static class TREEDEFAULTVALUE
@@ -142,29 +119,172 @@ namespace CruiseDAL.Schema
 		public enum TREEDEFAULTVALUE_FIELDS { TreeDefaultValue_CN, PrimaryProduct, Species, LiveDead, FIAcode, CullPrimary, HiddenPrimary, CullSecondary, HiddenSecondary, Recoverable, Chargeable, ContractSpecies, TreeGrade, MerchHeightLogLength, MerchHeightType, FormClass, BarkThicknessRatio, AverageZ, ReferenceHeightPercent };
 	}
 
-	public static class TREEDEFAULTVALUETREEAUDITVALUE
+	public static class SAMPLEGROUPTREEDEFAULTVALUE
 	{
-		public const string _NAME = "TreeDefaultValueTreeAuditValue";
-		public const string TREEAUDITVALUE_CN = "TreeAuditValue_CN";
+		public const string _NAME = "SampleGroupTreeDefaultValue";
 		public const string TREEDEFAULTVALUE_CN = "TreeDefaultValue_CN";
-		public static string[] _ALL = new string []{ TREEAUDITVALUE_CN, TREEDEFAULTVALUE_CN };
-		public enum TREEDEFAULTVALUETREEAUDITVALUE_FIELDS { TreeAuditValue_CN, TreeDefaultValue_CN };
+		public const string SAMPLEGROUP_CN = "SampleGroup_CN";
+		public static string[] _ALL = new string []{ TREEDEFAULTVALUE_CN, SAMPLEGROUP_CN };
+		public enum SAMPLEGROUPTREEDEFAULTVALUE_FIELDS { TreeDefaultValue_CN, SampleGroup_CN };
 	}
 
-	public static class TREEAUDITVALUE
+	public static class PLOT
 	{
-		public const string _NAME = "TreeAuditValue";
-		public const string TREEAUDITVALUE_CN = "TreeAuditValue_CN";
-		public const string FIELD = "Field";
-		public const string MIN = "Min";
-		public const string MAX = "Max";
-		public const string VALUESET = "ValueSet";
-		public const string REQUIRED = "Required";
-		public const string ERRORMESSAGE = "ErrorMessage";
-		public static string[] _ALL = new string []{ TREEAUDITVALUE_CN, FIELD, MIN, MAX, VALUESET, REQUIRED, ERRORMESSAGE };
-		public enum TREEAUDITVALUE_FIELDS { TreeAuditValue_CN, Field, Min, Max, ValueSet, Required, ErrorMessage };
+		public const string _NAME = "Plot";
+		public const string PLOT_CN = "Plot_CN";
+		public const string PLOT_GUID = "Plot_GUID";
+		public const string STRATUM_CN = "Stratum_CN";
+		public const string CUTTINGUNIT_CN = "CuttingUnit_CN";
+		public const string PLOTNUMBER = "PlotNumber";
+		public const string ISEMPTY = "IsEmpty";
+		public const string SLOPE = "Slope";
+		public const string KPI = "KPI";
+		public const string ASPECT = "Aspect";
+		public const string REMARKS = "Remarks";
+		public const string XCOORDINATE = "XCoordinate";
+		public const string YCOORDINATE = "YCoordinate";
+		public const string ZCOORDINATE = "ZCoordinate";
+		public const string METADATA = "MetaData";
+		public const string BLOB = "Blob";
+		public static string[] _ALL = new string []{ PLOT_CN, PLOT_GUID, STRATUM_CN, CUTTINGUNIT_CN, PLOTNUMBER, ISEMPTY, SLOPE, KPI, ASPECT, REMARKS, XCOORDINATE, YCOORDINATE, ZCOORDINATE, METADATA, BLOB };
+		public enum PLOT_FIELDS { Plot_CN, Plot_GUID, Stratum_CN, CuttingUnit_CN, PlotNumber, IsEmpty, Slope, KPI, Aspect, Remarks, XCoordinate, YCoordinate, ZCoordinate, MetaData, Blob };
 	}
 
+	public static class TREE
+	{
+		public const string _NAME = "Tree";
+		public const string TREE_CN = "Tree_CN";
+		public const string TREE_GUID = "Tree_GUID";
+		public const string TREEDEFAULTVALUE_CN = "TreeDefaultValue_CN";
+		public const string STRATUM_CN = "Stratum_CN";
+		public const string SAMPLEGROUP_CN = "SampleGroup_CN";
+		public const string CUTTINGUNIT_CN = "CuttingUnit_CN";
+		public const string PLOT_CN = "Plot_CN";
+		public const string TREENUMBER = "TreeNumber";
+		public const string SPECIES = "Species";
+		public const string COUNTORMEASURE = "CountOrMeasure";
+		public const string TREECOUNT = "TreeCount";
+		public const string KPI = "KPI";
+		public const string STM = "STM";
+		public const string SEENDEFECTPRIMARY = "SeenDefectPrimary";
+		public const string SEENDEFECTSECONDARY = "SeenDefectSecondary";
+		public const string RECOVERABLEPRIMARY = "RecoverablePrimary";
+		public const string HIDDENPRIMARY = "HiddenPrimary";
+		public const string INITIALS = "Initials";
+		public const string LIVEDEAD = "LiveDead";
+		public const string GRADE = "Grade";
+		public const string HEIGHTTOFIRSTLIVELIMB = "HeightToFirstLiveLimb";
+		public const string POLELENGTH = "PoleLength";
+		public const string CLEARFACE = "ClearFace";
+		public const string CROWNRATIO = "CrownRatio";
+		public const string DBH = "DBH";
+		public const string DRC = "DRC";
+		public const string TOTALHEIGHT = "TotalHeight";
+		public const string MERCHHEIGHTPRIMARY = "MerchHeightPrimary";
+		public const string MERCHHEIGHTSECONDARY = "MerchHeightSecondary";
+		public const string FORMCLASS = "FormClass";
+		public const string UPPERSTEMDOB = "UpperStemDOB";
+		public const string UPPERSTEMDIAMETER = "UpperStemDiameter";
+		public const string UPPERSTEMHEIGHT = "UpperStemHeight";
+		public const string DBHDOUBLEBARKTHICKNESS = "DBHDoubleBarkThickness";
+		public const string TOPDIBPRIMARY = "TopDIBPrimary";
+		public const string TOPDIBSECONDARY = "TopDIBSecondary";
+		public const string DEFECTCODE = "DefectCode";
+		public const string DIAMETERATDEFECT = "DiameterAtDefect";
+		public const string VOIDPERCENT = "VoidPercent";
+		public const string SLOPE = "Slope";
+		public const string ASPECT = "Aspect";
+		public const string REMARKS = "Remarks";
+		public const string XCOORDINATE = "XCoordinate";
+		public const string YCOORDINATE = "YCoordinate";
+		public const string ZCOORDINATE = "ZCoordinate";
+		public const string METADATA = "MetaData";
+		public const string ISFALLBUCKSCALE = "IsFallBuckScale";
+		public const string EXPANSIONFACTOR = "ExpansionFactor";
+		public const string TREEFACTOR = "TreeFactor";
+		public const string POINTFACTOR = "PointFactor";
+		public static string[] _ALL = new string []{ TREE_CN, TREE_GUID, TREEDEFAULTVALUE_CN, STRATUM_CN, SAMPLEGROUP_CN, CUTTINGUNIT_CN, PLOT_CN, TREENUMBER, SPECIES, COUNTORMEASURE, TREECOUNT, KPI, STM, SEENDEFECTPRIMARY, SEENDEFECTSECONDARY, RECOVERABLEPRIMARY, HIDDENPRIMARY, INITIALS, LIVEDEAD, GRADE, HEIGHTTOFIRSTLIVELIMB, POLELENGTH, CLEARFACE, CROWNRATIO, DBH, DRC, TOTALHEIGHT, MERCHHEIGHTPRIMARY, MERCHHEIGHTSECONDARY, FORMCLASS, UPPERSTEMDOB, UPPERSTEMDIAMETER, UPPERSTEMHEIGHT, DBHDOUBLEBARKTHICKNESS, TOPDIBPRIMARY, TOPDIBSECONDARY, DEFECTCODE, DIAMETERATDEFECT, VOIDPERCENT, SLOPE, ASPECT, REMARKS, XCOORDINATE, YCOORDINATE, ZCOORDINATE, METADATA, ISFALLBUCKSCALE, EXPANSIONFACTOR, TREEFACTOR, POINTFACTOR };
+		public enum TREE_FIELDS { Tree_CN, Tree_GUID, TreeDefaultValue_CN, Stratum_CN, SampleGroup_CN, CuttingUnit_CN, Plot_CN, TreeNumber, Species, CountOrMeasure, TreeCount, KPI, STM, SeenDefectPrimary, SeenDefectSecondary, RecoverablePrimary, HiddenPrimary, Initials, LiveDead, Grade, HeightToFirstLiveLimb, PoleLength, ClearFace, CrownRatio, DBH, DRC, TotalHeight, MerchHeightPrimary, MerchHeightSecondary, FormClass, UpperStemDOB, UpperStemDiameter, UpperStemHeight, DBHDoubleBarkThickness, TopDIBPrimary, TopDIBSecondary, DefectCode, DiameterAtDefect, VoidPercent, Slope, Aspect, Remarks, XCoordinate, YCoordinate, ZCoordinate, MetaData, IsFallBuckScale, ExpansionFactor, TreeFactor, PointFactor };
+	}
+
+	public static class LOG
+	{
+		public const string _NAME = "Log";
+		public const string LOG_CN = "Log_CN";
+		public const string LOG_GUID = "Log_GUID";
+		public const string TREE_CN = "Tree_CN";
+		public const string LOGNUMBER = "LogNumber";
+		public const string GRADE = "Grade";
+		public const string SEENDEFECT = "SeenDefect";
+		public const string PERCENTRECOVERABLE = "PercentRecoverable";
+		public const string LENGTH = "Length";
+		public const string EXPORTGRADE = "ExportGrade";
+		public const string SMALLENDDIAMETER = "SmallEndDiameter";
+		public const string LARGEENDDIAMETER = "LargeEndDiameter";
+		public const string GROSSBOARDFOOT = "GrossBoardFoot";
+		public const string NETBOARDFOOT = "NetBoardFoot";
+		public const string GROSSCUBICFOOT = "GrossCubicFoot";
+		public const string NETCUBICFOOT = "NetCubicFoot";
+		public const string BOARDFOOTREMOVED = "BoardFootRemoved";
+		public const string CUBICFOOTREMOVED = "CubicFootRemoved";
+		public const string DIBCLASS = "DIBClass";
+		public const string BARKTHICKNESS = "BarkThickness";
+		public static string[] _ALL = new string []{ LOG_CN, LOG_GUID, TREE_CN, LOGNUMBER, GRADE, SEENDEFECT, PERCENTRECOVERABLE, LENGTH, EXPORTGRADE, SMALLENDDIAMETER, LARGEENDDIAMETER, GROSSBOARDFOOT, NETBOARDFOOT, GROSSCUBICFOOT, NETCUBICFOOT, BOARDFOOTREMOVED, CUBICFOOTREMOVED, DIBCLASS, BARKTHICKNESS };
+		public enum LOG_FIELDS { Log_CN, Log_GUID, Tree_CN, LogNumber, Grade, SeenDefect, PercentRecoverable, Length, ExportGrade, SmallEndDiameter, LargeEndDiameter, GrossBoardFoot, NetBoardFoot, GrossCubicFoot, NetCubicFoot, BoardFootRemoved, CubicFootRemoved, DIBClass, BarkThickness };
+	}
+
+	public static class STEM
+	{
+		public const string _NAME = "Stem";
+		public const string STEM_CN = "Stem_CN";
+		public const string STEM_GUID = "Stem_GUID";
+		public const string TREE_CN = "Tree_CN";
+		public const string DIAMETER = "Diameter";
+		public const string DIAMETERTYPE = "DiameterType";
+		public static string[] _ALL = new string []{ STEM_CN, STEM_GUID, TREE_CN, DIAMETER, DIAMETERTYPE };
+		public enum STEM_FIELDS { Stem_CN, Stem_GUID, Tree_CN, Diameter, DiameterType };
+	}
+
+	public static class COUNTTREE
+	{
+		public const string _NAME = "CountTree";
+		public const string COUNTTREE_CN = "CountTree_CN";
+		public const string SAMPLEGROUP_CN = "SampleGroup_CN";
+		public const string CUTTINGUNIT_CN = "CuttingUnit_CN";
+		public const string TALLY_CN = "Tally_CN";
+		public const string TREEDEFAULTVALUE_CN = "TreeDefaultValue_CN";
+		public const string COMPONENT_CN = "Component_CN";
+		public const string TREECOUNT = "TreeCount";
+		public const string SUMKPI = "SumKPI";
+		public static string[] _ALL = new string []{ COUNTTREE_CN, SAMPLEGROUP_CN, CUTTINGUNIT_CN, TALLY_CN, TREEDEFAULTVALUE_CN, COMPONENT_CN, TREECOUNT, SUMKPI };
+		public enum COUNTTREE_FIELDS { CountTree_CN, SampleGroup_CN, CuttingUnit_CN, Tally_CN, TreeDefaultValue_CN, Component_CN, TreeCount, SumKPI };
+	}
+
+	public static class TALLY
+	{
+		public const string _NAME = "Tally";
+		public const string TALLY_CN = "Tally_CN";
+		public const string HOTKEY = "Hotkey";
+		public const string DESCRIPTION = "Description";
+		public const string INDICATORVALUE = "IndicatorValue";
+		public const string INDICATORTYPE = "IndicatorType";
+		public static string[] _ALL = new string []{ TALLY_CN, HOTKEY, DESCRIPTION, INDICATORVALUE, INDICATORTYPE };
+		public enum TALLY_FIELDS { Tally_CN, Hotkey, Description, IndicatorValue, IndicatorType };
+	}
+
+	public static class TREEESTIMATE
+	{
+		public const string _NAME = "TreeEstimate";
+		public const string TREEESTIMATE_CN = "TreeEstimate_CN";
+		public const string COUNTTREE_CN = "CountTree_CN";
+		public const string TREEESTIMATE_GUID = "TreeEstimate_GUID";
+		public const string KPI = "KPI";
+		public static string[] _ALL = new string []{ TREEESTIMATE_CN, COUNTTREE_CN, TREEESTIMATE_GUID, KPI };
+		public enum TREEESTIMATE_FIELDS { TreeEstimate_CN, CountTree_CN, TreeEstimate_GUID, KPI };
+	}
+
+	#endregion
+	#region Processing Tables
 	public static class VOLUMEEQUATION
 	{
 		public const string _NAME = "VolumeEquation";
@@ -213,267 +333,6 @@ namespace CruiseDAL.Schema
 		public enum BIOMASSEQUATION_FIELDS { Species, Product, Component, LiveDead, FIAcode, Equation, PercentMoisture, PercentRemoved, MetaData, WeightFactorPrimary, WeightFactorSecondary };
 	}
 
-	public static class MESSAGELOG
-	{
-		public const string _NAME = "MessageLog";
-		public const string MESSAGE_CN = "Message_CN";
-		public const string PROGRAM = "Program";
-		public const string MESSAGE = "Message";
-		public const string DATE = "Date";
-		public const string TIME = "Time";
-		public const string LEVEL = "Level";
-		public static string[] _ALL = new string []{ MESSAGE_CN, PROGRAM, MESSAGE, DATE, TIME, LEVEL };
-		public enum MESSAGELOG_FIELDS { Message_CN, Program, Message, Date, Time, Level };
-	}
-
-	public static class GLOBALS
-	{
-		public const string _NAME = "Globals";
-		public const string BLOCK = "Block";
-		public const string KEY = "Key";
-		public const string VALUE = "Value";
-		public static string[] _ALL = new string []{ BLOCK, KEY, VALUE };
-		public enum GLOBALS_FIELDS { Block, Key, Value };
-	}
-
-	public static class REGRESSION
-	{
-		public const string _NAME = "Regression";
-		public const string REGRESSION_CN = "Regression_CN";
-		public const string RVOLUME = "rVolume";
-		public const string RVOLTYPE = "rVolType";
-		public const string RSPEICES = "rSpeices";
-		public const string RPRODUCT = "rProduct";
-		public const string RLIVEDEAD = "rLiveDead";
-		public const string COEFFICIENTA = "CoefficientA";
-		public const string COEFFICIENTB = "CoefficientB";
-		public const string COEFFICIENTC = "CoefficientC";
-		public const string TOTALTREES = "TotalTrees";
-		public const string MEANSE = "MeanSE";
-		public const string RSQUARED = "Rsquared";
-		public const string REGRESSMODEL = "RegressModel";
-		public const string RMINDBH = "rMinDbh";
-		public const string RMAXDBH = "rMaxDbh";
-		public static string[] _ALL = new string []{ REGRESSION_CN, RVOLUME, RVOLTYPE, RSPEICES, RPRODUCT, RLIVEDEAD, COEFFICIENTA, COEFFICIENTB, COEFFICIENTC, TOTALTREES, MEANSE, RSQUARED, REGRESSMODEL, RMINDBH, RMAXDBH };
-		public enum REGRESSION_FIELDS { Regression_CN, rVolume, rVolType, rSpeices, rProduct, rLiveDead, CoefficientA, CoefficientB, CoefficientC, TotalTrees, MeanSE, Rsquared, RegressModel, rMinDbh, rMaxDbh };
-	}
-
-	public static class COUNTTREE
-	{
-		public const string _NAME = "CountTree";
-		public const string COUNTTREE_CN = "CountTree_CN";
-		public const string SAMPLEGROUP_CN = "SampleGroup_CN";
-		public const string CUTTINGUNIT_CN = "CuttingUnit_CN";
-		public const string TALLY_CN = "Tally_CN";
-		public const string TREEDEFAULTVALUE_CN = "TreeDefaultValue_CN";
-		public const string COMPONENT_CN = "Component_CN";
-		public const string TREECOUNT = "TreeCount";
-		public const string SUMKPI = "SumKPI";
-		public const string CREATEDBY = "CreatedBy";
-		public const string CREATEDDATE = "CreatedDate";
-		public const string MODIFIEDBY = "ModifiedBy";
-		public const string MODIFIEDDATE = "ModifiedDate";
-		public static string[] _ALL = new string []{ COUNTTREE_CN, SAMPLEGROUP_CN, CUTTINGUNIT_CN, TALLY_CN, TREEDEFAULTVALUE_CN, COMPONENT_CN, TREECOUNT, SUMKPI, CREATEDBY, CREATEDDATE, MODIFIEDBY, MODIFIEDDATE };
-		public enum COUNTTREE_FIELDS { CountTree_CN, SampleGroup_CN, CuttingUnit_CN, Tally_CN, TreeDefaultValue_CN, Component_CN, TreeCount, SumKPI, CreatedBy, CreatedDate, ModifiedBy, ModifiedDate };
-	}
-
-	public static class COMPONENT
-	{
-		public const string _NAME = "Component";
-		public const string COMPONENT_CN = "Component_CN";
-		public const string GUID = "GUID";
-		public const string LASTMERGE = "LastMerge";
-		public const string FILENAME = "FileName";
-		public static string[] _ALL = new string []{ COMPONENT_CN, GUID, LASTMERGE, FILENAME };
-		public enum COMPONENT_FIELDS { Component_CN, GUID, LastMerge, FileName };
-	}
-
-	public static class TALLY
-	{
-		public const string _NAME = "Tally";
-		public const string TALLY_CN = "Tally_CN";
-		public const string HOTKEY = "Hotkey";
-		public const string DESCRIPTION = "Description";
-		public const string INDICATORVALUE = "IndicatorValue";
-		public const string INDICATORTYPE = "IndicatorType";
-		public static string[] _ALL = new string []{ TALLY_CN, HOTKEY, DESCRIPTION, INDICATORVALUE, INDICATORTYPE };
-		public enum TALLY_FIELDS { Tally_CN, Hotkey, Description, IndicatorValue, IndicatorType };
-	}
-
-	public static class TREEESTIMATE
-	{
-		public const string _NAME = "TreeEstimate";
-		public const string TREEESTIMATE_CN = "TreeEstimate_CN";
-		public const string COUNTTREE_CN = "CountTree_CN";
-		public const string KPI = "KPI";
-		public static string[] _ALL = new string []{ TREEESTIMATE_CN, COUNTTREE_CN, KPI };
-		public enum TREEESTIMATE_FIELDS { TreeEstimate_CN, CountTree_CN, KPI };
-	}
-
-	public static class TREE
-	{
-		public const string _NAME = "Tree";
-		public const string TREE_CN = "Tree_CN";
-		public const string TREEDEFAULTVALUE_CN = "TreeDefaultValue_CN";
-		public const string STRATUM_CN = "Stratum_CN";
-		public const string SAMPLEGROUP_CN = "SampleGroup_CN";
-		public const string CUTTINGUNIT_CN = "CuttingUnit_CN";
-		public const string PLOT_CN = "Plot_CN";
-		public const string TREENUMBER = "TreeNumber";
-		public const string SPECIES = "Species";
-		public const string COUNTORMEASURE = "CountOrMeasure";
-		public const string TREECOUNT = "TreeCount";
-		public const string KPI = "KPI";
-		public const string STM = "STM";
-		public const string SEENDEFECTPRIMARY = "SeenDefectPrimary";
-		public const string SEENDEFECTSECONDARY = "SeenDefectSecondary";
-		public const string RECOVERABLEPRIMARY = "RecoverablePrimary";
-		public const string HIDDENPRIMARY = "HiddenPrimary";
-		public const string INITIALS = "Initials";
-		public const string LIVEDEAD = "LiveDead";
-		public const string GRADE = "Grade";
-		public const string HEIGHTTOFIRSTLIVELIMB = "HeightToFirstLiveLimb";
-		public const string POLELENGTH = "PoleLength";
-		public const string CLEARFACE = "ClearFace";
-		public const string CROWNRATIO = "CrownRatio";
-		public const string DBH = "DBH";
-		public const string DRC = "DRC";
-		public const string TOTALHEIGHT = "TotalHeight";
-		public const string MERCHHEIGHTPRIMARY = "MerchHeightPrimary";
-		public const string MERCHHEIGHTSECONDARY = "MerchHeightSecondary";
-		public const string FORMCLASS = "FormClass";
-		public const string UPPERSTEMDOB = "UpperStemDOB";
-		public const string UPPERSTEMHEIGHT = "UpperStemHeight";
-		public const string DBHDOUBLEBARKTHICKNESS = "DBHDoubleBarkThickness";
-		public const string TOPDIBPRIMARY = "TopDIBPrimary";
-		public const string TOPDIBSECONDARY = "TopDIBSecondary";
-		public const string DEFECTCODE = "DefectCode";
-		public const string DIAMETERATDEFECT = "DiameterAtDefect";
-		public const string VOIDPERCENT = "VoidPercent";
-		public const string SLOPE = "Slope";
-		public const string ASPECT = "Aspect";
-		public const string REMARKS = "Remarks";
-		public const string XCOORDINATE = "XCoordinate";
-		public const string YCOORDINATE = "YCoordinate";
-		public const string ZCOORDINATE = "ZCoordinate";
-		public const string METADATA = "MetaData";
-		public const string ISFALLBUCKSCALE = "IsFallBuckScale";
-		public const string CREATEDBY = "CreatedBy";
-		public const string CREATEDDATE = "CreatedDate";
-		public const string MODIFIEDBY = "ModifiedBy";
-		public const string MODIFIEDDATE = "ModifiedDate";
-		public const string EXPANSIONFACTOR = "ExpansionFactor";
-		public const string TREEFACTOR = "TreeFactor";
-		public const string POINTFACTOR = "PointFactor";
-		public static string[] _ALL = new string []{ TREE_CN, TREEDEFAULTVALUE_CN, STRATUM_CN, SAMPLEGROUP_CN, CUTTINGUNIT_CN, PLOT_CN, TREENUMBER, SPECIES, COUNTORMEASURE, TREECOUNT, KPI, STM, SEENDEFECTPRIMARY, SEENDEFECTSECONDARY, RECOVERABLEPRIMARY, HIDDENPRIMARY, INITIALS, LIVEDEAD, GRADE, HEIGHTTOFIRSTLIVELIMB, POLELENGTH, CLEARFACE, CROWNRATIO, DBH, DRC, TOTALHEIGHT, MERCHHEIGHTPRIMARY, MERCHHEIGHTSECONDARY, FORMCLASS, UPPERSTEMDOB, UPPERSTEMHEIGHT, DBHDOUBLEBARKTHICKNESS, TOPDIBPRIMARY, TOPDIBSECONDARY, DEFECTCODE, DIAMETERATDEFECT, VOIDPERCENT, SLOPE, ASPECT, REMARKS, XCOORDINATE, YCOORDINATE, ZCOORDINATE, METADATA, ISFALLBUCKSCALE, CREATEDBY, CREATEDDATE, MODIFIEDBY, MODIFIEDDATE, EXPANSIONFACTOR, TREEFACTOR, POINTFACTOR };
-		public enum TREE_FIELDS { Tree_CN, TreeDefaultValue_CN, Stratum_CN, SampleGroup_CN, CuttingUnit_CN, Plot_CN, TreeNumber, Species, CountOrMeasure, TreeCount, KPI, STM, SeenDefectPrimary, SeenDefectSecondary, RecoverablePrimary, HiddenPrimary, Initials, LiveDead, Grade, HeightToFirstLiveLimb, PoleLength, ClearFace, CrownRatio, DBH, DRC, TotalHeight, MerchHeightPrimary, MerchHeightSecondary, FormClass, UpperStemDOB, UpperStemHeight, DBHDoubleBarkThickness, TopDIBPrimary, TopDIBSecondary, DefectCode, DiameterAtDefect, VoidPercent, Slope, Aspect, Remarks, XCoordinate, YCoordinate, ZCoordinate, MetaData, IsFallBuckScale, CreatedBy, CreatedDate, ModifiedBy, ModifiedDate, ExpansionFactor, TreeFactor, PointFactor };
-	}
-
-	public static class PLOT
-	{
-		public const string _NAME = "Plot";
-		public const string PLOT_CN = "Plot_CN";
-		public const string STRATUM_CN = "Stratum_CN";
-		public const string CUTTINGUNIT_CN = "CuttingUnit_CN";
-		public const string PLOTNUMBER = "PlotNumber";
-		public const string ISEMPTY = "IsEmpty";
-		public const string SLOPE = "Slope";
-		public const string KPI = "KPI";
-		public const string ASPECT = "Aspect";
-		public const string REMARKS = "Remarks";
-		public const string XCOORDINATE = "XCoordinate";
-		public const string YCOORDINATE = "YCoordinate";
-		public const string ZCOORDINATE = "ZCoordinate";
-		public const string METADATA = "MetaData";
-		public const string BLOB = "Blob";
-		public const string CREATEDBY = "CreatedBy";
-		public const string CREATEDDATE = "CreatedDate";
-		public const string MODIFIEDBY = "ModifiedBy";
-		public const string MODIFIEDDATE = "ModifiedDate";
-		public static string[] _ALL = new string []{ PLOT_CN, STRATUM_CN, CUTTINGUNIT_CN, PLOTNUMBER, ISEMPTY, SLOPE, KPI, ASPECT, REMARKS, XCOORDINATE, YCOORDINATE, ZCOORDINATE, METADATA, BLOB, CREATEDBY, CREATEDDATE, MODIFIEDBY, MODIFIEDDATE };
-		public enum PLOT_FIELDS { Plot_CN, Stratum_CN, CuttingUnit_CN, PlotNumber, IsEmpty, Slope, KPI, Aspect, Remarks, XCoordinate, YCoordinate, ZCoordinate, MetaData, Blob, CreatedBy, CreatedDate, ModifiedBy, ModifiedDate };
-	}
-
-	public static class LOGFIELDSETUP
-	{
-		public const string _NAME = "LogFieldSetup";
-		public const string STRATUM_CN = "Stratum_CN";
-		public const string FIELD = "Field";
-		public const string FIELDORDER = "FieldOrder";
-		public const string COLUMNTYPE = "ColumnType";
-		public const string HEADING = "Heading";
-		public const string WIDTH = "Width";
-		public const string FORMAT = "Format";
-		public const string BEHAVIOR = "Behavior";
-		public static string[] _ALL = new string []{ STRATUM_CN, FIELD, FIELDORDER, COLUMNTYPE, HEADING, WIDTH, FORMAT, BEHAVIOR };
-		public enum LOGFIELDSETUP_FIELDS { Stratum_CN, Field, FieldOrder, ColumnType, Heading, Width, Format, Behavior };
-	}
-
-	public static class TREEFIELDSETUP
-	{
-		public const string _NAME = "TreeFieldSetup";
-		public const string STRATUM_CN = "Stratum_CN";
-		public const string FIELD = "Field";
-		public const string FIELDORDER = "FieldOrder";
-		public const string COLUMNTYPE = "ColumnType";
-		public const string HEADING = "Heading";
-		public const string WIDTH = "Width";
-		public const string FORMAT = "Format";
-		public const string BEHAVIOR = "Behavior";
-		public static string[] _ALL = new string []{ STRATUM_CN, FIELD, FIELDORDER, COLUMNTYPE, HEADING, WIDTH, FORMAT, BEHAVIOR };
-		public enum TREEFIELDSETUP_FIELDS { Stratum_CN, Field, FieldOrder, ColumnType, Heading, Width, Format, Behavior };
-	}
-
-	public static class LOG
-	{
-		public const string _NAME = "Log";
-		public const string LOG_CN = "Log_CN";
-		public const string TREE_CN = "Tree_CN";
-		public const string LOGNUMBER = "LogNumber";
-		public const string GRADE = "Grade";
-		public const string SEENDEFECT = "SeenDefect";
-		public const string PERCENTRECOVERABLE = "PercentRecoverable";
-		public const string LENGTH = "Length";
-		public const string EXPORTGRADE = "ExportGrade";
-		public const string SMALLENDDIAMETER = "SmallEndDiameter";
-		public const string LARGEENDDIAMETER = "LargeEndDiameter";
-		public const string GROSSBOARDFOOT = "GrossBoardFoot";
-		public const string NETBOARDFOOT = "NetBoardFoot";
-		public const string GROSSCUBICFOOT = "GrossCubicFoot";
-		public const string NETCUBICFOOT = "NetCubicFoot";
-		public const string BOARDFOOTREMOVED = "BoardFootRemoved";
-		public const string CUBICFOOTREMOVED = "CubicFootRemoved";
-		public const string DIBCLASS = "DIBClass";
-		public const string BARKTHICKNESS = "BarkThickness";
-		public const string CREATEDBY = "CreatedBy";
-		public const string CREATEDDATE = "CreatedDate";
-		public const string MODIFIEDBY = "ModifiedBy";
-		public const string MODIFIEDDATE = "ModifiedDate";
-		public static string[] _ALL = new string []{ LOG_CN, TREE_CN, LOGNUMBER, GRADE, SEENDEFECT, PERCENTRECOVERABLE, LENGTH, EXPORTGRADE, SMALLENDDIAMETER, LARGEENDDIAMETER, GROSSBOARDFOOT, NETBOARDFOOT, GROSSCUBICFOOT, NETCUBICFOOT, BOARDFOOTREMOVED, CUBICFOOTREMOVED, DIBCLASS, BARKTHICKNESS, CREATEDBY, CREATEDDATE, MODIFIEDBY, MODIFIEDDATE };
-		public enum LOG_FIELDS { Log_CN, Tree_CN, LogNumber, Grade, SeenDefect, PercentRecoverable, Length, ExportGrade, SmallEndDiameter, LargeEndDiameter, GrossBoardFoot, NetBoardFoot, GrossCubicFoot, NetCubicFoot, BoardFootRemoved, CubicFootRemoved, DIBClass, BarkThickness, CreatedBy, CreatedDate, ModifiedBy, ModifiedDate };
-	}
-
-	public static class REPORTS
-	{
-		public const string _NAME = "Reports";
-		public const string REPORTID = "ReportID";
-		public const string SELECTED = "Selected";
-		public const string TITLE = "Title";
-		public static string[] _ALL = new string []{ REPORTID, SELECTED, TITLE };
-		public enum REPORTS_FIELDS { ReportID, Selected, Title };
-	}
-
-	public static class STEM
-	{
-		public const string _NAME = "Stem";
-		public const string STEM_CN = "Stem_CN";
-		public const string TREE_CN = "Tree_CN";
-		public const string DIAMETER = "Diameter";
-		public const string DIAMETERTYPE = "DiameterType";
-		public static string[] _ALL = new string []{ STEM_CN, TREE_CN, DIAMETER, DIAMETERTYPE };
-		public enum STEM_FIELDS { Stem_CN, Tree_CN, Diameter, DiameterType };
-	}
-
 	public static class VALUEEQUATION
 	{
 		public const string _NAME = "ValueEquation";
@@ -508,18 +367,14 @@ namespace CruiseDAL.Schema
 		public enum QUALITYADJEQUATION_FIELDS { Species, QualityAdjEq, Year, Grade, Coefficient1, Coefficient2, Coefficient3, Coefficient4, Coefficient5, Coefficient6 };
 	}
 
-	public static class ERRORLOG
+	public static class REPORTS
 	{
-		public const string _NAME = "ErrorLog";
-		public const string TABLENAME = "TableName";
-		public const string CN_NUMBER = "CN_Number";
-		public const string COLUMNNAME = "ColumnName";
-		public const string LEVEL = "Level";
-		public const string MESSAGE = "Message";
-		public const string PROGRAM = "Program";
-		public const string SUPPRESS = "Suppress";
-		public static string[] _ALL = new string []{ TABLENAME, CN_NUMBER, COLUMNNAME, LEVEL, MESSAGE, PROGRAM, SUPPRESS };
-		public enum ERRORLOG_FIELDS { TableName, CN_Number, ColumnName, Level, Message, Program, Suppress };
+		public const string _NAME = "Reports";
+		public const string REPORTID = "ReportID";
+		public const string SELECTED = "Selected";
+		public const string TITLE = "Title";
+		public static string[] _ALL = new string []{ REPORTID, SELECTED, TITLE };
+		public enum REPORTS_FIELDS { ReportID, Selected, Title };
 	}
 
 	public static class TREECALCULATEDVALUES
@@ -728,12 +583,8 @@ namespace CruiseDAL.Schema
 		public const string BARKTHICKNESS = "BarkThickness";
 		public const string BOARDUTIL = "BoardUtil";
 		public const string CUBICUTIL = "CubicUtil";
-		public const string CREATEDBY = "CreatedBy";
-		public const string CREATEDDATE = "CreatedDate";
-		public const string MODIFIEDBY = "ModifiedBy";
-		public const string MODIFIEDDATE = "ModifiedDate";
-		public static string[] _ALL = new string []{ LOGSTOCK_CN, TREE_CN, LOGNUMBER, GRADE, SEENDEFECT, PERCENTRECOVERABLE, LENGTH, EXPORTGRADE, SMALLENDDIAMETER, LARGEENDDIAMETER, GROSSBOARDFOOT, NETBOARDFOOT, GROSSCUBICFOOT, NETCUBICFOOT, BOARDFOOTREMOVED, CUBICFOOTREMOVED, DIBCLASS, BARKTHICKNESS, BOARDUTIL, CUBICUTIL, CREATEDBY, CREATEDDATE, MODIFIEDBY, MODIFIEDDATE };
-		public enum LOGSTOCK_FIELDS { LogStock_CN, Tree_CN, LogNumber, Grade, SeenDefect, PercentRecoverable, Length, ExportGrade, SmallEndDiameter, LargeEndDiameter, GrossBoardFoot, NetBoardFoot, GrossCubicFoot, NetCubicFoot, BoardFootRemoved, CubicFootRemoved, DIBClass, BarkThickness, BoardUtil, CubicUtil, CreatedBy, CreatedDate, ModifiedBy, ModifiedDate };
+		public static string[] _ALL = new string []{ LOGSTOCK_CN, TREE_CN, LOGNUMBER, GRADE, SEENDEFECT, PERCENTRECOVERABLE, LENGTH, EXPORTGRADE, SMALLENDDIAMETER, LARGEENDDIAMETER, GROSSBOARDFOOT, NETBOARDFOOT, GROSSCUBICFOOT, NETCUBICFOOT, BOARDFOOTREMOVED, CUBICFOOTREMOVED, DIBCLASS, BARKTHICKNESS, BOARDUTIL, CUBICUTIL };
+		public enum LOGSTOCK_FIELDS { LogStock_CN, Tree_CN, LogNumber, Grade, SeenDefect, PercentRecoverable, Length, ExportGrade, SmallEndDiameter, LargeEndDiameter, GrossBoardFoot, NetBoardFoot, GrossCubicFoot, NetCubicFoot, BoardFootRemoved, CubicFootRemoved, DIBClass, BarkThickness, BoardUtil, CubicUtil };
 	}
 
 	public static class SAMPLEGROUPSTATS
@@ -775,6 +626,15 @@ namespace CruiseDAL.Schema
 		public enum SAMPLEGROUPSTATS_FIELDS { SampleGroupStats_CN, StratumStats_CN, Code, SgSet, Description, CutLeave, UOM, PrimaryProduct, SecondaryProduct, DefaultLiveDead, SgError, SampleSize1, SampleSize2, CV1, CV2, TreesPerAcre, VolumePerAcre, TreesPerPlot, AverageHeight, SamplingFrequency, InsuranceFrequency, KZ, BigBAF, BigFIX, MinDbh, MaxDbh, CV_Def, CV2_Def, TPA_Def, VPA_Def, ReconPlots, ReconTrees };
 	}
 
+	public static class SAMPLEGROUPSTATSTREEDEFAULTVALUE
+	{
+		public const string _NAME = "SampleGroupStatsTreeDefaultValue";
+		public const string TREEDEFAULTVALUE_CN = "TreeDefaultValue_CN";
+		public const string SAMPLEGROUPSTATS_CN = "SampleGroupStats_CN";
+		public static string[] _ALL = new string []{ TREEDEFAULTVALUE_CN, SAMPLEGROUPSTATS_CN };
+		public enum SAMPLEGROUPSTATSTREEDEFAULTVALUE_FIELDS { TreeDefaultValue_CN, SampleGroupStats_CN };
+	}
+
 	public static class STRATUMSTATS
 	{
 		public const string _NAME = "StratumStats";
@@ -802,13 +662,101 @@ namespace CruiseDAL.Schema
 		public enum STRATUMSTATS_FIELDS { StratumStats_CN, Stratum_CN, Code, Description, Method, SgSet, SgSetDescription, BasalAreaFactor, FixedPlotSize, StrError, SampleSize1, SampleSize2, WeightedCV1, WeightedCV2, TreesPerAcre, VolumePerAcre, TotalVolume, TotalAcres, PlotSpacing, Used };
 	}
 
-	public static class SAMPLEGROUPSTATSTREEDEFAULTVALUE
+	public static class REGRESSION
 	{
-		public const string _NAME = "SampleGroupStatsTreeDefaultValue";
+		public const string _NAME = "Regression";
+		public const string REGRESSION_CN = "Regression_CN";
+		public const string RVOLUME = "rVolume";
+		public const string RVOLTYPE = "rVolType";
+		public const string RSPEICES = "rSpeices";
+		public const string RPRODUCT = "rProduct";
+		public const string RLIVEDEAD = "rLiveDead";
+		public const string COEFFICIENTA = "CoefficientA";
+		public const string COEFFICIENTB = "CoefficientB";
+		public const string COEFFICIENTC = "CoefficientC";
+		public const string TOTALTREES = "TotalTrees";
+		public const string MEANSE = "MeanSE";
+		public const string RSQUARED = "Rsquared";
+		public const string REGRESSMODEL = "RegressModel";
+		public const string RMINDBH = "rMinDbh";
+		public const string RMAXDBH = "rMaxDbh";
+		public static string[] _ALL = new string []{ REGRESSION_CN, RVOLUME, RVOLTYPE, RSPEICES, RPRODUCT, RLIVEDEAD, COEFFICIENTA, COEFFICIENTB, COEFFICIENTC, TOTALTREES, MEANSE, RSQUARED, REGRESSMODEL, RMINDBH, RMAXDBH };
+		public enum REGRESSION_FIELDS { Regression_CN, rVolume, rVolType, rSpeices, rProduct, rLiveDead, CoefficientA, CoefficientB, CoefficientC, TotalTrees, MeanSE, Rsquared, RegressModel, rMinDbh, rMaxDbh };
+	}
+
+	public static class LOGMATRIX
+	{
+		public const string _NAME = "LogMatrix";
+		public const string REPORTNUMBER = "ReportNumber";
+		public const string GRADEDESCRIPTION = "GradeDescription";
+		public const string LOGSORTDESCRIPTION = "LogSortDescription";
+		public const string SPECIES = "Species";
+		public const string LOGGRADE1 = "LogGrade1";
+		public const string LOGGRADE2 = "LogGrade2";
+		public const string LOGGRADE3 = "LogGrade3";
+		public const string LOGGRADE4 = "LogGrade4";
+		public const string LOGGRADE5 = "LogGrade5";
+		public const string LOGGRADE6 = "LogGrade6";
+		public const string SEDLIMIT = "SEDlimit";
+		public const string SEDMINIMUM = "SEDminimum";
+		public const string SEDMAXIMUM = "SEDmaximum";
+		public static string[] _ALL = new string []{ REPORTNUMBER, GRADEDESCRIPTION, LOGSORTDESCRIPTION, SPECIES, LOGGRADE1, LOGGRADE2, LOGGRADE3, LOGGRADE4, LOGGRADE5, LOGGRADE6, SEDLIMIT, SEDMINIMUM, SEDMAXIMUM };
+		public enum LOGMATRIX_FIELDS { ReportNumber, GradeDescription, LogSortDescription, Species, LogGrade1, LogGrade2, LogGrade3, LogGrade4, LogGrade5, LogGrade6, SEDlimit, SEDminimum, SEDmaximum };
+	}
+
+	#endregion
+	#region Settings Tables
+	public static class TREEDEFAULTVALUETREEAUDITVALUE
+	{
+		public const string _NAME = "TreeDefaultValueTreeAuditValue";
+		public const string TREEAUDITVALUE_CN = "TreeAuditValue_CN";
 		public const string TREEDEFAULTVALUE_CN = "TreeDefaultValue_CN";
-		public const string SAMPLEGROUPSTATS_CN = "SampleGroupStats_CN";
-		public static string[] _ALL = new string []{ TREEDEFAULTVALUE_CN, SAMPLEGROUPSTATS_CN };
-		public enum SAMPLEGROUPSTATSTREEDEFAULTVALUE_FIELDS { TreeDefaultValue_CN, SampleGroupStats_CN };
+		public static string[] _ALL = new string []{ TREEAUDITVALUE_CN, TREEDEFAULTVALUE_CN };
+		public enum TREEDEFAULTVALUETREEAUDITVALUE_FIELDS { TreeAuditValue_CN, TreeDefaultValue_CN };
+	}
+
+	public static class TREEAUDITVALUE
+	{
+		public const string _NAME = "TreeAuditValue";
+		public const string TREEAUDITVALUE_CN = "TreeAuditValue_CN";
+		public const string FIELD = "Field";
+		public const string MIN = "Min";
+		public const string MAX = "Max";
+		public const string VALUESET = "ValueSet";
+		public const string REQUIRED = "Required";
+		public const string ERRORMESSAGE = "ErrorMessage";
+		public static string[] _ALL = new string []{ TREEAUDITVALUE_CN, FIELD, MIN, MAX, VALUESET, REQUIRED, ERRORMESSAGE };
+		public enum TREEAUDITVALUE_FIELDS { TreeAuditValue_CN, Field, Min, Max, ValueSet, Required, ErrorMessage };
+	}
+
+	public static class LOGFIELDSETUP
+	{
+		public const string _NAME = "LogFieldSetup";
+		public const string STRATUM_CN = "Stratum_CN";
+		public const string FIELD = "Field";
+		public const string FIELDORDER = "FieldOrder";
+		public const string COLUMNTYPE = "ColumnType";
+		public const string HEADING = "Heading";
+		public const string WIDTH = "Width";
+		public const string FORMAT = "Format";
+		public const string BEHAVIOR = "Behavior";
+		public static string[] _ALL = new string []{ STRATUM_CN, FIELD, FIELDORDER, COLUMNTYPE, HEADING, WIDTH, FORMAT, BEHAVIOR };
+		public enum LOGFIELDSETUP_FIELDS { Stratum_CN, Field, FieldOrder, ColumnType, Heading, Width, Format, Behavior };
+	}
+
+	public static class TREEFIELDSETUP
+	{
+		public const string _NAME = "TreeFieldSetup";
+		public const string STRATUM_CN = "Stratum_CN";
+		public const string FIELD = "Field";
+		public const string FIELDORDER = "FieldOrder";
+		public const string COLUMNTYPE = "ColumnType";
+		public const string HEADING = "Heading";
+		public const string WIDTH = "Width";
+		public const string FORMAT = "Format";
+		public const string BEHAVIOR = "Behavior";
+		public static string[] _ALL = new string []{ STRATUM_CN, FIELD, FIELDORDER, COLUMNTYPE, HEADING, WIDTH, FORMAT, BEHAVIOR };
+		public enum TREEFIELDSETUP_FIELDS { Stratum_CN, Field, FieldOrder, ColumnType, Heading, Width, Format, Behavior };
 	}
 
 	public static class LOGFIELDSETUPDEFAULT
@@ -844,6 +792,8 @@ namespace CruiseDAL.Schema
 		public enum TREEFIELDSETUPDEFAULT_FIELDS { TreeFieldSetupDefault_CN, Method, Field, FieldName, FieldOrder, ColumnType, Heading, Width, Format, Behavior };
 	}
 
+	#endregion
+	#region Lookup Tables
 	public static class CRUISEMETHODS
 	{
 		public const string _NAME = "CruiseMethods";
@@ -906,25 +856,61 @@ namespace CruiseDAL.Schema
 		public enum FORESTS_FIELDS { Forest_CN, Region_CN, State, Name, Number };
 	}
 
-	public static class LOGMATRIX
+	#endregion
+	#region Utility Tables
+	public static class ERRORLOG
 	{
-		public const string _NAME = "LogMatrix";
-		public const string REPORTNUMBER = "ReportNumber";
-		public const string GRADEDESCRIPTION = "GradeDescription";
-		public const string LOGSORTDESCRIPTION = "LogSortDescription";
-		public const string SPECIES = "Species";
-		public const string LOGGRADE1 = "LogGrade1";
-		public const string LOGGRADE2 = "LogGrade2";
-		public const string LOGGRADE3 = "LogGrade3";
-		public const string LOGGRADE4 = "LogGrade4";
-		public const string LOGGRADE5 = "LogGrade5";
-		public const string LOGGRADE6 = "LogGrade6";
-		public const string SEDLIMIT = "SEDlimit";
-		public const string SEDMINIMUM = "SEDminimum";
-		public const string SEDMAXIMUM = "SEDmaximum";
-		public static string[] _ALL = new string []{ REPORTNUMBER, GRADEDESCRIPTION, LOGSORTDESCRIPTION, SPECIES, LOGGRADE1, LOGGRADE2, LOGGRADE3, LOGGRADE4, LOGGRADE5, LOGGRADE6, SEDLIMIT, SEDMINIMUM, SEDMAXIMUM };
-		public enum LOGMATRIX_FIELDS { ReportNumber, GradeDescription, LogSortDescription, Species, LogGrade1, LogGrade2, LogGrade3, LogGrade4, LogGrade5, LogGrade6, SEDlimit, SEDminimum, SEDmaximum };
+		public const string _NAME = "ErrorLog";
+		public const string TABLENAME = "TableName";
+		public const string CN_NUMBER = "CN_Number";
+		public const string COLUMNNAME = "ColumnName";
+		public const string LEVEL = "Level";
+		public const string MESSAGE = "Message";
+		public const string PROGRAM = "Program";
+		public const string SUPPRESS = "Suppress";
+		public static string[] _ALL = new string []{ TABLENAME, CN_NUMBER, COLUMNNAME, LEVEL, MESSAGE, PROGRAM, SUPPRESS };
+		public enum ERRORLOG_FIELDS { TableName, CN_Number, ColumnName, Level, Message, Program, Suppress };
 	}
 
+	public static class MESSAGELOG
+	{
+		public const string _NAME = "MessageLog";
+		public const string MESSAGE_CN = "Message_CN";
+		public const string PROGRAM = "Program";
+		public const string MESSAGE = "Message";
+		public const string DATE = "Date";
+		public const string TIME = "Time";
+		public const string LEVEL = "Level";
+		public static string[] _ALL = new string []{ MESSAGE_CN, PROGRAM, MESSAGE, DATE, TIME, LEVEL };
+		public enum MESSAGELOG_FIELDS { Message_CN, Program, Message, Date, Time, Level };
+	}
+
+	public static class GLOBALS
+	{
+		public const string _NAME = "Globals";
+		public const string BLOCK = "Block";
+		public const string KEY = "Key";
+		public const string VALUE = "Value";
+		public static string[] _ALL = new string []{ BLOCK, KEY, VALUE };
+		public enum GLOBALS_FIELDS { Block, Key, Value };
+	}
+
+	public static class COMPONENT
+	{
+		public const string _NAME = "Component";
+		public const string COMPONENT_CN = "Component_CN";
+		public const string GUID = "GUID";
+		public const string LASTMERGE = "LastMerge";
+		public const string FILENAME = "FileName";
+		public static string[] _ALL = new string []{ COMPONENT_CN, GUID, LASTMERGE, FILENAME };
+		public enum COMPONENT_FIELDS { Component_CN, GUID, LastMerge, FileName };
+	}
+
+	#endregion
+
+	public static class Schema
+	{
+		public static String[] TABLE_NAMES = new String[] { "Sale","CuttingUnit","Stratum","CuttingUnitStratum","SampleGroup","TreeDefaultValue","SampleGroupTreeDefaultValue","Plot","Tree","Log","Stem","CountTree","Tally","TreeEstimate","VolumeEquation","BiomassEquation","ValueEquation","QualityAdjEquation","Reports","TreeCalculatedValues","LCD","POP","PRO","LogStock","SampleGroupStats","SampleGroupStatsTreeDefaultValue","StratumStats","Regression","LogMatrix","TreeDefaultValueTreeAuditValue","TreeAuditValue","LogFieldSetup","TreeFieldSetup","LogFieldSetupDefault","TreeFieldSetupDefault","CruiseMethods","LoggingMethods","ProductCodes","UOMCodes","Regions","Forests","ErrorLog","MessageLog","Globals","Component" };
+	}
 }
 

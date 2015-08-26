@@ -1,0 +1,14 @@
+View Name	Select STMT
+StratumAcres_View	"SELECT CuttingUnit.Code as CuttingUnitCode, 
+Stratum.Code as StratumCode, 
+ifnull(Area, CuttingUnit.Area) as Area, 
+CuttingUnitStratum.* 
+FROM CuttingUnitStratum 
+JOIN CuttingUnit USING (CuttingUnit_CN) 
+JOIN Stratum USING (Stratum_CN);"
+CountTree_View	"SELECT Stratum.Code as StratumCode,
+Stratum.Method as Method, 
+SampleGroup.Code as SampleGroupCode,
+SampleGroup.PrimaryProduct as PrimaryProduct, 
+CountTree.* 
+FROM CountTree JOIN SampleGroup USING (SampleGroup_CN) JOIN Stratum USING (Stratum_CN);"

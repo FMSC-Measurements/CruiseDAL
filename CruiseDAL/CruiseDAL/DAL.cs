@@ -29,13 +29,11 @@ using System.Security.Permissions;
 namespace CruiseDAL
 {
     public enum OnConflictOption { Rollback, Abort, Fail, Ignore, Replace };
+    public enum CruiseFileType { Unknown, Cruise, Template, Design, Master, Component }
 
 
     public partial class DAL : DatastoreBase, IDisposable
     {
-        //delegate definition for the method that will be called 
-        //to build the database schema on a seperate thread
-        //protected delegate void AsyncBuildSchemaCaller(); 
 
         public static string[] VALID_EXTENSIONS = new string[] { ".cruise", ".cut", ".design" };
         protected FileInfo _DBFileInfo;
@@ -43,37 +41,74 @@ namespace CruiseDAL
         
 
         #region properties
+        internal long SchemaVersion { get; set; }
 
 
         protected void Initialize()
         {
-            
-
-            String dbVersion = this.ExecuteScalar("SELECT Value FROM Globals WHERE Block = 'Database' AND Key = 'Version'") as string;
-            if (dbVersion != null)
-            {
-                base.DatabaseVersion = dbVersion;
-            }
-            else
-            {
-                base.DatabaseVersion = "Unknown";
-            }
-
-
-            CruiseDAL.Updater.Update(this);
-
-            
-
-            string callingProgram = GetCallingProgram();
-            string command = String.Format("INSERT OR REPLACE INTO Globals (Block, Key, Value) Values ( 'General', 'MRUP', '{0}' );", callingProgram);
+            DbConnection connection = null; 
             try
             {
-                this.Execute(command);
+                connection = OpenConnection();//establish connection
+                String dbVersion = ReadGlobalValue("Database", "Version");                     
+                if (dbVersion != null)
+                {
+                    base.DatabaseVersion = dbVersion;
+                }
+                else
+                {
+                    base.DatabaseVersion = "Unknown";
+                }
+
+                this.SchemaVersion = (long)this.ExecuteScalar("PRAGMA user_version;");
+                CruiseDAL.Updater.Update(this);
+
+                try
+                {
+                    string callingProgram = GetCallingProgram();
+                    this.LogMessage("File Opened Using " + callingProgram, "normal"); 
+                }
+                catch (ReadOnlyException)
+                {/*ignore, incase we want to allow access to a readonly DB*/}
             }
-            catch (ReadOnlyException)
-            {/*ignore, incase we want to allow access to a readonly DB*/}
+            catch (Exception e)
+            {
+                throw this.ThrowDatastoreExceptionHelper(connection, null, e);
+            }
             
 
+        }
+
+        public CruiseFileType ExtrapolateCruiseFileType(String path)
+        {
+            String normPath = this.Path.ToLower().TrimEnd();
+            if (String.IsNullOrEmpty(normPath))
+            {
+                return CruiseFileType.Unknown;
+            }
+
+            else if (System.Text.RegularExpressions.Regex.IsMatch(normPath, @".+\.m\.cruise\s*$"))
+            {
+                return CruiseFileType.Master;
+            }
+            else if (System.Text.RegularExpressions.Regex.IsMatch(normPath, @".+\.\d+\.cruise\s*$"))
+            {
+                return CruiseFileType.Component;
+            }
+            else if (normPath.EndsWith(".cruise"))
+            {
+                return CruiseFileType.Cruise;
+            }
+            else if (normPath.EndsWith(".cut"))
+            {
+                return CruiseFileType.Template;
+            }
+            else if (normPath.EndsWith(".design"))
+            {
+                return CruiseFileType.Design;
+            }
+
+            return CruiseFileType.Unknown;
         }
 
 
@@ -170,6 +205,31 @@ namespace CruiseDAL
             //file.SetAccessControl(fSecurity);
 #endif
         }
+
+        private CruiseFileType _cruiseFileType;
+        public CruiseFileType CruiseFileType
+        {
+            get
+            {
+                _cruiseFileType = this.ReadCruiseFileType();
+                if (_cruiseFileType == CruiseFileType.Unknown)
+                {
+                    _cruiseFileType = ExtrapolateCruiseFileType(this.Path);
+                    if(_cruiseFileType == CruiseFileType.Unknown)
+                    {
+                        WriteCruiseFileType(_cruiseFileType);
+                    }
+                }
+                return _cruiseFileType; 
+            }
+            protected set
+            {
+                _cruiseFileType = CruiseFileType.Unknown;
+                WriteCruiseFileType(value);
+            }
+        }
+
+
 
         /// <summary>
         /// Gets a value that indicates if a file exists at the path
@@ -279,17 +339,17 @@ namespace CruiseDAL
             {
                 Create();
             }
-            else if(!makeNew && !Exists)
+            else if (!makeNew && !Exists)
             {
-                throw this.ThrowDatastoreExceptionHelper(null, null, new FileNotFoundException());
+                throw new FileNotFoundException();
             }
 
             //allow null or empty path to create in memory DB?
-            if (Exists)
-            {
-                this.Initialize();
-            }
-
+            //if (Exists)
+            //{
+            //    this.Initialize();
+            //}
+            this.Initialize();
             Log.V(String.Format("Created DAL instance. Path = {0},ConnectionString = {1} User = {2}\r\n", Path, _ConnectionString, User));
         }
 
@@ -316,7 +376,8 @@ namespace CruiseDAL
 
         public DAL CopyTo(string path, bool overwrite)
         {
-            this.CloseConnection();
+            //this.ReleaseConnectionHold();
+            this.ReleaseConnection();
             _DBFileInfo.CopyTo(path, overwrite);
             return new DAL(path);
         }
@@ -327,7 +388,7 @@ namespace CruiseDAL
         /// <param name="path"></param>
         public bool CopyAs(string path)
         {
-            this.CloseConnection();
+            this.ReleaseConnection();
             try
             {
                 _DBFileInfo.CopyTo(path);
@@ -344,7 +405,7 @@ namespace CruiseDAL
 
         public bool MoveTo(string path)
         {
-            this.CloseConnection();
+            this.ReleaseConnection();
             try
             {
                 _DBFileInfo.MoveTo(path);
@@ -356,25 +417,6 @@ namespace CruiseDAL
                 return false;
             }
             return true;
-        }
-
-
-        internal void MigrateTo(string path)
-        {
-            //close connections to existing 
-            this.CloseConnection();
-            //invalidate all outstanding dataobjects
-            this.FlushCache();
-            try
-            {
-                
-                this._DBFileInfo = new FileInfo(path);
-                _ConnectionString = BuildConnectionString(false);//rebuild connection string
-            }
-            catch (Exception e)
-            {
-                throw this.ThrowDatastoreExceptionHelper("Failed to migrate database", e, false);
-            }
         }
 
         #endregion
@@ -439,36 +481,45 @@ namespace CruiseDAL
 
         protected override string BuildConnectionString(bool isNew, string path)
         {
+            if (String.IsNullOrEmpty(path))
+            { path = ":memory:"; }
 
-            return string.Format("Data Source={0};New= {1};Version=3;", path, isNew);
+            SQLiteConnectionStringBuilder builder = new SQLiteConnectionStringBuilder();
+            builder.Version = 3;
+            builder.DataSource = path;
+            builder.FailIfMissing = !isNew; 
+            return builder.ToString();
+            //return string.Format("Data Source={0};New= {1};Version=3;", path , isNew);
         }
 
 
 
         protected override void BuildDBFile()
         {
-            //if overwriting existing file
-            if (Exists)
-            {
-                _DBFileInfo.Delete();
-            }
+            this.BuildDBFile(this.Path);
 
-            String createSQLText = this.GetCreateSQL();
-
-
-            //open database connection, using a connection string with the parameter New = True
-            SQLiteConnection.CreateFile(this.Path);
-            //using (SQLiteConnection cn = (SQLiteConnection)this.OpenConnection())
+            ////if overwriting existing file
+            //if (Exists)
             //{
-                
-            //    cn.ChangePassword("something");
+            //    _DBFileInfo.Delete();
             //}
-            this.Execute(createSQLText);
 
-            //update status of file
-            _DBFileInfo.Refresh();
+            //String createSQLText = this.GetCreateSQL();
 
-            Initialize();
+
+            ////open database connection, using a connection string with the parameter New = True
+            //SQLiteConnection.CreateFile(this.Path);
+            ////using (SQLiteConnection cn = (SQLiteConnection)this.OpenConnection())
+            ////{
+                
+            ////    cn.ChangePassword("something");
+            ////}
+            //this.Execute(createSQLText);
+
+            ////update status of file
+            //_DBFileInfo.Refresh();
+
+            //Initialize();
         }
 
         protected void BuildDBFile(String path)
@@ -515,55 +566,78 @@ namespace CruiseDAL
 
         internal string GetCreateTriggers()
         {
-            String createTriggers = null;
-            StreamReader reader = null;
-            //read in the contents of CruiseCreate
-            try
-            {
-                Assembly assembley = Assembly.GetExecutingAssembly();
-                System.IO.Stream stream = assembley.GetManifestResourceStream("CruiseDAL.AutoGen.CruiseTriggers.sql");
-                reader = new System.IO.StreamReader(stream);
-                createTriggers = reader.ReadToEnd();
-                return createTriggers;
-            }
-            catch (Exception e)
-            {
-                Log.E("Unable to read CreateTriggers file", e);
-                throw e;
-            }
-            finally
-            {
+            return CruiseDAL.Properties.Resources.CreateTriggers;
 
-                if (reader != null) { reader.Close(); }
-            }
+            //String createTriggers = null;
+            //StreamReader reader = null;
+            ////read in the contents of CruiseCreate
+            //try
+            //{
+            //    Assembly assembley = Assembly.GetExecutingAssembly();
+            //    System.IO.Stream stream = assembley.GetManifestResourceStream("CruiseDAL.AutoGen.CruiseTriggers.sql");
+            //    reader = new System.IO.StreamReader(stream);
+            //    createTriggers = reader.ReadToEnd();
+            //    return createTriggers;
+            //}
+            //catch (Exception e)
+            //{
+            //    Log.E("Unable to read CreateTriggers file", e);
+            //    throw e;
+            //}
+            //finally
+            //{
+
+            //    if (reader != null) { reader.Close(); }
+            //}
 
         }
 
 
         protected override String GetCreateSQL()
         {
-            String createSQLText = null;
-            StreamReader reader = null;
-            //read in the contents of CruiseCreate
-            try
-            {
-                Assembly assembley = Assembly.GetExecutingAssembly();
-                System.Diagnostics.Debug.Assert(assembley.GetManifestResourceNames().Length != 0);
-                System.IO.Stream stream = assembley.GetManifestResourceStream("CruiseDAL.CruiseDAL.CruiseCreate.sql");
-                reader = new System.IO.StreamReader(stream);
-                createSQLText = reader.ReadToEnd();
-                return createSQLText;
-            }
-            catch (Exception e)
-            {
-                Log.E("Unable to read CruiseCreate file", e);
-                throw e;
-            }
-            finally
-            {
+            return CruiseDAL.Properties.Resources.CruiseCreate;
+
+            //String createSQLText = null;
+            //StreamReader reader = null;
+            ////read in the contents of CruiseCreate
+            //try
+            //{
+            //    Assembly assembley = Assembly.GetExecutingAssembly();
+            //    System.Diagnostics.Debug.Assert(assembley.GetManifestResourceNames().Length != 0);
+            //    System.IO.Stream stream = assembley.GetManifestResourceStream("CruiseDAL.CruiseDAL.CruiseCreate.sql");
+            //    reader = new System.IO.StreamReader(stream);
+            //    createSQLText = reader.ReadToEnd();
+            //    return createSQLText;
+            //}
+            //catch (Exception e)
+            //{
+            //    Log.E("Unable to read CruiseCreate file", e);
+            //    throw e;
+            //}
+            //finally
+            //{
                 
-                if (reader != null) { reader.Close(); }
+            //    if (reader != null) { reader.Close(); }
+            //}
+        }
+
+        public string GetTableSQL(String tableName)
+        {
+            return (String)this.ExecuteScalar("SELECT sql FROM Sqlite_master WHERE name = ? COLLATE NOCASE and type = 'table';", tableName);
+        }
+
+        public string[] GetTableUniques(String tableName)
+        {
+            String tableSQL = this.GetTableSQL(tableName);
+            System.Text.RegularExpressions.Match match = 
+                System.Text.RegularExpressions.Regex.Match(tableSQL, @"(?<=^\s+UNIQUE\s\()[^\)]+(?=\))", System.Text.RegularExpressions.RegexOptions.Multiline);
+            if (match != null && match.Success)
+            {
+                return match.Value.Split(new char[]{',',' ','\r','\n'},  StringSplitOptions.RemoveEmptyEntries);
+
             }
+            return new string[0];
+
         }
 
 
@@ -617,17 +691,24 @@ namespace CruiseDAL
 
         }
 
+        
+
         protected override Exception ThrowDatastoreExceptionHelper(DbConnection conn, DbCommand comm, Exception innerException, bool throwException)
         {
-            string message = String.Format("Read/Write Error Command:{0} ConnStr:{1} ConnState:{2} HoldConn:{3} OpenConnCount:{4}",
+            string message = String.Format("Read/Write Error Command:{0} ConnStr:{1} ConnState:{2} HoldConn:{3} TransactionStackSize:{4}",
                 (comm != null) ? comm.CommandText : "n/a",
                 (conn != null) ? conn.ConnectionString : "n/a",
                 (conn != null) ? conn.State.ToString() : "n/a",
                 this._holdConnection,
-                this._openConnectionCount);
+                this._transactionStack.Count);
+            //String message = innerException.Message;
+            //innerException.Data.Add("CommandText", (comm != null) ? comm.CommandText : "n/a");
+            //innerException.Data.Add("ConnectionString", (conn != null) ? conn.ConnectionString : "n/a");
+            //innerException.Data.Add("ConnectionState", (conn != null) ? conn.State.ToString() : "n/a");
+            //innerException.Data.Add("ConnectionHold", this._holdConnection.ToString());
+            //innerException.Data.Add("OpenConnectionCount", this._openConnectionCount.ToString());
+
             return this.ThrowDatastoreExceptionHelper(message, innerException, throwException);
-
-
         }
         
         protected override Exception ThrowDatastoreExceptionHelper(string message, Exception innerException, bool throwException)
@@ -656,6 +737,18 @@ namespace CruiseDAL
                     case SQLiteErrorCode.ReadOnly:
                         {
                             newEx = new ReadOnlyException(message, innerException);
+                            break;
+                        }
+                    case SQLiteErrorCode.Constraint:
+                        {                            
+                            if (innerException.Message.IndexOf("UNIQUE constraint failed") >= 0 )
+                            {
+                                newEx = new UniqueConstraintException(message, innerException);
+                            }
+                            else
+                            {
+                                newEx = new ConstraintException(message, innerException);
+                            }
                             break;
                         }
                     default:
@@ -740,73 +833,42 @@ namespace CruiseDAL
         {
             if (dataBase.Exists == false) { return; }
 
-            
 
-            DbConnection conn = null;
-            DbCommand copyCommand = null;
+
+            string cOpt = option.ToString().ToUpper();
+            string copy = String.Format("INSERT OR {2} INTO {0} SELECT * FROM destDB.{0} {1};", table, selection, cOpt);
+
+            this.AttachDB(dataBase, "destDB");
             try
             {
-                string cOpt = option.ToString().ToUpper();
-                string copy = String.Format("INSERT OR {2} INTO {0} SELECT * FROM destDB.{0} {1};", table, selection, cOpt);
-
-                conn = InternalAttachDB(dataBase, "destDB");
-
-                copyCommand = conn.CreateCommand();
-                copyCommand.CommandText = copy;
-                copyCommand.ExecuteNonQuery();
-            }
-            catch (ThreadAbortException)
-            {
-
-            }
-            catch (Exception e)
-            {
-                throw this.ThrowDatastoreExceptionHelper(conn, copyCommand, e);
+                this.Execute(copy);
             }
             finally
             {
-                InternalDetachDB("destDB");
-                CloseConnection();
-                if (copyCommand != null) { copyCommand.Dispose(); }
+                this.DetachDB("destDB");
             }
-        }
-
-        internal DbConnection InternalAttachDB(DAL externalDB, string externalDBAlias)
-        {
-            //once connection is closed all attached DB's are detached so we need to leave it open
-            //calling detachDB will cause the connection hold to be released 
-            this.EnterConnectionHold();
-            
-            lock (this._connectionSyncLock)
-            {
-
-                DbConnection conn = OpenConnection();
-                this.Execute("ATTACH DATABASE ? AS ?;", externalDB.Path, externalDBAlias);
-                return conn;
-            }
+                
         }
 
         public void AttachDB(DAL externalDB, string externalDBAlias)
         {
-            this.InternalAttachDB(externalDB, externalDBAlias);
+            lock (this._connectionSyncLock)
+            {
+                try
+                {
+                    OpenConnection();
+                    this.Execute("ATTACH DATABASE ? AS ?;", externalDB.Path, externalDBAlias);
+                }
+                catch
+                {
+                    ReleaseConnection();
+                    throw;
+                }
+            }
         }
 
         public void DetachDB(string externalDBAlias)
         {
-            try
-            {
-                this.InternalDetachDB(externalDBAlias);
-            }
-            finally
-            {
-                this.CloseConnection();
-            }
-        }
-
-
-        internal void InternalDetachDB(string externalDBAlias)
-        {
-
             try
             {
                 string detach = string.Format("DETACH DATABASE {0};", externalDBAlias);
@@ -814,9 +876,56 @@ namespace CruiseDAL
             }
             finally
             {
-                this.ExitConnectionHold();
+                this.ReleaseConnection(); 
+            }
+        }
+
+        public void StartSavePoint(String name)
+        {
+            this.Execute("SAVEPOINT " + name + ";");
+        }
+
+        public void ReleaseSavePoint(String name)
+        {
+            this.Execute("RELEASE SAVEPOINT " + name + ";");
+        }
+
+        public void RollbackSavePoint(String name)
+        {
+            this.Execute("ROLLBACK TO SAVEPOINT " + name + ";");
+        }
+
+
+        protected CruiseFileType ReadCruiseFileType()
+        {
+            String s = ReadGlobalValue("Database", "CruiseFileType");            
+            try
+            {
+                return (CruiseFileType)Enum.Parse(typeof(CruiseFileType), s, true);
+            }
+            catch
+            {
+                return CruiseFileType.Unknown;
             }
 
+        }
+
+        protected void WriteCruiseFileType(CruiseFileType cType)
+        {
+            this.WriteGlobalValue("Database", "CruiseFileType", cType.ToString());
+        }
+
+        public string ReadGlobalValue(String block, String key)
+        {
+            return base.ExecuteScalar("SELECT Value FROM GLOBALS WHERE " +
+            "ifnull(Block, '') = ifnull(?, '') " +
+            "AND ifnull(Key, '') = ifnull(?, '');", block, key) as string;
+        }
+
+        public void WriteGlobalValue(String block, String key, String value)
+        {
+            base.Execute("INSERT OR REPLACE INTO Globals (Block, Key, Value) " +
+                "Values (?, ?, ?);", block, key, value); 
         }
 
         public bool HasCruiseErrors(out string[] errors)
@@ -967,7 +1076,7 @@ namespace CruiseDAL
                 {
                     if (reader != null) { reader.Dispose(); }
                     if (command != null) { command.Dispose(); }
-                    CloseConnection();
+                    ReleaseConnection();
                 }
 
                 return hasErrors;
@@ -977,6 +1086,8 @@ namespace CruiseDAL
 
 
         #region read methods
+
+
 
         /// <summary>
         /// Sets the starting value of a AutoIncrement field for a table
@@ -1026,7 +1137,7 @@ namespace CruiseDAL
                     {
                         command.Dispose();
                     }
-                    CloseConnection();
+                    ReleaseConnection();
                 }
             }
         }

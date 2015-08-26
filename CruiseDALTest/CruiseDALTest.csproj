@@ -2,7 +2,7 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProductVersion>9.0.21022</ProductVersion>
+    <ProductVersion>9.0.30729</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{218BDBE5-66B4-45D8-B428-1DAC786B974C}</ProjectGuid>
     <OutputType>Library</OutputType>
@@ -19,22 +19,21 @@
     <SignAssembly>false</SignAssembly>
     <AssemblyOriginatorKeyFile>CruiseDALTest.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
     <DebugSymbols>true</DebugSymbols>
-    <DebugType>full</DebugType>
-    <Optimize>false</Optimize>
-    <OutputPath>bin\Debug\</OutputPath>
+    <OutputPath>bin\x86\Debug\</OutputPath>
     <DefineConstants>TRACE;DEBUG;TEST</DefineConstants>
+    <DebugType>full</DebugType>
+    <PlatformTarget>x86</PlatformTarget>
     <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <DebugType>pdbonly</DebugType>
-    <Optimize>true</Optimize>
-    <OutputPath>bin\Release\</OutputPath>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
+    <OutputPath>bin\x86\Release\</OutputPath>
     <DefineConstants>TRACE;TEST</DefineConstants>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>x86</PlatformTarget>
     <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Microsoft.VisualStudio.QualityTools.UnitTestFramework, Version=9.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
@@ -62,12 +61,13 @@
     <Compile Include="CuttingUnitDOTest.cs" />
     <Compile Include="CuttingUnitStratumDOTest.cs" />
     <Compile Include="DALTest.cs" />
-    <Compile Include="LogDOTest.cs" />
+    <Compile Include="DataObjectDiscriptionTest.cs" />
     <Compile Include="LogMatrixDOTest.cs" />
+    <Compile Include="MappingCollectionTest.cs" />
     <Compile Include="ObjectCacheTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="SaleDOTest.cs" />
-    <Compile Include="SampleGroupDOTest.cs" />
+    <Compile Include="ReadTests.cs" />
+    <Compile Include="TestReadDO.cs" />
     <Compile Include="TreeDOTest.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -82,6 +82,8 @@
     <None Include="Test.cruise">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Include="TestResources\Test.cruise" />
+    <None Include="TestResources\TestCruiseDAL.db" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\CruiseDAL\CruiseDAL_FF35.csproj">

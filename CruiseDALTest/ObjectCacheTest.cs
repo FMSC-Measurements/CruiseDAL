@@ -15,7 +15,6 @@ namespace CruiseDALTest
     public class ObjectCacheTest
     {
 
-
         private TestContext testContextInstance;
 
         /// <summary>

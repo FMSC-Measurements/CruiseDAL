@@ -2,16 +2,17 @@
 <#@ output extension=".cs" #>
 <#@ Assembly Name="System.Core.dll" #>
 <#@ Assembly Name="System.Windows.Forms.dll" #>
+<#@ Assembly Name="C:\tmp\CruiseDAL.CodeGenEngine.exe" #>
 <#@ import namespace="System" #>
 <#@ import namespace="System.IO" #>
 <#@ import namespace="System.Diagnostics" #>
 <#@ import namespace="System.Linq" #>
 <#@ import namespace="System.Collections" #>
 <#@ import namespace="System.Collections.Generic" #>
-<#@ include file="..\\..\\..\\DataDictionaryReader.tt" #>
+<#@ import namespace="CruiseDAL.CodeGenEngine" #>
 <#
-DataDictionaryReader dr = new DataDictionaryReader(Host.ResolvePath(@"..\\..\\..\DataDictionary.csv"));
-List<Table> TableList = dr.Read();
+DataDictionaryReader dr = new DataDictionaryReader();
+
 #>
 using System;
 using CruiseDAL;
@@ -19,16 +20,29 @@ using CruiseDAL;
 namespace CruiseDAL.Schema
 {
 <#
+List<String> tableNames = new List<String>();
 PushIndent("\t");
-foreach( Table table in TableList)
+foreach(TableCollection tc in dr.TableCollections)
 {
-	if(table.IsDepreciated == true) { continue; }
-    MakeSchemaClass(table);
+	WriteLine("#region " + tc.Name);
+	foreach(Table curTable in tc)
+	{
+		if(curTable.IsDepreciated == true) { continue; }
+		MakeSchemaClass(curTable);
+		tableNames.Add("\"" + curTable.Name + "\"");
+	}
+	WriteLine("#endregion");
 }
 PopIndent();
-WriteLine("}");
+//WriteLine("}");
 
 #>
+
+	public static class Schema
+	{
+		public static String[] TABLE_NAMES = new String[] { <#=String.Join(",", tableNames.ToArray())#> };
+	}
+}
 
 <#+
         public void MakeSchemaClass(Table table)

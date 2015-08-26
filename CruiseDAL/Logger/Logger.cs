@@ -29,7 +29,7 @@ namespace Logger
         /// <param name="app"></param>
         public static void L(string message)
         {
-            System.Diagnostics.Debug.Write(message, "Info");
+            System.Diagnostics.Debug.WriteLine(message, "Info");
         }
 
         /// <summary>
@@ -41,7 +41,7 @@ namespace Logger
         {
             if (_verbose)
             {
-                System.Diagnostics.Debug.Write(message, "Verbose");
+                System.Diagnostics.Debug.WriteLine(message, "Verbose");
             }
             
         }
@@ -53,19 +53,19 @@ namespace Logger
         /// <param name="app"></param>
         public static void E(string message)
         {
-            System.Diagnostics.Debug.Write(message, "Error");
+            System.Diagnostics.Debug.WriteLine(message, "Error");
         }
 
         public static void E(string message, Exception e)
         {
 
-            System.Diagnostics.Debug.Write(message + " | " + e.ToString(), "Error");
+            System.Diagnostics.Debug.WriteLine(message + " | " + e.ToString(), "Error");
             
         }
 
         public static void E(Exception e)
         {
-            System.Diagnostics.Debug.Write(e.ToString(), "Error");
+            System.Diagnostics.Debug.WriteLine(e.ToString(), "Error");
             
         }
 
@@ -76,7 +76,7 @@ namespace Logger
         [Conditional("DEBUG")]//this is how to create a method that only gets called in "Debug"
         public static void D(string message)
         {
-            System.Diagnostics.Debug.Write(message, "Debug");
+            System.Diagnostics.Debug.WriteLine(message, "Debug");
         }
 
         #endregion

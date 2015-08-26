@@ -6,7 +6,7 @@ using CruiseDAL;
 
 namespace CruiseDALTest
 {
-    [Table( TableName="TestRead" )]
+    [SQLEntity(TableName = "TestRead")]
     public class TestReadDO : DataObject
     {
         [Field( FieldName="StringTest" )]

@@ -102,7 +102,7 @@ namespace CruiseDAL.DataObjects
         protected override void NotifyPropertyChanged(string name)
         {
             base.NotifyPropertyChanged(name);
-            if (inWriteMode) { return; }
+            if (PropertyChangedEventsDisabled) { return; }
             if (name == "TreeDefaultValue" || name == Schema.TREE.TREEDEFAULTVALUE_CN)
             {
                 //_treeValidator = null;
@@ -116,7 +116,7 @@ namespace CruiseDAL.DataObjects
         protected override bool ValidateProperty(string name, object value)
         {
             bool isValid = true;
-            if (inWriteMode) { return isValid; }
+            if (PropertyChangedEventsDisabled) { return isValid; }
 
 
             isValid = base.ValidateProperty(name, value) && isValid; //perform base validation 
@@ -315,15 +315,15 @@ namespace CruiseDAL.DataObjects
 
         protected bool ValidateUpperStemDiameter(bool isMeasure)
         {
-            if (isMeasure && (UpperStemDOB > 0))
+            if (isMeasure && (UpperStemDiameter > 0))
             {
-                if (UpperStemDOB >= DBH)
+                if (UpperStemDiameter >= DBH)
                 {
-                    this.AddError(Schema.TREE.UPPERSTEMDOB, "Upper Stem DOB must be smaller than DBH");
+                    this.AddError(Schema.TREE.UPPERSTEMDIAMETER, "Upper Stem Diameter must be smaller than DBH");
                     return false;
                 }
             }
-            this.RemoveError(Schema.TREE.UPPERSTEMDOB, "Upper Stem DOB must be smaller than DBH");
+            this.RemoveError(Schema.TREE.UPPERSTEMDIAMETER, "Upper Stem Diameter must be smaller than DBH");
             return true;
         }
 

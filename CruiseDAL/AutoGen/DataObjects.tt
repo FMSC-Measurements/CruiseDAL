@@ -1,11 +1,14 @@
 ﻿<#@ template language="C#v3.5" debug="True" hostspecific="True" #>
+<#@ Assembly Name="C:\tmp\CruiseDAL.CodeGenEngine.exe" #>
 <#@ import namespace="System.Diagnostics" #>
 <#@ import namespace="System.IO" #>
 <#@ import namespace="System.Collections.Generic" #>
-<#@ include file="..\\..\\..\\DataDictionaryReader.tt" #>
+<#@ import namespace="CruiseDAL.CodeGenEngine" #>
+
 <#
-DataDictionaryReader dr = new DataDictionaryReader(Host.ResolvePath(@"..\\..\\..\DataDictionary.csv"));
-List<Table> TableList = dr.Read();
+DataDictionaryReader dr = new DataDictionaryReader();
+
+ICollection<Table> TableList = dr.AllTables.Values;
 #>
 using System;
 using CruiseDAL.Schema;
@@ -15,11 +18,19 @@ namespace CruiseDAL.DataObjects
 {
 <#
 PushIndent("\t");
-foreach(Table curTable in TableList)
+
+foreach(TableCollection tc in dr.TableCollections)
 {
-		if(curTable.IsDepreciated == true) { continue; }
-        MakeClass(curTable);
+	WriteLine("#region " + tc.Name);
+	foreach(Table curTable in tc)
+	{
+			if(curTable.IsDepreciated == true) { continue; }
+			MakeClass(curTable);
+	}
+	WriteLine("#endregion");
 }
+
+
 PopIndent();
  #>
 }
@@ -28,9 +39,10 @@ PopIndent();
 
 
 <#+
+//----------------------------------Method: MakeClass------------------------------------------------------
 public void MakeClass(Table table)
 {#>
-[Table(TableName = "<#=table.Name#>")]
+[SQLEntity(TableName = "<#=table.Name#>", IsCached=true)]
 public partial class <#=table.Name#>DO : DataObject
 {
 <#+  PushIndent("\t");#>
@@ -54,16 +66,10 @@ public override RowValidator Validator
     }
 }
 
-//[XmlIgnore]
-//public override Persister Persister
-//{
-    //get{ return persister; }
-//}
 
 #region Ctor
 static <#=table.Name#>DO()
-{
-    //persister = new <#=table.Name#>Persister();
+{    
     _validator = new RowValidator();
     
 <#+
@@ -71,8 +77,7 @@ static <#=table.Name#>DO()
 PushIndent("\t");
 foreach(Field f in table.Fields)
 {             
-    //if(f.IsDepreciated) { continue; }   
-    if(f.Name == "CreatedBy") { continue; }                  
+    if(f.IsDepreciated) { continue; }                  
     if (!string.IsNullOrEmpty(f.ErrorMessage))
     {
         //if(!hasRowValidator)
@@ -128,17 +133,20 @@ public <#=table.Name#>DO(DAL DAL) : base(DAL)
 			if(f.IsDepreciated) { continue; }
             MakeProperty(f, table, true);
         }
+        
+        MakeUtilProperties(table.TrackCreated, table.TrackModified, table.TrackRowVersion);
 
         MakeValidate(table);
         //MakeGetValidator(table);
-        MakeGetPropertyInfo();
         MakeSetValues(table);
         PopIndent();
         WriteLine("}");
- }// end feture method MakeClass
-#>
+ }
+ //---------------------------------End Method: MakeClass
 
-<#+public void MakePrimaryKeyProperty(Field field)
+
+//----------------------------------Method: MakePrimaryKeyProperty------------------------------------------------------
+public void MakePrimaryKeyProperty(Field field)
  {
             WriteLine("[XmlIgnore]");
             WriteLine("public Int64? {0}", field.Name);
@@ -148,9 +156,10 @@ public <#=table.Name#>DO(DAL DAL) : base(DAL)
             PopIndent();
             WriteLine("}");
 }
-#>
+//---------------------------------End Method: MakePrimaryKeyProperty
 
-<#+
+
+//----------------------------------Method: MakeValidate------------------------------------------------------
     public void MakeValidate(Table table)
     {
         WriteLine("protected override bool DoValidate()");
@@ -178,38 +187,22 @@ if(_errorsLoaded == false)
         PopIndent();
         WriteLine("}");
     }
-#>
+//---------------------------------End Method: MakeValidate
 
-<#+
+//----------------------------------Method: MakeGetValidator------------------------------------------------------
 public void MakeGetValidator(Table table)
 {
- #>
+#>
 protected override RowValidator GetValidator()
 {
     return DAL.GetTableValidator("<#=table.Name#>");
 }
 <#+
-} //end feature method MakeGetValidator
-#>
-
-<#+
-public void MakeGetPropertyInfo()
-{
- #>
-//protected override PropertyInfo[] GetPropertieInfo()
-//{
-    //if(_propertyInfo == null)
-    //{
-        //_propertyInfo = this.GetType().GetProperties(BindingFlags.Instance | BindingFlags.Public);
-    //}
-    //return _propertyInfo;
-//}
-<#+
-}//end feature method MakeGetPropertyInfo
- #>
+} 
+//---------------------------------End Method: MakeGetValidator
 
 
-<#+
+//----------------------------------Method: MakeSetValues------------------------------------------------------
 public void MakeSetValues(Table table) 
 {
 
@@ -227,18 +220,15 @@ public void MakeSetValues(Table table)
         foreach(Field f in table.DataFields)
         {
 			if(f.IsDepreciated) { continue; }
-            if(f.Name == "CreatedBy" || f.Name == "ModifiedBy" || f.Name == "CreatedDate" || f.Name == "ModifiedDate")
-                {continue;}
             WriteLine("{0} = obj.{0};", f.Name, table.Name);
         }
         PopIndent();
         WriteLine("}");
 }
-#>
+//---------------------------------End Method: MakeSetValues
 
 
-
-<#+ 
+//----------------------------------Method: MakeForeignKey------------------------------------------------------
 public void MakeForeignKey(Field field, Table table)
 {
     MakeProperty(field, table, false);
@@ -268,40 +258,45 @@ public <#=field.Ref#>DO <#=field.Ref#>
         <#=field.Name#> = (value != null) ? value.<#=field.Name#> : null;
     }
 }
-<#+}//end feture method MakeForeignKey #>
+<#+} 
+//---------------------------------End Method: MakeForeignKey
 
-
-
-
-<#+
+//----------------------------------Method: MakeProperty------------------------------------------------------
 public void MakeProperty(Field field, Table table, bool isSerializable)
-{#>
-private <#=field.NullableType#> _<#=field.Name.ToLower()#> = <#=(field.IsFK) ? "null" : (field.Type.StartsWith("ENUM:")) ? "0" : field.DefaultValue ?? "null"#>;
-<#+        if(isSerializable == false)
-            {
-            WriteLine("[XmlIgnore]");
-            }
-            else
-            {
-            WriteLine("[XmlElement]");
-            }
+{
+	//make private field for storing property value
+	WriteLine(String.Format("private {0} _{1} {2};",
+		field.AccessableType,
+		field.Name.ToLower(),
+		(field.DataObjectInitialValue != null) ? " = " + field.DataObjectInitialValue : ""));
+        
+    if(isSerializable == false)
+    {
+    WriteLine("[XmlIgnore]");
+    }
+    else
+    {
+    WriteLine("[XmlElement]");
+    }
+    if(field.IsDepreciated)
+    {
+		WriteLine("[Obsolete]");
+	}
  #>
 [Field (FieldName = "<#=field.Name#>",
  IsUnique = <#=field.IsUnique ? "true" : "false"#>,
- IsPersisted = <#=(!field.IsPK &&  !field.Name.StartsWith("Modified") && !field.Name.StartsWith("Created"))? "true" : "false" #>,
- SpecialFieldType = <#=(field.Name == "CreatedBy") ? "SepcialFieldType.CreatedBy" : (field.Name == "ModifiedBy") ? "SepcialFieldType.ModifiedBy" : "0"#>)]
-public virtual <#=field.NullableType#> <#=field.Name#>
+ IsPersisted = <#=(!field.IsPK )? "true" : "false" #>)]
+public virtual <#=field.AccessableType#> <#=field.Name#>
 {
     get 
     { 
-        <#+if (field.IsFK) { #> 
+        <#+
+        if (field.IsFK) { #> 
         if(_<#=field.Ref.ToLower()#> != null)
         {
             return _<#=field.Ref.ToLower()#>.<#=field.Name#>;
         }
         <#+} #>
-            
-
         return _<#=field.Name.ToLower()#>; 
     }
     set 
@@ -318,7 +313,48 @@ public virtual <#=field.NullableType#> <#=field.Name#>
         this.NotifyPropertyChanged(<#=table.Name.ToUpper()#>.<#=field.Name.ToUpper()#>, _<#=field.Name.ToLower()#>);
     }
 }
-<#+}//end feture method MakeProperty#>
+<#+}
+//---------------------------------End Method: MakeProperty
+
+
+
+
+//----------------------------------Method: MakeUtilProperties------------------------------------------------------
+public void MakeUtilProperties(bool trackCreated, bool trackModified, bool trackRowVersion)
+{
+	WriteLine("");
+	if(trackCreated)
+	{
+#>
+[XmlIgnore]
+[Field (FieldName = "CreatedBy",
+ SpecialFieldType = SepcialFieldType.CreatedBy)]
+public string CreatedBy { get; internal set; }
+
+[XmlIgnore]
+[Field (FieldName = "CreatedDate")]
+public DateTime CreatedDate { get; internal set; }
+<#+
+	}
+	
+	if(trackModified)
+	{
+#>
+
+[XmlIgnore]
+[Field (FieldName = "ModifiedBy",
+ SpecialFieldType = SepcialFieldType.ModifiedBy)]
+public string ModifiedBy { get; internal set; }
+
+[XmlIgnore]
+[Field (FieldName = "ModifiedDate")]
+public string ModifiedDate { get; internal set; }
+
+<#+
+	}
+}
+//---------------------------------End Method: MakeUtilProperties	
+#>
 
 
 

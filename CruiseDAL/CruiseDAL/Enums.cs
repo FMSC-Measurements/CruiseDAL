@@ -8,4 +8,6 @@ namespace CruiseDAL.Enums
     public enum TallyMode { Unknown = 0, None = 1, BySpecies = 2, BySampleGroup = 4, Locked = 8, Manual = 16 }
 
     public enum SampleSelectorType { Unknown = 0, Systematic, Block, SRS, ThreeP };
+
+    public enum MergeState { Unknown = 0, New, Merged, Dirty };
 }

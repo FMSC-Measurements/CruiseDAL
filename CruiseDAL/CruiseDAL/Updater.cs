@@ -9,12 +9,7 @@ namespace CruiseDAL
         {
             //PatchSureToMeasure(db);
 
-            if (string.IsNullOrEmpty(db.DatabaseVersion))
-            {
-                UpdateToVersion2013_05_28(db);
-            }
-
-            if (db.DatabaseVersion == "2013.05.28")
+            if (db.DatabaseVersion == "2013.05.28" || db.DatabaseVersion == "Unknown")
             {
                 UpdateToVersion2013_05_30(db);
             }
@@ -100,29 +95,27 @@ namespace CruiseDAL
             {
                 UpdateToVersion2014_10_01(db);
             }
-
-            if (HasBadTreeAuditValueTable(db))
+            if (db.DatabaseVersion == "2014.10.01" || db.DatabaseVersion == "2015.01.05")
             {
-                try
-                {
-                    db.BeginTransaction();
-                    RebuildTable(db, "TreeAuditValue",
-                        @"CREATE TABLE TreeAuditValue (
-				TreeAuditValue_CN INTEGER PRIMARY KEY AUTOINCREMENT,
-				Field TEXT NOT NULL,
-				Min REAL Default 0.0,
-				Max REAL Default 0.0,
-				ValueSet TEXT,
-				Required BOOLEAN Default 0,
-				ErrorMessage TEXT);", "Field, Min, Max, ValueSet, Required, ErrorMessage");
-                    db.EndTransaction();
-                }
-                catch (Exception e)
-                {
-                    db.CancelTransaction();
-                    throw new DatabaseExecutionException("failed fixing TreeAuditValue table", e);
-                }
+                UpdateToVersion2015_04_28(db);
             }
+
+            
+            if (db.DatabaseVersion == "2015.04.28")
+            {
+                UpdateToVersion2015_08_03(db);
+            }
+
+            if (db.DatabaseVersion == "2015.06.01")
+            {
+                SetDatabaseVersion(db, "2015.08.03");
+            }
+
+            if (db.DatabaseVersion == "2015.08.03")
+            {
+                UpdateToVersion2015_08_19(db);
+            }
+
 
             if (db.HasForeignKeyErrors(Schema.TREEDEFAULTVALUETREEAUDITVALUE._NAME))
             {
@@ -146,32 +139,57 @@ namespace CruiseDAL
 
         }
 
+        
+
+        private static String[] ListTriggers(DAL db)
+        {
+            string result = db.ExecuteScalar("SELECT group_concat(name,',') FROM sqlite_master WHERE type LIKE 'trigger';") as string;
+            if (result == null || result.Length == 0) { return new string[0]; }
+            else
+            {
+                return result.Split(',');
+            }
+
+        }
+
         private static void RebuildTable(DAL db, String tableName, String newTableDef, String columnList)
         {
             //get all triggers accocated with table so we can recreate them later
             string getTriggers = String.Format("SELECT group_concat(sql,';\r\n') FROM sqlite_master WHERE tbl_name LIKE '{0}' and type LIKE 'trigger';", tableName);
             string triggers = db.ExecuteScalar(getTriggers) as string;
-
-            //rename existing table
-            string command = String.Format("ALTER TABLE {0} RENAME TO {0}temp;", tableName);
-            db.Execute(command);
-
-            //create rebuilt table
-            command = String.Format("{0};", newTableDef);
-            db.Execute(command);
-
-            //copy data from existing table to rebuilt table
-            command = String.Format("INSERT INTO {0} ({1}) SELECT {1} FROM {0}temp;", tableName, columnList);
-            db.Execute(command);
-
-            command = String.Format("DROP TABLE {0}temp;",tableName);
-            db.Execute(command);
-
-            //recreate treggers
-            if (triggers != null)
+            db.BeginTransaction();
+            try
             {
-                db.Execute(triggers);
+                db.Execute("PRAGMA foreign_keys = off;");
+                db.Execute("ALTER TABLE " + tableName + " RENAME TO " + tableName + "temp;");                    
+
+                //create rebuilt table
+                db.Execute(newTableDef + ";");
+
+                //copy data from existing table to rebuilt table
+                db.Execute(
+                    "INSERT INTO " + tableName +
+                    " ( " + columnList + ") " +
+                    "SELECT " + columnList + " FROM " + tableName + "temp;");
+
+                db.Execute("DROP TABLE " + tableName + "temp;");
+
+                //recreate treggers
+                if (triggers != null)
+                {
+                    db.Execute(triggers);
+                }
+
+                db.Execute("PRAGMA foreign_keys = on;");
+                db.EndTransaction();
             }
+            catch
+            {
+                db.CancelTransaction();
+                throw;
+            }
+
+               
         }
 
         private static void SetDatabaseVersion(DAL db, string newVersion)
@@ -198,87 +216,43 @@ namespace CruiseDAL
             db.Execute(command);
         }
 
-        public static bool HasBadTreeAuditValueTable(DAL db)
-        {
-            object obj = db.ExecuteScalar("pragma foreign_key_list(TreeAuditValue);");
-            return  obj != null && (long)obj == 0;
-        }
+       
 
 
 
-        private static void UpdateToVersion2013_05_28(DAL db)
-        {
-            try
-            {
-                db.BeginTransaction();
-                string command = "DROP TABLE IF EXISTS TreeAudit;";
-                db.Execute(command);
-                command = @"CREATE TABLE IF NOT EXISTS TreeDefaultValueTreeAuditValue (
-	                        TreeAuditValue_CN INTEGER REFERENCES TreeAuditValue NOT NULL,
-	                        TreeDefaultValue_CN INTEGER REFERENCES TreeDefaultValue NOT NULL);";
-                db.Execute(command);
-                command = @"DROP TABLE IF EXISTS TreeAuditValue;";
-                db.Execute(command);
-                command = @"CREATE TABLE IF NOT EXISTS TreeAuditValue (
-	                        TreeAuditValue_CN INTEGER PRIMARY KEY AUTOINCREMENT REFERENCES TreeAudit,
-	                        Field TEXT NOT NULL,
-	                        Min REAL Default 0.0,
-	                        Max REAL Default 0.0,
-	                        ValueSet TEXT,
-	                        Required BOOL,
-	                        ErrorMessage TEXT);";
-                db.Execute(command);
-
-                SetDatabaseVersion(db, "2013.05.28");
-                db.EndTransaction();
-            }
-            catch (Exception e)
-            {
-                db.CancelTransaction();
-                throw new DatabaseExecutionException("failed updateing database to version 2013.05.28", e);
-            }
-        }
+        
 
         private static void UpdateToVersion2013_05_30(DAL db)
         {
             try
             {
                 db.BeginTransaction();
-                string command = @"
-                                    CREATE TABLE TempPlot (
-				                        Plot_CN INTEGER PRIMARY KEY AUTOINCREMENT,
-				                        Stratum_CN INTEGER REFERENCES Stratum NOT NULL,
-				                        CuttingUnit_CN INTEGER REFERENCES CuttingUnit NOT NULL,
-				                        PlotNumber INTEGER NOT NULL,
-				                        IsEmpty TEXT,
-				                        Slope REAL Default 0.0,
-				                        KPI REAL Default 0.0,
-				                        Aspect REAL Default 0.0,
-				                        Remarks TEXT,
-				                        XCoordinate REAL Default 0.0,
-				                        YCoordinate REAL Default 0.0,
-				                        ZCoordinate REAL Default 0.0,
-				                        MetaData TEXT,
-				                        Blob BLOB,
-				                        CreatedBy TEXT NOT NULL,
-				                        CreatedDate DATETIME,
-				                        ModifiedBy TEXT,
-				                        ModifiedDate DATETIME,
-				                        UNIQUE (Stratum_CN, CuttingUnit_CN, PlotNumber));
-                                    INSERT INTO TempPlot (PlotNumber, IsEmpty, Slope, KPI, Aspect, Remarks, XCoordinate, YCoordinate, ZCoordinate, MetaData, Blob, Stratum_CN, CuttingUnit_CN, CreatedBy, CreatedDate, ModifiedBy, ModifiedDate)
-                                    SELECT PlotNumber, IsEmpty, Slope, KPI, Aspect, Remarks, XCoordinate, YCoordinate, ZCoordinate, MetaData, Blob, Stratum_CN, CuttingUnit_CN, CreatedBy, CreatedDate, ModifiedBy, ModifiedDate FROM Plot;
-                                    DROP TABLE Plot;
-                                    ALTER TABLE TempPlot RENAME TO Plot;";
 
-                db.Execute(command);
-
-                command = @"
-                CREATE TRIGGER OnNewPlot AFTER INSERT ON Plot BEGIN 
-			    UPDATE Plot SET CreatedDate = datetime(current_timestamp, 'localtime') WHERE rowID = new.rowID; END;
-
-	            CREATE TRIGGER OnUpdatePlot UPDATE ON Plot BEGIN
-			    UPDATE Plot SET ModifiedDate = datetime(current_timestamp, 'localtime') WHERE rowID = new.rowID; END;";
-                db.Execute(command);
+                RebuildTable(db, "Plot",
+                    @"CREATE TABLE Plot (
+                        Plot_CN INTEGER PRIMARY KEY AUTOINCREMENT,
+                        Stratum_CN INTEGER REFERENCES Stratum NOT NULL,
+                        CuttingUnit_CN INTEGER REFERENCES CuttingUnit NOT NULL,
+                        PlotNumber INTEGER NOT NULL,
+                        IsEmpty TEXT,
+                        Slope REAL Default 0.0,
+                        KPI REAL Default 0.0,
+                        Aspect REAL Default 0.0,
+                        Remarks TEXT,
+                        XCoordinate REAL Default 0.0,
+                        YCoordinate REAL Default 0.0,
+                        ZCoordinate REAL Default 0.0,
+                        MetaData TEXT,
+                        Blob BLOB,
+                        CreatedBy TEXT NOT NULL,
+                        CreatedDate DATETIME,
+                        ModifiedBy TEXT,
+                        ModifiedDate DATETIME,
+                        UNIQUE (Stratum_CN, CuttingUnit_CN, PlotNumber));",
+                    "PlotNumber, IsEmpty, Slope, KPI, Aspect, Remarks, XCoordinate, YCoordinate," +
+                    "ZCoordinate, MetaData, Blob, Stratum_CN, CuttingUnit_CN, CreatedBy, " +
+                    "CreatedDate, ModifiedBy, ModifiedDate");
+                    
 
                 db.AddField("CuttingUnit", "TallyHistory TEXT");
 
@@ -443,78 +417,70 @@ namespace CruiseDAL
             try
             {
                 db.BeginTransaction();
-                string command = @"
-                                    PRAGMA foreign_keys = OFF;
-                                    
-                                    CREATE TABLE TempTree (
-				                        Tree_CN INTEGER PRIMARY KEY AUTOINCREMENT,
-				                        TreeDefaultValue_CN INTEGER REFERENCES TreeDefaultValue,
-				                        Stratum_CN INTEGER REFERENCES Stratum NOT NULL,
-				                        SampleGroup_CN INTEGER REFERENCES SampleGroup,
-				                        CuttingUnit_CN INTEGER REFERENCES CuttingUnit NOT NULL,
-				                        Plot_CN INTEGER REFERENCES Plot,
-				                        TreeNumber INTEGER NOT NULL,
-				                        Species TEXT,
-				                        CountOrMeasure TEXT,
-				                        TreeCount REAL Default 0.0,
-				                        KPI REAL Default 0.0,
-				                        STM TEXT Default 'N',
-				                        SeenDefectPrimary REAL Default 0.0,
-				                        SeenDefectSecondary REAL Default 0.0,
-				                        RecoverablePrimary REAL Default 0.0,
-				                        Initials TEXT,
-				                        LiveDead TEXT,
-				                        Grade TEXT,
-				                        HeightToFirstLiveLimb REAL Default 0.0,
-				                        PoleLength REAL Default 0.0,
-				                        ClearFace TEXT,
-				                        CrownRatio REAL Default 0.0,
-				                        DBH REAL Default 0.0,
-				                        DRC REAL Default 0.0,
-				                        TotalHeight REAL Default 0.0,
-				                        MerchHeightPrimary REAL Default 0.0,
-				                        MerchHeightSecondary REAL Default 0.0,
-				                        FormClass REAL Default 0.0,
-				                        UpperStemDOB REAL Default 0.0,
-				                        UpperStemHeight REAL Default 0.0,
-				                        DBHDoubleBarkThickness REAL Default 0.0,
-				                        TopDIBPrimary REAL Default 0.0,
-				                        TopDIBSecondary REAL Default 0.0,
-				                        DefectCode TEXT,
-				                        DiameterAtDefect REAL Default 0.0,
-				                        VoidPercent REAL Default 0.0,
-				                        Slope REAL Default 0.0,
-				                        Aspect REAL Default 0.0,
-				                        Remarks TEXT,
-				                        XCoordinate DOUBLE Default 0.0,
-				                        YCoordinate DOUBLE Default 0.0,
-				                        ZCoordinate DOUBLE Default 0.0,
-				                        MetaData TEXT,
-				                        IsFallBuckScale INTEGER Default 0,
-				                        CreatedBy TEXT NOT NULL,
-				                        CreatedDate DATETIME,
-				                        ModifiedBy TEXT,
-				                        ModifiedDate DATETIME,
-				                        ExpansionFactor REAL Default 0.0,
-				                        TreeFactor REAL Default 0.0,
-				                        PointFactor REAL Default 0.0,
-				                        UNIQUE (TreeDefaultValue_CN, Stratum_CN, SampleGroup_CN, CuttingUnit_CN, Plot_CN, TreeNumber));
-
-                                        INSERT INTO TempTree (TreeNumber, Species, CountOrMeasure, TreeCount, KPI, STM, SeenDefectPrimary, SeenDefectSecondary, RecoverablePrimary, Initials, LiveDead, Grade, HeightToFirstLiveLimb, PoleLength, ClearFace, CrownRatio, DBH, DRC, TotalHeight, MerchHeightPrimary, MerchHeightSecondary, FormClass, UpperStemDOB, UpperStemHeight, DBHDoubleBarkThickness, TopDIBPrimary, TopDIBSecondary, DefectCode, DiameterAtDefect, VoidPercent, Remarks, XCoordinate, YCoordinate, ZCoordinate, MetaData, IsFallBuckScale, ExpansionFactor, TreeFactor, PointFactor, TreeDefaultValue_CN, Stratum_CN, SampleGroup_CN, CuttingUnit_CN, Plot_CN, CreatedBy, CreatedDate, ModifiedBy, ModifiedDate)
-                                        SELECT TreeNumber, Species, CountOrMeasure, TreeCount, KPI, STM, SeenDefectPrimary, SeenDefectSecondary, RecoverablePrimary, Initials, LiveDead, Grade, HeightToFirstLiveLimb, PoleLength, ClearFace, CrownRatio, DBH, DRC, TotalHeight, MerchHeightPrimary, MerchHeightSecondary, FormClass, UpperStemDOB, UpperStemHeight, DBHDoubleBarkThickness, TopDIBPrimary, TopDIBSecondary, DefectCode, DiameterAtDefect, VoidPercent, Remarks, XCoordinate, YCoordinate, ZCoordinate, MetaData, IsFallBuckScale, ExpansionFactor, TreeFactor, PointFactor, nullif(TreeDefaultValue_CN,0), Stratum_CN, nullif(SampleGroup_CN, 0), CuttingUnit_CN, Plot_CN, CreatedBy, CreatedDate, ModifiedBy, ModifiedDate FROM Tree;
-                                        DROP TABLE Tree;
-                                        ALTER TABLE TempTree RENAME TO Tree;";
-                db.Execute(command);
-
-                //recreate triggers 
-                command = @"
-                CREATE TRIGGER IF NOT EXISTS OnNewTree AFTER INSERT ON Tree BEGIN 
-			    UPDATE Tree SET CreatedDate = datetime(current_timestamp, 'localtime') WHERE rowID = new.rowID; END;
-
-	            CREATE TRIGGER IF NOT EXISTS OnUpdateTree UPDATE ON Tree BEGIN
-			    UPDATE Tree SET ModifiedDate = datetime(current_timestamp, 'localtime') WHERE rowID = new.rowID; END;";
-
-                db.Execute(command);
+                RebuildTable(db, "Tree",                                     
+                    @"CREATE TABLE Tree (
+                        Tree_CN INTEGER PRIMARY KEY AUTOINCREMENT,
+                        TreeDefaultValue_CN INTEGER REFERENCES TreeDefaultValue,
+                        Stratum_CN INTEGER REFERENCES Stratum NOT NULL,
+                        SampleGroup_CN INTEGER REFERENCES SampleGroup,
+                        CuttingUnit_CN INTEGER REFERENCES CuttingUnit NOT NULL,
+                        Plot_CN INTEGER REFERENCES Plot,
+                        TreeNumber INTEGER NOT NULL,
+                        Species TEXT,
+                        CountOrMeasure TEXT,
+                        TreeCount REAL Default 0.0,
+                        KPI REAL Default 0.0,
+                        STM TEXT Default 'N',
+                        SeenDefectPrimary REAL Default 0.0,
+                        SeenDefectSecondary REAL Default 0.0,
+                        RecoverablePrimary REAL Default 0.0,
+                        Initials TEXT,
+                        LiveDead TEXT,
+                        Grade TEXT,
+                        HeightToFirstLiveLimb REAL Default 0.0,
+                        PoleLength REAL Default 0.0,
+                        ClearFace TEXT,
+                        CrownRatio REAL Default 0.0,
+                        DBH REAL Default 0.0,
+                        DRC REAL Default 0.0,
+                        TotalHeight REAL Default 0.0,
+                        MerchHeightPrimary REAL Default 0.0,
+                        MerchHeightSecondary REAL Default 0.0,
+                        FormClass REAL Default 0.0,
+                        UpperStemDOB REAL Default 0.0,
+                        UpperStemHeight REAL Default 0.0,
+                        DBHDoubleBarkThickness REAL Default 0.0,
+                        TopDIBPrimary REAL Default 0.0,
+                        TopDIBSecondary REAL Default 0.0,
+                        DefectCode TEXT,
+                        DiameterAtDefect REAL Default 0.0,
+                        VoidPercent REAL Default 0.0,
+                        Slope REAL Default 0.0,
+                        Aspect REAL Default 0.0,
+                        Remarks TEXT,
+                        XCoordinate DOUBLE Default 0.0,
+                        YCoordinate DOUBLE Default 0.0,
+                        ZCoordinate DOUBLE Default 0.0,
+                        MetaData TEXT,
+                        IsFallBuckScale INTEGER Default 0,
+                        CreatedBy TEXT NOT NULL,
+                        CreatedDate DATETIME,
+                        ModifiedBy TEXT,
+                        ModifiedDate DATETIME,
+                        ExpansionFactor REAL Default 0.0,
+                        TreeFactor REAL Default 0.0,
+                        PointFactor REAL Default 0.0,
+                        UNIQUE (TreeDefaultValue_CN, Stratum_CN, SampleGroup_CN, CuttingUnit_CN, Plot_CN, TreeNumber))",
+                        "TreeNumber, Species, CountOrMeasure, TreeCount, KPI, STM, SeenDefectPrimary, " + 
+                        "SeenDefectSecondary, RecoverablePrimary, Initials, LiveDead, Grade, " + 
+                        "HeightToFirstLiveLimb, PoleLength, ClearFace, CrownRatio, DBH, DRC, TotalHeight, " + 
+                        "MerchHeightPrimary, MerchHeightSecondary, FormClass, UpperStemDOB, UpperStemHeight, " + 
+                        "DBHDoubleBarkThickness, TopDIBPrimary, TopDIBSecondary, DefectCode, DiameterAtDefect, " + 
+                        "VoidPercent, Remarks, XCoordinate, YCoordinate, ZCoordinate, MetaData, " + 
+                        "IsFallBuckScale, ExpansionFactor, TreeFactor, PointFactor, TreeDefaultValue_CN, " + 
+                        "Stratum_CN, SampleGroup_CN, CuttingUnit_CN, Plot_CN, CreatedBy, CreatedDate, " + 
+                        "ModifiedBy, ModifiedDate");
+                                       
 
                 //command = "ALTER TABLE ErrorLog ADD COLUMN Suppress BOOLEAN;";
                 //db.Execute(command);
@@ -525,7 +491,7 @@ namespace CruiseDAL
             catch (Exception e)
             {
                 db.CancelTransaction();
-                throw new DatabaseExecutionException("failed updateing database to version 2013.06.13", e);
+                throw new DatabaseExecutionException("failed updateing database to version 2013.06.17", e);
             }
 
         }
@@ -956,6 +922,154 @@ CREATE TRIGGER OnDeletePlot AFTER DELETE ON Plot BEGIN
                 throw new DatabaseExecutionException("failed updating database to version 2014.10.01", e);
             }
 
+        }
+
+        public static void UpdateToVersion2015_04_28(DAL db)
+        {
+            try
+            {
+                db.BeginTransaction();
+                db.Execute(@"CREATE TABLE Util_Tombstone (
+                    RecordID INTEGER ,
+                    RecordGUID TEXT, 
+                    TableName TEXT NOT NULL COLLATE NOCASE,
+                    Data TEXT, 
+                    DeletedDate DATETIME NON NULL);");
+
+//                db.Execute(@"
+//                CREATE VIEW CountTree_View AS 
+//SELECT Stratum.Code as StratumCode,
+//Stratum.Method as Method, 
+//SampleGroup.Code as SampleGroupCode,
+//SampleGroup.PrimaryProduct as PrimaryProduct, 
+//CountTree.* 
+//FROM CountTree JOIN SampleGroup USING (SampleGroup_CN) JOIN Stratum USING (Stratum_CN);");
+
+
+
+                db.Execute(@"ALTER TABLE Sale ADD COLUMN RowVersion INTEGER DEFAULT 0;
+                    ALTER TABLE CuttingUnit ADD COLUMN RowVersion INTEGER DEFAULT 0;
+                    ALTER TABLE Stratum ADD COLUMN RowVersion INTEGER DEFAULT 0;
+                    ALTER TABLE SampleGroup ADD COLUMN RowVersion INTEGER DEFAULT 0;
+                    ALTER TABLE TreeDefaultValue ADD COLUMN RowVersion INTEGER DEFAULT 0;
+                    ALTER TABLE Plot ADD COLUMN RowVersion INTEGER DEFAULT 0;
+                    ALTER TABLE Tree ADD COLUMN RowVersion INTEGER DEFAULT 0;
+                    ALTER TABLE Log ADD COLUMN RowVersion INTEGER DEFAULT 0;
+                    ALTER TABLE Stem ADD COLUMN RowVersion INTEGER DEFAULT 0;
+                    ALTER TABLE CountTree ADD COLUMN RowVersion INTEGER DEFAULT 0;");
+
+                db.Execute(@"ALTER TABLE Stem ADD COLUMN CreatedBy TEXT;
+                    ALTER TABLE Stem ADD COLUMN CreatedDate DATETIME;
+                    ALTER TABLE Stem ADD COLUMN ModifiedBy TEXT; 
+                    ALTER TABLE Stem ADD COLUMN ModifiedDate DATETIME; 
+                    ALTER TABLE TreeEstimate ADD COLUMN CreatedBy TEXT;
+                    ALTER TABLE TreeEstimate ADD COLUMN CreatedDate DATETIME;
+                    ALTER TABLE TreeEstimate ADD COLUMN ModifiedBy TEXT; 
+                    ALTER TABLE TreeEstimate ADD COLUMN ModifiedDate DATETIME;
+                    ALTER TABLE TreeDefaultValue ADD COLUMN CreatedBy TEXT;
+                    ALTER TABLE TreeDefaultValue ADD COLUMN CreatedDate DATETIME;
+                    ALTER TABLE TreeDefaultValue ADD COLUMN ModifiedBy TEXT; 
+                    ALTER TABLE TreeDefaultValue ADD COLUMN ModifiedDate DATETIME;");
+
+                db.Execute("ALTER TABLE SampleGroup ADD COLUMN SmallFPS REAL DEFAULT 0.0;");
+
+                
+                db.Execute("ALTER TABLE Tree ADD COLUMN UpperStemDiameter REAL DEFAULT 0.0;");
+                db.Execute("UPDATE Tree SET UpperStemDiameter = UpperstemDOB;");
+                db.Execute("UPDATE TreeFieldSetup SET Field = 'UpperStemDiameter' WHERE Field = 'UpperStemDiameter';");
+                db.Execute("UPDATE TreeFieldSetupDefault SET Field = 'UpperStemDiameter' WHERE Field = 'UpperStemDiameter';");
+
+                db.Execute("ALTER TABLE Stratum ADD COLUMN YieldComponent TEXT DEFAULT 'CL';");
+                db.Execute("UPDATE TreeDefaultValue SET Chargeable = null;");
+
+                db.Execute("ALTER TABLE CuttingUnitStratum ADD COLUMN StratumArea REAL;");
+                
+
+                db.Execute(@"CREATE VIEW StratumAcres_View AS 
+SELECT CuttingUnit.Code as CuttingUnitCode, 
+Stratum.Code as StratumCode, 
+ifnull(Area, CuttingUnit.Area) as Area, 
+CuttingUnitStratum.* 
+FROM CuttingUnitStratum 
+JOIN CuttingUnit USING (CuttingUnit_CN) 
+JOIN Stratum USING (Stratum_CN);");
+
+
+                //because there are a lot of changes with triggers 
+                //lets just recreate all triggers
+                foreach (string trigName in ListTriggers(db))
+                {
+                    db.Execute("DROP TRIGGER " + trigName + ";");
+                }
+
+                string createTriggers = db.GetCreateTriggers();
+                db.Execute(createTriggers);
+
+                db.Execute("PRAGMA user_version = 1");
+                SetDatabaseVersion(db, "2015.04.28");
+                db.EndTransaction();
+
+
+            }
+            catch (Exception e)
+            {
+                db.CancelTransaction();
+                throw new DatabaseExecutionException("failed updating database to version 2015.04.28", e);
+
+
+            }
+        }
+
+        public static void UpdateToVersion2015_08_03(DAL db)
+        {
+            try
+            {
+                db.BeginTransaction();
+                db.AddField("Plot", "Plot_GUID TEXT");
+                db.AddField("Tree", "Tree_GUID TEXT");
+                db.AddField("Log", "Log_GUID TEXT");
+                db.AddField("Stem", "Stem_GUID TEXT");
+                db.AddField("TreeEstimate", "TreeEstimate_GUID");
+
+                SetDatabaseVersion(db, "2015.08.03");
+
+                db.EndTransaction();
+            }
+            catch (Exception e)
+            {
+                db.CancelTransaction();
+                throw new DatabaseExecutionException("failed updating database to version 2015.08.03", e);
+            }
+
+        }
+
+        private static void UpdateToVersion2015_08_19(DAL db)
+        {
+            System.Collections.Generic.List<ColumnInfo> tavCols = db.GetTableInfo("TreeAuditValue");
+            bool hasErrorMessageCol = false;
+            foreach(ColumnInfo col in tavCols)
+            {
+                if(col.Name == "ErrorMessage")
+                {
+                    hasErrorMessageCol = true; break;
+                }
+            }
+            
+            try
+            {
+                db.BeginTransaction();
+                if (!hasErrorMessageCol)
+                {                        
+                    db.AddField("TreeAuditValue", "ErrorMessage TEXT");                        
+                }
+                SetDatabaseVersion(db, "2015.08.19");
+                db.EndTransaction();
+            }
+            catch (Exception e)
+            {
+                db.CancelTransaction();
+                throw new DatabaseExecutionException("failed updating database to version 2015.08.19", e);
+            }                        
         }
 
     }

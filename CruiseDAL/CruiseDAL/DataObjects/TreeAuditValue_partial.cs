@@ -37,7 +37,7 @@ namespace CruiseDAL.DataObjects
         protected override void NotifyPropertyChanged(string name)
         {
             base.NotifyPropertyChanged(name);
-            if (!inWriteMode && 
+            if (!PropertyChangedEventsDisabled && 
                 (name == "Field" || name == "Min" || name == "Max" || name == "ValueSet" || name == "Required"))
             {
                 _errorMessage = null;

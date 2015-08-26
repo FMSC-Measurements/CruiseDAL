@@ -1,0 +1,13 @@
+update tree set treedefaultvalue_cn = (Select treedefaultvalue.treedefaultvalue_cn from treedefaultvalue where tree.species = treedefaultvalue.species),
+livedead = (Select treedefaultvalue.livedead from treedefaultvalue where tree.species = treedefaultvalue.species),
+grade = (Select treedefaultvalue.treegrade from treedefaultvalue where tree.species = treedefaultvalue.species),
+formclass = (Select treedefaultvalue.formclass from treedefaultvalue where tree.species = treedefaultvalue.species),
+recoverableprimary = (Select treedefaultvalue.recoverable from treedefaultvalue where tree.species = treedefaultvalue.species),
+hiddenprimary = (Select treedefaultvalue.hiddenprimary from treedefaultvalue where tree.species = treedefaultvalue.species)
+where tree.treedefaultvalue_cn is null;
+
+delete from log where not exists (select 1 from tree where log.[Tree_CN] = tree.tree_cn);
+delete from logstock where not exists (select 1 from tree where logstock.[Tree_CN] = tree.tree_cn);
+delete from treecalculatedvalues where not exists (select 1 from tree where treecalculatedvalues.[Tree_CN] = tree.tree_cn);
+delete from samplegrouptreedefaultvalue where not exists (select 1 from treedefaultvalue where treedefaultvalue.treedefaultvalue_cn = samplegrouptreedefaultvalue.[TreeDefaultValue_CN]);
+delete from counttree where treedefaultvalue_cn not null and not exists (select 1 from treedefaultvalue where treedefaultvalue.treedefaultvalue_cn = counttree.[TreeDefaultValue_CN]);

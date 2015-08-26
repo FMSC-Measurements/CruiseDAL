@@ -34,6 +34,9 @@ namespace CruiseDAL
         #region Properties
 
         #region persistance utility properties
+
+
+
         [XmlIgnore]
         public Int64? rowID
         {
@@ -63,7 +66,7 @@ namespace CruiseDAL
 
         //public abstract Persister Persister { get; }
         protected RecordState _recordState = RecordState.Detached;
-        protected bool inWriteMode = false;
+        //protected bool inWriteMode = false;
         //protected bool _hasChanges = false;
 
         [XmlIgnore]
@@ -315,7 +318,7 @@ namespace CruiseDAL
                 e.Level = "E";
             }
 
-            e.TableName = DatastoreBase.GetObjectDiscription(this.GetType()).TableName;
+            e.TableName = DatastoreBase.GetObjectDiscription(this.GetType()).ReadSource;
             e.ColumnName = propName;
             e.Message = error;
             e.Program = AppDomain.CurrentDomain.FriendlyName;
@@ -502,7 +505,7 @@ namespace CruiseDAL
         protected void PopulateErrorList()
         {
             if (this.rowID == null) { return; }
-            string tableName = DatastoreBase.GetObjectDiscription(this.GetType()).TableName;
+            string tableName = DatastoreBase.GetObjectDiscription(this.GetType()).ReadSource;
             List<ErrorLogDO> errorList = this.DAL.Read<ErrorLogDO>("ErrorLog", "WHERE TableName = ? AND CN_Number = ?", tableName, this.rowID);
             foreach(ErrorLogDO e in errorList)
             {
@@ -594,10 +597,7 @@ namespace CruiseDAL
 
         public virtual void Delete()
         {
-            if (DAL == null)
-            {
-                throw new InvalidOperationException("DAL must be set before calling delete");
-            }
+            Debug.Assert(DAL != null);
             DAL.Delete(this);
 
             //if (IsPersisted)
@@ -640,17 +640,19 @@ namespace CruiseDAL
         /// This is useful when changing many propertys on an object 
         /// and you need to protect against events fireing during the write process. 
         /// </summary>
+        [Obsolete("Use SuspendEvents instead")]
         public void StartWrite()
         {
-            inWriteMode = true;
+            this.PropertyChangedEventsDisabled = true;
         }
 
         /// <summary>
         /// Re-enables property changed events
         /// </summary>
+        [Obsolete("Use RsumeEvents instead")]
         public void EndWrite()
         {
-            inWriteMode = false;
+            this.PropertyChangedEventsDisabled = false;
         }
 
         /// <summary>
@@ -661,7 +663,7 @@ namespace CruiseDAL
         {
             if (DAL != null && rowID != null)
             {
-                return DataObject.GetID(this.GetType(), this.rowID);
+                return DatastoreBase.GetObjectDiscription(this.GetType()).GetID(this.rowID);
             }
             else
             {
@@ -669,31 +671,12 @@ namespace CruiseDAL
             }
         }
 
-        /// <summary>
-        /// Creates a unique DataObject ID based on DataObject type and rowID from database
-        /// </summary>
-        /// <param name="type"></param>
-        /// <param name="rowID"></param>
-        /// <returns></returns>
-        public static long GetID(Type type, long? rowID)
-        {
-            if (rowID == null)
-            {
-                throw new ArgumentNullException("to getID, rowID can't be null");
-            }
-
-            long typeHash = (long)type.GetHashCode();
-            typeHash = typeHash | typeHash << 32;
-            unchecked
-            {
-                return typeHash ^ (long)rowID * 31;
-            }
-        }
+        
 
         //depreciated
         public virtual bool ValidateProperty(string name)
         {
-            if (this.inWriteMode) { return true; }
+            if (PropertyChangedEventsDisabled) { return true; }
             object value = null;
             try
             {
@@ -714,7 +697,7 @@ namespace CruiseDAL
 
         protected virtual bool ValidateProperty(string name, object value)
         {
-            if (this.inWriteMode) { return true; }
+            if (PropertyChangedEventsDisabled) { return true; }
            if (Validator != null) { return Validator.Validate(this, name, value); }
             else { return true; }
         }
@@ -726,15 +709,28 @@ namespace CruiseDAL
 
         protected virtual void NotifyPropertyChanged(string name)
         {
-            if(!inWriteMode)
+            if (!PropertyChangedEventsDisabled)
             {
                 HasChanges = true;
                 IsValidated = false;
-                if (PropertyChanged != null )
-                {                    
+                if (PropertyChanged != null)
+                {
                     PropertyChanged(this, new PropertyChangedEventArgs(name));
                 }
             }
+        }
+
+        [XmlIgnore]
+        public bool PropertyChangedEventsDisabled { get; protected set; }
+
+        public void SuspendEvents()
+        {
+            PropertyChangedEventsDisabled = true;
+        }
+
+        public void ResumeEvents()
+        {
+            PropertyChangedEventsDisabled = false;
         }
 
         //protected abstract PropertyInfo[] GetPropertieInfo();
@@ -752,7 +748,7 @@ namespace CruiseDAL
                 return this.ToString();
             }
 
-            
+
 
             //get a list of all propertie place holders in format
             System.Text.RegularExpressions.Regex rx = new System.Text.RegularExpressions.Regex(@"\[(?<prop>[a-zA-Z]\w+)(?:(?:\|)(?<ifnull>\w+))?(?:(?::)(?<pad>(?:[-]?\d+)?[ULC]?))?\]", RegexOptions.Compiled);

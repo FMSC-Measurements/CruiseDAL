@@ -17,136 +17,103 @@ using System.Data.SQLite;
 
 namespace CruiseDAL
 {
-    //public delegate void DataObjectPropertySetter(DataObject obj, Object value);
-    //public delegate Object DataObjectPropertyGetter(DataObject obj);
-
     internal class DataObjectInfo
     {
-        internal class FieldInfo
-        {
-            //public PropertyInfo _propInfo;
-            public FieldAttribute _fieldAttr;
-            public Type _propType;
-            public int _ordinal = -1; //cached dataReader ordinal
-            public MethodInfo _getter;
-            public MethodInfo _setter;
-
-            public override string ToString()
-            {
-                return String.Format("PropType({0}); DBType({1}), FieldName({2}), Alias({3}), MapExpression({4})",
-                    _propType.Name, _fieldAttr.DataType, _fieldAttr.FieldName?? "null", _fieldAttr.Alias ?? "null", _fieldAttr.MapExpression ?? "null");
-            }
-        }
-
+        
         public DataObjectInfo(Type type)
         {
-            _dataObjectType = type;
-
-            object[] tAttrs = type.GetCustomAttributes(typeof(TableAttribute), true);
-            _tableAttr = (tAttrs.Length > 0) ? (TableAttribute)tAttrs[0] : null;
-
-            if (_tableAttr != null)
+            try
             {
-                this.TableName = _tableAttr.TableName;
-                this.JoinCommand = string.Format(" {0} ",_tableAttr.JoinCommand);
-            }
+                _dataObjectType = type;
+                _typeID = type.GetHashCode();
+                //_typeID = _typeID | _typeID << 32;
 
-            PropertyInfo[] props = type.GetProperties(BindingFlags.Public | BindingFlags.Instance);
-            
-            Properties = new Dictionary<string,FieldInfo>(props.Length,  StringComparer.Create(System.Globalization.CultureInfo.CurrentCulture, true));
-            foreach (PropertyInfo p in props)
-            {
-                FieldAttribute fa = (FieldAttribute)Attribute.GetCustomAttribute(p, typeof(FieldAttribute));
-                if (fa != null)
+                object[] tAttrs = type.GetCustomAttributes(typeof(SQLEntityAttribute), true);
+                if (tAttrs.Length > 0)
                 {
-                    FieldInfo fi = new FieldInfo();
-                        fi._fieldAttr = fa;
-                        //fi._propInfo = p;
-                        fi._getter = p.GetGetMethod();
-                        fi._setter = p.GetSetMethod();
-                        fi._propType = p.PropertyType;
-                        Properties.Add(p.Name, fi);
+                    _tableAttr = (SQLEntityAttribute)tAttrs[0];
+                    this.IsCached = _tableAttr.IsCached;
+                    this.ReadSource = _tableAttr.ReadSource;
+                    this.TableName = _tableAttr.TableName;
+                    this.JoinCommand = " " + _tableAttr.JoinCommand + " ";
+                    _readFromView = _tableAttr.ReadSource != _tableAttr.TableName;
                 }
-                //object[] fAttrs = p.GetCustomAttributes(typeof(FieldAttribute),
-                //object[] fAttrs = p.GetCustomAttributes(typeof(FieldAttribute), true);
-                //if (fAttrs.Length > 0)
-                //{
-                //    FieldInfo fi = new FieldInfo();
-                //    fi._fieldAttr = fAttrs[0] as FieldAttribute;
-                //    //fi._propInfo = p;
-                //    fi._getter = p.GetGetMethod();
-                //    fi._setter = p.GetSetMethod();
-                //    fi._propType = p.PropertyType;
-                //    Properties.Add(p.Name, fi);
-                //}
+
+                PropertyInfo[] props = type.GetProperties(BindingFlags.Public | BindingFlags.Instance);
+                Debug.Assert(props.Length > 0);
+
+                Properties = new Dictionary<string, FieldInfo>(props.Length + 1, StringComparer.Create(System.Globalization.CultureInfo.CurrentCulture, true));
+                foreach (PropertyInfo p in props)
+                {
+                    FieldAttribute fa = (FieldAttribute)Attribute.GetCustomAttribute(p, typeof(FieldAttribute));
+                    if (fa != null)
+                    {
+                        FieldInfo fi = new FieldInfo(p,fa);
+                        Properties.Add(p.Name, fi);                        
+                    }
+                }
+
+                
+                PropertyInfo rowIDProp = type.GetProperty("rowID");
+                if (rowIDProp != null)
+                {
+                    _rowidField = new FieldInfo(rowIDProp, null);
+                    Properties.Add("rowID", _rowidField);
+                }
             }
-
-            PropertyInfo rowIDProp = type.GetProperty("rowID");
-            FieldInfo finfo = new FieldInfo();
-            //finfo._propInfo = rowIDProp;
-            finfo._getter = rowIDProp.GetGetMethod();
-            finfo._setter = rowIDProp.GetSetMethod();
-            finfo._propType = rowIDProp.PropertyType;
-            Properties.Add("rowID", finfo);
-
+            catch (Exception e)
+            {
+                throw new ORMException("Unable to create DataObjectInfo for " + type.Name, e);
+            }
         }
 
         const int BYTE_READ_LENGTH = 1024;//TODO onece we start reading byte data figure out our byte read length... should this be done at runtime?
 
         private Type _dataObjectType;
-        private TableAttribute _tableAttr;
+        private int _typeID;
+        private SQLEntityAttribute _tableAttr;
+        private bool _readFromView;
         private string _selectCommandFormat;
         private string _updateCommandFormat;
         private string _insertCommandFormatString;
-        private int? _rowidOrd;
+        private FieldInfo _rowidField;
 
         internal Dictionary<String, FieldInfo> Properties { get; set; }
 
+        public String ReadSource { get; private set; }
         public String TableName { get; private set; }
         public String JoinCommand { get; private set; }
+        public bool IsCached { get; private set; }
 
-        internal string GetSelectCommandFormat()
+        private object GetPropertyValue(FieldInfo fi, Object obj)
         {
-            if(_selectCommandFormat == null)
+            object value = fi._getter.Invoke(obj, null);
+            if (fi._propType.IsEnum)
             {
-                StringBuilder sb = new StringBuilder("SELECT ");
-                foreach(FieldInfo fi in Properties.Values)
-                {
-                    if (fi._fieldAttr == null) { continue; }
-                    String colExpression = null;
-                    if(!string.IsNullOrEmpty(fi._fieldAttr.MapExpression))
-                    {
-                        colExpression = fi._fieldAttr.MapExpression;
-                    }
-                    else if(!string.IsNullOrEmpty(fi._fieldAttr.FieldName))
-                    {
-                        colExpression = (TableName + "." + fi._fieldAttr.FieldName);
-                    }
-
-                    if (!string.IsNullOrEmpty(fi._fieldAttr.Alias) && !string.IsNullOrEmpty(colExpression))
-                    {
-                        sb.AppendFormat(null, " {0} AS {1},", colExpression, fi._fieldAttr.Alias);
-                    }
-                    else if (!string.IsNullOrEmpty(fi._fieldAttr.Alias))
-                    {
-                        sb.Append(fi._fieldAttr.Alias + ",");
-                    }
-                    else if (!string.IsNullOrEmpty(colExpression))
-                    {
-                        sb.Append(colExpression + ",");
-                    }
-
-                }
-                sb.AppendFormat(null, " {0}.rowID as tableRowID FROM {0}{1}{2};", TableName, JoinCommand, "{0}");
-                _selectCommandFormat = sb.ToString();
+                value = value.ToString();
             }
-
-            return _selectCommandFormat;
+            else if (fi.IsGuid)
+            {
+                value = value.ToString();
+            }
+            return value;
         }
 
-        //TODO use this method in place of switch statment in ReadData
         private object GetValueByType(Type type, IDataReader reader, int ord)
         {
+            if (type.IsEnum)
+            {
+                return GetEnum(reader, ord, type);
+            }
+            else if (type.Equals(typeof(Guid)))
+            {
+                return GetGuid(reader, ord);
+            }
+            else if (reader.IsDBNull(ord))
+            {
+                return (type.IsValueType) ? Activator.CreateInstance(type) : null;
+            }
+
             TypeCode tc = Type.GetTypeCode(type);
             try
             {
@@ -192,6 +159,7 @@ namespace CruiseDAL
                         {
                             return reader.GetString(ord);
                         }
+                        
                     default:
                         {
                             return reader.GetValue(ord);
@@ -202,8 +170,16 @@ namespace CruiseDAL
             {
                 
                 Object value = reader.GetValue(ord);
-                Debug.WriteLine(String.Format("InvalidCastException in GetValueByType, Value = ({0}, {1}) ReadToType = ({2})", value.ToString(), value.GetType().ToString(), type.ToString()));
-                if (type.IsInstanceOfType(value))
+                Debug.WriteLine("InvalidCastException in GetValueByType" +
+                    " ExpectedType:" + type.Name + " " +
+                    " DOType:" + this._dataObjectType.Name +
+                    " Value = " + value.ToString() + ":" + value.GetType().Name);
+
+                if (tc == TypeCode.String)
+                {
+                    return value.ToString();
+                }
+                else if (type.IsInstanceOfType(value))
                 {
                     return value;
                 }
@@ -222,7 +198,7 @@ namespace CruiseDAL
             }
         }
 
-        private void SetFieldValue(DataObject dataObject, FieldInfo field, object value)
+        private void SetFieldValue(Object dataObject, FieldInfo field, object value)
         {
             if (field == null || field._setter == null)
             {
@@ -230,7 +206,6 @@ namespace CruiseDAL
             }
             try
             {
-
                 field._setter.Invoke(dataObject, new Object[] { value, });
             }
             catch
@@ -239,8 +214,7 @@ namespace CruiseDAL
             }
         }
 
-
-        public void ReadData(System.Data.IDataReader reader, DataObject dataObject)
+        public void ReadData(System.Data.IDataReader reader, Object dataObject)
         {
             foreach(FieldInfo fi in Properties.Values)
             {
@@ -249,66 +223,7 @@ namespace CruiseDAL
                     if (fi._fieldAttr == null) { continue; }
                     object value = null;
                     Type type = fi._propType;
-                    if (fi._propType.IsEnum)
-                    {
-                        value = GetEnum(reader, fi._ordinal, type);
-                    }
-                    else
-                    {
-                        if (reader.IsDBNull(fi._ordinal))
-                        {
-                            value = (type.IsValueType) ? Activator.CreateInstance(type) : null;
-                        }
-                        else
-                        {
-                            value = GetValueByType(type, reader, fi._ordinal);
-                        }
-                        //switch (fi._propType.Name)
-                        //{
-                        //    case "Int32":
-                        //        {
-                        //            value = GetInt32(reader, fi._ordinal);
-                        //            break;
-                        //        }
-                        //    case "Int64":
-                        //        {
-                        //            value = GetInt64(reader, fi._ordinal);
-                        //            break;
-                        //        }
-                        //    case "Double":
-                        //        {
-                        //            value = GetDouble(reader, fi._ordinal);
-                        //            break;
-                        //        }
-                        //    case "Single":
-                        //        {
-                        //            value = GetFloat(reader, fi._ordinal);
-                        //            break;
-                        //        }
-                        //    case "Boolean":
-                        //        {
-                        //            value = GetBool(reader, fi._ordinal);
-                        //            break;
-                        //        }
-                        //    case "String":
-                        //        {
-                        //            value = GetString(reader, fi._ordinal);
-                        //            break;
-                        //        }
-                        //    case "Byte[]":
-                        //        {
-                        //            value = GetByte(reader, fi._ordinal);
-                        //            break;
-                        //        }
-                        //    default:
-                        //        {
-                        //            value = reader.GetValue(fi._ordinal);
-                        //            if (value == DBNull.Value)
-                        //            { value = null; }
-                        //            break;
-                        //        }
-                        //}//end switch
-                    }
+                    value = GetValueByType(type, reader, fi._ordinal);
                     SetFieldValue(dataObject, fi, value);
                 }
                 catch (Exception e)
@@ -317,33 +232,118 @@ namespace CruiseDAL
                 }
             }//end foreach
 
-            if (_rowidOrd != null)
+            
+            if (dataObject is DataObject)
             {
-                dataObject.rowID = GetRowID(reader, _rowidOrd.Value);
-
+                if (_rowidField != null)
+                {
+                    ((DataObject)dataObject).rowID = GetRowID(reader, _rowidField._ordinal);
+                }
+                ((DataObject)dataObject).IsPersisted = true;
+                ((DataObject)dataObject).IsValidated = false;
             }
-            dataObject.IsPersisted = true;
-            dataObject.IsValidated = false;
         }
 
         public long ReadID(System.Data.IDataReader reader)
         {
-            if(_rowidOrd != null)
+            if(_rowidField != null)
             {
-                return DataObject.GetID(_dataObjectType, GetRowID(reader, _rowidOrd.Value));
+                return GetID(GetRowID(reader, _rowidField._ordinal));
             }
 
             return -1;
         }
 
+        /// <summary>
+        /// Creates a unique DataObject ID based on DataObject type and rowID from database
+        /// </summary>
+        /// <param name="type"></param>
+        /// <param name="rowID"></param>
+        /// <returns></returns>
+        public long GetID( long? rowID)
+        {
+            Debug.Assert(rowID != null);
+            unchecked
+            {
+                return _typeID ^ (long)rowID * 31;
+            }
+        }
+
+        /// <summary>
+        /// Prepares the DataObjectDiscription instance to read data from <paramref name="reader"/>
+        /// use before calling ReadData
+        /// </summary>
+        /// <param name="reader"></param>
         public void StartRead(System.Data.IDataReader reader)
+        {
+            this.StartRead(reader, false);
+        }
+
+        public void StartRead(System.Data.IDataReader reader, bool refreshOrdnals)
         {
             foreach (FieldInfo fi in Properties.Values)
             {
-                if (fi._fieldAttr == null ||fi._ordinal != -1) { continue; }
-                fi._ordinal = reader.GetOrdinal(fi._fieldAttr.Alias ?? fi._fieldAttr.FieldName);
+                if (fi._fieldAttr != null && (refreshOrdnals || fi._ordinal == -1))
+                {
+                    fi._ordinal = reader.GetOrdinal(fi._fieldAttr.Alias ?? fi._fieldAttr.FieldName);
+                }
             }
-            this._rowidOrd = reader.GetOrdinal("tableRowID");
+
+            if (_rowidField != null)
+            {
+                this._rowidField._ordinal = reader.GetOrdinal("tableRowID");
+            }
+        }
+
+        internal string GetSelectCommandFormat()
+        {
+            if (_selectCommandFormat == null)
+            {
+                StringBuilder sb = new StringBuilder("SELECT ");
+
+                bool first = true;
+                foreach (FieldInfo fi in Properties.Values)
+                {
+                    if (fi._fieldAttr == null) { continue; }
+                    String colExpression = null;
+
+                    if (!string.IsNullOrEmpty(fi._fieldAttr.MapExpression))
+                    {
+                        colExpression = fi._fieldAttr.MapExpression;
+                    }
+                    else if (!string.IsNullOrEmpty(fi._fieldAttr.FieldName))
+                    {
+                        colExpression = ((String.IsNullOrEmpty(TableName)) ? String.Empty : TableName + ".") + fi._fieldAttr.FieldName;
+                    }
+
+                    if (!string.IsNullOrEmpty(fi._fieldAttr.Alias) && !string.IsNullOrEmpty(colExpression))
+                    {
+                        sb.AppendFormat(null, " {0} AS {1},", colExpression, fi._fieldAttr.Alias);
+                    }
+                    else if (!string.IsNullOrEmpty(fi._fieldAttr.Alias))
+                    {
+                        sb.Append(fi._fieldAttr.Alias + ",");
+                    }
+                    else if (!string.IsNullOrEmpty(colExpression))
+                    {
+                        if (first) { first = false; }
+                        else { sb.Append(","); }
+                        sb.Append(colExpression);
+                    }
+
+                }
+                if (_rowidField != null)
+                {
+                    sb.AppendFormat(null, ", {0}.rowID as tableRowID FROM {0}{1}{2};", ReadSource, JoinCommand, "{0}");
+                }
+                else
+                {
+                    sb.AppendFormat(null, "  FROM {0}{1}{2};", ReadSource, JoinCommand, "{0}");
+                }
+                _selectCommandFormat = sb.ToString();
+            }
+
+            return _selectCommandFormat;
         }
 
         private string GetInsertCommandFormatString()
@@ -351,9 +351,9 @@ namespace CruiseDAL
             //check if we already have a cached insert command
             if(_insertCommandFormatString == null)
             {
+                StringBuilder sb = new StringBuilder();
                 //create first part of insert command, leaving placeholder for onConflect option
-                StringBuilder sb = new StringBuilder(String.Format("INSERT OR {0} INTO {1}( ", "{0}",this.TableName));
-
+                sb.AppendFormat(null,"INSERT OR {{0}} INTO {0}( ",this.TableName);                
                 //build the column names section of the insert command 
                 bool first = true;
                 foreach(FieldInfo fi in Properties.Values)
@@ -399,24 +399,19 @@ namespace CruiseDAL
             return _insertCommandFormatString;
         }
 
-
-        public SQLiteCommand CreateSQLInsert(DataObject data, string createdBy,bool setRowID, OnConflictOption option)
+        public SQLiteCommand CreateSQLInsert(DataObject data, string createdBy,bool usePresetRowID, OnConflictOption option)
         {
 
             string commandText = string.Format(GetInsertCommandFormatString(), option.ToString(),
-                (setRowID) ? ", rowID" : String.Empty,
-                (setRowID) ? ", @rowID" : String.Empty);
+                (usePresetRowID) ? ", rowID" : String.Empty,
+                (usePresetRowID) ? ", @rowID" : String.Empty);
             SQLiteCommand command = new SQLiteCommand(commandText);
             foreach(FieldInfo fi in Properties.Values)
             {
                 if (fi._fieldAttr == null) { continue; }
                 if(fi._fieldAttr.IsPersisted )
                 {
-                    object value = fi._getter.Invoke(data, null);
-                    if(fi._propType.IsEnum)
-                    {
-                        value = value.ToString();
-                    }
+                    object value = this.GetPropertyValue(fi, data);
                     command.Parameters.Add(new SQLiteParameter("@" + fi._fieldAttr.FieldName, value));
                 }
                 if (fi._fieldAttr.SpecialFieldType == SepcialFieldType.CreatedBy)
@@ -425,7 +420,7 @@ namespace CruiseDAL
                 }
             }
 
-            if (setRowID)
+            if (usePresetRowID)
             {
                 command.Parameters.AddWithValue("@rowID", data.rowID);
             }
@@ -437,8 +432,9 @@ namespace CruiseDAL
         {
             if(_updateCommandFormat == null)
             {
+                StringBuilder sb = new StringBuilder();
                 //create first part of update command with place holder for OnConflictOption. 
-                StringBuilder sb = new StringBuilder(String.Format("UPDATE OR {0} {1} SET ", "{0}", this.TableName));
+                sb.AppendFormat(null,"UPDATE OR {0} {1} SET ", "{0}", this.TableName);
 
                 String[] colExprs = new String[Properties.Values.Count];
                 int i = 0;
@@ -450,7 +446,6 @@ namespace CruiseDAL
                         colExprs[i] = string.Format(" {0} = @{0}", fi._fieldAttr.FieldName);
                         i++;
                     }
-
                 }
                 sb.Append(string.Join(", ", colExprs,0, i));
 
@@ -460,8 +455,8 @@ namespace CruiseDAL
             return _updateCommandFormat;
         }
 
-        public SQLiteCommand CreateSQLUpdate(DataObject data, string ModifiedBy, OnConflictOption option)
-        {
+        public SQLiteCommand CreateSQLUpdate(DataObject data, object recordKey, string ModifiedBy, OnConflictOption option)
+        {            
             string commandText = string.Format(GetUpdateCommandFormatString(), option.ToString());
             SQLiteCommand command = new SQLiteCommand(commandText);
             foreach(FieldInfo fi in Properties.Values)
@@ -469,11 +464,7 @@ namespace CruiseDAL
                 if (fi._fieldAttr == null) { continue; }
                 if (fi._fieldAttr.IsPersisted )
                 {
-                    object value = fi._getter.Invoke(data, null);
-                    if(fi._propType.IsEnum)
-                    {
-                        value = value.ToString();
-                    }
+                    object value = this.GetPropertyValue(fi, data);
                     command.Parameters.Add(new SQLiteParameter("@" + fi._fieldAttr.FieldName, value));
                 }
                 if (fi._fieldAttr.SpecialFieldType == SepcialFieldType.ModifiedBy)
@@ -482,7 +473,7 @@ namespace CruiseDAL
                 }
             }
 
-            command.Parameters.Add(new SQLiteParameter("@rowID", data.rowID));
+            command.Parameters.Add(new SQLiteParameter("@rowID", recordKey));
 
             return command;
         }
@@ -747,6 +738,50 @@ namespace CruiseDAL
             }
         }
 
+        public static Guid GetGuid(IDataReader reader, int ord)
+        {
+            if (reader.IsDBNull(ord))
+            {
+                return Guid.Empty;
+            }
+            else
+            {
+                try
+                {
+                    return reader.GetGuid(ord);
+                }
+                catch (InvalidCastException)
+                {
+                    return Guid.Empty;
+                }
+            }
+        }
+
+        internal class FieldInfo
+        {
+            //public PropertyInfo _propInfo;
+            public FieldAttribute _fieldAttr;
+            public Type _propType;
+            public int _ordinal = -1; //cached dataReader ordinal
+            public MethodInfo _getter;
+            public MethodInfo _setter;
+            public bool IsGuid;
+
+            public FieldInfo(PropertyInfo prop, FieldAttribute attr)
+            {
+                this._fieldAttr = attr;
+                this._getter = prop.GetGetMethod();
+                this._setter = prop.GetSetMethod();
+                this._propType = prop.PropertyType;
+                this.IsGuid = this._propType.Equals(typeof(Guid));
+            }
+
+            public override string ToString()
+            {
+                return String.Format("PropType({0}); DBType({1}), FieldName({2}), Alias({3}), MapExpression({4})",
+                    _propType.Name, _fieldAttr.DataType, _fieldAttr.FieldName ?? "null", _fieldAttr.Alias ?? "null", _fieldAttr.MapExpression ?? "null");
+            }
+        }
     }
 
         
