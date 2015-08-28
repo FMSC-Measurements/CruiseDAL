@@ -488,12 +488,12 @@ namespace CruiseDAL
             if (String.IsNullOrEmpty(path))
             { path = ":memory:"; }
 
-            SQLiteConnectionStringBuilder builder = new SQLiteConnectionStringBuilder();
-            builder.Version = 3;
-            builder.DataSource = path;
-            builder.FailIfMissing = !isNew; 
-            return builder.ToString();
-            //return string.Format("Data Source={0};New= {1};Version=3;", path , isNew);
+            //SQLiteConnectionStringBuilder builder = new SQLiteConnectionStringBuilder();
+            //builder.Version = 3;
+            //builder.DataSource = path;
+            //builder.FailIfMissing = !isNew; 
+            //return builder.ToString();
+            return string.Format("Data Source={0};New= {1};Version=3;", path , isNew);
         }
 
 
@@ -637,7 +637,27 @@ namespace CruiseDAL
                 System.Text.RegularExpressions.Regex.Match(tableSQL, @"(?<=^\s+UNIQUE\s\()[^\)]+(?=\))", System.Text.RegularExpressions.RegexOptions.Multiline);
             if (match != null && match.Success)
             {
-                return match.Value.Split(new char[]{',',' ','\r','\n'},  StringSplitOptions.RemoveEmptyEntries);
+                String[] a = match.Value.Split(new char[] { ',', ' ', '\r', '\n' });
+                int numNotEmpty = 0;
+                foreach (string s in a)
+                {
+                    if (!string.IsNullOrEmpty(s))
+                    {
+                        numNotEmpty++;
+                    }
+                }
+                string[] b = new string[numNotEmpty];
+                for (int i = 0, j = 0; i < a.Length; i++)
+                {
+                    if (!string.IsNullOrEmpty(a[i]))
+                    {
+                        b[j] = a[i];
+                        j++;
+                    }
+                }
+
+                return b;
+                //return match.Value.Split(new char[]{',',' ','\r','\n'},  StringSplitOptions.RemoveEmptyEntries);
 
             }
             return new string[0];
