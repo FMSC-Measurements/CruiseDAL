@@ -4,7 +4,7 @@ using CruiseDAL;
 using System.ComponentModel;
 using System.Collections.Generic;
 
-namespace CruiseDALTest
+namespace CruiseDAL.DataObjects.Tests
 {
     
     

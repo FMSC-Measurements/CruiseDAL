@@ -4,10 +4,10 @@ using System;
 using System.Collections.Generic;
 using CruiseDAL.DataObjects;
 using System.Threading;
-using System.Data.Common;
 using System.IO;
+using CruiseDAL.Test.TestTypes;
 
-namespace CruiseDALTest
+namespace CruiseDAL.Tests
 {
     
     
@@ -18,7 +18,6 @@ namespace CruiseDALTest
     [TestClass()]
     public class DALTest
     {
-        public static string TEST_FILE_PATH = "Test.cruise";
         public static string TEST_COPY_FILE_NAME = "\\TestCopy.cruise";
         public static string TESTCRUISEDAL_PATH = "TestCruiseDAL.db";
 
@@ -52,7 +51,7 @@ namespace CruiseDALTest
         [ClassInitialize()]
         public static void MyClassInitialize(TestContext testContext)
         {
-            _testDALInstance = GetTestDAL();
+            _testDALInstance = CruiseDAL.Tests.CommonMethods.GetTestDAL();
             Assert.IsTrue(_testDALInstance.Exists);
             //_rand = new Random(0);
 
@@ -65,11 +64,6 @@ namespace CruiseDALTest
             //    newCU.Area = (float)(1000 * _rand.NextDouble());
             //    newCU.Save();
             //}
-        }
-
-        public static DAL GetTestDAL()
-        {
-            return new DAL(TEST_FILE_PATH);
         }
 
         //private static string _chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
@@ -164,7 +158,7 @@ namespace CruiseDALTest
         [TestMethod()]
         public void DatabaseUpdateTest()
         {
-            DAL db = new DAL(TEST_FILE_PATH, false);
+            throw new NotImplementedException();
 
         }
 
@@ -324,7 +318,7 @@ namespace CruiseDALTest
         [TestMethod()]
         public void TestCopyTo()
         {
-            DAL target = GetTestDAL();
+            DAL target = CruiseDAL.Tests.CommonMethods.GetTestDAL();
             string copyPath = System.IO.Path.GetDirectoryName(target.Path) + TEST_COPY_FILE_NAME;
             DAL copy = target.CopyTo(copyPath);
 

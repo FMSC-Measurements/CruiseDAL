@@ -3,7 +3,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using CruiseDAL.DataObjects;
 
-namespace CruiseDALTest
+namespace CruiseDAL.BaseDAL.Tests
 {
     
     

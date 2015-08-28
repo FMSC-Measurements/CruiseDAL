@@ -3,18 +3,18 @@ using System.Text;
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System.Reflection;
 using CruiseDAL;
+using CruiseDALTest.TestTypes;
 
-namespace CruiseDALTest
+namespace CruiseDAL.BaseDAL.Tests
 {
     /// <summary>
-    /// Summary description for DataObjectDiscriptionTest
+    /// Summary description for DataObjectDescription
     /// </summary>
     [TestClass]
-    public class DataObjectDiscriptionTest
+    public class DataObjectInfoTest
     {
-        public DataObjectDiscriptionTest()
+        public DataObjectInfoTest()
         {
             //
             // TODO: Add constructor logic here
@@ -62,16 +62,31 @@ namespace CruiseDALTest
         #endregion
 
         [TestMethod]
+        public void Test_VanillaMultiTypeObject()
+        {
+            var doi = new DataObjectInfo_Accessor(typeof(VanillaMultiTypeObject));
+            Assert.IsNotNull(doi);
+        }
+
+        [TestMethod]
+        public void Test_DOMultiPropType()
+        {
+            var doi = new DataObjectInfo_Accessor(typeof(DOMultiPropType));
+            
+            Assert.IsNotNull(doi);
+        }
+
+        [TestMethod]
         public void LoadDataObjects()
         {
-            var types = (from t in Assembly.GetAssembly(typeof(CruiseDAL.DataObject)).GetTypes()
-                        where t.IsClass && t.Namespace == "CruiseDAL.DataObjects"
-                        select t).ToList();
+            var types = (from t in System.Reflection.Assembly.GetAssembly(typeof(CruiseDAL.DataObject)).GetTypes()
+                         where t.IsClass && t.Namespace == "CruiseDAL.DataObjects"
+                         select t).ToList();
 
             foreach (Type t in types)
             {
                 TestContext.WriteLine(t.FullName);
-                DataObjectInfo doi = new DataObjectInfo(t);
+                var doi = new DataObjectInfo_Accessor(t);
                 Assert.IsTrue(doi.ReadSource != null);
             }
         }

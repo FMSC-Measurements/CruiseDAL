@@ -1,0 +1,16 @@
+﻿CREATE TABLE MultiPropTable
+(
+	StringField TEXT, 
+	IntField INTEGER, 
+	NIntField INTEGER, 
+	LongField INTEGER, 
+	NLongField INTEGER, 
+	FloatField REAL, 
+	NFloatField REAL, 
+	DoubleField REAL, 
+	NDoubleField REAL,
+	BoolField BOOLEAN, 
+	NBoolField BOOLEAN, 
+	GuidField TEXT,
+	DateTimeField DATETIME
+)

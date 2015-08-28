@@ -6,7 +6,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using CruiseDAL;
 using System.Collections;
 
-namespace CruiseDALTest
+namespace CruiseDAL.Tests
 {
     /// <summary>
     /// Summary description for ReadTests

@@ -6,7 +6,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using CruiseDAL;
 using CruiseDAL.DataObjects;
 
-namespace CruiseDALTest
+namespace CruiseDAL.Tests
 {
     /// <summary>
     /// Summary description for MappingCollectionTest

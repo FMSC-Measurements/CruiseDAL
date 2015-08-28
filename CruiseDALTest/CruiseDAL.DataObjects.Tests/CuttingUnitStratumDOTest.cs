@@ -1,6 +1,6 @@
 ﻿using CruiseDAL.DataObjects;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-namespace CruiseDALTest
+namespace CruiseDAL.DataObjects.Tests
 {
     
     

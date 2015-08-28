@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using CruiseDAL;
 
-namespace CruiseDALTest
+namespace CruiseDAL.Test.TestTypes
 {
     [SQLEntity(TableName = "TestRead")]
     public class TestReadDO : DataObject

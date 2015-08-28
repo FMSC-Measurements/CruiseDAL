@@ -3,7 +3,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using CruiseDAL;
 using System.Collections.Generic;
 
-namespace CruiseDALTest
+namespace CruiseDAL.DataObjects.Tests
 {
     
     
@@ -71,7 +71,7 @@ namespace CruiseDALTest
         [TestMethod()]
         public void GetByRowNumberGroupBySpeciesTest()
         {
-            DAL cruiseDAL = DALTest.GetTestDAL();
+            DAL cruiseDAL = CruiseDAL.Tests.CommonMethods.GetTestDAL();
             string reportNum = "008"; 
 
 
