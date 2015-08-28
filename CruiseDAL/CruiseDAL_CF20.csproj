@@ -100,6 +100,7 @@
     <Compile Include="CruiseDAL\MappingCollections\MappingColliction_Base.cs" />
     <Compile Include="CruiseDAL\Schema\Constants.cs" />
     <Compile Include="CruiseDAL\Updater.cs" />
+    <Compile Include="DeviceInfo.cs" />
     <Compile Include="Logger\Logger.cs" />
     <Compile Include="Properties\AssemblyInfo_CF20.cs" />
     <Compile Include="Properties\Resources_CF20.Designer.cs">
@@ -124,12 +125,6 @@
       <Link>SQLite.Interop.094.dll</Link>
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\FMSC.Utility\FMSC.Utility\FMCSUtil_CF20.csproj">
-      <Project>{2B5BA2D4-7D46-4BF3-A775-2A0F849BE92B}</Project>
-      <Name>FMCSUtil_CF20</Name>
-    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CompactFramework.CSharp.targets" />
   <ProjectExtensions>

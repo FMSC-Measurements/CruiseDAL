@@ -105,12 +105,24 @@ namespace CruiseDAL.CodeGenEngine
 
             if (IsAccessableTypeEnum) { return "0"; }
             else if (IsFK || String.IsNullOrEmpty(DBDefault)) { return null; }
-             
-            
 
-            if (DBDefault == "null")
+
+
+            if (Default == "null")
             {
                 return null;
+            }
+            else if (!string.IsNullOrEmpty(Default))
+            {
+                if (this.AccessableType.ToLower() == "string")
+                {
+                    return "\"" + Default + "\"";
+                }
+                else
+                {
+                    return Default;
+                }
+
             }
             switch (this.AccessableType.ToLower())
             {

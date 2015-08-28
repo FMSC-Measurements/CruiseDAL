@@ -742,7 +742,7 @@ namespace CruiseDAL.DataObjects
 		        this.NotifyPropertyChanged(STRATUM.FBSCODE, _fbscode);
 		    }
 		}
-		private String _yieldcomponent ;
+		private String _yieldcomponent  = "CL";
 		[XmlElement]
 		[Field (FieldName = "YieldComponent",
 		 IsUnique = false,
@@ -1817,7 +1817,7 @@ namespace CruiseDAL.DataObjects
 		        this.NotifyPropertyChanged(TREEDEFAULTVALUE.CONTRACTSPECIES, _contractspecies);
 		    }
 		}
-		private String _treegrade ;
+		private String _treegrade  = "0";
 		[XmlElement]
 		[Field (FieldName = "TreeGrade",
 		 IsUnique = false,
@@ -1855,7 +1855,7 @@ namespace CruiseDAL.DataObjects
 		        this.NotifyPropertyChanged(TREEDEFAULTVALUE.MERCHHEIGHTLOGLENGTH, _merchheightloglength);
 		    }
 		}
-		private String _merchheighttype ;
+		private String _merchheighttype  = "F";
 		[XmlElement]
 		[Field (FieldName = "MerchHeightType",
 		 IsUnique = false,
@@ -3040,7 +3040,7 @@ namespace CruiseDAL.DataObjects
 		        this.NotifyPropertyChanged(TREE.KPI, _kpi);
 		    }
 		}
-		private String _stm ;
+		private String _stm  = "N";
 		[XmlElement]
 		[Field (FieldName = "STM",
 		 IsUnique = false,

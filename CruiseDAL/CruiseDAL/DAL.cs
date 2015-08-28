@@ -295,8 +295,10 @@ namespace CruiseDAL
         protected override String GetUserInformation()
         {
 #if Mobile
-            FMSC.Utility.MobileDeviceInfo di = new FMSC.Utility.MobileDeviceInfo();
-            return di.GetModelAndSerialNumber();
+
+            return FMSC.Util.DeviceInfo.GetMachineDescription() + "|" + FMSC.Util.DeviceInfo.GetMachineName();
+            //FMSC.Utility.MobileDeviceInfo di = new FMSC.Utility.MobileDeviceInfo();
+            //return di.GetModelAndSerialNumber();
             //return "Mobile User";
 #elif FullFramework
             return Environment.UserName + " on " + System.Windows.Forms.SystemInformation.ComputerName;
@@ -305,6 +307,8 @@ namespace CruiseDAL
 #endif
            //return Environment.UserName + " on " + System.Windows.Forms.SystemInformation.ComputerName;
         }
+
+        
 
 
         //private Dictionary<string, RowValidator> _validators = new Dictionary<string, RowValidator>();
