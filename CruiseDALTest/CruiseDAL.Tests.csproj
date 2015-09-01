@@ -17,7 +17,8 @@
     <SccAuxPath>Svn</SccAuxPath>
     <SccProvider>SubversionScc</SccProvider>
     <SignAssembly>false</SignAssembly>
-    <AssemblyOriginatorKeyFile>CruiseDALTest.snk</AssemblyOriginatorKeyFile>
+    <AssemblyOriginatorKeyFile>
+    </AssemblyOriginatorKeyFile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
     <DebugSymbols>true</DebugSymbols>
@@ -81,7 +82,6 @@
     <Shadow Include="Test References\CruiseDAL.accessor" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="CruiseDALTest.snk" />
     <None Include="SQL\CreateTestDB.sql" />
     <None Include="TestResources\Test.cruise" />
     <None Include="TestResources\TestCruiseDAL.db" />

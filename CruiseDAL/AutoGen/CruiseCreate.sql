@@ -794,7 +794,7 @@ JOIN CuttingUnit USING (CuttingUnit_CN)
 JOIN Stratum USING (Stratum_CN);
 
 
-INSERT INTO Globals (Block, Key, Value) VALUES ("Database", "Version", "2015.08.19"); 
+INSERT INTO Globals (Block, Key, Value) VALUES ("Database", "Version", "2015.09.01"); 
 PRAGMA user_version = 2;
 
 

@@ -115,6 +115,10 @@ namespace CruiseDAL
             {
                 UpdateToVersion2015_08_19(db);
             }
+            if (db.DatabaseVersion == "2015.08.19")
+            {
+                UpdateToVersion2015_09_01(db);
+            }
 
 
             if (db.HasForeignKeyErrors(Schema.TREEDEFAULTVALUETREEAUDITVALUE._NAME))
@@ -995,15 +999,7 @@ JOIN CuttingUnit USING (CuttingUnit_CN)
 JOIN Stratum USING (Stratum_CN);");
 
 
-                //because there are a lot of changes with triggers 
-                //lets just recreate all triggers
-                foreach (string trigName in ListTriggers(db))
-                {
-                    db.Execute("DROP TRIGGER " + trigName + ";");
-                }
-
-                string createTriggers = db.GetCreateTriggers();
-                db.Execute(createTriggers);
+                               
 
                 db.Execute("PRAGMA user_version = 1");
                 SetDatabaseVersion(db, "2015.04.28");
@@ -1061,7 +1057,8 @@ JOIN Stratum USING (Stratum_CN);");
                 if (!hasErrorMessageCol)
                 {                        
                     db.AddField("TreeAuditValue", "ErrorMessage TEXT");                        
-                }
+                }                               
+
                 SetDatabaseVersion(db, "2015.08.19");
                 db.EndTransaction();
             }
@@ -1071,6 +1068,36 @@ JOIN Stratum USING (Stratum_CN);");
                 throw new DatabaseExecutionException("failed updating database to version 2015.08.19", e);
             }                        
         }
+
+        //patch for some a version that got out in the wild with bad triggers
+        private static void UpdateToVersion2015_09_01(DAL db)
+        {
+            db.BeginTransaction();
+            try
+            {
+                
+                //because there are a lot of changes with triggers 
+                //lets just recreate all triggers
+                foreach (string trigName in ListTriggers(db))
+                {
+                    db.Execute("DROP TRIGGER " + trigName + ";");
+                }
+
+                string createTriggers = db.GetCreateTriggers();
+                db.Execute(createTriggers);
+
+
+                SetDatabaseVersion(db, "2015.09.01");
+                db.EndTransaction();
+            }
+            catch (Exception e)
+            {
+                db.CancelTransaction();
+                throw new DatabaseExecutionException("failed updating database to version 2015.09.01", e);
+            } 
+
+        }
+
 
     }
 }
