@@ -1,6 +1,7 @@
 *.suo
 bin/
 obj/
+/TestResults
 *.user
 *.snk
 *.old

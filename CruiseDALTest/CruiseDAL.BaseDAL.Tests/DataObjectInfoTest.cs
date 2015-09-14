@@ -87,7 +87,7 @@ namespace CruiseDAL.BaseDAL.Tests
             {
                 TestContext.WriteLine(t.FullName);
                 var doi = new DataObjectInfo_Accessor(t);
-                Assert.IsTrue(doi.ReadSource != null);
+                Assert.IsTrue(doi.ReadSource != null, doi._dataObjectType.Name);
             }
         }
     }

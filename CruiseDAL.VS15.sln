@@ -1,0 +1,69 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 14
+VisualStudioVersion = 14.0.23107.0
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{770A329F-9981-40B5-8AD1-85C573421463}"
+	ProjectSection(SolutionItems) = preProject
+		CruiseDAL1.vsmdi = CruiseDAL1.vsmdi
+		LocalTestRun.testrunconfig = LocalTestRun.testrunconfig
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CruiseDAL_FF35.VS15", "CruiseDAL\CruiseDAL_FF35.VS15.csproj", "{BAF1842E-F8C5-47A5-94C6-ADABA8A4B3AF}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CruiseDAL.Tests.VS15", "CruiseDALTest\CruiseDAL.Tests.VS15.csproj", "{218BDBE5-66B4-45D8-B428-1DAC786B974C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CruiseDAL.CodeGenEngine", "CruiseDAL.CodeGenEngine\CruiseDAL.CodeGenEngine.VS15.csproj", "{0262A884-E5B3-4BFF-8C63-79EFC742151F}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Debug|Mixed Platforms = Debug|Mixed Platforms
+		Debug|x86 = Debug|x86
+		Release|Any CPU = Release|Any CPU
+		Release|Mixed Platforms = Release|Mixed Platforms
+		Release|x86 = Release|x86
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{BAF1842E-F8C5-47A5-94C6-ADABA8A4B3AF}.Debug|Any CPU.ActiveCfg = Debug|x86
+		{BAF1842E-F8C5-47A5-94C6-ADABA8A4B3AF}.Debug|Mixed Platforms.ActiveCfg = Debug|x86
+		{BAF1842E-F8C5-47A5-94C6-ADABA8A4B3AF}.Debug|Mixed Platforms.Build.0 = Debug|x86
+		{BAF1842E-F8C5-47A5-94C6-ADABA8A4B3AF}.Debug|x86.ActiveCfg = Debug|x86
+		{BAF1842E-F8C5-47A5-94C6-ADABA8A4B3AF}.Debug|x86.Build.0 = Debug|x86
+		{BAF1842E-F8C5-47A5-94C6-ADABA8A4B3AF}.Release|Any CPU.ActiveCfg = Release|x86
+		{BAF1842E-F8C5-47A5-94C6-ADABA8A4B3AF}.Release|Mixed Platforms.ActiveCfg = Release|x86
+		{BAF1842E-F8C5-47A5-94C6-ADABA8A4B3AF}.Release|Mixed Platforms.Build.0 = Release|x86
+		{BAF1842E-F8C5-47A5-94C6-ADABA8A4B3AF}.Release|x86.ActiveCfg = Release|x86
+		{BAF1842E-F8C5-47A5-94C6-ADABA8A4B3AF}.Release|x86.Build.0 = Release|x86
+		{218BDBE5-66B4-45D8-B428-1DAC786B974C}.Debug|Any CPU.ActiveCfg = Debug|x86
+		{218BDBE5-66B4-45D8-B428-1DAC786B974C}.Debug|Mixed Platforms.ActiveCfg = Debug|x86
+		{218BDBE5-66B4-45D8-B428-1DAC786B974C}.Debug|Mixed Platforms.Build.0 = Debug|x86
+		{218BDBE5-66B4-45D8-B428-1DAC786B974C}.Debug|x86.ActiveCfg = Debug|x86
+		{218BDBE5-66B4-45D8-B428-1DAC786B974C}.Debug|x86.Build.0 = Debug|x86
+		{218BDBE5-66B4-45D8-B428-1DAC786B974C}.Release|Any CPU.ActiveCfg = Release|x86
+		{218BDBE5-66B4-45D8-B428-1DAC786B974C}.Release|Mixed Platforms.ActiveCfg = Release|x86
+		{218BDBE5-66B4-45D8-B428-1DAC786B974C}.Release|Mixed Platforms.Build.0 = Release|x86
+		{218BDBE5-66B4-45D8-B428-1DAC786B974C}.Release|x86.ActiveCfg = Release|x86
+		{218BDBE5-66B4-45D8-B428-1DAC786B974C}.Release|x86.Build.0 = Release|x86
+		{0262A884-E5B3-4BFF-8C63-79EFC742151F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0262A884-E5B3-4BFF-8C63-79EFC742151F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0262A884-E5B3-4BFF-8C63-79EFC742151F}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{0262A884-E5B3-4BFF-8C63-79EFC742151F}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{0262A884-E5B3-4BFF-8C63-79EFC742151F}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{0262A884-E5B3-4BFF-8C63-79EFC742151F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0262A884-E5B3-4BFF-8C63-79EFC742151F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0262A884-E5B3-4BFF-8C63-79EFC742151F}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{0262A884-E5B3-4BFF-8C63-79EFC742151F}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{0262A884-E5B3-4BFF-8C63-79EFC742151F}.Release|x86.ActiveCfg = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(SubversionScc) = preSolution
+		Svn-Managed = True
+		Manager = AnkhSVN - Subversion Support for Visual Studio
+	EndGlobalSection
+	GlobalSection(TestCaseManagementSettings) = postSolution
+		CategoryFile = CruiseDAL1.vsmdi
+	EndGlobalSection
+EndGlobal
