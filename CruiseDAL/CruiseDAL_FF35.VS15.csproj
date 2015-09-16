@@ -86,16 +86,6 @@
   </ItemGroup>
   <!-- Added Code to include all code files in project directory -->
   <ItemGroup>
-    <Compile Include="AutoGen\CreateTriggers.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>CreateTriggers.tt</DependentUpon>
-    </Compile>
-    <Compile Include="AutoGen\CruiseCreate.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>CruiseCreate.tt</DependentUpon>
-    </Compile>
     <Compile Include="AutoGen\DAL.AutoGen.cs">
       <SubType>Code</SubType>
       <AutoGen>True</AutoGen>
@@ -169,11 +159,11 @@
   <ItemGroup>
     <None Include="AutoGen\CreateTriggers.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
-      <LastGenOutput>CreateTriggers.cs</LastGenOutput>
+      <LastGenOutput>CreateTriggers.sql</LastGenOutput>
     </None>
     <None Include="AutoGen\CruiseCreate.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
-      <LastGenOutput>CruiseCreate.cs</LastGenOutput>
+      <LastGenOutput>CruiseCreate.sql</LastGenOutput>
     </None>
     <None Include="AutoGen\DAL.AutoGen.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
@@ -188,6 +178,18 @@
       <LastGenOutput>Schema.cs</LastGenOutput>
     </None>
     <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="AutoGen\CreateTriggers.sql">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>CreateTriggers.tt</DependentUpon>
+    </Content>
+    <Content Include="AutoGen\CruiseCreate.sql">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>CruiseCreate.tt</DependentUpon>
+    </Content>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="..\packages\System.Data.SQLite.Core.1.0.98.1\build\net20\System.Data.SQLite.Core.targets" Condition="Exists('..\packages\System.Data.SQLite.Core.1.0.98.1\build\net20\System.Data.SQLite.Core.targets')" />
