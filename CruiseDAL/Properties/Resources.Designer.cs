@@ -61,7 +61,22 @@ namespace CruiseDAL.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to ErrorGeneratingOutput.
+        ///   Looks up a localized string similar to  
+        ///
+        ///--Core Tables--
+        ///--Sale--
+        ///CREATE TRIGGER OnUpdateSale 
+        ///AFTER UPDATE OF Sale_CN, SaleNumber, Name, Purpose, Region, Forest, District, MeasurementYear, CalendarYear, LogGradingEnabled, Remarks, DefaultUOM 
+        ///ON Sale 
+        ///BEGIN
+        ///	UPDATE Sale 
+        ///	SET ModifiedDate = datetime(current_timestamp, &apos;localtime&apos;) 
+        ///	WHERE rowID = new.rowID; 
+        ///END;
+        ///
+        /// 
+        ///CREATE TRIGGER OnUpdateSaleRowVersion AFTER UPDATE 
+        ///OF Sale_CN, SaleNumber, Name, Purpose, Region, Forest, District, MeasurementYear, CalendarYear, LogGradingEnabled [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string CreateTriggers {
             get {
@@ -70,7 +85,27 @@ namespace CruiseDAL.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to ErrorGeneratingOutput.
+        ///   Looks up a localized string similar to  
+        ///
+        ///PRAGMA foreign_keys = ON;--is the nessicary? no data is being inserted yet.
+        ///
+        ///
+        ///--Core Tables--
+        ///    CREATE TABLE Sale (
+        ///				Sale_CN INTEGER PRIMARY KEY AUTOINCREMENT,
+        ///				SaleNumber TEXT NOT NULL,
+        ///				Name TEXT,
+        ///				Purpose TEXT,
+        ///				Region TEXT NOT NULL,
+        ///				Forest TEXT NOT NULL,
+        ///				District TEXT NOT NULL,
+        ///				MeasurementYear TEXT,
+        ///				CalendarYear INTEGER Default 0,
+        ///				LogGradingEnabled BOOLEAN Default 0,
+        ///				Remarks TEXT,
+        ///				DefaultUOM TEXT,
+        ///				CreatedBy TEXT DEFAULT &apos;none&apos;,
+        ///				 [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string CruiseCreate {
             get {
