@@ -58,11 +58,7 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
-	EndGlobalSection
-	GlobalSection(SubversionScc) = preSolution
-		Svn-Managed = True
-		Manager = AnkhSVN - Subversion Support for Visual Studio
-	EndGlobalSection
+	EndGlobalSection	
 	GlobalSection(TestCaseManagementSettings) = postSolution
 		CategoryFile = CruiseDAL1.vsmdi
 	EndGlobalSection
