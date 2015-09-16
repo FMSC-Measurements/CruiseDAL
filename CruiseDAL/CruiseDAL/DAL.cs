@@ -301,7 +301,7 @@ namespace CruiseDAL
             //return di.GetModelAndSerialNumber();
             //return "Mobile User";
 #elif FullFramework
-            return Environment.UserName + " on " + System.Windows.Forms.SystemInformation.ComputerName;
+            return Environment.UserName + " on " + System.Environment.MachineName;
 			#elif ANDROID
 			return "AndroidUser";
 #endif

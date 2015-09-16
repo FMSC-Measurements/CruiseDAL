@@ -103,6 +103,7 @@
     <Compile Include="BaseDAL\ObjectCache.cs" />
     <Compile Include="BaseDAL\ReadDataObject.cs" />
     <Compile Include="BaseDAL\Validator.cs" />
+    <Compile Include="CruiseDAL\CustomTriggers.cs" />
     <Compile Include="CruiseDAL\DAL.cs" />
     <Compile Include="CruiseDAL\DataObjects\AuditValue_partial.cs" />
     <Compile Include="CruiseDAL\DataObjects\CountTree_ViewDO.cs" />
@@ -132,6 +133,11 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
+    <Compile Include="SQLExpressionTypes\InsertStatment.cs" />
+    <Compile Include="SQLExpressionTypes\SQLCreateTrigger.cs" />
+    <Compile Include="SQLExpressionTypes\SQLDdlStatment.cs" />
+    <Compile Include="SQLExpressionTypes\SQLExpression.cs" />
+    <Compile Include="SQLExpressionTypes\SQLStatment.cs" />
   </ItemGroup>
   <!-- end Added Code -->
   <ItemGroup>

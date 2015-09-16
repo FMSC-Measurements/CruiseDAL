@@ -1,0 +1,8 @@
+--delete from counttree where counttree_CN in (
+--select counttree_CN from (
+select * from (
+select count(1) as numDup, * from (
+select * from counttree order by counttree_cn asc )
+group by cuttingUnit_CN, sampleGroup_CN, ifnull(Component_CN, 0)
+) where numDup > 1
+--)
