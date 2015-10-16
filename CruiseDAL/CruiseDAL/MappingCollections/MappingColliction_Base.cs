@@ -126,6 +126,16 @@ namespace CruiseDAL
 
         }
 
+        public bool HasChanges
+        {
+            get
+            {
+                return this.DAL == null 
+                    ||this._unpersistedChildren.Count > 0 
+                    || this._toBeDeleted.Count > 0;
+            }
+        }
+
         //protected void SaveChild(ChildType child)
         //{
         //    addMap(child);
