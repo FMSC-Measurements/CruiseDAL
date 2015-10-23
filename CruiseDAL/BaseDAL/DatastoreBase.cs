@@ -4,6 +4,7 @@ using System.Text;
 using System.Data.Common;
 using System.Collections;
 using Logger;
+using CruiseDAL.BaseDAL;
 
 #if ANDROID
 using Mono.Data.Sqlite;
@@ -37,7 +38,7 @@ namespace CruiseDAL
         protected AsyncBuildSchemaCaller _buildSchemaCallerHandle;
 
         internal ObjectCache _IDTable;
-        private static Dictionary<Type, DataObjectInfo> DataObjectDescriptionLookup = new Dictionary<Type, DataObjectInfo>();
+        private static Dictionary<Type, EntityDescription> DataObjectDescriptionLookup = new Dictionary<Type, EntityDescription>();
 
         protected string _ConnectionString
         {
@@ -549,7 +550,7 @@ namespace CruiseDAL
                 {
                     throw new InvalidOperationException("Can't change row id on unsaved data");
                 }
-                DataObjectInfo doi = DatastoreBase.GetObjectDiscription(data.GetType());
+                EntityDescription doi = DatastoreBase.GetObjectDiscription(data.GetType());
                 string command = string.Format("UPDATE OR {3} {0} SET rowid = {2} WHERE rowID = {1};", doi.ReadSource, data.rowID, newRowID, option.ToString());
                 this.Execute(command);
                 data.rowID = newRowID;
@@ -564,13 +565,13 @@ namespace CruiseDAL
         //    return DatastoreBase.GetObjectDiscription(T);
         //}
 
-        internal static DataObjectInfo GetObjectDiscription(Type T)
+        internal static EntityDescription GetObjectDiscription(Type T)
         {
             lock (DataObjectDescriptionLookup)
             {
                 if (!DataObjectDescriptionLookup.ContainsKey(T))
                 {
-                    DataObjectInfo des = new DataObjectInfo(T);
+                    EntityDescription des = new EntityDescription(T);
                     DataObjectDescriptionLookup.Add(T, des);
                     return des;
                 }
@@ -579,17 +580,17 @@ namespace CruiseDAL
         }
 
 
-        protected virtual DbParameter CreateParameter(string name, object value)
+        internal virtual DbParameter CreateParameter(string name, object value)
         {
             return new SQLiteParameter(name, value);
         }
 
-        protected virtual DbCommand CreateCommand(string commandText)
+        internal virtual DbCommand CreateCommand(string commandText)
         {
             return new SQLiteCommand(commandText);
         }
 
-        protected virtual DbCommand CreateCommand(DbConnection connection, String commandText)
+        internal virtual DbCommand CreateCommand(DbConnection connection, String commandText)
         {
             DbCommand cmd = connection.CreateCommand();
             cmd.CommandText = commandText;
@@ -772,7 +773,7 @@ namespace CruiseDAL
 
         }
 
-        internal List<T> Read<T>(DbCommand command, bool cache, DataObjectInfo des) where T : DataObject, new()
+        internal List<T> Read<T>(DbCommand command, bool cache, EntityDescription des) where T : DataObject, new()
         {
             List<T> doList = new List<T>();
             DbDataReader reader = null;            
@@ -857,7 +858,7 @@ namespace CruiseDAL
         public List<T> Read<T>(string tableName, String selection, params Object[] selectionArgs)
             where T : DataObject, new()
         {
-            DataObjectInfo des = DatastoreBase.GetObjectDiscription(typeof(T));
+            EntityDescription des = DatastoreBase.GetObjectDiscription(typeof(T));
             bool cache = des.IsCached;
             string query = String.Format(des.GetSelectCommandFormat(), selection);
             using (DbCommand command = this.CreateCommand(query))
@@ -878,7 +879,7 @@ namespace CruiseDAL
 
         public T QuerySingleRecord<T>(String selectCommand, params Object[] selectionArgs) where T : new()
         {
-            DataObjectInfo doi = DatastoreBase.GetObjectDiscription(typeof(T));
+            EntityDescription doi = DatastoreBase.GetObjectDiscription(typeof(T));
             DbCommand command = this.CreateCommand(selectCommand);
 
             //Add selection Arugments to command parameter list
@@ -924,7 +925,7 @@ namespace CruiseDAL
 
         public List<T> Query<T>(String selectCommand, params Object[] selectionArgs) where T : new()
         {
-            DataObjectInfo doi = DatastoreBase.GetObjectDiscription(typeof(T));
+            EntityDescription doi = DatastoreBase.GetObjectDiscription(typeof(T));
             DbCommand command = this.CreateCommand(selectCommand);
 
             //Add selection Arugments to command parameter list
@@ -972,7 +973,7 @@ namespace CruiseDAL
 
 
 
-        internal T ReadSingleRow<T>(DbCommand command, bool cache, DataObjectInfo des) where T : DataObject, new()
+        internal T ReadSingleRow<T>(DbCommand command, bool cache, EntityDescription des) where T : DataObject, new()
         {
             DataObject row = null;
             DbDataReader reader = null;
@@ -1031,7 +1032,7 @@ namespace CruiseDAL
         {
             if (rowID == null)
             { return null; }
-            DataObjectInfo des = DatastoreBase.GetObjectDiscription(typeof(T));
+            EntityDescription des = DatastoreBase.GetObjectDiscription(typeof(T));
             string query = String.Format(des.GetSelectCommandFormat(), "WHERE TableRowID = @RowID");
             using (DbCommand command = this.CreateCommand(query))
             {
@@ -1062,7 +1063,7 @@ namespace CruiseDAL
             {
                 return null;
             }
-            DataObjectInfo des = DatastoreBase.GetObjectDiscription(typeof(T));
+            EntityDescription des = DatastoreBase.GetObjectDiscription(typeof(T));
             bool cache = des.IsCached;
             string query = String.Format(des.GetSelectCommandFormat(), selection);
             using (DbCommand command = this.CreateCommand(query))

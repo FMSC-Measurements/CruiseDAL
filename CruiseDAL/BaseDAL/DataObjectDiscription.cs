@@ -15,89 +15,95 @@ using System.Data.SQLite;
 #endif
 
 
-namespace CruiseDAL
+namespace CruiseDAL.BaseDAL
 {
-    public class DataObjectInfo
+    public class EntityDescription
     {
-        
-        public DataObjectInfo(Type type)
+        protected EntityDescription()
+        {
+            Properties = new Dictionary<string, EntityFieldInfo>(StringComparer.Create(System.Globalization.CultureInfo.CurrentCulture, true));
+        }
+
+
+        public EntityDescription(Type type)
         {
             try
             {
-                _dataObjectType = type;
+                EntityType = type;
                 _typeID = type.GetHashCode();
                 //_typeID = _typeID | _typeID << 32;
 
                 object[] tAttrs = type.GetCustomAttributes(typeof(SQLEntityAttribute), true);
                 if (tAttrs.Length > 0)
                 {
-                    _tableAttr = (SQLEntityAttribute)tAttrs[0];
-                    this.IsCached = _tableAttr.IsCached;
-                    this.ReadSource = _tableAttr.ReadSource;
-                    this.TableName = _tableAttr.TableName;
-                    this.JoinCommand = " " + _tableAttr.JoinCommand + " ";
-                    _readFromView = _tableAttr.ReadSource != _tableAttr.TableName;
+                    _entityAttr = (SQLEntityAttribute)tAttrs[0];
+                    this.IsCached = _entityAttr.IsCached;
+                    this.ReadSource = _entityAttr.ReadSource;
+                    this.TableName = _entityAttr.TableName;
+                    this.JoinCommand = " " + _entityAttr.JoinCommand + " ";
+                    _readFromView = _entityAttr.ReadSource != _entityAttr.TableName;
                 }
 
-                PropertyInfo[] props = type.GetProperties(BindingFlags.Public | BindingFlags.Instance);
-                Debug.Assert(props.Length > 0);
 
-                Properties = new Dictionary<string, FieldInfo>(props.Length + 1, StringComparer.Create(System.Globalization.CultureInfo.CurrentCulture, true));
-                foreach (PropertyInfo p in props)
+
+                foreach (PropertyInfo p in type.GetProperties(BindingFlags.Public | BindingFlags.Instance))
                 {
-                    FieldAttribute fa = (FieldAttribute)Attribute.GetCustomAttribute(p, typeof(FieldAttribute));
-                    if (fa != null)
-                    {
-                        FieldInfo fi = new FieldInfo(p,fa);
-                        Properties.Add(p.Name, fi);                        
-                    }
+                    AddProperty(p);
                 }
 
-                
+                foreach (PropertyInfo p in type.GetProperties(BindingFlags.NonPublic | BindingFlags.Instance))
+                {
+                    AddProperty(p);
+                }
+
                 PropertyInfo rowIDProp = type.GetProperty("rowID");
                 if (rowIDProp != null)
                 {
-                    _rowidField = new FieldInfo(rowIDProp, null);
-                    Properties.Add("rowID", _rowidField);
+                    AddProperty(rowIDProp);
                 }
             }
             catch (Exception e)
             {
-                throw new ORMException("Unable to create DataObjectInfo for " + type.Name, e);
+                throw new ORMException("Unable to create EntityDescription for " + type.Name, e);
             }
         }
 
+        
+
         const int BYTE_READ_LENGTH = 1024;//TODO onece we start reading byte data figure out our byte read length... should this be done at runtime?
 
-        private Type _dataObjectType;
+        public Type EntityType { get; private set; }
         private int _typeID;
-        private SQLEntityAttribute _tableAttr;
+        private SQLEntityAttribute _entityAttr;
         private bool _readFromView;
         private string _selectCommandFormat;
         private string _updateCommandFormat;
         private string _insertCommandFormatString;
-        private FieldInfo _rowidField;
+        private EntityFieldInfo _rowidField;
 
-        internal Dictionary<String, FieldInfo> Properties { get; set; }
+        public Dictionary<String, EntityFieldInfo> Properties { get; protected set; }
 
         public String ReadSource { get; private set; }
         public String TableName { get; private set; }
         public String JoinCommand { get; private set; }
         public bool IsCached { get; private set; }
 
-        private object GetPropertyValue(FieldInfo fi, Object obj)
+        private void AddProperty(PropertyInfo pi)
         {
-            object value = fi._getter.Invoke(obj, null);
-            if (fi._propType.IsEnum)
+            FieldAttribute fa = (FieldAttribute)Attribute.GetCustomAttribute(pi, typeof(FieldAttribute));
+            EntityFieldInfo fi;
+            if (fa != null)
             {
-                value = value.ToString();
+                fi = new EntityFieldInfo(pi, fa);
             }
-            else if (fi.IsGuid)
+            else
             {
-                value = value.ToString();
+                fi = new EntityFieldInfo(pi);
             }
-            return value;
+            Properties.Add(pi.Name, fi);
         }
+
+        
 
         private object GetValueByType(Type type, IDataReader reader, int ord)
         {
@@ -172,7 +178,7 @@ namespace CruiseDAL
                 Object value = reader.GetValue(ord);
                 Debug.WriteLine("InvalidCastException in GetValueByType" +
                     " ExpectedType:" + type.Name + " " +
-                    " DOType:" + this._dataObjectType.Name +
+                    " DOType:" + this.EntityType.Name +
                     " Value = " + value.ToString() + ":" + value.GetType().Name);
 
                 if (tc == TypeCode.String)
@@ -198,39 +204,25 @@ namespace CruiseDAL
             }
         }
 
-        private void SetFieldValue(Object dataObject, FieldInfo field, object value)
-        {
-            if (field == null || field._setter == null)
-            {
-                return;
-            }
-            try
-            {
-                field._setter.Invoke(dataObject, new Object[] { value, });
-            }
-            catch
-            {
-                throw new ORMException(String.Format("unable to set value; Value = {0}; FieldInfo = {1}", value, field));
-            }
-        }
+        
 
         public void ReadData(System.Data.IDataReader reader, Object dataObject)
         {
-            foreach(FieldInfo fi in Properties.Values)
+            foreach(EntityFieldInfo fi in Properties.Values)
             {
                 try
                 {
-                    if (fi._fieldAttr == null) { continue; }
+                    if (fi._ordinal < 0) { continue; }
                     object value = null;
-                    Type type = fi._propType;
+                    Type type = fi.DataType;
                     value = GetValueByType(type, reader, fi._ordinal);
-                    SetFieldValue(dataObject, fi, value);
+                    fi.SetFieldValue(dataObject, value);
                 }
                 catch (Exception e)
                 {
                     throw new ORMException("Error in ReadData: field info = " + fi.ToString(), e);
                 }
-            }//end foreach
+            }
 
             
             if (dataObject is DataObject)
@@ -281,12 +273,9 @@ namespace CruiseDAL
 
         public void StartRead(System.Data.IDataReader reader, bool refreshOrdnals)
         {
-            foreach (FieldInfo fi in Properties.Values)
+            foreach (EntityFieldInfo fi in Properties.Values)
             {
-                if (fi._fieldAttr != null && (refreshOrdnals || fi._ordinal == -1))
-                {
-                    fi._ordinal = reader.GetOrdinal(fi._fieldAttr.Alias ?? fi._fieldAttr.FieldName);
-                }
+                fi._ordinal = reader.GetOrdinal(fi._fieldAttr.Alias ?? fi._fieldAttr.FieldName);
             }
 
             if (_rowidField != null)
@@ -302,7 +291,7 @@ namespace CruiseDAL
                 StringBuilder sb = new StringBuilder("SELECT ");
 
                 bool first = true;
-                foreach (FieldInfo fi in Properties.Values)
+                foreach (EntityFieldInfo fi in Properties.Values)
                 {
                     if (fi._fieldAttr == null) { continue; }
                     String colExpression = null;
@@ -311,7 +300,7 @@ namespace CruiseDAL
                     {
                         colExpression = fi._fieldAttr.MapExpression;
                     }
-                    else if (!string.IsNullOrEmpty(fi._fieldAttr.FieldName))
+                    else if (!string.IsNullOrEmpty(fi.FieldName))
                     {
                         colExpression = ((String.IsNullOrEmpty(TableName)) ? String.Empty : TableName + ".") + fi._fieldAttr.FieldName;
                     }
@@ -757,31 +746,7 @@ namespace CruiseDAL
             }
         }
 
-        internal class FieldInfo
-        {
-            //public PropertyInfo _propInfo;
-            public FieldAttribute _fieldAttr;
-            public Type _propType;
-            public int _ordinal = -1; //cached dataReader ordinal
-            public MethodInfo _getter;
-            public MethodInfo _setter;
-            public bool IsGuid;
-
-            public FieldInfo(PropertyInfo prop, FieldAttribute attr)
-            {
-                this._fieldAttr = attr;
-                this._getter = prop.GetGetMethod();
-                this._setter = prop.GetSetMethod();
-                this._propType = prop.PropertyType;
-                this.IsGuid = this._propType.Equals(typeof(Guid));
-            }
-
-            public override string ToString()
-            {
-                return String.Format("PropType({0}); DBType({1}), FieldName({2}), Alias({3}), MapExpression({4})",
-                    _propType.Name, _fieldAttr.DataType, _fieldAttr.FieldName ?? "null", _fieldAttr.Alias ?? "null", _fieldAttr.MapExpression ?? "null");
-            }
-        }
+        
     }
 
         

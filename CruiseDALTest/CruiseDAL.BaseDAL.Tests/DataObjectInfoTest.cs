@@ -16,22 +16,27 @@ namespace CruiseDAL.BaseDAL.Tests
         public DataObjectInfoTest(ITestOutputHelper output)
         {
             _output = output;
-            //
-            // TODO: Add constructor logic here
-            //
+            
         }
 
 
+
+
+        [Fact]
         public void Test_VanillaMultiTypeObject()
         {
-            var doi = new DataObjectInfo(typeof(VanillaMultiTypeObject));
-            Assert.NotNull(doi);
+            Type t = typeof(VanillaMultiTypeObject);
+            var doi = new EntityDescription(t);
+            VerifyDataObjectInfo(t, doi);
         }
 
+
+        [Fact]
         public void Test_DOMultiPropType()
         {
-            var doi = new DataObjectInfo(typeof(DOMultiPropType));
-            Assert.NotNull(doi);
+            var t = typeof(DOMultiPropType);
+            var doi = new EntityDescription(t);
+            VerifyDataObjectInfo(t, doi);
         }
 
         public void LoadDataObjects()
@@ -43,10 +48,21 @@ namespace CruiseDAL.BaseDAL.Tests
             foreach (Type t in types)
             {
                 _output.WriteLine(t.FullName);
-                var doi = new DataObjectInfo(t);
-                
-                //Assert.True(doi.ReadSource != null, doi._dataObjectType.Name);
+                var doi = new EntityDescription(t);
+
+                VerifyDataObjectInfo(t, doi);
             }
+        }
+
+        void VerifyDataObjectInfo(Type dataType, EntityDescription doi)
+        {
+            Assert.NotNull(doi);
+            Assert.Equal(dataType, doi.EntityType);
+            Assert.False(String.IsNullOrWhiteSpace(doi.ReadSource));
+            Assert.NotEmpty(doi.Properties);
+            Assert.True(doi.Properties.Values.All(x => x.Getter != null || x.Setter != null));
+
+
         }
     }
 }

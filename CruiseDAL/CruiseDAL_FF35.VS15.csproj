@@ -117,7 +117,9 @@
     <Compile Include="BaseDAL\DataObjectFactory.cs" />
     <Compile Include="BaseDAL\DataObjects_Base.cs" />
     <Compile Include="BaseDAL\DatastoreBase.cs" />
+    <Compile Include="BaseDAL\EntityCommandBuilder.cs" />
     <Compile Include="BaseDAL\Exceptions.cs" />
+    <Compile Include="BaseDAL\EntityFieldInfo.cs" />
     <Compile Include="BaseDAL\ObjectCache.cs" />
     <Compile Include="BaseDAL\ReadDataObject.cs" />
     <Compile Include="BaseDAL\Validator.cs" />

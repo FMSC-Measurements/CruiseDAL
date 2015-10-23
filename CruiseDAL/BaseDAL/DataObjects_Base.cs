@@ -771,7 +771,7 @@ namespace CruiseDAL
 
             try
             {
-                DataObjectInfo des = DatastoreBase.GetObjectDiscription(this.GetType());
+                EntityDescription des = DatastoreBase.GetObjectDiscription(this.GetType());
                 Object value = des.Properties[propName]._getter.Invoke(this, null);
                 if (value != null && value is IFormattable)
                 {
