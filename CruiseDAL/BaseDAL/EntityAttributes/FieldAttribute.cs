@@ -1,34 +1,12 @@
-using System;
+﻿using System;
+using System.Collections.Generic;
 using System.Data;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
 namespace CruiseDAL
 {
-
-
-
-    [AttributeUsage(AttributeTargets.Class, Inherited = true)]
-    public class SQLEntityAttribute : Attribute
-    {
-        string _readSource;
-
-        public bool IsCached { get; set; }
-        public string TableName { get; set; }
-
-        public string ReadSource
-        {
-            get { return _readSource ?? TableName; }
-            set { _readSource = value; }
-        }
-
-        [Obsolete]
-        public string JoinCommand
-        {
-            get;
-            set;
-        }
-
-    }
-
     public enum SepcialFieldType { None = 0, CreatedBy, CreatedDate, ModifiedBy, ModifiedDate, RowVersion };
 
     [AttributeUsage(AttributeTargets.Property, Inherited = true)]
@@ -48,7 +26,7 @@ namespace CruiseDAL
             set
             {
                 _dataType = value;
-               
+
             }
         }
 
@@ -64,7 +42,7 @@ namespace CruiseDAL
         public int MinValue { get; set; }
         public int MaxValue { get; set; }
 
-        
+
 
 
         public string FieldName
@@ -92,8 +70,4 @@ namespace CruiseDAL
         }
 
     }
-
-
-
-
 }

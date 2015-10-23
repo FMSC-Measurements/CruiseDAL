@@ -42,7 +42,7 @@ PopIndent();
 //----------------------------------Method: MakeClass------------------------------------------------------
 public void MakeClass(Table table)
 {#>
-[SQLEntity(TableName = "<#=table.Name#>", IsCached=true)]
+[SQLEntity(Source = "<#=table.Name#>")]
 public partial class <#=table.Name#>DO : DataObject
 {
 <#+  PushIndent("\t");#>
