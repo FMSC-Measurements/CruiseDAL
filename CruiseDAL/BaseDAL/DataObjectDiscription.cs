@@ -17,7 +17,7 @@ using System.Data.SQLite;
 
 namespace CruiseDAL
 {
-    internal class DataObjectInfo
+    public class DataObjectInfo
     {
         
         public DataObjectInfo(Type type)
