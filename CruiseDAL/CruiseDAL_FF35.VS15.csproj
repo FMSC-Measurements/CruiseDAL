@@ -111,17 +111,26 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Schema.tt</DependentUpon>
     </Compile>
-    <Compile Include="BaseDAL\ColumnInfo.cs" />
-    <Compile Include="BaseDAL\DataObjectAttributes.cs" />
-    <Compile Include="BaseDAL\DataObjectDiscription.cs" />
+    <Compile Include="BaseDAL\EntityAttributes\ReferenceAttribute.cs" />
+    <Compile Include="BaseDAL\EntityCache.cs" />
+    <Compile Include="BaseDAL\EntityInflator.cs" />
+    <Compile Include="BaseDAL\EntitySelectCommandBuilder.cs" />
+    <Compile Include="BaseDAL\SQL\ColumnInfo.cs" />
+    <Compile Include="BaseDAL\EntityDescription.cs" />
     <Compile Include="BaseDAL\DataObjectFactory.cs" />
     <Compile Include="BaseDAL\DataObjects_Base.cs" />
     <Compile Include="BaseDAL\DatastoreBase.cs" />
+    <Compile Include="BaseDAL\EntityAttributes\FieldAttribute.cs" />
+    <Compile Include="BaseDAL\EntityAttributes\FieldValidationRuleAttribut.cs" />
+    <Compile Include="BaseDAL\EntityAttributes\PrimaryKeyFieldAttribute.cs" />
+    <Compile Include="BaseDAL\EntityAttributes\SQLEntityAttribute.cs" />
     <Compile Include="BaseDAL\EntityCommandBuilder.cs" />
     <Compile Include="BaseDAL\Exceptions.cs" />
     <Compile Include="BaseDAL\EntityFieldInfo.cs" />
     <Compile Include="BaseDAL\ObjectCache.cs" />
     <Compile Include="BaseDAL\ReadDataObject.cs" />
+    <Compile Include="BaseDAL\SQL\SQLSelectExpression.cs" />
+    <Compile Include="BaseDAL\SQL\WhereClause.cs" />
     <Compile Include="BaseDAL\Validator.cs" />
     <Compile Include="CruiseDAL\DAL.cs" />
     <Compile Include="CruiseDAL\DataObjects\AuditValue_partial.cs" />

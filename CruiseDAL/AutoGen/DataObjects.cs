@@ -6,7 +6,7 @@ using System.Reflection;
 namespace CruiseDAL.DataObjects
 {
 	#region Core Tables
-	[SQLEntity(Source = "Sale")]
+	[SQLEntity(SourceName = "Sale")]
 	public partial class SaleDO : DataObject
 	{
 		//private static Persister persister;
@@ -326,7 +326,7 @@ namespace CruiseDAL.DataObjects
 			DefaultUOM = obj.DefaultUOM;
 		}
 	}
-	[SQLEntity(Source = "CuttingUnit")]
+	[SQLEntity(SourceName = "CuttingUnit")]
 	public partial class CuttingUnitDO : DataObject
 	{
 		//private static Persister persister;
@@ -538,7 +538,7 @@ namespace CruiseDAL.DataObjects
 			TallyHistory = obj.TallyHistory;
 		}
 	}
-	[SQLEntity(Source = "Stratum")]
+	[SQLEntity(SourceName = "Stratum")]
 	public partial class StratumDO : DataObject
 	{
 		//private static Persister persister;
@@ -859,7 +859,7 @@ namespace CruiseDAL.DataObjects
 			Year = obj.Year;
 		}
 	}
-	[SQLEntity(Source = "CuttingUnitStratum")]
+	[SQLEntity(SourceName = "CuttingUnitStratum")]
 	public partial class CuttingUnitStratumDO : DataObject
 	{
 		//private static Persister persister;
@@ -1045,7 +1045,7 @@ namespace CruiseDAL.DataObjects
 			StratumArea = obj.StratumArea;
 		}
 	}
-	[SQLEntity(Source = "SampleGroup")]
+	[SQLEntity(SourceName = "SampleGroup")]
 	public partial class SampleGroupDO : DataObject
 	{
 		//private static Persister persister;
@@ -1567,7 +1567,7 @@ namespace CruiseDAL.DataObjects
 			MaxKPI = obj.MaxKPI;
 		}
 	}
-	[SQLEntity(Source = "TreeDefaultValue")]
+	[SQLEntity(SourceName = "TreeDefaultValue")]
 	public partial class TreeDefaultValueDO : DataObject
 	{
 		//private static Persister persister;
@@ -2022,7 +2022,7 @@ namespace CruiseDAL.DataObjects
 			ReferenceHeightPercent = obj.ReferenceHeightPercent;
 		}
 	}
-	[SQLEntity(Source = "SampleGroupTreeDefaultValue")]
+	[SQLEntity(SourceName = "SampleGroupTreeDefaultValue")]
 	public partial class SampleGroupTreeDefaultValueDO : DataObject
 	{
 		//private static Persister persister;
@@ -2185,7 +2185,7 @@ namespace CruiseDAL.DataObjects
 			if(obj == null) { return; }
 		}
 	}
-	[SQLEntity(Source = "Plot")]
+	[SQLEntity(SourceName = "Plot")]
 	public partial class PlotDO : DataObject
 	{
 		//private static Persister persister;
@@ -2626,7 +2626,7 @@ namespace CruiseDAL.DataObjects
 			Blob = obj.Blob;
 		}
 	}
-	[SQLEntity(Source = "Tree")]
+	[SQLEntity(SourceName = "Tree")]
 	public partial class TreeDO : DataObject
 	{
 		//private static Persister persister;
@@ -3872,7 +3872,7 @@ namespace CruiseDAL.DataObjects
 			PointFactor = obj.PointFactor;
 		}
 	}
-	[SQLEntity(Source = "Log")]
+	[SQLEntity(SourceName = "Log")]
 	public partial class LogDO : DataObject
 	{
 		//private static Persister persister;
@@ -4366,7 +4366,7 @@ namespace CruiseDAL.DataObjects
 			BarkThickness = obj.BarkThickness;
 		}
 	}
-	[SQLEntity(Source = "Stem")]
+	[SQLEntity(SourceName = "Stem")]
 	public partial class StemDO : DataObject
 	{
 		//private static Persister persister;
@@ -4564,7 +4564,7 @@ namespace CruiseDAL.DataObjects
 			DiameterType = obj.DiameterType;
 		}
 	}
-	[SQLEntity(Source = "CountTree")]
+	[SQLEntity(SourceName = "CountTree")]
 	public partial class CountTreeDO : DataObject
 	{
 		//private static Persister persister;
@@ -4947,7 +4947,7 @@ namespace CruiseDAL.DataObjects
 			SumKPI = obj.SumKPI;
 		}
 	}
-	[SQLEntity(Source = "Tally")]
+	[SQLEntity(SourceName = "Tally")]
 	public partial class TallyDO : DataObject
 	{
 		//private static Persister persister;
@@ -5099,7 +5099,7 @@ namespace CruiseDAL.DataObjects
 			IndicatorType = obj.IndicatorType;
 		}
 	}
-	[SQLEntity(Source = "TreeEstimate")]
+	[SQLEntity(SourceName = "TreeEstimate")]
 	public partial class TreeEstimateDO : DataObject
 	{
 		//private static Persister persister;
@@ -5279,7 +5279,7 @@ namespace CruiseDAL.DataObjects
 	}
 	#endregion
 	#region Processing Tables
-	[SQLEntity(Source = "VolumeEquation")]
+	[SQLEntity(SourceName = "VolumeEquation")]
 	public partial class VolumeEquationDO : DataObject
 	{
 		//private static Persister persister;
@@ -5784,7 +5784,7 @@ namespace CruiseDAL.DataObjects
 			EvenOddSegment = obj.EvenOddSegment;
 		}
 	}
-	[SQLEntity(Source = "BiomassEquation")]
+	[SQLEntity(SourceName = "BiomassEquation")]
 	public partial class BiomassEquationDO : DataObject
 	{
 		//private static Persister persister;
@@ -6081,7 +6081,7 @@ namespace CruiseDAL.DataObjects
 			WeightFactorSecondary = obj.WeightFactorSecondary;
 		}
 	}
-	[SQLEntity(Source = "ValueEquation")]
+	[SQLEntity(SourceName = "ValueEquation")]
 	public partial class ValueEquationDO : DataObject
 	{
 		//private static Persister persister;
@@ -6354,7 +6354,7 @@ namespace CruiseDAL.DataObjects
 			Coefficient6 = obj.Coefficient6;
 		}
 	}
-	[SQLEntity(Source = "QualityAdjEquation")]
+	[SQLEntity(SourceName = "QualityAdjEquation")]
 	public partial class QualityAdjEquationDO : DataObject
 	{
 		//private static Persister persister;
@@ -6626,7 +6626,7 @@ namespace CruiseDAL.DataObjects
 			Coefficient6 = obj.Coefficient6;
 		}
 	}
-	[SQLEntity(Source = "Reports")]
+	[SQLEntity(SourceName = "Reports")]
 	public partial class ReportsDO : DataObject
 	{
 		//private static Persister persister;
@@ -6751,7 +6751,7 @@ namespace CruiseDAL.DataObjects
 			Title = obj.Title;
 		}
 	}
-	[SQLEntity(Source = "TreeCalculatedValues")]
+	[SQLEntity(SourceName = "TreeCalculatedValues")]
 	public partial class TreeCalculatedValuesDO : DataObject
 	{
 		//private static Persister persister;
@@ -7541,7 +7541,7 @@ namespace CruiseDAL.DataObjects
 			BiomassTip = obj.BiomassTip;
 		}
 	}
-	[SQLEntity(Source = "LCD")]
+	[SQLEntity(SourceName = "LCD")]
 	public partial class LCDDO : DataObject
 	{
 		//private static Persister persister;
@@ -8731,7 +8731,7 @@ namespace CruiseDAL.DataObjects
 			SumWgtTip = obj.SumWgtTip;
 		}
 	}
-	[SQLEntity(Source = "POP")]
+	[SQLEntity(SourceName = "POP")]
 	public partial class POPDO : DataObject
 	{
 		//private static Persister persister;
@@ -9853,7 +9853,7 @@ namespace CruiseDAL.DataObjects
 			Stg2ValueXsqrdRP = obj.Stg2ValueXsqrdRP;
 		}
 	}
-	[SQLEntity(Source = "PRO")]
+	[SQLEntity(SourceName = "PRO")]
 	public partial class PRODO : DataObject
 	{
 		//private static Persister persister;
@@ -10241,7 +10241,7 @@ namespace CruiseDAL.DataObjects
 			ProratedEstimatedTrees = obj.ProratedEstimatedTrees;
 		}
 	}
-	[SQLEntity(Source = "LogStock")]
+	[SQLEntity(SourceName = "LogStock")]
 	public partial class LogStockDO : DataObject
 	{
 		//private static Persister persister;
@@ -10756,7 +10756,7 @@ namespace CruiseDAL.DataObjects
 			CubicUtil = obj.CubicUtil;
 		}
 	}
-	[SQLEntity(Source = "SampleGroupStats")]
+	[SQLEntity(SourceName = "SampleGroupStats")]
 	public partial class SampleGroupStatsDO : DataObject
 	{
 		//private static Persister persister;
@@ -11503,7 +11503,7 @@ namespace CruiseDAL.DataObjects
 			ReconTrees = obj.ReconTrees;
 		}
 	}
-	[SQLEntity(Source = "SampleGroupStatsTreeDefaultValue")]
+	[SQLEntity(SourceName = "SampleGroupStatsTreeDefaultValue")]
 	public partial class SampleGroupStatsTreeDefaultValueDO : DataObject
 	{
 		//private static Persister persister;
@@ -11666,7 +11666,7 @@ namespace CruiseDAL.DataObjects
 			if(obj == null) { return; }
 		}
 	}
-	[SQLEntity(Source = "StratumStats")]
+	[SQLEntity(SourceName = "StratumStats")]
 	public partial class StratumStatsDO : DataObject
 	{
 		//private static Persister persister;
@@ -12161,7 +12161,7 @@ namespace CruiseDAL.DataObjects
 			Used = obj.Used;
 		}
 	}
-	[SQLEntity(Source = "Regression")]
+	[SQLEntity(SourceName = "Regression")]
 	public partial class RegressionDO : DataObject
 	{
 		//private static Persister persister;
@@ -12521,7 +12521,7 @@ namespace CruiseDAL.DataObjects
 			rMaxDbh = obj.rMaxDbh;
 		}
 	}
-	[SQLEntity(Source = "LogMatrix")]
+	[SQLEntity(SourceName = "LogMatrix")]
 	public partial class LogMatrixDO : DataObject
 	{
 		//private static Persister persister;
@@ -12857,7 +12857,7 @@ namespace CruiseDAL.DataObjects
 	}
 	#endregion
 	#region Settings Tables
-	[SQLEntity(Source = "TreeDefaultValueTreeAuditValue")]
+	[SQLEntity(SourceName = "TreeDefaultValueTreeAuditValue")]
 	public partial class TreeDefaultValueTreeAuditValueDO : DataObject
 	{
 		//private static Persister persister;
@@ -13022,7 +13022,7 @@ namespace CruiseDAL.DataObjects
 			if(obj == null) { return; }
 		}
 	}
-	[SQLEntity(Source = "TreeAuditValue")]
+	[SQLEntity(SourceName = "TreeAuditValue")]
 	public partial class TreeAuditValueDO : DataObject
 	{
 		//private static Persister persister;
@@ -13194,7 +13194,7 @@ namespace CruiseDAL.DataObjects
 			Required = obj.Required;
 		}
 	}
-	[SQLEntity(Source = "LogFieldSetup")]
+	[SQLEntity(SourceName = "LogFieldSetup")]
 	public partial class LogFieldSetupDO : DataObject
 	{
 		//private static Persister persister;
@@ -13455,7 +13455,7 @@ namespace CruiseDAL.DataObjects
 			Behavior = obj.Behavior;
 		}
 	}
-	[SQLEntity(Source = "TreeFieldSetup")]
+	[SQLEntity(SourceName = "TreeFieldSetup")]
 	public partial class TreeFieldSetupDO : DataObject
 	{
 		//private static Persister persister;
@@ -13716,7 +13716,7 @@ namespace CruiseDAL.DataObjects
 			Behavior = obj.Behavior;
 		}
 	}
-	[SQLEntity(Source = "LogFieldSetupDefault")]
+	[SQLEntity(SourceName = "LogFieldSetupDefault")]
 	public partial class LogFieldSetupDefaultDO : DataObject
 	{
 		//private static Persister persister;
@@ -13951,7 +13951,7 @@ namespace CruiseDAL.DataObjects
 			Behavior = obj.Behavior;
 		}
 	}
-	[SQLEntity(Source = "TreeFieldSetupDefault")]
+	[SQLEntity(SourceName = "TreeFieldSetupDefault")]
 	public partial class TreeFieldSetupDefaultDO : DataObject
 	{
 		//private static Persister persister;
@@ -14210,7 +14210,7 @@ namespace CruiseDAL.DataObjects
 	}
 	#endregion
 	#region Lookup Tables
-	[SQLEntity(Source = "CruiseMethods")]
+	[SQLEntity(SourceName = "CruiseMethods")]
 	public partial class CruiseMethodsDO : DataObject
 	{
 		//private static Persister persister;
@@ -14318,7 +14318,7 @@ namespace CruiseDAL.DataObjects
 			FriendlyValue = obj.FriendlyValue;
 		}
 	}
-	[SQLEntity(Source = "LoggingMethods")]
+	[SQLEntity(SourceName = "LoggingMethods")]
 	public partial class LoggingMethodsDO : DataObject
 	{
 		//private static Persister persister;
@@ -14426,7 +14426,7 @@ namespace CruiseDAL.DataObjects
 			FriendlyValue = obj.FriendlyValue;
 		}
 	}
-	[SQLEntity(Source = "ProductCodes")]
+	[SQLEntity(SourceName = "ProductCodes")]
 	public partial class ProductCodesDO : DataObject
 	{
 		//private static Persister persister;
@@ -14534,7 +14534,7 @@ namespace CruiseDAL.DataObjects
 			FriendlyValue = obj.FriendlyValue;
 		}
 	}
-	[SQLEntity(Source = "UOMCodes")]
+	[SQLEntity(SourceName = "UOMCodes")]
 	public partial class UOMCodesDO : DataObject
 	{
 		//private static Persister persister;
@@ -14642,7 +14642,7 @@ namespace CruiseDAL.DataObjects
 			FriendlyValue = obj.FriendlyValue;
 		}
 	}
-	[SQLEntity(Source = "Regions")]
+	[SQLEntity(SourceName = "Regions")]
 	public partial class RegionsDO : DataObject
 	{
 		//private static Persister persister;
@@ -14750,7 +14750,7 @@ namespace CruiseDAL.DataObjects
 			Name = obj.Name;
 		}
 	}
-	[SQLEntity(Source = "Forests")]
+	[SQLEntity(SourceName = "Forests")]
 	public partial class ForestsDO : DataObject
 	{
 		//private static Persister persister;
@@ -14932,7 +14932,7 @@ namespace CruiseDAL.DataObjects
 	}
 	#endregion
 	#region Utility Tables
-	[SQLEntity(Source = "ErrorLog")]
+	[SQLEntity(SourceName = "ErrorLog")]
 	public partial class ErrorLogDO : DataObject
 	{
 		//private static Persister persister;
@@ -15144,7 +15144,7 @@ namespace CruiseDAL.DataObjects
 			Suppress = obj.Suppress;
 		}
 	}
-	[SQLEntity(Source = "MessageLog")]
+	[SQLEntity(SourceName = "MessageLog")]
 	public partial class MessageLogDO : DataObject
 	{
 		//private static Persister persister;
@@ -15315,7 +15315,7 @@ namespace CruiseDAL.DataObjects
 			Level = obj.Level;
 		}
 	}
-	[SQLEntity(Source = "Globals")]
+	[SQLEntity(SourceName = "Globals")]
 	public partial class GlobalsDO : DataObject
 	{
 		//private static Persister persister;
@@ -15439,7 +15439,7 @@ namespace CruiseDAL.DataObjects
 			Value = obj.Value;
 		}
 	}
-	[SQLEntity(Source = "Component")]
+	[SQLEntity(SourceName = "Component")]
 	public partial class ComponentDO : DataObject
 	{
 		//private static Persister persister;

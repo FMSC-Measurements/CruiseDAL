@@ -680,7 +680,7 @@ namespace CruiseDAL
             object value = null;
             try
             {
-                value = DatastoreBase.GetObjectDiscription(this.GetType()).Properties[name]._getter.Invoke(this, null);
+                value = DatastoreBase.GetObjectDiscription(this.GetType()).Fields[name]._getter.Invoke(this, null);
                 //PropertyInfo property = this.GetType().GetProperty(name, BindingFlags.Instance | BindingFlags.Public);
                 ////if (property == null) { return true; }
                 //value = property.GetValue(this, null);

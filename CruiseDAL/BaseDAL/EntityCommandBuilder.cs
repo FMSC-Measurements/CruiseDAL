@@ -25,9 +25,8 @@ namespace CruiseDAL.BaseDAL
         {
             string commandText = string.Format(GetInsertCommandFormatString(), option.ToString());
             DbCommand command = _dataStore.CreateCommand(commandText);
-            foreach (EntityFieldInfo fi in EntityDescription.Properties.Values)
+            foreach (EntityFieldInfo fi in EntityDescription.Fields.Values)
             {
-                if (fi._fieldAttr == null) { continue; }
                 if (fi._fieldAttr.IsPersisted)
                 {
                     object value = fi.GetFieldValue(data);
@@ -55,10 +54,10 @@ namespace CruiseDAL.BaseDAL
             {
                 StringBuilder sb = new StringBuilder();
                 //create first part of insert command, leaving placeholder for onConflect option
-                sb.AppendFormat(null, "INSERT OR {{0}} INTO {0}( ", EntityDescription.TableName);
+                sb.AppendFormat(null, "INSERT OR {{0}} INTO {0}( ", EntityDescription.SourceName);
                 //build the column names section of the insert command 
                 bool first = true;
-                foreach (EntityFieldInfo fi in EntityDescription.Properties.Values)
+                foreach (EntityFieldInfo fi in EntityDescription.Fields.Values)
                 {
                     if (fi._fieldAttr == null) { continue; }
                     if (fi._fieldAttr.IsPersisted || fi._fieldAttr.SpecialFieldType == SepcialFieldType.CreatedBy)
@@ -76,7 +75,7 @@ namespace CruiseDAL.BaseDAL
                 //build the values section of the insert command 
                 sb.Append(" ) VALUES (");
                 first = true;
-                foreach (EntityFieldInfo fi in EntityDescription.Properties.Values)
+                foreach (EntityFieldInfo fi in EntityDescription.Fields.Values)
                 {
                     if (fi._fieldAttr == null) { continue; }
                     if (fi._fieldAttr.IsPersisted || fi._fieldAttr.SpecialFieldType == SepcialFieldType.CreatedBy)
@@ -105,7 +104,7 @@ namespace CruiseDAL.BaseDAL
         {
             string commandText = string.Format(GetUpdateCommandFormatString(), option.ToString());
             DbCommand command = _dataStore.CreateCommand(commandText);
-            foreach (EntityFieldInfo fi in EntityDescription.Properties.Values)
+            foreach (EntityFieldInfo fi in EntityDescription.Fields.Values)
             {
                 if (fi._fieldAttr == null) { continue; }
                 if (fi._fieldAttr.IsPersisted)
@@ -130,11 +129,11 @@ namespace CruiseDAL.BaseDAL
             {
                 StringBuilder sb = new StringBuilder();
                 //create first part of update command with place holder for OnConflictOption. 
-                sb.AppendFormat(null, "UPDATE OR {0} {1} SET ", "{0}", EntityDescription.TableName);
+                sb.AppendFormat(null, "UPDATE OR {0} {1} SET ", "{0}", EntityDescription.SourceName);
 
-                String[] colExprs = new String[EntityDescription.Properties.Values.Count];
+                String[] colExprs = new String[EntityDescription.Fields.Values.Count];
                 int i = 0;
-                foreach (EntityFieldInfo fi in EntityDescription.Properties.Values)
+                foreach (EntityFieldInfo fi in EntityDescription.Fields.Values)
                 {
                     if (fi._fieldAttr == null) { continue; }
                     if (fi._fieldAttr.IsPersisted || fi._fieldAttr.SpecialFieldType == SepcialFieldType.ModifiedBy)
@@ -149,6 +148,16 @@ namespace CruiseDAL.BaseDAL
                 _updateCommandFormat = sb.ToString();
             }
             return _updateCommandFormat;
+        }
+
+        public SQLiteCommand CreateSQLDelete(DataObject data)
+        {
+            string query = string.Format(@"DELETE FROM {0} WHERE rowID = @rowID;
+            DELETE FROM ErrorLog WHERE TableName = '{0}' AND CN_Number = @rowID;", this.TableName);
+
+            SQLiteCommand command = new SQLiteCommand(query);
+            command.Parameters.Add(new SQLiteParameter("@rowID", data.rowID));
+            return command;
         }
 
     }
