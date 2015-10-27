@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -12,27 +13,79 @@ namespace CruiseDAL
     [AttributeUsage(AttributeTargets.Property, Inherited = true)]
     public class FieldAttribute : Attribute
     {
-        int _oridnal = -1;
+        private int _ordinal = -1;
+        public int Ordinal { get { return _ordinal; } set { _ordinal = value; } }
 
         public string FieldName { get; set; }
-        public string Source { get; set; }
         public string SQLExpression { get; set; }
-        public bool IsPersisted { get; set; }
+        public virtual bool IsPersisted { get; set; }
 
-        public int Ordinal
-        {
-            get { return _oridnal; }
-            set { _oridnal = value; }
-        }
+        public Type RunTimeType { get; set; }
+        public MethodInfo Getter { get; set; }
+        public MethodInfo Setter { get; set; }
+        public bool IsGuid;
 
+        public string SQLPramName { get { return "@" + FieldName.ToLower();  } }
 
-        public object DefaultValue { get; set; }
-        public string References { get; set; }
-        public bool IsDepreciated { get; set; }   
+        public virtual object DefaultValue { get; set; }
+        //public bool IsDepreciated { get; set; }   
         
+        public FieldAttribute()
+        { }
+
         public FieldAttribute(string fieldName)
         {
             this.FieldName = fieldName;
-        } 
+        }
+
+        
+
+        public object GetFieldValue(Object obj)
+        {
+            object value = Getter.Invoke(obj, null);
+            if (RunTimeType.IsEnum)
+            {
+                value = value.ToString();
+            }
+            else if (IsGuid)
+            {
+                value = value.ToString();
+            }
+            return value;
+        }
+
+        public object GetFieldValueOrDefault(Object obj)
+        {
+            object value = GetFieldValue(obj);
+            if(value == null)
+            {
+                value = DefaultValue;
+            }
+            return value;
+        }
+
+        public void SetFieldValue(Object dataObject, object value)
+        {
+            try
+            {
+                Setter.Invoke(dataObject, new Object[] { value, });
+            }
+            catch
+            {
+                throw new ORMException(String.Format("unable to set value; Value = {0}; FieldInfo = {1}", value, this));
+            }
+        }
+
+        public void SetFieldValueOrDefault(Object dataObject, object value)
+        {
+            if(value == null) { value = DefaultValue; }
+            SetFieldValue(dataObject, value);
+        }
+
+        public override string ToString()
+        {
+            return String.Format("EntityFieldInfo RunTimeType({0}), FieldName({1}), Expression({2})",
+                 RunTimeType, FieldName ?? "null", SQLExpression ?? "null");
+        }
     }
 }

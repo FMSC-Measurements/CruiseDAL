@@ -1,21 +1,22 @@
-﻿using System;
+﻿using CruiseDAL.BaseDAL.EntityAttributes;
+using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace CruiseDAL.BaseDAL
 {
     public class EntityInflator
     {
-        const int BYTE_READ_LENGTH = 1024;//TODO onece we start reading byte data figure out our byte read length... should this be done at runtime?
+        const int BYTE_READ_LENGTH = 1024;//TODO once we start reading byte data figure out our byte read length... should this be done at runtime?
 
-        protected EntityDescription Entity { get; set; }
+        protected EntityDescription EntityDescription { get; set; }
 
         public EntityInflator(EntityDescription entity)
         {
-            Entity = entity;
+            EntityDescription = entity;
         }
 
         /// <summary>
@@ -23,83 +24,87 @@ namespace CruiseDAL.BaseDAL
         /// use before calling ReadData
         /// </summary>
         /// <param name="reader"></param>
-        public void StartRead(System.Data.IDataReader reader)
+        public void CheckOrdinals(System.Data.IDataReader reader)
         {
-            this.StartRead(reader, false);
-        }
-
-        public void StartRead(System.Data.IDataReader reader, bool refreshOrdnals)
-        {
-            foreach (EntityFieldInfo fi in Entity.Fields.Values)
+            foreach (FieldAttribute field in EntityDescription.Fields)
             {
-                fi._ordinal = reader.GetOrdinal(fi.FieldName);
+                field.Ordinal = reader.GetOrdinal(field.FieldName);
             }
 
-            if (_rowidField != null)
+            PrimaryKeyFieldAttribute keyField = EntityDescription.Fields.PrimaryKeyField;
+            if(keyField != null)
             {
-                this._rowidField._ordinal = reader.GetOrdinal("tableRowID");
+                keyField.Ordinal = reader.GetOrdinal(keyField.FieldName);
             }
         }
 
-        public void ReadData(System.Data.IDataReader reader, Object dataObject)
+        public void ReadData(System.Data.IDataReader reader, Object obj)
         {
-            foreach (EntityFieldInfo fi in Entity.Fields.Values)
+            
+
+            foreach (FieldAttribute field in EntityDescription.Fields)
             {
                 try
                 {
-                    if (fi._ordinal < 0) { continue; }
-                    object value = null;
-                    Type type = fi.DataType;
-                    value = GetValueByType(type, reader, fi._ordinal);
-                    fi.SetFieldValue(dataObject, value);
+                    if (field.Ordinal < 0) { continue; }
+
+                    object value = GetValueByType(field.RunTimeType, reader, field.Ordinal);
+                    field.SetFieldValue(obj, value);
                 }
                 catch (Exception e)
                 {
-                    throw new ORMException("Error in ReadData: field info = " + fi.ToString(), e);
+                    throw new ORMException("Error in ReadData: field info = " + field.ToString(), e);
                 }
             }
 
 
-            if (dataObject is DataObject)
-            {
-                if (_rowidField != null)
-                {
-                    ((DataObject)dataObject).rowID = GetRowID(reader, _rowidField._ordinal);
-                }
-                ((DataObject)dataObject).IsPersisted = true;
-                ((DataObject)dataObject).IsValidated = false;
-            }
+            
         }
 
-        public static long? GetRowID(IDataReader reader, int ord)
+        public object ReadPrimaryKey(System.Data.IDataReader reader, Object obj)
         {
-            if (reader.IsDBNull(ord))
-            { //throw new DataException("Trying to read Int64 value, but value was null"); 
-                return null;
+            PrimaryKeyFieldAttribute keyField = EntityDescription.Fields.PrimaryKeyField;
+            if (keyField != null && keyField.Ordinal != -1)
+            {
+                object value = GetValueByType(keyField.RunTimeType, reader, keyField.Ordinal);
+                keyField.SetFieldValue(obj, value);
+                return value;
             }
             else
             {
-                try
-                {
-                    return reader.GetInt64(ord);
-                }
-                catch (InvalidCastException)
-                {
-
-                    if (reader.GetValue(ord) is long) { return (long)reader.GetValue(ord); }
-#if !WindowsCE                    
-                    Trace.Write(String.Format("{1}: Try read key failed, returned null, actual: {0} ({2})\r\n",
-                        reader.GetValue(ord),
-                        string.Empty,
-                        reader.GetValue(ord).GetType().Name),
-                        "Warning");
-#endif
-                    //Trace.TraceWarning(String.Format("{1}: Try read Int64 failed, returned null, actual: {0} ({2})", reader.GetValue(ord), this.GetType().Name, reader.GetValue(ord).GetType().Name)); 
-                    //Logger.Log.V(String.Format("{1}: Try read Int64 failed, returned null, actual: {0} ({2})", reader.GetValue(ord), this.GetType().Name, reader.GetValue(ord).GetType().Name)); 
-                    return null;
-                }
+                return null;
             }
         }
+
+//        public static long? GetRowID(IDataReader reader, int ord)
+//        {
+//            if (reader.IsDBNull(ord))
+//            { //throw new DataException("Trying to read Int64 value, but value was null"); 
+//                return null;
+//            }
+//            else
+//            {
+//                try
+//                {
+//                    return reader.GetInt64(ord);
+//                }
+//                catch (InvalidCastException)
+//                {
+
+//                    if (reader.GetValue(ord) is long) { return (long)reader.GetValue(ord); }
+//#if !WindowsCE                    
+//                    Trace.Write(String.Format("{1}: Try read key failed, returned null, actual: {0} ({2})\r\n",
+//                        reader.GetValue(ord),
+//                        string.Empty,
+//                        reader.GetValue(ord).GetType().Name),
+//                        "Warning");
+//#endif
+//                    //Trace.TraceWarning(String.Format("{1}: Try read Int64 failed, returned null, actual: {0} ({2})", reader.GetValue(ord), this.GetType().Name, reader.GetValue(ord).GetType().Name)); 
+//                    //Logger.Log.V(String.Format("{1}: Try read Int64 failed, returned null, actual: {0} ({2})", reader.GetValue(ord), this.GetType().Name, reader.GetValue(ord).GetType().Name)); 
+//                    return null;
+//                }
+//            }
+//        }
 
         public static Int32 GetInt32(IDataReader reader, int ord)
         {
@@ -417,7 +422,7 @@ namespace CruiseDAL.BaseDAL
                 Object value = reader.GetValue(ord);
                 Debug.WriteLine("InvalidCastException in GetValueByType" +
                     " ExpectedType:" + type.Name + " " +
-                    " DOType:" + this.EntityType.Name +
+                    " DOType:" + this.EntityDescription.EntityType.Name +
                     " Value = " + value.ToString() + ":" + value.GetType().Name);
 
                 if (tc == TypeCode.String)

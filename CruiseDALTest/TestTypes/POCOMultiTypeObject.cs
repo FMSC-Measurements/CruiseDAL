@@ -6,7 +6,7 @@ using CruiseDAL;
 
 namespace CruiseDALTest.TestTypes
 {
-    public class VanillaMultiTypeObject
+    public class POCOMultiTypeObject
     {
         [Field(FieldName = "StringField")]
         public string StringField { get; set; }

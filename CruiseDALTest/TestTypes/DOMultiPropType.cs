@@ -6,7 +6,7 @@ using CruiseDAL;
 
 namespace CruiseDALTest.TestTypes
 {
-    [SQLEntity(TableName = CruiseDAL.Tests.SQL.TestSQLConstants.MULTI_PROP_TABLE_NAME)]
+    [SQLEntity(SourceName = CruiseDAL.Tests.SQL.TestSQLConstants.MULTI_PROP_TABLE_NAME)]
     public class DOMultiPropType : DataObject
     {
         [Field(FieldName = "StringField")]

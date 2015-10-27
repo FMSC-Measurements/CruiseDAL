@@ -111,10 +111,15 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Schema.tt</DependentUpon>
     </Compile>
+    <Compile Include="BaseDAL\DataObject_Extra.cs" />
+    <Compile Include="BaseDAL\EntityAttributes\FieldAttributeCollection.cs" />
+    <Compile Include="BaseDAL\EntityAttributes\InfrastructureFieldAttribute.cs" />
     <Compile Include="BaseDAL\EntityAttributes\ReferenceAttribute.cs" />
     <Compile Include="BaseDAL\EntityCache.cs" />
+    <Compile Include="BaseDAL\EntityFormatProvider.cs" />
     <Compile Include="BaseDAL\EntityInflator.cs" />
     <Compile Include="BaseDAL\EntitySelectCommandBuilder.cs" />
+    <Compile Include="BaseDAL\EntityFormatter.cs" />
     <Compile Include="BaseDAL\SQL\ColumnInfo.cs" />
     <Compile Include="BaseDAL\EntityDescription.cs" />
     <Compile Include="BaseDAL\DataObjectFactory.cs" />
@@ -129,7 +134,9 @@
     <Compile Include="BaseDAL\EntityFieldInfo.cs" />
     <Compile Include="BaseDAL\ObjectCache.cs" />
     <Compile Include="BaseDAL\ReadDataObject.cs" />
+    <Compile Include="BaseDAL\SQL\SQLInsertCommand.cs" />
     <Compile Include="BaseDAL\SQL\SQLSelectExpression.cs" />
+    <Compile Include="BaseDAL\SQL\SQLUpdateCommand.cs" />
     <Compile Include="BaseDAL\SQL\WhereClause.cs" />
     <Compile Include="BaseDAL\Validator.cs" />
     <Compile Include="CruiseDAL\DAL.cs" />

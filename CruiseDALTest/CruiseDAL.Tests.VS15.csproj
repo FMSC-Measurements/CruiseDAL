@@ -113,7 +113,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CommonMethods.cs" />
-    <Compile Include="CruiseDAL.BaseDAL.Tests\DataObjectInfoTest.cs" />
+    <Compile Include="CruiseDAL.BaseDAL.Tests\EntityDescriptionTest.cs" />
     <None Include="CruiseDAL.DataObjects.Tests\CuttingUnitDOTest.cs" />
     <None Include="CruiseDAL.DataObjects.Tests\CuttingUnitStratumDOTest.cs" />
     <Compile Include="DALTest.cs" />
@@ -124,7 +124,7 @@
     <Compile Include="SQL\TestSQLConstants.cs" />
     <Compile Include="TestTypes\TestReadDO.cs" />
     <Compile Include="TestTypes\DOMultiPropType.cs" />
-    <Compile Include="TestTypes\VanillaMultiTypeObject.cs" />
+    <Compile Include="TestTypes\POCOMultiTypeObject.cs" />
     <None Include="CruiseDAL.DataObjects.Tests\TreeDOTest.cs" />
   </ItemGroup>
   <ItemGroup>

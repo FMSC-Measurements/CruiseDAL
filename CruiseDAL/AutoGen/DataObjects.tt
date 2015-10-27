@@ -14,6 +14,9 @@ using System;
 using CruiseDAL.Schema;
 using System.Xml.Serialization;
 using System.Reflection;
+using CruiseDAL.BaseDAL;
+using CruiseDAL.BaseDAL.EntityAttributes;
+
 namespace CruiseDAL.DataObjects
 {
 <#
@@ -42,8 +45,8 @@ PopIndent();
 //----------------------------------Method: MakeClass------------------------------------------------------
 public void MakeClass(Table table)
 {#>
-[SQLEntity(Source = "<#=table.Name#>")]
-public partial class <#=table.Name#>DO : DataObject
+[SQLEntity(SourceName = "<#=table.Name#>")]
+public partial class <#=table.Name#>DO : DataObjectExtra
 {
 <#+  PushIndent("\t");#>
 //private static Persister persister;
@@ -284,7 +287,6 @@ public void MakeProperty(Field field, Table table, bool isSerializable)
 	}
  #>
 [Field (FieldName = "<#=field.Name#>",
- IsUnique = <#=field.IsUnique ? "true" : "false"#>,
  IsPersisted = <#=(!field.IsPK )? "true" : "false" #>)]
 public virtual <#=field.AccessableType#> <#=field.Name#>
 {
@@ -310,7 +312,7 @@ public virtual <#=field.AccessableType#> <#=field.Name#>
  #>
         _<#=field.Name.ToLower()#> = value;
         this.ValidateProperty(<#=table.Name.ToUpper()#>.<#=field.Name.ToUpper()#>, _<#=field.Name.ToLower()#>);
-        this.NotifyPropertyChanged(<#=table.Name.ToUpper()#>.<#=field.Name.ToUpper()#>, _<#=field.Name.ToLower()#>);
+        this.NotifyPropertyChanged(<#=table.Name.ToUpper()#>.<#=field.Name.ToUpper()#>);
     }
 }
 <#+}
@@ -327,12 +329,13 @@ public void MakeUtilProperties(bool trackCreated, bool trackModified, bool track
 	{
 #>
 [XmlIgnore]
-[Field (FieldName = "CreatedBy",
- SpecialFieldType = SepcialFieldType.CreatedBy)]
+[InfrastructureFieldAttribute (FieldName = "CreatedBy",
+ FieldType = InfrastructureFieldType.CreatedBy)]
 public string CreatedBy { get; internal set; }
 
 [XmlIgnore]
-[Field (FieldName = "CreatedDate")]
+[InfrastructureFieldAttribute (FieldName = "CreatedDate",
+FieldType = InfrastructureFieldType.CreatedDate)]
 public DateTime CreatedDate { get; internal set; }
 <#+
 	}
@@ -342,12 +345,13 @@ public DateTime CreatedDate { get; internal set; }
 #>
 
 [XmlIgnore]
-[Field (FieldName = "ModifiedBy",
- SpecialFieldType = SepcialFieldType.ModifiedBy)]
+[InfrastructureFieldAttribute (FieldName = "ModifiedBy",
+ FieldType = InfrastructureFieldType.ModifiedBy)]
 public string ModifiedBy { get; internal set; }
 
 [XmlIgnore]
-[Field (FieldName = "ModifiedDate")]
+[InfrastructureFieldAttribute (FieldName = "ModifiedDate",
+FieldType = InfrastructureFieldType.ModifiedDate)]
 public string ModifiedDate { get; internal set; }
 
 <#+

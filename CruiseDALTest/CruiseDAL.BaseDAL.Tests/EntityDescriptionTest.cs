@@ -25,7 +25,7 @@ namespace CruiseDAL.BaseDAL.Tests
         [Fact]
         public void Test_VanillaMultiTypeObject()
         {
-            Type t = typeof(VanillaMultiTypeObject);
+            Type t = typeof(POCOMultiTypeObject);
             var doi = new EntityDescription(t);
             VerifyDataObjectInfo(t, doi);
         }
@@ -58,11 +58,14 @@ namespace CruiseDAL.BaseDAL.Tests
         {
             Assert.NotNull(doi);
             Assert.Equal(dataType, doi.EntityType);
-            Assert.False(String.IsNullOrWhiteSpace(doi.ReadSource));
-            Assert.NotEmpty(doi.Properties);
-            Assert.True(doi.Properties.Values.All(x => x.Getter != null || x.Setter != null));
+            Assert.False(String.IsNullOrWhiteSpace(doi.SourceName));
 
+            Assert.NotEmpty(doi.Fields);
+            Assert.NotNull(doi.KeyField);
 
+            Assert.True(doi.Fields.Values.All(x => x.Getter != null));
+            Assert.True(doi.Fields.Values.All(x => x.Setter != null));
+            Assert.True(doi.Fields.Values.All(x => x.RunTimeType != null));
         }
     }
 }

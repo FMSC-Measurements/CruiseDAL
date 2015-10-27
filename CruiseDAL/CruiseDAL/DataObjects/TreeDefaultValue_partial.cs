@@ -1,7 +1,7 @@
 using CruiseDAL.MappingCollections;
 namespace CruiseDAL.DataObjects
 {
-    public partial class TreeDefaultValueDO : DataObject
+    public partial class TreeDefaultValueDO 
     {
 
         ////support for depreciated member

@@ -3,11 +3,14 @@ using System;
 using CruiseDAL.Schema;
 using System.Xml.Serialization;
 using System.Reflection;
+using CruiseDAL.BaseDAL;
+using CruiseDAL.BaseDAL.EntityAttributes;
+
 namespace CruiseDAL.DataObjects
 {
 	#region Core Tables
 	[SQLEntity(SourceName = "Sale")]
-	public partial class SaleDO : DataObject
+	public partial class SaleDO : DataObjectExtra
 	{
 		//private static Persister persister;
 		private static RowValidator _validator;
@@ -60,7 +63,6 @@ namespace CruiseDAL.DataObjects
 		private String _salenumber ;
 		[XmlElement]
 		[Field (FieldName = "SaleNumber",
-		 IsUnique = true,
 		 IsPersisted = true)]
 		public virtual String SaleNumber
 		{
@@ -73,13 +75,12 @@ namespace CruiseDAL.DataObjects
 		        if(_salenumber == value) { return; }
 		        _salenumber = value;
 		        this.ValidateProperty(SALE.SALENUMBER, _salenumber);
-		        this.NotifyPropertyChanged(SALE.SALENUMBER, _salenumber);
+		        this.NotifyPropertyChanged(SALE.SALENUMBER);
 		    }
 		}
 		private String _name ;
 		[XmlElement]
 		[Field (FieldName = "Name",
-		 IsUnique = false,
 		 IsPersisted = true)]
 		public virtual String Name
 		{
@@ -92,13 +93,12 @@ namespace CruiseDAL.DataObjects
 		        if(_name == value) { return; }
 		        _name = value;
 		        this.ValidateProperty(SALE.NAME, _name);
-		        this.NotifyPropertyChanged(SALE.NAME, _name);
+		        this.NotifyPropertyChanged(SALE.NAME);
 		    }
 		}
 		private String _purpose ;
 		[XmlElement]
 		[Field (FieldName = "Purpose",
-		 IsUnique = false,
 		 IsPersisted = true)]
 		public virtual String Purpose
 		{
@@ -111,13 +111,12 @@ namespace CruiseDAL.DataObjects
 		        if(_purpose == value) { return; }
 		        _purpose = value;
 		        this.ValidateProperty(SALE.PURPOSE, _purpose);
-		        this.NotifyPropertyChanged(SALE.PURPOSE, _purpose);
+		        this.NotifyPropertyChanged(SALE.PURPOSE);
 		    }
 		}
 		private String _region ;
 		[XmlElement]
 		[Field (FieldName = "Region",
-		 IsUnique = false,
 		 IsPersisted = true)]
 		public virtual String Region
 		{
@@ -130,13 +129,12 @@ namespace CruiseDAL.DataObjects
 		        if(_region == value) { return; }
 		        _region = value;
 		        this.ValidateProperty(SALE.REGION, _region);
-		        this.NotifyPropertyChanged(SALE.REGION, _region);
+		        this.NotifyPropertyChanged(SALE.REGION);
 		    }
 		}
 		private String _forest ;
 		[XmlElement]
 		[Field (FieldName = "Forest",
-		 IsUnique = false,
 		 IsPersisted = true)]
 		public virtual String Forest
 		{
@@ -149,13 +147,12 @@ namespace CruiseDAL.DataObjects
 		        if(_forest == value) { return; }
 		        _forest = value;
 		        this.ValidateProperty(SALE.FOREST, _forest);
-		        this.NotifyPropertyChanged(SALE.FOREST, _forest);
+		        this.NotifyPropertyChanged(SALE.FOREST);
 		    }
 		}
 		private String _district ;
 		[XmlElement]
 		[Field (FieldName = "District",
-		 IsUnique = false,
 		 IsPersisted = true)]
 		public virtual String District
 		{
@@ -168,13 +165,12 @@ namespace CruiseDAL.DataObjects
 		        if(_district == value) { return; }
 		        _district = value;
 		        this.ValidateProperty(SALE.DISTRICT, _district);
-		        this.NotifyPropertyChanged(SALE.DISTRICT, _district);
+		        this.NotifyPropertyChanged(SALE.DISTRICT);
 		    }
 		}
 		private String _measurementyear ;
 		[XmlElement]
 		[Field (FieldName = "MeasurementYear",
-		 IsUnique = false,
 		 IsPersisted = true)]
 		public virtual String MeasurementYear
 		{
@@ -187,13 +183,12 @@ namespace CruiseDAL.DataObjects
 		        if(_measurementyear == value) { return; }
 		        _measurementyear = value;
 		        this.ValidateProperty(SALE.MEASUREMENTYEAR, _measurementyear);
-		        this.NotifyPropertyChanged(SALE.MEASUREMENTYEAR, _measurementyear);
+		        this.NotifyPropertyChanged(SALE.MEASUREMENTYEAR);
 		    }
 		}
 		private Int64 _calendaryear ;
 		[XmlElement]
 		[Field (FieldName = "CalendarYear",
-		 IsUnique = false,
 		 IsPersisted = true)]
 		public virtual Int64 CalendarYear
 		{
@@ -206,13 +201,12 @@ namespace CruiseDAL.DataObjects
 		        if(_calendaryear == value) { return; }
 		        _calendaryear = value;
 		        this.ValidateProperty(SALE.CALENDARYEAR, _calendaryear);
-		        this.NotifyPropertyChanged(SALE.CALENDARYEAR, _calendaryear);
+		        this.NotifyPropertyChanged(SALE.CALENDARYEAR);
 		    }
 		}
 		private bool _loggradingenabled  = false;
 		[XmlElement]
 		[Field (FieldName = "LogGradingEnabled",
-		 IsUnique = false,
 		 IsPersisted = true)]
 		public virtual bool LogGradingEnabled
 		{
@@ -225,13 +219,12 @@ namespace CruiseDAL.DataObjects
 		        if(_loggradingenabled == value) { return; }
 		        _loggradingenabled = value;
 		        this.ValidateProperty(SALE.LOGGRADINGENABLED, _loggradingenabled);
-		        this.NotifyPropertyChanged(SALE.LOGGRADINGENABLED, _loggradingenabled);
+		        this.NotifyPropertyChanged(SALE.LOGGRADINGENABLED);
 		    }
 		}
 		private String _remarks ;
 		[XmlElement]
 		[Field (FieldName = "Remarks",
-		 IsUnique = false,
 		 IsPersisted = true)]
 		public virtual String Remarks
 		{
@@ -244,13 +237,12 @@ namespace CruiseDAL.DataObjects
 		        if(_remarks == value) { return; }
 		        _remarks = value;
 		        this.ValidateProperty(SALE.REMARKS, _remarks);
-		        this.NotifyPropertyChanged(SALE.REMARKS, _remarks);
+		        this.NotifyPropertyChanged(SALE.REMARKS);
 		    }
 		}
 		private String _defaultuom ;
 		[XmlElement]
 		[Field (FieldName = "DefaultUOM",
-		 IsUnique = false,
 		 IsPersisted = true)]
 		public virtual String DefaultUOM
 		{
@@ -263,26 +255,28 @@ namespace CruiseDAL.DataObjects
 		        if(_defaultuom == value) { return; }
 		        _defaultuom = value;
 		        this.ValidateProperty(SALE.DEFAULTUOM, _defaultuom);
-		        this.NotifyPropertyChanged(SALE.DEFAULTUOM, _defaultuom);
+		        this.NotifyPropertyChanged(SALE.DEFAULTUOM);
 		    }
 		}
 
 		[XmlIgnore]
-		[Field (FieldName = "CreatedBy",
-		 SpecialFieldType = SepcialFieldType.CreatedBy)]
+		[InfrastructureFieldAttribute (FieldName = "CreatedBy",
+		 FieldType = InfrastructureFieldType.CreatedBy)]
 		public string CreatedBy { get; internal set; }
 		
 		[XmlIgnore]
-		[Field (FieldName = "CreatedDate")]
+		[InfrastructureFieldAttribute (FieldName = "CreatedDate",
+		FieldType = InfrastructureFieldType.CreatedDate)]
 		public DateTime CreatedDate { get; internal set; }
 		
 		[XmlIgnore]
-		[Field (FieldName = "ModifiedBy",
-		 SpecialFieldType = SepcialFieldType.ModifiedBy)]
+		[InfrastructureFieldAttribute (FieldName = "ModifiedBy",
+		 FieldType = InfrastructureFieldType.ModifiedBy)]
 		public string ModifiedBy { get; internal set; }
 		
 		[XmlIgnore]
-		[Field (FieldName = "ModifiedDate")]
+		[InfrastructureFieldAttribute (FieldName = "ModifiedDate",
+		FieldType = InfrastructureFieldType.ModifiedDate)]
 		public string ModifiedDate { get; internal set; }
 		
 		protected override bool DoValidate()
@@ -327,7 +321,7 @@ namespace CruiseDAL.DataObjects
 		}
 	}
 	[SQLEntity(SourceName = "CuttingUnit")]
-	public partial class CuttingUnitDO : DataObject
+	public partial class CuttingUnitDO : DataObjectExtra
 	{
 		//private static Persister persister;
 		private static RowValidator _validator;
@@ -377,7 +371,6 @@ namespace CruiseDAL.DataObjects
 		private String _code ;
 		[XmlElement]
 		[Field (FieldName = "Code",
-		 IsUnique = true,
 		 IsPersisted = true)]
 		public virtual String Code
 		{
@@ -390,13 +383,12 @@ namespace CruiseDAL.DataObjects
 		        if(_code == value) { return; }
 		        _code = value;
 		        this.ValidateProperty(CUTTINGUNIT.CODE, _code);
-		        this.NotifyPropertyChanged(CUTTINGUNIT.CODE, _code);
+		        this.NotifyPropertyChanged(CUTTINGUNIT.CODE);
 		    }
 		}
 		private float _area  = 0.0f;
 		[XmlElement]
 		[Field (FieldName = "Area",
-		 IsUnique = false,
 		 IsPersisted = true)]
 		public virtual float Area
 		{
@@ -409,13 +401,12 @@ namespace CruiseDAL.DataObjects
 		        if(_area == value) { return; }
 		        _area = value;
 		        this.ValidateProperty(CUTTINGUNIT.AREA, _area);
-		        this.NotifyPropertyChanged(CUTTINGUNIT.AREA, _area);
+		        this.NotifyPropertyChanged(CUTTINGUNIT.AREA);
 		    }
 		}
 		private String _description ;
 		[XmlElement]
 		[Field (FieldName = "Description",
-		 IsUnique = false,
 		 IsPersisted = true)]
 		public virtual String Description
 		{
@@ -428,13 +419,12 @@ namespace CruiseDAL.DataObjects
 		        if(_description == value) { return; }
 		        _description = value;
 		        this.ValidateProperty(CUTTINGUNIT.DESCRIPTION, _description);
-		        this.NotifyPropertyChanged(CUTTINGUNIT.DESCRIPTION, _description);
+		        this.NotifyPropertyChanged(CUTTINGUNIT.DESCRIPTION);
 		    }
 		}
 		private String _loggingmethod ;
 		[XmlElement]
 		[Field (FieldName = "LoggingMethod",
-		 IsUnique = false,
 		 IsPersisted = true)]
 		public virtual String LoggingMethod
 		{
@@ -447,13 +437,12 @@ namespace CruiseDAL.DataObjects
 		        if(_loggingmethod == value) { return; }
 		        _loggingmethod = value;
 		        this.ValidateProperty(CUTTINGUNIT.LOGGINGMETHOD, _loggingmethod);
-		        this.NotifyPropertyChanged(CUTTINGUNIT.LOGGINGMETHOD, _loggingmethod);
+		        this.NotifyPropertyChanged(CUTTINGUNIT.LOGGINGMETHOD);
 		    }
 		}
 		private String _paymentunit ;
 		[XmlElement]
 		[Field (FieldName = "PaymentUnit",
-		 IsUnique = false,
 		 IsPersisted = true)]
 		public virtual String PaymentUnit
 		{
@@ -466,13 +455,12 @@ namespace CruiseDAL.DataObjects
 		        if(_paymentunit == value) { return; }
 		        _paymentunit = value;
 		        this.ValidateProperty(CUTTINGUNIT.PAYMENTUNIT, _paymentunit);
-		        this.NotifyPropertyChanged(CUTTINGUNIT.PAYMENTUNIT, _paymentunit);
+		        this.NotifyPropertyChanged(CUTTINGUNIT.PAYMENTUNIT);
 		    }
 		}
 		private String _tallyhistory ;
 		[XmlElement]
 		[Field (FieldName = "TallyHistory",
-		 IsUnique = false,
 		 IsPersisted = true)]
 		public virtual String TallyHistory
 		{
@@ -485,26 +473,28 @@ namespace CruiseDAL.DataObjects
 		        if(_tallyhistory == value) { return; }
 		        _tallyhistory = value;
 		        this.ValidateProperty(CUTTINGUNIT.TALLYHISTORY, _tallyhistory);
-		        this.NotifyPropertyChanged(CUTTINGUNIT.TALLYHISTORY, _tallyhistory);
+		        this.NotifyPropertyChanged(CUTTINGUNIT.TALLYHISTORY);
 		    }
 		}
 
 		[XmlIgnore]
-		[Field (FieldName = "CreatedBy",
-		 SpecialFieldType = SepcialFieldType.CreatedBy)]
+		[InfrastructureFieldAttribute (FieldName = "CreatedBy",
+		 FieldType = InfrastructureFieldType.CreatedBy)]
 		public string CreatedBy { get; internal set; }
 		
 		[XmlIgnore]
-		[Field (FieldName = "CreatedDate")]
+		[InfrastructureFieldAttribute (FieldName = "CreatedDate",
+		FieldType = InfrastructureFieldType.CreatedDate)]
 		public DateTime CreatedDate { get; internal set; }
 		
 		[XmlIgnore]
-		[Field (FieldName = "ModifiedBy",
-		 SpecialFieldType = SepcialFieldType.ModifiedBy)]
+		[InfrastructureFieldAttribute (FieldName = "ModifiedBy",
+		 FieldType = InfrastructureFieldType.ModifiedBy)]
 		public string ModifiedBy { get; internal set; }
 		
 		[XmlIgnore]
-		[Field (FieldName = "ModifiedDate")]
+		[InfrastructureFieldAttribute (FieldName = "ModifiedDate",
+		FieldType = InfrastructureFieldType.ModifiedDate)]
 		public string ModifiedDate { get; internal set; }
 		
 		protected override bool DoValidate()
@@ -539,7 +529,7 @@ namespace CruiseDAL.DataObjects
 		}
 	}
 	[SQLEntity(SourceName = "Stratum")]
-	public partial class StratumDO : DataObject
+	public partial class StratumDO : DataObjectExtra
 	{
 		//private static Persister persister;
 		private static RowValidator _validator;
@@ -593,7 +583,6 @@ namespace CruiseDAL.DataObjects
 		private String _code ;
 		[XmlElement]
 		[Field (FieldName = "Code",
-		 IsUnique = true,
 		 IsPersisted = true)]
 		public virtual String Code
 		{
@@ -606,13 +595,12 @@ namespace CruiseDAL.DataObjects
 		        if(_code == value) { return; }
 		        _code = value;
 		        this.ValidateProperty(STRATUM.CODE, _code);
-		        this.NotifyPropertyChanged(STRATUM.CODE, _code);
+		        this.NotifyPropertyChanged(STRATUM.CODE);
 		    }
 		}
 		private String _description ;
 		[XmlElement]
 		[Field (FieldName = "Description",
-		 IsUnique = false,
 		 IsPersisted = true)]
 		public virtual String Description
 		{
@@ -625,13 +613,12 @@ namespace CruiseDAL.DataObjects
 		        if(_description == value) { return; }
 		        _description = value;
 		        this.ValidateProperty(STRATUM.DESCRIPTION, _description);
-		        this.NotifyPropertyChanged(STRATUM.DESCRIPTION, _description);
+		        this.NotifyPropertyChanged(STRATUM.DESCRIPTION);
 		    }
 		}
 		private String _method ;
 		[XmlElement]
 		[Field (FieldName = "Method",
-		 IsUnique = false,
 		 IsPersisted = true)]
 		public virtual String Method
 		{
@@ -644,13 +631,12 @@ namespace CruiseDAL.DataObjects
 		        if(_method == value) { return; }
 		        _method = value;
 		        this.ValidateProperty(STRATUM.METHOD, _method);
-		        this.NotifyPropertyChanged(STRATUM.METHOD, _method);
+		        this.NotifyPropertyChanged(STRATUM.METHOD);
 		    }
 		}
 		private float _basalareafactor  = 0.0f;
 		[XmlElement]
 		[Field (FieldName = "BasalAreaFactor",
-		 IsUnique = false,
 		 IsPersisted = true)]
 		public virtual float BasalAreaFactor
 		{
@@ -663,13 +649,12 @@ namespace CruiseDAL.DataObjects
 		        if(_basalareafactor == value) { return; }
 		        _basalareafactor = value;
 		        this.ValidateProperty(STRATUM.BASALAREAFACTOR, _basalareafactor);
-		        this.NotifyPropertyChanged(STRATUM.BASALAREAFACTOR, _basalareafactor);
+		        this.NotifyPropertyChanged(STRATUM.BASALAREAFACTOR);
 		    }
 		}
 		private float _fixedplotsize  = 0.0f;
 		[XmlElement]
 		[Field (FieldName = "FixedPlotSize",
-		 IsUnique = false,
 		 IsPersisted = true)]
 		public virtual float FixedPlotSize
 		{
@@ -682,13 +667,12 @@ namespace CruiseDAL.DataObjects
 		        if(_fixedplotsize == value) { return; }
 		        _fixedplotsize = value;
 		        this.ValidateProperty(STRATUM.FIXEDPLOTSIZE, _fixedplotsize);
-		        this.NotifyPropertyChanged(STRATUM.FIXEDPLOTSIZE, _fixedplotsize);
+		        this.NotifyPropertyChanged(STRATUM.FIXEDPLOTSIZE);
 		    }
 		}
 		private Int64 _kz3ppnt ;
 		[XmlElement]
 		[Field (FieldName = "KZ3PPNT",
-		 IsUnique = false,
 		 IsPersisted = true)]
 		public virtual Int64 KZ3PPNT
 		{
@@ -701,13 +685,12 @@ namespace CruiseDAL.DataObjects
 		        if(_kz3ppnt == value) { return; }
 		        _kz3ppnt = value;
 		        this.ValidateProperty(STRATUM.KZ3PPNT, _kz3ppnt);
-		        this.NotifyPropertyChanged(STRATUM.KZ3PPNT, _kz3ppnt);
+		        this.NotifyPropertyChanged(STRATUM.KZ3PPNT);
 		    }
 		}
 		private String _hotkey ;
 		[XmlElement]
 		[Field (FieldName = "Hotkey",
-		 IsUnique = false,
 		 IsPersisted = true)]
 		public virtual String Hotkey
 		{
@@ -720,13 +703,12 @@ namespace CruiseDAL.DataObjects
 		        if(_hotkey == value) { return; }
 		        _hotkey = value;
 		        this.ValidateProperty(STRATUM.HOTKEY, _hotkey);
-		        this.NotifyPropertyChanged(STRATUM.HOTKEY, _hotkey);
+		        this.NotifyPropertyChanged(STRATUM.HOTKEY);
 		    }
 		}
 		private String _fbscode ;
 		[XmlElement]
 		[Field (FieldName = "FBSCode",
-		 IsUnique = false,
 		 IsPersisted = true)]
 		public virtual String FBSCode
 		{
@@ -739,13 +721,12 @@ namespace CruiseDAL.DataObjects
 		        if(_fbscode == value) { return; }
 		        _fbscode = value;
 		        this.ValidateProperty(STRATUM.FBSCODE, _fbscode);
-		        this.NotifyPropertyChanged(STRATUM.FBSCODE, _fbscode);
+		        this.NotifyPropertyChanged(STRATUM.FBSCODE);
 		    }
 		}
 		private String _yieldcomponent  = "CL";
 		[XmlElement]
 		[Field (FieldName = "YieldComponent",
-		 IsUnique = false,
 		 IsPersisted = true)]
 		public virtual String YieldComponent
 		{
@@ -758,13 +739,12 @@ namespace CruiseDAL.DataObjects
 		        if(_yieldcomponent == value) { return; }
 		        _yieldcomponent = value;
 		        this.ValidateProperty(STRATUM.YIELDCOMPONENT, _yieldcomponent);
-		        this.NotifyPropertyChanged(STRATUM.YIELDCOMPONENT, _yieldcomponent);
+		        this.NotifyPropertyChanged(STRATUM.YIELDCOMPONENT);
 		    }
 		}
 		private Int64 _month ;
 		[XmlElement]
 		[Field (FieldName = "Month",
-		 IsUnique = false,
 		 IsPersisted = true)]
 		public virtual Int64 Month
 		{
@@ -777,13 +757,12 @@ namespace CruiseDAL.DataObjects
 		        if(_month == value) { return; }
 		        _month = value;
 		        this.ValidateProperty(STRATUM.MONTH, _month);
-		        this.NotifyPropertyChanged(STRATUM.MONTH, _month);
+		        this.NotifyPropertyChanged(STRATUM.MONTH);
 		    }
 		}
 		private Int64 _year ;
 		[XmlElement]
 		[Field (FieldName = "Year",
-		 IsUnique = false,
 		 IsPersisted = true)]
 		public virtual Int64 Year
 		{
@@ -796,26 +775,28 @@ namespace CruiseDAL.DataObjects
 		        if(_year == value) { return; }
 		        _year = value;
 		        this.ValidateProperty(STRATUM.YEAR, _year);
-		        this.NotifyPropertyChanged(STRATUM.YEAR, _year);
+		        this.NotifyPropertyChanged(STRATUM.YEAR);
 		    }
 		}
 
 		[XmlIgnore]
-		[Field (FieldName = "CreatedBy",
-		 SpecialFieldType = SepcialFieldType.CreatedBy)]
+		[InfrastructureFieldAttribute (FieldName = "CreatedBy",
+		 FieldType = InfrastructureFieldType.CreatedBy)]
 		public string CreatedBy { get; internal set; }
 		
 		[XmlIgnore]
-		[Field (FieldName = "CreatedDate")]
+		[InfrastructureFieldAttribute (FieldName = "CreatedDate",
+		FieldType = InfrastructureFieldType.CreatedDate)]
 		public DateTime CreatedDate { get; internal set; }
 		
 		[XmlIgnore]
-		[Field (FieldName = "ModifiedBy",
-		 SpecialFieldType = SepcialFieldType.ModifiedBy)]
+		[InfrastructureFieldAttribute (FieldName = "ModifiedBy",
+		 FieldType = InfrastructureFieldType.ModifiedBy)]
 		public string ModifiedBy { get; internal set; }
 		
 		[XmlIgnore]
-		[Field (FieldName = "ModifiedDate")]
+		[InfrastructureFieldAttribute (FieldName = "ModifiedDate",
+		FieldType = InfrastructureFieldType.ModifiedDate)]
 		public string ModifiedDate { get; internal set; }
 		
 		protected override bool DoValidate()
@@ -860,7 +841,7 @@ namespace CruiseDAL.DataObjects
 		}
 	}
 	[SQLEntity(SourceName = "CuttingUnitStratum")]
-	public partial class CuttingUnitStratumDO : DataObject
+	public partial class CuttingUnitStratumDO : DataObjectExtra
 	{
 		//private static Persister persister;
 		private static RowValidator _validator;
@@ -905,7 +886,6 @@ namespace CruiseDAL.DataObjects
 		private long? _cuttingunit_cn ;
 		[XmlIgnore]
 		[Field (FieldName = "CuttingUnit_CN",
-		 IsUnique = true,
 		 IsPersisted = true)]
 		public virtual long? CuttingUnit_CN
 		{
@@ -924,7 +904,7 @@ namespace CruiseDAL.DataObjects
 		        if(value == null || value.Value == 0) { _cuttingunit = null;  }
 		        _cuttingunit_cn = value;
 		        this.ValidateProperty(CUTTINGUNITSTRATUM.CUTTINGUNIT_CN, _cuttingunit_cn);
-		        this.NotifyPropertyChanged(CUTTINGUNITSTRATUM.CUTTINGUNIT_CN, _cuttingunit_cn);
+		        this.NotifyPropertyChanged(CUTTINGUNITSTRATUM.CUTTINGUNIT_CN);
 		    }
 		}
 		public virtual CuttingUnitDO GetCuttingUnit()
@@ -955,7 +935,6 @@ namespace CruiseDAL.DataObjects
 		private long? _stratum_cn ;
 		[XmlIgnore]
 		[Field (FieldName = "Stratum_CN",
-		 IsUnique = true,
 		 IsPersisted = true)]
 		public virtual long? Stratum_CN
 		{
@@ -974,7 +953,7 @@ namespace CruiseDAL.DataObjects
 		        if(value == null || value.Value == 0) { _stratum = null;  }
 		        _stratum_cn = value;
 		        this.ValidateProperty(CUTTINGUNITSTRATUM.STRATUM_CN, _stratum_cn);
-		        this.NotifyPropertyChanged(CUTTINGUNITSTRATUM.STRATUM_CN, _stratum_cn);
+		        this.NotifyPropertyChanged(CUTTINGUNITSTRATUM.STRATUM_CN);
 		    }
 		}
 		public virtual StratumDO GetStratum()
@@ -1005,7 +984,6 @@ namespace CruiseDAL.DataObjects
 		private float? _stratumarea ;
 		[XmlElement]
 		[Field (FieldName = "StratumArea",
-		 IsUnique = false,
 		 IsPersisted = true)]
 		public virtual float? StratumArea
 		{
@@ -1018,7 +996,7 @@ namespace CruiseDAL.DataObjects
 		        if(_stratumarea == value) { return; }
 		        _stratumarea = value;
 		        this.ValidateProperty(CUTTINGUNITSTRATUM.STRATUMAREA, _stratumarea);
-		        this.NotifyPropertyChanged(CUTTINGUNITSTRATUM.STRATUMAREA, _stratumarea);
+		        this.NotifyPropertyChanged(CUTTINGUNITSTRATUM.STRATUMAREA);
 		    }
 		}
 
@@ -1046,7 +1024,7 @@ namespace CruiseDAL.DataObjects
 		}
 	}
 	[SQLEntity(SourceName = "SampleGroup")]
-	public partial class SampleGroupDO : DataObject
+	public partial class SampleGroupDO : DataObjectExtra
 	{
 		//private static Persister persister;
 		private static RowValidator _validator;
@@ -1103,7 +1081,6 @@ namespace CruiseDAL.DataObjects
 		private long? _stratum_cn ;
 		[XmlIgnore]
 		[Field (FieldName = "Stratum_CN",
-		 IsUnique = true,
 		 IsPersisted = true)]
 		public virtual long? Stratum_CN
 		{
@@ -1122,7 +1099,7 @@ namespace CruiseDAL.DataObjects
 		        if(value == null || value.Value == 0) { _stratum = null;  }
 		        _stratum_cn = value;
 		        this.ValidateProperty(SAMPLEGROUP.STRATUM_CN, _stratum_cn);
-		        this.NotifyPropertyChanged(SAMPLEGROUP.STRATUM_CN, _stratum_cn);
+		        this.NotifyPropertyChanged(SAMPLEGROUP.STRATUM_CN);
 		    }
 		}
 		public virtual StratumDO GetStratum()
@@ -1153,7 +1130,6 @@ namespace CruiseDAL.DataObjects
 		private String _code ;
 		[XmlElement]
 		[Field (FieldName = "Code",
-		 IsUnique = true,
 		 IsPersisted = true)]
 		public virtual String Code
 		{
@@ -1166,13 +1142,12 @@ namespace CruiseDAL.DataObjects
 		        if(_code == value) { return; }
 		        _code = value;
 		        this.ValidateProperty(SAMPLEGROUP.CODE, _code);
-		        this.NotifyPropertyChanged(SAMPLEGROUP.CODE, _code);
+		        this.NotifyPropertyChanged(SAMPLEGROUP.CODE);
 		    }
 		}
 		private String _cutleave ;
 		[XmlElement]
 		[Field (FieldName = "CutLeave",
-		 IsUnique = false,
 		 IsPersisted = true)]
 		public virtual String CutLeave
 		{
@@ -1185,13 +1160,12 @@ namespace CruiseDAL.DataObjects
 		        if(_cutleave == value) { return; }
 		        _cutleave = value;
 		        this.ValidateProperty(SAMPLEGROUP.CUTLEAVE, _cutleave);
-		        this.NotifyPropertyChanged(SAMPLEGROUP.CUTLEAVE, _cutleave);
+		        this.NotifyPropertyChanged(SAMPLEGROUP.CUTLEAVE);
 		    }
 		}
 		private String _uom ;
 		[XmlElement]
 		[Field (FieldName = "UOM",
-		 IsUnique = false,
 		 IsPersisted = true)]
 		public virtual String UOM
 		{
@@ -1204,13 +1178,12 @@ namespace CruiseDAL.DataObjects
 		        if(_uom == value) { return; }
 		        _uom = value;
 		        this.ValidateProperty(SAMPLEGROUP.UOM, _uom);
-		        this.NotifyPropertyChanged(SAMPLEGROUP.UOM, _uom);
+		        this.NotifyPropertyChanged(SAMPLEGROUP.UOM);
 		    }
 		}
 		private String _primaryproduct ;
 		[XmlElement]
 		[Field (FieldName = "PrimaryProduct",
-		 IsUnique = false,
 		 IsPersisted = true)]
 		public virtual String PrimaryProduct
 		{
@@ -1223,13 +1196,12 @@ namespace CruiseDAL.DataObjects
 		        if(_primaryproduct == value) { return; }
 		        _primaryproduct = value;
 		        this.ValidateProperty(SAMPLEGROUP.PRIMARYPRODUCT, _primaryproduct);
-		        this.NotifyPropertyChanged(SAMPLEGROUP.PRIMARYPRODUCT, _primaryproduct);
+		        this.NotifyPropertyChanged(SAMPLEGROUP.PRIMARYPRODUCT);
 		    }
 		}
 		private String _secondaryproduct ;
 		[XmlElement]
 		[Field (FieldName = "SecondaryProduct",
-		 IsUnique = false,
 		 IsPersisted = true)]
 		public virtual String SecondaryProduct
 		{
@@ -1242,13 +1214,12 @@ namespace CruiseDAL.DataObjects
 		        if(_secondaryproduct == value) { return; }
 		        _secondaryproduct = value;
 		        this.ValidateProperty(SAMPLEGROUP.SECONDARYPRODUCT, _secondaryproduct);
-		        this.NotifyPropertyChanged(SAMPLEGROUP.SECONDARYPRODUCT, _secondaryproduct);
+		        this.NotifyPropertyChanged(SAMPLEGROUP.SECONDARYPRODUCT);
 		    }
 		}
 		private String _biomassproduct ;
 		[XmlElement]
 		[Field (FieldName = "BiomassProduct",
-		 IsUnique = false,
 		 IsPersisted = true)]
 		public virtual String BiomassProduct
 		{
@@ -1261,13 +1232,12 @@ namespace CruiseDAL.DataObjects
 		        if(_biomassproduct == value) { return; }
 		        _biomassproduct = value;
 		        this.ValidateProperty(SAMPLEGROUP.BIOMASSPRODUCT, _biomassproduct);
-		        this.NotifyPropertyChanged(SAMPLEGROUP.BIOMASSPRODUCT, _biomassproduct);
+		        this.NotifyPropertyChanged(SAMPLEGROUP.BIOMASSPRODUCT);
 		    }
 		}
 		private String _defaultlivedead ;
 		[XmlElement]
 		[Field (FieldName = "DefaultLiveDead",
-		 IsUnique = false,
 		 IsPersisted = true)]
 		public virtual String DefaultLiveDead
 		{
@@ -1280,13 +1250,12 @@ namespace CruiseDAL.DataObjects
 		        if(_defaultlivedead == value) { return; }
 		        _defaultlivedead = value;
 		        this.ValidateProperty(SAMPLEGROUP.DEFAULTLIVEDEAD, _defaultlivedead);
-		        this.NotifyPropertyChanged(SAMPLEGROUP.DEFAULTLIVEDEAD, _defaultlivedead);
+		        this.NotifyPropertyChanged(SAMPLEGROUP.DEFAULTLIVEDEAD);
 		    }
 		}
 		private Int64 _samplingfrequency ;
 		[XmlElement]
 		[Field (FieldName = "SamplingFrequency",
-		 IsUnique = false,
 		 IsPersisted = true)]
 		public virtual Int64 SamplingFrequency
 		{
@@ -1299,13 +1268,12 @@ namespace CruiseDAL.DataObjects
 		        if(_samplingfrequency == value) { return; }
 		        _samplingfrequency = value;
 		        this.ValidateProperty(SAMPLEGROUP.SAMPLINGFREQUENCY, _samplingfrequency);
-		        this.NotifyPropertyChanged(SAMPLEGROUP.SAMPLINGFREQUENCY, _samplingfrequency);
+		        this.NotifyPropertyChanged(SAMPLEGROUP.SAMPLINGFREQUENCY);
 		    }
 		}
 		private Int64 _insurancefrequency ;
 		[XmlElement]
 		[Field (FieldName = "InsuranceFrequency",
-		 IsUnique = false,
 		 IsPersisted = true)]
 		public virtual Int64 InsuranceFrequency
 		{
@@ -1318,13 +1286,12 @@ namespace CruiseDAL.DataObjects
 		        if(_insurancefrequency == value) { return; }
 		        _insurancefrequency = value;
 		        this.ValidateProperty(SAMPLEGROUP.INSURANCEFREQUENCY, _insurancefrequency);
-		        this.NotifyPropertyChanged(SAMPLEGROUP.INSURANCEFREQUENCY, _insurancefrequency);
+		        this.NotifyPropertyChanged(SAMPLEGROUP.INSURANCEFREQUENCY);
 		    }
 		}
 		private Int64 _kz ;
 		[XmlElement]
 		[Field (FieldName = "KZ",
-		 IsUnique = false,
 		 IsPersisted = true)]
 		public virtual Int64 KZ
 		{
@@ -1337,13 +1304,12 @@ namespace CruiseDAL.DataObjects
 		        if(_kz == value) { return; }
 		        _kz = value;
 		        this.ValidateProperty(SAMPLEGROUP.KZ, _kz);
-		        this.NotifyPropertyChanged(SAMPLEGROUP.KZ, _kz);
+		        this.NotifyPropertyChanged(SAMPLEGROUP.KZ);
 		    }
 		}
 		private float _bigbaf  = 0.0f;
 		[XmlElement]
 		[Field (FieldName = "BigBAF",
-		 IsUnique = false,
 		 IsPersisted = true)]
 		public virtual float BigBAF
 		{
@@ -1356,13 +1322,12 @@ namespace CruiseDAL.DataObjects
 		        if(_bigbaf == value) { return; }
 		        _bigbaf = value;
 		        this.ValidateProperty(SAMPLEGROUP.BIGBAF, _bigbaf);
-		        this.NotifyPropertyChanged(SAMPLEGROUP.BIGBAF, _bigbaf);
+		        this.NotifyPropertyChanged(SAMPLEGROUP.BIGBAF);
 		    }
 		}
 		private float _smallfps  = 0.0f;
 		[XmlElement]
 		[Field (FieldName = "SmallFPS",
-		 IsUnique = false,
 		 IsPersisted = true)]
 		public virtual float SmallFPS
 		{
@@ -1375,13 +1340,12 @@ namespace CruiseDAL.DataObjects
 		        if(_smallfps == value) { return; }
 		        _smallfps = value;
 		        this.ValidateProperty(SAMPLEGROUP.SMALLFPS, _smallfps);
-		        this.NotifyPropertyChanged(SAMPLEGROUP.SMALLFPS, _smallfps);
+		        this.NotifyPropertyChanged(SAMPLEGROUP.SMALLFPS);
 		    }
 		}
 		private CruiseDAL.Enums.TallyMode _tallymethod  = 0;
 		[XmlElement]
 		[Field (FieldName = "TallyMethod",
-		 IsUnique = false,
 		 IsPersisted = true)]
 		public virtual CruiseDAL.Enums.TallyMode TallyMethod
 		{
@@ -1394,13 +1358,12 @@ namespace CruiseDAL.DataObjects
 		        if(_tallymethod == value) { return; }
 		        _tallymethod = value;
 		        this.ValidateProperty(SAMPLEGROUP.TALLYMETHOD, _tallymethod);
-		        this.NotifyPropertyChanged(SAMPLEGROUP.TALLYMETHOD, _tallymethod);
+		        this.NotifyPropertyChanged(SAMPLEGROUP.TALLYMETHOD);
 		    }
 		}
 		private String _description ;
 		[XmlElement]
 		[Field (FieldName = "Description",
-		 IsUnique = false,
 		 IsPersisted = true)]
 		public virtual String Description
 		{
@@ -1413,13 +1376,12 @@ namespace CruiseDAL.DataObjects
 		        if(_description == value) { return; }
 		        _description = value;
 		        this.ValidateProperty(SAMPLEGROUP.DESCRIPTION, _description);
-		        this.NotifyPropertyChanged(SAMPLEGROUP.DESCRIPTION, _description);
+		        this.NotifyPropertyChanged(SAMPLEGROUP.DESCRIPTION);
 		    }
 		}
 		private String _sampleselectortype ;
 		[XmlElement]
 		[Field (FieldName = "SampleSelectorType",
-		 IsUnique = false,
 		 IsPersisted = true)]
 		public virtual String SampleSelectorType
 		{
@@ -1432,13 +1394,12 @@ namespace CruiseDAL.DataObjects
 		        if(_sampleselectortype == value) { return; }
 		        _sampleselectortype = value;
 		        this.ValidateProperty(SAMPLEGROUP.SAMPLESELECTORTYPE, _sampleselectortype);
-		        this.NotifyPropertyChanged(SAMPLEGROUP.SAMPLESELECTORTYPE, _sampleselectortype);
+		        this.NotifyPropertyChanged(SAMPLEGROUP.SAMPLESELECTORTYPE);
 		    }
 		}
 		private String _sampleselectorstate ;
 		[XmlElement]
 		[Field (FieldName = "SampleSelectorState",
-		 IsUnique = false,
 		 IsPersisted = true)]
 		public virtual String SampleSelectorState
 		{
@@ -1451,13 +1412,12 @@ namespace CruiseDAL.DataObjects
 		        if(_sampleselectorstate == value) { return; }
 		        _sampleselectorstate = value;
 		        this.ValidateProperty(SAMPLEGROUP.SAMPLESELECTORSTATE, _sampleselectorstate);
-		        this.NotifyPropertyChanged(SAMPLEGROUP.SAMPLESELECTORSTATE, _sampleselectorstate);
+		        this.NotifyPropertyChanged(SAMPLEGROUP.SAMPLESELECTORSTATE);
 		    }
 		}
 		private Int64 _minkpi ;
 		[XmlElement]
 		[Field (FieldName = "MinKPI",
-		 IsUnique = false,
 		 IsPersisted = true)]
 		public virtual Int64 MinKPI
 		{
@@ -1470,13 +1430,12 @@ namespace CruiseDAL.DataObjects
 		        if(_minkpi == value) { return; }
 		        _minkpi = value;
 		        this.ValidateProperty(SAMPLEGROUP.MINKPI, _minkpi);
-		        this.NotifyPropertyChanged(SAMPLEGROUP.MINKPI, _minkpi);
+		        this.NotifyPropertyChanged(SAMPLEGROUP.MINKPI);
 		    }
 		}
 		private Int64 _maxkpi ;
 		[XmlElement]
 		[Field (FieldName = "MaxKPI",
-		 IsUnique = false,
 		 IsPersisted = true)]
 		public virtual Int64 MaxKPI
 		{
@@ -1489,26 +1448,28 @@ namespace CruiseDAL.DataObjects
 		        if(_maxkpi == value) { return; }
 		        _maxkpi = value;
 		        this.ValidateProperty(SAMPLEGROUP.MAXKPI, _maxkpi);
-		        this.NotifyPropertyChanged(SAMPLEGROUP.MAXKPI, _maxkpi);
+		        this.NotifyPropertyChanged(SAMPLEGROUP.MAXKPI);
 		    }
 		}
 
 		[XmlIgnore]
-		[Field (FieldName = "CreatedBy",
-		 SpecialFieldType = SepcialFieldType.CreatedBy)]
+		[InfrastructureFieldAttribute (FieldName = "CreatedBy",
+		 FieldType = InfrastructureFieldType.CreatedBy)]
 		public string CreatedBy { get; internal set; }
 		
 		[XmlIgnore]
-		[Field (FieldName = "CreatedDate")]
+		[InfrastructureFieldAttribute (FieldName = "CreatedDate",
+		FieldType = InfrastructureFieldType.CreatedDate)]
 		public DateTime CreatedDate { get; internal set; }
 		
 		[XmlIgnore]
-		[Field (FieldName = "ModifiedBy",
-		 SpecialFieldType = SepcialFieldType.ModifiedBy)]
+		[InfrastructureFieldAttribute (FieldName = "ModifiedBy",
+		 FieldType = InfrastructureFieldType.ModifiedBy)]
 		public string ModifiedBy { get; internal set; }
 		
 		[XmlIgnore]
-		[Field (FieldName = "ModifiedDate")]
+		[InfrastructureFieldAttribute (FieldName = "ModifiedDate",
+		FieldType = InfrastructureFieldType.ModifiedDate)]
 		public string ModifiedDate { get; internal set; }
 		
 		protected override bool DoValidate()
@@ -1568,7 +1529,7 @@ namespace CruiseDAL.DataObjects
 		}
 	}
 	[SQLEntity(SourceName = "TreeDefaultValue")]
-	public partial class TreeDefaultValueDO : DataObject
+	public partial class TreeDefaultValueDO : DataObjectExtra
 	{
 		//private static Persister persister;
 		private static RowValidator _validator;
@@ -1630,7 +1591,6 @@ namespace CruiseDAL.DataObjects
 		private String _primaryproduct ;
 		[XmlElement]
 		[Field (FieldName = "PrimaryProduct",
-		 IsUnique = true,
 		 IsPersisted = true)]
 		public virtual String PrimaryProduct
 		{
@@ -1643,13 +1603,12 @@ namespace CruiseDAL.DataObjects
 		        if(_primaryproduct == value) { return; }
 		        _primaryproduct = value;
 		        this.ValidateProperty(TREEDEFAULTVALUE.PRIMARYPRODUCT, _primaryproduct);
-		        this.NotifyPropertyChanged(TREEDEFAULTVALUE.PRIMARYPRODUCT, _primaryproduct);
+		        this.NotifyPropertyChanged(TREEDEFAULTVALUE.PRIMARYPRODUCT);
 		    }
 		}
 		private String _species ;
 		[XmlElement]
 		[Field (FieldName = "Species",
-		 IsUnique = true,
 		 IsPersisted = true)]
 		public virtual String Species
 		{
@@ -1662,13 +1621,12 @@ namespace CruiseDAL.DataObjects
 		        if(_species == value) { return; }
 		        _species = value;
 		        this.ValidateProperty(TREEDEFAULTVALUE.SPECIES, _species);
-		        this.NotifyPropertyChanged(TREEDEFAULTVALUE.SPECIES, _species);
+		        this.NotifyPropertyChanged(TREEDEFAULTVALUE.SPECIES);
 		    }
 		}
 		private String _livedead ;
 		[XmlElement]
 		[Field (FieldName = "LiveDead",
-		 IsUnique = true,
 		 IsPersisted = true)]
 		public virtual String LiveDead
 		{
@@ -1681,13 +1639,12 @@ namespace CruiseDAL.DataObjects
 		        if(_livedead == value) { return; }
 		        _livedead = value;
 		        this.ValidateProperty(TREEDEFAULTVALUE.LIVEDEAD, _livedead);
-		        this.NotifyPropertyChanged(TREEDEFAULTVALUE.LIVEDEAD, _livedead);
+		        this.NotifyPropertyChanged(TREEDEFAULTVALUE.LIVEDEAD);
 		    }
 		}
 		private Int64 _fiacode ;
 		[XmlElement]
 		[Field (FieldName = "FIAcode",
-		 IsUnique = false,
 		 IsPersisted = true)]
 		public virtual Int64 FIAcode
 		{
@@ -1700,13 +1657,12 @@ namespace CruiseDAL.DataObjects
 		        if(_fiacode == value) { return; }
 		        _fiacode = value;
 		        this.ValidateProperty(TREEDEFAULTVALUE.FIACODE, _fiacode);
-		        this.NotifyPropertyChanged(TREEDEFAULTVALUE.FIACODE, _fiacode);
+		        this.NotifyPropertyChanged(TREEDEFAULTVALUE.FIACODE);
 		    }
 		}
 		private float _cullprimary  = 0.0f;
 		[XmlElement]
 		[Field (FieldName = "CullPrimary",
-		 IsUnique = false,
 		 IsPersisted = true)]
 		public virtual float CullPrimary
 		{
@@ -1719,13 +1675,12 @@ namespace CruiseDAL.DataObjects
 		        if(_cullprimary == value) { return; }
 		        _cullprimary = value;
 		        this.ValidateProperty(TREEDEFAULTVALUE.CULLPRIMARY, _cullprimary);
-		        this.NotifyPropertyChanged(TREEDEFAULTVALUE.CULLPRIMARY, _cullprimary);
+		        this.NotifyPropertyChanged(TREEDEFAULTVALUE.CULLPRIMARY);
 		    }
 		}
 		private float _hiddenprimary  = 0.0f;
 		[XmlElement]
 		[Field (FieldName = "HiddenPrimary",
-		 IsUnique = false,
 		 IsPersisted = true)]
 		public virtual float HiddenPrimary
 		{
@@ -1738,13 +1693,12 @@ namespace CruiseDAL.DataObjects
 		        if(_hiddenprimary == value) { return; }
 		        _hiddenprimary = value;
 		        this.ValidateProperty(TREEDEFAULTVALUE.HIDDENPRIMARY, _hiddenprimary);
-		        this.NotifyPropertyChanged(TREEDEFAULTVALUE.HIDDENPRIMARY, _hiddenprimary);
+		        this.NotifyPropertyChanged(TREEDEFAULTVALUE.HIDDENPRIMARY);
 		    }
 		}
 		private float _cullsecondary  = 0.0f;
 		[XmlElement]
 		[Field (FieldName = "CullSecondary",
-		 IsUnique = false,
 		 IsPersisted = true)]
 		public virtual float CullSecondary
 		{
@@ -1757,13 +1711,12 @@ namespace CruiseDAL.DataObjects
 		        if(_cullsecondary == value) { return; }
 		        _cullsecondary = value;
 		        this.ValidateProperty(TREEDEFAULTVALUE.CULLSECONDARY, _cullsecondary);
-		        this.NotifyPropertyChanged(TREEDEFAULTVALUE.CULLSECONDARY, _cullsecondary);
+		        this.NotifyPropertyChanged(TREEDEFAULTVALUE.CULLSECONDARY);
 		    }
 		}
 		private float _hiddensecondary  = 0.0f;
 		[XmlElement]
 		[Field (FieldName = "HiddenSecondary",
-		 IsUnique = false,
 		 IsPersisted = true)]
 		public virtual float HiddenSecondary
 		{
@@ -1776,13 +1729,12 @@ namespace CruiseDAL.DataObjects
 		        if(_hiddensecondary == value) { return; }
 		        _hiddensecondary = value;
 		        this.ValidateProperty(TREEDEFAULTVALUE.HIDDENSECONDARY, _hiddensecondary);
-		        this.NotifyPropertyChanged(TREEDEFAULTVALUE.HIDDENSECONDARY, _hiddensecondary);
+		        this.NotifyPropertyChanged(TREEDEFAULTVALUE.HIDDENSECONDARY);
 		    }
 		}
 		private float _recoverable  = 0.0f;
 		[XmlElement]
 		[Field (FieldName = "Recoverable",
-		 IsUnique = false,
 		 IsPersisted = true)]
 		public virtual float Recoverable
 		{
@@ -1795,13 +1747,12 @@ namespace CruiseDAL.DataObjects
 		        if(_recoverable == value) { return; }
 		        _recoverable = value;
 		        this.ValidateProperty(TREEDEFAULTVALUE.RECOVERABLE, _recoverable);
-		        this.NotifyPropertyChanged(TREEDEFAULTVALUE.RECOVERABLE, _recoverable);
+		        this.NotifyPropertyChanged(TREEDEFAULTVALUE.RECOVERABLE);
 		    }
 		}
 		private String _contractspecies ;
 		[XmlElement]
 		[Field (FieldName = "ContractSpecies",
-		 IsUnique = false,
 		 IsPersisted = true)]
 		public virtual String ContractSpecies
 		{
@@ -1814,13 +1765,12 @@ namespace CruiseDAL.DataObjects
 		        if(_contractspecies == value) { return; }
 		        _contractspecies = value;
 		        this.ValidateProperty(TREEDEFAULTVALUE.CONTRACTSPECIES, _contractspecies);
-		        this.NotifyPropertyChanged(TREEDEFAULTVALUE.CONTRACTSPECIES, _contractspecies);
+		        this.NotifyPropertyChanged(TREEDEFAULTVALUE.CONTRACTSPECIES);
 		    }
 		}
 		private String _treegrade  = "0";
 		[XmlElement]
 		[Field (FieldName = "TreeGrade",
-		 IsUnique = false,
 		 IsPersisted = true)]
 		public virtual String TreeGrade
 		{
@@ -1833,13 +1783,12 @@ namespace CruiseDAL.DataObjects
 		        if(_treegrade == value) { return; }
 		        _treegrade = value;
 		        this.ValidateProperty(TREEDEFAULTVALUE.TREEGRADE, _treegrade);
-		        this.NotifyPropertyChanged(TREEDEFAULTVALUE.TREEGRADE, _treegrade);
+		        this.NotifyPropertyChanged(TREEDEFAULTVALUE.TREEGRADE);
 		    }
 		}
 		private Int64 _merchheightloglength ;
 		[XmlElement]
 		[Field (FieldName = "MerchHeightLogLength",
-		 IsUnique = false,
 		 IsPersisted = true)]
 		public virtual Int64 MerchHeightLogLength
 		{
@@ -1852,13 +1801,12 @@ namespace CruiseDAL.DataObjects
 		        if(_merchheightloglength == value) { return; }
 		        _merchheightloglength = value;
 		        this.ValidateProperty(TREEDEFAULTVALUE.MERCHHEIGHTLOGLENGTH, _merchheightloglength);
-		        this.NotifyPropertyChanged(TREEDEFAULTVALUE.MERCHHEIGHTLOGLENGTH, _merchheightloglength);
+		        this.NotifyPropertyChanged(TREEDEFAULTVALUE.MERCHHEIGHTLOGLENGTH);
 		    }
 		}
 		private String _merchheighttype  = "F";
 		[XmlElement]
 		[Field (FieldName = "MerchHeightType",
-		 IsUnique = false,
 		 IsPersisted = true)]
 		public virtual String MerchHeightType
 		{
@@ -1871,13 +1819,12 @@ namespace CruiseDAL.DataObjects
 		        if(_merchheighttype == value) { return; }
 		        _merchheighttype = value;
 		        this.ValidateProperty(TREEDEFAULTVALUE.MERCHHEIGHTTYPE, _merchheighttype);
-		        this.NotifyPropertyChanged(TREEDEFAULTVALUE.MERCHHEIGHTTYPE, _merchheighttype);
+		        this.NotifyPropertyChanged(TREEDEFAULTVALUE.MERCHHEIGHTTYPE);
 		    }
 		}
 		private float _formclass  = 0.0f;
 		[XmlElement]
 		[Field (FieldName = "FormClass",
-		 IsUnique = false,
 		 IsPersisted = true)]
 		public virtual float FormClass
 		{
@@ -1890,13 +1837,12 @@ namespace CruiseDAL.DataObjects
 		        if(_formclass == value) { return; }
 		        _formclass = value;
 		        this.ValidateProperty(TREEDEFAULTVALUE.FORMCLASS, _formclass);
-		        this.NotifyPropertyChanged(TREEDEFAULTVALUE.FORMCLASS, _formclass);
+		        this.NotifyPropertyChanged(TREEDEFAULTVALUE.FORMCLASS);
 		    }
 		}
 		private float _barkthicknessratio  = 0.0f;
 		[XmlElement]
 		[Field (FieldName = "BarkThicknessRatio",
-		 IsUnique = false,
 		 IsPersisted = true)]
 		public virtual float BarkThicknessRatio
 		{
@@ -1909,13 +1855,12 @@ namespace CruiseDAL.DataObjects
 		        if(_barkthicknessratio == value) { return; }
 		        _barkthicknessratio = value;
 		        this.ValidateProperty(TREEDEFAULTVALUE.BARKTHICKNESSRATIO, _barkthicknessratio);
-		        this.NotifyPropertyChanged(TREEDEFAULTVALUE.BARKTHICKNESSRATIO, _barkthicknessratio);
+		        this.NotifyPropertyChanged(TREEDEFAULTVALUE.BARKTHICKNESSRATIO);
 		    }
 		}
 		private float _averagez  = 0.0f;
 		[XmlElement]
 		[Field (FieldName = "AverageZ",
-		 IsUnique = false,
 		 IsPersisted = true)]
 		public virtual float AverageZ
 		{
@@ -1928,13 +1873,12 @@ namespace CruiseDAL.DataObjects
 		        if(_averagez == value) { return; }
 		        _averagez = value;
 		        this.ValidateProperty(TREEDEFAULTVALUE.AVERAGEZ, _averagez);
-		        this.NotifyPropertyChanged(TREEDEFAULTVALUE.AVERAGEZ, _averagez);
+		        this.NotifyPropertyChanged(TREEDEFAULTVALUE.AVERAGEZ);
 		    }
 		}
 		private float _referenceheightpercent  = 0.0f;
 		[XmlElement]
 		[Field (FieldName = "ReferenceHeightPercent",
-		 IsUnique = false,
 		 IsPersisted = true)]
 		public virtual float ReferenceHeightPercent
 		{
@@ -1947,26 +1891,28 @@ namespace CruiseDAL.DataObjects
 		        if(_referenceheightpercent == value) { return; }
 		        _referenceheightpercent = value;
 		        this.ValidateProperty(TREEDEFAULTVALUE.REFERENCEHEIGHTPERCENT, _referenceheightpercent);
-		        this.NotifyPropertyChanged(TREEDEFAULTVALUE.REFERENCEHEIGHTPERCENT, _referenceheightpercent);
+		        this.NotifyPropertyChanged(TREEDEFAULTVALUE.REFERENCEHEIGHTPERCENT);
 		    }
 		}
 
 		[XmlIgnore]
-		[Field (FieldName = "CreatedBy",
-		 SpecialFieldType = SepcialFieldType.CreatedBy)]
+		[InfrastructureFieldAttribute (FieldName = "CreatedBy",
+		 FieldType = InfrastructureFieldType.CreatedBy)]
 		public string CreatedBy { get; internal set; }
 		
 		[XmlIgnore]
-		[Field (FieldName = "CreatedDate")]
+		[InfrastructureFieldAttribute (FieldName = "CreatedDate",
+		FieldType = InfrastructureFieldType.CreatedDate)]
 		public DateTime CreatedDate { get; internal set; }
 		
 		[XmlIgnore]
-		[Field (FieldName = "ModifiedBy",
-		 SpecialFieldType = SepcialFieldType.ModifiedBy)]
+		[InfrastructureFieldAttribute (FieldName = "ModifiedBy",
+		 FieldType = InfrastructureFieldType.ModifiedBy)]
 		public string ModifiedBy { get; internal set; }
 		
 		[XmlIgnore]
-		[Field (FieldName = "ModifiedDate")]
+		[InfrastructureFieldAttribute (FieldName = "ModifiedDate",
+		FieldType = InfrastructureFieldType.ModifiedDate)]
 		public string ModifiedDate { get; internal set; }
 		
 		protected override bool DoValidate()
@@ -2023,7 +1969,7 @@ namespace CruiseDAL.DataObjects
 		}
 	}
 	[SQLEntity(SourceName = "SampleGroupTreeDefaultValue")]
-	public partial class SampleGroupTreeDefaultValueDO : DataObject
+	public partial class SampleGroupTreeDefaultValueDO : DataObjectExtra
 	{
 		//private static Persister persister;
 		private static RowValidator _validator;
@@ -2066,7 +2012,6 @@ namespace CruiseDAL.DataObjects
 		private long? _treedefaultvalue_cn ;
 		[XmlIgnore]
 		[Field (FieldName = "TreeDefaultValue_CN",
-		 IsUnique = true,
 		 IsPersisted = true)]
 		public virtual long? TreeDefaultValue_CN
 		{
@@ -2085,7 +2030,7 @@ namespace CruiseDAL.DataObjects
 		        if(value == null || value.Value == 0) { _treedefaultvalue = null;  }
 		        _treedefaultvalue_cn = value;
 		        this.ValidateProperty(SAMPLEGROUPTREEDEFAULTVALUE.TREEDEFAULTVALUE_CN, _treedefaultvalue_cn);
-		        this.NotifyPropertyChanged(SAMPLEGROUPTREEDEFAULTVALUE.TREEDEFAULTVALUE_CN, _treedefaultvalue_cn);
+		        this.NotifyPropertyChanged(SAMPLEGROUPTREEDEFAULTVALUE.TREEDEFAULTVALUE_CN);
 		    }
 		}
 		public virtual TreeDefaultValueDO GetTreeDefaultValue()
@@ -2116,7 +2061,6 @@ namespace CruiseDAL.DataObjects
 		private long? _samplegroup_cn ;
 		[XmlIgnore]
 		[Field (FieldName = "SampleGroup_CN",
-		 IsUnique = true,
 		 IsPersisted = true)]
 		public virtual long? SampleGroup_CN
 		{
@@ -2135,7 +2079,7 @@ namespace CruiseDAL.DataObjects
 		        if(value == null || value.Value == 0) { _samplegroup = null;  }
 		        _samplegroup_cn = value;
 		        this.ValidateProperty(SAMPLEGROUPTREEDEFAULTVALUE.SAMPLEGROUP_CN, _samplegroup_cn);
-		        this.NotifyPropertyChanged(SAMPLEGROUPTREEDEFAULTVALUE.SAMPLEGROUP_CN, _samplegroup_cn);
+		        this.NotifyPropertyChanged(SAMPLEGROUPTREEDEFAULTVALUE.SAMPLEGROUP_CN);
 		    }
 		}
 		public virtual SampleGroupDO GetSampleGroup()
@@ -2186,7 +2130,7 @@ namespace CruiseDAL.DataObjects
 		}
 	}
 	[SQLEntity(SourceName = "Plot")]
-	public partial class PlotDO : DataObject
+	public partial class PlotDO : DataObjectExtra
 	{
 		//private static Persister persister;
 		private static RowValidator _validator;
@@ -2237,7 +2181,6 @@ namespace CruiseDAL.DataObjects
 		private long? _stratum_cn ;
 		[XmlIgnore]
 		[Field (FieldName = "Stratum_CN",
-		 IsUnique = true,
 		 IsPersisted = true)]
 		public virtual long? Stratum_CN
 		{
@@ -2256,7 +2199,7 @@ namespace CruiseDAL.DataObjects
 		        if(value == null || value.Value == 0) { _stratum = null;  }
 		        _stratum_cn = value;
 		        this.ValidateProperty(PLOT.STRATUM_CN, _stratum_cn);
-		        this.NotifyPropertyChanged(PLOT.STRATUM_CN, _stratum_cn);
+		        this.NotifyPropertyChanged(PLOT.STRATUM_CN);
 		    }
 		}
 		public virtual StratumDO GetStratum()
@@ -2287,7 +2230,6 @@ namespace CruiseDAL.DataObjects
 		private long? _cuttingunit_cn ;
 		[XmlIgnore]
 		[Field (FieldName = "CuttingUnit_CN",
-		 IsUnique = true,
 		 IsPersisted = true)]
 		public virtual long? CuttingUnit_CN
 		{
@@ -2306,7 +2248,7 @@ namespace CruiseDAL.DataObjects
 		        if(value == null || value.Value == 0) { _cuttingunit = null;  }
 		        _cuttingunit_cn = value;
 		        this.ValidateProperty(PLOT.CUTTINGUNIT_CN, _cuttingunit_cn);
-		        this.NotifyPropertyChanged(PLOT.CUTTINGUNIT_CN, _cuttingunit_cn);
+		        this.NotifyPropertyChanged(PLOT.CUTTINGUNIT_CN);
 		    }
 		}
 		public virtual CuttingUnitDO GetCuttingUnit()
@@ -2337,7 +2279,6 @@ namespace CruiseDAL.DataObjects
 		private Guid _plot_guid  = Guid.NewGuid();
 		[XmlElement]
 		[Field (FieldName = "Plot_GUID",
-		 IsUnique = false,
 		 IsPersisted = true)]
 		public virtual Guid Plot_GUID
 		{
@@ -2350,13 +2291,12 @@ namespace CruiseDAL.DataObjects
 		        if(_plot_guid == value) { return; }
 		        _plot_guid = value;
 		        this.ValidateProperty(PLOT.PLOT_GUID, _plot_guid);
-		        this.NotifyPropertyChanged(PLOT.PLOT_GUID, _plot_guid);
+		        this.NotifyPropertyChanged(PLOT.PLOT_GUID);
 		    }
 		}
 		private Int64 _plotnumber ;
 		[XmlElement]
 		[Field (FieldName = "PlotNumber",
-		 IsUnique = true,
 		 IsPersisted = true)]
 		public virtual Int64 PlotNumber
 		{
@@ -2369,13 +2309,12 @@ namespace CruiseDAL.DataObjects
 		        if(_plotnumber == value) { return; }
 		        _plotnumber = value;
 		        this.ValidateProperty(PLOT.PLOTNUMBER, _plotnumber);
-		        this.NotifyPropertyChanged(PLOT.PLOTNUMBER, _plotnumber);
+		        this.NotifyPropertyChanged(PLOT.PLOTNUMBER);
 		    }
 		}
 		private String _isempty ;
 		[XmlElement]
 		[Field (FieldName = "IsEmpty",
-		 IsUnique = false,
 		 IsPersisted = true)]
 		public virtual String IsEmpty
 		{
@@ -2388,13 +2327,12 @@ namespace CruiseDAL.DataObjects
 		        if(_isempty == value) { return; }
 		        _isempty = value;
 		        this.ValidateProperty(PLOT.ISEMPTY, _isempty);
-		        this.NotifyPropertyChanged(PLOT.ISEMPTY, _isempty);
+		        this.NotifyPropertyChanged(PLOT.ISEMPTY);
 		    }
 		}
 		private float _slope  = 0.0f;
 		[XmlElement]
 		[Field (FieldName = "Slope",
-		 IsUnique = false,
 		 IsPersisted = true)]
 		public virtual float Slope
 		{
@@ -2407,13 +2345,12 @@ namespace CruiseDAL.DataObjects
 		        if(_slope == value) { return; }
 		        _slope = value;
 		        this.ValidateProperty(PLOT.SLOPE, _slope);
-		        this.NotifyPropertyChanged(PLOT.SLOPE, _slope);
+		        this.NotifyPropertyChanged(PLOT.SLOPE);
 		    }
 		}
 		private float _kpi  = 0.0f;
 		[XmlElement]
 		[Field (FieldName = "KPI",
-		 IsUnique = false,
 		 IsPersisted = true)]
 		public virtual float KPI
 		{
@@ -2426,13 +2363,12 @@ namespace CruiseDAL.DataObjects
 		        if(_kpi == value) { return; }
 		        _kpi = value;
 		        this.ValidateProperty(PLOT.KPI, _kpi);
-		        this.NotifyPropertyChanged(PLOT.KPI, _kpi);
+		        this.NotifyPropertyChanged(PLOT.KPI);
 		    }
 		}
 		private float _aspect  = 0.0f;
 		[XmlElement]
 		[Field (FieldName = "Aspect",
-		 IsUnique = false,
 		 IsPersisted = true)]
 		public virtual float Aspect
 		{
@@ -2445,13 +2381,12 @@ namespace CruiseDAL.DataObjects
 		        if(_aspect == value) { return; }
 		        _aspect = value;
 		        this.ValidateProperty(PLOT.ASPECT, _aspect);
-		        this.NotifyPropertyChanged(PLOT.ASPECT, _aspect);
+		        this.NotifyPropertyChanged(PLOT.ASPECT);
 		    }
 		}
 		private String _remarks ;
 		[XmlElement]
 		[Field (FieldName = "Remarks",
-		 IsUnique = false,
 		 IsPersisted = true)]
 		public virtual String Remarks
 		{
@@ -2464,13 +2399,12 @@ namespace CruiseDAL.DataObjects
 		        if(_remarks == value) { return; }
 		        _remarks = value;
 		        this.ValidateProperty(PLOT.REMARKS, _remarks);
-		        this.NotifyPropertyChanged(PLOT.REMARKS, _remarks);
+		        this.NotifyPropertyChanged(PLOT.REMARKS);
 		    }
 		}
 		private float _xcoordinate  = 0.0f;
 		[XmlElement]
 		[Field (FieldName = "XCoordinate",
-		 IsUnique = false,
 		 IsPersisted = true)]
 		public virtual float XCoordinate
 		{
@@ -2483,13 +2417,12 @@ namespace CruiseDAL.DataObjects
 		        if(_xcoordinate == value) { return; }
 		        _xcoordinate = value;
 		        this.ValidateProperty(PLOT.XCOORDINATE, _xcoordinate);
-		        this.NotifyPropertyChanged(PLOT.XCOORDINATE, _xcoordinate);
+		        this.NotifyPropertyChanged(PLOT.XCOORDINATE);
 		    }
 		}
 		private float _ycoordinate  = 0.0f;
 		[XmlElement]
 		[Field (FieldName = "YCoordinate",
-		 IsUnique = false,
 		 IsPersisted = true)]
 		public virtual float YCoordinate
 		{
@@ -2502,13 +2435,12 @@ namespace CruiseDAL.DataObjects
 		        if(_ycoordinate == value) { return; }
 		        _ycoordinate = value;
 		        this.ValidateProperty(PLOT.YCOORDINATE, _ycoordinate);
-		        this.NotifyPropertyChanged(PLOT.YCOORDINATE, _ycoordinate);
+		        this.NotifyPropertyChanged(PLOT.YCOORDINATE);
 		    }
 		}
 		private float _zcoordinate  = 0.0f;
 		[XmlElement]
 		[Field (FieldName = "ZCoordinate",
-		 IsUnique = false,
 		 IsPersisted = true)]
 		public virtual float ZCoordinate
 		{
@@ -2521,13 +2453,12 @@ namespace CruiseDAL.DataObjects
 		        if(_zcoordinate == value) { return; }
 		        _zcoordinate = value;
 		        this.ValidateProperty(PLOT.ZCOORDINATE, _zcoordinate);
-		        this.NotifyPropertyChanged(PLOT.ZCOORDINATE, _zcoordinate);
+		        this.NotifyPropertyChanged(PLOT.ZCOORDINATE);
 		    }
 		}
 		private String _metadata ;
 		[XmlElement]
 		[Field (FieldName = "MetaData",
-		 IsUnique = false,
 		 IsPersisted = true)]
 		public virtual String MetaData
 		{
@@ -2540,13 +2471,12 @@ namespace CruiseDAL.DataObjects
 		        if(_metadata == value) { return; }
 		        _metadata = value;
 		        this.ValidateProperty(PLOT.METADATA, _metadata);
-		        this.NotifyPropertyChanged(PLOT.METADATA, _metadata);
+		        this.NotifyPropertyChanged(PLOT.METADATA);
 		    }
 		}
 		private byte[] _blob ;
 		[XmlElement]
 		[Field (FieldName = "Blob",
-		 IsUnique = false,
 		 IsPersisted = true)]
 		public virtual byte[] Blob
 		{
@@ -2559,26 +2489,28 @@ namespace CruiseDAL.DataObjects
 		        if(_blob == value) { return; }
 		        _blob = value;
 		        this.ValidateProperty(PLOT.BLOB, _blob);
-		        this.NotifyPropertyChanged(PLOT.BLOB, _blob);
+		        this.NotifyPropertyChanged(PLOT.BLOB);
 		    }
 		}
 
 		[XmlIgnore]
-		[Field (FieldName = "CreatedBy",
-		 SpecialFieldType = SepcialFieldType.CreatedBy)]
+		[InfrastructureFieldAttribute (FieldName = "CreatedBy",
+		 FieldType = InfrastructureFieldType.CreatedBy)]
 		public string CreatedBy { get; internal set; }
 		
 		[XmlIgnore]
-		[Field (FieldName = "CreatedDate")]
+		[InfrastructureFieldAttribute (FieldName = "CreatedDate",
+		FieldType = InfrastructureFieldType.CreatedDate)]
 		public DateTime CreatedDate { get; internal set; }
 		
 		[XmlIgnore]
-		[Field (FieldName = "ModifiedBy",
-		 SpecialFieldType = SepcialFieldType.ModifiedBy)]
+		[InfrastructureFieldAttribute (FieldName = "ModifiedBy",
+		 FieldType = InfrastructureFieldType.ModifiedBy)]
 		public string ModifiedBy { get; internal set; }
 		
 		[XmlIgnore]
-		[Field (FieldName = "ModifiedDate")]
+		[InfrastructureFieldAttribute (FieldName = "ModifiedDate",
+		FieldType = InfrastructureFieldType.ModifiedDate)]
 		public string ModifiedDate { get; internal set; }
 		
 		protected override bool DoValidate()
@@ -2627,7 +2559,7 @@ namespace CruiseDAL.DataObjects
 		}
 	}
 	[SQLEntity(SourceName = "Tree")]
-	public partial class TreeDO : DataObject
+	public partial class TreeDO : DataObjectExtra
 	{
 		//private static Persister persister;
 		private static RowValidator _validator;
@@ -2679,7 +2611,6 @@ namespace CruiseDAL.DataObjects
 		private long? _treedefaultvalue_cn ;
 		[XmlIgnore]
 		[Field (FieldName = "TreeDefaultValue_CN",
-		 IsUnique = true,
 		 IsPersisted = true)]
 		public virtual long? TreeDefaultValue_CN
 		{
@@ -2698,7 +2629,7 @@ namespace CruiseDAL.DataObjects
 		        if(value == null || value.Value == 0) { _treedefaultvalue = null;  }
 		        _treedefaultvalue_cn = value;
 		        this.ValidateProperty(TREE.TREEDEFAULTVALUE_CN, _treedefaultvalue_cn);
-		        this.NotifyPropertyChanged(TREE.TREEDEFAULTVALUE_CN, _treedefaultvalue_cn);
+		        this.NotifyPropertyChanged(TREE.TREEDEFAULTVALUE_CN);
 		    }
 		}
 		public virtual TreeDefaultValueDO GetTreeDefaultValue()
@@ -2729,7 +2660,6 @@ namespace CruiseDAL.DataObjects
 		private long? _stratum_cn ;
 		[XmlIgnore]
 		[Field (FieldName = "Stratum_CN",
-		 IsUnique = true,
 		 IsPersisted = true)]
 		public virtual long? Stratum_CN
 		{
@@ -2748,7 +2678,7 @@ namespace CruiseDAL.DataObjects
 		        if(value == null || value.Value == 0) { _stratum = null;  }
 		        _stratum_cn = value;
 		        this.ValidateProperty(TREE.STRATUM_CN, _stratum_cn);
-		        this.NotifyPropertyChanged(TREE.STRATUM_CN, _stratum_cn);
+		        this.NotifyPropertyChanged(TREE.STRATUM_CN);
 		    }
 		}
 		public virtual StratumDO GetStratum()
@@ -2779,7 +2709,6 @@ namespace CruiseDAL.DataObjects
 		private long? _samplegroup_cn ;
 		[XmlIgnore]
 		[Field (FieldName = "SampleGroup_CN",
-		 IsUnique = true,
 		 IsPersisted = true)]
 		public virtual long? SampleGroup_CN
 		{
@@ -2798,7 +2727,7 @@ namespace CruiseDAL.DataObjects
 		        if(value == null || value.Value == 0) { _samplegroup = null;  }
 		        _samplegroup_cn = value;
 		        this.ValidateProperty(TREE.SAMPLEGROUP_CN, _samplegroup_cn);
-		        this.NotifyPropertyChanged(TREE.SAMPLEGROUP_CN, _samplegroup_cn);
+		        this.NotifyPropertyChanged(TREE.SAMPLEGROUP_CN);
 		    }
 		}
 		public virtual SampleGroupDO GetSampleGroup()
@@ -2829,7 +2758,6 @@ namespace CruiseDAL.DataObjects
 		private long? _cuttingunit_cn ;
 		[XmlIgnore]
 		[Field (FieldName = "CuttingUnit_CN",
-		 IsUnique = true,
 		 IsPersisted = true)]
 		public virtual long? CuttingUnit_CN
 		{
@@ -2848,7 +2776,7 @@ namespace CruiseDAL.DataObjects
 		        if(value == null || value.Value == 0) { _cuttingunit = null;  }
 		        _cuttingunit_cn = value;
 		        this.ValidateProperty(TREE.CUTTINGUNIT_CN, _cuttingunit_cn);
-		        this.NotifyPropertyChanged(TREE.CUTTINGUNIT_CN, _cuttingunit_cn);
+		        this.NotifyPropertyChanged(TREE.CUTTINGUNIT_CN);
 		    }
 		}
 		public virtual CuttingUnitDO GetCuttingUnit()
@@ -2879,7 +2807,6 @@ namespace CruiseDAL.DataObjects
 		private long? _plot_cn ;
 		[XmlIgnore]
 		[Field (FieldName = "Plot_CN",
-		 IsUnique = true,
 		 IsPersisted = true)]
 		public virtual long? Plot_CN
 		{
@@ -2898,7 +2825,7 @@ namespace CruiseDAL.DataObjects
 		        if(value == null || value.Value == 0) { _plot = null;  }
 		        _plot_cn = value;
 		        this.ValidateProperty(TREE.PLOT_CN, _plot_cn);
-		        this.NotifyPropertyChanged(TREE.PLOT_CN, _plot_cn);
+		        this.NotifyPropertyChanged(TREE.PLOT_CN);
 		    }
 		}
 		public virtual PlotDO GetPlot()
@@ -2929,7 +2856,6 @@ namespace CruiseDAL.DataObjects
 		private Guid _tree_guid  = Guid.NewGuid();
 		[XmlElement]
 		[Field (FieldName = "Tree_GUID",
-		 IsUnique = false,
 		 IsPersisted = true)]
 		public virtual Guid Tree_GUID
 		{
@@ -2942,13 +2868,12 @@ namespace CruiseDAL.DataObjects
 		        if(_tree_guid == value) { return; }
 		        _tree_guid = value;
 		        this.ValidateProperty(TREE.TREE_GUID, _tree_guid);
-		        this.NotifyPropertyChanged(TREE.TREE_GUID, _tree_guid);
+		        this.NotifyPropertyChanged(TREE.TREE_GUID);
 		    }
 		}
 		private Int64 _treenumber ;
 		[XmlElement]
 		[Field (FieldName = "TreeNumber",
-		 IsUnique = true,
 		 IsPersisted = true)]
 		public virtual Int64 TreeNumber
 		{
@@ -2961,13 +2886,12 @@ namespace CruiseDAL.DataObjects
 		        if(_treenumber == value) { return; }
 		        _treenumber = value;
 		        this.ValidateProperty(TREE.TREENUMBER, _treenumber);
-		        this.NotifyPropertyChanged(TREE.TREENUMBER, _treenumber);
+		        this.NotifyPropertyChanged(TREE.TREENUMBER);
 		    }
 		}
 		private String _species ;
 		[XmlElement]
 		[Field (FieldName = "Species",
-		 IsUnique = false,
 		 IsPersisted = true)]
 		public virtual String Species
 		{
@@ -2980,13 +2904,12 @@ namespace CruiseDAL.DataObjects
 		        if(_species == value) { return; }
 		        _species = value;
 		        this.ValidateProperty(TREE.SPECIES, _species);
-		        this.NotifyPropertyChanged(TREE.SPECIES, _species);
+		        this.NotifyPropertyChanged(TREE.SPECIES);
 		    }
 		}
 		private String _countormeasure ;
 		[XmlElement]
 		[Field (FieldName = "CountOrMeasure",
-		 IsUnique = false,
 		 IsPersisted = true)]
 		public virtual String CountOrMeasure
 		{
@@ -2999,13 +2922,12 @@ namespace CruiseDAL.DataObjects
 		        if(_countormeasure == value) { return; }
 		        _countormeasure = value;
 		        this.ValidateProperty(TREE.COUNTORMEASURE, _countormeasure);
-		        this.NotifyPropertyChanged(TREE.COUNTORMEASURE, _countormeasure);
+		        this.NotifyPropertyChanged(TREE.COUNTORMEASURE);
 		    }
 		}
 		private float _treecount  = 0.0f;
 		[XmlElement]
 		[Field (FieldName = "TreeCount",
-		 IsUnique = false,
 		 IsPersisted = true)]
 		public virtual float TreeCount
 		{
@@ -3018,13 +2940,12 @@ namespace CruiseDAL.DataObjects
 		        if(_treecount == value) { return; }
 		        _treecount = value;
 		        this.ValidateProperty(TREE.TREECOUNT, _treecount);
-		        this.NotifyPropertyChanged(TREE.TREECOUNT, _treecount);
+		        this.NotifyPropertyChanged(TREE.TREECOUNT);
 		    }
 		}
 		private float _kpi  = 0.0f;
 		[XmlElement]
 		[Field (FieldName = "KPI",
-		 IsUnique = false,
 		 IsPersisted = true)]
 		public virtual float KPI
 		{
@@ -3037,13 +2958,12 @@ namespace CruiseDAL.DataObjects
 		        if(_kpi == value) { return; }
 		        _kpi = value;
 		        this.ValidateProperty(TREE.KPI, _kpi);
-		        this.NotifyPropertyChanged(TREE.KPI, _kpi);
+		        this.NotifyPropertyChanged(TREE.KPI);
 		    }
 		}
 		private String _stm  = "N";
 		[XmlElement]
 		[Field (FieldName = "STM",
-		 IsUnique = false,
 		 IsPersisted = true)]
 		public virtual String STM
 		{
@@ -3056,13 +2976,12 @@ namespace CruiseDAL.DataObjects
 		        if(_stm == value) { return; }
 		        _stm = value;
 		        this.ValidateProperty(TREE.STM, _stm);
-		        this.NotifyPropertyChanged(TREE.STM, _stm);
+		        this.NotifyPropertyChanged(TREE.STM);
 		    }
 		}
 		private float _seendefectprimary  = 0.0f;
 		[XmlElement]
 		[Field (FieldName = "SeenDefectPrimary",
-		 IsUnique = false,
 		 IsPersisted = true)]
 		public virtual float SeenDefectPrimary
 		{
@@ -3075,13 +2994,12 @@ namespace CruiseDAL.DataObjects
 		        if(_seendefectprimary == value) { return; }
 		        _seendefectprimary = value;
 		        this.ValidateProperty(TREE.SEENDEFECTPRIMARY, _seendefectprimary);
-		        this.NotifyPropertyChanged(TREE.SEENDEFECTPRIMARY, _seendefectprimary);
+		        this.NotifyPropertyChanged(TREE.SEENDEFECTPRIMARY);
 		    }
 		}
 		private float _seendefectsecondary  = 0.0f;
 		[XmlElement]
 		[Field (FieldName = "SeenDefectSecondary",
-		 IsUnique = false,
 		 IsPersisted = true)]
 		public virtual float SeenDefectSecondary
 		{
@@ -3094,13 +3012,12 @@ namespace CruiseDAL.DataObjects
 		        if(_seendefectsecondary == value) { return; }
 		        _seendefectsecondary = value;
 		        this.ValidateProperty(TREE.SEENDEFECTSECONDARY, _seendefectsecondary);
-		        this.NotifyPropertyChanged(TREE.SEENDEFECTSECONDARY, _seendefectsecondary);
+		        this.NotifyPropertyChanged(TREE.SEENDEFECTSECONDARY);
 		    }
 		}
 		private float _recoverableprimary  = 0.0f;
 		[XmlElement]
 		[Field (FieldName = "RecoverablePrimary",
-		 IsUnique = false,
 		 IsPersisted = true)]
 		public virtual float RecoverablePrimary
 		{
@@ -3113,13 +3030,12 @@ namespace CruiseDAL.DataObjects
 		        if(_recoverableprimary == value) { return; }
 		        _recoverableprimary = value;
 		        this.ValidateProperty(TREE.RECOVERABLEPRIMARY, _recoverableprimary);
-		        this.NotifyPropertyChanged(TREE.RECOVERABLEPRIMARY, _recoverableprimary);
+		        this.NotifyPropertyChanged(TREE.RECOVERABLEPRIMARY);
 		    }
 		}
 		private float _hiddenprimary  = 0.0f;
 		[XmlElement]
 		[Field (FieldName = "HiddenPrimary",
-		 IsUnique = false,
 		 IsPersisted = true)]
 		public virtual float HiddenPrimary
 		{
@@ -3132,13 +3048,12 @@ namespace CruiseDAL.DataObjects
 		        if(_hiddenprimary == value) { return; }
 		        _hiddenprimary = value;
 		        this.ValidateProperty(TREE.HIDDENPRIMARY, _hiddenprimary);
-		        this.NotifyPropertyChanged(TREE.HIDDENPRIMARY, _hiddenprimary);
+		        this.NotifyPropertyChanged(TREE.HIDDENPRIMARY);
 		    }
 		}
 		private String _initials ;
 		[XmlElement]
 		[Field (FieldName = "Initials",
-		 IsUnique = false,
 		 IsPersisted = true)]
 		public virtual String Initials
 		{
@@ -3151,13 +3066,12 @@ namespace CruiseDAL.DataObjects
 		        if(_initials == value) { return; }
 		        _initials = value;
 		        this.ValidateProperty(TREE.INITIALS, _initials);
-		        this.NotifyPropertyChanged(TREE.INITIALS, _initials);
+		        this.NotifyPropertyChanged(TREE.INITIALS);
 		    }
 		}
 		private String _livedead ;
 		[XmlElement]
 		[Field (FieldName = "LiveDead",
-		 IsUnique = false,
 		 IsPersisted = true)]
 		public virtual String LiveDead
 		{
@@ -3170,13 +3084,12 @@ namespace CruiseDAL.DataObjects
 		        if(_livedead == value) { return; }
 		        _livedead = value;
 		        this.ValidateProperty(TREE.LIVEDEAD, _livedead);
-		        this.NotifyPropertyChanged(TREE.LIVEDEAD, _livedead);
+		        this.NotifyPropertyChanged(TREE.LIVEDEAD);
 		    }
 		}
 		private String _grade ;
 		[XmlElement]
 		[Field (FieldName = "Grade",
-		 IsUnique = false,
 		 IsPersisted = true)]
 		public virtual String Grade
 		{
@@ -3189,13 +3102,12 @@ namespace CruiseDAL.DataObjects
 		        if(_grade == value) { return; }
 		        _grade = value;
 		        this.ValidateProperty(TREE.GRADE, _grade);
-		        this.NotifyPropertyChanged(TREE.GRADE, _grade);
+		        this.NotifyPropertyChanged(TREE.GRADE);
 		    }
 		}
 		private float _heighttofirstlivelimb  = 0.0f;
 		[XmlElement]
 		[Field (FieldName = "HeightToFirstLiveLimb",
-		 IsUnique = false,
 		 IsPersisted = true)]
 		public virtual float HeightToFirstLiveLimb
 		{
@@ -3208,13 +3120,12 @@ namespace CruiseDAL.DataObjects
 		        if(_heighttofirstlivelimb == value) { return; }
 		        _heighttofirstlivelimb = value;
 		        this.ValidateProperty(TREE.HEIGHTTOFIRSTLIVELIMB, _heighttofirstlivelimb);
-		        this.NotifyPropertyChanged(TREE.HEIGHTTOFIRSTLIVELIMB, _heighttofirstlivelimb);
+		        this.NotifyPropertyChanged(TREE.HEIGHTTOFIRSTLIVELIMB);
 		    }
 		}
 		private float _polelength  = 0.0f;
 		[XmlElement]
 		[Field (FieldName = "PoleLength",
-		 IsUnique = false,
 		 IsPersisted = true)]
 		public virtual float PoleLength
 		{
@@ -3227,13 +3138,12 @@ namespace CruiseDAL.DataObjects
 		        if(_polelength == value) { return; }
 		        _polelength = value;
 		        this.ValidateProperty(TREE.POLELENGTH, _polelength);
-		        this.NotifyPropertyChanged(TREE.POLELENGTH, _polelength);
+		        this.NotifyPropertyChanged(TREE.POLELENGTH);
 		    }
 		}
 		private String _clearface ;
 		[XmlElement]
 		[Field (FieldName = "ClearFace",
-		 IsUnique = false,
 		 IsPersisted = true)]
 		public virtual String ClearFace
 		{
@@ -3246,13 +3156,12 @@ namespace CruiseDAL.DataObjects
 		        if(_clearface == value) { return; }
 		        _clearface = value;
 		        this.ValidateProperty(TREE.CLEARFACE, _clearface);
-		        this.NotifyPropertyChanged(TREE.CLEARFACE, _clearface);
+		        this.NotifyPropertyChanged(TREE.CLEARFACE);
 		    }
 		}
 		private float _crownratio  = 0.0f;
 		[XmlElement]
 		[Field (FieldName = "CrownRatio",
-		 IsUnique = false,
 		 IsPersisted = true)]
 		public virtual float CrownRatio
 		{
@@ -3265,13 +3174,12 @@ namespace CruiseDAL.DataObjects
 		        if(_crownratio == value) { return; }
 		        _crownratio = value;
 		        this.ValidateProperty(TREE.CROWNRATIO, _crownratio);
-		        this.NotifyPropertyChanged(TREE.CROWNRATIO, _crownratio);
+		        this.NotifyPropertyChanged(TREE.CROWNRATIO);
 		    }
 		}
 		private float _dbh  = 0.0f;
 		[XmlElement]
 		[Field (FieldName = "DBH",
-		 IsUnique = false,
 		 IsPersisted = true)]
 		public virtual float DBH
 		{
@@ -3284,13 +3192,12 @@ namespace CruiseDAL.DataObjects
 		        if(_dbh == value) { return; }
 		        _dbh = value;
 		        this.ValidateProperty(TREE.DBH, _dbh);
-		        this.NotifyPropertyChanged(TREE.DBH, _dbh);
+		        this.NotifyPropertyChanged(TREE.DBH);
 		    }
 		}
 		private float _drc  = 0.0f;
 		[XmlElement]
 		[Field (FieldName = "DRC",
-		 IsUnique = false,
 		 IsPersisted = true)]
 		public virtual float DRC
 		{
@@ -3303,13 +3210,12 @@ namespace CruiseDAL.DataObjects
 		        if(_drc == value) { return; }
 		        _drc = value;
 		        this.ValidateProperty(TREE.DRC, _drc);
-		        this.NotifyPropertyChanged(TREE.DRC, _drc);
+		        this.NotifyPropertyChanged(TREE.DRC);
 		    }
 		}
 		private float _totalheight  = 0.0f;
 		[XmlElement]
 		[Field (FieldName = "TotalHeight",
-		 IsUnique = false,
 		 IsPersisted = true)]
 		public virtual float TotalHeight
 		{
@@ -3322,13 +3228,12 @@ namespace CruiseDAL.DataObjects
 		        if(_totalheight == value) { return; }
 		        _totalheight = value;
 		        this.ValidateProperty(TREE.TOTALHEIGHT, _totalheight);
-		        this.NotifyPropertyChanged(TREE.TOTALHEIGHT, _totalheight);
+		        this.NotifyPropertyChanged(TREE.TOTALHEIGHT);
 		    }
 		}
 		private float _merchheightprimary  = 0.0f;
 		[XmlElement]
 		[Field (FieldName = "MerchHeightPrimary",
-		 IsUnique = false,
 		 IsPersisted = true)]
 		public virtual float MerchHeightPrimary
 		{
@@ -3341,13 +3246,12 @@ namespace CruiseDAL.DataObjects
 		        if(_merchheightprimary == value) { return; }
 		        _merchheightprimary = value;
 		        this.ValidateProperty(TREE.MERCHHEIGHTPRIMARY, _merchheightprimary);
-		        this.NotifyPropertyChanged(TREE.MERCHHEIGHTPRIMARY, _merchheightprimary);
+		        this.NotifyPropertyChanged(TREE.MERCHHEIGHTPRIMARY);
 		    }
 		}
 		private float _merchheightsecondary  = 0.0f;
 		[XmlElement]
 		[Field (FieldName = "MerchHeightSecondary",
-		 IsUnique = false,
 		 IsPersisted = true)]
 		public virtual float MerchHeightSecondary
 		{
@@ -3360,13 +3264,12 @@ namespace CruiseDAL.DataObjects
 		        if(_merchheightsecondary == value) { return; }
 		        _merchheightsecondary = value;
 		        this.ValidateProperty(TREE.MERCHHEIGHTSECONDARY, _merchheightsecondary);
-		        this.NotifyPropertyChanged(TREE.MERCHHEIGHTSECONDARY, _merchheightsecondary);
+		        this.NotifyPropertyChanged(TREE.MERCHHEIGHTSECONDARY);
 		    }
 		}
 		private float _formclass  = 0.0f;
 		[XmlElement]
 		[Field (FieldName = "FormClass",
-		 IsUnique = false,
 		 IsPersisted = true)]
 		public virtual float FormClass
 		{
@@ -3379,13 +3282,12 @@ namespace CruiseDAL.DataObjects
 		        if(_formclass == value) { return; }
 		        _formclass = value;
 		        this.ValidateProperty(TREE.FORMCLASS, _formclass);
-		        this.NotifyPropertyChanged(TREE.FORMCLASS, _formclass);
+		        this.NotifyPropertyChanged(TREE.FORMCLASS);
 		    }
 		}
 		private float _upperstemdiameter  = 0.0f;
 		[XmlElement]
 		[Field (FieldName = "UpperStemDiameter",
-		 IsUnique = false,
 		 IsPersisted = true)]
 		public virtual float UpperStemDiameter
 		{
@@ -3398,13 +3300,12 @@ namespace CruiseDAL.DataObjects
 		        if(_upperstemdiameter == value) { return; }
 		        _upperstemdiameter = value;
 		        this.ValidateProperty(TREE.UPPERSTEMDIAMETER, _upperstemdiameter);
-		        this.NotifyPropertyChanged(TREE.UPPERSTEMDIAMETER, _upperstemdiameter);
+		        this.NotifyPropertyChanged(TREE.UPPERSTEMDIAMETER);
 		    }
 		}
 		private float _upperstemheight  = 0.0f;
 		[XmlElement]
 		[Field (FieldName = "UpperStemHeight",
-		 IsUnique = false,
 		 IsPersisted = true)]
 		public virtual float UpperStemHeight
 		{
@@ -3417,13 +3318,12 @@ namespace CruiseDAL.DataObjects
 		        if(_upperstemheight == value) { return; }
 		        _upperstemheight = value;
 		        this.ValidateProperty(TREE.UPPERSTEMHEIGHT, _upperstemheight);
-		        this.NotifyPropertyChanged(TREE.UPPERSTEMHEIGHT, _upperstemheight);
+		        this.NotifyPropertyChanged(TREE.UPPERSTEMHEIGHT);
 		    }
 		}
 		private float _dbhdoublebarkthickness  = 0.0f;
 		[XmlElement]
 		[Field (FieldName = "DBHDoubleBarkThickness",
-		 IsUnique = false,
 		 IsPersisted = true)]
 		public virtual float DBHDoubleBarkThickness
 		{
@@ -3436,13 +3336,12 @@ namespace CruiseDAL.DataObjects
 		        if(_dbhdoublebarkthickness == value) { return; }
 		        _dbhdoublebarkthickness = value;
 		        this.ValidateProperty(TREE.DBHDOUBLEBARKTHICKNESS, _dbhdoublebarkthickness);
-		        this.NotifyPropertyChanged(TREE.DBHDOUBLEBARKTHICKNESS, _dbhdoublebarkthickness);
+		        this.NotifyPropertyChanged(TREE.DBHDOUBLEBARKTHICKNESS);
 		    }
 		}
 		private float _topdibprimary  = 0.0f;
 		[XmlElement]
 		[Field (FieldName = "TopDIBPrimary",
-		 IsUnique = false,
 		 IsPersisted = true)]
 		public virtual float TopDIBPrimary
 		{
@@ -3455,13 +3354,12 @@ namespace CruiseDAL.DataObjects
 		        if(_topdibprimary == value) { return; }
 		        _topdibprimary = value;
 		        this.ValidateProperty(TREE.TOPDIBPRIMARY, _topdibprimary);
-		        this.NotifyPropertyChanged(TREE.TOPDIBPRIMARY, _topdibprimary);
+		        this.NotifyPropertyChanged(TREE.TOPDIBPRIMARY);
 		    }
 		}
 		private float _topdibsecondary  = 0.0f;
 		[XmlElement]
 		[Field (FieldName = "TopDIBSecondary",
-		 IsUnique = false,
 		 IsPersisted = true)]
 		public virtual float TopDIBSecondary
 		{
@@ -3474,13 +3372,12 @@ namespace CruiseDAL.DataObjects
 		        if(_topdibsecondary == value) { return; }
 		        _topdibsecondary = value;
 		        this.ValidateProperty(TREE.TOPDIBSECONDARY, _topdibsecondary);
-		        this.NotifyPropertyChanged(TREE.TOPDIBSECONDARY, _topdibsecondary);
+		        this.NotifyPropertyChanged(TREE.TOPDIBSECONDARY);
 		    }
 		}
 		private String _defectcode ;
 		[XmlElement]
 		[Field (FieldName = "DefectCode",
-		 IsUnique = false,
 		 IsPersisted = true)]
 		public virtual String DefectCode
 		{
@@ -3493,13 +3390,12 @@ namespace CruiseDAL.DataObjects
 		        if(_defectcode == value) { return; }
 		        _defectcode = value;
 		        this.ValidateProperty(TREE.DEFECTCODE, _defectcode);
-		        this.NotifyPropertyChanged(TREE.DEFECTCODE, _defectcode);
+		        this.NotifyPropertyChanged(TREE.DEFECTCODE);
 		    }
 		}
 		private float _diameteratdefect  = 0.0f;
 		[XmlElement]
 		[Field (FieldName = "DiameterAtDefect",
-		 IsUnique = false,
 		 IsPersisted = true)]
 		public virtual float DiameterAtDefect
 		{
@@ -3512,13 +3408,12 @@ namespace CruiseDAL.DataObjects
 		        if(_diameteratdefect == value) { return; }
 		        _diameteratdefect = value;
 		        this.ValidateProperty(TREE.DIAMETERATDEFECT, _diameteratdefect);
-		        this.NotifyPropertyChanged(TREE.DIAMETERATDEFECT, _diameteratdefect);
+		        this.NotifyPropertyChanged(TREE.DIAMETERATDEFECT);
 		    }
 		}
 		private float _voidpercent  = 0.0f;
 		[XmlElement]
 		[Field (FieldName = "VoidPercent",
-		 IsUnique = false,
 		 IsPersisted = true)]
 		public virtual float VoidPercent
 		{
@@ -3531,13 +3426,12 @@ namespace CruiseDAL.DataObjects
 		        if(_voidpercent == value) { return; }
 		        _voidpercent = value;
 		        this.ValidateProperty(TREE.VOIDPERCENT, _voidpercent);
-		        this.NotifyPropertyChanged(TREE.VOIDPERCENT, _voidpercent);
+		        this.NotifyPropertyChanged(TREE.VOIDPERCENT);
 		    }
 		}
 		private float _slope  = 0.0f;
 		[XmlElement]
 		[Field (FieldName = "Slope",
-		 IsUnique = false,
 		 IsPersisted = true)]
 		public virtual float Slope
 		{
@@ -3550,13 +3444,12 @@ namespace CruiseDAL.DataObjects
 		        if(_slope == value) { return; }
 		        _slope = value;
 		        this.ValidateProperty(TREE.SLOPE, _slope);
-		        this.NotifyPropertyChanged(TREE.SLOPE, _slope);
+		        this.NotifyPropertyChanged(TREE.SLOPE);
 		    }
 		}
 		private float _aspect  = 0.0f;
 		[XmlElement]
 		[Field (FieldName = "Aspect",
-		 IsUnique = false,
 		 IsPersisted = true)]
 		public virtual float Aspect
 		{
@@ -3569,13 +3462,12 @@ namespace CruiseDAL.DataObjects
 		        if(_aspect == value) { return; }
 		        _aspect = value;
 		        this.ValidateProperty(TREE.ASPECT, _aspect);
-		        this.NotifyPropertyChanged(TREE.ASPECT, _aspect);
+		        this.NotifyPropertyChanged(TREE.ASPECT);
 		    }
 		}
 		private String _remarks ;
 		[XmlElement]
 		[Field (FieldName = "Remarks",
-		 IsUnique = false,
 		 IsPersisted = true)]
 		public virtual String Remarks
 		{
@@ -3588,13 +3480,12 @@ namespace CruiseDAL.DataObjects
 		        if(_remarks == value) { return; }
 		        _remarks = value;
 		        this.ValidateProperty(TREE.REMARKS, _remarks);
-		        this.NotifyPropertyChanged(TREE.REMARKS, _remarks);
+		        this.NotifyPropertyChanged(TREE.REMARKS);
 		    }
 		}
 		private Double _xcoordinate  = 0.0;
 		[XmlElement]
 		[Field (FieldName = "XCoordinate",
-		 IsUnique = false,
 		 IsPersisted = true)]
 		public virtual Double XCoordinate
 		{
@@ -3607,13 +3498,12 @@ namespace CruiseDAL.DataObjects
 		        if(_xcoordinate == value) { return; }
 		        _xcoordinate = value;
 		        this.ValidateProperty(TREE.XCOORDINATE, _xcoordinate);
-		        this.NotifyPropertyChanged(TREE.XCOORDINATE, _xcoordinate);
+		        this.NotifyPropertyChanged(TREE.XCOORDINATE);
 		    }
 		}
 		private Double _ycoordinate  = 0.0;
 		[XmlElement]
 		[Field (FieldName = "YCoordinate",
-		 IsUnique = false,
 		 IsPersisted = true)]
 		public virtual Double YCoordinate
 		{
@@ -3626,13 +3516,12 @@ namespace CruiseDAL.DataObjects
 		        if(_ycoordinate == value) { return; }
 		        _ycoordinate = value;
 		        this.ValidateProperty(TREE.YCOORDINATE, _ycoordinate);
-		        this.NotifyPropertyChanged(TREE.YCOORDINATE, _ycoordinate);
+		        this.NotifyPropertyChanged(TREE.YCOORDINATE);
 		    }
 		}
 		private Double _zcoordinate  = 0.0;
 		[XmlElement]
 		[Field (FieldName = "ZCoordinate",
-		 IsUnique = false,
 		 IsPersisted = true)]
 		public virtual Double ZCoordinate
 		{
@@ -3645,13 +3534,12 @@ namespace CruiseDAL.DataObjects
 		        if(_zcoordinate == value) { return; }
 		        _zcoordinate = value;
 		        this.ValidateProperty(TREE.ZCOORDINATE, _zcoordinate);
-		        this.NotifyPropertyChanged(TREE.ZCOORDINATE, _zcoordinate);
+		        this.NotifyPropertyChanged(TREE.ZCOORDINATE);
 		    }
 		}
 		private String _metadata ;
 		[XmlElement]
 		[Field (FieldName = "MetaData",
-		 IsUnique = false,
 		 IsPersisted = true)]
 		public virtual String MetaData
 		{
@@ -3664,13 +3552,12 @@ namespace CruiseDAL.DataObjects
 		        if(_metadata == value) { return; }
 		        _metadata = value;
 		        this.ValidateProperty(TREE.METADATA, _metadata);
-		        this.NotifyPropertyChanged(TREE.METADATA, _metadata);
+		        this.NotifyPropertyChanged(TREE.METADATA);
 		    }
 		}
 		private Int64 _isfallbuckscale ;
 		[XmlElement]
 		[Field (FieldName = "IsFallBuckScale",
-		 IsUnique = false,
 		 IsPersisted = true)]
 		public virtual Int64 IsFallBuckScale
 		{
@@ -3683,13 +3570,12 @@ namespace CruiseDAL.DataObjects
 		        if(_isfallbuckscale == value) { return; }
 		        _isfallbuckscale = value;
 		        this.ValidateProperty(TREE.ISFALLBUCKSCALE, _isfallbuckscale);
-		        this.NotifyPropertyChanged(TREE.ISFALLBUCKSCALE, _isfallbuckscale);
+		        this.NotifyPropertyChanged(TREE.ISFALLBUCKSCALE);
 		    }
 		}
 		private float _expansionfactor  = 0.0f;
 		[XmlElement]
 		[Field (FieldName = "ExpansionFactor",
-		 IsUnique = false,
 		 IsPersisted = true)]
 		public virtual float ExpansionFactor
 		{
@@ -3702,13 +3588,12 @@ namespace CruiseDAL.DataObjects
 		        if(_expansionfactor == value) { return; }
 		        _expansionfactor = value;
 		        this.ValidateProperty(TREE.EXPANSIONFACTOR, _expansionfactor);
-		        this.NotifyPropertyChanged(TREE.EXPANSIONFACTOR, _expansionfactor);
+		        this.NotifyPropertyChanged(TREE.EXPANSIONFACTOR);
 		    }
 		}
 		private float _treefactor  = 0.0f;
 		[XmlElement]
 		[Field (FieldName = "TreeFactor",
-		 IsUnique = false,
 		 IsPersisted = true)]
 		public virtual float TreeFactor
 		{
@@ -3721,13 +3606,12 @@ namespace CruiseDAL.DataObjects
 		        if(_treefactor == value) { return; }
 		        _treefactor = value;
 		        this.ValidateProperty(TREE.TREEFACTOR, _treefactor);
-		        this.NotifyPropertyChanged(TREE.TREEFACTOR, _treefactor);
+		        this.NotifyPropertyChanged(TREE.TREEFACTOR);
 		    }
 		}
 		private float _pointfactor  = 0.0f;
 		[XmlElement]
 		[Field (FieldName = "PointFactor",
-		 IsUnique = false,
 		 IsPersisted = true)]
 		public virtual float PointFactor
 		{
@@ -3740,26 +3624,28 @@ namespace CruiseDAL.DataObjects
 		        if(_pointfactor == value) { return; }
 		        _pointfactor = value;
 		        this.ValidateProperty(TREE.POINTFACTOR, _pointfactor);
-		        this.NotifyPropertyChanged(TREE.POINTFACTOR, _pointfactor);
+		        this.NotifyPropertyChanged(TREE.POINTFACTOR);
 		    }
 		}
 
 		[XmlIgnore]
-		[Field (FieldName = "CreatedBy",
-		 SpecialFieldType = SepcialFieldType.CreatedBy)]
+		[InfrastructureFieldAttribute (FieldName = "CreatedBy",
+		 FieldType = InfrastructureFieldType.CreatedBy)]
 		public string CreatedBy { get; internal set; }
 		
 		[XmlIgnore]
-		[Field (FieldName = "CreatedDate")]
+		[InfrastructureFieldAttribute (FieldName = "CreatedDate",
+		FieldType = InfrastructureFieldType.CreatedDate)]
 		public DateTime CreatedDate { get; internal set; }
 		
 		[XmlIgnore]
-		[Field (FieldName = "ModifiedBy",
-		 SpecialFieldType = SepcialFieldType.ModifiedBy)]
+		[InfrastructureFieldAttribute (FieldName = "ModifiedBy",
+		 FieldType = InfrastructureFieldType.ModifiedBy)]
 		public string ModifiedBy { get; internal set; }
 		
 		[XmlIgnore]
-		[Field (FieldName = "ModifiedDate")]
+		[InfrastructureFieldAttribute (FieldName = "ModifiedDate",
+		FieldType = InfrastructureFieldType.ModifiedDate)]
 		public string ModifiedDate { get; internal set; }
 		
 		protected override bool DoValidate()
@@ -3873,7 +3759,7 @@ namespace CruiseDAL.DataObjects
 		}
 	}
 	[SQLEntity(SourceName = "Log")]
-	public partial class LogDO : DataObject
+	public partial class LogDO : DataObjectExtra
 	{
 		//private static Persister persister;
 		private static RowValidator _validator;
@@ -3923,7 +3809,6 @@ namespace CruiseDAL.DataObjects
 		private long? _tree_cn ;
 		[XmlIgnore]
 		[Field (FieldName = "Tree_CN",
-		 IsUnique = true,
 		 IsPersisted = true)]
 		public virtual long? Tree_CN
 		{
@@ -3942,7 +3827,7 @@ namespace CruiseDAL.DataObjects
 		        if(value == null || value.Value == 0) { _tree = null;  }
 		        _tree_cn = value;
 		        this.ValidateProperty(LOG.TREE_CN, _tree_cn);
-		        this.NotifyPropertyChanged(LOG.TREE_CN, _tree_cn);
+		        this.NotifyPropertyChanged(LOG.TREE_CN);
 		    }
 		}
 		public virtual TreeDO GetTree()
@@ -3973,7 +3858,6 @@ namespace CruiseDAL.DataObjects
 		private Guid _log_guid  = Guid.NewGuid();
 		[XmlElement]
 		[Field (FieldName = "Log_GUID",
-		 IsUnique = false,
 		 IsPersisted = true)]
 		public virtual Guid Log_GUID
 		{
@@ -3986,13 +3870,12 @@ namespace CruiseDAL.DataObjects
 		        if(_log_guid == value) { return; }
 		        _log_guid = value;
 		        this.ValidateProperty(LOG.LOG_GUID, _log_guid);
-		        this.NotifyPropertyChanged(LOG.LOG_GUID, _log_guid);
+		        this.NotifyPropertyChanged(LOG.LOG_GUID);
 		    }
 		}
 		private String _lognumber ;
 		[XmlElement]
 		[Field (FieldName = "LogNumber",
-		 IsUnique = true,
 		 IsPersisted = true)]
 		public virtual String LogNumber
 		{
@@ -4005,13 +3888,12 @@ namespace CruiseDAL.DataObjects
 		        if(_lognumber == value) { return; }
 		        _lognumber = value;
 		        this.ValidateProperty(LOG.LOGNUMBER, _lognumber);
-		        this.NotifyPropertyChanged(LOG.LOGNUMBER, _lognumber);
+		        this.NotifyPropertyChanged(LOG.LOGNUMBER);
 		    }
 		}
 		private String _grade ;
 		[XmlElement]
 		[Field (FieldName = "Grade",
-		 IsUnique = false,
 		 IsPersisted = true)]
 		public virtual String Grade
 		{
@@ -4024,13 +3906,12 @@ namespace CruiseDAL.DataObjects
 		        if(_grade == value) { return; }
 		        _grade = value;
 		        this.ValidateProperty(LOG.GRADE, _grade);
-		        this.NotifyPropertyChanged(LOG.GRADE, _grade);
+		        this.NotifyPropertyChanged(LOG.GRADE);
 		    }
 		}
 		private float _seendefect  = 0.0f;
 		[XmlElement]
 		[Field (FieldName = "SeenDefect",
-		 IsUnique = false,
 		 IsPersisted = true)]
 		public virtual float SeenDefect
 		{
@@ -4043,13 +3924,12 @@ namespace CruiseDAL.DataObjects
 		        if(_seendefect == value) { return; }
 		        _seendefect = value;
 		        this.ValidateProperty(LOG.SEENDEFECT, _seendefect);
-		        this.NotifyPropertyChanged(LOG.SEENDEFECT, _seendefect);
+		        this.NotifyPropertyChanged(LOG.SEENDEFECT);
 		    }
 		}
 		private float _percentrecoverable  = 0.0f;
 		[XmlElement]
 		[Field (FieldName = "PercentRecoverable",
-		 IsUnique = false,
 		 IsPersisted = true)]
 		public virtual float PercentRecoverable
 		{
@@ -4062,13 +3942,12 @@ namespace CruiseDAL.DataObjects
 		        if(_percentrecoverable == value) { return; }
 		        _percentrecoverable = value;
 		        this.ValidateProperty(LOG.PERCENTRECOVERABLE, _percentrecoverable);
-		        this.NotifyPropertyChanged(LOG.PERCENTRECOVERABLE, _percentrecoverable);
+		        this.NotifyPropertyChanged(LOG.PERCENTRECOVERABLE);
 		    }
 		}
 		private Int64 _length ;
 		[XmlElement]
 		[Field (FieldName = "Length",
-		 IsUnique = false,
 		 IsPersisted = true)]
 		public virtual Int64 Length
 		{
@@ -4081,13 +3960,12 @@ namespace CruiseDAL.DataObjects
 		        if(_length == value) { return; }
 		        _length = value;
 		        this.ValidateProperty(LOG.LENGTH, _length);
-		        this.NotifyPropertyChanged(LOG.LENGTH, _length);
+		        this.NotifyPropertyChanged(LOG.LENGTH);
 		    }
 		}
 		private String _exportgrade ;
 		[XmlElement]
 		[Field (FieldName = "ExportGrade",
-		 IsUnique = false,
 		 IsPersisted = true)]
 		public virtual String ExportGrade
 		{
@@ -4100,13 +3978,12 @@ namespace CruiseDAL.DataObjects
 		        if(_exportgrade == value) { return; }
 		        _exportgrade = value;
 		        this.ValidateProperty(LOG.EXPORTGRADE, _exportgrade);
-		        this.NotifyPropertyChanged(LOG.EXPORTGRADE, _exportgrade);
+		        this.NotifyPropertyChanged(LOG.EXPORTGRADE);
 		    }
 		}
 		private float _smallenddiameter  = 0.0f;
 		[XmlElement]
 		[Field (FieldName = "SmallEndDiameter",
-		 IsUnique = false,
 		 IsPersisted = true)]
 		public virtual float SmallEndDiameter
 		{
@@ -4119,13 +3996,12 @@ namespace CruiseDAL.DataObjects
 		        if(_smallenddiameter == value) { return; }
 		        _smallenddiameter = value;
 		        this.ValidateProperty(LOG.SMALLENDDIAMETER, _smallenddiameter);
-		        this.NotifyPropertyChanged(LOG.SMALLENDDIAMETER, _smallenddiameter);
+		        this.NotifyPropertyChanged(LOG.SMALLENDDIAMETER);
 		    }
 		}
 		private float _largeenddiameter  = 0.0f;
 		[XmlElement]
 		[Field (FieldName = "LargeEndDiameter",
-		 IsUnique = false,
 		 IsPersisted = true)]
 		public virtual float LargeEndDiameter
 		{
@@ -4138,13 +4014,12 @@ namespace CruiseDAL.DataObjects
 		        if(_largeenddiameter == value) { return; }
 		        _largeenddiameter = value;
 		        this.ValidateProperty(LOG.LARGEENDDIAMETER, _largeenddiameter);
-		        this.NotifyPropertyChanged(LOG.LARGEENDDIAMETER, _largeenddiameter);
+		        this.NotifyPropertyChanged(LOG.LARGEENDDIAMETER);
 		    }
 		}
 		private float _grossboardfoot  = 0.0f;
 		[XmlElement]
 		[Field (FieldName = "GrossBoardFoot",
-		 IsUnique = false,
 		 IsPersisted = true)]
 		public virtual float GrossBoardFoot
 		{
@@ -4157,13 +4032,12 @@ namespace CruiseDAL.DataObjects
 		        if(_grossboardfoot == value) { return; }
 		        _grossboardfoot = value;
 		        this.ValidateProperty(LOG.GROSSBOARDFOOT, _grossboardfoot);
-		        this.NotifyPropertyChanged(LOG.GROSSBOARDFOOT, _grossboardfoot);
+		        this.NotifyPropertyChanged(LOG.GROSSBOARDFOOT);
 		    }
 		}
 		private float _netboardfoot  = 0.0f;
 		[XmlElement]
 		[Field (FieldName = "NetBoardFoot",
-		 IsUnique = false,
 		 IsPersisted = true)]
 		public virtual float NetBoardFoot
 		{
@@ -4176,13 +4050,12 @@ namespace CruiseDAL.DataObjects
 		        if(_netboardfoot == value) { return; }
 		        _netboardfoot = value;
 		        this.ValidateProperty(LOG.NETBOARDFOOT, _netboardfoot);
-		        this.NotifyPropertyChanged(LOG.NETBOARDFOOT, _netboardfoot);
+		        this.NotifyPropertyChanged(LOG.NETBOARDFOOT);
 		    }
 		}
 		private float _grosscubicfoot  = 0.0f;
 		[XmlElement]
 		[Field (FieldName = "GrossCubicFoot",
-		 IsUnique = false,
 		 IsPersisted = true)]
 		public virtual float GrossCubicFoot
 		{
@@ -4195,13 +4068,12 @@ namespace CruiseDAL.DataObjects
 		        if(_grosscubicfoot == value) { return; }
 		        _grosscubicfoot = value;
 		        this.ValidateProperty(LOG.GROSSCUBICFOOT, _grosscubicfoot);
-		        this.NotifyPropertyChanged(LOG.GROSSCUBICFOOT, _grosscubicfoot);
+		        this.NotifyPropertyChanged(LOG.GROSSCUBICFOOT);
 		    }
 		}
 		private float _netcubicfoot  = 0.0f;
 		[XmlElement]
 		[Field (FieldName = "NetCubicFoot",
-		 IsUnique = false,
 		 IsPersisted = true)]
 		public virtual float NetCubicFoot
 		{
@@ -4214,13 +4086,12 @@ namespace CruiseDAL.DataObjects
 		        if(_netcubicfoot == value) { return; }
 		        _netcubicfoot = value;
 		        this.ValidateProperty(LOG.NETCUBICFOOT, _netcubicfoot);
-		        this.NotifyPropertyChanged(LOG.NETCUBICFOOT, _netcubicfoot);
+		        this.NotifyPropertyChanged(LOG.NETCUBICFOOT);
 		    }
 		}
 		private float _boardfootremoved  = 0.0f;
 		[XmlElement]
 		[Field (FieldName = "BoardFootRemoved",
-		 IsUnique = false,
 		 IsPersisted = true)]
 		public virtual float BoardFootRemoved
 		{
@@ -4233,13 +4104,12 @@ namespace CruiseDAL.DataObjects
 		        if(_boardfootremoved == value) { return; }
 		        _boardfootremoved = value;
 		        this.ValidateProperty(LOG.BOARDFOOTREMOVED, _boardfootremoved);
-		        this.NotifyPropertyChanged(LOG.BOARDFOOTREMOVED, _boardfootremoved);
+		        this.NotifyPropertyChanged(LOG.BOARDFOOTREMOVED);
 		    }
 		}
 		private float _cubicfootremoved  = 0.0f;
 		[XmlElement]
 		[Field (FieldName = "CubicFootRemoved",
-		 IsUnique = false,
 		 IsPersisted = true)]
 		public virtual float CubicFootRemoved
 		{
@@ -4252,13 +4122,12 @@ namespace CruiseDAL.DataObjects
 		        if(_cubicfootremoved == value) { return; }
 		        _cubicfootremoved = value;
 		        this.ValidateProperty(LOG.CUBICFOOTREMOVED, _cubicfootremoved);
-		        this.NotifyPropertyChanged(LOG.CUBICFOOTREMOVED, _cubicfootremoved);
+		        this.NotifyPropertyChanged(LOG.CUBICFOOTREMOVED);
 		    }
 		}
 		private float _dibclass  = 0.0f;
 		[XmlElement]
 		[Field (FieldName = "DIBClass",
-		 IsUnique = false,
 		 IsPersisted = true)]
 		public virtual float DIBClass
 		{
@@ -4271,13 +4140,12 @@ namespace CruiseDAL.DataObjects
 		        if(_dibclass == value) { return; }
 		        _dibclass = value;
 		        this.ValidateProperty(LOG.DIBCLASS, _dibclass);
-		        this.NotifyPropertyChanged(LOG.DIBCLASS, _dibclass);
+		        this.NotifyPropertyChanged(LOG.DIBCLASS);
 		    }
 		}
 		private float _barkthickness  = 0.0f;
 		[XmlElement]
 		[Field (FieldName = "BarkThickness",
-		 IsUnique = false,
 		 IsPersisted = true)]
 		public virtual float BarkThickness
 		{
@@ -4290,26 +4158,28 @@ namespace CruiseDAL.DataObjects
 		        if(_barkthickness == value) { return; }
 		        _barkthickness = value;
 		        this.ValidateProperty(LOG.BARKTHICKNESS, _barkthickness);
-		        this.NotifyPropertyChanged(LOG.BARKTHICKNESS, _barkthickness);
+		        this.NotifyPropertyChanged(LOG.BARKTHICKNESS);
 		    }
 		}
 
 		[XmlIgnore]
-		[Field (FieldName = "CreatedBy",
-		 SpecialFieldType = SepcialFieldType.CreatedBy)]
+		[InfrastructureFieldAttribute (FieldName = "CreatedBy",
+		 FieldType = InfrastructureFieldType.CreatedBy)]
 		public string CreatedBy { get; internal set; }
 		
 		[XmlIgnore]
-		[Field (FieldName = "CreatedDate")]
+		[InfrastructureFieldAttribute (FieldName = "CreatedDate",
+		FieldType = InfrastructureFieldType.CreatedDate)]
 		public DateTime CreatedDate { get; internal set; }
 		
 		[XmlIgnore]
-		[Field (FieldName = "ModifiedBy",
-		 SpecialFieldType = SepcialFieldType.ModifiedBy)]
+		[InfrastructureFieldAttribute (FieldName = "ModifiedBy",
+		 FieldType = InfrastructureFieldType.ModifiedBy)]
 		public string ModifiedBy { get; internal set; }
 		
 		[XmlIgnore]
-		[Field (FieldName = "ModifiedDate")]
+		[InfrastructureFieldAttribute (FieldName = "ModifiedDate",
+		FieldType = InfrastructureFieldType.ModifiedDate)]
 		public string ModifiedDate { get; internal set; }
 		
 		protected override bool DoValidate()
@@ -4367,7 +4237,7 @@ namespace CruiseDAL.DataObjects
 		}
 	}
 	[SQLEntity(SourceName = "Stem")]
-	public partial class StemDO : DataObject
+	public partial class StemDO : DataObjectExtra
 	{
 		//private static Persister persister;
 		private static RowValidator _validator;
@@ -4415,7 +4285,6 @@ namespace CruiseDAL.DataObjects
 		private long? _tree_cn ;
 		[XmlIgnore]
 		[Field (FieldName = "Tree_CN",
-		 IsUnique = true,
 		 IsPersisted = true)]
 		public virtual long? Tree_CN
 		{
@@ -4434,7 +4303,7 @@ namespace CruiseDAL.DataObjects
 		        if(value == null || value.Value == 0) { _tree = null;  }
 		        _tree_cn = value;
 		        this.ValidateProperty(STEM.TREE_CN, _tree_cn);
-		        this.NotifyPropertyChanged(STEM.TREE_CN, _tree_cn);
+		        this.NotifyPropertyChanged(STEM.TREE_CN);
 		    }
 		}
 		public virtual TreeDO GetTree()
@@ -4465,7 +4334,6 @@ namespace CruiseDAL.DataObjects
 		private Guid _stem_guid  = Guid.NewGuid();
 		[XmlElement]
 		[Field (FieldName = "Stem_GUID",
-		 IsUnique = false,
 		 IsPersisted = true)]
 		public virtual Guid Stem_GUID
 		{
@@ -4478,13 +4346,12 @@ namespace CruiseDAL.DataObjects
 		        if(_stem_guid == value) { return; }
 		        _stem_guid = value;
 		        this.ValidateProperty(STEM.STEM_GUID, _stem_guid);
-		        this.NotifyPropertyChanged(STEM.STEM_GUID, _stem_guid);
+		        this.NotifyPropertyChanged(STEM.STEM_GUID);
 		    }
 		}
 		private float _diameter  = 0.0f;
 		[XmlElement]
 		[Field (FieldName = "Diameter",
-		 IsUnique = false,
 		 IsPersisted = true)]
 		public virtual float Diameter
 		{
@@ -4497,13 +4364,12 @@ namespace CruiseDAL.DataObjects
 		        if(_diameter == value) { return; }
 		        _diameter = value;
 		        this.ValidateProperty(STEM.DIAMETER, _diameter);
-		        this.NotifyPropertyChanged(STEM.DIAMETER, _diameter);
+		        this.NotifyPropertyChanged(STEM.DIAMETER);
 		    }
 		}
 		private String _diametertype ;
 		[XmlElement]
 		[Field (FieldName = "DiameterType",
-		 IsUnique = false,
 		 IsPersisted = true)]
 		public virtual String DiameterType
 		{
@@ -4516,26 +4382,28 @@ namespace CruiseDAL.DataObjects
 		        if(_diametertype == value) { return; }
 		        _diametertype = value;
 		        this.ValidateProperty(STEM.DIAMETERTYPE, _diametertype);
-		        this.NotifyPropertyChanged(STEM.DIAMETERTYPE, _diametertype);
+		        this.NotifyPropertyChanged(STEM.DIAMETERTYPE);
 		    }
 		}
 
 		[XmlIgnore]
-		[Field (FieldName = "CreatedBy",
-		 SpecialFieldType = SepcialFieldType.CreatedBy)]
+		[InfrastructureFieldAttribute (FieldName = "CreatedBy",
+		 FieldType = InfrastructureFieldType.CreatedBy)]
 		public string CreatedBy { get; internal set; }
 		
 		[XmlIgnore]
-		[Field (FieldName = "CreatedDate")]
+		[InfrastructureFieldAttribute (FieldName = "CreatedDate",
+		FieldType = InfrastructureFieldType.CreatedDate)]
 		public DateTime CreatedDate { get; internal set; }
 		
 		[XmlIgnore]
-		[Field (FieldName = "ModifiedBy",
-		 SpecialFieldType = SepcialFieldType.ModifiedBy)]
+		[InfrastructureFieldAttribute (FieldName = "ModifiedBy",
+		 FieldType = InfrastructureFieldType.ModifiedBy)]
 		public string ModifiedBy { get; internal set; }
 		
 		[XmlIgnore]
-		[Field (FieldName = "ModifiedDate")]
+		[InfrastructureFieldAttribute (FieldName = "ModifiedDate",
+		FieldType = InfrastructureFieldType.ModifiedDate)]
 		public string ModifiedDate { get; internal set; }
 		
 		protected override bool DoValidate()
@@ -4565,7 +4433,7 @@ namespace CruiseDAL.DataObjects
 		}
 	}
 	[SQLEntity(SourceName = "CountTree")]
-	public partial class CountTreeDO : DataObject
+	public partial class CountTreeDO : DataObjectExtra
 	{
 		//private static Persister persister;
 		private static RowValidator _validator;
@@ -4615,7 +4483,6 @@ namespace CruiseDAL.DataObjects
 		private long? _samplegroup_cn ;
 		[XmlIgnore]
 		[Field (FieldName = "SampleGroup_CN",
-		 IsUnique = true,
 		 IsPersisted = true)]
 		public virtual long? SampleGroup_CN
 		{
@@ -4634,7 +4501,7 @@ namespace CruiseDAL.DataObjects
 		        if(value == null || value.Value == 0) { _samplegroup = null;  }
 		        _samplegroup_cn = value;
 		        this.ValidateProperty(COUNTTREE.SAMPLEGROUP_CN, _samplegroup_cn);
-		        this.NotifyPropertyChanged(COUNTTREE.SAMPLEGROUP_CN, _samplegroup_cn);
+		        this.NotifyPropertyChanged(COUNTTREE.SAMPLEGROUP_CN);
 		    }
 		}
 		public virtual SampleGroupDO GetSampleGroup()
@@ -4665,7 +4532,6 @@ namespace CruiseDAL.DataObjects
 		private long? _cuttingunit_cn ;
 		[XmlIgnore]
 		[Field (FieldName = "CuttingUnit_CN",
-		 IsUnique = true,
 		 IsPersisted = true)]
 		public virtual long? CuttingUnit_CN
 		{
@@ -4684,7 +4550,7 @@ namespace CruiseDAL.DataObjects
 		        if(value == null || value.Value == 0) { _cuttingunit = null;  }
 		        _cuttingunit_cn = value;
 		        this.ValidateProperty(COUNTTREE.CUTTINGUNIT_CN, _cuttingunit_cn);
-		        this.NotifyPropertyChanged(COUNTTREE.CUTTINGUNIT_CN, _cuttingunit_cn);
+		        this.NotifyPropertyChanged(COUNTTREE.CUTTINGUNIT_CN);
 		    }
 		}
 		public virtual CuttingUnitDO GetCuttingUnit()
@@ -4715,7 +4581,6 @@ namespace CruiseDAL.DataObjects
 		private long? _tally_cn ;
 		[XmlIgnore]
 		[Field (FieldName = "Tally_CN",
-		 IsUnique = false,
 		 IsPersisted = true)]
 		public virtual long? Tally_CN
 		{
@@ -4734,7 +4599,7 @@ namespace CruiseDAL.DataObjects
 		        if(value == null || value.Value == 0) { _tally = null;  }
 		        _tally_cn = value;
 		        this.ValidateProperty(COUNTTREE.TALLY_CN, _tally_cn);
-		        this.NotifyPropertyChanged(COUNTTREE.TALLY_CN, _tally_cn);
+		        this.NotifyPropertyChanged(COUNTTREE.TALLY_CN);
 		    }
 		}
 		public virtual TallyDO GetTally()
@@ -4765,7 +4630,6 @@ namespace CruiseDAL.DataObjects
 		private long? _treedefaultvalue_cn ;
 		[XmlIgnore]
 		[Field (FieldName = "TreeDefaultValue_CN",
-		 IsUnique = true,
 		 IsPersisted = true)]
 		public virtual long? TreeDefaultValue_CN
 		{
@@ -4784,7 +4648,7 @@ namespace CruiseDAL.DataObjects
 		        if(value == null || value.Value == 0) { _treedefaultvalue = null;  }
 		        _treedefaultvalue_cn = value;
 		        this.ValidateProperty(COUNTTREE.TREEDEFAULTVALUE_CN, _treedefaultvalue_cn);
-		        this.NotifyPropertyChanged(COUNTTREE.TREEDEFAULTVALUE_CN, _treedefaultvalue_cn);
+		        this.NotifyPropertyChanged(COUNTTREE.TREEDEFAULTVALUE_CN);
 		    }
 		}
 		public virtual TreeDefaultValueDO GetTreeDefaultValue()
@@ -4815,7 +4679,6 @@ namespace CruiseDAL.DataObjects
 		private long? _component_cn ;
 		[XmlIgnore]
 		[Field (FieldName = "Component_CN",
-		 IsUnique = true,
 		 IsPersisted = true)]
 		public virtual long? Component_CN
 		{
@@ -4834,7 +4697,7 @@ namespace CruiseDAL.DataObjects
 		        if(value == null || value.Value == 0) { _component = null;  }
 		        _component_cn = value;
 		        this.ValidateProperty(COUNTTREE.COMPONENT_CN, _component_cn);
-		        this.NotifyPropertyChanged(COUNTTREE.COMPONENT_CN, _component_cn);
+		        this.NotifyPropertyChanged(COUNTTREE.COMPONENT_CN);
 		    }
 		}
 		public virtual ComponentDO GetComponent()
@@ -4865,7 +4728,6 @@ namespace CruiseDAL.DataObjects
 		private Int64 _treecount ;
 		[XmlElement]
 		[Field (FieldName = "TreeCount",
-		 IsUnique = false,
 		 IsPersisted = true)]
 		public virtual Int64 TreeCount
 		{
@@ -4878,13 +4740,12 @@ namespace CruiseDAL.DataObjects
 		        if(_treecount == value) { return; }
 		        _treecount = value;
 		        this.ValidateProperty(COUNTTREE.TREECOUNT, _treecount);
-		        this.NotifyPropertyChanged(COUNTTREE.TREECOUNT, _treecount);
+		        this.NotifyPropertyChanged(COUNTTREE.TREECOUNT);
 		    }
 		}
 		private Int64 _sumkpi ;
 		[XmlElement]
 		[Field (FieldName = "SumKPI",
-		 IsUnique = false,
 		 IsPersisted = true)]
 		public virtual Int64 SumKPI
 		{
@@ -4897,26 +4758,28 @@ namespace CruiseDAL.DataObjects
 		        if(_sumkpi == value) { return; }
 		        _sumkpi = value;
 		        this.ValidateProperty(COUNTTREE.SUMKPI, _sumkpi);
-		        this.NotifyPropertyChanged(COUNTTREE.SUMKPI, _sumkpi);
+		        this.NotifyPropertyChanged(COUNTTREE.SUMKPI);
 		    }
 		}
 
 		[XmlIgnore]
-		[Field (FieldName = "CreatedBy",
-		 SpecialFieldType = SepcialFieldType.CreatedBy)]
+		[InfrastructureFieldAttribute (FieldName = "CreatedBy",
+		 FieldType = InfrastructureFieldType.CreatedBy)]
 		public string CreatedBy { get; internal set; }
 		
 		[XmlIgnore]
-		[Field (FieldName = "CreatedDate")]
+		[InfrastructureFieldAttribute (FieldName = "CreatedDate",
+		FieldType = InfrastructureFieldType.CreatedDate)]
 		public DateTime CreatedDate { get; internal set; }
 		
 		[XmlIgnore]
-		[Field (FieldName = "ModifiedBy",
-		 SpecialFieldType = SepcialFieldType.ModifiedBy)]
+		[InfrastructureFieldAttribute (FieldName = "ModifiedBy",
+		 FieldType = InfrastructureFieldType.ModifiedBy)]
 		public string ModifiedBy { get; internal set; }
 		
 		[XmlIgnore]
-		[Field (FieldName = "ModifiedDate")]
+		[InfrastructureFieldAttribute (FieldName = "ModifiedDate",
+		FieldType = InfrastructureFieldType.ModifiedDate)]
 		public string ModifiedDate { get; internal set; }
 		
 		protected override bool DoValidate()
@@ -4948,7 +4811,7 @@ namespace CruiseDAL.DataObjects
 		}
 	}
 	[SQLEntity(SourceName = "Tally")]
-	public partial class TallyDO : DataObject
+	public partial class TallyDO : DataObjectExtra
 	{
 		//private static Persister persister;
 		private static RowValidator _validator;
@@ -4998,7 +4861,6 @@ namespace CruiseDAL.DataObjects
 		private String _hotkey ;
 		[XmlElement]
 		[Field (FieldName = "Hotkey",
-		 IsUnique = false,
 		 IsPersisted = true)]
 		public virtual String Hotkey
 		{
@@ -5011,13 +4873,12 @@ namespace CruiseDAL.DataObjects
 		        if(_hotkey == value) { return; }
 		        _hotkey = value;
 		        this.ValidateProperty(TALLY.HOTKEY, _hotkey);
-		        this.NotifyPropertyChanged(TALLY.HOTKEY, _hotkey);
+		        this.NotifyPropertyChanged(TALLY.HOTKEY);
 		    }
 		}
 		private String _description ;
 		[XmlElement]
 		[Field (FieldName = "Description",
-		 IsUnique = false,
 		 IsPersisted = true)]
 		public virtual String Description
 		{
@@ -5030,13 +4891,12 @@ namespace CruiseDAL.DataObjects
 		        if(_description == value) { return; }
 		        _description = value;
 		        this.ValidateProperty(TALLY.DESCRIPTION, _description);
-		        this.NotifyPropertyChanged(TALLY.DESCRIPTION, _description);
+		        this.NotifyPropertyChanged(TALLY.DESCRIPTION);
 		    }
 		}
 		private String _indicatorvalue ;
 		[XmlElement]
 		[Field (FieldName = "IndicatorValue",
-		 IsUnique = false,
 		 IsPersisted = true)]
 		public virtual String IndicatorValue
 		{
@@ -5049,13 +4909,12 @@ namespace CruiseDAL.DataObjects
 		        if(_indicatorvalue == value) { return; }
 		        _indicatorvalue = value;
 		        this.ValidateProperty(TALLY.INDICATORVALUE, _indicatorvalue);
-		        this.NotifyPropertyChanged(TALLY.INDICATORVALUE, _indicatorvalue);
+		        this.NotifyPropertyChanged(TALLY.INDICATORVALUE);
 		    }
 		}
 		private String _indicatortype ;
 		[XmlElement]
 		[Field (FieldName = "IndicatorType",
-		 IsUnique = false,
 		 IsPersisted = true)]
 		public virtual String IndicatorType
 		{
@@ -5068,7 +4927,7 @@ namespace CruiseDAL.DataObjects
 		        if(_indicatortype == value) { return; }
 		        _indicatortype = value;
 		        this.ValidateProperty(TALLY.INDICATORTYPE, _indicatortype);
-		        this.NotifyPropertyChanged(TALLY.INDICATORTYPE, _indicatortype);
+		        this.NotifyPropertyChanged(TALLY.INDICATORTYPE);
 		    }
 		}
 
@@ -5100,7 +4959,7 @@ namespace CruiseDAL.DataObjects
 		}
 	}
 	[SQLEntity(SourceName = "TreeEstimate")]
-	public partial class TreeEstimateDO : DataObject
+	public partial class TreeEstimateDO : DataObjectExtra
 	{
 		//private static Persister persister;
 		private static RowValidator _validator;
@@ -5149,7 +5008,6 @@ namespace CruiseDAL.DataObjects
 		private long? _counttree_cn ;
 		[XmlIgnore]
 		[Field (FieldName = "CountTree_CN",
-		 IsUnique = false,
 		 IsPersisted = true)]
 		public virtual long? CountTree_CN
 		{
@@ -5168,7 +5026,7 @@ namespace CruiseDAL.DataObjects
 		        if(value == null || value.Value == 0) { _counttree = null;  }
 		        _counttree_cn = value;
 		        this.ValidateProperty(TREEESTIMATE.COUNTTREE_CN, _counttree_cn);
-		        this.NotifyPropertyChanged(TREEESTIMATE.COUNTTREE_CN, _counttree_cn);
+		        this.NotifyPropertyChanged(TREEESTIMATE.COUNTTREE_CN);
 		    }
 		}
 		public virtual CountTreeDO GetCountTree()
@@ -5199,7 +5057,6 @@ namespace CruiseDAL.DataObjects
 		private Guid _treeestimate_guid  = Guid.NewGuid();
 		[XmlElement]
 		[Field (FieldName = "TreeEstimate_GUID",
-		 IsUnique = false,
 		 IsPersisted = true)]
 		public virtual Guid TreeEstimate_GUID
 		{
@@ -5212,13 +5069,12 @@ namespace CruiseDAL.DataObjects
 		        if(_treeestimate_guid == value) { return; }
 		        _treeestimate_guid = value;
 		        this.ValidateProperty(TREEESTIMATE.TREEESTIMATE_GUID, _treeestimate_guid);
-		        this.NotifyPropertyChanged(TREEESTIMATE.TREEESTIMATE_GUID, _treeestimate_guid);
+		        this.NotifyPropertyChanged(TREEESTIMATE.TREEESTIMATE_GUID);
 		    }
 		}
 		private float _kpi  = 0.0f;
 		[XmlElement]
 		[Field (FieldName = "KPI",
-		 IsUnique = false,
 		 IsPersisted = true)]
 		public virtual float KPI
 		{
@@ -5231,26 +5087,28 @@ namespace CruiseDAL.DataObjects
 		        if(_kpi == value) { return; }
 		        _kpi = value;
 		        this.ValidateProperty(TREEESTIMATE.KPI, _kpi);
-		        this.NotifyPropertyChanged(TREEESTIMATE.KPI, _kpi);
+		        this.NotifyPropertyChanged(TREEESTIMATE.KPI);
 		    }
 		}
 
 		[XmlIgnore]
-		[Field (FieldName = "CreatedBy",
-		 SpecialFieldType = SepcialFieldType.CreatedBy)]
+		[InfrastructureFieldAttribute (FieldName = "CreatedBy",
+		 FieldType = InfrastructureFieldType.CreatedBy)]
 		public string CreatedBy { get; internal set; }
 		
 		[XmlIgnore]
-		[Field (FieldName = "CreatedDate")]
+		[InfrastructureFieldAttribute (FieldName = "CreatedDate",
+		FieldType = InfrastructureFieldType.CreatedDate)]
 		public DateTime CreatedDate { get; internal set; }
 		
 		[XmlIgnore]
-		[Field (FieldName = "ModifiedBy",
-		 SpecialFieldType = SepcialFieldType.ModifiedBy)]
+		[InfrastructureFieldAttribute (FieldName = "ModifiedBy",
+		 FieldType = InfrastructureFieldType.ModifiedBy)]
 		public string ModifiedBy { get; internal set; }
 		
 		[XmlIgnore]
-		[Field (FieldName = "ModifiedDate")]
+		[InfrastructureFieldAttribute (FieldName = "ModifiedDate",
+		FieldType = InfrastructureFieldType.ModifiedDate)]
 		public string ModifiedDate { get; internal set; }
 		
 		protected override bool DoValidate()
@@ -5280,7 +5138,7 @@ namespace CruiseDAL.DataObjects
 	#endregion
 	#region Processing Tables
 	[SQLEntity(SourceName = "VolumeEquation")]
-	public partial class VolumeEquationDO : DataObject
+	public partial class VolumeEquationDO : DataObjectExtra
 	{
 		//private static Persister persister;
 		private static RowValidator _validator;
@@ -5326,7 +5184,6 @@ namespace CruiseDAL.DataObjects
 		private String _species ;
 		[XmlElement]
 		[Field (FieldName = "Species",
-		 IsUnique = true,
 		 IsPersisted = true)]
 		public virtual String Species
 		{
@@ -5339,13 +5196,12 @@ namespace CruiseDAL.DataObjects
 		        if(_species == value) { return; }
 		        _species = value;
 		        this.ValidateProperty(VOLUMEEQUATION.SPECIES, _species);
-		        this.NotifyPropertyChanged(VOLUMEEQUATION.SPECIES, _species);
+		        this.NotifyPropertyChanged(VOLUMEEQUATION.SPECIES);
 		    }
 		}
 		private String _primaryproduct ;
 		[XmlElement]
 		[Field (FieldName = "PrimaryProduct",
-		 IsUnique = true,
 		 IsPersisted = true)]
 		public virtual String PrimaryProduct
 		{
@@ -5358,13 +5214,12 @@ namespace CruiseDAL.DataObjects
 		        if(_primaryproduct == value) { return; }
 		        _primaryproduct = value;
 		        this.ValidateProperty(VOLUMEEQUATION.PRIMARYPRODUCT, _primaryproduct);
-		        this.NotifyPropertyChanged(VOLUMEEQUATION.PRIMARYPRODUCT, _primaryproduct);
+		        this.NotifyPropertyChanged(VOLUMEEQUATION.PRIMARYPRODUCT);
 		    }
 		}
 		private String _volumeequationnumber ;
 		[XmlElement]
 		[Field (FieldName = "VolumeEquationNumber",
-		 IsUnique = true,
 		 IsPersisted = true)]
 		public virtual String VolumeEquationNumber
 		{
@@ -5377,13 +5232,12 @@ namespace CruiseDAL.DataObjects
 		        if(_volumeequationnumber == value) { return; }
 		        _volumeequationnumber = value;
 		        this.ValidateProperty(VOLUMEEQUATION.VOLUMEEQUATIONNUMBER, _volumeequationnumber);
-		        this.NotifyPropertyChanged(VOLUMEEQUATION.VOLUMEEQUATIONNUMBER, _volumeequationnumber);
+		        this.NotifyPropertyChanged(VOLUMEEQUATION.VOLUMEEQUATIONNUMBER);
 		    }
 		}
 		private float _stumpheight  = 0.0f;
 		[XmlElement]
 		[Field (FieldName = "StumpHeight",
-		 IsUnique = false,
 		 IsPersisted = true)]
 		public virtual float StumpHeight
 		{
@@ -5396,13 +5250,12 @@ namespace CruiseDAL.DataObjects
 		        if(_stumpheight == value) { return; }
 		        _stumpheight = value;
 		        this.ValidateProperty(VOLUMEEQUATION.STUMPHEIGHT, _stumpheight);
-		        this.NotifyPropertyChanged(VOLUMEEQUATION.STUMPHEIGHT, _stumpheight);
+		        this.NotifyPropertyChanged(VOLUMEEQUATION.STUMPHEIGHT);
 		    }
 		}
 		private float _topdibprimary  = 0.0f;
 		[XmlElement]
 		[Field (FieldName = "TopDIBPrimary",
-		 IsUnique = false,
 		 IsPersisted = true)]
 		public virtual float TopDIBPrimary
 		{
@@ -5415,13 +5268,12 @@ namespace CruiseDAL.DataObjects
 		        if(_topdibprimary == value) { return; }
 		        _topdibprimary = value;
 		        this.ValidateProperty(VOLUMEEQUATION.TOPDIBPRIMARY, _topdibprimary);
-		        this.NotifyPropertyChanged(VOLUMEEQUATION.TOPDIBPRIMARY, _topdibprimary);
+		        this.NotifyPropertyChanged(VOLUMEEQUATION.TOPDIBPRIMARY);
 		    }
 		}
 		private float _topdibsecondary  = 0.0f;
 		[XmlElement]
 		[Field (FieldName = "TopDIBSecondary",
-		 IsUnique = false,
 		 IsPersisted = true)]
 		public virtual float TopDIBSecondary
 		{
@@ -5434,13 +5286,12 @@ namespace CruiseDAL.DataObjects
 		        if(_topdibsecondary == value) { return; }
 		        _topdibsecondary = value;
 		        this.ValidateProperty(VOLUMEEQUATION.TOPDIBSECONDARY, _topdibsecondary);
-		        this.NotifyPropertyChanged(VOLUMEEQUATION.TOPDIBSECONDARY, _topdibsecondary);
+		        this.NotifyPropertyChanged(VOLUMEEQUATION.TOPDIBSECONDARY);
 		    }
 		}
 		private Int64 _calctotal ;
 		[XmlElement]
 		[Field (FieldName = "CalcTotal",
-		 IsUnique = false,
 		 IsPersisted = true)]
 		public virtual Int64 CalcTotal
 		{
@@ -5453,13 +5304,12 @@ namespace CruiseDAL.DataObjects
 		        if(_calctotal == value) { return; }
 		        _calctotal = value;
 		        this.ValidateProperty(VOLUMEEQUATION.CALCTOTAL, _calctotal);
-		        this.NotifyPropertyChanged(VOLUMEEQUATION.CALCTOTAL, _calctotal);
+		        this.NotifyPropertyChanged(VOLUMEEQUATION.CALCTOTAL);
 		    }
 		}
 		private Int64 _calcboard ;
 		[XmlElement]
 		[Field (FieldName = "CalcBoard",
-		 IsUnique = false,
 		 IsPersisted = true)]
 		public virtual Int64 CalcBoard
 		{
@@ -5472,13 +5322,12 @@ namespace CruiseDAL.DataObjects
 		        if(_calcboard == value) { return; }
 		        _calcboard = value;
 		        this.ValidateProperty(VOLUMEEQUATION.CALCBOARD, _calcboard);
-		        this.NotifyPropertyChanged(VOLUMEEQUATION.CALCBOARD, _calcboard);
+		        this.NotifyPropertyChanged(VOLUMEEQUATION.CALCBOARD);
 		    }
 		}
 		private Int64 _calccubic ;
 		[XmlElement]
 		[Field (FieldName = "CalcCubic",
-		 IsUnique = false,
 		 IsPersisted = true)]
 		public virtual Int64 CalcCubic
 		{
@@ -5491,13 +5340,12 @@ namespace CruiseDAL.DataObjects
 		        if(_calccubic == value) { return; }
 		        _calccubic = value;
 		        this.ValidateProperty(VOLUMEEQUATION.CALCCUBIC, _calccubic);
-		        this.NotifyPropertyChanged(VOLUMEEQUATION.CALCCUBIC, _calccubic);
+		        this.NotifyPropertyChanged(VOLUMEEQUATION.CALCCUBIC);
 		    }
 		}
 		private Int64 _calccord ;
 		[XmlElement]
 		[Field (FieldName = "CalcCord",
-		 IsUnique = false,
 		 IsPersisted = true)]
 		public virtual Int64 CalcCord
 		{
@@ -5510,13 +5358,12 @@ namespace CruiseDAL.DataObjects
 		        if(_calccord == value) { return; }
 		        _calccord = value;
 		        this.ValidateProperty(VOLUMEEQUATION.CALCCORD, _calccord);
-		        this.NotifyPropertyChanged(VOLUMEEQUATION.CALCCORD, _calccord);
+		        this.NotifyPropertyChanged(VOLUMEEQUATION.CALCCORD);
 		    }
 		}
 		private Int64 _calctopwood ;
 		[XmlElement]
 		[Field (FieldName = "CalcTopwood",
-		 IsUnique = false,
 		 IsPersisted = true)]
 		public virtual Int64 CalcTopwood
 		{
@@ -5529,13 +5376,12 @@ namespace CruiseDAL.DataObjects
 		        if(_calctopwood == value) { return; }
 		        _calctopwood = value;
 		        this.ValidateProperty(VOLUMEEQUATION.CALCTOPWOOD, _calctopwood);
-		        this.NotifyPropertyChanged(VOLUMEEQUATION.CALCTOPWOOD, _calctopwood);
+		        this.NotifyPropertyChanged(VOLUMEEQUATION.CALCTOPWOOD);
 		    }
 		}
 		private Int64 _calcbiomass ;
 		[XmlElement]
 		[Field (FieldName = "CalcBiomass",
-		 IsUnique = false,
 		 IsPersisted = true)]
 		public virtual Int64 CalcBiomass
 		{
@@ -5548,13 +5394,12 @@ namespace CruiseDAL.DataObjects
 		        if(_calcbiomass == value) { return; }
 		        _calcbiomass = value;
 		        this.ValidateProperty(VOLUMEEQUATION.CALCBIOMASS, _calcbiomass);
-		        this.NotifyPropertyChanged(VOLUMEEQUATION.CALCBIOMASS, _calcbiomass);
+		        this.NotifyPropertyChanged(VOLUMEEQUATION.CALCBIOMASS);
 		    }
 		}
 		private float _trim  = 0.0f;
 		[XmlElement]
 		[Field (FieldName = "Trim",
-		 IsUnique = false,
 		 IsPersisted = true)]
 		public virtual float Trim
 		{
@@ -5567,13 +5412,12 @@ namespace CruiseDAL.DataObjects
 		        if(_trim == value) { return; }
 		        _trim = value;
 		        this.ValidateProperty(VOLUMEEQUATION.TRIM, _trim);
-		        this.NotifyPropertyChanged(VOLUMEEQUATION.TRIM, _trim);
+		        this.NotifyPropertyChanged(VOLUMEEQUATION.TRIM);
 		    }
 		}
 		private Int64 _segmentationlogic ;
 		[XmlElement]
 		[Field (FieldName = "SegmentationLogic",
-		 IsUnique = false,
 		 IsPersisted = true)]
 		public virtual Int64 SegmentationLogic
 		{
@@ -5586,13 +5430,12 @@ namespace CruiseDAL.DataObjects
 		        if(_segmentationlogic == value) { return; }
 		        _segmentationlogic = value;
 		        this.ValidateProperty(VOLUMEEQUATION.SEGMENTATIONLOGIC, _segmentationlogic);
-		        this.NotifyPropertyChanged(VOLUMEEQUATION.SEGMENTATIONLOGIC, _segmentationlogic);
+		        this.NotifyPropertyChanged(VOLUMEEQUATION.SEGMENTATIONLOGIC);
 		    }
 		}
 		private float _minloglengthprimary  = 0.0f;
 		[XmlElement]
 		[Field (FieldName = "MinLogLengthPrimary",
-		 IsUnique = false,
 		 IsPersisted = true)]
 		public virtual float MinLogLengthPrimary
 		{
@@ -5605,13 +5448,12 @@ namespace CruiseDAL.DataObjects
 		        if(_minloglengthprimary == value) { return; }
 		        _minloglengthprimary = value;
 		        this.ValidateProperty(VOLUMEEQUATION.MINLOGLENGTHPRIMARY, _minloglengthprimary);
-		        this.NotifyPropertyChanged(VOLUMEEQUATION.MINLOGLENGTHPRIMARY, _minloglengthprimary);
+		        this.NotifyPropertyChanged(VOLUMEEQUATION.MINLOGLENGTHPRIMARY);
 		    }
 		}
 		private float _maxloglengthprimary  = 0.0f;
 		[XmlElement]
 		[Field (FieldName = "MaxLogLengthPrimary",
-		 IsUnique = false,
 		 IsPersisted = true)]
 		public virtual float MaxLogLengthPrimary
 		{
@@ -5624,13 +5466,12 @@ namespace CruiseDAL.DataObjects
 		        if(_maxloglengthprimary == value) { return; }
 		        _maxloglengthprimary = value;
 		        this.ValidateProperty(VOLUMEEQUATION.MAXLOGLENGTHPRIMARY, _maxloglengthprimary);
-		        this.NotifyPropertyChanged(VOLUMEEQUATION.MAXLOGLENGTHPRIMARY, _maxloglengthprimary);
+		        this.NotifyPropertyChanged(VOLUMEEQUATION.MAXLOGLENGTHPRIMARY);
 		    }
 		}
 		private float _minmerchlength  = 0.0f;
 		[XmlElement]
 		[Field (FieldName = "MinMerchLength",
-		 IsUnique = false,
 		 IsPersisted = true)]
 		public virtual float MinMerchLength
 		{
@@ -5643,13 +5484,12 @@ namespace CruiseDAL.DataObjects
 		        if(_minmerchlength == value) { return; }
 		        _minmerchlength = value;
 		        this.ValidateProperty(VOLUMEEQUATION.MINMERCHLENGTH, _minmerchlength);
-		        this.NotifyPropertyChanged(VOLUMEEQUATION.MINMERCHLENGTH, _minmerchlength);
+		        this.NotifyPropertyChanged(VOLUMEEQUATION.MINMERCHLENGTH);
 		    }
 		}
 		private String _model ;
 		[XmlElement]
 		[Field (FieldName = "Model",
-		 IsUnique = false,
 		 IsPersisted = true)]
 		public virtual String Model
 		{
@@ -5662,13 +5502,12 @@ namespace CruiseDAL.DataObjects
 		        if(_model == value) { return; }
 		        _model = value;
 		        this.ValidateProperty(VOLUMEEQUATION.MODEL, _model);
-		        this.NotifyPropertyChanged(VOLUMEEQUATION.MODEL, _model);
+		        this.NotifyPropertyChanged(VOLUMEEQUATION.MODEL);
 		    }
 		}
 		private String _commonspeciesname ;
 		[XmlElement]
 		[Field (FieldName = "CommonSpeciesName",
-		 IsUnique = false,
 		 IsPersisted = true)]
 		public virtual String CommonSpeciesName
 		{
@@ -5681,13 +5520,12 @@ namespace CruiseDAL.DataObjects
 		        if(_commonspeciesname == value) { return; }
 		        _commonspeciesname = value;
 		        this.ValidateProperty(VOLUMEEQUATION.COMMONSPECIESNAME, _commonspeciesname);
-		        this.NotifyPropertyChanged(VOLUMEEQUATION.COMMONSPECIESNAME, _commonspeciesname);
+		        this.NotifyPropertyChanged(VOLUMEEQUATION.COMMONSPECIESNAME);
 		    }
 		}
 		private Int64 _merchmodflag ;
 		[XmlElement]
 		[Field (FieldName = "MerchModFlag",
-		 IsUnique = false,
 		 IsPersisted = true)]
 		public virtual Int64 MerchModFlag
 		{
@@ -5700,13 +5538,12 @@ namespace CruiseDAL.DataObjects
 		        if(_merchmodflag == value) { return; }
 		        _merchmodflag = value;
 		        this.ValidateProperty(VOLUMEEQUATION.MERCHMODFLAG, _merchmodflag);
-		        this.NotifyPropertyChanged(VOLUMEEQUATION.MERCHMODFLAG, _merchmodflag);
+		        this.NotifyPropertyChanged(VOLUMEEQUATION.MERCHMODFLAG);
 		    }
 		}
 		private Int64 _evenoddsegment ;
 		[XmlElement]
 		[Field (FieldName = "EvenOddSegment",
-		 IsUnique = false,
 		 IsPersisted = true)]
 		public virtual Int64 EvenOddSegment
 		{
@@ -5719,7 +5556,7 @@ namespace CruiseDAL.DataObjects
 		        if(_evenoddsegment == value) { return; }
 		        _evenoddsegment = value;
 		        this.ValidateProperty(VOLUMEEQUATION.EVENODDSEGMENT, _evenoddsegment);
-		        this.NotifyPropertyChanged(VOLUMEEQUATION.EVENODDSEGMENT, _evenoddsegment);
+		        this.NotifyPropertyChanged(VOLUMEEQUATION.EVENODDSEGMENT);
 		    }
 		}
 
@@ -5785,7 +5622,7 @@ namespace CruiseDAL.DataObjects
 		}
 	}
 	[SQLEntity(SourceName = "BiomassEquation")]
-	public partial class BiomassEquationDO : DataObject
+	public partial class BiomassEquationDO : DataObjectExtra
 	{
 		//private static Persister persister;
 		private static RowValidator _validator;
@@ -5833,7 +5670,6 @@ namespace CruiseDAL.DataObjects
 		private String _species ;
 		[XmlElement]
 		[Field (FieldName = "Species",
-		 IsUnique = true,
 		 IsPersisted = true)]
 		public virtual String Species
 		{
@@ -5846,13 +5682,12 @@ namespace CruiseDAL.DataObjects
 		        if(_species == value) { return; }
 		        _species = value;
 		        this.ValidateProperty(BIOMASSEQUATION.SPECIES, _species);
-		        this.NotifyPropertyChanged(BIOMASSEQUATION.SPECIES, _species);
+		        this.NotifyPropertyChanged(BIOMASSEQUATION.SPECIES);
 		    }
 		}
 		private String _product ;
 		[XmlElement]
 		[Field (FieldName = "Product",
-		 IsUnique = true,
 		 IsPersisted = true)]
 		public virtual String Product
 		{
@@ -5865,13 +5700,12 @@ namespace CruiseDAL.DataObjects
 		        if(_product == value) { return; }
 		        _product = value;
 		        this.ValidateProperty(BIOMASSEQUATION.PRODUCT, _product);
-		        this.NotifyPropertyChanged(BIOMASSEQUATION.PRODUCT, _product);
+		        this.NotifyPropertyChanged(BIOMASSEQUATION.PRODUCT);
 		    }
 		}
 		private String _component ;
 		[XmlElement]
 		[Field (FieldName = "Component",
-		 IsUnique = true,
 		 IsPersisted = true)]
 		public virtual String Component
 		{
@@ -5884,13 +5718,12 @@ namespace CruiseDAL.DataObjects
 		        if(_component == value) { return; }
 		        _component = value;
 		        this.ValidateProperty(BIOMASSEQUATION.COMPONENT, _component);
-		        this.NotifyPropertyChanged(BIOMASSEQUATION.COMPONENT, _component);
+		        this.NotifyPropertyChanged(BIOMASSEQUATION.COMPONENT);
 		    }
 		}
 		private String _livedead ;
 		[XmlElement]
 		[Field (FieldName = "LiveDead",
-		 IsUnique = true,
 		 IsPersisted = true)]
 		public virtual String LiveDead
 		{
@@ -5903,13 +5736,12 @@ namespace CruiseDAL.DataObjects
 		        if(_livedead == value) { return; }
 		        _livedead = value;
 		        this.ValidateProperty(BIOMASSEQUATION.LIVEDEAD, _livedead);
-		        this.NotifyPropertyChanged(BIOMASSEQUATION.LIVEDEAD, _livedead);
+		        this.NotifyPropertyChanged(BIOMASSEQUATION.LIVEDEAD);
 		    }
 		}
 		private Int64 _fiacode ;
 		[XmlElement]
 		[Field (FieldName = "FIAcode",
-		 IsUnique = false,
 		 IsPersisted = true)]
 		public virtual Int64 FIAcode
 		{
@@ -5922,13 +5754,12 @@ namespace CruiseDAL.DataObjects
 		        if(_fiacode == value) { return; }
 		        _fiacode = value;
 		        this.ValidateProperty(BIOMASSEQUATION.FIACODE, _fiacode);
-		        this.NotifyPropertyChanged(BIOMASSEQUATION.FIACODE, _fiacode);
+		        this.NotifyPropertyChanged(BIOMASSEQUATION.FIACODE);
 		    }
 		}
 		private String _equation ;
 		[XmlElement]
 		[Field (FieldName = "Equation",
-		 IsUnique = false,
 		 IsPersisted = true)]
 		public virtual String Equation
 		{
@@ -5941,13 +5772,12 @@ namespace CruiseDAL.DataObjects
 		        if(_equation == value) { return; }
 		        _equation = value;
 		        this.ValidateProperty(BIOMASSEQUATION.EQUATION, _equation);
-		        this.NotifyPropertyChanged(BIOMASSEQUATION.EQUATION, _equation);
+		        this.NotifyPropertyChanged(BIOMASSEQUATION.EQUATION);
 		    }
 		}
 		private float _percentmoisture  = 0.0f;
 		[XmlElement]
 		[Field (FieldName = "PercentMoisture",
-		 IsUnique = false,
 		 IsPersisted = true)]
 		public virtual float PercentMoisture
 		{
@@ -5960,13 +5790,12 @@ namespace CruiseDAL.DataObjects
 		        if(_percentmoisture == value) { return; }
 		        _percentmoisture = value;
 		        this.ValidateProperty(BIOMASSEQUATION.PERCENTMOISTURE, _percentmoisture);
-		        this.NotifyPropertyChanged(BIOMASSEQUATION.PERCENTMOISTURE, _percentmoisture);
+		        this.NotifyPropertyChanged(BIOMASSEQUATION.PERCENTMOISTURE);
 		    }
 		}
 		private float _percentremoved  = 0.0f;
 		[XmlElement]
 		[Field (FieldName = "PercentRemoved",
-		 IsUnique = false,
 		 IsPersisted = true)]
 		public virtual float PercentRemoved
 		{
@@ -5979,13 +5808,12 @@ namespace CruiseDAL.DataObjects
 		        if(_percentremoved == value) { return; }
 		        _percentremoved = value;
 		        this.ValidateProperty(BIOMASSEQUATION.PERCENTREMOVED, _percentremoved);
-		        this.NotifyPropertyChanged(BIOMASSEQUATION.PERCENTREMOVED, _percentremoved);
+		        this.NotifyPropertyChanged(BIOMASSEQUATION.PERCENTREMOVED);
 		    }
 		}
 		private String _metadata ;
 		[XmlElement]
 		[Field (FieldName = "MetaData",
-		 IsUnique = false,
 		 IsPersisted = true)]
 		public virtual String MetaData
 		{
@@ -5998,13 +5826,12 @@ namespace CruiseDAL.DataObjects
 		        if(_metadata == value) { return; }
 		        _metadata = value;
 		        this.ValidateProperty(BIOMASSEQUATION.METADATA, _metadata);
-		        this.NotifyPropertyChanged(BIOMASSEQUATION.METADATA, _metadata);
+		        this.NotifyPropertyChanged(BIOMASSEQUATION.METADATA);
 		    }
 		}
 		private float _weightfactorprimary  = 0.0f;
 		[XmlElement]
 		[Field (FieldName = "WeightFactorPrimary",
-		 IsUnique = false,
 		 IsPersisted = true)]
 		public virtual float WeightFactorPrimary
 		{
@@ -6017,13 +5844,12 @@ namespace CruiseDAL.DataObjects
 		        if(_weightfactorprimary == value) { return; }
 		        _weightfactorprimary = value;
 		        this.ValidateProperty(BIOMASSEQUATION.WEIGHTFACTORPRIMARY, _weightfactorprimary);
-		        this.NotifyPropertyChanged(BIOMASSEQUATION.WEIGHTFACTORPRIMARY, _weightfactorprimary);
+		        this.NotifyPropertyChanged(BIOMASSEQUATION.WEIGHTFACTORPRIMARY);
 		    }
 		}
 		private float _weightfactorsecondary  = 0.0f;
 		[XmlElement]
 		[Field (FieldName = "WeightFactorSecondary",
-		 IsUnique = false,
 		 IsPersisted = true)]
 		public virtual float WeightFactorSecondary
 		{
@@ -6036,7 +5862,7 @@ namespace CruiseDAL.DataObjects
 		        if(_weightfactorsecondary == value) { return; }
 		        _weightfactorsecondary = value;
 		        this.ValidateProperty(BIOMASSEQUATION.WEIGHTFACTORSECONDARY, _weightfactorsecondary);
-		        this.NotifyPropertyChanged(BIOMASSEQUATION.WEIGHTFACTORSECONDARY, _weightfactorsecondary);
+		        this.NotifyPropertyChanged(BIOMASSEQUATION.WEIGHTFACTORSECONDARY);
 		    }
 		}
 
@@ -6082,7 +5908,7 @@ namespace CruiseDAL.DataObjects
 		}
 	}
 	[SQLEntity(SourceName = "ValueEquation")]
-	public partial class ValueEquationDO : DataObject
+	public partial class ValueEquationDO : DataObjectExtra
 	{
 		//private static Persister persister;
 		private static RowValidator _validator;
@@ -6127,7 +5953,6 @@ namespace CruiseDAL.DataObjects
 		private String _species ;
 		[XmlElement]
 		[Field (FieldName = "Species",
-		 IsUnique = true,
 		 IsPersisted = true)]
 		public virtual String Species
 		{
@@ -6140,13 +5965,12 @@ namespace CruiseDAL.DataObjects
 		        if(_species == value) { return; }
 		        _species = value;
 		        this.ValidateProperty(VALUEEQUATION.SPECIES, _species);
-		        this.NotifyPropertyChanged(VALUEEQUATION.SPECIES, _species);
+		        this.NotifyPropertyChanged(VALUEEQUATION.SPECIES);
 		    }
 		}
 		private String _primaryproduct ;
 		[XmlElement]
 		[Field (FieldName = "PrimaryProduct",
-		 IsUnique = true,
 		 IsPersisted = true)]
 		public virtual String PrimaryProduct
 		{
@@ -6159,13 +5983,12 @@ namespace CruiseDAL.DataObjects
 		        if(_primaryproduct == value) { return; }
 		        _primaryproduct = value;
 		        this.ValidateProperty(VALUEEQUATION.PRIMARYPRODUCT, _primaryproduct);
-		        this.NotifyPropertyChanged(VALUEEQUATION.PRIMARYPRODUCT, _primaryproduct);
+		        this.NotifyPropertyChanged(VALUEEQUATION.PRIMARYPRODUCT);
 		    }
 		}
 		private String _valueequationnumber ;
 		[XmlElement]
 		[Field (FieldName = "ValueEquationNumber",
-		 IsUnique = true,
 		 IsPersisted = true)]
 		public virtual String ValueEquationNumber
 		{
@@ -6178,13 +6001,12 @@ namespace CruiseDAL.DataObjects
 		        if(_valueequationnumber == value) { return; }
 		        _valueequationnumber = value;
 		        this.ValidateProperty(VALUEEQUATION.VALUEEQUATIONNUMBER, _valueequationnumber);
-		        this.NotifyPropertyChanged(VALUEEQUATION.VALUEEQUATIONNUMBER, _valueequationnumber);
+		        this.NotifyPropertyChanged(VALUEEQUATION.VALUEEQUATIONNUMBER);
 		    }
 		}
 		private String _grade ;
 		[XmlElement]
 		[Field (FieldName = "Grade",
-		 IsUnique = false,
 		 IsPersisted = true)]
 		public virtual String Grade
 		{
@@ -6197,13 +6019,12 @@ namespace CruiseDAL.DataObjects
 		        if(_grade == value) { return; }
 		        _grade = value;
 		        this.ValidateProperty(VALUEEQUATION.GRADE, _grade);
-		        this.NotifyPropertyChanged(VALUEEQUATION.GRADE, _grade);
+		        this.NotifyPropertyChanged(VALUEEQUATION.GRADE);
 		    }
 		}
 		private float _coefficient1  = 0.0f;
 		[XmlElement]
 		[Field (FieldName = "Coefficient1",
-		 IsUnique = false,
 		 IsPersisted = true)]
 		public virtual float Coefficient1
 		{
@@ -6216,13 +6037,12 @@ namespace CruiseDAL.DataObjects
 		        if(_coefficient1 == value) { return; }
 		        _coefficient1 = value;
 		        this.ValidateProperty(VALUEEQUATION.COEFFICIENT1, _coefficient1);
-		        this.NotifyPropertyChanged(VALUEEQUATION.COEFFICIENT1, _coefficient1);
+		        this.NotifyPropertyChanged(VALUEEQUATION.COEFFICIENT1);
 		    }
 		}
 		private float _coefficient2  = 0.0f;
 		[XmlElement]
 		[Field (FieldName = "Coefficient2",
-		 IsUnique = false,
 		 IsPersisted = true)]
 		public virtual float Coefficient2
 		{
@@ -6235,13 +6055,12 @@ namespace CruiseDAL.DataObjects
 		        if(_coefficient2 == value) { return; }
 		        _coefficient2 = value;
 		        this.ValidateProperty(VALUEEQUATION.COEFFICIENT2, _coefficient2);
-		        this.NotifyPropertyChanged(VALUEEQUATION.COEFFICIENT2, _coefficient2);
+		        this.NotifyPropertyChanged(VALUEEQUATION.COEFFICIENT2);
 		    }
 		}
 		private float _coefficient3  = 0.0f;
 		[XmlElement]
 		[Field (FieldName = "Coefficient3",
-		 IsUnique = false,
 		 IsPersisted = true)]
 		public virtual float Coefficient3
 		{
@@ -6254,13 +6073,12 @@ namespace CruiseDAL.DataObjects
 		        if(_coefficient3 == value) { return; }
 		        _coefficient3 = value;
 		        this.ValidateProperty(VALUEEQUATION.COEFFICIENT3, _coefficient3);
-		        this.NotifyPropertyChanged(VALUEEQUATION.COEFFICIENT3, _coefficient3);
+		        this.NotifyPropertyChanged(VALUEEQUATION.COEFFICIENT3);
 		    }
 		}
 		private float _coefficient4  = 0.0f;
 		[XmlElement]
 		[Field (FieldName = "Coefficient4",
-		 IsUnique = false,
 		 IsPersisted = true)]
 		public virtual float Coefficient4
 		{
@@ -6273,13 +6091,12 @@ namespace CruiseDAL.DataObjects
 		        if(_coefficient4 == value) { return; }
 		        _coefficient4 = value;
 		        this.ValidateProperty(VALUEEQUATION.COEFFICIENT4, _coefficient4);
-		        this.NotifyPropertyChanged(VALUEEQUATION.COEFFICIENT4, _coefficient4);
+		        this.NotifyPropertyChanged(VALUEEQUATION.COEFFICIENT4);
 		    }
 		}
 		private float _coefficient5  = 0.0f;
 		[XmlElement]
 		[Field (FieldName = "Coefficient5",
-		 IsUnique = false,
 		 IsPersisted = true)]
 		public virtual float Coefficient5
 		{
@@ -6292,13 +6109,12 @@ namespace CruiseDAL.DataObjects
 		        if(_coefficient5 == value) { return; }
 		        _coefficient5 = value;
 		        this.ValidateProperty(VALUEEQUATION.COEFFICIENT5, _coefficient5);
-		        this.NotifyPropertyChanged(VALUEEQUATION.COEFFICIENT5, _coefficient5);
+		        this.NotifyPropertyChanged(VALUEEQUATION.COEFFICIENT5);
 		    }
 		}
 		private float _coefficient6  = 0.0f;
 		[XmlElement]
 		[Field (FieldName = "Coefficient6",
-		 IsUnique = false,
 		 IsPersisted = true)]
 		public virtual float Coefficient6
 		{
@@ -6311,7 +6127,7 @@ namespace CruiseDAL.DataObjects
 		        if(_coefficient6 == value) { return; }
 		        _coefficient6 = value;
 		        this.ValidateProperty(VALUEEQUATION.COEFFICIENT6, _coefficient6);
-		        this.NotifyPropertyChanged(VALUEEQUATION.COEFFICIENT6, _coefficient6);
+		        this.NotifyPropertyChanged(VALUEEQUATION.COEFFICIENT6);
 		    }
 		}
 
@@ -6355,7 +6171,7 @@ namespace CruiseDAL.DataObjects
 		}
 	}
 	[SQLEntity(SourceName = "QualityAdjEquation")]
-	public partial class QualityAdjEquationDO : DataObject
+	public partial class QualityAdjEquationDO : DataObjectExtra
 	{
 		//private static Persister persister;
 		private static RowValidator _validator;
@@ -6399,7 +6215,6 @@ namespace CruiseDAL.DataObjects
 		private String _species ;
 		[XmlElement]
 		[Field (FieldName = "Species",
-		 IsUnique = true,
 		 IsPersisted = true)]
 		public virtual String Species
 		{
@@ -6412,13 +6227,12 @@ namespace CruiseDAL.DataObjects
 		        if(_species == value) { return; }
 		        _species = value;
 		        this.ValidateProperty(QUALITYADJEQUATION.SPECIES, _species);
-		        this.NotifyPropertyChanged(QUALITYADJEQUATION.SPECIES, _species);
+		        this.NotifyPropertyChanged(QUALITYADJEQUATION.SPECIES);
 		    }
 		}
 		private String _qualityadjeq ;
 		[XmlElement]
 		[Field (FieldName = "QualityAdjEq",
-		 IsUnique = true,
 		 IsPersisted = true)]
 		public virtual String QualityAdjEq
 		{
@@ -6431,13 +6245,12 @@ namespace CruiseDAL.DataObjects
 		        if(_qualityadjeq == value) { return; }
 		        _qualityadjeq = value;
 		        this.ValidateProperty(QUALITYADJEQUATION.QUALITYADJEQ, _qualityadjeq);
-		        this.NotifyPropertyChanged(QUALITYADJEQUATION.QUALITYADJEQ, _qualityadjeq);
+		        this.NotifyPropertyChanged(QUALITYADJEQUATION.QUALITYADJEQ);
 		    }
 		}
 		private Int64 _year ;
 		[XmlElement]
 		[Field (FieldName = "Year",
-		 IsUnique = false,
 		 IsPersisted = true)]
 		public virtual Int64 Year
 		{
@@ -6450,13 +6263,12 @@ namespace CruiseDAL.DataObjects
 		        if(_year == value) { return; }
 		        _year = value;
 		        this.ValidateProperty(QUALITYADJEQUATION.YEAR, _year);
-		        this.NotifyPropertyChanged(QUALITYADJEQUATION.YEAR, _year);
+		        this.NotifyPropertyChanged(QUALITYADJEQUATION.YEAR);
 		    }
 		}
 		private String _grade ;
 		[XmlElement]
 		[Field (FieldName = "Grade",
-		 IsUnique = false,
 		 IsPersisted = true)]
 		public virtual String Grade
 		{
@@ -6469,13 +6281,12 @@ namespace CruiseDAL.DataObjects
 		        if(_grade == value) { return; }
 		        _grade = value;
 		        this.ValidateProperty(QUALITYADJEQUATION.GRADE, _grade);
-		        this.NotifyPropertyChanged(QUALITYADJEQUATION.GRADE, _grade);
+		        this.NotifyPropertyChanged(QUALITYADJEQUATION.GRADE);
 		    }
 		}
 		private float _coefficient1  = 0.0f;
 		[XmlElement]
 		[Field (FieldName = "Coefficient1",
-		 IsUnique = false,
 		 IsPersisted = true)]
 		public virtual float Coefficient1
 		{
@@ -6488,13 +6299,12 @@ namespace CruiseDAL.DataObjects
 		        if(_coefficient1 == value) { return; }
 		        _coefficient1 = value;
 		        this.ValidateProperty(QUALITYADJEQUATION.COEFFICIENT1, _coefficient1);
-		        this.NotifyPropertyChanged(QUALITYADJEQUATION.COEFFICIENT1, _coefficient1);
+		        this.NotifyPropertyChanged(QUALITYADJEQUATION.COEFFICIENT1);
 		    }
 		}
 		private float _coefficient2  = 0.0f;
 		[XmlElement]
 		[Field (FieldName = "Coefficient2",
-		 IsUnique = false,
 		 IsPersisted = true)]
 		public virtual float Coefficient2
 		{
@@ -6507,13 +6317,12 @@ namespace CruiseDAL.DataObjects
 		        if(_coefficient2 == value) { return; }
 		        _coefficient2 = value;
 		        this.ValidateProperty(QUALITYADJEQUATION.COEFFICIENT2, _coefficient2);
-		        this.NotifyPropertyChanged(QUALITYADJEQUATION.COEFFICIENT2, _coefficient2);
+		        this.NotifyPropertyChanged(QUALITYADJEQUATION.COEFFICIENT2);
 		    }
 		}
 		private float _coefficient3  = 0.0f;
 		[XmlElement]
 		[Field (FieldName = "Coefficient3",
-		 IsUnique = false,
 		 IsPersisted = true)]
 		public virtual float Coefficient3
 		{
@@ -6526,13 +6335,12 @@ namespace CruiseDAL.DataObjects
 		        if(_coefficient3 == value) { return; }
 		        _coefficient3 = value;
 		        this.ValidateProperty(QUALITYADJEQUATION.COEFFICIENT3, _coefficient3);
-		        this.NotifyPropertyChanged(QUALITYADJEQUATION.COEFFICIENT3, _coefficient3);
+		        this.NotifyPropertyChanged(QUALITYADJEQUATION.COEFFICIENT3);
 		    }
 		}
 		private float _coefficient4  = 0.0f;
 		[XmlElement]
 		[Field (FieldName = "Coefficient4",
-		 IsUnique = false,
 		 IsPersisted = true)]
 		public virtual float Coefficient4
 		{
@@ -6545,13 +6353,12 @@ namespace CruiseDAL.DataObjects
 		        if(_coefficient4 == value) { return; }
 		        _coefficient4 = value;
 		        this.ValidateProperty(QUALITYADJEQUATION.COEFFICIENT4, _coefficient4);
-		        this.NotifyPropertyChanged(QUALITYADJEQUATION.COEFFICIENT4, _coefficient4);
+		        this.NotifyPropertyChanged(QUALITYADJEQUATION.COEFFICIENT4);
 		    }
 		}
 		private float _coefficient5  = 0.0f;
 		[XmlElement]
 		[Field (FieldName = "Coefficient5",
-		 IsUnique = false,
 		 IsPersisted = true)]
 		public virtual float Coefficient5
 		{
@@ -6564,13 +6371,12 @@ namespace CruiseDAL.DataObjects
 		        if(_coefficient5 == value) { return; }
 		        _coefficient5 = value;
 		        this.ValidateProperty(QUALITYADJEQUATION.COEFFICIENT5, _coefficient5);
-		        this.NotifyPropertyChanged(QUALITYADJEQUATION.COEFFICIENT5, _coefficient5);
+		        this.NotifyPropertyChanged(QUALITYADJEQUATION.COEFFICIENT5);
 		    }
 		}
 		private float _coefficient6  = 0.0f;
 		[XmlElement]
 		[Field (FieldName = "Coefficient6",
-		 IsUnique = false,
 		 IsPersisted = true)]
 		public virtual float Coefficient6
 		{
@@ -6583,7 +6389,7 @@ namespace CruiseDAL.DataObjects
 		        if(_coefficient6 == value) { return; }
 		        _coefficient6 = value;
 		        this.ValidateProperty(QUALITYADJEQUATION.COEFFICIENT6, _coefficient6);
-		        this.NotifyPropertyChanged(QUALITYADJEQUATION.COEFFICIENT6, _coefficient6);
+		        this.NotifyPropertyChanged(QUALITYADJEQUATION.COEFFICIENT6);
 		    }
 		}
 
@@ -6627,7 +6433,7 @@ namespace CruiseDAL.DataObjects
 		}
 	}
 	[SQLEntity(SourceName = "Reports")]
-	public partial class ReportsDO : DataObject
+	public partial class ReportsDO : DataObjectExtra
 	{
 		//private static Persister persister;
 		private static RowValidator _validator;
@@ -6671,7 +6477,6 @@ namespace CruiseDAL.DataObjects
 		private String _reportid ;
 		[XmlElement]
 		[Field (FieldName = "ReportID",
-		 IsUnique = true,
 		 IsPersisted = true)]
 		public virtual String ReportID
 		{
@@ -6684,13 +6489,12 @@ namespace CruiseDAL.DataObjects
 		        if(_reportid == value) { return; }
 		        _reportid = value;
 		        this.ValidateProperty(REPORTS.REPORTID, _reportid);
-		        this.NotifyPropertyChanged(REPORTS.REPORTID, _reportid);
+		        this.NotifyPropertyChanged(REPORTS.REPORTID);
 		    }
 		}
 		private bool _selected  = false;
 		[XmlElement]
 		[Field (FieldName = "Selected",
-		 IsUnique = false,
 		 IsPersisted = true)]
 		public virtual bool Selected
 		{
@@ -6703,13 +6507,12 @@ namespace CruiseDAL.DataObjects
 		        if(_selected == value) { return; }
 		        _selected = value;
 		        this.ValidateProperty(REPORTS.SELECTED, _selected);
-		        this.NotifyPropertyChanged(REPORTS.SELECTED, _selected);
+		        this.NotifyPropertyChanged(REPORTS.SELECTED);
 		    }
 		}
 		private String _title ;
 		[XmlElement]
 		[Field (FieldName = "Title",
-		 IsUnique = false,
 		 IsPersisted = true)]
 		public virtual String Title
 		{
@@ -6722,7 +6525,7 @@ namespace CruiseDAL.DataObjects
 		        if(_title == value) { return; }
 		        _title = value;
 		        this.ValidateProperty(REPORTS.TITLE, _title);
-		        this.NotifyPropertyChanged(REPORTS.TITLE, _title);
+		        this.NotifyPropertyChanged(REPORTS.TITLE);
 		    }
 		}
 
@@ -6752,7 +6555,7 @@ namespace CruiseDAL.DataObjects
 		}
 	}
 	[SQLEntity(SourceName = "TreeCalculatedValues")]
-	public partial class TreeCalculatedValuesDO : DataObject
+	public partial class TreeCalculatedValuesDO : DataObjectExtra
 	{
 		//private static Persister persister;
 		private static RowValidator _validator;
@@ -6801,7 +6604,6 @@ namespace CruiseDAL.DataObjects
 		private long? _tree_cn ;
 		[XmlIgnore]
 		[Field (FieldName = "Tree_CN",
-		 IsUnique = true,
 		 IsPersisted = true)]
 		public virtual long? Tree_CN
 		{
@@ -6820,7 +6622,7 @@ namespace CruiseDAL.DataObjects
 		        if(value == null || value.Value == 0) { _tree = null;  }
 		        _tree_cn = value;
 		        this.ValidateProperty(TREECALCULATEDVALUES.TREE_CN, _tree_cn);
-		        this.NotifyPropertyChanged(TREECALCULATEDVALUES.TREE_CN, _tree_cn);
+		        this.NotifyPropertyChanged(TREECALCULATEDVALUES.TREE_CN);
 		    }
 		}
 		public virtual TreeDO GetTree()
@@ -6851,7 +6653,6 @@ namespace CruiseDAL.DataObjects
 		private float _totalcubicvolume  = 0.0f;
 		[XmlElement]
 		[Field (FieldName = "TotalCubicVolume",
-		 IsUnique = false,
 		 IsPersisted = true)]
 		public virtual float TotalCubicVolume
 		{
@@ -6864,13 +6665,12 @@ namespace CruiseDAL.DataObjects
 		        if(_totalcubicvolume == value) { return; }
 		        _totalcubicvolume = value;
 		        this.ValidateProperty(TREECALCULATEDVALUES.TOTALCUBICVOLUME, _totalcubicvolume);
-		        this.NotifyPropertyChanged(TREECALCULATEDVALUES.TOTALCUBICVOLUME, _totalcubicvolume);
+		        this.NotifyPropertyChanged(TREECALCULATEDVALUES.TOTALCUBICVOLUME);
 		    }
 		}
 		private float _grossbdftpp  = 0.0f;
 		[XmlElement]
 		[Field (FieldName = "GrossBDFTPP",
-		 IsUnique = false,
 		 IsPersisted = true)]
 		public virtual float GrossBDFTPP
 		{
@@ -6883,13 +6683,12 @@ namespace CruiseDAL.DataObjects
 		        if(_grossbdftpp == value) { return; }
 		        _grossbdftpp = value;
 		        this.ValidateProperty(TREECALCULATEDVALUES.GROSSBDFTPP, _grossbdftpp);
-		        this.NotifyPropertyChanged(TREECALCULATEDVALUES.GROSSBDFTPP, _grossbdftpp);
+		        this.NotifyPropertyChanged(TREECALCULATEDVALUES.GROSSBDFTPP);
 		    }
 		}
 		private float _netbdftpp  = 0.0f;
 		[XmlElement]
 		[Field (FieldName = "NetBDFTPP",
-		 IsUnique = false,
 		 IsPersisted = true)]
 		public virtual float NetBDFTPP
 		{
@@ -6902,13 +6701,12 @@ namespace CruiseDAL.DataObjects
 		        if(_netbdftpp == value) { return; }
 		        _netbdftpp = value;
 		        this.ValidateProperty(TREECALCULATEDVALUES.NETBDFTPP, _netbdftpp);
-		        this.NotifyPropertyChanged(TREECALCULATEDVALUES.NETBDFTPP, _netbdftpp);
+		        this.NotifyPropertyChanged(TREECALCULATEDVALUES.NETBDFTPP);
 		    }
 		}
 		private float _grosscuftpp  = 0.0f;
 		[XmlElement]
 		[Field (FieldName = "GrossCUFTPP",
-		 IsUnique = false,
 		 IsPersisted = true)]
 		public virtual float GrossCUFTPP
 		{
@@ -6921,13 +6719,12 @@ namespace CruiseDAL.DataObjects
 		        if(_grosscuftpp == value) { return; }
 		        _grosscuftpp = value;
 		        this.ValidateProperty(TREECALCULATEDVALUES.GROSSCUFTPP, _grosscuftpp);
-		        this.NotifyPropertyChanged(TREECALCULATEDVALUES.GROSSCUFTPP, _grosscuftpp);
+		        this.NotifyPropertyChanged(TREECALCULATEDVALUES.GROSSCUFTPP);
 		    }
 		}
 		private float _netcuftpp  = 0.0f;
 		[XmlElement]
 		[Field (FieldName = "NetCUFTPP",
-		 IsUnique = false,
 		 IsPersisted = true)]
 		public virtual float NetCUFTPP
 		{
@@ -6940,13 +6737,12 @@ namespace CruiseDAL.DataObjects
 		        if(_netcuftpp == value) { return; }
 		        _netcuftpp = value;
 		        this.ValidateProperty(TREECALCULATEDVALUES.NETCUFTPP, _netcuftpp);
-		        this.NotifyPropertyChanged(TREECALCULATEDVALUES.NETCUFTPP, _netcuftpp);
+		        this.NotifyPropertyChanged(TREECALCULATEDVALUES.NETCUFTPP);
 		    }
 		}
 		private float _cordspp  = 0.0f;
 		[XmlElement]
 		[Field (FieldName = "CordsPP",
-		 IsUnique = false,
 		 IsPersisted = true)]
 		public virtual float CordsPP
 		{
@@ -6959,13 +6755,12 @@ namespace CruiseDAL.DataObjects
 		        if(_cordspp == value) { return; }
 		        _cordspp = value;
 		        this.ValidateProperty(TREECALCULATEDVALUES.CORDSPP, _cordspp);
-		        this.NotifyPropertyChanged(TREECALCULATEDVALUES.CORDSPP, _cordspp);
+		        this.NotifyPropertyChanged(TREECALCULATEDVALUES.CORDSPP);
 		    }
 		}
 		private float _grossbdftremvpp  = 0.0f;
 		[XmlElement]
 		[Field (FieldName = "GrossBDFTRemvPP",
-		 IsUnique = false,
 		 IsPersisted = true)]
 		public virtual float GrossBDFTRemvPP
 		{
@@ -6978,13 +6773,12 @@ namespace CruiseDAL.DataObjects
 		        if(_grossbdftremvpp == value) { return; }
 		        _grossbdftremvpp = value;
 		        this.ValidateProperty(TREECALCULATEDVALUES.GROSSBDFTREMVPP, _grossbdftremvpp);
-		        this.NotifyPropertyChanged(TREECALCULATEDVALUES.GROSSBDFTREMVPP, _grossbdftremvpp);
+		        this.NotifyPropertyChanged(TREECALCULATEDVALUES.GROSSBDFTREMVPP);
 		    }
 		}
 		private float _grosscuftremvpp  = 0.0f;
 		[XmlElement]
 		[Field (FieldName = "GrossCUFTRemvPP",
-		 IsUnique = false,
 		 IsPersisted = true)]
 		public virtual float GrossCUFTRemvPP
 		{
@@ -6997,13 +6791,12 @@ namespace CruiseDAL.DataObjects
 		        if(_grosscuftremvpp == value) { return; }
 		        _grosscuftremvpp = value;
 		        this.ValidateProperty(TREECALCULATEDVALUES.GROSSCUFTREMVPP, _grosscuftremvpp);
-		        this.NotifyPropertyChanged(TREECALCULATEDVALUES.GROSSCUFTREMVPP, _grosscuftremvpp);
+		        this.NotifyPropertyChanged(TREECALCULATEDVALUES.GROSSCUFTREMVPP);
 		    }
 		}
 		private float _grossbdftsp  = 0.0f;
 		[XmlElement]
 		[Field (FieldName = "GrossBDFTSP",
-		 IsUnique = false,
 		 IsPersisted = true)]
 		public virtual float GrossBDFTSP
 		{
@@ -7016,13 +6809,12 @@ namespace CruiseDAL.DataObjects
 		        if(_grossbdftsp == value) { return; }
 		        _grossbdftsp = value;
 		        this.ValidateProperty(TREECALCULATEDVALUES.GROSSBDFTSP, _grossbdftsp);
-		        this.NotifyPropertyChanged(TREECALCULATEDVALUES.GROSSBDFTSP, _grossbdftsp);
+		        this.NotifyPropertyChanged(TREECALCULATEDVALUES.GROSSBDFTSP);
 		    }
 		}
 		private float _netbdftsp  = 0.0f;
 		[XmlElement]
 		[Field (FieldName = "NetBDFTSP",
-		 IsUnique = false,
 		 IsPersisted = true)]
 		public virtual float NetBDFTSP
 		{
@@ -7035,13 +6827,12 @@ namespace CruiseDAL.DataObjects
 		        if(_netbdftsp == value) { return; }
 		        _netbdftsp = value;
 		        this.ValidateProperty(TREECALCULATEDVALUES.NETBDFTSP, _netbdftsp);
-		        this.NotifyPropertyChanged(TREECALCULATEDVALUES.NETBDFTSP, _netbdftsp);
+		        this.NotifyPropertyChanged(TREECALCULATEDVALUES.NETBDFTSP);
 		    }
 		}
 		private float _grosscuftsp  = 0.0f;
 		[XmlElement]
 		[Field (FieldName = "GrossCUFTSP",
-		 IsUnique = false,
 		 IsPersisted = true)]
 		public virtual float GrossCUFTSP
 		{
@@ -7054,13 +6845,12 @@ namespace CruiseDAL.DataObjects
 		        if(_grosscuftsp == value) { return; }
 		        _grosscuftsp = value;
 		        this.ValidateProperty(TREECALCULATEDVALUES.GROSSCUFTSP, _grosscuftsp);
-		        this.NotifyPropertyChanged(TREECALCULATEDVALUES.GROSSCUFTSP, _grosscuftsp);
+		        this.NotifyPropertyChanged(TREECALCULATEDVALUES.GROSSCUFTSP);
 		    }
 		}
 		private float _netcuftsp  = 0.0f;
 		[XmlElement]
 		[Field (FieldName = "NetCUFTSP",
-		 IsUnique = false,
 		 IsPersisted = true)]
 		public virtual float NetCUFTSP
 		{
@@ -7073,13 +6863,12 @@ namespace CruiseDAL.DataObjects
 		        if(_netcuftsp == value) { return; }
 		        _netcuftsp = value;
 		        this.ValidateProperty(TREECALCULATEDVALUES.NETCUFTSP, _netcuftsp);
-		        this.NotifyPropertyChanged(TREECALCULATEDVALUES.NETCUFTSP, _netcuftsp);
+		        this.NotifyPropertyChanged(TREECALCULATEDVALUES.NETCUFTSP);
 		    }
 		}
 		private float _cordssp  = 0.0f;
 		[XmlElement]
 		[Field (FieldName = "CordsSP",
-		 IsUnique = false,
 		 IsPersisted = true)]
 		public virtual float CordsSP
 		{
@@ -7092,13 +6881,12 @@ namespace CruiseDAL.DataObjects
 		        if(_cordssp == value) { return; }
 		        _cordssp = value;
 		        this.ValidateProperty(TREECALCULATEDVALUES.CORDSSP, _cordssp);
-		        this.NotifyPropertyChanged(TREECALCULATEDVALUES.CORDSSP, _cordssp);
+		        this.NotifyPropertyChanged(TREECALCULATEDVALUES.CORDSSP);
 		    }
 		}
 		private float _grosscuftremvsp  = 0.0f;
 		[XmlElement]
 		[Field (FieldName = "GrossCUFTRemvSP",
-		 IsUnique = false,
 		 IsPersisted = true)]
 		public virtual float GrossCUFTRemvSP
 		{
@@ -7111,13 +6899,12 @@ namespace CruiseDAL.DataObjects
 		        if(_grosscuftremvsp == value) { return; }
 		        _grosscuftremvsp = value;
 		        this.ValidateProperty(TREECALCULATEDVALUES.GROSSCUFTREMVSP, _grosscuftremvsp);
-		        this.NotifyPropertyChanged(TREECALCULATEDVALUES.GROSSCUFTREMVSP, _grosscuftremvsp);
+		        this.NotifyPropertyChanged(TREECALCULATEDVALUES.GROSSCUFTREMVSP);
 		    }
 		}
 		private float _numberlogsms  = 0.0f;
 		[XmlElement]
 		[Field (FieldName = "NumberlogsMS",
-		 IsUnique = false,
 		 IsPersisted = true)]
 		public virtual float NumberlogsMS
 		{
@@ -7130,13 +6917,12 @@ namespace CruiseDAL.DataObjects
 		        if(_numberlogsms == value) { return; }
 		        _numberlogsms = value;
 		        this.ValidateProperty(TREECALCULATEDVALUES.NUMBERLOGSMS, _numberlogsms);
-		        this.NotifyPropertyChanged(TREECALCULATEDVALUES.NUMBERLOGSMS, _numberlogsms);
+		        this.NotifyPropertyChanged(TREECALCULATEDVALUES.NUMBERLOGSMS);
 		    }
 		}
 		private float _numberlogstpw  = 0.0f;
 		[XmlElement]
 		[Field (FieldName = "NumberlogsTPW",
-		 IsUnique = false,
 		 IsPersisted = true)]
 		public virtual float NumberlogsTPW
 		{
@@ -7149,13 +6935,12 @@ namespace CruiseDAL.DataObjects
 		        if(_numberlogstpw == value) { return; }
 		        _numberlogstpw = value;
 		        this.ValidateProperty(TREECALCULATEDVALUES.NUMBERLOGSTPW, _numberlogstpw);
-		        this.NotifyPropertyChanged(TREECALCULATEDVALUES.NUMBERLOGSTPW, _numberlogstpw);
+		        this.NotifyPropertyChanged(TREECALCULATEDVALUES.NUMBERLOGSTPW);
 		    }
 		}
 		private float _grossbdftrp  = 0.0f;
 		[XmlElement]
 		[Field (FieldName = "GrossBDFTRP",
-		 IsUnique = false,
 		 IsPersisted = true)]
 		public virtual float GrossBDFTRP
 		{
@@ -7168,13 +6953,12 @@ namespace CruiseDAL.DataObjects
 		        if(_grossbdftrp == value) { return; }
 		        _grossbdftrp = value;
 		        this.ValidateProperty(TREECALCULATEDVALUES.GROSSBDFTRP, _grossbdftrp);
-		        this.NotifyPropertyChanged(TREECALCULATEDVALUES.GROSSBDFTRP, _grossbdftrp);
+		        this.NotifyPropertyChanged(TREECALCULATEDVALUES.GROSSBDFTRP);
 		    }
 		}
 		private float _grosscuftrp  = 0.0f;
 		[XmlElement]
 		[Field (FieldName = "GrossCUFTRP",
-		 IsUnique = false,
 		 IsPersisted = true)]
 		public virtual float GrossCUFTRP
 		{
@@ -7187,13 +6971,12 @@ namespace CruiseDAL.DataObjects
 		        if(_grosscuftrp == value) { return; }
 		        _grosscuftrp = value;
 		        this.ValidateProperty(TREECALCULATEDVALUES.GROSSCUFTRP, _grosscuftrp);
-		        this.NotifyPropertyChanged(TREECALCULATEDVALUES.GROSSCUFTRP, _grosscuftrp);
+		        this.NotifyPropertyChanged(TREECALCULATEDVALUES.GROSSCUFTRP);
 		    }
 		}
 		private float _cordsrp  = 0.0f;
 		[XmlElement]
 		[Field (FieldName = "CordsRP",
-		 IsUnique = false,
 		 IsPersisted = true)]
 		public virtual float CordsRP
 		{
@@ -7206,13 +6989,12 @@ namespace CruiseDAL.DataObjects
 		        if(_cordsrp == value) { return; }
 		        _cordsrp = value;
 		        this.ValidateProperty(TREECALCULATEDVALUES.CORDSRP, _cordsrp);
-		        this.NotifyPropertyChanged(TREECALCULATEDVALUES.CORDSRP, _cordsrp);
+		        this.NotifyPropertyChanged(TREECALCULATEDVALUES.CORDSRP);
 		    }
 		}
 		private float _grossbdftintl  = 0.0f;
 		[XmlElement]
 		[Field (FieldName = "GrossBDFTIntl",
-		 IsUnique = false,
 		 IsPersisted = true)]
 		public virtual float GrossBDFTIntl
 		{
@@ -7225,13 +7007,12 @@ namespace CruiseDAL.DataObjects
 		        if(_grossbdftintl == value) { return; }
 		        _grossbdftintl = value;
 		        this.ValidateProperty(TREECALCULATEDVALUES.GROSSBDFTINTL, _grossbdftintl);
-		        this.NotifyPropertyChanged(TREECALCULATEDVALUES.GROSSBDFTINTL, _grossbdftintl);
+		        this.NotifyPropertyChanged(TREECALCULATEDVALUES.GROSSBDFTINTL);
 		    }
 		}
 		private float _netbdftintl  = 0.0f;
 		[XmlElement]
 		[Field (FieldName = "NetBDFTIntl",
-		 IsUnique = false,
 		 IsPersisted = true)]
 		public virtual float NetBDFTIntl
 		{
@@ -7244,13 +7025,12 @@ namespace CruiseDAL.DataObjects
 		        if(_netbdftintl == value) { return; }
 		        _netbdftintl = value;
 		        this.ValidateProperty(TREECALCULATEDVALUES.NETBDFTINTL, _netbdftintl);
-		        this.NotifyPropertyChanged(TREECALCULATEDVALUES.NETBDFTINTL, _netbdftintl);
+		        this.NotifyPropertyChanged(TREECALCULATEDVALUES.NETBDFTINTL);
 		    }
 		}
 		private float _biomassmainstemprimary  = 0.0f;
 		[XmlElement]
 		[Field (FieldName = "BiomassMainStemPrimary",
-		 IsUnique = false,
 		 IsPersisted = true)]
 		public virtual float BiomassMainStemPrimary
 		{
@@ -7263,13 +7043,12 @@ namespace CruiseDAL.DataObjects
 		        if(_biomassmainstemprimary == value) { return; }
 		        _biomassmainstemprimary = value;
 		        this.ValidateProperty(TREECALCULATEDVALUES.BIOMASSMAINSTEMPRIMARY, _biomassmainstemprimary);
-		        this.NotifyPropertyChanged(TREECALCULATEDVALUES.BIOMASSMAINSTEMPRIMARY, _biomassmainstemprimary);
+		        this.NotifyPropertyChanged(TREECALCULATEDVALUES.BIOMASSMAINSTEMPRIMARY);
 		    }
 		}
 		private float _biomassmainstemsecondary  = 0.0f;
 		[XmlElement]
 		[Field (FieldName = "BiomassMainStemSecondary",
-		 IsUnique = false,
 		 IsPersisted = true)]
 		public virtual float BiomassMainStemSecondary
 		{
@@ -7282,13 +7061,12 @@ namespace CruiseDAL.DataObjects
 		        if(_biomassmainstemsecondary == value) { return; }
 		        _biomassmainstemsecondary = value;
 		        this.ValidateProperty(TREECALCULATEDVALUES.BIOMASSMAINSTEMSECONDARY, _biomassmainstemsecondary);
-		        this.NotifyPropertyChanged(TREECALCULATEDVALUES.BIOMASSMAINSTEMSECONDARY, _biomassmainstemsecondary);
+		        this.NotifyPropertyChanged(TREECALCULATEDVALUES.BIOMASSMAINSTEMSECONDARY);
 		    }
 		}
 		private float _valuepp  = 0.0f;
 		[XmlElement]
 		[Field (FieldName = "ValuePP",
-		 IsUnique = false,
 		 IsPersisted = true)]
 		public virtual float ValuePP
 		{
@@ -7301,13 +7079,12 @@ namespace CruiseDAL.DataObjects
 		        if(_valuepp == value) { return; }
 		        _valuepp = value;
 		        this.ValidateProperty(TREECALCULATEDVALUES.VALUEPP, _valuepp);
-		        this.NotifyPropertyChanged(TREECALCULATEDVALUES.VALUEPP, _valuepp);
+		        this.NotifyPropertyChanged(TREECALCULATEDVALUES.VALUEPP);
 		    }
 		}
 		private float _valuesp  = 0.0f;
 		[XmlElement]
 		[Field (FieldName = "ValueSP",
-		 IsUnique = false,
 		 IsPersisted = true)]
 		public virtual float ValueSP
 		{
@@ -7320,13 +7097,12 @@ namespace CruiseDAL.DataObjects
 		        if(_valuesp == value) { return; }
 		        _valuesp = value;
 		        this.ValidateProperty(TREECALCULATEDVALUES.VALUESP, _valuesp);
-		        this.NotifyPropertyChanged(TREECALCULATEDVALUES.VALUESP, _valuesp);
+		        this.NotifyPropertyChanged(TREECALCULATEDVALUES.VALUESP);
 		    }
 		}
 		private float _valuerp  = 0.0f;
 		[XmlElement]
 		[Field (FieldName = "ValueRP",
-		 IsUnique = false,
 		 IsPersisted = true)]
 		public virtual float ValueRP
 		{
@@ -7339,13 +7115,12 @@ namespace CruiseDAL.DataObjects
 		        if(_valuerp == value) { return; }
 		        _valuerp = value;
 		        this.ValidateProperty(TREECALCULATEDVALUES.VALUERP, _valuerp);
-		        this.NotifyPropertyChanged(TREECALCULATEDVALUES.VALUERP, _valuerp);
+		        this.NotifyPropertyChanged(TREECALCULATEDVALUES.VALUERP);
 		    }
 		}
 		private float _biomassprod  = 0.0f;
 		[XmlElement]
 		[Field (FieldName = "BiomassProd",
-		 IsUnique = false,
 		 IsPersisted = true)]
 		public virtual float BiomassProd
 		{
@@ -7358,13 +7133,12 @@ namespace CruiseDAL.DataObjects
 		        if(_biomassprod == value) { return; }
 		        _biomassprod = value;
 		        this.ValidateProperty(TREECALCULATEDVALUES.BIOMASSPROD, _biomassprod);
-		        this.NotifyPropertyChanged(TREECALCULATEDVALUES.BIOMASSPROD, _biomassprod);
+		        this.NotifyPropertyChanged(TREECALCULATEDVALUES.BIOMASSPROD);
 		    }
 		}
 		private float _biomasstotalstem  = 0.0f;
 		[XmlElement]
 		[Field (FieldName = "Biomasstotalstem",
-		 IsUnique = false,
 		 IsPersisted = true)]
 		public virtual float Biomasstotalstem
 		{
@@ -7377,13 +7151,12 @@ namespace CruiseDAL.DataObjects
 		        if(_biomasstotalstem == value) { return; }
 		        _biomasstotalstem = value;
 		        this.ValidateProperty(TREECALCULATEDVALUES.BIOMASSTOTALSTEM, _biomasstotalstem);
-		        this.NotifyPropertyChanged(TREECALCULATEDVALUES.BIOMASSTOTALSTEM, _biomasstotalstem);
+		        this.NotifyPropertyChanged(TREECALCULATEDVALUES.BIOMASSTOTALSTEM);
 		    }
 		}
 		private float _biomasslivebranches  = 0.0f;
 		[XmlElement]
 		[Field (FieldName = "Biomasslivebranches",
-		 IsUnique = false,
 		 IsPersisted = true)]
 		public virtual float Biomasslivebranches
 		{
@@ -7396,13 +7169,12 @@ namespace CruiseDAL.DataObjects
 		        if(_biomasslivebranches == value) { return; }
 		        _biomasslivebranches = value;
 		        this.ValidateProperty(TREECALCULATEDVALUES.BIOMASSLIVEBRANCHES, _biomasslivebranches);
-		        this.NotifyPropertyChanged(TREECALCULATEDVALUES.BIOMASSLIVEBRANCHES, _biomasslivebranches);
+		        this.NotifyPropertyChanged(TREECALCULATEDVALUES.BIOMASSLIVEBRANCHES);
 		    }
 		}
 		private float _biomassdeadbranches  = 0.0f;
 		[XmlElement]
 		[Field (FieldName = "Biomassdeadbranches",
-		 IsUnique = false,
 		 IsPersisted = true)]
 		public virtual float Biomassdeadbranches
 		{
@@ -7415,13 +7187,12 @@ namespace CruiseDAL.DataObjects
 		        if(_biomassdeadbranches == value) { return; }
 		        _biomassdeadbranches = value;
 		        this.ValidateProperty(TREECALCULATEDVALUES.BIOMASSDEADBRANCHES, _biomassdeadbranches);
-		        this.NotifyPropertyChanged(TREECALCULATEDVALUES.BIOMASSDEADBRANCHES, _biomassdeadbranches);
+		        this.NotifyPropertyChanged(TREECALCULATEDVALUES.BIOMASSDEADBRANCHES);
 		    }
 		}
 		private float _biomassfoliage  = 0.0f;
 		[XmlElement]
 		[Field (FieldName = "Biomassfoliage",
-		 IsUnique = false,
 		 IsPersisted = true)]
 		public virtual float Biomassfoliage
 		{
@@ -7434,13 +7205,12 @@ namespace CruiseDAL.DataObjects
 		        if(_biomassfoliage == value) { return; }
 		        _biomassfoliage = value;
 		        this.ValidateProperty(TREECALCULATEDVALUES.BIOMASSFOLIAGE, _biomassfoliage);
-		        this.NotifyPropertyChanged(TREECALCULATEDVALUES.BIOMASSFOLIAGE, _biomassfoliage);
+		        this.NotifyPropertyChanged(TREECALCULATEDVALUES.BIOMASSFOLIAGE);
 		    }
 		}
 		private float _biomasstip  = 0.0f;
 		[XmlElement]
 		[Field (FieldName = "BiomassTip",
-		 IsUnique = false,
 		 IsPersisted = true)]
 		public virtual float BiomassTip
 		{
@@ -7453,7 +7223,7 @@ namespace CruiseDAL.DataObjects
 		        if(_biomasstip == value) { return; }
 		        _biomasstip = value;
 		        this.ValidateProperty(TREECALCULATEDVALUES.BIOMASSTIP, _biomasstip);
-		        this.NotifyPropertyChanged(TREECALCULATEDVALUES.BIOMASSTIP, _biomasstip);
+		        this.NotifyPropertyChanged(TREECALCULATEDVALUES.BIOMASSTIP);
 		    }
 		}
 
@@ -7542,7 +7312,7 @@ namespace CruiseDAL.DataObjects
 		}
 	}
 	[SQLEntity(SourceName = "LCD")]
-	public partial class LCDDO : DataObject
+	public partial class LCDDO : DataObjectExtra
 	{
 		//private static Persister persister;
 		private static RowValidator _validator;
@@ -7601,7 +7371,6 @@ namespace CruiseDAL.DataObjects
 		private String _cutleave ;
 		[XmlElement]
 		[Field (FieldName = "CutLeave",
-		 IsUnique = false,
 		 IsPersisted = true)]
 		public virtual String CutLeave
 		{
@@ -7614,13 +7383,12 @@ namespace CruiseDAL.DataObjects
 		        if(_cutleave == value) { return; }
 		        _cutleave = value;
 		        this.ValidateProperty(LCD.CUTLEAVE, _cutleave);
-		        this.NotifyPropertyChanged(LCD.CUTLEAVE, _cutleave);
+		        this.NotifyPropertyChanged(LCD.CUTLEAVE);
 		    }
 		}
 		private String _stratum ;
 		[XmlElement]
 		[Field (FieldName = "Stratum",
-		 IsUnique = false,
 		 IsPersisted = true)]
 		public virtual String Stratum
 		{
@@ -7633,13 +7401,12 @@ namespace CruiseDAL.DataObjects
 		        if(_stratum == value) { return; }
 		        _stratum = value;
 		        this.ValidateProperty(LCD.STRATUM, _stratum);
-		        this.NotifyPropertyChanged(LCD.STRATUM, _stratum);
+		        this.NotifyPropertyChanged(LCD.STRATUM);
 		    }
 		}
 		private String _samplegroup ;
 		[XmlElement]
 		[Field (FieldName = "SampleGroup",
-		 IsUnique = false,
 		 IsPersisted = true)]
 		public virtual String SampleGroup
 		{
@@ -7652,13 +7419,12 @@ namespace CruiseDAL.DataObjects
 		        if(_samplegroup == value) { return; }
 		        _samplegroup = value;
 		        this.ValidateProperty(LCD.SAMPLEGROUP, _samplegroup);
-		        this.NotifyPropertyChanged(LCD.SAMPLEGROUP, _samplegroup);
+		        this.NotifyPropertyChanged(LCD.SAMPLEGROUP);
 		    }
 		}
 		private String _species ;
 		[XmlElement]
 		[Field (FieldName = "Species",
-		 IsUnique = false,
 		 IsPersisted = true)]
 		public virtual String Species
 		{
@@ -7671,13 +7437,12 @@ namespace CruiseDAL.DataObjects
 		        if(_species == value) { return; }
 		        _species = value;
 		        this.ValidateProperty(LCD.SPECIES, _species);
-		        this.NotifyPropertyChanged(LCD.SPECIES, _species);
+		        this.NotifyPropertyChanged(LCD.SPECIES);
 		    }
 		}
 		private String _primaryproduct ;
 		[XmlElement]
 		[Field (FieldName = "PrimaryProduct",
-		 IsUnique = false,
 		 IsPersisted = true)]
 		public virtual String PrimaryProduct
 		{
@@ -7690,13 +7455,12 @@ namespace CruiseDAL.DataObjects
 		        if(_primaryproduct == value) { return; }
 		        _primaryproduct = value;
 		        this.ValidateProperty(LCD.PRIMARYPRODUCT, _primaryproduct);
-		        this.NotifyPropertyChanged(LCD.PRIMARYPRODUCT, _primaryproduct);
+		        this.NotifyPropertyChanged(LCD.PRIMARYPRODUCT);
 		    }
 		}
 		private String _secondaryproduct ;
 		[XmlElement]
 		[Field (FieldName = "SecondaryProduct",
-		 IsUnique = false,
 		 IsPersisted = true)]
 		public virtual String SecondaryProduct
 		{
@@ -7709,13 +7473,12 @@ namespace CruiseDAL.DataObjects
 		        if(_secondaryproduct == value) { return; }
 		        _secondaryproduct = value;
 		        this.ValidateProperty(LCD.SECONDARYPRODUCT, _secondaryproduct);
-		        this.NotifyPropertyChanged(LCD.SECONDARYPRODUCT, _secondaryproduct);
+		        this.NotifyPropertyChanged(LCD.SECONDARYPRODUCT);
 		    }
 		}
 		private String _uom ;
 		[XmlElement]
 		[Field (FieldName = "UOM",
-		 IsUnique = false,
 		 IsPersisted = true)]
 		public virtual String UOM
 		{
@@ -7728,13 +7491,12 @@ namespace CruiseDAL.DataObjects
 		        if(_uom == value) { return; }
 		        _uom = value;
 		        this.ValidateProperty(LCD.UOM, _uom);
-		        this.NotifyPropertyChanged(LCD.UOM, _uom);
+		        this.NotifyPropertyChanged(LCD.UOM);
 		    }
 		}
 		private String _livedead ;
 		[XmlElement]
 		[Field (FieldName = "LiveDead",
-		 IsUnique = false,
 		 IsPersisted = true)]
 		public virtual String LiveDead
 		{
@@ -7747,13 +7509,12 @@ namespace CruiseDAL.DataObjects
 		        if(_livedead == value) { return; }
 		        _livedead = value;
 		        this.ValidateProperty(LCD.LIVEDEAD, _livedead);
-		        this.NotifyPropertyChanged(LCD.LIVEDEAD, _livedead);
+		        this.NotifyPropertyChanged(LCD.LIVEDEAD);
 		    }
 		}
 		private String _yield ;
 		[XmlElement]
 		[Field (FieldName = "Yield",
-		 IsUnique = false,
 		 IsPersisted = true)]
 		public virtual String Yield
 		{
@@ -7766,13 +7527,12 @@ namespace CruiseDAL.DataObjects
 		        if(_yield == value) { return; }
 		        _yield = value;
 		        this.ValidateProperty(LCD.YIELD, _yield);
-		        this.NotifyPropertyChanged(LCD.YIELD, _yield);
+		        this.NotifyPropertyChanged(LCD.YIELD);
 		    }
 		}
 		private String _contractspecies ;
 		[XmlElement]
 		[Field (FieldName = "ContractSpecies",
-		 IsUnique = false,
 		 IsPersisted = true)]
 		public virtual String ContractSpecies
 		{
@@ -7785,13 +7545,12 @@ namespace CruiseDAL.DataObjects
 		        if(_contractspecies == value) { return; }
 		        _contractspecies = value;
 		        this.ValidateProperty(LCD.CONTRACTSPECIES, _contractspecies);
-		        this.NotifyPropertyChanged(LCD.CONTRACTSPECIES, _contractspecies);
+		        this.NotifyPropertyChanged(LCD.CONTRACTSPECIES);
 		    }
 		}
 		private String _treegrade ;
 		[XmlElement]
 		[Field (FieldName = "TreeGrade",
-		 IsUnique = false,
 		 IsPersisted = true)]
 		public virtual String TreeGrade
 		{
@@ -7804,13 +7563,12 @@ namespace CruiseDAL.DataObjects
 		        if(_treegrade == value) { return; }
 		        _treegrade = value;
 		        this.ValidateProperty(LCD.TREEGRADE, _treegrade);
-		        this.NotifyPropertyChanged(LCD.TREEGRADE, _treegrade);
+		        this.NotifyPropertyChanged(LCD.TREEGRADE);
 		    }
 		}
 		private String _stm ;
 		[XmlElement]
 		[Field (FieldName = "STM",
-		 IsUnique = false,
 		 IsPersisted = true)]
 		public virtual String STM
 		{
@@ -7823,13 +7581,12 @@ namespace CruiseDAL.DataObjects
 		        if(_stm == value) { return; }
 		        _stm = value;
 		        this.ValidateProperty(LCD.STM, _stm);
-		        this.NotifyPropertyChanged(LCD.STM, _stm);
+		        this.NotifyPropertyChanged(LCD.STM);
 		    }
 		}
 		private Double _firststagetrees  = 0.0;
 		[XmlElement]
 		[Field (FieldName = "FirstStageTrees",
-		 IsUnique = false,
 		 IsPersisted = true)]
 		public virtual Double FirstStageTrees
 		{
@@ -7842,13 +7599,12 @@ namespace CruiseDAL.DataObjects
 		        if(_firststagetrees == value) { return; }
 		        _firststagetrees = value;
 		        this.ValidateProperty(LCD.FIRSTSTAGETREES, _firststagetrees);
-		        this.NotifyPropertyChanged(LCD.FIRSTSTAGETREES, _firststagetrees);
+		        this.NotifyPropertyChanged(LCD.FIRSTSTAGETREES);
 		    }
 		}
 		private Double _measuredtrees  = 0.0;
 		[XmlElement]
 		[Field (FieldName = "MeasuredTrees",
-		 IsUnique = false,
 		 IsPersisted = true)]
 		public virtual Double MeasuredTrees
 		{
@@ -7861,13 +7617,12 @@ namespace CruiseDAL.DataObjects
 		        if(_measuredtrees == value) { return; }
 		        _measuredtrees = value;
 		        this.ValidateProperty(LCD.MEASUREDTREES, _measuredtrees);
-		        this.NotifyPropertyChanged(LCD.MEASUREDTREES, _measuredtrees);
+		        this.NotifyPropertyChanged(LCD.MEASUREDTREES);
 		    }
 		}
 		private Double _talliedtrees  = 0.0;
 		[XmlElement]
 		[Field (FieldName = "TalliedTrees",
-		 IsUnique = false,
 		 IsPersisted = true)]
 		public virtual Double TalliedTrees
 		{
@@ -7880,13 +7635,12 @@ namespace CruiseDAL.DataObjects
 		        if(_talliedtrees == value) { return; }
 		        _talliedtrees = value;
 		        this.ValidateProperty(LCD.TALLIEDTREES, _talliedtrees);
-		        this.NotifyPropertyChanged(LCD.TALLIEDTREES, _talliedtrees);
+		        this.NotifyPropertyChanged(LCD.TALLIEDTREES);
 		    }
 		}
 		private Double _sumkpi  = 0.0;
 		[XmlElement]
 		[Field (FieldName = "SumKPI",
-		 IsUnique = false,
 		 IsPersisted = true)]
 		public virtual Double SumKPI
 		{
@@ -7899,13 +7653,12 @@ namespace CruiseDAL.DataObjects
 		        if(_sumkpi == value) { return; }
 		        _sumkpi = value;
 		        this.ValidateProperty(LCD.SUMKPI, _sumkpi);
-		        this.NotifyPropertyChanged(LCD.SUMKPI, _sumkpi);
+		        this.NotifyPropertyChanged(LCD.SUMKPI);
 		    }
 		}
 		private Double _summeasuredkpi  = 0.0;
 		[XmlElement]
 		[Field (FieldName = "SumMeasuredKPI",
-		 IsUnique = false,
 		 IsPersisted = true)]
 		public virtual Double SumMeasuredKPI
 		{
@@ -7918,13 +7671,12 @@ namespace CruiseDAL.DataObjects
 		        if(_summeasuredkpi == value) { return; }
 		        _summeasuredkpi = value;
 		        this.ValidateProperty(LCD.SUMMEASUREDKPI, _summeasuredkpi);
-		        this.NotifyPropertyChanged(LCD.SUMMEASUREDKPI, _summeasuredkpi);
+		        this.NotifyPropertyChanged(LCD.SUMMEASUREDKPI);
 		    }
 		}
 		private Double _sumexpanfactor  = 0.0;
 		[XmlElement]
 		[Field (FieldName = "SumExpanFactor",
-		 IsUnique = false,
 		 IsPersisted = true)]
 		public virtual Double SumExpanFactor
 		{
@@ -7937,13 +7689,12 @@ namespace CruiseDAL.DataObjects
 		        if(_sumexpanfactor == value) { return; }
 		        _sumexpanfactor = value;
 		        this.ValidateProperty(LCD.SUMEXPANFACTOR, _sumexpanfactor);
-		        this.NotifyPropertyChanged(LCD.SUMEXPANFACTOR, _sumexpanfactor);
+		        this.NotifyPropertyChanged(LCD.SUMEXPANFACTOR);
 		    }
 		}
 		private Double _sumdbhob  = 0.0;
 		[XmlElement]
 		[Field (FieldName = "SumDBHOB",
-		 IsUnique = false,
 		 IsPersisted = true)]
 		public virtual Double SumDBHOB
 		{
@@ -7956,13 +7707,12 @@ namespace CruiseDAL.DataObjects
 		        if(_sumdbhob == value) { return; }
 		        _sumdbhob = value;
 		        this.ValidateProperty(LCD.SUMDBHOB, _sumdbhob);
-		        this.NotifyPropertyChanged(LCD.SUMDBHOB, _sumdbhob);
+		        this.NotifyPropertyChanged(LCD.SUMDBHOB);
 		    }
 		}
 		private Double _sumdbhobsqrd  = 0.0;
 		[XmlElement]
 		[Field (FieldName = "SumDBHOBsqrd",
-		 IsUnique = false,
 		 IsPersisted = true)]
 		public virtual Double SumDBHOBsqrd
 		{
@@ -7975,13 +7725,12 @@ namespace CruiseDAL.DataObjects
 		        if(_sumdbhobsqrd == value) { return; }
 		        _sumdbhobsqrd = value;
 		        this.ValidateProperty(LCD.SUMDBHOBSQRD, _sumdbhobsqrd);
-		        this.NotifyPropertyChanged(LCD.SUMDBHOBSQRD, _sumdbhobsqrd);
+		        this.NotifyPropertyChanged(LCD.SUMDBHOBSQRD);
 		    }
 		}
 		private Double _sumtothgt  = 0.0;
 		[XmlElement]
 		[Field (FieldName = "SumTotHgt",
-		 IsUnique = false,
 		 IsPersisted = true)]
 		public virtual Double SumTotHgt
 		{
@@ -7994,13 +7743,12 @@ namespace CruiseDAL.DataObjects
 		        if(_sumtothgt == value) { return; }
 		        _sumtothgt = value;
 		        this.ValidateProperty(LCD.SUMTOTHGT, _sumtothgt);
-		        this.NotifyPropertyChanged(LCD.SUMTOTHGT, _sumtothgt);
+		        this.NotifyPropertyChanged(LCD.SUMTOTHGT);
 		    }
 		}
 		private Double _sumhgtupstem  = 0.0;
 		[XmlElement]
 		[Field (FieldName = "SumHgtUpStem",
-		 IsUnique = false,
 		 IsPersisted = true)]
 		public virtual Double SumHgtUpStem
 		{
@@ -8013,13 +7761,12 @@ namespace CruiseDAL.DataObjects
 		        if(_sumhgtupstem == value) { return; }
 		        _sumhgtupstem = value;
 		        this.ValidateProperty(LCD.SUMHGTUPSTEM, _sumhgtupstem);
-		        this.NotifyPropertyChanged(LCD.SUMHGTUPSTEM, _sumhgtupstem);
+		        this.NotifyPropertyChanged(LCD.SUMHGTUPSTEM);
 		    }
 		}
 		private Double _summerchhgtprim  = 0.0;
 		[XmlElement]
 		[Field (FieldName = "SumMerchHgtPrim",
-		 IsUnique = false,
 		 IsPersisted = true)]
 		public virtual Double SumMerchHgtPrim
 		{
@@ -8032,13 +7779,12 @@ namespace CruiseDAL.DataObjects
 		        if(_summerchhgtprim == value) { return; }
 		        _summerchhgtprim = value;
 		        this.ValidateProperty(LCD.SUMMERCHHGTPRIM, _summerchhgtprim);
-		        this.NotifyPropertyChanged(LCD.SUMMERCHHGTPRIM, _summerchhgtprim);
+		        this.NotifyPropertyChanged(LCD.SUMMERCHHGTPRIM);
 		    }
 		}
 		private Double _summerchhgtsecond  = 0.0;
 		[XmlElement]
 		[Field (FieldName = "SumMerchHgtSecond",
-		 IsUnique = false,
 		 IsPersisted = true)]
 		public virtual Double SumMerchHgtSecond
 		{
@@ -8051,13 +7797,12 @@ namespace CruiseDAL.DataObjects
 		        if(_summerchhgtsecond == value) { return; }
 		        _summerchhgtsecond = value;
 		        this.ValidateProperty(LCD.SUMMERCHHGTSECOND, _summerchhgtsecond);
-		        this.NotifyPropertyChanged(LCD.SUMMERCHHGTSECOND, _summerchhgtsecond);
+		        this.NotifyPropertyChanged(LCD.SUMMERCHHGTSECOND);
 		    }
 		}
 		private Double _sumlogsms  = 0.0;
 		[XmlElement]
 		[Field (FieldName = "SumLogsMS",
-		 IsUnique = false,
 		 IsPersisted = true)]
 		public virtual Double SumLogsMS
 		{
@@ -8070,13 +7815,12 @@ namespace CruiseDAL.DataObjects
 		        if(_sumlogsms == value) { return; }
 		        _sumlogsms = value;
 		        this.ValidateProperty(LCD.SUMLOGSMS, _sumlogsms);
-		        this.NotifyPropertyChanged(LCD.SUMLOGSMS, _sumlogsms);
+		        this.NotifyPropertyChanged(LCD.SUMLOGSMS);
 		    }
 		}
 		private Double _sumtotcubic  = 0.0;
 		[XmlElement]
 		[Field (FieldName = "SumTotCubic",
-		 IsUnique = false,
 		 IsPersisted = true)]
 		public virtual Double SumTotCubic
 		{
@@ -8089,13 +7833,12 @@ namespace CruiseDAL.DataObjects
 		        if(_sumtotcubic == value) { return; }
 		        _sumtotcubic = value;
 		        this.ValidateProperty(LCD.SUMTOTCUBIC, _sumtotcubic);
-		        this.NotifyPropertyChanged(LCD.SUMTOTCUBIC, _sumtotcubic);
+		        this.NotifyPropertyChanged(LCD.SUMTOTCUBIC);
 		    }
 		}
 		private Double _sumgbdft  = 0.0;
 		[XmlElement]
 		[Field (FieldName = "SumGBDFT",
-		 IsUnique = false,
 		 IsPersisted = true)]
 		public virtual Double SumGBDFT
 		{
@@ -8108,13 +7851,12 @@ namespace CruiseDAL.DataObjects
 		        if(_sumgbdft == value) { return; }
 		        _sumgbdft = value;
 		        this.ValidateProperty(LCD.SUMGBDFT, _sumgbdft);
-		        this.NotifyPropertyChanged(LCD.SUMGBDFT, _sumgbdft);
+		        this.NotifyPropertyChanged(LCD.SUMGBDFT);
 		    }
 		}
 		private Double _sumnbdft  = 0.0;
 		[XmlElement]
 		[Field (FieldName = "SumNBDFT",
-		 IsUnique = false,
 		 IsPersisted = true)]
 		public virtual Double SumNBDFT
 		{
@@ -8127,13 +7869,12 @@ namespace CruiseDAL.DataObjects
 		        if(_sumnbdft == value) { return; }
 		        _sumnbdft = value;
 		        this.ValidateProperty(LCD.SUMNBDFT, _sumnbdft);
-		        this.NotifyPropertyChanged(LCD.SUMNBDFT, _sumnbdft);
+		        this.NotifyPropertyChanged(LCD.SUMNBDFT);
 		    }
 		}
 		private Double _sumgcuft  = 0.0;
 		[XmlElement]
 		[Field (FieldName = "SumGCUFT",
-		 IsUnique = false,
 		 IsPersisted = true)]
 		public virtual Double SumGCUFT
 		{
@@ -8146,13 +7887,12 @@ namespace CruiseDAL.DataObjects
 		        if(_sumgcuft == value) { return; }
 		        _sumgcuft = value;
 		        this.ValidateProperty(LCD.SUMGCUFT, _sumgcuft);
-		        this.NotifyPropertyChanged(LCD.SUMGCUFT, _sumgcuft);
+		        this.NotifyPropertyChanged(LCD.SUMGCUFT);
 		    }
 		}
 		private Double _sumncuft  = 0.0;
 		[XmlElement]
 		[Field (FieldName = "SumNCUFT",
-		 IsUnique = false,
 		 IsPersisted = true)]
 		public virtual Double SumNCUFT
 		{
@@ -8165,13 +7905,12 @@ namespace CruiseDAL.DataObjects
 		        if(_sumncuft == value) { return; }
 		        _sumncuft = value;
 		        this.ValidateProperty(LCD.SUMNCUFT, _sumncuft);
-		        this.NotifyPropertyChanged(LCD.SUMNCUFT, _sumncuft);
+		        this.NotifyPropertyChanged(LCD.SUMNCUFT);
 		    }
 		}
 		private Double _sumgbdftremv  = 0.0;
 		[XmlElement]
 		[Field (FieldName = "SumGBDFTremv",
-		 IsUnique = false,
 		 IsPersisted = true)]
 		public virtual Double SumGBDFTremv
 		{
@@ -8184,13 +7923,12 @@ namespace CruiseDAL.DataObjects
 		        if(_sumgbdftremv == value) { return; }
 		        _sumgbdftremv = value;
 		        this.ValidateProperty(LCD.SUMGBDFTREMV, _sumgbdftremv);
-		        this.NotifyPropertyChanged(LCD.SUMGBDFTREMV, _sumgbdftremv);
+		        this.NotifyPropertyChanged(LCD.SUMGBDFTREMV);
 		    }
 		}
 		private Double _sumgcuftremv  = 0.0;
 		[XmlElement]
 		[Field (FieldName = "SumGCUFTremv",
-		 IsUnique = false,
 		 IsPersisted = true)]
 		public virtual Double SumGCUFTremv
 		{
@@ -8203,13 +7941,12 @@ namespace CruiseDAL.DataObjects
 		        if(_sumgcuftremv == value) { return; }
 		        _sumgcuftremv = value;
 		        this.ValidateProperty(LCD.SUMGCUFTREMV, _sumgcuftremv);
-		        this.NotifyPropertyChanged(LCD.SUMGCUFTREMV, _sumgcuftremv);
+		        this.NotifyPropertyChanged(LCD.SUMGCUFTREMV);
 		    }
 		}
 		private Double _sumcords  = 0.0;
 		[XmlElement]
 		[Field (FieldName = "SumCords",
-		 IsUnique = false,
 		 IsPersisted = true)]
 		public virtual Double SumCords
 		{
@@ -8222,13 +7959,12 @@ namespace CruiseDAL.DataObjects
 		        if(_sumcords == value) { return; }
 		        _sumcords = value;
 		        this.ValidateProperty(LCD.SUMCORDS, _sumcords);
-		        this.NotifyPropertyChanged(LCD.SUMCORDS, _sumcords);
+		        this.NotifyPropertyChanged(LCD.SUMCORDS);
 		    }
 		}
 		private Double _sumwgtmsp  = 0.0;
 		[XmlElement]
 		[Field (FieldName = "SumWgtMSP",
-		 IsUnique = false,
 		 IsPersisted = true)]
 		public virtual Double SumWgtMSP
 		{
@@ -8241,13 +7977,12 @@ namespace CruiseDAL.DataObjects
 		        if(_sumwgtmsp == value) { return; }
 		        _sumwgtmsp = value;
 		        this.ValidateProperty(LCD.SUMWGTMSP, _sumwgtmsp);
-		        this.NotifyPropertyChanged(LCD.SUMWGTMSP, _sumwgtmsp);
+		        this.NotifyPropertyChanged(LCD.SUMWGTMSP);
 		    }
 		}
 		private Double _sumvalue  = 0.0;
 		[XmlElement]
 		[Field (FieldName = "SumValue",
-		 IsUnique = false,
 		 IsPersisted = true)]
 		public virtual Double SumValue
 		{
@@ -8260,13 +7995,12 @@ namespace CruiseDAL.DataObjects
 		        if(_sumvalue == value) { return; }
 		        _sumvalue = value;
 		        this.ValidateProperty(LCD.SUMVALUE, _sumvalue);
-		        this.NotifyPropertyChanged(LCD.SUMVALUE, _sumvalue);
+		        this.NotifyPropertyChanged(LCD.SUMVALUE);
 		    }
 		}
 		private Double _sumgbdfttop  = 0.0;
 		[XmlElement]
 		[Field (FieldName = "SumGBDFTtop",
-		 IsUnique = false,
 		 IsPersisted = true)]
 		public virtual Double SumGBDFTtop
 		{
@@ -8279,13 +8013,12 @@ namespace CruiseDAL.DataObjects
 		        if(_sumgbdfttop == value) { return; }
 		        _sumgbdfttop = value;
 		        this.ValidateProperty(LCD.SUMGBDFTTOP, _sumgbdfttop);
-		        this.NotifyPropertyChanged(LCD.SUMGBDFTTOP, _sumgbdfttop);
+		        this.NotifyPropertyChanged(LCD.SUMGBDFTTOP);
 		    }
 		}
 		private Double _sumnbdfttop  = 0.0;
 		[XmlElement]
 		[Field (FieldName = "SumNBDFTtop",
-		 IsUnique = false,
 		 IsPersisted = true)]
 		public virtual Double SumNBDFTtop
 		{
@@ -8298,13 +8031,12 @@ namespace CruiseDAL.DataObjects
 		        if(_sumnbdfttop == value) { return; }
 		        _sumnbdfttop = value;
 		        this.ValidateProperty(LCD.SUMNBDFTTOP, _sumnbdfttop);
-		        this.NotifyPropertyChanged(LCD.SUMNBDFTTOP, _sumnbdfttop);
+		        this.NotifyPropertyChanged(LCD.SUMNBDFTTOP);
 		    }
 		}
 		private Double _sumgcufttop  = 0.0;
 		[XmlElement]
 		[Field (FieldName = "SumGCUFTtop",
-		 IsUnique = false,
 		 IsPersisted = true)]
 		public virtual Double SumGCUFTtop
 		{
@@ -8317,13 +8049,12 @@ namespace CruiseDAL.DataObjects
 		        if(_sumgcufttop == value) { return; }
 		        _sumgcufttop = value;
 		        this.ValidateProperty(LCD.SUMGCUFTTOP, _sumgcufttop);
-		        this.NotifyPropertyChanged(LCD.SUMGCUFTTOP, _sumgcufttop);
+		        this.NotifyPropertyChanged(LCD.SUMGCUFTTOP);
 		    }
 		}
 		private Double _sumncufttop  = 0.0;
 		[XmlElement]
 		[Field (FieldName = "SumNCUFTtop",
-		 IsUnique = false,
 		 IsPersisted = true)]
 		public virtual Double SumNCUFTtop
 		{
@@ -8336,13 +8067,12 @@ namespace CruiseDAL.DataObjects
 		        if(_sumncufttop == value) { return; }
 		        _sumncufttop = value;
 		        this.ValidateProperty(LCD.SUMNCUFTTOP, _sumncufttop);
-		        this.NotifyPropertyChanged(LCD.SUMNCUFTTOP, _sumncufttop);
+		        this.NotifyPropertyChanged(LCD.SUMNCUFTTOP);
 		    }
 		}
 		private Double _sumcordstop  = 0.0;
 		[XmlElement]
 		[Field (FieldName = "SumCordsTop",
-		 IsUnique = false,
 		 IsPersisted = true)]
 		public virtual Double SumCordsTop
 		{
@@ -8355,13 +8085,12 @@ namespace CruiseDAL.DataObjects
 		        if(_sumcordstop == value) { return; }
 		        _sumcordstop = value;
 		        this.ValidateProperty(LCD.SUMCORDSTOP, _sumcordstop);
-		        this.NotifyPropertyChanged(LCD.SUMCORDSTOP, _sumcordstop);
+		        this.NotifyPropertyChanged(LCD.SUMCORDSTOP);
 		    }
 		}
 		private Double _sumwgtmss  = 0.0;
 		[XmlElement]
 		[Field (FieldName = "SumWgtMSS",
-		 IsUnique = false,
 		 IsPersisted = true)]
 		public virtual Double SumWgtMSS
 		{
@@ -8374,13 +8103,12 @@ namespace CruiseDAL.DataObjects
 		        if(_sumwgtmss == value) { return; }
 		        _sumwgtmss = value;
 		        this.ValidateProperty(LCD.SUMWGTMSS, _sumwgtmss);
-		        this.NotifyPropertyChanged(LCD.SUMWGTMSS, _sumwgtmss);
+		        this.NotifyPropertyChanged(LCD.SUMWGTMSS);
 		    }
 		}
 		private Double _sumtopvalue  = 0.0;
 		[XmlElement]
 		[Field (FieldName = "SumTopValue",
-		 IsUnique = false,
 		 IsPersisted = true)]
 		public virtual Double SumTopValue
 		{
@@ -8393,13 +8121,12 @@ namespace CruiseDAL.DataObjects
 		        if(_sumtopvalue == value) { return; }
 		        _sumtopvalue = value;
 		        this.ValidateProperty(LCD.SUMTOPVALUE, _sumtopvalue);
-		        this.NotifyPropertyChanged(LCD.SUMTOPVALUE, _sumtopvalue);
+		        this.NotifyPropertyChanged(LCD.SUMTOPVALUE);
 		    }
 		}
 		private Double _sumlogstop  = 0.0;
 		[XmlElement]
 		[Field (FieldName = "SumLogsTop",
-		 IsUnique = false,
 		 IsPersisted = true)]
 		public virtual Double SumLogsTop
 		{
@@ -8412,13 +8139,12 @@ namespace CruiseDAL.DataObjects
 		        if(_sumlogstop == value) { return; }
 		        _sumlogstop = value;
 		        this.ValidateProperty(LCD.SUMLOGSTOP, _sumlogstop);
-		        this.NotifyPropertyChanged(LCD.SUMLOGSTOP, _sumlogstop);
+		        this.NotifyPropertyChanged(LCD.SUMLOGSTOP);
 		    }
 		}
 		private Double _sumbdftrecv  = 0.0;
 		[XmlElement]
 		[Field (FieldName = "SumBDFTrecv",
-		 IsUnique = false,
 		 IsPersisted = true)]
 		public virtual Double SumBDFTrecv
 		{
@@ -8431,13 +8157,12 @@ namespace CruiseDAL.DataObjects
 		        if(_sumbdftrecv == value) { return; }
 		        _sumbdftrecv = value;
 		        this.ValidateProperty(LCD.SUMBDFTRECV, _sumbdftrecv);
-		        this.NotifyPropertyChanged(LCD.SUMBDFTRECV, _sumbdftrecv);
+		        this.NotifyPropertyChanged(LCD.SUMBDFTRECV);
 		    }
 		}
 		private Double _sumcuftrecv  = 0.0;
 		[XmlElement]
 		[Field (FieldName = "SumCUFTrecv",
-		 IsUnique = false,
 		 IsPersisted = true)]
 		public virtual Double SumCUFTrecv
 		{
@@ -8450,13 +8175,12 @@ namespace CruiseDAL.DataObjects
 		        if(_sumcuftrecv == value) { return; }
 		        _sumcuftrecv = value;
 		        this.ValidateProperty(LCD.SUMCUFTRECV, _sumcuftrecv);
-		        this.NotifyPropertyChanged(LCD.SUMCUFTRECV, _sumcuftrecv);
+		        this.NotifyPropertyChanged(LCD.SUMCUFTRECV);
 		    }
 		}
 		private Double _sumcordsrecv  = 0.0;
 		[XmlElement]
 		[Field (FieldName = "SumCordsRecv",
-		 IsUnique = false,
 		 IsPersisted = true)]
 		public virtual Double SumCordsRecv
 		{
@@ -8469,13 +8193,12 @@ namespace CruiseDAL.DataObjects
 		        if(_sumcordsrecv == value) { return; }
 		        _sumcordsrecv = value;
 		        this.ValidateProperty(LCD.SUMCORDSRECV, _sumcordsrecv);
-		        this.NotifyPropertyChanged(LCD.SUMCORDSRECV, _sumcordsrecv);
+		        this.NotifyPropertyChanged(LCD.SUMCORDSRECV);
 		    }
 		}
 		private Double _sumvaluerecv  = 0.0;
 		[XmlElement]
 		[Field (FieldName = "SumValueRecv",
-		 IsUnique = false,
 		 IsPersisted = true)]
 		public virtual Double SumValueRecv
 		{
@@ -8488,13 +8211,12 @@ namespace CruiseDAL.DataObjects
 		        if(_sumvaluerecv == value) { return; }
 		        _sumvaluerecv = value;
 		        this.ValidateProperty(LCD.SUMVALUERECV, _sumvaluerecv);
-		        this.NotifyPropertyChanged(LCD.SUMVALUERECV, _sumvaluerecv);
+		        this.NotifyPropertyChanged(LCD.SUMVALUERECV);
 		    }
 		}
 		private Double _biomassproduct  = 0.0;
 		[XmlElement]
 		[Field (FieldName = "BiomassProduct",
-		 IsUnique = false,
 		 IsPersisted = true)]
 		public virtual Double BiomassProduct
 		{
@@ -8507,13 +8229,12 @@ namespace CruiseDAL.DataObjects
 		        if(_biomassproduct == value) { return; }
 		        _biomassproduct = value;
 		        this.ValidateProperty(LCD.BIOMASSPRODUCT, _biomassproduct);
-		        this.NotifyPropertyChanged(LCD.BIOMASSPRODUCT, _biomassproduct);
+		        this.NotifyPropertyChanged(LCD.BIOMASSPRODUCT);
 		    }
 		}
 		private Double _sumwgtbat  = 0.0;
 		[XmlElement]
 		[Field (FieldName = "SumWgtBAT",
-		 IsUnique = false,
 		 IsPersisted = true)]
 		public virtual Double SumWgtBAT
 		{
@@ -8526,13 +8247,12 @@ namespace CruiseDAL.DataObjects
 		        if(_sumwgtbat == value) { return; }
 		        _sumwgtbat = value;
 		        this.ValidateProperty(LCD.SUMWGTBAT, _sumwgtbat);
-		        this.NotifyPropertyChanged(LCD.SUMWGTBAT, _sumwgtbat);
+		        this.NotifyPropertyChanged(LCD.SUMWGTBAT);
 		    }
 		}
 		private Double _sumwgtbbl  = 0.0;
 		[XmlElement]
 		[Field (FieldName = "SumWgtBBL",
-		 IsUnique = false,
 		 IsPersisted = true)]
 		public virtual Double SumWgtBBL
 		{
@@ -8545,13 +8265,12 @@ namespace CruiseDAL.DataObjects
 		        if(_sumwgtbbl == value) { return; }
 		        _sumwgtbbl = value;
 		        this.ValidateProperty(LCD.SUMWGTBBL, _sumwgtbbl);
-		        this.NotifyPropertyChanged(LCD.SUMWGTBBL, _sumwgtbbl);
+		        this.NotifyPropertyChanged(LCD.SUMWGTBBL);
 		    }
 		}
 		private Double _sumwgtbbd  = 0.0;
 		[XmlElement]
 		[Field (FieldName = "SumWgtBBD",
-		 IsUnique = false,
 		 IsPersisted = true)]
 		public virtual Double SumWgtBBD
 		{
@@ -8564,13 +8283,12 @@ namespace CruiseDAL.DataObjects
 		        if(_sumwgtbbd == value) { return; }
 		        _sumwgtbbd = value;
 		        this.ValidateProperty(LCD.SUMWGTBBD, _sumwgtbbd);
-		        this.NotifyPropertyChanged(LCD.SUMWGTBBD, _sumwgtbbd);
+		        this.NotifyPropertyChanged(LCD.SUMWGTBBD);
 		    }
 		}
 		private Double _sumwgtbft  = 0.0;
 		[XmlElement]
 		[Field (FieldName = "SumWgtBFT",
-		 IsUnique = false,
 		 IsPersisted = true)]
 		public virtual Double SumWgtBFT
 		{
@@ -8583,13 +8301,12 @@ namespace CruiseDAL.DataObjects
 		        if(_sumwgtbft == value) { return; }
 		        _sumwgtbft = value;
 		        this.ValidateProperty(LCD.SUMWGTBFT, _sumwgtbft);
-		        this.NotifyPropertyChanged(LCD.SUMWGTBFT, _sumwgtbft);
+		        this.NotifyPropertyChanged(LCD.SUMWGTBFT);
 		    }
 		}
 		private Double _sumwgttip  = 0.0;
 		[XmlElement]
 		[Field (FieldName = "SumWgtTip",
-		 IsUnique = false,
 		 IsPersisted = true)]
 		public virtual Double SumWgtTip
 		{
@@ -8602,7 +8319,7 @@ namespace CruiseDAL.DataObjects
 		        if(_sumwgttip == value) { return; }
 		        _sumwgttip = value;
 		        this.ValidateProperty(LCD.SUMWGTTIP, _sumwgttip);
-		        this.NotifyPropertyChanged(LCD.SUMWGTTIP, _sumwgttip);
+		        this.NotifyPropertyChanged(LCD.SUMWGTTIP);
 		    }
 		}
 
@@ -8732,7 +8449,7 @@ namespace CruiseDAL.DataObjects
 		}
 	}
 	[SQLEntity(SourceName = "POP")]
-	public partial class POPDO : DataObject
+	public partial class POPDO : DataObjectExtra
 	{
 		//private static Persister persister;
 		private static RowValidator _validator;
@@ -8786,7 +8503,6 @@ namespace CruiseDAL.DataObjects
 		private String _cutleave ;
 		[XmlElement]
 		[Field (FieldName = "CutLeave",
-		 IsUnique = false,
 		 IsPersisted = true)]
 		public virtual String CutLeave
 		{
@@ -8799,13 +8515,12 @@ namespace CruiseDAL.DataObjects
 		        if(_cutleave == value) { return; }
 		        _cutleave = value;
 		        this.ValidateProperty(POP.CUTLEAVE, _cutleave);
-		        this.NotifyPropertyChanged(POP.CUTLEAVE, _cutleave);
+		        this.NotifyPropertyChanged(POP.CUTLEAVE);
 		    }
 		}
 		private String _stratum ;
 		[XmlElement]
 		[Field (FieldName = "Stratum",
-		 IsUnique = false,
 		 IsPersisted = true)]
 		public virtual String Stratum
 		{
@@ -8818,13 +8533,12 @@ namespace CruiseDAL.DataObjects
 		        if(_stratum == value) { return; }
 		        _stratum = value;
 		        this.ValidateProperty(POP.STRATUM, _stratum);
-		        this.NotifyPropertyChanged(POP.STRATUM, _stratum);
+		        this.NotifyPropertyChanged(POP.STRATUM);
 		    }
 		}
 		private String _samplegroup ;
 		[XmlElement]
 		[Field (FieldName = "SampleGroup",
-		 IsUnique = false,
 		 IsPersisted = true)]
 		public virtual String SampleGroup
 		{
@@ -8837,13 +8551,12 @@ namespace CruiseDAL.DataObjects
 		        if(_samplegroup == value) { return; }
 		        _samplegroup = value;
 		        this.ValidateProperty(POP.SAMPLEGROUP, _samplegroup);
-		        this.NotifyPropertyChanged(POP.SAMPLEGROUP, _samplegroup);
+		        this.NotifyPropertyChanged(POP.SAMPLEGROUP);
 		    }
 		}
 		private String _primaryproduct ;
 		[XmlElement]
 		[Field (FieldName = "PrimaryProduct",
-		 IsUnique = false,
 		 IsPersisted = true)]
 		public virtual String PrimaryProduct
 		{
@@ -8856,13 +8569,12 @@ namespace CruiseDAL.DataObjects
 		        if(_primaryproduct == value) { return; }
 		        _primaryproduct = value;
 		        this.ValidateProperty(POP.PRIMARYPRODUCT, _primaryproduct);
-		        this.NotifyPropertyChanged(POP.PRIMARYPRODUCT, _primaryproduct);
+		        this.NotifyPropertyChanged(POP.PRIMARYPRODUCT);
 		    }
 		}
 		private String _secondaryproduct ;
 		[XmlElement]
 		[Field (FieldName = "SecondaryProduct",
-		 IsUnique = false,
 		 IsPersisted = true)]
 		public virtual String SecondaryProduct
 		{
@@ -8875,13 +8587,12 @@ namespace CruiseDAL.DataObjects
 		        if(_secondaryproduct == value) { return; }
 		        _secondaryproduct = value;
 		        this.ValidateProperty(POP.SECONDARYPRODUCT, _secondaryproduct);
-		        this.NotifyPropertyChanged(POP.SECONDARYPRODUCT, _secondaryproduct);
+		        this.NotifyPropertyChanged(POP.SECONDARYPRODUCT);
 		    }
 		}
 		private String _stm ;
 		[XmlElement]
 		[Field (FieldName = "STM",
-		 IsUnique = false,
 		 IsPersisted = true)]
 		public virtual String STM
 		{
@@ -8894,13 +8605,12 @@ namespace CruiseDAL.DataObjects
 		        if(_stm == value) { return; }
 		        _stm = value;
 		        this.ValidateProperty(POP.STM, _stm);
-		        this.NotifyPropertyChanged(POP.STM, _stm);
+		        this.NotifyPropertyChanged(POP.STM);
 		    }
 		}
 		private String _uom ;
 		[XmlElement]
 		[Field (FieldName = "UOM",
-		 IsUnique = false,
 		 IsPersisted = true)]
 		public virtual String UOM
 		{
@@ -8913,13 +8623,12 @@ namespace CruiseDAL.DataObjects
 		        if(_uom == value) { return; }
 		        _uom = value;
 		        this.ValidateProperty(POP.UOM, _uom);
-		        this.NotifyPropertyChanged(POP.UOM, _uom);
+		        this.NotifyPropertyChanged(POP.UOM);
 		    }
 		}
 		private Double _firststagetrees  = 0.0;
 		[XmlElement]
 		[Field (FieldName = "FirstStageTrees",
-		 IsUnique = false,
 		 IsPersisted = true)]
 		public virtual Double FirstStageTrees
 		{
@@ -8932,13 +8641,12 @@ namespace CruiseDAL.DataObjects
 		        if(_firststagetrees == value) { return; }
 		        _firststagetrees = value;
 		        this.ValidateProperty(POP.FIRSTSTAGETREES, _firststagetrees);
-		        this.NotifyPropertyChanged(POP.FIRSTSTAGETREES, _firststagetrees);
+		        this.NotifyPropertyChanged(POP.FIRSTSTAGETREES);
 		    }
 		}
 		private Double _measuredtrees  = 0.0;
 		[XmlElement]
 		[Field (FieldName = "MeasuredTrees",
-		 IsUnique = false,
 		 IsPersisted = true)]
 		public virtual Double MeasuredTrees
 		{
@@ -8951,13 +8659,12 @@ namespace CruiseDAL.DataObjects
 		        if(_measuredtrees == value) { return; }
 		        _measuredtrees = value;
 		        this.ValidateProperty(POP.MEASUREDTREES, _measuredtrees);
-		        this.NotifyPropertyChanged(POP.MEASUREDTREES, _measuredtrees);
+		        this.NotifyPropertyChanged(POP.MEASUREDTREES);
 		    }
 		}
 		private Double _talliedtrees  = 0.0;
 		[XmlElement]
 		[Field (FieldName = "TalliedTrees",
-		 IsUnique = false,
 		 IsPersisted = true)]
 		public virtual Double TalliedTrees
 		{
@@ -8970,13 +8677,12 @@ namespace CruiseDAL.DataObjects
 		        if(_talliedtrees == value) { return; }
 		        _talliedtrees = value;
 		        this.ValidateProperty(POP.TALLIEDTREES, _talliedtrees);
-		        this.NotifyPropertyChanged(POP.TALLIEDTREES, _talliedtrees);
+		        this.NotifyPropertyChanged(POP.TALLIEDTREES);
 		    }
 		}
 		private Double _sumkpi  = 0.0;
 		[XmlElement]
 		[Field (FieldName = "SumKPI",
-		 IsUnique = false,
 		 IsPersisted = true)]
 		public virtual Double SumKPI
 		{
@@ -8989,13 +8695,12 @@ namespace CruiseDAL.DataObjects
 		        if(_sumkpi == value) { return; }
 		        _sumkpi = value;
 		        this.ValidateProperty(POP.SUMKPI, _sumkpi);
-		        this.NotifyPropertyChanged(POP.SUMKPI, _sumkpi);
+		        this.NotifyPropertyChanged(POP.SUMKPI);
 		    }
 		}
 		private Double _summeasuredkpi  = 0.0;
 		[XmlElement]
 		[Field (FieldName = "SumMeasuredKPI",
-		 IsUnique = false,
 		 IsPersisted = true)]
 		public virtual Double SumMeasuredKPI
 		{
@@ -9008,13 +8713,12 @@ namespace CruiseDAL.DataObjects
 		        if(_summeasuredkpi == value) { return; }
 		        _summeasuredkpi = value;
 		        this.ValidateProperty(POP.SUMMEASUREDKPI, _summeasuredkpi);
-		        this.NotifyPropertyChanged(POP.SUMMEASUREDKPI, _summeasuredkpi);
+		        this.NotifyPropertyChanged(POP.SUMMEASUREDKPI);
 		    }
 		}
 		private Double _stageonesamples  = 0.0;
 		[XmlElement]
 		[Field (FieldName = "StageOneSamples",
-		 IsUnique = false,
 		 IsPersisted = true)]
 		public virtual Double StageOneSamples
 		{
@@ -9027,13 +8731,12 @@ namespace CruiseDAL.DataObjects
 		        if(_stageonesamples == value) { return; }
 		        _stageonesamples = value;
 		        this.ValidateProperty(POP.STAGEONESAMPLES, _stageonesamples);
-		        this.NotifyPropertyChanged(POP.STAGEONESAMPLES, _stageonesamples);
+		        this.NotifyPropertyChanged(POP.STAGEONESAMPLES);
 		    }
 		}
 		private Double _stagetwosamples  = 0.0;
 		[XmlElement]
 		[Field (FieldName = "StageTwoSamples",
-		 IsUnique = false,
 		 IsPersisted = true)]
 		public virtual Double StageTwoSamples
 		{
@@ -9046,13 +8749,12 @@ namespace CruiseDAL.DataObjects
 		        if(_stagetwosamples == value) { return; }
 		        _stagetwosamples = value;
 		        this.ValidateProperty(POP.STAGETWOSAMPLES, _stagetwosamples);
-		        this.NotifyPropertyChanged(POP.STAGETWOSAMPLES, _stagetwosamples);
+		        this.NotifyPropertyChanged(POP.STAGETWOSAMPLES);
 		    }
 		}
 		private Double _stg1grossxpp  = 0.0;
 		[XmlElement]
 		[Field (FieldName = "Stg1GrossXPP",
-		 IsUnique = false,
 		 IsPersisted = true)]
 		public virtual Double Stg1GrossXPP
 		{
@@ -9065,13 +8767,12 @@ namespace CruiseDAL.DataObjects
 		        if(_stg1grossxpp == value) { return; }
 		        _stg1grossxpp = value;
 		        this.ValidateProperty(POP.STG1GROSSXPP, _stg1grossxpp);
-		        this.NotifyPropertyChanged(POP.STG1GROSSXPP, _stg1grossxpp);
+		        this.NotifyPropertyChanged(POP.STG1GROSSXPP);
 		    }
 		}
 		private Double _stg1grossxsqrdpp  = 0.0;
 		[XmlElement]
 		[Field (FieldName = "Stg1GrossXsqrdPP",
-		 IsUnique = false,
 		 IsPersisted = true)]
 		public virtual Double Stg1GrossXsqrdPP
 		{
@@ -9084,13 +8785,12 @@ namespace CruiseDAL.DataObjects
 		        if(_stg1grossxsqrdpp == value) { return; }
 		        _stg1grossxsqrdpp = value;
 		        this.ValidateProperty(POP.STG1GROSSXSQRDPP, _stg1grossxsqrdpp);
-		        this.NotifyPropertyChanged(POP.STG1GROSSXSQRDPP, _stg1grossxsqrdpp);
+		        this.NotifyPropertyChanged(POP.STG1GROSSXSQRDPP);
 		    }
 		}
 		private Double _stg1netxpp  = 0.0;
 		[XmlElement]
 		[Field (FieldName = "Stg1NetXPP",
-		 IsUnique = false,
 		 IsPersisted = true)]
 		public virtual Double Stg1NetXPP
 		{
@@ -9103,13 +8803,12 @@ namespace CruiseDAL.DataObjects
 		        if(_stg1netxpp == value) { return; }
 		        _stg1netxpp = value;
 		        this.ValidateProperty(POP.STG1NETXPP, _stg1netxpp);
-		        this.NotifyPropertyChanged(POP.STG1NETXPP, _stg1netxpp);
+		        this.NotifyPropertyChanged(POP.STG1NETXPP);
 		    }
 		}
 		private Double _stg1netxsqrdpp  = 0.0;
 		[XmlElement]
 		[Field (FieldName = "Stg1NetXsqrdPP",
-		 IsUnique = false,
 		 IsPersisted = true)]
 		public virtual Double Stg1NetXsqrdPP
 		{
@@ -9122,13 +8821,12 @@ namespace CruiseDAL.DataObjects
 		        if(_stg1netxsqrdpp == value) { return; }
 		        _stg1netxsqrdpp = value;
 		        this.ValidateProperty(POP.STG1NETXSQRDPP, _stg1netxsqrdpp);
-		        this.NotifyPropertyChanged(POP.STG1NETXSQRDPP, _stg1netxsqrdpp);
+		        this.NotifyPropertyChanged(POP.STG1NETXSQRDPP);
 		    }
 		}
 		private Double _stg1valuexpp  = 0.0;
 		[XmlElement]
 		[Field (FieldName = "Stg1ValueXPP",
-		 IsUnique = false,
 		 IsPersisted = true)]
 		public virtual Double Stg1ValueXPP
 		{
@@ -9141,13 +8839,12 @@ namespace CruiseDAL.DataObjects
 		        if(_stg1valuexpp == value) { return; }
 		        _stg1valuexpp = value;
 		        this.ValidateProperty(POP.STG1VALUEXPP, _stg1valuexpp);
-		        this.NotifyPropertyChanged(POP.STG1VALUEXPP, _stg1valuexpp);
+		        this.NotifyPropertyChanged(POP.STG1VALUEXPP);
 		    }
 		}
 		private Double _stg1valuexsqrdpp  = 0.0;
 		[XmlElement]
 		[Field (FieldName = "Stg1ValueXsqrdPP",
-		 IsUnique = false,
 		 IsPersisted = true)]
 		public virtual Double Stg1ValueXsqrdPP
 		{
@@ -9160,13 +8857,12 @@ namespace CruiseDAL.DataObjects
 		        if(_stg1valuexsqrdpp == value) { return; }
 		        _stg1valuexsqrdpp = value;
 		        this.ValidateProperty(POP.STG1VALUEXSQRDPP, _stg1valuexsqrdpp);
-		        this.NotifyPropertyChanged(POP.STG1VALUEXSQRDPP, _stg1valuexsqrdpp);
+		        this.NotifyPropertyChanged(POP.STG1VALUEXSQRDPP);
 		    }
 		}
 		private Double _stg2grossxpp  = 0.0;
 		[XmlElement]
 		[Field (FieldName = "Stg2GrossXPP",
-		 IsUnique = false,
 		 IsPersisted = true)]
 		public virtual Double Stg2GrossXPP
 		{
@@ -9179,13 +8875,12 @@ namespace CruiseDAL.DataObjects
 		        if(_stg2grossxpp == value) { return; }
 		        _stg2grossxpp = value;
 		        this.ValidateProperty(POP.STG2GROSSXPP, _stg2grossxpp);
-		        this.NotifyPropertyChanged(POP.STG2GROSSXPP, _stg2grossxpp);
+		        this.NotifyPropertyChanged(POP.STG2GROSSXPP);
 		    }
 		}
 		private Double _stg2grossxsqrdpp  = 0.0;
 		[XmlElement]
 		[Field (FieldName = "Stg2GrossXsqrdPP",
-		 IsUnique = false,
 		 IsPersisted = true)]
 		public virtual Double Stg2GrossXsqrdPP
 		{
@@ -9198,13 +8893,12 @@ namespace CruiseDAL.DataObjects
 		        if(_stg2grossxsqrdpp == value) { return; }
 		        _stg2grossxsqrdpp = value;
 		        this.ValidateProperty(POP.STG2GROSSXSQRDPP, _stg2grossxsqrdpp);
-		        this.NotifyPropertyChanged(POP.STG2GROSSXSQRDPP, _stg2grossxsqrdpp);
+		        this.NotifyPropertyChanged(POP.STG2GROSSXSQRDPP);
 		    }
 		}
 		private Double _stg2netxpp  = 0.0;
 		[XmlElement]
 		[Field (FieldName = "Stg2NetXPP",
-		 IsUnique = false,
 		 IsPersisted = true)]
 		public virtual Double Stg2NetXPP
 		{
@@ -9217,13 +8911,12 @@ namespace CruiseDAL.DataObjects
 		        if(_stg2netxpp == value) { return; }
 		        _stg2netxpp = value;
 		        this.ValidateProperty(POP.STG2NETXPP, _stg2netxpp);
-		        this.NotifyPropertyChanged(POP.STG2NETXPP, _stg2netxpp);
+		        this.NotifyPropertyChanged(POP.STG2NETXPP);
 		    }
 		}
 		private Double _stg2netxsqrdpp  = 0.0;
 		[XmlElement]
 		[Field (FieldName = "Stg2NetXsqrdPP",
-		 IsUnique = false,
 		 IsPersisted = true)]
 		public virtual Double Stg2NetXsqrdPP
 		{
@@ -9236,13 +8929,12 @@ namespace CruiseDAL.DataObjects
 		        if(_stg2netxsqrdpp == value) { return; }
 		        _stg2netxsqrdpp = value;
 		        this.ValidateProperty(POP.STG2NETXSQRDPP, _stg2netxsqrdpp);
-		        this.NotifyPropertyChanged(POP.STG2NETXSQRDPP, _stg2netxsqrdpp);
+		        this.NotifyPropertyChanged(POP.STG2NETXSQRDPP);
 		    }
 		}
 		private Double _stg2valuexpp  = 0.0;
 		[XmlElement]
 		[Field (FieldName = "Stg2ValueXPP",
-		 IsUnique = false,
 		 IsPersisted = true)]
 		public virtual Double Stg2ValueXPP
 		{
@@ -9255,13 +8947,12 @@ namespace CruiseDAL.DataObjects
 		        if(_stg2valuexpp == value) { return; }
 		        _stg2valuexpp = value;
 		        this.ValidateProperty(POP.STG2VALUEXPP, _stg2valuexpp);
-		        this.NotifyPropertyChanged(POP.STG2VALUEXPP, _stg2valuexpp);
+		        this.NotifyPropertyChanged(POP.STG2VALUEXPP);
 		    }
 		}
 		private Double _stg2valuexsqrdpp  = 0.0;
 		[XmlElement]
 		[Field (FieldName = "Stg2ValueXsqrdPP",
-		 IsUnique = false,
 		 IsPersisted = true)]
 		public virtual Double Stg2ValueXsqrdPP
 		{
@@ -9274,13 +8965,12 @@ namespace CruiseDAL.DataObjects
 		        if(_stg2valuexsqrdpp == value) { return; }
 		        _stg2valuexsqrdpp = value;
 		        this.ValidateProperty(POP.STG2VALUEXSQRDPP, _stg2valuexsqrdpp);
-		        this.NotifyPropertyChanged(POP.STG2VALUEXSQRDPP, _stg2valuexsqrdpp);
+		        this.NotifyPropertyChanged(POP.STG2VALUEXSQRDPP);
 		    }
 		}
 		private Double _stg1grossxsp  = 0.0;
 		[XmlElement]
 		[Field (FieldName = "Stg1GrossXSP",
-		 IsUnique = false,
 		 IsPersisted = true)]
 		public virtual Double Stg1GrossXSP
 		{
@@ -9293,13 +8983,12 @@ namespace CruiseDAL.DataObjects
 		        if(_stg1grossxsp == value) { return; }
 		        _stg1grossxsp = value;
 		        this.ValidateProperty(POP.STG1GROSSXSP, _stg1grossxsp);
-		        this.NotifyPropertyChanged(POP.STG1GROSSXSP, _stg1grossxsp);
+		        this.NotifyPropertyChanged(POP.STG1GROSSXSP);
 		    }
 		}
 		private Double _stg1grossxsqrdsp  = 0.0;
 		[XmlElement]
 		[Field (FieldName = "Stg1GrossXsqrdSP",
-		 IsUnique = false,
 		 IsPersisted = true)]
 		public virtual Double Stg1GrossXsqrdSP
 		{
@@ -9312,13 +9001,12 @@ namespace CruiseDAL.DataObjects
 		        if(_stg1grossxsqrdsp == value) { return; }
 		        _stg1grossxsqrdsp = value;
 		        this.ValidateProperty(POP.STG1GROSSXSQRDSP, _stg1grossxsqrdsp);
-		        this.NotifyPropertyChanged(POP.STG1GROSSXSQRDSP, _stg1grossxsqrdsp);
+		        this.NotifyPropertyChanged(POP.STG1GROSSXSQRDSP);
 		    }
 		}
 		private Double _stg1netxsp  = 0.0;
 		[XmlElement]
 		[Field (FieldName = "Stg1NetXSP",
-		 IsUnique = false,
 		 IsPersisted = true)]
 		public virtual Double Stg1NetXSP
 		{
@@ -9331,13 +9019,12 @@ namespace CruiseDAL.DataObjects
 		        if(_stg1netxsp == value) { return; }
 		        _stg1netxsp = value;
 		        this.ValidateProperty(POP.STG1NETXSP, _stg1netxsp);
-		        this.NotifyPropertyChanged(POP.STG1NETXSP, _stg1netxsp);
+		        this.NotifyPropertyChanged(POP.STG1NETXSP);
 		    }
 		}
 		private Double _stg1netxsqrdsp  = 0.0;
 		[XmlElement]
 		[Field (FieldName = "Stg1NetXsqrdSP",
-		 IsUnique = false,
 		 IsPersisted = true)]
 		public virtual Double Stg1NetXsqrdSP
 		{
@@ -9350,13 +9037,12 @@ namespace CruiseDAL.DataObjects
 		        if(_stg1netxsqrdsp == value) { return; }
 		        _stg1netxsqrdsp = value;
 		        this.ValidateProperty(POP.STG1NETXSQRDSP, _stg1netxsqrdsp);
-		        this.NotifyPropertyChanged(POP.STG1NETXSQRDSP, _stg1netxsqrdsp);
+		        this.NotifyPropertyChanged(POP.STG1NETXSQRDSP);
 		    }
 		}
 		private Double _stg1valuexsp  = 0.0;
 		[XmlElement]
 		[Field (FieldName = "Stg1ValueXSP",
-		 IsUnique = false,
 		 IsPersisted = true)]
 		public virtual Double Stg1ValueXSP
 		{
@@ -9369,13 +9055,12 @@ namespace CruiseDAL.DataObjects
 		        if(_stg1valuexsp == value) { return; }
 		        _stg1valuexsp = value;
 		        this.ValidateProperty(POP.STG1VALUEXSP, _stg1valuexsp);
-		        this.NotifyPropertyChanged(POP.STG1VALUEXSP, _stg1valuexsp);
+		        this.NotifyPropertyChanged(POP.STG1VALUEXSP);
 		    }
 		}
 		private Double _stg1valuexsqrdsp  = 0.0;
 		[XmlElement]
 		[Field (FieldName = "Stg1ValueXsqrdSP",
-		 IsUnique = false,
 		 IsPersisted = true)]
 		public virtual Double Stg1ValueXsqrdSP
 		{
@@ -9388,13 +9073,12 @@ namespace CruiseDAL.DataObjects
 		        if(_stg1valuexsqrdsp == value) { return; }
 		        _stg1valuexsqrdsp = value;
 		        this.ValidateProperty(POP.STG1VALUEXSQRDSP, _stg1valuexsqrdsp);
-		        this.NotifyPropertyChanged(POP.STG1VALUEXSQRDSP, _stg1valuexsqrdsp);
+		        this.NotifyPropertyChanged(POP.STG1VALUEXSQRDSP);
 		    }
 		}
 		private Double _stg2grossxsp  = 0.0;
 		[XmlElement]
 		[Field (FieldName = "Stg2GrossXSP",
-		 IsUnique = false,
 		 IsPersisted = true)]
 		public virtual Double Stg2GrossXSP
 		{
@@ -9407,13 +9091,12 @@ namespace CruiseDAL.DataObjects
 		        if(_stg2grossxsp == value) { return; }
 		        _stg2grossxsp = value;
 		        this.ValidateProperty(POP.STG2GROSSXSP, _stg2grossxsp);
-		        this.NotifyPropertyChanged(POP.STG2GROSSXSP, _stg2grossxsp);
+		        this.NotifyPropertyChanged(POP.STG2GROSSXSP);
 		    }
 		}
 		private Double _stg2grossxsqrdsp  = 0.0;
 		[XmlElement]
 		[Field (FieldName = "Stg2GrossXsqrdSP",
-		 IsUnique = false,
 		 IsPersisted = true)]
 		public virtual Double Stg2GrossXsqrdSP
 		{
@@ -9426,13 +9109,12 @@ namespace CruiseDAL.DataObjects
 		        if(_stg2grossxsqrdsp == value) { return; }
 		        _stg2grossxsqrdsp = value;
 		        this.ValidateProperty(POP.STG2GROSSXSQRDSP, _stg2grossxsqrdsp);
-		        this.NotifyPropertyChanged(POP.STG2GROSSXSQRDSP, _stg2grossxsqrdsp);
+		        this.NotifyPropertyChanged(POP.STG2GROSSXSQRDSP);
 		    }
 		}
 		private Double _stg2netxsp  = 0.0;
 		[XmlElement]
 		[Field (FieldName = "Stg2NetXSP",
-		 IsUnique = false,
 		 IsPersisted = true)]
 		public virtual Double Stg2NetXSP
 		{
@@ -9445,13 +9127,12 @@ namespace CruiseDAL.DataObjects
 		        if(_stg2netxsp == value) { return; }
 		        _stg2netxsp = value;
 		        this.ValidateProperty(POP.STG2NETXSP, _stg2netxsp);
-		        this.NotifyPropertyChanged(POP.STG2NETXSP, _stg2netxsp);
+		        this.NotifyPropertyChanged(POP.STG2NETXSP);
 		    }
 		}
 		private Double _stg2netxsqrdsp  = 0.0;
 		[XmlElement]
 		[Field (FieldName = "Stg2NetXsqrdSP",
-		 IsUnique = false,
 		 IsPersisted = true)]
 		public virtual Double Stg2NetXsqrdSP
 		{
@@ -9464,13 +9145,12 @@ namespace CruiseDAL.DataObjects
 		        if(_stg2netxsqrdsp == value) { return; }
 		        _stg2netxsqrdsp = value;
 		        this.ValidateProperty(POP.STG2NETXSQRDSP, _stg2netxsqrdsp);
-		        this.NotifyPropertyChanged(POP.STG2NETXSQRDSP, _stg2netxsqrdsp);
+		        this.NotifyPropertyChanged(POP.STG2NETXSQRDSP);
 		    }
 		}
 		private Double _stg2valuexsp  = 0.0;
 		[XmlElement]
 		[Field (FieldName = "Stg2ValueXSP",
-		 IsUnique = false,
 		 IsPersisted = true)]
 		public virtual Double Stg2ValueXSP
 		{
@@ -9483,13 +9163,12 @@ namespace CruiseDAL.DataObjects
 		        if(_stg2valuexsp == value) { return; }
 		        _stg2valuexsp = value;
 		        this.ValidateProperty(POP.STG2VALUEXSP, _stg2valuexsp);
-		        this.NotifyPropertyChanged(POP.STG2VALUEXSP, _stg2valuexsp);
+		        this.NotifyPropertyChanged(POP.STG2VALUEXSP);
 		    }
 		}
 		private Double _stg2valuexsqrdsp  = 0.0;
 		[XmlElement]
 		[Field (FieldName = "Stg2ValueXsqrdSP",
-		 IsUnique = false,
 		 IsPersisted = true)]
 		public virtual Double Stg2ValueXsqrdSP
 		{
@@ -9502,13 +9181,12 @@ namespace CruiseDAL.DataObjects
 		        if(_stg2valuexsqrdsp == value) { return; }
 		        _stg2valuexsqrdsp = value;
 		        this.ValidateProperty(POP.STG2VALUEXSQRDSP, _stg2valuexsqrdsp);
-		        this.NotifyPropertyChanged(POP.STG2VALUEXSQRDSP, _stg2valuexsqrdsp);
+		        this.NotifyPropertyChanged(POP.STG2VALUEXSQRDSP);
 		    }
 		}
 		private Double _stg1grossxrp  = 0.0;
 		[XmlElement]
 		[Field (FieldName = "Stg1GrossXRP",
-		 IsUnique = false,
 		 IsPersisted = true)]
 		public virtual Double Stg1GrossXRP
 		{
@@ -9521,13 +9199,12 @@ namespace CruiseDAL.DataObjects
 		        if(_stg1grossxrp == value) { return; }
 		        _stg1grossxrp = value;
 		        this.ValidateProperty(POP.STG1GROSSXRP, _stg1grossxrp);
-		        this.NotifyPropertyChanged(POP.STG1GROSSXRP, _stg1grossxrp);
+		        this.NotifyPropertyChanged(POP.STG1GROSSXRP);
 		    }
 		}
 		private Double _stg1grossxsqrdrp  = 0.0;
 		[XmlElement]
 		[Field (FieldName = "Stg1GrossXsqrdRP",
-		 IsUnique = false,
 		 IsPersisted = true)]
 		public virtual Double Stg1GrossXsqrdRP
 		{
@@ -9540,13 +9217,12 @@ namespace CruiseDAL.DataObjects
 		        if(_stg1grossxsqrdrp == value) { return; }
 		        _stg1grossxsqrdrp = value;
 		        this.ValidateProperty(POP.STG1GROSSXSQRDRP, _stg1grossxsqrdrp);
-		        this.NotifyPropertyChanged(POP.STG1GROSSXSQRDRP, _stg1grossxsqrdrp);
+		        this.NotifyPropertyChanged(POP.STG1GROSSXSQRDRP);
 		    }
 		}
 		private Double _stg1netxrp  = 0.0;
 		[XmlElement]
 		[Field (FieldName = "Stg1NetXRP",
-		 IsUnique = false,
 		 IsPersisted = true)]
 		public virtual Double Stg1NetXRP
 		{
@@ -9559,13 +9235,12 @@ namespace CruiseDAL.DataObjects
 		        if(_stg1netxrp == value) { return; }
 		        _stg1netxrp = value;
 		        this.ValidateProperty(POP.STG1NETXRP, _stg1netxrp);
-		        this.NotifyPropertyChanged(POP.STG1NETXRP, _stg1netxrp);
+		        this.NotifyPropertyChanged(POP.STG1NETXRP);
 		    }
 		}
 		private Double _stg1netxrsqrdrp  = 0.0;
 		[XmlElement]
 		[Field (FieldName = "Stg1NetXRsqrdRP",
-		 IsUnique = false,
 		 IsPersisted = true)]
 		public virtual Double Stg1NetXRsqrdRP
 		{
@@ -9578,13 +9253,12 @@ namespace CruiseDAL.DataObjects
 		        if(_stg1netxrsqrdrp == value) { return; }
 		        _stg1netxrsqrdrp = value;
 		        this.ValidateProperty(POP.STG1NETXRSQRDRP, _stg1netxrsqrdrp);
-		        this.NotifyPropertyChanged(POP.STG1NETXRSQRDRP, _stg1netxrsqrdrp);
+		        this.NotifyPropertyChanged(POP.STG1NETXRSQRDRP);
 		    }
 		}
 		private Double _stg1valuexrp  = 0.0;
 		[XmlElement]
 		[Field (FieldName = "Stg1ValueXRP",
-		 IsUnique = false,
 		 IsPersisted = true)]
 		public virtual Double Stg1ValueXRP
 		{
@@ -9597,13 +9271,12 @@ namespace CruiseDAL.DataObjects
 		        if(_stg1valuexrp == value) { return; }
 		        _stg1valuexrp = value;
 		        this.ValidateProperty(POP.STG1VALUEXRP, _stg1valuexrp);
-		        this.NotifyPropertyChanged(POP.STG1VALUEXRP, _stg1valuexrp);
+		        this.NotifyPropertyChanged(POP.STG1VALUEXRP);
 		    }
 		}
 		private Double _stg1valuexsqrdrp  = 0.0;
 		[XmlElement]
 		[Field (FieldName = "Stg1ValueXsqrdRP",
-		 IsUnique = false,
 		 IsPersisted = true)]
 		public virtual Double Stg1ValueXsqrdRP
 		{
@@ -9616,13 +9289,12 @@ namespace CruiseDAL.DataObjects
 		        if(_stg1valuexsqrdrp == value) { return; }
 		        _stg1valuexsqrdrp = value;
 		        this.ValidateProperty(POP.STG1VALUEXSQRDRP, _stg1valuexsqrdrp);
-		        this.NotifyPropertyChanged(POP.STG1VALUEXSQRDRP, _stg1valuexsqrdrp);
+		        this.NotifyPropertyChanged(POP.STG1VALUEXSQRDRP);
 		    }
 		}
 		private Double _stg2grossxrp  = 0.0;
 		[XmlElement]
 		[Field (FieldName = "Stg2GrossXRP",
-		 IsUnique = false,
 		 IsPersisted = true)]
 		public virtual Double Stg2GrossXRP
 		{
@@ -9635,13 +9307,12 @@ namespace CruiseDAL.DataObjects
 		        if(_stg2grossxrp == value) { return; }
 		        _stg2grossxrp = value;
 		        this.ValidateProperty(POP.STG2GROSSXRP, _stg2grossxrp);
-		        this.NotifyPropertyChanged(POP.STG2GROSSXRP, _stg2grossxrp);
+		        this.NotifyPropertyChanged(POP.STG2GROSSXRP);
 		    }
 		}
 		private Double _stg2grossxsqrdrp  = 0.0;
 		[XmlElement]
 		[Field (FieldName = "Stg2GrossXsqrdRP",
-		 IsUnique = false,
 		 IsPersisted = true)]
 		public virtual Double Stg2GrossXsqrdRP
 		{
@@ -9654,13 +9325,12 @@ namespace CruiseDAL.DataObjects
 		        if(_stg2grossxsqrdrp == value) { return; }
 		        _stg2grossxsqrdrp = value;
 		        this.ValidateProperty(POP.STG2GROSSXSQRDRP, _stg2grossxsqrdrp);
-		        this.NotifyPropertyChanged(POP.STG2GROSSXSQRDRP, _stg2grossxsqrdrp);
+		        this.NotifyPropertyChanged(POP.STG2GROSSXSQRDRP);
 		    }
 		}
 		private Double _stg2netxrp  = 0.0;
 		[XmlElement]
 		[Field (FieldName = "Stg2NetXRP",
-		 IsUnique = false,
 		 IsPersisted = true)]
 		public virtual Double Stg2NetXRP
 		{
@@ -9673,13 +9343,12 @@ namespace CruiseDAL.DataObjects
 		        if(_stg2netxrp == value) { return; }
 		        _stg2netxrp = value;
 		        this.ValidateProperty(POP.STG2NETXRP, _stg2netxrp);
-		        this.NotifyPropertyChanged(POP.STG2NETXRP, _stg2netxrp);
+		        this.NotifyPropertyChanged(POP.STG2NETXRP);
 		    }
 		}
 		private Double _stg2netxsqrdrp  = 0.0;
 		[XmlElement]
 		[Field (FieldName = "Stg2NetXsqrdRP",
-		 IsUnique = false,
 		 IsPersisted = true)]
 		public virtual Double Stg2NetXsqrdRP
 		{
@@ -9692,13 +9361,12 @@ namespace CruiseDAL.DataObjects
 		        if(_stg2netxsqrdrp == value) { return; }
 		        _stg2netxsqrdrp = value;
 		        this.ValidateProperty(POP.STG2NETXSQRDRP, _stg2netxsqrdrp);
-		        this.NotifyPropertyChanged(POP.STG2NETXSQRDRP, _stg2netxsqrdrp);
+		        this.NotifyPropertyChanged(POP.STG2NETXSQRDRP);
 		    }
 		}
 		private Double _stg2valuexrp  = 0.0;
 		[XmlElement]
 		[Field (FieldName = "Stg2ValueXRP",
-		 IsUnique = false,
 		 IsPersisted = true)]
 		public virtual Double Stg2ValueXRP
 		{
@@ -9711,13 +9379,12 @@ namespace CruiseDAL.DataObjects
 		        if(_stg2valuexrp == value) { return; }
 		        _stg2valuexrp = value;
 		        this.ValidateProperty(POP.STG2VALUEXRP, _stg2valuexrp);
-		        this.NotifyPropertyChanged(POP.STG2VALUEXRP, _stg2valuexrp);
+		        this.NotifyPropertyChanged(POP.STG2VALUEXRP);
 		    }
 		}
 		private Double _stg2valuexsqrdrp  = 0.0;
 		[XmlElement]
 		[Field (FieldName = "Stg2ValueXsqrdRP",
-		 IsUnique = false,
 		 IsPersisted = true)]
 		public virtual Double Stg2ValueXsqrdRP
 		{
@@ -9730,7 +9397,7 @@ namespace CruiseDAL.DataObjects
 		        if(_stg2valuexsqrdrp == value) { return; }
 		        _stg2valuexsqrdrp = value;
 		        this.ValidateProperty(POP.STG2VALUEXSQRDRP, _stg2valuexsqrdrp);
-		        this.NotifyPropertyChanged(POP.STG2VALUEXSQRDRP, _stg2valuexsqrdrp);
+		        this.NotifyPropertyChanged(POP.STG2VALUEXSQRDRP);
 		    }
 		}
 
@@ -9854,7 +9521,7 @@ namespace CruiseDAL.DataObjects
 		}
 	}
 	[SQLEntity(SourceName = "PRO")]
-	public partial class PRODO : DataObject
+	public partial class PRODO : DataObjectExtra
 	{
 		//private static Persister persister;
 		private static RowValidator _validator;
@@ -9909,7 +9576,6 @@ namespace CruiseDAL.DataObjects
 		private String _cutleave ;
 		[XmlElement]
 		[Field (FieldName = "CutLeave",
-		 IsUnique = false,
 		 IsPersisted = true)]
 		public virtual String CutLeave
 		{
@@ -9922,13 +9588,12 @@ namespace CruiseDAL.DataObjects
 		        if(_cutleave == value) { return; }
 		        _cutleave = value;
 		        this.ValidateProperty(PRO.CUTLEAVE, _cutleave);
-		        this.NotifyPropertyChanged(PRO.CUTLEAVE, _cutleave);
+		        this.NotifyPropertyChanged(PRO.CUTLEAVE);
 		    }
 		}
 		private String _stratum ;
 		[XmlElement]
 		[Field (FieldName = "Stratum",
-		 IsUnique = false,
 		 IsPersisted = true)]
 		public virtual String Stratum
 		{
@@ -9941,13 +9606,12 @@ namespace CruiseDAL.DataObjects
 		        if(_stratum == value) { return; }
 		        _stratum = value;
 		        this.ValidateProperty(PRO.STRATUM, _stratum);
-		        this.NotifyPropertyChanged(PRO.STRATUM, _stratum);
+		        this.NotifyPropertyChanged(PRO.STRATUM);
 		    }
 		}
 		private String _cuttingunit ;
 		[XmlElement]
 		[Field (FieldName = "CuttingUnit",
-		 IsUnique = false,
 		 IsPersisted = true)]
 		public virtual String CuttingUnit
 		{
@@ -9960,13 +9624,12 @@ namespace CruiseDAL.DataObjects
 		        if(_cuttingunit == value) { return; }
 		        _cuttingunit = value;
 		        this.ValidateProperty(PRO.CUTTINGUNIT, _cuttingunit);
-		        this.NotifyPropertyChanged(PRO.CUTTINGUNIT, _cuttingunit);
+		        this.NotifyPropertyChanged(PRO.CUTTINGUNIT);
 		    }
 		}
 		private String _samplegroup ;
 		[XmlElement]
 		[Field (FieldName = "SampleGroup",
-		 IsUnique = false,
 		 IsPersisted = true)]
 		public virtual String SampleGroup
 		{
@@ -9979,13 +9642,12 @@ namespace CruiseDAL.DataObjects
 		        if(_samplegroup == value) { return; }
 		        _samplegroup = value;
 		        this.ValidateProperty(PRO.SAMPLEGROUP, _samplegroup);
-		        this.NotifyPropertyChanged(PRO.SAMPLEGROUP, _samplegroup);
+		        this.NotifyPropertyChanged(PRO.SAMPLEGROUP);
 		    }
 		}
 		private String _primaryproduct ;
 		[XmlElement]
 		[Field (FieldName = "PrimaryProduct",
-		 IsUnique = false,
 		 IsPersisted = true)]
 		public virtual String PrimaryProduct
 		{
@@ -9998,13 +9660,12 @@ namespace CruiseDAL.DataObjects
 		        if(_primaryproduct == value) { return; }
 		        _primaryproduct = value;
 		        this.ValidateProperty(PRO.PRIMARYPRODUCT, _primaryproduct);
-		        this.NotifyPropertyChanged(PRO.PRIMARYPRODUCT, _primaryproduct);
+		        this.NotifyPropertyChanged(PRO.PRIMARYPRODUCT);
 		    }
 		}
 		private String _secondaryproduct ;
 		[XmlElement]
 		[Field (FieldName = "SecondaryProduct",
-		 IsUnique = false,
 		 IsPersisted = true)]
 		public virtual String SecondaryProduct
 		{
@@ -10017,13 +9678,12 @@ namespace CruiseDAL.DataObjects
 		        if(_secondaryproduct == value) { return; }
 		        _secondaryproduct = value;
 		        this.ValidateProperty(PRO.SECONDARYPRODUCT, _secondaryproduct);
-		        this.NotifyPropertyChanged(PRO.SECONDARYPRODUCT, _secondaryproduct);
+		        this.NotifyPropertyChanged(PRO.SECONDARYPRODUCT);
 		    }
 		}
 		private String _uom ;
 		[XmlElement]
 		[Field (FieldName = "UOM",
-		 IsUnique = false,
 		 IsPersisted = true)]
 		public virtual String UOM
 		{
@@ -10036,13 +9696,12 @@ namespace CruiseDAL.DataObjects
 		        if(_uom == value) { return; }
 		        _uom = value;
 		        this.ValidateProperty(PRO.UOM, _uom);
-		        this.NotifyPropertyChanged(PRO.UOM, _uom);
+		        this.NotifyPropertyChanged(PRO.UOM);
 		    }
 		}
 		private String _stm ;
 		[XmlElement]
 		[Field (FieldName = "STM",
-		 IsUnique = false,
 		 IsPersisted = true)]
 		public virtual String STM
 		{
@@ -10055,13 +9714,12 @@ namespace CruiseDAL.DataObjects
 		        if(_stm == value) { return; }
 		        _stm = value;
 		        this.ValidateProperty(PRO.STM, _stm);
-		        this.NotifyPropertyChanged(PRO.STM, _stm);
+		        this.NotifyPropertyChanged(PRO.STM);
 		    }
 		}
 		private Double _firststagetrees  = 0.0;
 		[XmlElement]
 		[Field (FieldName = "FirstStageTrees",
-		 IsUnique = false,
 		 IsPersisted = true)]
 		public virtual Double FirstStageTrees
 		{
@@ -10074,13 +9732,12 @@ namespace CruiseDAL.DataObjects
 		        if(_firststagetrees == value) { return; }
 		        _firststagetrees = value;
 		        this.ValidateProperty(PRO.FIRSTSTAGETREES, _firststagetrees);
-		        this.NotifyPropertyChanged(PRO.FIRSTSTAGETREES, _firststagetrees);
+		        this.NotifyPropertyChanged(PRO.FIRSTSTAGETREES);
 		    }
 		}
 		private Double _measuredtrees  = 0.0;
 		[XmlElement]
 		[Field (FieldName = "MeasuredTrees",
-		 IsUnique = false,
 		 IsPersisted = true)]
 		public virtual Double MeasuredTrees
 		{
@@ -10093,13 +9750,12 @@ namespace CruiseDAL.DataObjects
 		        if(_measuredtrees == value) { return; }
 		        _measuredtrees = value;
 		        this.ValidateProperty(PRO.MEASUREDTREES, _measuredtrees);
-		        this.NotifyPropertyChanged(PRO.MEASUREDTREES, _measuredtrees);
+		        this.NotifyPropertyChanged(PRO.MEASUREDTREES);
 		    }
 		}
 		private Double _talliedtrees  = 0.0;
 		[XmlElement]
 		[Field (FieldName = "TalliedTrees",
-		 IsUnique = false,
 		 IsPersisted = true)]
 		public virtual Double TalliedTrees
 		{
@@ -10112,13 +9768,12 @@ namespace CruiseDAL.DataObjects
 		        if(_talliedtrees == value) { return; }
 		        _talliedtrees = value;
 		        this.ValidateProperty(PRO.TALLIEDTREES, _talliedtrees);
-		        this.NotifyPropertyChanged(PRO.TALLIEDTREES, _talliedtrees);
+		        this.NotifyPropertyChanged(PRO.TALLIEDTREES);
 		    }
 		}
 		private Double _sumkpi  = 0.0;
 		[XmlElement]
 		[Field (FieldName = "SumKPI",
-		 IsUnique = false,
 		 IsPersisted = true)]
 		public virtual Double SumKPI
 		{
@@ -10131,13 +9786,12 @@ namespace CruiseDAL.DataObjects
 		        if(_sumkpi == value) { return; }
 		        _sumkpi = value;
 		        this.ValidateProperty(PRO.SUMKPI, _sumkpi);
-		        this.NotifyPropertyChanged(PRO.SUMKPI, _sumkpi);
+		        this.NotifyPropertyChanged(PRO.SUMKPI);
 		    }
 		}
 		private Double _summeasuredkpi  = 0.0;
 		[XmlElement]
 		[Field (FieldName = "SumMeasuredKPI",
-		 IsUnique = false,
 		 IsPersisted = true)]
 		public virtual Double SumMeasuredKPI
 		{
@@ -10150,13 +9804,12 @@ namespace CruiseDAL.DataObjects
 		        if(_summeasuredkpi == value) { return; }
 		        _summeasuredkpi = value;
 		        this.ValidateProperty(PRO.SUMMEASUREDKPI, _summeasuredkpi);
-		        this.NotifyPropertyChanged(PRO.SUMMEASUREDKPI, _summeasuredkpi);
+		        this.NotifyPropertyChanged(PRO.SUMMEASUREDKPI);
 		    }
 		}
 		private Double _prorationfactor  = 0.0;
 		[XmlElement]
 		[Field (FieldName = "ProrationFactor",
-		 IsUnique = false,
 		 IsPersisted = true)]
 		public virtual Double ProrationFactor
 		{
@@ -10169,13 +9822,12 @@ namespace CruiseDAL.DataObjects
 		        if(_prorationfactor == value) { return; }
 		        _prorationfactor = value;
 		        this.ValidateProperty(PRO.PRORATIONFACTOR, _prorationfactor);
-		        this.NotifyPropertyChanged(PRO.PRORATIONFACTOR, _prorationfactor);
+		        this.NotifyPropertyChanged(PRO.PRORATIONFACTOR);
 		    }
 		}
 		private Double _proratedestimatedtrees  = 0.0;
 		[XmlElement]
 		[Field (FieldName = "ProratedEstimatedTrees",
-		 IsUnique = false,
 		 IsPersisted = true)]
 		public virtual Double ProratedEstimatedTrees
 		{
@@ -10188,7 +9840,7 @@ namespace CruiseDAL.DataObjects
 		        if(_proratedestimatedtrees == value) { return; }
 		        _proratedestimatedtrees = value;
 		        this.ValidateProperty(PRO.PRORATEDESTIMATEDTREES, _proratedestimatedtrees);
-		        this.NotifyPropertyChanged(PRO.PRORATEDESTIMATEDTREES, _proratedestimatedtrees);
+		        this.NotifyPropertyChanged(PRO.PRORATEDESTIMATEDTREES);
 		    }
 		}
 
@@ -10242,7 +9894,7 @@ namespace CruiseDAL.DataObjects
 		}
 	}
 	[SQLEntity(SourceName = "LogStock")]
-	public partial class LogStockDO : DataObject
+	public partial class LogStockDO : DataObjectExtra
 	{
 		//private static Persister persister;
 		private static RowValidator _validator;
@@ -10292,7 +9944,6 @@ namespace CruiseDAL.DataObjects
 		private long? _tree_cn ;
 		[XmlIgnore]
 		[Field (FieldName = "Tree_CN",
-		 IsUnique = true,
 		 IsPersisted = true)]
 		public virtual long? Tree_CN
 		{
@@ -10311,7 +9962,7 @@ namespace CruiseDAL.DataObjects
 		        if(value == null || value.Value == 0) { _tree = null;  }
 		        _tree_cn = value;
 		        this.ValidateProperty(LOGSTOCK.TREE_CN, _tree_cn);
-		        this.NotifyPropertyChanged(LOGSTOCK.TREE_CN, _tree_cn);
+		        this.NotifyPropertyChanged(LOGSTOCK.TREE_CN);
 		    }
 		}
 		public virtual TreeDO GetTree()
@@ -10342,7 +9993,6 @@ namespace CruiseDAL.DataObjects
 		private String _lognumber ;
 		[XmlElement]
 		[Field (FieldName = "LogNumber",
-		 IsUnique = true,
 		 IsPersisted = true)]
 		public virtual String LogNumber
 		{
@@ -10355,13 +10005,12 @@ namespace CruiseDAL.DataObjects
 		        if(_lognumber == value) { return; }
 		        _lognumber = value;
 		        this.ValidateProperty(LOGSTOCK.LOGNUMBER, _lognumber);
-		        this.NotifyPropertyChanged(LOGSTOCK.LOGNUMBER, _lognumber);
+		        this.NotifyPropertyChanged(LOGSTOCK.LOGNUMBER);
 		    }
 		}
 		private String _grade ;
 		[XmlElement]
 		[Field (FieldName = "Grade",
-		 IsUnique = false,
 		 IsPersisted = true)]
 		public virtual String Grade
 		{
@@ -10374,13 +10023,12 @@ namespace CruiseDAL.DataObjects
 		        if(_grade == value) { return; }
 		        _grade = value;
 		        this.ValidateProperty(LOGSTOCK.GRADE, _grade);
-		        this.NotifyPropertyChanged(LOGSTOCK.GRADE, _grade);
+		        this.NotifyPropertyChanged(LOGSTOCK.GRADE);
 		    }
 		}
 		private float _seendefect  = 0.0f;
 		[XmlElement]
 		[Field (FieldName = "SeenDefect",
-		 IsUnique = false,
 		 IsPersisted = true)]
 		public virtual float SeenDefect
 		{
@@ -10393,13 +10041,12 @@ namespace CruiseDAL.DataObjects
 		        if(_seendefect == value) { return; }
 		        _seendefect = value;
 		        this.ValidateProperty(LOGSTOCK.SEENDEFECT, _seendefect);
-		        this.NotifyPropertyChanged(LOGSTOCK.SEENDEFECT, _seendefect);
+		        this.NotifyPropertyChanged(LOGSTOCK.SEENDEFECT);
 		    }
 		}
 		private float _percentrecoverable  = 0.0f;
 		[XmlElement]
 		[Field (FieldName = "PercentRecoverable",
-		 IsUnique = false,
 		 IsPersisted = true)]
 		public virtual float PercentRecoverable
 		{
@@ -10412,13 +10059,12 @@ namespace CruiseDAL.DataObjects
 		        if(_percentrecoverable == value) { return; }
 		        _percentrecoverable = value;
 		        this.ValidateProperty(LOGSTOCK.PERCENTRECOVERABLE, _percentrecoverable);
-		        this.NotifyPropertyChanged(LOGSTOCK.PERCENTRECOVERABLE, _percentrecoverable);
+		        this.NotifyPropertyChanged(LOGSTOCK.PERCENTRECOVERABLE);
 		    }
 		}
 		private Int64 _length ;
 		[XmlElement]
 		[Field (FieldName = "Length",
-		 IsUnique = false,
 		 IsPersisted = true)]
 		public virtual Int64 Length
 		{
@@ -10431,13 +10077,12 @@ namespace CruiseDAL.DataObjects
 		        if(_length == value) { return; }
 		        _length = value;
 		        this.ValidateProperty(LOGSTOCK.LENGTH, _length);
-		        this.NotifyPropertyChanged(LOGSTOCK.LENGTH, _length);
+		        this.NotifyPropertyChanged(LOGSTOCK.LENGTH);
 		    }
 		}
 		private String _exportgrade ;
 		[XmlElement]
 		[Field (FieldName = "ExportGrade",
-		 IsUnique = false,
 		 IsPersisted = true)]
 		public virtual String ExportGrade
 		{
@@ -10450,13 +10095,12 @@ namespace CruiseDAL.DataObjects
 		        if(_exportgrade == value) { return; }
 		        _exportgrade = value;
 		        this.ValidateProperty(LOGSTOCK.EXPORTGRADE, _exportgrade);
-		        this.NotifyPropertyChanged(LOGSTOCK.EXPORTGRADE, _exportgrade);
+		        this.NotifyPropertyChanged(LOGSTOCK.EXPORTGRADE);
 		    }
 		}
 		private float _smallenddiameter  = 0.0f;
 		[XmlElement]
 		[Field (FieldName = "SmallEndDiameter",
-		 IsUnique = false,
 		 IsPersisted = true)]
 		public virtual float SmallEndDiameter
 		{
@@ -10469,13 +10113,12 @@ namespace CruiseDAL.DataObjects
 		        if(_smallenddiameter == value) { return; }
 		        _smallenddiameter = value;
 		        this.ValidateProperty(LOGSTOCK.SMALLENDDIAMETER, _smallenddiameter);
-		        this.NotifyPropertyChanged(LOGSTOCK.SMALLENDDIAMETER, _smallenddiameter);
+		        this.NotifyPropertyChanged(LOGSTOCK.SMALLENDDIAMETER);
 		    }
 		}
 		private float _largeenddiameter  = 0.0f;
 		[XmlElement]
 		[Field (FieldName = "LargeEndDiameter",
-		 IsUnique = false,
 		 IsPersisted = true)]
 		public virtual float LargeEndDiameter
 		{
@@ -10488,13 +10131,12 @@ namespace CruiseDAL.DataObjects
 		        if(_largeenddiameter == value) { return; }
 		        _largeenddiameter = value;
 		        this.ValidateProperty(LOGSTOCK.LARGEENDDIAMETER, _largeenddiameter);
-		        this.NotifyPropertyChanged(LOGSTOCK.LARGEENDDIAMETER, _largeenddiameter);
+		        this.NotifyPropertyChanged(LOGSTOCK.LARGEENDDIAMETER);
 		    }
 		}
 		private float _grossboardfoot  = 0.0f;
 		[XmlElement]
 		[Field (FieldName = "GrossBoardFoot",
-		 IsUnique = false,
 		 IsPersisted = true)]
 		public virtual float GrossBoardFoot
 		{
@@ -10507,13 +10149,12 @@ namespace CruiseDAL.DataObjects
 		        if(_grossboardfoot == value) { return; }
 		        _grossboardfoot = value;
 		        this.ValidateProperty(LOGSTOCK.GROSSBOARDFOOT, _grossboardfoot);
-		        this.NotifyPropertyChanged(LOGSTOCK.GROSSBOARDFOOT, _grossboardfoot);
+		        this.NotifyPropertyChanged(LOGSTOCK.GROSSBOARDFOOT);
 		    }
 		}
 		private float _netboardfoot  = 0.0f;
 		[XmlElement]
 		[Field (FieldName = "NetBoardFoot",
-		 IsUnique = false,
 		 IsPersisted = true)]
 		public virtual float NetBoardFoot
 		{
@@ -10526,13 +10167,12 @@ namespace CruiseDAL.DataObjects
 		        if(_netboardfoot == value) { return; }
 		        _netboardfoot = value;
 		        this.ValidateProperty(LOGSTOCK.NETBOARDFOOT, _netboardfoot);
-		        this.NotifyPropertyChanged(LOGSTOCK.NETBOARDFOOT, _netboardfoot);
+		        this.NotifyPropertyChanged(LOGSTOCK.NETBOARDFOOT);
 		    }
 		}
 		private float _grosscubicfoot  = 0.0f;
 		[XmlElement]
 		[Field (FieldName = "GrossCubicFoot",
-		 IsUnique = false,
 		 IsPersisted = true)]
 		public virtual float GrossCubicFoot
 		{
@@ -10545,13 +10185,12 @@ namespace CruiseDAL.DataObjects
 		        if(_grosscubicfoot == value) { return; }
 		        _grosscubicfoot = value;
 		        this.ValidateProperty(LOGSTOCK.GROSSCUBICFOOT, _grosscubicfoot);
-		        this.NotifyPropertyChanged(LOGSTOCK.GROSSCUBICFOOT, _grosscubicfoot);
+		        this.NotifyPropertyChanged(LOGSTOCK.GROSSCUBICFOOT);
 		    }
 		}
 		private float _netcubicfoot  = 0.0f;
 		[XmlElement]
 		[Field (FieldName = "NetCubicFoot",
-		 IsUnique = false,
 		 IsPersisted = true)]
 		public virtual float NetCubicFoot
 		{
@@ -10564,13 +10203,12 @@ namespace CruiseDAL.DataObjects
 		        if(_netcubicfoot == value) { return; }
 		        _netcubicfoot = value;
 		        this.ValidateProperty(LOGSTOCK.NETCUBICFOOT, _netcubicfoot);
-		        this.NotifyPropertyChanged(LOGSTOCK.NETCUBICFOOT, _netcubicfoot);
+		        this.NotifyPropertyChanged(LOGSTOCK.NETCUBICFOOT);
 		    }
 		}
 		private float _boardfootremoved  = 0.0f;
 		[XmlElement]
 		[Field (FieldName = "BoardFootRemoved",
-		 IsUnique = false,
 		 IsPersisted = true)]
 		public virtual float BoardFootRemoved
 		{
@@ -10583,13 +10221,12 @@ namespace CruiseDAL.DataObjects
 		        if(_boardfootremoved == value) { return; }
 		        _boardfootremoved = value;
 		        this.ValidateProperty(LOGSTOCK.BOARDFOOTREMOVED, _boardfootremoved);
-		        this.NotifyPropertyChanged(LOGSTOCK.BOARDFOOTREMOVED, _boardfootremoved);
+		        this.NotifyPropertyChanged(LOGSTOCK.BOARDFOOTREMOVED);
 		    }
 		}
 		private float _cubicfootremoved  = 0.0f;
 		[XmlElement]
 		[Field (FieldName = "CubicFootRemoved",
-		 IsUnique = false,
 		 IsPersisted = true)]
 		public virtual float CubicFootRemoved
 		{
@@ -10602,13 +10239,12 @@ namespace CruiseDAL.DataObjects
 		        if(_cubicfootremoved == value) { return; }
 		        _cubicfootremoved = value;
 		        this.ValidateProperty(LOGSTOCK.CUBICFOOTREMOVED, _cubicfootremoved);
-		        this.NotifyPropertyChanged(LOGSTOCK.CUBICFOOTREMOVED, _cubicfootremoved);
+		        this.NotifyPropertyChanged(LOGSTOCK.CUBICFOOTREMOVED);
 		    }
 		}
 		private float _dibclass  = 0.0f;
 		[XmlElement]
 		[Field (FieldName = "DIBClass",
-		 IsUnique = false,
 		 IsPersisted = true)]
 		public virtual float DIBClass
 		{
@@ -10621,13 +10257,12 @@ namespace CruiseDAL.DataObjects
 		        if(_dibclass == value) { return; }
 		        _dibclass = value;
 		        this.ValidateProperty(LOGSTOCK.DIBCLASS, _dibclass);
-		        this.NotifyPropertyChanged(LOGSTOCK.DIBCLASS, _dibclass);
+		        this.NotifyPropertyChanged(LOGSTOCK.DIBCLASS);
 		    }
 		}
 		private float _barkthickness  = 0.0f;
 		[XmlElement]
 		[Field (FieldName = "BarkThickness",
-		 IsUnique = false,
 		 IsPersisted = true)]
 		public virtual float BarkThickness
 		{
@@ -10640,13 +10275,12 @@ namespace CruiseDAL.DataObjects
 		        if(_barkthickness == value) { return; }
 		        _barkthickness = value;
 		        this.ValidateProperty(LOGSTOCK.BARKTHICKNESS, _barkthickness);
-		        this.NotifyPropertyChanged(LOGSTOCK.BARKTHICKNESS, _barkthickness);
+		        this.NotifyPropertyChanged(LOGSTOCK.BARKTHICKNESS);
 		    }
 		}
 		private float _boardutil  = 0.0f;
 		[XmlElement]
 		[Field (FieldName = "BoardUtil",
-		 IsUnique = false,
 		 IsPersisted = true)]
 		public virtual float BoardUtil
 		{
@@ -10659,13 +10293,12 @@ namespace CruiseDAL.DataObjects
 		        if(_boardutil == value) { return; }
 		        _boardutil = value;
 		        this.ValidateProperty(LOGSTOCK.BOARDUTIL, _boardutil);
-		        this.NotifyPropertyChanged(LOGSTOCK.BOARDUTIL, _boardutil);
+		        this.NotifyPropertyChanged(LOGSTOCK.BOARDUTIL);
 		    }
 		}
 		private float _cubicutil  = 0.0f;
 		[XmlElement]
 		[Field (FieldName = "CubicUtil",
-		 IsUnique = false,
 		 IsPersisted = true)]
 		public virtual float CubicUtil
 		{
@@ -10678,26 +10311,28 @@ namespace CruiseDAL.DataObjects
 		        if(_cubicutil == value) { return; }
 		        _cubicutil = value;
 		        this.ValidateProperty(LOGSTOCK.CUBICUTIL, _cubicutil);
-		        this.NotifyPropertyChanged(LOGSTOCK.CUBICUTIL, _cubicutil);
+		        this.NotifyPropertyChanged(LOGSTOCK.CUBICUTIL);
 		    }
 		}
 
 		[XmlIgnore]
-		[Field (FieldName = "CreatedBy",
-		 SpecialFieldType = SepcialFieldType.CreatedBy)]
+		[InfrastructureFieldAttribute (FieldName = "CreatedBy",
+		 FieldType = InfrastructureFieldType.CreatedBy)]
 		public string CreatedBy { get; internal set; }
 		
 		[XmlIgnore]
-		[Field (FieldName = "CreatedDate")]
+		[InfrastructureFieldAttribute (FieldName = "CreatedDate",
+		FieldType = InfrastructureFieldType.CreatedDate)]
 		public DateTime CreatedDate { get; internal set; }
 		
 		[XmlIgnore]
-		[Field (FieldName = "ModifiedBy",
-		 SpecialFieldType = SepcialFieldType.ModifiedBy)]
+		[InfrastructureFieldAttribute (FieldName = "ModifiedBy",
+		 FieldType = InfrastructureFieldType.ModifiedBy)]
 		public string ModifiedBy { get; internal set; }
 		
 		[XmlIgnore]
-		[Field (FieldName = "ModifiedDate")]
+		[InfrastructureFieldAttribute (FieldName = "ModifiedDate",
+		FieldType = InfrastructureFieldType.ModifiedDate)]
 		public string ModifiedDate { get; internal set; }
 		
 		protected override bool DoValidate()
@@ -10757,7 +10392,7 @@ namespace CruiseDAL.DataObjects
 		}
 	}
 	[SQLEntity(SourceName = "SampleGroupStats")]
-	public partial class SampleGroupStatsDO : DataObject
+	public partial class SampleGroupStatsDO : DataObjectExtra
 	{
 		//private static Persister persister;
 		private static RowValidator _validator;
@@ -10805,7 +10440,6 @@ namespace CruiseDAL.DataObjects
 		private long? _stratumstats_cn ;
 		[XmlIgnore]
 		[Field (FieldName = "StratumStats_CN",
-		 IsUnique = true,
 		 IsPersisted = true)]
 		public virtual long? StratumStats_CN
 		{
@@ -10824,7 +10458,7 @@ namespace CruiseDAL.DataObjects
 		        if(value == null || value.Value == 0) { _stratumstats = null;  }
 		        _stratumstats_cn = value;
 		        this.ValidateProperty(SAMPLEGROUPSTATS.STRATUMSTATS_CN, _stratumstats_cn);
-		        this.NotifyPropertyChanged(SAMPLEGROUPSTATS.STRATUMSTATS_CN, _stratumstats_cn);
+		        this.NotifyPropertyChanged(SAMPLEGROUPSTATS.STRATUMSTATS_CN);
 		    }
 		}
 		public virtual StratumStatsDO GetStratumStats()
@@ -10855,7 +10489,6 @@ namespace CruiseDAL.DataObjects
 		private String _code ;
 		[XmlElement]
 		[Field (FieldName = "Code",
-		 IsUnique = true,
 		 IsPersisted = true)]
 		public virtual String Code
 		{
@@ -10868,13 +10501,12 @@ namespace CruiseDAL.DataObjects
 		        if(_code == value) { return; }
 		        _code = value;
 		        this.ValidateProperty(SAMPLEGROUPSTATS.CODE, _code);
-		        this.NotifyPropertyChanged(SAMPLEGROUPSTATS.CODE, _code);
+		        this.NotifyPropertyChanged(SAMPLEGROUPSTATS.CODE);
 		    }
 		}
 		private Int64 _sgset ;
 		[XmlElement]
 		[Field (FieldName = "SgSet",
-		 IsUnique = true,
 		 IsPersisted = true)]
 		public virtual Int64 SgSet
 		{
@@ -10887,13 +10519,12 @@ namespace CruiseDAL.DataObjects
 		        if(_sgset == value) { return; }
 		        _sgset = value;
 		        this.ValidateProperty(SAMPLEGROUPSTATS.SGSET, _sgset);
-		        this.NotifyPropertyChanged(SAMPLEGROUPSTATS.SGSET, _sgset);
+		        this.NotifyPropertyChanged(SAMPLEGROUPSTATS.SGSET);
 		    }
 		}
 		private String _description ;
 		[XmlElement]
 		[Field (FieldName = "Description",
-		 IsUnique = false,
 		 IsPersisted = true)]
 		public virtual String Description
 		{
@@ -10906,13 +10537,12 @@ namespace CruiseDAL.DataObjects
 		        if(_description == value) { return; }
 		        _description = value;
 		        this.ValidateProperty(SAMPLEGROUPSTATS.DESCRIPTION, _description);
-		        this.NotifyPropertyChanged(SAMPLEGROUPSTATS.DESCRIPTION, _description);
+		        this.NotifyPropertyChanged(SAMPLEGROUPSTATS.DESCRIPTION);
 		    }
 		}
 		private String _cutleave ;
 		[XmlElement]
 		[Field (FieldName = "CutLeave",
-		 IsUnique = false,
 		 IsPersisted = true)]
 		public virtual String CutLeave
 		{
@@ -10925,13 +10555,12 @@ namespace CruiseDAL.DataObjects
 		        if(_cutleave == value) { return; }
 		        _cutleave = value;
 		        this.ValidateProperty(SAMPLEGROUPSTATS.CUTLEAVE, _cutleave);
-		        this.NotifyPropertyChanged(SAMPLEGROUPSTATS.CUTLEAVE, _cutleave);
+		        this.NotifyPropertyChanged(SAMPLEGROUPSTATS.CUTLEAVE);
 		    }
 		}
 		private String _uom ;
 		[XmlElement]
 		[Field (FieldName = "UOM",
-		 IsUnique = false,
 		 IsPersisted = true)]
 		public virtual String UOM
 		{
@@ -10944,13 +10573,12 @@ namespace CruiseDAL.DataObjects
 		        if(_uom == value) { return; }
 		        _uom = value;
 		        this.ValidateProperty(SAMPLEGROUPSTATS.UOM, _uom);
-		        this.NotifyPropertyChanged(SAMPLEGROUPSTATS.UOM, _uom);
+		        this.NotifyPropertyChanged(SAMPLEGROUPSTATS.UOM);
 		    }
 		}
 		private String _primaryproduct ;
 		[XmlElement]
 		[Field (FieldName = "PrimaryProduct",
-		 IsUnique = false,
 		 IsPersisted = true)]
 		public virtual String PrimaryProduct
 		{
@@ -10963,13 +10591,12 @@ namespace CruiseDAL.DataObjects
 		        if(_primaryproduct == value) { return; }
 		        _primaryproduct = value;
 		        this.ValidateProperty(SAMPLEGROUPSTATS.PRIMARYPRODUCT, _primaryproduct);
-		        this.NotifyPropertyChanged(SAMPLEGROUPSTATS.PRIMARYPRODUCT, _primaryproduct);
+		        this.NotifyPropertyChanged(SAMPLEGROUPSTATS.PRIMARYPRODUCT);
 		    }
 		}
 		private String _secondaryproduct ;
 		[XmlElement]
 		[Field (FieldName = "SecondaryProduct",
-		 IsUnique = false,
 		 IsPersisted = true)]
 		public virtual String SecondaryProduct
 		{
@@ -10982,13 +10609,12 @@ namespace CruiseDAL.DataObjects
 		        if(_secondaryproduct == value) { return; }
 		        _secondaryproduct = value;
 		        this.ValidateProperty(SAMPLEGROUPSTATS.SECONDARYPRODUCT, _secondaryproduct);
-		        this.NotifyPropertyChanged(SAMPLEGROUPSTATS.SECONDARYPRODUCT, _secondaryproduct);
+		        this.NotifyPropertyChanged(SAMPLEGROUPSTATS.SECONDARYPRODUCT);
 		    }
 		}
 		private String _defaultlivedead ;
 		[XmlElement]
 		[Field (FieldName = "DefaultLiveDead",
-		 IsUnique = false,
 		 IsPersisted = true)]
 		public virtual String DefaultLiveDead
 		{
@@ -11001,13 +10627,12 @@ namespace CruiseDAL.DataObjects
 		        if(_defaultlivedead == value) { return; }
 		        _defaultlivedead = value;
 		        this.ValidateProperty(SAMPLEGROUPSTATS.DEFAULTLIVEDEAD, _defaultlivedead);
-		        this.NotifyPropertyChanged(SAMPLEGROUPSTATS.DEFAULTLIVEDEAD, _defaultlivedead);
+		        this.NotifyPropertyChanged(SAMPLEGROUPSTATS.DEFAULTLIVEDEAD);
 		    }
 		}
 		private float _sgerror  = 0.0f;
 		[XmlElement]
 		[Field (FieldName = "SgError",
-		 IsUnique = false,
 		 IsPersisted = true)]
 		public virtual float SgError
 		{
@@ -11020,13 +10645,12 @@ namespace CruiseDAL.DataObjects
 		        if(_sgerror == value) { return; }
 		        _sgerror = value;
 		        this.ValidateProperty(SAMPLEGROUPSTATS.SGERROR, _sgerror);
-		        this.NotifyPropertyChanged(SAMPLEGROUPSTATS.SGERROR, _sgerror);
+		        this.NotifyPropertyChanged(SAMPLEGROUPSTATS.SGERROR);
 		    }
 		}
 		private Int64 _samplesize1 ;
 		[XmlElement]
 		[Field (FieldName = "SampleSize1",
-		 IsUnique = false,
 		 IsPersisted = true)]
 		public virtual Int64 SampleSize1
 		{
@@ -11039,13 +10663,12 @@ namespace CruiseDAL.DataObjects
 		        if(_samplesize1 == value) { return; }
 		        _samplesize1 = value;
 		        this.ValidateProperty(SAMPLEGROUPSTATS.SAMPLESIZE1, _samplesize1);
-		        this.NotifyPropertyChanged(SAMPLEGROUPSTATS.SAMPLESIZE1, _samplesize1);
+		        this.NotifyPropertyChanged(SAMPLEGROUPSTATS.SAMPLESIZE1);
 		    }
 		}
 		private Int64 _samplesize2 ;
 		[XmlElement]
 		[Field (FieldName = "SampleSize2",
-		 IsUnique = false,
 		 IsPersisted = true)]
 		public virtual Int64 SampleSize2
 		{
@@ -11058,13 +10681,12 @@ namespace CruiseDAL.DataObjects
 		        if(_samplesize2 == value) { return; }
 		        _samplesize2 = value;
 		        this.ValidateProperty(SAMPLEGROUPSTATS.SAMPLESIZE2, _samplesize2);
-		        this.NotifyPropertyChanged(SAMPLEGROUPSTATS.SAMPLESIZE2, _samplesize2);
+		        this.NotifyPropertyChanged(SAMPLEGROUPSTATS.SAMPLESIZE2);
 		    }
 		}
 		private float _cv1  = 0.0f;
 		[XmlElement]
 		[Field (FieldName = "CV1",
-		 IsUnique = false,
 		 IsPersisted = true)]
 		public virtual float CV1
 		{
@@ -11077,13 +10699,12 @@ namespace CruiseDAL.DataObjects
 		        if(_cv1 == value) { return; }
 		        _cv1 = value;
 		        this.ValidateProperty(SAMPLEGROUPSTATS.CV1, _cv1);
-		        this.NotifyPropertyChanged(SAMPLEGROUPSTATS.CV1, _cv1);
+		        this.NotifyPropertyChanged(SAMPLEGROUPSTATS.CV1);
 		    }
 		}
 		private float _cv2  = 0.0f;
 		[XmlElement]
 		[Field (FieldName = "CV2",
-		 IsUnique = false,
 		 IsPersisted = true)]
 		public virtual float CV2
 		{
@@ -11096,13 +10717,12 @@ namespace CruiseDAL.DataObjects
 		        if(_cv2 == value) { return; }
 		        _cv2 = value;
 		        this.ValidateProperty(SAMPLEGROUPSTATS.CV2, _cv2);
-		        this.NotifyPropertyChanged(SAMPLEGROUPSTATS.CV2, _cv2);
+		        this.NotifyPropertyChanged(SAMPLEGROUPSTATS.CV2);
 		    }
 		}
 		private float _treesperacre  = 0.0f;
 		[XmlElement]
 		[Field (FieldName = "TreesPerAcre",
-		 IsUnique = false,
 		 IsPersisted = true)]
 		public virtual float TreesPerAcre
 		{
@@ -11115,13 +10735,12 @@ namespace CruiseDAL.DataObjects
 		        if(_treesperacre == value) { return; }
 		        _treesperacre = value;
 		        this.ValidateProperty(SAMPLEGROUPSTATS.TREESPERACRE, _treesperacre);
-		        this.NotifyPropertyChanged(SAMPLEGROUPSTATS.TREESPERACRE, _treesperacre);
+		        this.NotifyPropertyChanged(SAMPLEGROUPSTATS.TREESPERACRE);
 		    }
 		}
 		private float _volumeperacre  = 0.0f;
 		[XmlElement]
 		[Field (FieldName = "VolumePerAcre",
-		 IsUnique = false,
 		 IsPersisted = true)]
 		public virtual float VolumePerAcre
 		{
@@ -11134,13 +10753,12 @@ namespace CruiseDAL.DataObjects
 		        if(_volumeperacre == value) { return; }
 		        _volumeperacre = value;
 		        this.ValidateProperty(SAMPLEGROUPSTATS.VOLUMEPERACRE, _volumeperacre);
-		        this.NotifyPropertyChanged(SAMPLEGROUPSTATS.VOLUMEPERACRE, _volumeperacre);
+		        this.NotifyPropertyChanged(SAMPLEGROUPSTATS.VOLUMEPERACRE);
 		    }
 		}
 		private float _treesperplot  = 0.0f;
 		[XmlElement]
 		[Field (FieldName = "TreesPerPlot",
-		 IsUnique = false,
 		 IsPersisted = true)]
 		public virtual float TreesPerPlot
 		{
@@ -11153,13 +10771,12 @@ namespace CruiseDAL.DataObjects
 		        if(_treesperplot == value) { return; }
 		        _treesperplot = value;
 		        this.ValidateProperty(SAMPLEGROUPSTATS.TREESPERPLOT, _treesperplot);
-		        this.NotifyPropertyChanged(SAMPLEGROUPSTATS.TREESPERPLOT, _treesperplot);
+		        this.NotifyPropertyChanged(SAMPLEGROUPSTATS.TREESPERPLOT);
 		    }
 		}
 		private float _averageheight  = 0.0f;
 		[XmlElement]
 		[Field (FieldName = "AverageHeight",
-		 IsUnique = false,
 		 IsPersisted = true)]
 		public virtual float AverageHeight
 		{
@@ -11172,13 +10789,12 @@ namespace CruiseDAL.DataObjects
 		        if(_averageheight == value) { return; }
 		        _averageheight = value;
 		        this.ValidateProperty(SAMPLEGROUPSTATS.AVERAGEHEIGHT, _averageheight);
-		        this.NotifyPropertyChanged(SAMPLEGROUPSTATS.AVERAGEHEIGHT, _averageheight);
+		        this.NotifyPropertyChanged(SAMPLEGROUPSTATS.AVERAGEHEIGHT);
 		    }
 		}
 		private Int64 _samplingfrequency ;
 		[XmlElement]
 		[Field (FieldName = "SamplingFrequency",
-		 IsUnique = false,
 		 IsPersisted = true)]
 		public virtual Int64 SamplingFrequency
 		{
@@ -11191,13 +10807,12 @@ namespace CruiseDAL.DataObjects
 		        if(_samplingfrequency == value) { return; }
 		        _samplingfrequency = value;
 		        this.ValidateProperty(SAMPLEGROUPSTATS.SAMPLINGFREQUENCY, _samplingfrequency);
-		        this.NotifyPropertyChanged(SAMPLEGROUPSTATS.SAMPLINGFREQUENCY, _samplingfrequency);
+		        this.NotifyPropertyChanged(SAMPLEGROUPSTATS.SAMPLINGFREQUENCY);
 		    }
 		}
 		private Int64 _insurancefrequency ;
 		[XmlElement]
 		[Field (FieldName = "InsuranceFrequency",
-		 IsUnique = false,
 		 IsPersisted = true)]
 		public virtual Int64 InsuranceFrequency
 		{
@@ -11210,13 +10825,12 @@ namespace CruiseDAL.DataObjects
 		        if(_insurancefrequency == value) { return; }
 		        _insurancefrequency = value;
 		        this.ValidateProperty(SAMPLEGROUPSTATS.INSURANCEFREQUENCY, _insurancefrequency);
-		        this.NotifyPropertyChanged(SAMPLEGROUPSTATS.INSURANCEFREQUENCY, _insurancefrequency);
+		        this.NotifyPropertyChanged(SAMPLEGROUPSTATS.INSURANCEFREQUENCY);
 		    }
 		}
 		private Int64 _kz ;
 		[XmlElement]
 		[Field (FieldName = "KZ",
-		 IsUnique = false,
 		 IsPersisted = true)]
 		public virtual Int64 KZ
 		{
@@ -11229,13 +10843,12 @@ namespace CruiseDAL.DataObjects
 		        if(_kz == value) { return; }
 		        _kz = value;
 		        this.ValidateProperty(SAMPLEGROUPSTATS.KZ, _kz);
-		        this.NotifyPropertyChanged(SAMPLEGROUPSTATS.KZ, _kz);
+		        this.NotifyPropertyChanged(SAMPLEGROUPSTATS.KZ);
 		    }
 		}
 		private float _bigbaf  = 0.0f;
 		[XmlElement]
 		[Field (FieldName = "BigBAF",
-		 IsUnique = false,
 		 IsPersisted = true)]
 		public virtual float BigBAF
 		{
@@ -11248,13 +10861,12 @@ namespace CruiseDAL.DataObjects
 		        if(_bigbaf == value) { return; }
 		        _bigbaf = value;
 		        this.ValidateProperty(SAMPLEGROUPSTATS.BIGBAF, _bigbaf);
-		        this.NotifyPropertyChanged(SAMPLEGROUPSTATS.BIGBAF, _bigbaf);
+		        this.NotifyPropertyChanged(SAMPLEGROUPSTATS.BIGBAF);
 		    }
 		}
 		private Int64 _bigfix ;
 		[XmlElement]
 		[Field (FieldName = "BigFIX",
-		 IsUnique = false,
 		 IsPersisted = true)]
 		public virtual Int64 BigFIX
 		{
@@ -11267,13 +10879,12 @@ namespace CruiseDAL.DataObjects
 		        if(_bigfix == value) { return; }
 		        _bigfix = value;
 		        this.ValidateProperty(SAMPLEGROUPSTATS.BIGFIX, _bigfix);
-		        this.NotifyPropertyChanged(SAMPLEGROUPSTATS.BIGFIX, _bigfix);
+		        this.NotifyPropertyChanged(SAMPLEGROUPSTATS.BIGFIX);
 		    }
 		}
 		private float _mindbh  = 0.0f;
 		[XmlElement]
 		[Field (FieldName = "MinDbh",
-		 IsUnique = false,
 		 IsPersisted = true)]
 		public virtual float MinDbh
 		{
@@ -11286,13 +10897,12 @@ namespace CruiseDAL.DataObjects
 		        if(_mindbh == value) { return; }
 		        _mindbh = value;
 		        this.ValidateProperty(SAMPLEGROUPSTATS.MINDBH, _mindbh);
-		        this.NotifyPropertyChanged(SAMPLEGROUPSTATS.MINDBH, _mindbh);
+		        this.NotifyPropertyChanged(SAMPLEGROUPSTATS.MINDBH);
 		    }
 		}
 		private float _maxdbh  = 0.0f;
 		[XmlElement]
 		[Field (FieldName = "MaxDbh",
-		 IsUnique = false,
 		 IsPersisted = true)]
 		public virtual float MaxDbh
 		{
@@ -11305,13 +10915,12 @@ namespace CruiseDAL.DataObjects
 		        if(_maxdbh == value) { return; }
 		        _maxdbh = value;
 		        this.ValidateProperty(SAMPLEGROUPSTATS.MAXDBH, _maxdbh);
-		        this.NotifyPropertyChanged(SAMPLEGROUPSTATS.MAXDBH, _maxdbh);
+		        this.NotifyPropertyChanged(SAMPLEGROUPSTATS.MAXDBH);
 		    }
 		}
 		private Int64 _cv_def ;
 		[XmlElement]
 		[Field (FieldName = "CV_Def",
-		 IsUnique = false,
 		 IsPersisted = true)]
 		public virtual Int64 CV_Def
 		{
@@ -11324,13 +10933,12 @@ namespace CruiseDAL.DataObjects
 		        if(_cv_def == value) { return; }
 		        _cv_def = value;
 		        this.ValidateProperty(SAMPLEGROUPSTATS.CV_DEF, _cv_def);
-		        this.NotifyPropertyChanged(SAMPLEGROUPSTATS.CV_DEF, _cv_def);
+		        this.NotifyPropertyChanged(SAMPLEGROUPSTATS.CV_DEF);
 		    }
 		}
 		private Int64 _cv2_def ;
 		[XmlElement]
 		[Field (FieldName = "CV2_Def",
-		 IsUnique = false,
 		 IsPersisted = true)]
 		public virtual Int64 CV2_Def
 		{
@@ -11343,13 +10951,12 @@ namespace CruiseDAL.DataObjects
 		        if(_cv2_def == value) { return; }
 		        _cv2_def = value;
 		        this.ValidateProperty(SAMPLEGROUPSTATS.CV2_DEF, _cv2_def);
-		        this.NotifyPropertyChanged(SAMPLEGROUPSTATS.CV2_DEF, _cv2_def);
+		        this.NotifyPropertyChanged(SAMPLEGROUPSTATS.CV2_DEF);
 		    }
 		}
 		private Int64 _tpa_def ;
 		[XmlElement]
 		[Field (FieldName = "TPA_Def",
-		 IsUnique = false,
 		 IsPersisted = true)]
 		public virtual Int64 TPA_Def
 		{
@@ -11362,13 +10969,12 @@ namespace CruiseDAL.DataObjects
 		        if(_tpa_def == value) { return; }
 		        _tpa_def = value;
 		        this.ValidateProperty(SAMPLEGROUPSTATS.TPA_DEF, _tpa_def);
-		        this.NotifyPropertyChanged(SAMPLEGROUPSTATS.TPA_DEF, _tpa_def);
+		        this.NotifyPropertyChanged(SAMPLEGROUPSTATS.TPA_DEF);
 		    }
 		}
 		private Int64 _vpa_def ;
 		[XmlElement]
 		[Field (FieldName = "VPA_Def",
-		 IsUnique = false,
 		 IsPersisted = true)]
 		public virtual Int64 VPA_Def
 		{
@@ -11381,13 +10987,12 @@ namespace CruiseDAL.DataObjects
 		        if(_vpa_def == value) { return; }
 		        _vpa_def = value;
 		        this.ValidateProperty(SAMPLEGROUPSTATS.VPA_DEF, _vpa_def);
-		        this.NotifyPropertyChanged(SAMPLEGROUPSTATS.VPA_DEF, _vpa_def);
+		        this.NotifyPropertyChanged(SAMPLEGROUPSTATS.VPA_DEF);
 		    }
 		}
 		private Int64 _reconplots ;
 		[XmlElement]
 		[Field (FieldName = "ReconPlots",
-		 IsUnique = false,
 		 IsPersisted = true)]
 		public virtual Int64 ReconPlots
 		{
@@ -11400,13 +11005,12 @@ namespace CruiseDAL.DataObjects
 		        if(_reconplots == value) { return; }
 		        _reconplots = value;
 		        this.ValidateProperty(SAMPLEGROUPSTATS.RECONPLOTS, _reconplots);
-		        this.NotifyPropertyChanged(SAMPLEGROUPSTATS.RECONPLOTS, _reconplots);
+		        this.NotifyPropertyChanged(SAMPLEGROUPSTATS.RECONPLOTS);
 		    }
 		}
 		private Int64 _recontrees ;
 		[XmlElement]
 		[Field (FieldName = "ReconTrees",
-		 IsUnique = false,
 		 IsPersisted = true)]
 		public virtual Int64 ReconTrees
 		{
@@ -11419,7 +11023,7 @@ namespace CruiseDAL.DataObjects
 		        if(_recontrees == value) { return; }
 		        _recontrees = value;
 		        this.ValidateProperty(SAMPLEGROUPSTATS.RECONTREES, _recontrees);
-		        this.NotifyPropertyChanged(SAMPLEGROUPSTATS.RECONTREES, _recontrees);
+		        this.NotifyPropertyChanged(SAMPLEGROUPSTATS.RECONTREES);
 		    }
 		}
 
@@ -11504,7 +11108,7 @@ namespace CruiseDAL.DataObjects
 		}
 	}
 	[SQLEntity(SourceName = "SampleGroupStatsTreeDefaultValue")]
-	public partial class SampleGroupStatsTreeDefaultValueDO : DataObject
+	public partial class SampleGroupStatsTreeDefaultValueDO : DataObjectExtra
 	{
 		//private static Persister persister;
 		private static RowValidator _validator;
@@ -11547,7 +11151,6 @@ namespace CruiseDAL.DataObjects
 		private long? _treedefaultvalue_cn ;
 		[XmlIgnore]
 		[Field (FieldName = "TreeDefaultValue_CN",
-		 IsUnique = true,
 		 IsPersisted = true)]
 		public virtual long? TreeDefaultValue_CN
 		{
@@ -11566,7 +11169,7 @@ namespace CruiseDAL.DataObjects
 		        if(value == null || value.Value == 0) { _treedefaultvalue = null;  }
 		        _treedefaultvalue_cn = value;
 		        this.ValidateProperty(SAMPLEGROUPSTATSTREEDEFAULTVALUE.TREEDEFAULTVALUE_CN, _treedefaultvalue_cn);
-		        this.NotifyPropertyChanged(SAMPLEGROUPSTATSTREEDEFAULTVALUE.TREEDEFAULTVALUE_CN, _treedefaultvalue_cn);
+		        this.NotifyPropertyChanged(SAMPLEGROUPSTATSTREEDEFAULTVALUE.TREEDEFAULTVALUE_CN);
 		    }
 		}
 		public virtual TreeDefaultValueDO GetTreeDefaultValue()
@@ -11597,7 +11200,6 @@ namespace CruiseDAL.DataObjects
 		private long? _samplegroupstats_cn ;
 		[XmlIgnore]
 		[Field (FieldName = "SampleGroupStats_CN",
-		 IsUnique = true,
 		 IsPersisted = true)]
 		public virtual long? SampleGroupStats_CN
 		{
@@ -11616,7 +11218,7 @@ namespace CruiseDAL.DataObjects
 		        if(value == null || value.Value == 0) { _samplegroupstats = null;  }
 		        _samplegroupstats_cn = value;
 		        this.ValidateProperty(SAMPLEGROUPSTATSTREEDEFAULTVALUE.SAMPLEGROUPSTATS_CN, _samplegroupstats_cn);
-		        this.NotifyPropertyChanged(SAMPLEGROUPSTATSTREEDEFAULTVALUE.SAMPLEGROUPSTATS_CN, _samplegroupstats_cn);
+		        this.NotifyPropertyChanged(SAMPLEGROUPSTATSTREEDEFAULTVALUE.SAMPLEGROUPSTATS_CN);
 		    }
 		}
 		public virtual SampleGroupStatsDO GetSampleGroupStats()
@@ -11667,7 +11269,7 @@ namespace CruiseDAL.DataObjects
 		}
 	}
 	[SQLEntity(SourceName = "StratumStats")]
-	public partial class StratumStatsDO : DataObject
+	public partial class StratumStatsDO : DataObjectExtra
 	{
 		//private static Persister persister;
 		private static RowValidator _validator;
@@ -11715,7 +11317,6 @@ namespace CruiseDAL.DataObjects
 		private long? _stratum_cn ;
 		[XmlIgnore]
 		[Field (FieldName = "Stratum_CN",
-		 IsUnique = false,
 		 IsPersisted = true)]
 		public virtual long? Stratum_CN
 		{
@@ -11734,7 +11335,7 @@ namespace CruiseDAL.DataObjects
 		        if(value == null || value.Value == 0) { _stratum = null;  }
 		        _stratum_cn = value;
 		        this.ValidateProperty(STRATUMSTATS.STRATUM_CN, _stratum_cn);
-		        this.NotifyPropertyChanged(STRATUMSTATS.STRATUM_CN, _stratum_cn);
+		        this.NotifyPropertyChanged(STRATUMSTATS.STRATUM_CN);
 		    }
 		}
 		public virtual StratumDO GetStratum()
@@ -11765,7 +11366,6 @@ namespace CruiseDAL.DataObjects
 		private String _code ;
 		[XmlElement]
 		[Field (FieldName = "Code",
-		 IsUnique = true,
 		 IsPersisted = true)]
 		public virtual String Code
 		{
@@ -11778,13 +11378,12 @@ namespace CruiseDAL.DataObjects
 		        if(_code == value) { return; }
 		        _code = value;
 		        this.ValidateProperty(STRATUMSTATS.CODE, _code);
-		        this.NotifyPropertyChanged(STRATUMSTATS.CODE, _code);
+		        this.NotifyPropertyChanged(STRATUMSTATS.CODE);
 		    }
 		}
 		private String _description ;
 		[XmlElement]
 		[Field (FieldName = "Description",
-		 IsUnique = false,
 		 IsPersisted = true)]
 		public virtual String Description
 		{
@@ -11797,13 +11396,12 @@ namespace CruiseDAL.DataObjects
 		        if(_description == value) { return; }
 		        _description = value;
 		        this.ValidateProperty(STRATUMSTATS.DESCRIPTION, _description);
-		        this.NotifyPropertyChanged(STRATUMSTATS.DESCRIPTION, _description);
+		        this.NotifyPropertyChanged(STRATUMSTATS.DESCRIPTION);
 		    }
 		}
 		private String _method ;
 		[XmlElement]
 		[Field (FieldName = "Method",
-		 IsUnique = true,
 		 IsPersisted = true)]
 		public virtual String Method
 		{
@@ -11816,13 +11414,12 @@ namespace CruiseDAL.DataObjects
 		        if(_method == value) { return; }
 		        _method = value;
 		        this.ValidateProperty(STRATUMSTATS.METHOD, _method);
-		        this.NotifyPropertyChanged(STRATUMSTATS.METHOD, _method);
+		        this.NotifyPropertyChanged(STRATUMSTATS.METHOD);
 		    }
 		}
 		private Int64 _sgset ;
 		[XmlElement]
 		[Field (FieldName = "SgSet",
-		 IsUnique = true,
 		 IsPersisted = true)]
 		public virtual Int64 SgSet
 		{
@@ -11835,13 +11432,12 @@ namespace CruiseDAL.DataObjects
 		        if(_sgset == value) { return; }
 		        _sgset = value;
 		        this.ValidateProperty(STRATUMSTATS.SGSET, _sgset);
-		        this.NotifyPropertyChanged(STRATUMSTATS.SGSET, _sgset);
+		        this.NotifyPropertyChanged(STRATUMSTATS.SGSET);
 		    }
 		}
 		private String _sgsetdescription ;
 		[XmlElement]
 		[Field (FieldName = "SgSetDescription",
-		 IsUnique = false,
 		 IsPersisted = true)]
 		public virtual String SgSetDescription
 		{
@@ -11854,13 +11450,12 @@ namespace CruiseDAL.DataObjects
 		        if(_sgsetdescription == value) { return; }
 		        _sgsetdescription = value;
 		        this.ValidateProperty(STRATUMSTATS.SGSETDESCRIPTION, _sgsetdescription);
-		        this.NotifyPropertyChanged(STRATUMSTATS.SGSETDESCRIPTION, _sgsetdescription);
+		        this.NotifyPropertyChanged(STRATUMSTATS.SGSETDESCRIPTION);
 		    }
 		}
 		private float _basalareafactor  = 0.0f;
 		[XmlElement]
 		[Field (FieldName = "BasalAreaFactor",
-		 IsUnique = false,
 		 IsPersisted = true)]
 		public virtual float BasalAreaFactor
 		{
@@ -11873,13 +11468,12 @@ namespace CruiseDAL.DataObjects
 		        if(_basalareafactor == value) { return; }
 		        _basalareafactor = value;
 		        this.ValidateProperty(STRATUMSTATS.BASALAREAFACTOR, _basalareafactor);
-		        this.NotifyPropertyChanged(STRATUMSTATS.BASALAREAFACTOR, _basalareafactor);
+		        this.NotifyPropertyChanged(STRATUMSTATS.BASALAREAFACTOR);
 		    }
 		}
 		private float _fixedplotsize  = 0.0f;
 		[XmlElement]
 		[Field (FieldName = "FixedPlotSize",
-		 IsUnique = false,
 		 IsPersisted = true)]
 		public virtual float FixedPlotSize
 		{
@@ -11892,13 +11486,12 @@ namespace CruiseDAL.DataObjects
 		        if(_fixedplotsize == value) { return; }
 		        _fixedplotsize = value;
 		        this.ValidateProperty(STRATUMSTATS.FIXEDPLOTSIZE, _fixedplotsize);
-		        this.NotifyPropertyChanged(STRATUMSTATS.FIXEDPLOTSIZE, _fixedplotsize);
+		        this.NotifyPropertyChanged(STRATUMSTATS.FIXEDPLOTSIZE);
 		    }
 		}
 		private float _strerror  = 0.0f;
 		[XmlElement]
 		[Field (FieldName = "StrError",
-		 IsUnique = false,
 		 IsPersisted = true)]
 		public virtual float StrError
 		{
@@ -11911,13 +11504,12 @@ namespace CruiseDAL.DataObjects
 		        if(_strerror == value) { return; }
 		        _strerror = value;
 		        this.ValidateProperty(STRATUMSTATS.STRERROR, _strerror);
-		        this.NotifyPropertyChanged(STRATUMSTATS.STRERROR, _strerror);
+		        this.NotifyPropertyChanged(STRATUMSTATS.STRERROR);
 		    }
 		}
 		private Int64 _samplesize1 ;
 		[XmlElement]
 		[Field (FieldName = "SampleSize1",
-		 IsUnique = false,
 		 IsPersisted = true)]
 		public virtual Int64 SampleSize1
 		{
@@ -11930,13 +11522,12 @@ namespace CruiseDAL.DataObjects
 		        if(_samplesize1 == value) { return; }
 		        _samplesize1 = value;
 		        this.ValidateProperty(STRATUMSTATS.SAMPLESIZE1, _samplesize1);
-		        this.NotifyPropertyChanged(STRATUMSTATS.SAMPLESIZE1, _samplesize1);
+		        this.NotifyPropertyChanged(STRATUMSTATS.SAMPLESIZE1);
 		    }
 		}
 		private Int64 _samplesize2 ;
 		[XmlElement]
 		[Field (FieldName = "SampleSize2",
-		 IsUnique = false,
 		 IsPersisted = true)]
 		public virtual Int64 SampleSize2
 		{
@@ -11949,13 +11540,12 @@ namespace CruiseDAL.DataObjects
 		        if(_samplesize2 == value) { return; }
 		        _samplesize2 = value;
 		        this.ValidateProperty(STRATUMSTATS.SAMPLESIZE2, _samplesize2);
-		        this.NotifyPropertyChanged(STRATUMSTATS.SAMPLESIZE2, _samplesize2);
+		        this.NotifyPropertyChanged(STRATUMSTATS.SAMPLESIZE2);
 		    }
 		}
 		private float _weightedcv1  = 0.0f;
 		[XmlElement]
 		[Field (FieldName = "WeightedCV1",
-		 IsUnique = false,
 		 IsPersisted = true)]
 		public virtual float WeightedCV1
 		{
@@ -11968,13 +11558,12 @@ namespace CruiseDAL.DataObjects
 		        if(_weightedcv1 == value) { return; }
 		        _weightedcv1 = value;
 		        this.ValidateProperty(STRATUMSTATS.WEIGHTEDCV1, _weightedcv1);
-		        this.NotifyPropertyChanged(STRATUMSTATS.WEIGHTEDCV1, _weightedcv1);
+		        this.NotifyPropertyChanged(STRATUMSTATS.WEIGHTEDCV1);
 		    }
 		}
 		private float _weightedcv2  = 0.0f;
 		[XmlElement]
 		[Field (FieldName = "WeightedCV2",
-		 IsUnique = false,
 		 IsPersisted = true)]
 		public virtual float WeightedCV2
 		{
@@ -11987,13 +11576,12 @@ namespace CruiseDAL.DataObjects
 		        if(_weightedcv2 == value) { return; }
 		        _weightedcv2 = value;
 		        this.ValidateProperty(STRATUMSTATS.WEIGHTEDCV2, _weightedcv2);
-		        this.NotifyPropertyChanged(STRATUMSTATS.WEIGHTEDCV2, _weightedcv2);
+		        this.NotifyPropertyChanged(STRATUMSTATS.WEIGHTEDCV2);
 		    }
 		}
 		private float _treesperacre  = 0.0f;
 		[XmlElement]
 		[Field (FieldName = "TreesPerAcre",
-		 IsUnique = false,
 		 IsPersisted = true)]
 		public virtual float TreesPerAcre
 		{
@@ -12006,13 +11594,12 @@ namespace CruiseDAL.DataObjects
 		        if(_treesperacre == value) { return; }
 		        _treesperacre = value;
 		        this.ValidateProperty(STRATUMSTATS.TREESPERACRE, _treesperacre);
-		        this.NotifyPropertyChanged(STRATUMSTATS.TREESPERACRE, _treesperacre);
+		        this.NotifyPropertyChanged(STRATUMSTATS.TREESPERACRE);
 		    }
 		}
 		private float _volumeperacre  = 0.0f;
 		[XmlElement]
 		[Field (FieldName = "VolumePerAcre",
-		 IsUnique = false,
 		 IsPersisted = true)]
 		public virtual float VolumePerAcre
 		{
@@ -12025,13 +11612,12 @@ namespace CruiseDAL.DataObjects
 		        if(_volumeperacre == value) { return; }
 		        _volumeperacre = value;
 		        this.ValidateProperty(STRATUMSTATS.VOLUMEPERACRE, _volumeperacre);
-		        this.NotifyPropertyChanged(STRATUMSTATS.VOLUMEPERACRE, _volumeperacre);
+		        this.NotifyPropertyChanged(STRATUMSTATS.VOLUMEPERACRE);
 		    }
 		}
 		private float _totalvolume  = 0.0f;
 		[XmlElement]
 		[Field (FieldName = "TotalVolume",
-		 IsUnique = false,
 		 IsPersisted = true)]
 		public virtual float TotalVolume
 		{
@@ -12044,13 +11630,12 @@ namespace CruiseDAL.DataObjects
 		        if(_totalvolume == value) { return; }
 		        _totalvolume = value;
 		        this.ValidateProperty(STRATUMSTATS.TOTALVOLUME, _totalvolume);
-		        this.NotifyPropertyChanged(STRATUMSTATS.TOTALVOLUME, _totalvolume);
+		        this.NotifyPropertyChanged(STRATUMSTATS.TOTALVOLUME);
 		    }
 		}
 		private float _totalacres  = 0.0f;
 		[XmlElement]
 		[Field (FieldName = "TotalAcres",
-		 IsUnique = false,
 		 IsPersisted = true)]
 		public virtual float TotalAcres
 		{
@@ -12063,13 +11648,12 @@ namespace CruiseDAL.DataObjects
 		        if(_totalacres == value) { return; }
 		        _totalacres = value;
 		        this.ValidateProperty(STRATUMSTATS.TOTALACRES, _totalacres);
-		        this.NotifyPropertyChanged(STRATUMSTATS.TOTALACRES, _totalacres);
+		        this.NotifyPropertyChanged(STRATUMSTATS.TOTALACRES);
 		    }
 		}
 		private Int64 _plotspacing ;
 		[XmlElement]
 		[Field (FieldName = "PlotSpacing",
-		 IsUnique = false,
 		 IsPersisted = true)]
 		public virtual Int64 PlotSpacing
 		{
@@ -12082,13 +11666,12 @@ namespace CruiseDAL.DataObjects
 		        if(_plotspacing == value) { return; }
 		        _plotspacing = value;
 		        this.ValidateProperty(STRATUMSTATS.PLOTSPACING, _plotspacing);
-		        this.NotifyPropertyChanged(STRATUMSTATS.PLOTSPACING, _plotspacing);
+		        this.NotifyPropertyChanged(STRATUMSTATS.PLOTSPACING);
 		    }
 		}
 		private Int64 _used ;
 		[XmlElement]
 		[Field (FieldName = "Used",
-		 IsUnique = false,
 		 IsPersisted = true)]
 		public virtual Int64 Used
 		{
@@ -12101,7 +11684,7 @@ namespace CruiseDAL.DataObjects
 		        if(_used == value) { return; }
 		        _used = value;
 		        this.ValidateProperty(STRATUMSTATS.USED, _used);
-		        this.NotifyPropertyChanged(STRATUMSTATS.USED, _used);
+		        this.NotifyPropertyChanged(STRATUMSTATS.USED);
 		    }
 		}
 
@@ -12162,7 +11745,7 @@ namespace CruiseDAL.DataObjects
 		}
 	}
 	[SQLEntity(SourceName = "Regression")]
-	public partial class RegressionDO : DataObject
+	public partial class RegressionDO : DataObjectExtra
 	{
 		//private static Persister persister;
 		private static RowValidator _validator;
@@ -12210,7 +11793,6 @@ namespace CruiseDAL.DataObjects
 		private String _rvolume ;
 		[XmlElement]
 		[Field (FieldName = "rVolume",
-		 IsUnique = false,
 		 IsPersisted = true)]
 		public virtual String rVolume
 		{
@@ -12223,13 +11805,12 @@ namespace CruiseDAL.DataObjects
 		        if(_rvolume == value) { return; }
 		        _rvolume = value;
 		        this.ValidateProperty(REGRESSION.RVOLUME, _rvolume);
-		        this.NotifyPropertyChanged(REGRESSION.RVOLUME, _rvolume);
+		        this.NotifyPropertyChanged(REGRESSION.RVOLUME);
 		    }
 		}
 		private String _rvoltype ;
 		[XmlElement]
 		[Field (FieldName = "rVolType",
-		 IsUnique = false,
 		 IsPersisted = true)]
 		public virtual String rVolType
 		{
@@ -12242,13 +11823,12 @@ namespace CruiseDAL.DataObjects
 		        if(_rvoltype == value) { return; }
 		        _rvoltype = value;
 		        this.ValidateProperty(REGRESSION.RVOLTYPE, _rvoltype);
-		        this.NotifyPropertyChanged(REGRESSION.RVOLTYPE, _rvoltype);
+		        this.NotifyPropertyChanged(REGRESSION.RVOLTYPE);
 		    }
 		}
 		private String _rspeices ;
 		[XmlElement]
 		[Field (FieldName = "rSpeices",
-		 IsUnique = false,
 		 IsPersisted = true)]
 		public virtual String rSpeices
 		{
@@ -12261,13 +11841,12 @@ namespace CruiseDAL.DataObjects
 		        if(_rspeices == value) { return; }
 		        _rspeices = value;
 		        this.ValidateProperty(REGRESSION.RSPEICES, _rspeices);
-		        this.NotifyPropertyChanged(REGRESSION.RSPEICES, _rspeices);
+		        this.NotifyPropertyChanged(REGRESSION.RSPEICES);
 		    }
 		}
 		private String _rproduct ;
 		[XmlElement]
 		[Field (FieldName = "rProduct",
-		 IsUnique = false,
 		 IsPersisted = true)]
 		public virtual String rProduct
 		{
@@ -12280,13 +11859,12 @@ namespace CruiseDAL.DataObjects
 		        if(_rproduct == value) { return; }
 		        _rproduct = value;
 		        this.ValidateProperty(REGRESSION.RPRODUCT, _rproduct);
-		        this.NotifyPropertyChanged(REGRESSION.RPRODUCT, _rproduct);
+		        this.NotifyPropertyChanged(REGRESSION.RPRODUCT);
 		    }
 		}
 		private String _rlivedead ;
 		[XmlElement]
 		[Field (FieldName = "rLiveDead",
-		 IsUnique = false,
 		 IsPersisted = true)]
 		public virtual String rLiveDead
 		{
@@ -12299,13 +11877,12 @@ namespace CruiseDAL.DataObjects
 		        if(_rlivedead == value) { return; }
 		        _rlivedead = value;
 		        this.ValidateProperty(REGRESSION.RLIVEDEAD, _rlivedead);
-		        this.NotifyPropertyChanged(REGRESSION.RLIVEDEAD, _rlivedead);
+		        this.NotifyPropertyChanged(REGRESSION.RLIVEDEAD);
 		    }
 		}
 		private float _coefficienta  = 0.0f;
 		[XmlElement]
 		[Field (FieldName = "CoefficientA",
-		 IsUnique = false,
 		 IsPersisted = true)]
 		public virtual float CoefficientA
 		{
@@ -12318,13 +11895,12 @@ namespace CruiseDAL.DataObjects
 		        if(_coefficienta == value) { return; }
 		        _coefficienta = value;
 		        this.ValidateProperty(REGRESSION.COEFFICIENTA, _coefficienta);
-		        this.NotifyPropertyChanged(REGRESSION.COEFFICIENTA, _coefficienta);
+		        this.NotifyPropertyChanged(REGRESSION.COEFFICIENTA);
 		    }
 		}
 		private float _coefficientb  = 0.0f;
 		[XmlElement]
 		[Field (FieldName = "CoefficientB",
-		 IsUnique = false,
 		 IsPersisted = true)]
 		public virtual float CoefficientB
 		{
@@ -12337,13 +11913,12 @@ namespace CruiseDAL.DataObjects
 		        if(_coefficientb == value) { return; }
 		        _coefficientb = value;
 		        this.ValidateProperty(REGRESSION.COEFFICIENTB, _coefficientb);
-		        this.NotifyPropertyChanged(REGRESSION.COEFFICIENTB, _coefficientb);
+		        this.NotifyPropertyChanged(REGRESSION.COEFFICIENTB);
 		    }
 		}
 		private float _coefficientc  = 0.0f;
 		[XmlElement]
 		[Field (FieldName = "CoefficientC",
-		 IsUnique = false,
 		 IsPersisted = true)]
 		public virtual float CoefficientC
 		{
@@ -12356,13 +11931,12 @@ namespace CruiseDAL.DataObjects
 		        if(_coefficientc == value) { return; }
 		        _coefficientc = value;
 		        this.ValidateProperty(REGRESSION.COEFFICIENTC, _coefficientc);
-		        this.NotifyPropertyChanged(REGRESSION.COEFFICIENTC, _coefficientc);
+		        this.NotifyPropertyChanged(REGRESSION.COEFFICIENTC);
 		    }
 		}
 		private Int64 _totaltrees ;
 		[XmlElement]
 		[Field (FieldName = "TotalTrees",
-		 IsUnique = false,
 		 IsPersisted = true)]
 		public virtual Int64 TotalTrees
 		{
@@ -12375,13 +11949,12 @@ namespace CruiseDAL.DataObjects
 		        if(_totaltrees == value) { return; }
 		        _totaltrees = value;
 		        this.ValidateProperty(REGRESSION.TOTALTREES, _totaltrees);
-		        this.NotifyPropertyChanged(REGRESSION.TOTALTREES, _totaltrees);
+		        this.NotifyPropertyChanged(REGRESSION.TOTALTREES);
 		    }
 		}
 		private float _meanse  = 0.0f;
 		[XmlElement]
 		[Field (FieldName = "MeanSE",
-		 IsUnique = false,
 		 IsPersisted = true)]
 		public virtual float MeanSE
 		{
@@ -12394,13 +11967,12 @@ namespace CruiseDAL.DataObjects
 		        if(_meanse == value) { return; }
 		        _meanse = value;
 		        this.ValidateProperty(REGRESSION.MEANSE, _meanse);
-		        this.NotifyPropertyChanged(REGRESSION.MEANSE, _meanse);
+		        this.NotifyPropertyChanged(REGRESSION.MEANSE);
 		    }
 		}
 		private float _rsquared  = 0.0f;
 		[XmlElement]
 		[Field (FieldName = "Rsquared",
-		 IsUnique = false,
 		 IsPersisted = true)]
 		public virtual float Rsquared
 		{
@@ -12413,13 +11985,12 @@ namespace CruiseDAL.DataObjects
 		        if(_rsquared == value) { return; }
 		        _rsquared = value;
 		        this.ValidateProperty(REGRESSION.RSQUARED, _rsquared);
-		        this.NotifyPropertyChanged(REGRESSION.RSQUARED, _rsquared);
+		        this.NotifyPropertyChanged(REGRESSION.RSQUARED);
 		    }
 		}
 		private String _regressmodel ;
 		[XmlElement]
 		[Field (FieldName = "RegressModel",
-		 IsUnique = false,
 		 IsPersisted = true)]
 		public virtual String RegressModel
 		{
@@ -12432,13 +12003,12 @@ namespace CruiseDAL.DataObjects
 		        if(_regressmodel == value) { return; }
 		        _regressmodel = value;
 		        this.ValidateProperty(REGRESSION.REGRESSMODEL, _regressmodel);
-		        this.NotifyPropertyChanged(REGRESSION.REGRESSMODEL, _regressmodel);
+		        this.NotifyPropertyChanged(REGRESSION.REGRESSMODEL);
 		    }
 		}
 		private float _rmindbh  = 0.0f;
 		[XmlElement]
 		[Field (FieldName = "rMinDbh",
-		 IsUnique = false,
 		 IsPersisted = true)]
 		public virtual float rMinDbh
 		{
@@ -12451,13 +12021,12 @@ namespace CruiseDAL.DataObjects
 		        if(_rmindbh == value) { return; }
 		        _rmindbh = value;
 		        this.ValidateProperty(REGRESSION.RMINDBH, _rmindbh);
-		        this.NotifyPropertyChanged(REGRESSION.RMINDBH, _rmindbh);
+		        this.NotifyPropertyChanged(REGRESSION.RMINDBH);
 		    }
 		}
 		private float _rmaxdbh  = 0.0f;
 		[XmlElement]
 		[Field (FieldName = "rMaxDbh",
-		 IsUnique = false,
 		 IsPersisted = true)]
 		public virtual float rMaxDbh
 		{
@@ -12470,7 +12039,7 @@ namespace CruiseDAL.DataObjects
 		        if(_rmaxdbh == value) { return; }
 		        _rmaxdbh = value;
 		        this.ValidateProperty(REGRESSION.RMAXDBH, _rmaxdbh);
-		        this.NotifyPropertyChanged(REGRESSION.RMAXDBH, _rmaxdbh);
+		        this.NotifyPropertyChanged(REGRESSION.RMAXDBH);
 		    }
 		}
 
@@ -12522,7 +12091,7 @@ namespace CruiseDAL.DataObjects
 		}
 	}
 	[SQLEntity(SourceName = "LogMatrix")]
-	public partial class LogMatrixDO : DataObject
+	public partial class LogMatrixDO : DataObjectExtra
 	{
 		//private static Persister persister;
 		private static RowValidator _validator;
@@ -12565,7 +12134,6 @@ namespace CruiseDAL.DataObjects
 		private String _reportnumber ;
 		[XmlElement]
 		[Field (FieldName = "ReportNumber",
-		 IsUnique = false,
 		 IsPersisted = true)]
 		public virtual String ReportNumber
 		{
@@ -12578,13 +12146,12 @@ namespace CruiseDAL.DataObjects
 		        if(_reportnumber == value) { return; }
 		        _reportnumber = value;
 		        this.ValidateProperty(LOGMATRIX.REPORTNUMBER, _reportnumber);
-		        this.NotifyPropertyChanged(LOGMATRIX.REPORTNUMBER, _reportnumber);
+		        this.NotifyPropertyChanged(LOGMATRIX.REPORTNUMBER);
 		    }
 		}
 		private String _gradedescription ;
 		[XmlElement]
 		[Field (FieldName = "GradeDescription",
-		 IsUnique = false,
 		 IsPersisted = true)]
 		public virtual String GradeDescription
 		{
@@ -12597,13 +12164,12 @@ namespace CruiseDAL.DataObjects
 		        if(_gradedescription == value) { return; }
 		        _gradedescription = value;
 		        this.ValidateProperty(LOGMATRIX.GRADEDESCRIPTION, _gradedescription);
-		        this.NotifyPropertyChanged(LOGMATRIX.GRADEDESCRIPTION, _gradedescription);
+		        this.NotifyPropertyChanged(LOGMATRIX.GRADEDESCRIPTION);
 		    }
 		}
 		private String _logsortdescription ;
 		[XmlElement]
 		[Field (FieldName = "LogSortDescription",
-		 IsUnique = false,
 		 IsPersisted = true)]
 		public virtual String LogSortDescription
 		{
@@ -12616,13 +12182,12 @@ namespace CruiseDAL.DataObjects
 		        if(_logsortdescription == value) { return; }
 		        _logsortdescription = value;
 		        this.ValidateProperty(LOGMATRIX.LOGSORTDESCRIPTION, _logsortdescription);
-		        this.NotifyPropertyChanged(LOGMATRIX.LOGSORTDESCRIPTION, _logsortdescription);
+		        this.NotifyPropertyChanged(LOGMATRIX.LOGSORTDESCRIPTION);
 		    }
 		}
 		private String _species ;
 		[XmlElement]
 		[Field (FieldName = "Species",
-		 IsUnique = false,
 		 IsPersisted = true)]
 		public virtual String Species
 		{
@@ -12635,13 +12200,12 @@ namespace CruiseDAL.DataObjects
 		        if(_species == value) { return; }
 		        _species = value;
 		        this.ValidateProperty(LOGMATRIX.SPECIES, _species);
-		        this.NotifyPropertyChanged(LOGMATRIX.SPECIES, _species);
+		        this.NotifyPropertyChanged(LOGMATRIX.SPECIES);
 		    }
 		}
 		private String _loggrade1 ;
 		[XmlElement]
 		[Field (FieldName = "LogGrade1",
-		 IsUnique = false,
 		 IsPersisted = true)]
 		public virtual String LogGrade1
 		{
@@ -12654,13 +12218,12 @@ namespace CruiseDAL.DataObjects
 		        if(_loggrade1 == value) { return; }
 		        _loggrade1 = value;
 		        this.ValidateProperty(LOGMATRIX.LOGGRADE1, _loggrade1);
-		        this.NotifyPropertyChanged(LOGMATRIX.LOGGRADE1, _loggrade1);
+		        this.NotifyPropertyChanged(LOGMATRIX.LOGGRADE1);
 		    }
 		}
 		private String _loggrade2 ;
 		[XmlElement]
 		[Field (FieldName = "LogGrade2",
-		 IsUnique = false,
 		 IsPersisted = true)]
 		public virtual String LogGrade2
 		{
@@ -12673,13 +12236,12 @@ namespace CruiseDAL.DataObjects
 		        if(_loggrade2 == value) { return; }
 		        _loggrade2 = value;
 		        this.ValidateProperty(LOGMATRIX.LOGGRADE2, _loggrade2);
-		        this.NotifyPropertyChanged(LOGMATRIX.LOGGRADE2, _loggrade2);
+		        this.NotifyPropertyChanged(LOGMATRIX.LOGGRADE2);
 		    }
 		}
 		private String _loggrade3 ;
 		[XmlElement]
 		[Field (FieldName = "LogGrade3",
-		 IsUnique = false,
 		 IsPersisted = true)]
 		public virtual String LogGrade3
 		{
@@ -12692,13 +12254,12 @@ namespace CruiseDAL.DataObjects
 		        if(_loggrade3 == value) { return; }
 		        _loggrade3 = value;
 		        this.ValidateProperty(LOGMATRIX.LOGGRADE3, _loggrade3);
-		        this.NotifyPropertyChanged(LOGMATRIX.LOGGRADE3, _loggrade3);
+		        this.NotifyPropertyChanged(LOGMATRIX.LOGGRADE3);
 		    }
 		}
 		private String _loggrade4 ;
 		[XmlElement]
 		[Field (FieldName = "LogGrade4",
-		 IsUnique = false,
 		 IsPersisted = true)]
 		public virtual String LogGrade4
 		{
@@ -12711,13 +12272,12 @@ namespace CruiseDAL.DataObjects
 		        if(_loggrade4 == value) { return; }
 		        _loggrade4 = value;
 		        this.ValidateProperty(LOGMATRIX.LOGGRADE4, _loggrade4);
-		        this.NotifyPropertyChanged(LOGMATRIX.LOGGRADE4, _loggrade4);
+		        this.NotifyPropertyChanged(LOGMATRIX.LOGGRADE4);
 		    }
 		}
 		private String _loggrade5 ;
 		[XmlElement]
 		[Field (FieldName = "LogGrade5",
-		 IsUnique = false,
 		 IsPersisted = true)]
 		public virtual String LogGrade5
 		{
@@ -12730,13 +12290,12 @@ namespace CruiseDAL.DataObjects
 		        if(_loggrade5 == value) { return; }
 		        _loggrade5 = value;
 		        this.ValidateProperty(LOGMATRIX.LOGGRADE5, _loggrade5);
-		        this.NotifyPropertyChanged(LOGMATRIX.LOGGRADE5, _loggrade5);
+		        this.NotifyPropertyChanged(LOGMATRIX.LOGGRADE5);
 		    }
 		}
 		private String _loggrade6 ;
 		[XmlElement]
 		[Field (FieldName = "LogGrade6",
-		 IsUnique = false,
 		 IsPersisted = true)]
 		public virtual String LogGrade6
 		{
@@ -12749,13 +12308,12 @@ namespace CruiseDAL.DataObjects
 		        if(_loggrade6 == value) { return; }
 		        _loggrade6 = value;
 		        this.ValidateProperty(LOGMATRIX.LOGGRADE6, _loggrade6);
-		        this.NotifyPropertyChanged(LOGMATRIX.LOGGRADE6, _loggrade6);
+		        this.NotifyPropertyChanged(LOGMATRIX.LOGGRADE6);
 		    }
 		}
 		private String _sedlimit ;
 		[XmlElement]
 		[Field (FieldName = "SEDlimit",
-		 IsUnique = false,
 		 IsPersisted = true)]
 		public virtual String SEDlimit
 		{
@@ -12768,13 +12326,12 @@ namespace CruiseDAL.DataObjects
 		        if(_sedlimit == value) { return; }
 		        _sedlimit = value;
 		        this.ValidateProperty(LOGMATRIX.SEDLIMIT, _sedlimit);
-		        this.NotifyPropertyChanged(LOGMATRIX.SEDLIMIT, _sedlimit);
+		        this.NotifyPropertyChanged(LOGMATRIX.SEDLIMIT);
 		    }
 		}
 		private Double _sedminimum  = 0.0;
 		[XmlElement]
 		[Field (FieldName = "SEDminimum",
-		 IsUnique = false,
 		 IsPersisted = true)]
 		public virtual Double SEDminimum
 		{
@@ -12787,13 +12344,12 @@ namespace CruiseDAL.DataObjects
 		        if(_sedminimum == value) { return; }
 		        _sedminimum = value;
 		        this.ValidateProperty(LOGMATRIX.SEDMINIMUM, _sedminimum);
-		        this.NotifyPropertyChanged(LOGMATRIX.SEDMINIMUM, _sedminimum);
+		        this.NotifyPropertyChanged(LOGMATRIX.SEDMINIMUM);
 		    }
 		}
 		private Double _sedmaximum  = 0.0;
 		[XmlElement]
 		[Field (FieldName = "SEDmaximum",
-		 IsUnique = false,
 		 IsPersisted = true)]
 		public virtual Double SEDmaximum
 		{
@@ -12806,7 +12362,7 @@ namespace CruiseDAL.DataObjects
 		        if(_sedmaximum == value) { return; }
 		        _sedmaximum = value;
 		        this.ValidateProperty(LOGMATRIX.SEDMAXIMUM, _sedmaximum);
-		        this.NotifyPropertyChanged(LOGMATRIX.SEDMAXIMUM, _sedmaximum);
+		        this.NotifyPropertyChanged(LOGMATRIX.SEDMAXIMUM);
 		    }
 		}
 
@@ -12858,7 +12414,7 @@ namespace CruiseDAL.DataObjects
 	#endregion
 	#region Settings Tables
 	[SQLEntity(SourceName = "TreeDefaultValueTreeAuditValue")]
-	public partial class TreeDefaultValueTreeAuditValueDO : DataObject
+	public partial class TreeDefaultValueTreeAuditValueDO : DataObjectExtra
 	{
 		//private static Persister persister;
 		private static RowValidator _validator;
@@ -12903,7 +12459,6 @@ namespace CruiseDAL.DataObjects
 		private long? _treeauditvalue_cn ;
 		[XmlIgnore]
 		[Field (FieldName = "TreeAuditValue_CN",
-		 IsUnique = false,
 		 IsPersisted = true)]
 		public virtual long? TreeAuditValue_CN
 		{
@@ -12922,7 +12477,7 @@ namespace CruiseDAL.DataObjects
 		        if(value == null || value.Value == 0) { _treeauditvalue = null;  }
 		        _treeauditvalue_cn = value;
 		        this.ValidateProperty(TREEDEFAULTVALUETREEAUDITVALUE.TREEAUDITVALUE_CN, _treeauditvalue_cn);
-		        this.NotifyPropertyChanged(TREEDEFAULTVALUETREEAUDITVALUE.TREEAUDITVALUE_CN, _treeauditvalue_cn);
+		        this.NotifyPropertyChanged(TREEDEFAULTVALUETREEAUDITVALUE.TREEAUDITVALUE_CN);
 		    }
 		}
 		public virtual TreeAuditValueDO GetTreeAuditValue()
@@ -12953,7 +12508,6 @@ namespace CruiseDAL.DataObjects
 		private long? _treedefaultvalue_cn ;
 		[XmlIgnore]
 		[Field (FieldName = "TreeDefaultValue_CN",
-		 IsUnique = false,
 		 IsPersisted = true)]
 		public virtual long? TreeDefaultValue_CN
 		{
@@ -12972,7 +12526,7 @@ namespace CruiseDAL.DataObjects
 		        if(value == null || value.Value == 0) { _treedefaultvalue = null;  }
 		        _treedefaultvalue_cn = value;
 		        this.ValidateProperty(TREEDEFAULTVALUETREEAUDITVALUE.TREEDEFAULTVALUE_CN, _treedefaultvalue_cn);
-		        this.NotifyPropertyChanged(TREEDEFAULTVALUETREEAUDITVALUE.TREEDEFAULTVALUE_CN, _treedefaultvalue_cn);
+		        this.NotifyPropertyChanged(TREEDEFAULTVALUETREEAUDITVALUE.TREEDEFAULTVALUE_CN);
 		    }
 		}
 		public virtual TreeDefaultValueDO GetTreeDefaultValue()
@@ -13023,7 +12577,7 @@ namespace CruiseDAL.DataObjects
 		}
 	}
 	[SQLEntity(SourceName = "TreeAuditValue")]
-	public partial class TreeAuditValueDO : DataObject
+	public partial class TreeAuditValueDO : DataObjectExtra
 	{
 		//private static Persister persister;
 		private static RowValidator _validator;
@@ -13072,7 +12626,6 @@ namespace CruiseDAL.DataObjects
 		private String _field ;
 		[XmlElement]
 		[Field (FieldName = "Field",
-		 IsUnique = false,
 		 IsPersisted = true)]
 		public virtual String Field
 		{
@@ -13085,13 +12638,12 @@ namespace CruiseDAL.DataObjects
 		        if(_field == value) { return; }
 		        _field = value;
 		        this.ValidateProperty(TREEAUDITVALUE.FIELD, _field);
-		        this.NotifyPropertyChanged(TREEAUDITVALUE.FIELD, _field);
+		        this.NotifyPropertyChanged(TREEAUDITVALUE.FIELD);
 		    }
 		}
 		private float _min  = 0.0f;
 		[XmlElement]
 		[Field (FieldName = "Min",
-		 IsUnique = false,
 		 IsPersisted = true)]
 		public virtual float Min
 		{
@@ -13104,13 +12656,12 @@ namespace CruiseDAL.DataObjects
 		        if(_min == value) { return; }
 		        _min = value;
 		        this.ValidateProperty(TREEAUDITVALUE.MIN, _min);
-		        this.NotifyPropertyChanged(TREEAUDITVALUE.MIN, _min);
+		        this.NotifyPropertyChanged(TREEAUDITVALUE.MIN);
 		    }
 		}
 		private float _max  = 0.0f;
 		[XmlElement]
 		[Field (FieldName = "Max",
-		 IsUnique = false,
 		 IsPersisted = true)]
 		public virtual float Max
 		{
@@ -13123,13 +12674,12 @@ namespace CruiseDAL.DataObjects
 		        if(_max == value) { return; }
 		        _max = value;
 		        this.ValidateProperty(TREEAUDITVALUE.MAX, _max);
-		        this.NotifyPropertyChanged(TREEAUDITVALUE.MAX, _max);
+		        this.NotifyPropertyChanged(TREEAUDITVALUE.MAX);
 		    }
 		}
 		private String _valueset ;
 		[XmlElement]
 		[Field (FieldName = "ValueSet",
-		 IsUnique = false,
 		 IsPersisted = true)]
 		public virtual String ValueSet
 		{
@@ -13142,13 +12692,12 @@ namespace CruiseDAL.DataObjects
 		        if(_valueset == value) { return; }
 		        _valueset = value;
 		        this.ValidateProperty(TREEAUDITVALUE.VALUESET, _valueset);
-		        this.NotifyPropertyChanged(TREEAUDITVALUE.VALUESET, _valueset);
+		        this.NotifyPropertyChanged(TREEAUDITVALUE.VALUESET);
 		    }
 		}
 		private bool _required  = false;
 		[XmlElement]
 		[Field (FieldName = "Required",
-		 IsUnique = false,
 		 IsPersisted = true)]
 		public virtual bool Required
 		{
@@ -13161,7 +12710,7 @@ namespace CruiseDAL.DataObjects
 		        if(_required == value) { return; }
 		        _required = value;
 		        this.ValidateProperty(TREEAUDITVALUE.REQUIRED, _required);
-		        this.NotifyPropertyChanged(TREEAUDITVALUE.REQUIRED, _required);
+		        this.NotifyPropertyChanged(TREEAUDITVALUE.REQUIRED);
 		    }
 		}
 
@@ -13195,7 +12744,7 @@ namespace CruiseDAL.DataObjects
 		}
 	}
 	[SQLEntity(SourceName = "LogFieldSetup")]
-	public partial class LogFieldSetupDO : DataObject
+	public partial class LogFieldSetupDO : DataObjectExtra
 	{
 		//private static Persister persister;
 		private static RowValidator _validator;
@@ -13240,7 +12789,6 @@ namespace CruiseDAL.DataObjects
 		private long? _stratum_cn ;
 		[XmlIgnore]
 		[Field (FieldName = "Stratum_CN",
-		 IsUnique = true,
 		 IsPersisted = true)]
 		public virtual long? Stratum_CN
 		{
@@ -13259,7 +12807,7 @@ namespace CruiseDAL.DataObjects
 		        if(value == null || value.Value == 0) { _stratum = null;  }
 		        _stratum_cn = value;
 		        this.ValidateProperty(LOGFIELDSETUP.STRATUM_CN, _stratum_cn);
-		        this.NotifyPropertyChanged(LOGFIELDSETUP.STRATUM_CN, _stratum_cn);
+		        this.NotifyPropertyChanged(LOGFIELDSETUP.STRATUM_CN);
 		    }
 		}
 		public virtual StratumDO GetStratum()
@@ -13290,7 +12838,6 @@ namespace CruiseDAL.DataObjects
 		private String _field ;
 		[XmlElement]
 		[Field (FieldName = "Field",
-		 IsUnique = true,
 		 IsPersisted = true)]
 		public virtual String Field
 		{
@@ -13303,13 +12850,12 @@ namespace CruiseDAL.DataObjects
 		        if(_field == value) { return; }
 		        _field = value;
 		        this.ValidateProperty(LOGFIELDSETUP.FIELD, _field);
-		        this.NotifyPropertyChanged(LOGFIELDSETUP.FIELD, _field);
+		        this.NotifyPropertyChanged(LOGFIELDSETUP.FIELD);
 		    }
 		}
 		private Int64 _fieldorder ;
 		[XmlElement]
 		[Field (FieldName = "FieldOrder",
-		 IsUnique = false,
 		 IsPersisted = true)]
 		public virtual Int64 FieldOrder
 		{
@@ -13322,13 +12868,12 @@ namespace CruiseDAL.DataObjects
 		        if(_fieldorder == value) { return; }
 		        _fieldorder = value;
 		        this.ValidateProperty(LOGFIELDSETUP.FIELDORDER, _fieldorder);
-		        this.NotifyPropertyChanged(LOGFIELDSETUP.FIELDORDER, _fieldorder);
+		        this.NotifyPropertyChanged(LOGFIELDSETUP.FIELDORDER);
 		    }
 		}
 		private String _columntype ;
 		[XmlElement]
 		[Field (FieldName = "ColumnType",
-		 IsUnique = false,
 		 IsPersisted = true)]
 		public virtual String ColumnType
 		{
@@ -13341,13 +12886,12 @@ namespace CruiseDAL.DataObjects
 		        if(_columntype == value) { return; }
 		        _columntype = value;
 		        this.ValidateProperty(LOGFIELDSETUP.COLUMNTYPE, _columntype);
-		        this.NotifyPropertyChanged(LOGFIELDSETUP.COLUMNTYPE, _columntype);
+		        this.NotifyPropertyChanged(LOGFIELDSETUP.COLUMNTYPE);
 		    }
 		}
 		private String _heading ;
 		[XmlElement]
 		[Field (FieldName = "Heading",
-		 IsUnique = false,
 		 IsPersisted = true)]
 		public virtual String Heading
 		{
@@ -13360,13 +12904,12 @@ namespace CruiseDAL.DataObjects
 		        if(_heading == value) { return; }
 		        _heading = value;
 		        this.ValidateProperty(LOGFIELDSETUP.HEADING, _heading);
-		        this.NotifyPropertyChanged(LOGFIELDSETUP.HEADING, _heading);
+		        this.NotifyPropertyChanged(LOGFIELDSETUP.HEADING);
 		    }
 		}
 		private float _width  = 0.0f;
 		[XmlElement]
 		[Field (FieldName = "Width",
-		 IsUnique = false,
 		 IsPersisted = true)]
 		public virtual float Width
 		{
@@ -13379,13 +12922,12 @@ namespace CruiseDAL.DataObjects
 		        if(_width == value) { return; }
 		        _width = value;
 		        this.ValidateProperty(LOGFIELDSETUP.WIDTH, _width);
-		        this.NotifyPropertyChanged(LOGFIELDSETUP.WIDTH, _width);
+		        this.NotifyPropertyChanged(LOGFIELDSETUP.WIDTH);
 		    }
 		}
 		private String _format ;
 		[XmlElement]
 		[Field (FieldName = "Format",
-		 IsUnique = false,
 		 IsPersisted = true)]
 		public virtual String Format
 		{
@@ -13398,13 +12940,12 @@ namespace CruiseDAL.DataObjects
 		        if(_format == value) { return; }
 		        _format = value;
 		        this.ValidateProperty(LOGFIELDSETUP.FORMAT, _format);
-		        this.NotifyPropertyChanged(LOGFIELDSETUP.FORMAT, _format);
+		        this.NotifyPropertyChanged(LOGFIELDSETUP.FORMAT);
 		    }
 		}
 		private String _behavior ;
 		[XmlElement]
 		[Field (FieldName = "Behavior",
-		 IsUnique = false,
 		 IsPersisted = true)]
 		public virtual String Behavior
 		{
@@ -13417,7 +12958,7 @@ namespace CruiseDAL.DataObjects
 		        if(_behavior == value) { return; }
 		        _behavior = value;
 		        this.ValidateProperty(LOGFIELDSETUP.BEHAVIOR, _behavior);
-		        this.NotifyPropertyChanged(LOGFIELDSETUP.BEHAVIOR, _behavior);
+		        this.NotifyPropertyChanged(LOGFIELDSETUP.BEHAVIOR);
 		    }
 		}
 
@@ -13456,7 +12997,7 @@ namespace CruiseDAL.DataObjects
 		}
 	}
 	[SQLEntity(SourceName = "TreeFieldSetup")]
-	public partial class TreeFieldSetupDO : DataObject
+	public partial class TreeFieldSetupDO : DataObjectExtra
 	{
 		//private static Persister persister;
 		private static RowValidator _validator;
@@ -13501,7 +13042,6 @@ namespace CruiseDAL.DataObjects
 		private long? _stratum_cn ;
 		[XmlIgnore]
 		[Field (FieldName = "Stratum_CN",
-		 IsUnique = true,
 		 IsPersisted = true)]
 		public virtual long? Stratum_CN
 		{
@@ -13520,7 +13060,7 @@ namespace CruiseDAL.DataObjects
 		        if(value == null || value.Value == 0) { _stratum = null;  }
 		        _stratum_cn = value;
 		        this.ValidateProperty(TREEFIELDSETUP.STRATUM_CN, _stratum_cn);
-		        this.NotifyPropertyChanged(TREEFIELDSETUP.STRATUM_CN, _stratum_cn);
+		        this.NotifyPropertyChanged(TREEFIELDSETUP.STRATUM_CN);
 		    }
 		}
 		public virtual StratumDO GetStratum()
@@ -13551,7 +13091,6 @@ namespace CruiseDAL.DataObjects
 		private String _field ;
 		[XmlElement]
 		[Field (FieldName = "Field",
-		 IsUnique = true,
 		 IsPersisted = true)]
 		public virtual String Field
 		{
@@ -13564,13 +13103,12 @@ namespace CruiseDAL.DataObjects
 		        if(_field == value) { return; }
 		        _field = value;
 		        this.ValidateProperty(TREEFIELDSETUP.FIELD, _field);
-		        this.NotifyPropertyChanged(TREEFIELDSETUP.FIELD, _field);
+		        this.NotifyPropertyChanged(TREEFIELDSETUP.FIELD);
 		    }
 		}
 		private Int64 _fieldorder ;
 		[XmlElement]
 		[Field (FieldName = "FieldOrder",
-		 IsUnique = false,
 		 IsPersisted = true)]
 		public virtual Int64 FieldOrder
 		{
@@ -13583,13 +13121,12 @@ namespace CruiseDAL.DataObjects
 		        if(_fieldorder == value) { return; }
 		        _fieldorder = value;
 		        this.ValidateProperty(TREEFIELDSETUP.FIELDORDER, _fieldorder);
-		        this.NotifyPropertyChanged(TREEFIELDSETUP.FIELDORDER, _fieldorder);
+		        this.NotifyPropertyChanged(TREEFIELDSETUP.FIELDORDER);
 		    }
 		}
 		private String _columntype ;
 		[XmlElement]
 		[Field (FieldName = "ColumnType",
-		 IsUnique = false,
 		 IsPersisted = true)]
 		public virtual String ColumnType
 		{
@@ -13602,13 +13139,12 @@ namespace CruiseDAL.DataObjects
 		        if(_columntype == value) { return; }
 		        _columntype = value;
 		        this.ValidateProperty(TREEFIELDSETUP.COLUMNTYPE, _columntype);
-		        this.NotifyPropertyChanged(TREEFIELDSETUP.COLUMNTYPE, _columntype);
+		        this.NotifyPropertyChanged(TREEFIELDSETUP.COLUMNTYPE);
 		    }
 		}
 		private String _heading ;
 		[XmlElement]
 		[Field (FieldName = "Heading",
-		 IsUnique = false,
 		 IsPersisted = true)]
 		public virtual String Heading
 		{
@@ -13621,13 +13157,12 @@ namespace CruiseDAL.DataObjects
 		        if(_heading == value) { return; }
 		        _heading = value;
 		        this.ValidateProperty(TREEFIELDSETUP.HEADING, _heading);
-		        this.NotifyPropertyChanged(TREEFIELDSETUP.HEADING, _heading);
+		        this.NotifyPropertyChanged(TREEFIELDSETUP.HEADING);
 		    }
 		}
 		private float _width  = 0.0f;
 		[XmlElement]
 		[Field (FieldName = "Width",
-		 IsUnique = false,
 		 IsPersisted = true)]
 		public virtual float Width
 		{
@@ -13640,13 +13175,12 @@ namespace CruiseDAL.DataObjects
 		        if(_width == value) { return; }
 		        _width = value;
 		        this.ValidateProperty(TREEFIELDSETUP.WIDTH, _width);
-		        this.NotifyPropertyChanged(TREEFIELDSETUP.WIDTH, _width);
+		        this.NotifyPropertyChanged(TREEFIELDSETUP.WIDTH);
 		    }
 		}
 		private String _format ;
 		[XmlElement]
 		[Field (FieldName = "Format",
-		 IsUnique = false,
 		 IsPersisted = true)]
 		public virtual String Format
 		{
@@ -13659,13 +13193,12 @@ namespace CruiseDAL.DataObjects
 		        if(_format == value) { return; }
 		        _format = value;
 		        this.ValidateProperty(TREEFIELDSETUP.FORMAT, _format);
-		        this.NotifyPropertyChanged(TREEFIELDSETUP.FORMAT, _format);
+		        this.NotifyPropertyChanged(TREEFIELDSETUP.FORMAT);
 		    }
 		}
 		private String _behavior ;
 		[XmlElement]
 		[Field (FieldName = "Behavior",
-		 IsUnique = false,
 		 IsPersisted = true)]
 		public virtual String Behavior
 		{
@@ -13678,7 +13211,7 @@ namespace CruiseDAL.DataObjects
 		        if(_behavior == value) { return; }
 		        _behavior = value;
 		        this.ValidateProperty(TREEFIELDSETUP.BEHAVIOR, _behavior);
-		        this.NotifyPropertyChanged(TREEFIELDSETUP.BEHAVIOR, _behavior);
+		        this.NotifyPropertyChanged(TREEFIELDSETUP.BEHAVIOR);
 		    }
 		}
 
@@ -13717,7 +13250,7 @@ namespace CruiseDAL.DataObjects
 		}
 	}
 	[SQLEntity(SourceName = "LogFieldSetupDefault")]
-	public partial class LogFieldSetupDefaultDO : DataObject
+	public partial class LogFieldSetupDefaultDO : DataObjectExtra
 	{
 		//private static Persister persister;
 		private static RowValidator _validator;
@@ -13766,7 +13299,6 @@ namespace CruiseDAL.DataObjects
 		private String _field ;
 		[XmlElement]
 		[Field (FieldName = "Field",
-		 IsUnique = true,
 		 IsPersisted = true)]
 		public virtual String Field
 		{
@@ -13779,13 +13311,12 @@ namespace CruiseDAL.DataObjects
 		        if(_field == value) { return; }
 		        _field = value;
 		        this.ValidateProperty(LOGFIELDSETUPDEFAULT.FIELD, _field);
-		        this.NotifyPropertyChanged(LOGFIELDSETUPDEFAULT.FIELD, _field);
+		        this.NotifyPropertyChanged(LOGFIELDSETUPDEFAULT.FIELD);
 		    }
 		}
 		private String _fieldname ;
 		[XmlElement]
 		[Field (FieldName = "FieldName",
-		 IsUnique = false,
 		 IsPersisted = true)]
 		public virtual String FieldName
 		{
@@ -13798,13 +13329,12 @@ namespace CruiseDAL.DataObjects
 		        if(_fieldname == value) { return; }
 		        _fieldname = value;
 		        this.ValidateProperty(LOGFIELDSETUPDEFAULT.FIELDNAME, _fieldname);
-		        this.NotifyPropertyChanged(LOGFIELDSETUPDEFAULT.FIELDNAME, _fieldname);
+		        this.NotifyPropertyChanged(LOGFIELDSETUPDEFAULT.FIELDNAME);
 		    }
 		}
 		private Int64 _fieldorder ;
 		[XmlElement]
 		[Field (FieldName = "FieldOrder",
-		 IsUnique = false,
 		 IsPersisted = true)]
 		public virtual Int64 FieldOrder
 		{
@@ -13817,13 +13347,12 @@ namespace CruiseDAL.DataObjects
 		        if(_fieldorder == value) { return; }
 		        _fieldorder = value;
 		        this.ValidateProperty(LOGFIELDSETUPDEFAULT.FIELDORDER, _fieldorder);
-		        this.NotifyPropertyChanged(LOGFIELDSETUPDEFAULT.FIELDORDER, _fieldorder);
+		        this.NotifyPropertyChanged(LOGFIELDSETUPDEFAULT.FIELDORDER);
 		    }
 		}
 		private String _columntype ;
 		[XmlElement]
 		[Field (FieldName = "ColumnType",
-		 IsUnique = false,
 		 IsPersisted = true)]
 		public virtual String ColumnType
 		{
@@ -13836,13 +13365,12 @@ namespace CruiseDAL.DataObjects
 		        if(_columntype == value) { return; }
 		        _columntype = value;
 		        this.ValidateProperty(LOGFIELDSETUPDEFAULT.COLUMNTYPE, _columntype);
-		        this.NotifyPropertyChanged(LOGFIELDSETUPDEFAULT.COLUMNTYPE, _columntype);
+		        this.NotifyPropertyChanged(LOGFIELDSETUPDEFAULT.COLUMNTYPE);
 		    }
 		}
 		private String _heading ;
 		[XmlElement]
 		[Field (FieldName = "Heading",
-		 IsUnique = false,
 		 IsPersisted = true)]
 		public virtual String Heading
 		{
@@ -13855,13 +13383,12 @@ namespace CruiseDAL.DataObjects
 		        if(_heading == value) { return; }
 		        _heading = value;
 		        this.ValidateProperty(LOGFIELDSETUPDEFAULT.HEADING, _heading);
-		        this.NotifyPropertyChanged(LOGFIELDSETUPDEFAULT.HEADING, _heading);
+		        this.NotifyPropertyChanged(LOGFIELDSETUPDEFAULT.HEADING);
 		    }
 		}
 		private float _width  = 0.0f;
 		[XmlElement]
 		[Field (FieldName = "Width",
-		 IsUnique = false,
 		 IsPersisted = true)]
 		public virtual float Width
 		{
@@ -13874,13 +13401,12 @@ namespace CruiseDAL.DataObjects
 		        if(_width == value) { return; }
 		        _width = value;
 		        this.ValidateProperty(LOGFIELDSETUPDEFAULT.WIDTH, _width);
-		        this.NotifyPropertyChanged(LOGFIELDSETUPDEFAULT.WIDTH, _width);
+		        this.NotifyPropertyChanged(LOGFIELDSETUPDEFAULT.WIDTH);
 		    }
 		}
 		private String _format ;
 		[XmlElement]
 		[Field (FieldName = "Format",
-		 IsUnique = false,
 		 IsPersisted = true)]
 		public virtual String Format
 		{
@@ -13893,13 +13419,12 @@ namespace CruiseDAL.DataObjects
 		        if(_format == value) { return; }
 		        _format = value;
 		        this.ValidateProperty(LOGFIELDSETUPDEFAULT.FORMAT, _format);
-		        this.NotifyPropertyChanged(LOGFIELDSETUPDEFAULT.FORMAT, _format);
+		        this.NotifyPropertyChanged(LOGFIELDSETUPDEFAULT.FORMAT);
 		    }
 		}
 		private String _behavior ;
 		[XmlElement]
 		[Field (FieldName = "Behavior",
-		 IsUnique = false,
 		 IsPersisted = true)]
 		public virtual String Behavior
 		{
@@ -13912,7 +13437,7 @@ namespace CruiseDAL.DataObjects
 		        if(_behavior == value) { return; }
 		        _behavior = value;
 		        this.ValidateProperty(LOGFIELDSETUPDEFAULT.BEHAVIOR, _behavior);
-		        this.NotifyPropertyChanged(LOGFIELDSETUPDEFAULT.BEHAVIOR, _behavior);
+		        this.NotifyPropertyChanged(LOGFIELDSETUPDEFAULT.BEHAVIOR);
 		    }
 		}
 
@@ -13952,7 +13477,7 @@ namespace CruiseDAL.DataObjects
 		}
 	}
 	[SQLEntity(SourceName = "TreeFieldSetupDefault")]
-	public partial class TreeFieldSetupDefaultDO : DataObject
+	public partial class TreeFieldSetupDefaultDO : DataObjectExtra
 	{
 		//private static Persister persister;
 		private static RowValidator _validator;
@@ -14002,7 +13527,6 @@ namespace CruiseDAL.DataObjects
 		private String _method ;
 		[XmlElement]
 		[Field (FieldName = "Method",
-		 IsUnique = true,
 		 IsPersisted = true)]
 		public virtual String Method
 		{
@@ -14015,13 +13539,12 @@ namespace CruiseDAL.DataObjects
 		        if(_method == value) { return; }
 		        _method = value;
 		        this.ValidateProperty(TREEFIELDSETUPDEFAULT.METHOD, _method);
-		        this.NotifyPropertyChanged(TREEFIELDSETUPDEFAULT.METHOD, _method);
+		        this.NotifyPropertyChanged(TREEFIELDSETUPDEFAULT.METHOD);
 		    }
 		}
 		private String _field ;
 		[XmlElement]
 		[Field (FieldName = "Field",
-		 IsUnique = true,
 		 IsPersisted = true)]
 		public virtual String Field
 		{
@@ -14034,13 +13557,12 @@ namespace CruiseDAL.DataObjects
 		        if(_field == value) { return; }
 		        _field = value;
 		        this.ValidateProperty(TREEFIELDSETUPDEFAULT.FIELD, _field);
-		        this.NotifyPropertyChanged(TREEFIELDSETUPDEFAULT.FIELD, _field);
+		        this.NotifyPropertyChanged(TREEFIELDSETUPDEFAULT.FIELD);
 		    }
 		}
 		private String _fieldname ;
 		[XmlElement]
 		[Field (FieldName = "FieldName",
-		 IsUnique = false,
 		 IsPersisted = true)]
 		public virtual String FieldName
 		{
@@ -14053,13 +13575,12 @@ namespace CruiseDAL.DataObjects
 		        if(_fieldname == value) { return; }
 		        _fieldname = value;
 		        this.ValidateProperty(TREEFIELDSETUPDEFAULT.FIELDNAME, _fieldname);
-		        this.NotifyPropertyChanged(TREEFIELDSETUPDEFAULT.FIELDNAME, _fieldname);
+		        this.NotifyPropertyChanged(TREEFIELDSETUPDEFAULT.FIELDNAME);
 		    }
 		}
 		private Int64 _fieldorder ;
 		[XmlElement]
 		[Field (FieldName = "FieldOrder",
-		 IsUnique = false,
 		 IsPersisted = true)]
 		public virtual Int64 FieldOrder
 		{
@@ -14072,13 +13593,12 @@ namespace CruiseDAL.DataObjects
 		        if(_fieldorder == value) { return; }
 		        _fieldorder = value;
 		        this.ValidateProperty(TREEFIELDSETUPDEFAULT.FIELDORDER, _fieldorder);
-		        this.NotifyPropertyChanged(TREEFIELDSETUPDEFAULT.FIELDORDER, _fieldorder);
+		        this.NotifyPropertyChanged(TREEFIELDSETUPDEFAULT.FIELDORDER);
 		    }
 		}
 		private String _columntype ;
 		[XmlElement]
 		[Field (FieldName = "ColumnType",
-		 IsUnique = false,
 		 IsPersisted = true)]
 		public virtual String ColumnType
 		{
@@ -14091,13 +13611,12 @@ namespace CruiseDAL.DataObjects
 		        if(_columntype == value) { return; }
 		        _columntype = value;
 		        this.ValidateProperty(TREEFIELDSETUPDEFAULT.COLUMNTYPE, _columntype);
-		        this.NotifyPropertyChanged(TREEFIELDSETUPDEFAULT.COLUMNTYPE, _columntype);
+		        this.NotifyPropertyChanged(TREEFIELDSETUPDEFAULT.COLUMNTYPE);
 		    }
 		}
 		private String _heading ;
 		[XmlElement]
 		[Field (FieldName = "Heading",
-		 IsUnique = false,
 		 IsPersisted = true)]
 		public virtual String Heading
 		{
@@ -14110,13 +13629,12 @@ namespace CruiseDAL.DataObjects
 		        if(_heading == value) { return; }
 		        _heading = value;
 		        this.ValidateProperty(TREEFIELDSETUPDEFAULT.HEADING, _heading);
-		        this.NotifyPropertyChanged(TREEFIELDSETUPDEFAULT.HEADING, _heading);
+		        this.NotifyPropertyChanged(TREEFIELDSETUPDEFAULT.HEADING);
 		    }
 		}
 		private float _width  = 0.0f;
 		[XmlElement]
 		[Field (FieldName = "Width",
-		 IsUnique = false,
 		 IsPersisted = true)]
 		public virtual float Width
 		{
@@ -14129,13 +13647,12 @@ namespace CruiseDAL.DataObjects
 		        if(_width == value) { return; }
 		        _width = value;
 		        this.ValidateProperty(TREEFIELDSETUPDEFAULT.WIDTH, _width);
-		        this.NotifyPropertyChanged(TREEFIELDSETUPDEFAULT.WIDTH, _width);
+		        this.NotifyPropertyChanged(TREEFIELDSETUPDEFAULT.WIDTH);
 		    }
 		}
 		private String _format ;
 		[XmlElement]
 		[Field (FieldName = "Format",
-		 IsUnique = false,
 		 IsPersisted = true)]
 		public virtual String Format
 		{
@@ -14148,13 +13665,12 @@ namespace CruiseDAL.DataObjects
 		        if(_format == value) { return; }
 		        _format = value;
 		        this.ValidateProperty(TREEFIELDSETUPDEFAULT.FORMAT, _format);
-		        this.NotifyPropertyChanged(TREEFIELDSETUPDEFAULT.FORMAT, _format);
+		        this.NotifyPropertyChanged(TREEFIELDSETUPDEFAULT.FORMAT);
 		    }
 		}
 		private String _behavior ;
 		[XmlElement]
 		[Field (FieldName = "Behavior",
-		 IsUnique = false,
 		 IsPersisted = true)]
 		public virtual String Behavior
 		{
@@ -14167,7 +13683,7 @@ namespace CruiseDAL.DataObjects
 		        if(_behavior == value) { return; }
 		        _behavior = value;
 		        this.ValidateProperty(TREEFIELDSETUPDEFAULT.BEHAVIOR, _behavior);
-		        this.NotifyPropertyChanged(TREEFIELDSETUPDEFAULT.BEHAVIOR, _behavior);
+		        this.NotifyPropertyChanged(TREEFIELDSETUPDEFAULT.BEHAVIOR);
 		    }
 		}
 
@@ -14211,7 +13727,7 @@ namespace CruiseDAL.DataObjects
 	#endregion
 	#region Lookup Tables
 	[SQLEntity(SourceName = "CruiseMethods")]
-	public partial class CruiseMethodsDO : DataObject
+	public partial class CruiseMethodsDO : DataObjectExtra
 	{
 		//private static Persister persister;
 		private static RowValidator _validator;
@@ -14259,7 +13775,6 @@ namespace CruiseDAL.DataObjects
 		private String _code ;
 		[XmlElement]
 		[Field (FieldName = "Code",
-		 IsUnique = true,
 		 IsPersisted = true)]
 		public virtual String Code
 		{
@@ -14272,13 +13787,12 @@ namespace CruiseDAL.DataObjects
 		        if(_code == value) { return; }
 		        _code = value;
 		        this.ValidateProperty(CRUISEMETHODS.CODE, _code);
-		        this.NotifyPropertyChanged(CRUISEMETHODS.CODE, _code);
+		        this.NotifyPropertyChanged(CRUISEMETHODS.CODE);
 		    }
 		}
 		private String _friendlyvalue ;
 		[XmlElement]
 		[Field (FieldName = "FriendlyValue",
-		 IsUnique = false,
 		 IsPersisted = true)]
 		public virtual String FriendlyValue
 		{
@@ -14291,7 +13805,7 @@ namespace CruiseDAL.DataObjects
 		        if(_friendlyvalue == value) { return; }
 		        _friendlyvalue = value;
 		        this.ValidateProperty(CRUISEMETHODS.FRIENDLYVALUE, _friendlyvalue);
-		        this.NotifyPropertyChanged(CRUISEMETHODS.FRIENDLYVALUE, _friendlyvalue);
+		        this.NotifyPropertyChanged(CRUISEMETHODS.FRIENDLYVALUE);
 		    }
 		}
 
@@ -14319,7 +13833,7 @@ namespace CruiseDAL.DataObjects
 		}
 	}
 	[SQLEntity(SourceName = "LoggingMethods")]
-	public partial class LoggingMethodsDO : DataObject
+	public partial class LoggingMethodsDO : DataObjectExtra
 	{
 		//private static Persister persister;
 		private static RowValidator _validator;
@@ -14367,7 +13881,6 @@ namespace CruiseDAL.DataObjects
 		private String _code ;
 		[XmlElement]
 		[Field (FieldName = "Code",
-		 IsUnique = true,
 		 IsPersisted = true)]
 		public virtual String Code
 		{
@@ -14380,13 +13893,12 @@ namespace CruiseDAL.DataObjects
 		        if(_code == value) { return; }
 		        _code = value;
 		        this.ValidateProperty(LOGGINGMETHODS.CODE, _code);
-		        this.NotifyPropertyChanged(LOGGINGMETHODS.CODE, _code);
+		        this.NotifyPropertyChanged(LOGGINGMETHODS.CODE);
 		    }
 		}
 		private String _friendlyvalue ;
 		[XmlElement]
 		[Field (FieldName = "FriendlyValue",
-		 IsUnique = false,
 		 IsPersisted = true)]
 		public virtual String FriendlyValue
 		{
@@ -14399,7 +13911,7 @@ namespace CruiseDAL.DataObjects
 		        if(_friendlyvalue == value) { return; }
 		        _friendlyvalue = value;
 		        this.ValidateProperty(LOGGINGMETHODS.FRIENDLYVALUE, _friendlyvalue);
-		        this.NotifyPropertyChanged(LOGGINGMETHODS.FRIENDLYVALUE, _friendlyvalue);
+		        this.NotifyPropertyChanged(LOGGINGMETHODS.FRIENDLYVALUE);
 		    }
 		}
 
@@ -14427,7 +13939,7 @@ namespace CruiseDAL.DataObjects
 		}
 	}
 	[SQLEntity(SourceName = "ProductCodes")]
-	public partial class ProductCodesDO : DataObject
+	public partial class ProductCodesDO : DataObjectExtra
 	{
 		//private static Persister persister;
 		private static RowValidator _validator;
@@ -14475,7 +13987,6 @@ namespace CruiseDAL.DataObjects
 		private String _code ;
 		[XmlElement]
 		[Field (FieldName = "Code",
-		 IsUnique = true,
 		 IsPersisted = true)]
 		public virtual String Code
 		{
@@ -14488,13 +13999,12 @@ namespace CruiseDAL.DataObjects
 		        if(_code == value) { return; }
 		        _code = value;
 		        this.ValidateProperty(PRODUCTCODES.CODE, _code);
-		        this.NotifyPropertyChanged(PRODUCTCODES.CODE, _code);
+		        this.NotifyPropertyChanged(PRODUCTCODES.CODE);
 		    }
 		}
 		private String _friendlyvalue ;
 		[XmlElement]
 		[Field (FieldName = "FriendlyValue",
-		 IsUnique = false,
 		 IsPersisted = true)]
 		public virtual String FriendlyValue
 		{
@@ -14507,7 +14017,7 @@ namespace CruiseDAL.DataObjects
 		        if(_friendlyvalue == value) { return; }
 		        _friendlyvalue = value;
 		        this.ValidateProperty(PRODUCTCODES.FRIENDLYVALUE, _friendlyvalue);
-		        this.NotifyPropertyChanged(PRODUCTCODES.FRIENDLYVALUE, _friendlyvalue);
+		        this.NotifyPropertyChanged(PRODUCTCODES.FRIENDLYVALUE);
 		    }
 		}
 
@@ -14535,7 +14045,7 @@ namespace CruiseDAL.DataObjects
 		}
 	}
 	[SQLEntity(SourceName = "UOMCodes")]
-	public partial class UOMCodesDO : DataObject
+	public partial class UOMCodesDO : DataObjectExtra
 	{
 		//private static Persister persister;
 		private static RowValidator _validator;
@@ -14583,7 +14093,6 @@ namespace CruiseDAL.DataObjects
 		private String _code ;
 		[XmlElement]
 		[Field (FieldName = "Code",
-		 IsUnique = true,
 		 IsPersisted = true)]
 		public virtual String Code
 		{
@@ -14596,13 +14105,12 @@ namespace CruiseDAL.DataObjects
 		        if(_code == value) { return; }
 		        _code = value;
 		        this.ValidateProperty(UOMCODES.CODE, _code);
-		        this.NotifyPropertyChanged(UOMCODES.CODE, _code);
+		        this.NotifyPropertyChanged(UOMCODES.CODE);
 		    }
 		}
 		private String _friendlyvalue ;
 		[XmlElement]
 		[Field (FieldName = "FriendlyValue",
-		 IsUnique = false,
 		 IsPersisted = true)]
 		public virtual String FriendlyValue
 		{
@@ -14615,7 +14123,7 @@ namespace CruiseDAL.DataObjects
 		        if(_friendlyvalue == value) { return; }
 		        _friendlyvalue = value;
 		        this.ValidateProperty(UOMCODES.FRIENDLYVALUE, _friendlyvalue);
-		        this.NotifyPropertyChanged(UOMCODES.FRIENDLYVALUE, _friendlyvalue);
+		        this.NotifyPropertyChanged(UOMCODES.FRIENDLYVALUE);
 		    }
 		}
 
@@ -14643,7 +14151,7 @@ namespace CruiseDAL.DataObjects
 		}
 	}
 	[SQLEntity(SourceName = "Regions")]
-	public partial class RegionsDO : DataObject
+	public partial class RegionsDO : DataObjectExtra
 	{
 		//private static Persister persister;
 		private static RowValidator _validator;
@@ -14691,7 +14199,6 @@ namespace CruiseDAL.DataObjects
 		private Int64 _number ;
 		[XmlElement]
 		[Field (FieldName = "Number",
-		 IsUnique = true,
 		 IsPersisted = true)]
 		public virtual Int64 Number
 		{
@@ -14704,13 +14211,12 @@ namespace CruiseDAL.DataObjects
 		        if(_number == value) { return; }
 		        _number = value;
 		        this.ValidateProperty(REGIONS.NUMBER, _number);
-		        this.NotifyPropertyChanged(REGIONS.NUMBER, _number);
+		        this.NotifyPropertyChanged(REGIONS.NUMBER);
 		    }
 		}
 		private String _name ;
 		[XmlElement]
 		[Field (FieldName = "Name",
-		 IsUnique = false,
 		 IsPersisted = true)]
 		public virtual String Name
 		{
@@ -14723,7 +14229,7 @@ namespace CruiseDAL.DataObjects
 		        if(_name == value) { return; }
 		        _name = value;
 		        this.ValidateProperty(REGIONS.NAME, _name);
-		        this.NotifyPropertyChanged(REGIONS.NAME, _name);
+		        this.NotifyPropertyChanged(REGIONS.NAME);
 		    }
 		}
 
@@ -14751,7 +14257,7 @@ namespace CruiseDAL.DataObjects
 		}
 	}
 	[SQLEntity(SourceName = "Forests")]
-	public partial class ForestsDO : DataObject
+	public partial class ForestsDO : DataObjectExtra
 	{
 		//private static Persister persister;
 		private static RowValidator _validator;
@@ -14799,7 +14305,6 @@ namespace CruiseDAL.DataObjects
 		private long? _region_cn ;
 		[XmlIgnore]
 		[Field (FieldName = "Region_CN",
-		 IsUnique = false,
 		 IsPersisted = true)]
 		public virtual long? Region_CN
 		{
@@ -14818,7 +14323,7 @@ namespace CruiseDAL.DataObjects
 		        if(value == null || value.Value == 0) { _regions = null;  }
 		        _region_cn = value;
 		        this.ValidateProperty(FORESTS.REGION_CN, _region_cn);
-		        this.NotifyPropertyChanged(FORESTS.REGION_CN, _region_cn);
+		        this.NotifyPropertyChanged(FORESTS.REGION_CN);
 		    }
 		}
 		public virtual RegionsDO GetRegions()
@@ -14849,7 +14354,6 @@ namespace CruiseDAL.DataObjects
 		private String _state ;
 		[XmlElement]
 		[Field (FieldName = "State",
-		 IsUnique = false,
 		 IsPersisted = true)]
 		public virtual String State
 		{
@@ -14862,13 +14366,12 @@ namespace CruiseDAL.DataObjects
 		        if(_state == value) { return; }
 		        _state = value;
 		        this.ValidateProperty(FORESTS.STATE, _state);
-		        this.NotifyPropertyChanged(FORESTS.STATE, _state);
+		        this.NotifyPropertyChanged(FORESTS.STATE);
 		    }
 		}
 		private String _name ;
 		[XmlElement]
 		[Field (FieldName = "Name",
-		 IsUnique = false,
 		 IsPersisted = true)]
 		public virtual String Name
 		{
@@ -14881,13 +14384,12 @@ namespace CruiseDAL.DataObjects
 		        if(_name == value) { return; }
 		        _name = value;
 		        this.ValidateProperty(FORESTS.NAME, _name);
-		        this.NotifyPropertyChanged(FORESTS.NAME, _name);
+		        this.NotifyPropertyChanged(FORESTS.NAME);
 		    }
 		}
 		private Int64 _number ;
 		[XmlElement]
 		[Field (FieldName = "Number",
-		 IsUnique = false,
 		 IsPersisted = true)]
 		public virtual Int64 Number
 		{
@@ -14900,7 +14402,7 @@ namespace CruiseDAL.DataObjects
 		        if(_number == value) { return; }
 		        _number = value;
 		        this.ValidateProperty(FORESTS.NUMBER, _number);
-		        this.NotifyPropertyChanged(FORESTS.NUMBER, _number);
+		        this.NotifyPropertyChanged(FORESTS.NUMBER);
 		    }
 		}
 
@@ -14933,7 +14435,7 @@ namespace CruiseDAL.DataObjects
 	#endregion
 	#region Utility Tables
 	[SQLEntity(SourceName = "ErrorLog")]
-	public partial class ErrorLogDO : DataObject
+	public partial class ErrorLogDO : DataObjectExtra
 	{
 		//private static Persister persister;
 		private static RowValidator _validator;
@@ -14980,7 +14482,6 @@ namespace CruiseDAL.DataObjects
 		private String _tablename ;
 		[XmlElement]
 		[Field (FieldName = "TableName",
-		 IsUnique = true,
 		 IsPersisted = true)]
 		public virtual String TableName
 		{
@@ -14993,13 +14494,12 @@ namespace CruiseDAL.DataObjects
 		        if(_tablename == value) { return; }
 		        _tablename = value;
 		        this.ValidateProperty(ERRORLOG.TABLENAME, _tablename);
-		        this.NotifyPropertyChanged(ERRORLOG.TABLENAME, _tablename);
+		        this.NotifyPropertyChanged(ERRORLOG.TABLENAME);
 		    }
 		}
 		private Int64 _cn_number ;
 		[XmlElement]
 		[Field (FieldName = "CN_Number",
-		 IsUnique = true,
 		 IsPersisted = true)]
 		public virtual Int64 CN_Number
 		{
@@ -15012,13 +14512,12 @@ namespace CruiseDAL.DataObjects
 		        if(_cn_number == value) { return; }
 		        _cn_number = value;
 		        this.ValidateProperty(ERRORLOG.CN_NUMBER, _cn_number);
-		        this.NotifyPropertyChanged(ERRORLOG.CN_NUMBER, _cn_number);
+		        this.NotifyPropertyChanged(ERRORLOG.CN_NUMBER);
 		    }
 		}
 		private String _columnname ;
 		[XmlElement]
 		[Field (FieldName = "ColumnName",
-		 IsUnique = true,
 		 IsPersisted = true)]
 		public virtual String ColumnName
 		{
@@ -15031,13 +14530,12 @@ namespace CruiseDAL.DataObjects
 		        if(_columnname == value) { return; }
 		        _columnname = value;
 		        this.ValidateProperty(ERRORLOG.COLUMNNAME, _columnname);
-		        this.NotifyPropertyChanged(ERRORLOG.COLUMNNAME, _columnname);
+		        this.NotifyPropertyChanged(ERRORLOG.COLUMNNAME);
 		    }
 		}
 		private String _level ;
 		[XmlElement]
 		[Field (FieldName = "Level",
-		 IsUnique = true,
 		 IsPersisted = true)]
 		public virtual String Level
 		{
@@ -15050,13 +14548,12 @@ namespace CruiseDAL.DataObjects
 		        if(_level == value) { return; }
 		        _level = value;
 		        this.ValidateProperty(ERRORLOG.LEVEL, _level);
-		        this.NotifyPropertyChanged(ERRORLOG.LEVEL, _level);
+		        this.NotifyPropertyChanged(ERRORLOG.LEVEL);
 		    }
 		}
 		private String _message ;
 		[XmlElement]
 		[Field (FieldName = "Message",
-		 IsUnique = false,
 		 IsPersisted = true)]
 		public virtual String Message
 		{
@@ -15069,13 +14566,12 @@ namespace CruiseDAL.DataObjects
 		        if(_message == value) { return; }
 		        _message = value;
 		        this.ValidateProperty(ERRORLOG.MESSAGE, _message);
-		        this.NotifyPropertyChanged(ERRORLOG.MESSAGE, _message);
+		        this.NotifyPropertyChanged(ERRORLOG.MESSAGE);
 		    }
 		}
 		private String _program ;
 		[XmlElement]
 		[Field (FieldName = "Program",
-		 IsUnique = false,
 		 IsPersisted = true)]
 		public virtual String Program
 		{
@@ -15088,13 +14584,12 @@ namespace CruiseDAL.DataObjects
 		        if(_program == value) { return; }
 		        _program = value;
 		        this.ValidateProperty(ERRORLOG.PROGRAM, _program);
-		        this.NotifyPropertyChanged(ERRORLOG.PROGRAM, _program);
+		        this.NotifyPropertyChanged(ERRORLOG.PROGRAM);
 		    }
 		}
 		private bool _suppress  = false;
 		[XmlElement]
 		[Field (FieldName = "Suppress",
-		 IsUnique = false,
 		 IsPersisted = true)]
 		public virtual bool Suppress
 		{
@@ -15107,7 +14602,7 @@ namespace CruiseDAL.DataObjects
 		        if(_suppress == value) { return; }
 		        _suppress = value;
 		        this.ValidateProperty(ERRORLOG.SUPPRESS, _suppress);
-		        this.NotifyPropertyChanged(ERRORLOG.SUPPRESS, _suppress);
+		        this.NotifyPropertyChanged(ERRORLOG.SUPPRESS);
 		    }
 		}
 
@@ -15145,7 +14640,7 @@ namespace CruiseDAL.DataObjects
 		}
 	}
 	[SQLEntity(SourceName = "MessageLog")]
-	public partial class MessageLogDO : DataObject
+	public partial class MessageLogDO : DataObjectExtra
 	{
 		//private static Persister persister;
 		private static RowValidator _validator;
@@ -15193,7 +14688,6 @@ namespace CruiseDAL.DataObjects
 		private String _program ;
 		[XmlElement]
 		[Field (FieldName = "Program",
-		 IsUnique = false,
 		 IsPersisted = true)]
 		public virtual String Program
 		{
@@ -15206,13 +14700,12 @@ namespace CruiseDAL.DataObjects
 		        if(_program == value) { return; }
 		        _program = value;
 		        this.ValidateProperty(MESSAGELOG.PROGRAM, _program);
-		        this.NotifyPropertyChanged(MESSAGELOG.PROGRAM, _program);
+		        this.NotifyPropertyChanged(MESSAGELOG.PROGRAM);
 		    }
 		}
 		private String _message ;
 		[XmlElement]
 		[Field (FieldName = "Message",
-		 IsUnique = false,
 		 IsPersisted = true)]
 		public virtual String Message
 		{
@@ -15225,13 +14718,12 @@ namespace CruiseDAL.DataObjects
 		        if(_message == value) { return; }
 		        _message = value;
 		        this.ValidateProperty(MESSAGELOG.MESSAGE, _message);
-		        this.NotifyPropertyChanged(MESSAGELOG.MESSAGE, _message);
+		        this.NotifyPropertyChanged(MESSAGELOG.MESSAGE);
 		    }
 		}
 		private String _date ;
 		[XmlElement]
 		[Field (FieldName = "Date",
-		 IsUnique = false,
 		 IsPersisted = true)]
 		public virtual String Date
 		{
@@ -15244,13 +14736,12 @@ namespace CruiseDAL.DataObjects
 		        if(_date == value) { return; }
 		        _date = value;
 		        this.ValidateProperty(MESSAGELOG.DATE, _date);
-		        this.NotifyPropertyChanged(MESSAGELOG.DATE, _date);
+		        this.NotifyPropertyChanged(MESSAGELOG.DATE);
 		    }
 		}
 		private String _time ;
 		[XmlElement]
 		[Field (FieldName = "Time",
-		 IsUnique = false,
 		 IsPersisted = true)]
 		public virtual String Time
 		{
@@ -15263,13 +14754,12 @@ namespace CruiseDAL.DataObjects
 		        if(_time == value) { return; }
 		        _time = value;
 		        this.ValidateProperty(MESSAGELOG.TIME, _time);
-		        this.NotifyPropertyChanged(MESSAGELOG.TIME, _time);
+		        this.NotifyPropertyChanged(MESSAGELOG.TIME);
 		    }
 		}
 		private String _level ;
 		[XmlElement]
 		[Field (FieldName = "Level",
-		 IsUnique = false,
 		 IsPersisted = true)]
 		public virtual String Level
 		{
@@ -15282,7 +14772,7 @@ namespace CruiseDAL.DataObjects
 		        if(_level == value) { return; }
 		        _level = value;
 		        this.ValidateProperty(MESSAGELOG.LEVEL, _level);
-		        this.NotifyPropertyChanged(MESSAGELOG.LEVEL, _level);
+		        this.NotifyPropertyChanged(MESSAGELOG.LEVEL);
 		    }
 		}
 
@@ -15316,7 +14806,7 @@ namespace CruiseDAL.DataObjects
 		}
 	}
 	[SQLEntity(SourceName = "Globals")]
-	public partial class GlobalsDO : DataObject
+	public partial class GlobalsDO : DataObjectExtra
 	{
 		//private static Persister persister;
 		private static RowValidator _validator;
@@ -15359,7 +14849,6 @@ namespace CruiseDAL.DataObjects
 		private String _block ;
 		[XmlElement]
 		[Field (FieldName = "Block",
-		 IsUnique = true,
 		 IsPersisted = true)]
 		public virtual String Block
 		{
@@ -15372,13 +14861,12 @@ namespace CruiseDAL.DataObjects
 		        if(_block == value) { return; }
 		        _block = value;
 		        this.ValidateProperty(GLOBALS.BLOCK, _block);
-		        this.NotifyPropertyChanged(GLOBALS.BLOCK, _block);
+		        this.NotifyPropertyChanged(GLOBALS.BLOCK);
 		    }
 		}
 		private String _key ;
 		[XmlElement]
 		[Field (FieldName = "Key",
-		 IsUnique = true,
 		 IsPersisted = true)]
 		public virtual String Key
 		{
@@ -15391,13 +14879,12 @@ namespace CruiseDAL.DataObjects
 		        if(_key == value) { return; }
 		        _key = value;
 		        this.ValidateProperty(GLOBALS.KEY, _key);
-		        this.NotifyPropertyChanged(GLOBALS.KEY, _key);
+		        this.NotifyPropertyChanged(GLOBALS.KEY);
 		    }
 		}
 		private String _value ;
 		[XmlElement]
 		[Field (FieldName = "Value",
-		 IsUnique = false,
 		 IsPersisted = true)]
 		public virtual String Value
 		{
@@ -15410,7 +14897,7 @@ namespace CruiseDAL.DataObjects
 		        if(_value == value) { return; }
 		        _value = value;
 		        this.ValidateProperty(GLOBALS.VALUE, _value);
-		        this.NotifyPropertyChanged(GLOBALS.VALUE, _value);
+		        this.NotifyPropertyChanged(GLOBALS.VALUE);
 		    }
 		}
 
@@ -15440,7 +14927,7 @@ namespace CruiseDAL.DataObjects
 		}
 	}
 	[SQLEntity(SourceName = "Component")]
-	public partial class ComponentDO : DataObject
+	public partial class ComponentDO : DataObjectExtra
 	{
 		//private static Persister persister;
 		private static RowValidator _validator;
@@ -15488,7 +14975,6 @@ namespace CruiseDAL.DataObjects
 		private String _guid ;
 		[XmlElement]
 		[Field (FieldName = "GUID",
-		 IsUnique = false,
 		 IsPersisted = true)]
 		public virtual String GUID
 		{
@@ -15501,13 +14987,12 @@ namespace CruiseDAL.DataObjects
 		        if(_guid == value) { return; }
 		        _guid = value;
 		        this.ValidateProperty(COMPONENT.GUID, _guid);
-		        this.NotifyPropertyChanged(COMPONENT.GUID, _guid);
+		        this.NotifyPropertyChanged(COMPONENT.GUID);
 		    }
 		}
 		private String _lastmerge ;
 		[XmlElement]
 		[Field (FieldName = "LastMerge",
-		 IsUnique = false,
 		 IsPersisted = true)]
 		public virtual String LastMerge
 		{
@@ -15520,13 +15005,12 @@ namespace CruiseDAL.DataObjects
 		        if(_lastmerge == value) { return; }
 		        _lastmerge = value;
 		        this.ValidateProperty(COMPONENT.LASTMERGE, _lastmerge);
-		        this.NotifyPropertyChanged(COMPONENT.LASTMERGE, _lastmerge);
+		        this.NotifyPropertyChanged(COMPONENT.LASTMERGE);
 		    }
 		}
 		private String _filename ;
 		[XmlElement]
 		[Field (FieldName = "FileName",
-		 IsUnique = false,
 		 IsPersisted = true)]
 		public virtual String FileName
 		{
@@ -15539,7 +15023,7 @@ namespace CruiseDAL.DataObjects
 		        if(_filename == value) { return; }
 		        _filename = value;
 		        this.ValidateProperty(COMPONENT.FILENAME, _filename);
-		        this.NotifyPropertyChanged(COMPONENT.FILENAME, _filename);
+		        this.NotifyPropertyChanged(COMPONENT.FILENAME);
 		    }
 		}
 

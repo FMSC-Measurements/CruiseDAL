@@ -25,10 +25,10 @@ namespace CruiseDAL.BaseDAL
 
         int CompareFieldsByOrdinal(EntityFieldInfo x, EntityFieldInfo y)
         {
-            if(x._ordinal == y._ordinal) { return 0; }
-            if(x._ordinal == -1) { return 1; }
-            if(y._ordinal == -1) { return -1; }
-            if(x._ordinal > y._ordinal) { return 1; }
+            if(x.Ordnal == y.Ordnal) { return 0; }
+            if(x.Ordnal == -1) { return 1; }
+            if(y.Ordnal == -1) { return -1; }
+            if(x.Ordnal > y.Ordnal) { return 1; }
             else { return -1;  }
         }
 
