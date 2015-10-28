@@ -40,7 +40,7 @@ namespace CruiseDAL.DataObjects
         protected override bool ValidateProperty(string name, object value)
         {
             bool isValid = true;
-            if (name == Schema.STRATUM.KZ3PPNT) 
+            if (name == STRATUM.KZ3PPNT) 
             {
                 if (this.Method == "3PPNT" && this.KZ3PPNT <= 0)
                 {
@@ -52,7 +52,7 @@ namespace CruiseDAL.DataObjects
                     this.RemoveError(name, "KZ invalid for 3PPNT");
                 }
             }
-            else if (name == Schema.STRATUM.METHOD)
+            else if (name == STRATUM.METHOD)
             {
                 if (Array.IndexOf(Schema.Constants.CruiseMethods.UNSUPPORTED_METHODS, this.Method) >= 0)
                 {
@@ -176,7 +176,7 @@ DELETE FROM LogFieldSetup WHERE Stratum_CN = {0};",
 
         public List<T> ReadSampleGroups<T>() where T : SampleGroupDO, new()
         {
-            return this.DAL.Read<T>(Schema.SAMPLEGROUP._NAME, "WHERE Stratum_CN = ?", this.Stratum_CN);
+            return this.DAL.Read<T>(SAMPLEGROUP._NAME, "WHERE Stratum_CN = ?", this.Stratum_CN);
         }
 
         public List<SampleGroupDO> ReadSampleGroups()

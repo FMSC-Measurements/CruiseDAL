@@ -3,12 +3,16 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using CruiseDAL;
+using CruiseDAL.BaseDAL.EntityAttributes;
 
 namespace CruiseDALTest.TestTypes
 {
     [SQLEntity(SourceName = CruiseDAL.Tests.SQL.TestSQLConstants.MULTI_PROP_TABLE_NAME)]
     public class DOMultiPropType : DataObject
     {
+        [PrimaryKeyField(FieldName = "ID")]
+        public int ID { get; set; }
+
         [Field(FieldName = "StringField")]
         public string StringField { get; set; }
 
@@ -48,16 +52,6 @@ namespace CruiseDALTest.TestTypes
         [Field(FieldName = "DateTimeField")]
         public DateTime DateTimeField { get; set; }
 
-
-        public override RowValidator Validator
-        {
-            get { throw new NotImplementedException(); }
-        }
-
-        protected override bool DoValidate()
-        {
-            throw new NotImplementedException();
-        }
 
         public override void SetValues(DataObject obj)
         {

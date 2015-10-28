@@ -3,11 +3,15 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using CruiseDAL;
+using CruiseDAL.BaseDAL.EntityAttributes;
 
 namespace CruiseDALTest.TestTypes
 {
     public class POCOMultiTypeObject
     {
+        [PrimaryKeyField(FieldName = "ID")]
+        public int ID { get; set; }
+
         [Field(FieldName = "StringField")]
         public string StringField { get; set; }
 

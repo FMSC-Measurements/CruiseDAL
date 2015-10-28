@@ -1,9 +1,11 @@
 ﻿using CruiseDAL.BaseDAL.EntityAttributes;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Data;
 using System.Diagnostics;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 
 namespace CruiseDAL.BaseDAL
@@ -17,7 +19,11 @@ namespace CruiseDAL.BaseDAL
         public EntityInflator(EntityDescription entity)
         {
             EntityDescription = entity;
+
+            _constructor = EntityDescription.EntityType.GetConstructor(new Type[] { });
         }
+
+        ConstructorInfo _constructor;
 
         /// <summary>
         /// Prepares the DataObjectDiscription instance to read data from <paramref name="reader"/>
@@ -38,9 +44,18 @@ namespace CruiseDAL.BaseDAL
             }
         }
 
+        public object CreateInstanceOfEntity()
+        {
+            return Activator.CreateInstance(EntityDescription.EntityType);
+        }
+
+
         public void ReadData(System.Data.IDataReader reader, Object obj)
         {
-            
+            if (obj is ISupportInitialize)
+            {
+                ((ISupportInitialize)obj).BeginInit();
+            }
 
             foreach (FieldAttribute field in EntityDescription.Fields)
             {
@@ -57,17 +72,26 @@ namespace CruiseDAL.BaseDAL
                 }
             }
 
-
-            
-        }
-
-        public object ReadPrimaryKey(System.Data.IDataReader reader, Object obj)
-        {
             PrimaryKeyFieldAttribute keyField = EntityDescription.Fields.PrimaryKeyField;
             if (keyField != null && keyField.Ordinal != -1)
             {
                 object value = GetValueByType(keyField.RunTimeType, reader, keyField.Ordinal);
                 keyField.SetFieldValue(obj, value);
+            }
+
+            if (obj is ISupportInitialize)
+            {
+                ((ISupportInitialize)obj).EndInit();
+            }
+
+        }
+
+        public object ReadPrimaryKey(System.Data.IDataReader reader)
+        {
+            PrimaryKeyFieldAttribute keyField = EntityDescription.Fields.PrimaryKeyField;
+            if (keyField != null && keyField.Ordinal != -1)
+            {
+                object value = GetValueByType(keyField.RunTimeType, reader, keyField.Ordinal);
                 return value;
             }
             else

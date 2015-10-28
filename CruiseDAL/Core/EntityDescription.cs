@@ -52,13 +52,29 @@ namespace CruiseDAL.BaseDAL
                 //find public properties
                 foreach (PropertyInfo p in type.GetProperties(BindingFlags.Public | BindingFlags.Instance))
                 {
-                    Fields.AddField(p);
+                    FieldAttribute fieldAttr = (FieldAttribute)Attribute.GetCustomAttribute(p, typeof(FieldAttribute));
+                    if (fieldAttr != null)
+                    {
+                        Fields.AddField(p, fieldAttr);
+                    }
+                    else
+                    {
+                        Fields.AddField(p);
+                    }
                 }
 
                 //find private properties
                 foreach (PropertyInfo p in type.GetProperties(BindingFlags.NonPublic | BindingFlags.Instance))
                 {
-                    Fields.AddField(p);
+                    FieldAttribute fieldAttr = (FieldAttribute)Attribute.GetCustomAttribute(p, typeof(FieldAttribute));
+                    if (fieldAttr != null)
+                    {
+                        Fields.AddField(p, fieldAttr);
+                    }
+                    else
+                    {
+                        Fields.AddField(p);
+                    }
                 }
             }
             catch (Exception e)

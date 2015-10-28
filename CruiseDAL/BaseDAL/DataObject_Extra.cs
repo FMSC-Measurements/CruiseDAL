@@ -1,15 +1,24 @@
-﻿using CruiseDAL.DataObjects;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Linq;
 using System.Text;
 using System.Xml.Serialization;
 
+using CruiseDAL.Core.EntityModel;
+using CruiseDAL.DataObjects;
+
 namespace CruiseDAL.BaseDAL
 {
-    public abstract class DataObjectExtra : DataObject, IDataErrorInfo
+    public abstract class DataObjectExtra : DataObject, IDataErrorInfo, IValidatable
     {
+        public DataObjectExtra() : base()
+        { }
+
+
+        public DataObjectExtra(DatastoreBase ds) : base(ds)
+        { }
+
+
         protected bool _errorsLoaded = false;
 
 

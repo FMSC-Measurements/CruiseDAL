@@ -1,4 +1,5 @@
-﻿using CruiseDAL.MappingCollections;
+﻿using CruiseDAL.Core.EntityModel;
+using CruiseDAL.MappingCollections;
 namespace CruiseDAL.DataObjects
 {
     public partial class TreeAuditValueDO : IFieldValidator

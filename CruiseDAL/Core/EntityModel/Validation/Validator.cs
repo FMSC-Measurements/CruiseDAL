@@ -1,6 +1,9 @@
 using System.Collections.Generic;
 using System;
-namespace CruiseDAL
+using System.Reflection;
+using CruiseDAL.BaseDAL.EntityAttributes;
+
+namespace CruiseDAL.Core.EntityModel
 {
     public enum ErrorLevel { Warning, Error }; 
 
@@ -11,16 +14,32 @@ namespace CruiseDAL
             this.Constraints = new FieldValidatorCollection();
         }
 
-        //public RowValidator(FieldValidatorCollection constraints)
-        //{
-        //    if (constraints == null) { throw new ArgumentNullException("constraints"); }
-        //    this.Constraints = constraints;
-        //}
+        public RowValidator(Type entityType)
+        {
+            foreach (PropertyInfo p in entityType.GetProperties(BindingFlags.Public | BindingFlags.Instance))
+            {
+                FieldValidationRuleAttribut attr = (FieldValidationRuleAttribut)Attribute.GetCustomAttribute(p, typeof(FieldValidationRuleAttribut));
+                if (attr != null)
+                {
+                    this.Constraints.Add(attr);
+                }
+            }
+
+            //find private properties
+            foreach (PropertyInfo p in entityType.GetProperties(BindingFlags.NonPublic | BindingFlags.Instance))
+            {
+                FieldValidationRuleAttribut attr = (FieldValidationRuleAttribut)Attribute.GetCustomAttribute(p, typeof(FieldValidationRuleAttribut));
+                if (attr != null)
+                {
+                    this.Constraints.Add(attr);
+                }
+            }
+        }
 
 
         public FieldValidatorCollection Constraints { get; protected set; }
 
-        public bool Validate(DataObject sender, string fieldName, object value)
+        public bool Validate(IValidatable sender, string fieldName, object value)
         {
             IFieldValidator constraint = Constraints[fieldName];
             if (constraint == null) { return true; }//nothing to validate, pass
@@ -48,7 +67,6 @@ namespace CruiseDAL
                 sender.RemoveError(fieldName, message);
                 return true;
             }
-
         }
 
         public void Add(IFieldValidator fv)
@@ -67,56 +85,6 @@ namespace CruiseDAL
 
     }
 
-    public interface IFieldValidator
-    {
-        string Field { get; }
-
-        string TableName { get; }
-
-        string ErrorMessage { get; }
-
-        ErrorLevel Level { get;}
-
-        bool Validate(object sender, object value);
-    }
-
-    public class FieldValidatorCollection 
-    {
-        private Dictionary<string, IFieldValidator> lookup { get; set; }
-
-        public FieldValidatorCollection()
-        {
-            lookup = new Dictionary<string, IFieldValidator>();
-        }
-
-        public void Add( IFieldValidator fv)
-        {
-            var fieldName = fv.Field;
-            if (!HasConstraint(fieldName)) { lookup.Add(fieldName, fv); }
-            if (object.ReferenceEquals(lookup[fieldName], fv)) { return; }
-
-            lookup[fieldName] = fv;
-        }
-
-
-        public IFieldValidator this[string fieldName] 
-        {
-            get{
-                if (HasConstraint(fieldName) == false) { return null; }
-                return lookup[fieldName];
-            }
-            set{
-                lookup.Add(fieldName, value);
-            }
-        }
-
-        public bool HasConstraint(String fieldName)
-        {
-            return lookup.ContainsKey(fieldName);
-        }
-
-
-    }
 
     public class FieldValidator : IFieldValidator
     {

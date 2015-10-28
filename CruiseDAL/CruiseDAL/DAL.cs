@@ -1029,22 +1029,22 @@ namespace CruiseDAL
 
         private bool HasBlankSpeciesCodes()
         {
-            return this.GetRowCount(Schema.TREE._NAME, "WHERE ifnull(Species, '') = ''") > 0;
+            return this.GetRowCount(TREE._NAME, "WHERE ifnull(Species, '') = ''") > 0;
         }
 
         private bool HasBlankLiveDead()
         {
-            return this.GetRowCount(Schema.TREE._NAME, "WHERE ifnull(LiveDead, '') = ''") > 0;
+            return this.GetRowCount(TREE._NAME, "WHERE ifnull(LiveDead, '') = ''") > 0;
         }
 
         private bool HasBlankCountOrMeasure()
         {
-            return this.GetRowCount(Schema.TREE._NAME, "WHERE ifnull(CountOrMeasure, '') = ''") > 0;
+            return this.GetRowCount(TREE._NAME, "WHERE ifnull(CountOrMeasure, '') = ''") > 0;
         }
 
         private bool HasBlankDefaultLiveDead()
         {
-            return this.GetRowCount(Schema.SAMPLEGROUP._NAME, "WHERE ifnull(DefaultLiveDead, '') = ''") > 0;
+            return this.GetRowCount(SAMPLEGROUP._NAME, "WHERE ifnull(DefaultLiveDead, '') = ''") > 0;
         }
 
         //private bool HasMismatchSpecies()
@@ -1060,12 +1060,12 @@ namespace CruiseDAL
 
         private bool HasOrphanedStrata()
         {
-            return this.GetRowCount(Schema.STRATUM._NAME, "LEFT JOIN CuttingUnitStratum USING (Stratum_CN) WHERE CuttingUnitStratum.Stratum_CN IS NULL") > 0;
+            return this.GetRowCount(STRATUM._NAME, "LEFT JOIN CuttingUnitStratum USING (Stratum_CN) WHERE CuttingUnitStratum.Stratum_CN IS NULL") > 0;
         }
 
         private bool HasStrataWithNoSampleGroups()
         {
-            return this.GetRowCount(Schema.STRATUM._NAME, "LEFT JOIN SampleGroup USING (Stratum_CN) WHERE SampleGroup.Stratum_CN IS NULL") > 0;
+            return this.GetRowCount(STRATUM._NAME, "LEFT JOIN SampleGroup USING (Stratum_CN) WHERE SampleGroup.Stratum_CN IS NULL") > 0;
         }
 
 

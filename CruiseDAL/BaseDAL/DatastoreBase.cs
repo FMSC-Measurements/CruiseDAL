@@ -22,11 +22,6 @@ namespace CruiseDAL
 
     public abstract class DatastoreBase
     {
-        private const String LOG_LEV_DB_CONTROL_VERBOSE = "DB_Control_Verbose";
-        private const String LOG_LEV_DB_CONTROL = "DB_Control";
-        private const String LOG_LEV_DS_EVENT = "DS_Event"; 
-
-        protected delegate void AsyncBuildSchemaCaller();
 
         protected DbConnection _Connection;
 
@@ -35,7 +30,7 @@ namespace CruiseDAL
         //protected int _openConnectionCount = 0;
         protected Object _connectionSyncLock = new object();
         protected Stack<DbTransaction> _transactionStack = new Stack<DbTransaction>(); 
-        protected AsyncBuildSchemaCaller _buildSchemaCallerHandle;
+        protected Action _buildSchemaCallerHandle;
 
         internal ObjectCache _IDTable;
         private static Dictionary<Type, EntityDescription> DataObjectDescriptionLookup = new Dictionary<Type, EntityDescription>();
@@ -316,121 +311,7 @@ namespace CruiseDAL
         }
         #endregion
 
-        #region Transaction Management
-        public DbTransaction BeginTransaction()
-        {
-            lock (_transactionStack)
-            {
-                DbConnection conn = null; 
-                try
-                {
-                    Debug.WriteLine("Transaction Started", LOG_LEV_DB_CONTROL);
-                    conn = this.OpenConnection();
-                    DbTransaction transaction = conn.BeginTransaction();
-                    this._transactionStack.Push(transaction);
-                    return transaction;
-                }
-                catch(Exception e)
-                {
-                    throw this.ThrowDatastoreExceptionHelper(conn, null, e);
-                }
-            }
-        }
-
-        public void CancelTransaction()
-        {
-            lock (_transactionStack)
-            {
-                try
-                {
-                    DbTransaction top = _transactionStack.Peek();
-                    this.CancelTransaction(top);
-                }
-                catch (InvalidOperationException)//handle stack empty
-                {
-                    Debug.Fail("transaction stack empty, are you missing a BeginTransaction"); 
-                }
-            }
-        }
-
-        public void CancelTransaction(DbTransaction transaction)
-        {
-            lock (_transactionStack)
-            {
-                Debug.Assert(this._transactionStack.Contains(transaction), "transaction not on stack");
-                try
-                {
-                    DbTransaction top = null;
-                    do
-                    {
-                        try
-                        {
-                            top = _transactionStack.Pop();
-                            top.Rollback();
-                            Debug.WriteLine("Transaction Canceled", LOG_LEV_DB_CONTROL);
-                        }
-                        catch(InvalidOperationException)//handel stack empty
-                        {
-                            break; 
-                        }                        
-                    } while (!Object.ReferenceEquals(top, transaction));
-                }
-                catch (Exception e)
-                {
-                    throw this.ThrowDatastoreExceptionHelper(this._Connection, null, e);
-                }
-            }
-        }
-
         
-
-        public void EndTransaction()
-        {
-            lock (_transactionStack)
-            {
-                try
-                {
-                    DbTransaction top = _transactionStack.Peek();
-                    this.EndTransaction(top);
-                }
-                catch (InvalidOperationException)//handle stack empty
-                {
-                    Debug.Fail("transaction stack empty, are you missing a BeginTransaction");
-                }
-            }
-
-        }
-
-        public void EndTransaction(DbTransaction transaction)
-        {
-            lock (_transactionStack)
-            {
-                Debug.Assert(this._transactionStack.Contains(transaction), "transaction not on stack");
-                try
-                {
-                    DbTransaction top = null;
-                    do
-                    {
-                        try
-                        {
-                            top = _transactionStack.Pop();
-                            top.Commit();
-                            Debug.WriteLine("Transaction Ended", LOG_LEV_DB_CONTROL);
-                        }
-                        catch(InvalidOperationException)//handel stack empty
-                        {
-                            break; 
-                        }                        
-                    } while (!Object.ReferenceEquals(top, transaction));
-                }
-                catch (Exception e)
-                {
-                    throw this.ThrowDatastoreExceptionHelper(this._Connection, null, e);
-                }
-            }
-        }
-
-        #endregion 
 
 
         #region Persistance Methods
@@ -655,7 +536,7 @@ namespace CruiseDAL
         //    throw ex;
         //}
 
-        #region Connection managment 
+        #region Connection management 
         protected void EnterConnectionHold()
         {
             System.Threading.Interlocked.Increment(ref this._holdConnection);

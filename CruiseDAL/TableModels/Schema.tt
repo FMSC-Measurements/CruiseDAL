@@ -17,7 +17,7 @@ DataDictionaryReader dr = new DataDictionaryReader();
 using System;
 using CruiseDAL;
 
-namespace CruiseDAL.Schema
+namespace CruiseDAL.DataObjects
 {
 <#
 List<String> tableNames = new List<String>();

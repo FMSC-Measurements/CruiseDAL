@@ -7,7 +7,9 @@ using CruiseDALTest.TestTypes;
 using Xunit;
 using Xunit.Abstractions;
 
-namespace CruiseDAL.BaseDAL.Tests
+using CruiseDAL.BaseDAL;
+
+namespace CruiseDAL.Core.Tests
 {
     public class DataObjectInfoTest 
     {
@@ -60,12 +62,17 @@ namespace CruiseDAL.BaseDAL.Tests
             Assert.Equal(dataType, doi.EntityType);
             Assert.False(String.IsNullOrWhiteSpace(doi.SourceName));
 
-            Assert.NotEmpty(doi.Fields);
-            Assert.NotNull(doi.KeyField);
+            
+            Assert.NotNull(doi.Fields.PrimaryKeyField);
+            Assert.NotNull(doi.Fields.PrimaryKeyField.Getter);
+            Assert.NotNull(doi.Fields.PrimaryKeyField.Setter);
 
-            Assert.True(doi.Fields.Values.All(x => x.Getter != null));
-            Assert.True(doi.Fields.Values.All(x => x.Setter != null));
-            Assert.True(doi.Fields.Values.All(x => x.RunTimeType != null));
+
+
+            Assert.NotEmpty(doi.Fields);
+            Assert.True(doi.Fields.All(x => x.Getter != null));
+            Assert.True(doi.Fields.All(x => x.Setter != null));
+            Assert.True(doi.Fields.All(x => x.RunTimeType != null));
         }
     }
 }

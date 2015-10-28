@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System;
+using CruiseDAL.Core.EntityModel;
 
 namespace CruiseDAL.DataObjects
 {
@@ -103,7 +104,7 @@ namespace CruiseDAL.DataObjects
         {
             base.NotifyPropertyChanged(name);
             if (PropertyChangedEventsDisabled) { return; }
-            if (name == "TreeDefaultValue" || name == Schema.TREE.TREEDEFAULTVALUE_CN)
+            if (name == "TreeDefaultValue" || name == TREE.TREEDEFAULTVALUE_CN)
             {
                 //_treeValidator = null;
                 this.ClearErrors();
@@ -121,51 +122,51 @@ namespace CruiseDAL.DataObjects
 
             isValid = base.ValidateProperty(name, value) && isValid; //perform base validation 
             
-            if (name == Schema.TREE.SPECIES)
+            if (name == TREE.SPECIES)
             {
                 isValid = this.ValidateSpecies() && isValid;
             }
-            else if (name == Schema.TREE.SAMPLEGROUP_CN)
+            else if (name == TREE.SAMPLEGROUP_CN)
             {
                 isValid = this.ValidateSampleGroup() && isValid;
             }
-            else if (name == Schema.TREE.TREEDEFAULTVALUE_CN)
+            else if (name == TREE.TREEDEFAULTVALUE_CN)
             {
                 isValid = this.ValidateTreeDefaultValue() && isValid;
             }
-            else if (name == Schema.TREE.LIVEDEAD)
+            else if (name == TREE.LIVEDEAD)
             {
                 isValid = this.ValidateLiveDead() && isValid;
             }
-            else if (name == Schema.TREE.COUNTORMEASURE)
+            else if (name == TREE.COUNTORMEASURE)
             {
                 isValid = this.ValidateCountOrMeasure() && isValid;
             }
 
             bool isMeasure = this.CountOrMeasure == "M";
 
-            if (name == Schema.TREE.TOTALHEIGHT || name == Schema.TREE.MERCHHEIGHTPRIMARY || name == Schema.TREE.HEIGHTTOFIRSTLIVELIMB || name == Schema.TREE.UPPERSTEMHEIGHT)
+            if (name == TREE.TOTALHEIGHT || name == TREE.MERCHHEIGHTPRIMARY || name == TREE.HEIGHTTOFIRSTLIVELIMB || name == TREE.UPPERSTEMHEIGHT)
             {
                 isValid = this.ValidateHeights(isMeasure) && isValid;
             }
-            if (name == Schema.TREE.MERCHHEIGHTPRIMARY || name == Schema.TREE.MERCHHEIGHTSECONDARY)
+            if (name == TREE.MERCHHEIGHTPRIMARY || name == TREE.MERCHHEIGHTSECONDARY)
             {
                 isValid = this.ValidateMerchHeightSecondary(isMeasure) && isValid;
             }
 
-            if (name == Schema.TREE.UPPERSTEMHEIGHT || name == Schema.TREE.MERCHHEIGHTPRIMARY)
+            if (name == TREE.UPPERSTEMHEIGHT || name == TREE.MERCHHEIGHTPRIMARY)
             {
                 isValid = this.ValidateUpperStemHeight(isMeasure) && isValid;
             }
-            else if (name == Schema.TREE.DBH || name == Schema.TREE.DRC)
+            else if (name == TREE.DBH || name == TREE.DRC)
             {
                 isValid = this.ValidateDiameters(isMeasure) && isValid;
             }
-            else if (name == Schema.TREE.TOPDIBPRIMARY || name == Schema.TREE.TOPDIBSECONDARY)
+            else if (name == TREE.TOPDIBPRIMARY || name == TREE.TOPDIBSECONDARY)
             {
                 isValid = this.ValidateTopDIBSecondary(isMeasure) && isValid;
             }
-            else if (name == Schema.TREE.RECOVERABLEPRIMARY || name == Schema.TREE.SEENDEFECTPRIMARY)
+            else if (name == TREE.RECOVERABLEPRIMARY || name == TREE.SEENDEFECTPRIMARY)
             {
                 isValid = this.ValidateSeenDefectPrimary(isMeasure) && isValid;
             }
@@ -191,10 +192,10 @@ namespace CruiseDAL.DataObjects
         {
             if (string.IsNullOrEmpty(this.Species))
             {
-                this.AddError(Schema.TREE.SPECIES, "Species is required");
+                this.AddError(TREE.SPECIES, "Species is required");
                 return false;
             }
-            this.RemoveError(Schema.TREE.SPECIES, "Species is required");
+            this.RemoveError(TREE.SPECIES, "Species is required");
             return true;
         }
 
@@ -239,12 +240,12 @@ namespace CruiseDAL.DataObjects
         {
             if(String.IsNullOrEmpty(this.CountOrMeasure))
             {
-                this.AddError(Schema.TREE.COUNTORMEASURE, "Count or Measure value invalid");
+                this.AddError(TREE.COUNTORMEASURE, "Count or Measure value invalid");
                 return false; 
             }
             else 
             {
-                this.RemoveError(Schema.TREE.COUNTORMEASURE, "Count or Measure value invalid");
+                this.RemoveError(TREE.COUNTORMEASURE, "Count or Measure value invalid");
                 return true;
             }
         }
@@ -270,12 +271,12 @@ namespace CruiseDAL.DataObjects
         {
             if (String.IsNullOrEmpty(this.LiveDead))
             {
-                this.AddError(Schema.TREE.LIVEDEAD, "Live Dead can not be blank");
+                this.AddError(TREE.LIVEDEAD, "Live Dead can not be blank");
                 return false;
             }
             else
             {
-                this.RemoveError(Schema.TREE.LIVEDEAD, "Live Dead can not be blank");
+                this.RemoveError(TREE.LIVEDEAD, "Live Dead can not be blank");
                 return true;
             }
         }
@@ -286,11 +287,11 @@ namespace CruiseDAL.DataObjects
             {
                 if (MerchHeightSecondary <= MerchHeightPrimary)
                 {
-                    this.AddError(Schema.TREE.MERCHHEIGHTSECONDARY, "Merch Height Secondary must be greater than Merch Height Primary");
+                    this.AddError(TREE.MERCHHEIGHTSECONDARY, "Merch Height Secondary must be greater than Merch Height Primary");
                     return false;
                 }
             }
-            this.RemoveError(Schema.TREE.MERCHHEIGHTSECONDARY, "Merch Height Secondary must be greater than Merch Height Primary");
+            this.RemoveError(TREE.MERCHHEIGHTSECONDARY, "Merch Height Secondary must be greater than Merch Height Primary");
             return true;
         }
 
@@ -300,16 +301,16 @@ namespace CruiseDAL.DataObjects
             {
                 if (UpperStemHeight < MerchHeightPrimary)
                 {
-                    this.AddError(Schema.TREE.UPPERSTEMHEIGHT, "Upper Stem Height must be greater or equal to Merch Height Primary");
+                    this.AddError(TREE.UPPERSTEMHEIGHT, "Upper Stem Height must be greater or equal to Merch Height Primary");
                     return false;
                 }
                 else
                 {
-                    this.RemoveError(Schema.TREE.UPPERSTEMHEIGHT, "Upper Stem Height must be greater or equal to Merch Height Primary");
+                    this.RemoveError(TREE.UPPERSTEMHEIGHT, "Upper Stem Height must be greater or equal to Merch Height Primary");
                     return true;
                 }
             }
-            this.RemoveError(Schema.TREE.UPPERSTEMHEIGHT, "Upper Stem Height must be greater or equal to Merch Height Primary");
+            this.RemoveError(TREE.UPPERSTEMHEIGHT, "Upper Stem Height must be greater or equal to Merch Height Primary");
             return true;
         }
 
@@ -319,11 +320,11 @@ namespace CruiseDAL.DataObjects
             {
                 if (UpperStemDiameter >= DBH)
                 {
-                    this.AddError(Schema.TREE.UPPERSTEMDIAMETER, "Upper Stem Diameter must be smaller than DBH");
+                    this.AddError(TREE.UPPERSTEMDIAMETER, "Upper Stem Diameter must be smaller than DBH");
                     return false;
                 }
             }
-            this.RemoveError(Schema.TREE.UPPERSTEMDIAMETER, "Upper Stem Diameter must be smaller than DBH");
+            this.RemoveError(TREE.UPPERSTEMDIAMETER, "Upper Stem Diameter must be smaller than DBH");
             return true;
         }
 
@@ -333,11 +334,11 @@ namespace CruiseDAL.DataObjects
             {
                 if (TopDIBSecondary > TopDIBPrimary)
                 {
-                    this.AddError(Schema.TREE.TOPDIBSECONDARY, "Top DIB Secondary must be less Top DIB Primary");
+                    this.AddError(TREE.TOPDIBSECONDARY, "Top DIB Secondary must be less Top DIB Primary");
                     return false;
                 }
             }
-            this.RemoveError(Schema.TREE.TOPDIBSECONDARY, "Top DIB Secondary must be less Top DIB Primary");
+            this.RemoveError(TREE.TOPDIBSECONDARY, "Top DIB Secondary must be less Top DIB Primary");
             return true;
         }
 
@@ -347,11 +348,11 @@ namespace CruiseDAL.DataObjects
             {
                 if (SeenDefectPrimary < RecoverablePrimary)
                 {
-                    this.AddError(Schema.TREE.SEENDEFECTPRIMARY, "Seen Defect Primary must be greater than Recoverable Primary");
+                    this.AddError(TREE.SEENDEFECTPRIMARY, "Seen Defect Primary must be greater than Recoverable Primary");
                     return false;
                 }
             }
-            this.RemoveError(Schema.TREE.SEENDEFECTPRIMARY, "Seen Defect Primary must be greater than Recoverable Primary");
+            this.RemoveError(TREE.SEENDEFECTPRIMARY, "Seen Defect Primary must be greater than Recoverable Primary");
             return true;
         }
 

@@ -16,6 +16,7 @@ using System.Xml.Serialization;
 using System.Reflection;
 using CruiseDAL.BaseDAL;
 using CruiseDAL.BaseDAL.EntityAttributes;
+using CruiseDAL.Core.EntityModel;
 
 namespace CruiseDAL.DataObjects
 {

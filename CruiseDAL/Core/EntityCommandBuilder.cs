@@ -22,11 +22,11 @@ namespace CruiseDAL.BaseDAL
         string _updateCommandFormat;
 
         public EntityDescription EntityDescription { get; set; }
-        private DatastoreBase _dataStore;
+        private DbProviderFactoryAdapter _providerFactory;
 
-        public EntityCommandBuilder(EntityDescription entDesc, DatastoreBase dataStore)
+        public EntityCommandBuilder(EntityDescription entDesc, DbProviderFactoryAdapter providerFactory)
         {
-            _dataStore = dataStore;
+            _providerFactory = providerFactory;
             EntityDescription = entDesc;
 
             InitializeSelectCommand();
@@ -46,7 +46,7 @@ namespace CruiseDAL.BaseDAL
             this._selectCommand.Where = where;
             string query = _selectCommand.ToString();
 
-            DbCommand command = _dataStore.CreateCommand(query);
+            DbCommand command = _providerFactory.CreateCommand(query);
             return command;
 
         }
@@ -87,13 +87,13 @@ namespace CruiseDAL.BaseDAL
         {
             _insertCommand.ConflictOption = option.ToString();
 
-            DbCommand command = _dataStore.CreateCommand(_insertCommand.ToString());
+            DbCommand command = _providerFactory.CreateCommand(_insertCommand.ToString());
 
             foreach(FieldAttribute field in EntityDescription.Fields.GetPersistedFields())
             {
                 object value = field.GetFieldValueOrDefault(data);
 
-                DbParameter pram = _dataStore.CreateParameter(field.SQLPramName, value);
+                DbParameter pram = _providerFactory.CreateParameter(field.SQLPramName, value);
                 command.Parameters.Add(pram);
             }
 
@@ -103,7 +103,7 @@ namespace CruiseDAL.BaseDAL
                 {
                     object value = field.GetFieldValueOrDefault(data);
 
-                    DbParameter pram = _dataStore.CreateParameter(field.SQLPramName, value);
+                    DbParameter pram = _providerFactory.CreateParameter(field.SQLPramName, value);
                     command.Parameters.Add(pram);
                 }
             }
@@ -226,13 +226,13 @@ namespace CruiseDAL.BaseDAL
 
             _updateCommand.ConflictOption = option.ToString();
 
-            DbCommand command = _dataStore.CreateCommand(_updateCommand.ToString());
+            DbCommand command = _providerFactory.CreateCommand(_updateCommand.ToString());
 
             foreach (FieldAttribute field in EntityDescription.Fields.GetPersistedFields())
             {
                 object value = field.GetFieldValueOrDefault(data);
 
-                DbParameter pram = _dataStore.CreateParameter(field.SQLPramName, value);
+                DbParameter pram = _providerFactory.CreateParameter(field.SQLPramName, value);
                 command.Parameters.Add(pram);
             }
 
@@ -242,7 +242,7 @@ namespace CruiseDAL.BaseDAL
                 {
                     object value = field.GetFieldValueOrDefault(data);
 
-                    DbParameter pram = _dataStore.CreateParameter(field.SQLPramName, value);
+                    DbParameter pram = _providerFactory.CreateParameter(field.SQLPramName, value);
                     command.Parameters.Add(pram);
                 }
             }
@@ -250,7 +250,7 @@ namespace CruiseDAL.BaseDAL
             
             PrimaryKeyFieldAttribute keyField = EntityDescription.Fields.PrimaryKeyField;
             object keyValue = keyField.GetFieldValue(data);
-            DbParameter p = _dataStore.CreateParameter(keyField.SQLPramName, keyField);
+            DbParameter p = _providerFactory.CreateParameter(keyField.SQLPramName, keyField);
             command.Parameters.Add(p);
 
 
@@ -345,7 +345,7 @@ namespace CruiseDAL.BaseDAL
 
             //string query = string.Format(@"DELETE FROM {0} WHERE rowID = @rowID;", EntityDescription.SourceName);
 
-            return _dataStore.CreateCommand(query);
+            return _providerFactory.CreateCommand(query);
         }
 
         public DbCommand BuildSQLDeleteCommand(object data)
@@ -354,7 +354,7 @@ namespace CruiseDAL.BaseDAL
             var command = GetSQLDeleteCommand();
 
             command.Parameters.Clear();
-            command.Parameters.Add(_dataStore.CreateParameter("@rowID", keyValue));
+            command.Parameters.Add(_providerFactory.CreateParameter("@rowID", keyValue));
             return command;
         }
         #endregion

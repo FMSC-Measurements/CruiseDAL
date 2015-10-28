@@ -1,7 +1,7 @@
 using System;
 using CruiseDAL;
 
-namespace CruiseDAL.Schema
+namespace CruiseDAL.DataObjects
 {
 	#region Core Tables
 	public static class SALE

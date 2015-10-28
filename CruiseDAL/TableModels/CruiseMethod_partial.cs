@@ -9,7 +9,7 @@ namespace CruiseDAL.DataObjects
                 string.Join("', '", Schema.Constants.CruiseMethods.UNSUPPORTED_METHODS),
                 (reconMethodsOnly) ? "AND Code = 'FIX' OR Code = 'PNT'" : string.Empty);
 
-            return db.Read<T>(Schema.CRUISEMETHODS._NAME, condition);
+            return db.Read<T>(CRUISEMETHODS._NAME, condition);
         }
 
         public static List<CruiseMethodsDO> ReadCruiseMethods(DAL db, bool reconMethodsOnly)

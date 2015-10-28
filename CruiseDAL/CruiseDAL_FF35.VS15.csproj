@@ -99,46 +99,52 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>DAL.AutoGen.tt</DependentUpon>
     </Compile>
-    <Compile Include="AutoGen\DataObjects.cs">
+    <Compile Include="BaseDAL\DataStoreContext.cs" />
+    <Compile Include="BaseDAL\DbProviderFactoryAdapter.cs" />
+    <Compile Include="Core\Constants\Logging.cs" />
+    <Compile Include="Core\EntityModel\IDataObject.cs" />
+    <Compile Include="Core\EntityModel\Validation\FieldValidatorCollection.cs" />
+    <Compile Include="Core\EntityModel\Validation\IFieldValidator.cs" />
+    <Compile Include="Core\EntityModel\Validation\IValidatable.cs" />
+    <Compile Include="SQLite\SQLiteDataStoreContext.cs" />
+    <Compile Include="SQLite\SQLiteProviderFactory.cs" />
+    <Compile Include="TableModels\TableModels.cs">
       <SubType>Code</SubType>
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
-      <DependentUpon>DataObjects.tt</DependentUpon>
+      <DependentUpon>TableModels.tt</DependentUpon>
     </Compile>
-    <Compile Include="AutoGen\Schema.cs">
+    <Compile Include="TableModels\Schema.cs">
       <SubType>Code</SubType>
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>Schema.tt</DependentUpon>
     </Compile>
     <Compile Include="BaseDAL\DataObject_Extra.cs" />
-    <Compile Include="BaseDAL\EntityAttributes\FieldAttributeCollection.cs" />
-    <Compile Include="BaseDAL\EntityAttributes\InfrastructureFieldAttribute.cs" />
-    <Compile Include="BaseDAL\EntityAttributes\ReferenceAttribute.cs" />
+    <Compile Include="Core\EntityAttributes\FieldAttributeCollection.cs" />
+    <Compile Include="Core\EntityAttributes\InfrastructureFieldAttribute.cs" />
+    <Compile Include="Core\EntityAttributes\ReferenceAttribute.cs" />
     <Compile Include="BaseDAL\EntityCache.cs" />
-    <Compile Include="BaseDAL\EntityFormatProvider.cs" />
-    <Compile Include="BaseDAL\EntityInflator.cs" />
-    <Compile Include="BaseDAL\EntitySelectCommandBuilder.cs" />
-    <Compile Include="BaseDAL\EntityFormatter.cs" />
-    <Compile Include="BaseDAL\SQL\ColumnInfo.cs" />
-    <Compile Include="BaseDAL\EntityDescription.cs" />
+    <Compile Include="Core\EntityFormatProvider.cs" />
+    <Compile Include="Core\EntityInflator.cs" />
+    <Compile Include="Core\EntityFormatter.cs" />
+    <Compile Include="Core\SQL\ColumnInfo.cs" />
+    <Compile Include="Core\EntityDescription.cs" />
     <Compile Include="BaseDAL\DataObjectFactory.cs" />
     <Compile Include="BaseDAL\DataObjects_Base.cs" />
     <Compile Include="BaseDAL\DatastoreBase.cs" />
-    <Compile Include="BaseDAL\EntityAttributes\FieldAttribute.cs" />
-    <Compile Include="BaseDAL\EntityAttributes\FieldValidationRuleAttribut.cs" />
-    <Compile Include="BaseDAL\EntityAttributes\PrimaryKeyFieldAttribute.cs" />
-    <Compile Include="BaseDAL\EntityAttributes\SQLEntityAttribute.cs" />
-    <Compile Include="BaseDAL\EntityCommandBuilder.cs" />
+    <Compile Include="Core\EntityAttributes\FieldAttribute.cs" />
+    <Compile Include="Core\EntityAttributes\FieldValidationRuleAttribut.cs" />
+    <Compile Include="Core\EntityAttributes\PrimaryKeyFieldAttribute.cs" />
+    <Compile Include="Core\EntityAttributes\SQLEntityAttribute.cs" />
+    <Compile Include="Core\EntityCommandBuilder.cs" />
     <Compile Include="BaseDAL\Exceptions.cs" />
-    <Compile Include="BaseDAL\EntityFieldInfo.cs" />
     <Compile Include="BaseDAL\ObjectCache.cs" />
-    <Compile Include="BaseDAL\ReadDataObject.cs" />
-    <Compile Include="BaseDAL\SQL\SQLInsertCommand.cs" />
-    <Compile Include="BaseDAL\SQL\SQLSelectExpression.cs" />
-    <Compile Include="BaseDAL\SQL\SQLUpdateCommand.cs" />
-    <Compile Include="BaseDAL\SQL\WhereClause.cs" />
-    <Compile Include="BaseDAL\Validator.cs" />
+    <Compile Include="Core\SQL\SQLInsertCommand.cs" />
+    <Compile Include="Core\SQL\SQLSelectExpression.cs" />
+    <Compile Include="Core\SQL\SQLUpdateCommand.cs" />
+    <Compile Include="Core\SQL\WhereClause.cs" />
+    <Compile Include="Core\EntityModel\Validation\Validator.cs" />
     <Compile Include="CruiseDAL\DAL.cs" />
     <Compile Include="CruiseDAL\DataObjects\AuditValue_partial.cs" />
     <Compile Include="CruiseDAL\DataObjects\CountTree_ViewDO.cs" />
@@ -194,11 +200,11 @@
       <Generator>TextTemplatingFileGenerator</Generator>
       <LastGenOutput>DAL.AutoGen.cs</LastGenOutput>
     </None>
-    <None Include="AutoGen\DataObjects.tt">
+    <None Include="TableModels\TableModels.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
-      <LastGenOutput>DataObjects.cs</LastGenOutput>
+      <LastGenOutput>TableModels.cs</LastGenOutput>
     </None>
-    <None Include="AutoGen\Schema.tt">
+    <None Include="TableModels\Schema.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
       <LastGenOutput>Schema.cs</LastGenOutput>
     </None>
