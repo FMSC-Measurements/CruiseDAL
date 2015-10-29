@@ -6,9 +6,8 @@ using System.Threading.Tasks;
 
 namespace CruiseDAL.Core.EntityModel
 {
-    interface IDataObject
+    public interface IDataObject
     {
         DatastoreBase DAL { get; set; }
-
     }
 }

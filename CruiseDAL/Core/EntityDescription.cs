@@ -16,7 +16,7 @@ using System.Data.SQLite;
 #endif
 
 
-namespace CruiseDAL.BaseDAL
+namespace CruiseDAL.Core
 {
     public class EntityDescription
     {
@@ -32,6 +32,8 @@ namespace CruiseDAL.BaseDAL
 
         //public Dictionary<String, ReferenceAttribute> ReferenceFields { get; set; }
 
+        public EntityCommandBuilder CommandBuilder { get; set; }
+        public EntityInflator Inflator { get; set; }
 
         protected EntityDescription()
         {
@@ -39,18 +41,24 @@ namespace CruiseDAL.BaseDAL
         }
 
 
-        public EntityDescription(Type type) : this()
+        public EntityDescription(Type type, DbProviderFactoryAdapter providerFactory) : this()
+        {
+            EntityType = type;
+
+            this.Inflator = new EntityInflator(this);
+            this.CommandBuilder = new EntityCommandBuilder(this, providerFactory);
+        }
+
+        protected void Initialize()
         {
             try
             {
-                EntityType = type;
-
                 //read Entity attribute
-                object[] tAttrs = type.GetCustomAttributes(typeof(SQLEntityAttribute), true);
+                object[] tAttrs = EntityType.GetCustomAttributes(typeof(SQLEntityAttribute), true);
                 _entityAttr = (SQLEntityAttribute)tAttrs[0];
 
                 //find public properties
-                foreach (PropertyInfo p in type.GetProperties(BindingFlags.Public | BindingFlags.Instance))
+                foreach (PropertyInfo p in EntityType.GetProperties(BindingFlags.Public | BindingFlags.Instance))
                 {
                     FieldAttribute fieldAttr = (FieldAttribute)Attribute.GetCustomAttribute(p, typeof(FieldAttribute));
                     if (fieldAttr != null)
@@ -64,7 +72,7 @@ namespace CruiseDAL.BaseDAL
                 }
 
                 //find private properties
-                foreach (PropertyInfo p in type.GetProperties(BindingFlags.NonPublic | BindingFlags.Instance))
+                foreach (PropertyInfo p in EntityType.GetProperties(BindingFlags.NonPublic | BindingFlags.Instance))
                 {
                     FieldAttribute fieldAttr = (FieldAttribute)Attribute.GetCustomAttribute(p, typeof(FieldAttribute));
                     if (fieldAttr != null)
@@ -79,14 +87,8 @@ namespace CruiseDAL.BaseDAL
             }
             catch (Exception e)
             {
-                throw new ORMException("Unable to create EntityDescription for " + type.Name, e);
+                throw new ORMException("Unable to create EntityDescription for " + EntityType.Name, e);
             }
         }
-
-
     }
-
-        
-    
-
 }

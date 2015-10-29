@@ -10,15 +10,21 @@ using System.Diagnostics;
 using System.Threading;
 using System.ComponentModel;
 using CruiseDAL.Core.EntityModel;
-using CruiseDAL.BaseDAL.SQL;
+using CruiseDAL.Core.SQL;
+using CruiseDAL.BaseDAL.EntityAttributes;
+using CruiseDAL.BaseDAL;
 
-namespace CruiseDAL.BaseDAL
+namespace CruiseDAL.Core
 {
+    public enum OnConflictOption { Default, Rollback, Abort, Fail, Ignore, Replace };
+
     public abstract class DataStoreContext : IDisposable
     {
         public DatastoreBase DataStore { get; set; }
 
         public DbConnectionStringBuilder ConnectionStringBuilder { get; protected set; }
+
+        protected int _holdConnection = 0;
 
         protected Object _readOnlyConnectionSyncLock = new object();
         protected Object _readWriteConnectionSyncLock = new object();
@@ -26,9 +32,12 @@ namespace CruiseDAL.BaseDAL
         protected DbConnection _ReadWriteConnection;
         protected DbConnection _ReadOnlyConnection;
 
+        protected object _transactionSyncLock = new object(); 
+        protected DbTransaction _CurrentTransaction;
+
         protected Stack<DbTransaction> _transactionStack = new Stack<DbTransaction>();
 
-        protected EntityCache _cache;
+        protected Dictionary<Type, EntityCache> _cache;
 
 
         #region abstract members
@@ -36,6 +45,31 @@ namespace CruiseDAL.BaseDAL
         protected abstract Exception ThrowExceptionHelper(DbConnection conn, DbCommand comm, Exception innerException);
 
         #endregion
+
+        private EntityCache GetEntityCache(Type type)
+        {
+            if(_cache == null) { _cache = new Dictionary<Type, EntityCache>(); }
+            if (_cache.ContainsKey(type) == false)
+            {
+                EntityCache newCache = new EntityCache();
+                _cache.Add(type, newCache);
+                return newCache;
+            }
+            else
+            {
+                return _cache[type];
+            }
+        }
+
+        private EntityDescription GetEntityInfo(Type type)
+        {
+            throw new NotImplementedException();
+        }
+
+        private EntityInflator GetEntityInflator(Type type)
+        {
+            return GetEntityInfo(type).Inflator;
+        }
 
         #region sugar
         DbCommand CreateCommand(string commandText)
@@ -55,149 +89,236 @@ namespace CruiseDAL.BaseDAL
         #endregion
 
         #region Transaction Management
-        public DbTransaction BeginTransaction()
+        public void BeginTransaction()
         {
-            lock (_transactionStack)
+            lock(_transactionSyncLock)
             {
-                DbConnection conn = null;
-                try
+                if(_CurrentTransaction != null)
                 {
-                    Debug.WriteLine("Transaction Started", Logging.DB_CONTROL);
-                    conn = this.OpenReadWriteConnection(true);
-                    DbTransaction transaction = conn.BeginTransaction();
-                    this._transactionStack.Push(transaction);
-                    return transaction;
+                    throw new InvalidOperationException("one transaction at a time");
                 }
-                catch (Exception e)
-                {
-                    throw this.ThrowExceptionHelper(conn, null, e);
-                }
+
+                this.EnterConnectionHold();
+                DbConnection connection = OpenReadWriteConnection(true);
+                _CurrentTransaction = connection.BeginTransaction();
+
+                Debug.WriteLine("Transaction Started", Logging.DB_CONTROL);
             }
         }
 
         public void CancelTransaction()
         {
-            lock (_transactionStack)
+            lock(_transactionSyncLock)
             {
-                if(_transactionStack.Count > 0)
+                if(_CurrentTransaction == null)
                 {
-                    DbTransaction top = _transactionStack.Peek();
-                    this.CancelTransaction(top);
+                    throw new InvalidOperationException("no active transaction");
                 }
-                else
-                {
-                    Debug.Fail("transaction stack empty, are you missing a BeginTransaction?");
-                }    
+
+                _CurrentTransaction.Rollback();
+                _CurrentTransaction.Dispose();
+                _CurrentTransaction = null;
+                ExitConnectionHold();
             }
+
+
+            //lock (_transactionStack)
+            //{
+            //    if(_transactionStack.Count > 0)
+            //    {
+            //        DbTransaction top = _transactionStack.Peek();
+            //        this.CancelTransaction(top);
+            //    }
+            //    else
+            //    {
+            //        Debug.Fail("transaction stack empty, are you missing a BeginTransaction?");
+            //    }    
+            //}
         }
 
-        public void CancelTransaction(DbTransaction transaction)
+        //public void CancelTransaction(DbTransaction transaction)
+        //{
+        //    Debug.Assert(transaction != null);
+
+
+
+        //    lock (_transactionStack)
+        //    {
+        //        if (this._transactionStack.Contains(transaction))
+        //        {
+        //            DbTransaction top = null;
+        //            int transactionDepth = 0;
+        //            do
+        //            {
+        //                top = _transactionStack.Pop();
+        //                transactionDepth++;
+
+
+        //            } while (!Object.ReferenceEquals(top, transaction));
+
+        //            try
+        //            {
+        //                this.ExitConnectionHold(transactionDepth);
+        //                top.Rollback();
+                        
+        //                Debug.WriteLine("Transaction Rolled back", Logging.DB_CONTROL);
+        //            }
+        //            catch (Exception e)
+        //            {
+        //                throw this.ThrowExceptionHelper(top.Connection, null, e);
+        //            }
+        //        }
+        //        else
+        //        {
+        //            Debug.Fail("transaction not on stack, are you missing a BeginTransaction?");
+        //        }
+        //    }
+        //}
+
+        public void CommitTransaction()
         {
-            lock (_transactionStack)
+            lock (_transactionSyncLock)
             {
-                if (this._transactionStack.Contains(transaction))
+                if (_CurrentTransaction == null)
                 {
-                    DbTransaction top = null;
-                    do
-                    {
-                        top = _transactionStack.Pop();
-
-
-                    } while (!Object.ReferenceEquals(top, transaction));
-
-                    try
-                    {
-                        top.Rollback();
-                        Debug.WriteLine("Transaction Rolled back", Logging.DB_CONTROL);
-                    }
-                    catch (Exception e)
-                    {
-                        throw this.ThrowExceptionHelper(top.Connection, null, e);
-                    }
+                    throw new InvalidOperationException("no active transaction");
                 }
-                else
-                {
-                    Debug.Fail("transaction not on stack, are you missing a BeginTransaction?");
-                }
-            }
-        }
 
-        public void EndTransaction()
-        {
-            lock (_transactionStack)
-            {
-                if(_transactionStack.Count > 0)
-                { 
-                    DbTransaction top = _transactionStack.Peek();
-                    this.EndTransaction(top);
-                }
-                else
-                { 
-                    Debug.Fail("transaction stack empty, are you missing a BeginTransaction?");
-                }
+                _CurrentTransaction.Commit();
+                _CurrentTransaction.Dispose();
+                _CurrentTransaction = null;
+                ExitConnectionHold();
             }
 
+            //lock (_transactionStack)
+            //{
+            //    if(_transactionStack.Count > 0)
+            //    { 
+            //        DbTransaction top = _transactionStack.Peek();
+            //        this.EndTransaction(top);
+            //    }
+            //    else
+            //    { 
+            //        Debug.Fail("transaction stack empty, are you missing a BeginTransaction?");
+            //    }
+            //}
         }
 
-        public void EndTransaction(DbTransaction transaction)
-        {
-            lock (_transactionStack)
-            {
-                if (this._transactionStack.Contains(transaction))
-                {
-                    DbTransaction top = null;
-                    do
-                    {
-                        top = _transactionStack.Pop();
+        //public void EndTransaction(DbTransaction transaction)
+        //{
+        //    lock (_transactionStack)
+        //    {
+        //        if (this._transactionStack.Contains(transaction))
+        //        {
+        //            DbTransaction top = null;
+        //            do
+        //            {
+        //                top = _transactionStack.Pop();
 
 
 
-                    } while (!Object.ReferenceEquals(top, transaction));
+        //            } while (!Object.ReferenceEquals(top, transaction));
 
-                    try
-                    {
-                        top.Commit();
-                        Debug.WriteLine("Transaction Committed", Logging.DB_CONTROL);
-                    }
-                    catch (Exception e)
-                    {
-                        throw this.ThrowExceptionHelper(top.Connection, null, e);
-                    }
-                }
-                else
-                {
-                    Debug.Fail("transaction not on stack, are you missing a BeginTransaction?");
-                }
-            }
-        }
+        //            try
+        //            {
+        //                top.Commit();
+        //                Debug.WriteLine("Transaction Committed", Logging.DB_CONTROL);
+        //            }
+        //            catch (Exception e)
+        //            {
+        //                throw this.ThrowExceptionHelper(top.Connection, null, e);
+        //            }
+        //        }
+        //        else
+        //        {
+        //            Debug.Fail("transaction not on stack, are you missing a BeginTransaction?");
+        //        }
+        //    }
+        //}
 
         #endregion
 
         #region Persistence Methods
-        public void Insert(object data,  OnConflictOption option)
+        public void Save<T>(T data, SQLConflictOption option) where T : IPersistanceTracking
         {
-            EntityCommandBuilder builder = GetEntityCommandBuilder(data.GetType());
-            using (DbCommand command = builder.BuildInsertCommand(data, option))
+            if (data.HasChanges == false) { return; }
+            if (!data.IsPersisted)
             {
-                object result = ExecuteScalar(command);
-                throw new NotImplementedException("need to set key on data");
+                object primaryKey = Insert(data, option);
+                if (primaryKey != null)
+                {
+                    EntityCache cache = GetEntityCache(typeof(T));
 
-                data.IsPersisted = true;
-                data.HasChanges = false;
+                    Debug.Assert(cache.ContainsKey(primaryKey) == false);
+                    cache.Add(primaryKey, data);
+                }
+            }
+            else
+            {
+                Update(data, option);
             }
         }
+
+        public object Insert(object data,  SQLConflictOption option)
+        {
+            EntityDescription entityDescription = GetEntityInfo(data.GetType());
+
+            PrimaryKeyFieldAttribute rowIDField = entityDescription.Fields.RowIDField;
+            PrimaryKeyFieldAttribute primaryKeyField = entityDescription.Fields.PrimaryKeyField;
+
+            EntityCommandBuilder builder = entityDescription.CommandBuilder;
+
+            object primaryKey = null;
+            using (DbCommand command = builder.BuildInsertCommand(data, option))
+            {
+                ExecuteSQL(command);
+
+                if(rowIDField != null)
+                {
+                    long rowID = GetLastInsertRowID();
+                    rowIDField.SetFieldValue(data, rowID);
+                }
+                if(primaryKeyField != null)
+                {
+                    primaryKey = GetLastInsertPrimaryKeyValue(entityDescription.SourceName
+                        , primaryKeyField.FieldName);
+
+                    primaryKeyField.SetFieldValue(data, primaryKey);
+                }
+            }
+
+            if(data is IPersistanceTracking)
+            {
+                ((IPersistanceTracking)data).IsPersisted = true;
+                ((IPersistanceTracking)data).HasChanges = false;
+                ((IPersistanceTracking)data).OnInserted();
+            }
+
+            return primaryKey;
+        }
+
+        
 
         //public void Update(DataObject data, OnConflictOption option)
         //{
         //    this.Update(data, data.rowID, option);
         //}
 
-        public void Update(object data, OnConflictOption option)
+        public void Update(object data, SQLConflictOption option)
         {
-            EntityCommandBuilder builder = GetEntityCommandBuilder(data.GetType());
+            EntityDescription entityDescription = GetEntityInfo(data.GetType());
+            EntityCommandBuilder builder = entityDescription.CommandBuilder;
+
             using (DbCommand command = builder.BuildUpdateCommand(data, DataStore.User, option))
             {
                 ExecuteSQL(command);
+            }
+
+            if (data is IPersistanceTracking)
+            {
+                ((IPersistanceTracking)data).IsPersisted = true;
+                ((IPersistanceTracking)data).HasChanges = false;
+                ((IPersistanceTracking)data).OnUpdated();
             }
 
         }
@@ -206,15 +327,25 @@ namespace CruiseDAL.BaseDAL
         {
             lock (data)
             {
-                if (data.IsPersisted)
-                {
-                    EntityCommandBuilder builder = GetEntityCommandBuilder(data.GetType());
-                    using (DbCommand command = builder.BuildSQLDeleteCommand(data))
-                    {
-                        ExecuteSQL(command);
+                EntityDescription entityDescription = GetEntityInfo(data.GetType());
+                EntityCommandBuilder builder = entityDescription.CommandBuilder;
 
-                        data.IsDeleted = true;
-                    }
+                if (data is IPersistanceTracking)
+                {
+                    Debug.Assert(((IPersistanceTracking)data).IsPersisted == true);
+                    ((IPersistanceTracking)data).IsDeleted = true;
+                    ((IPersistanceTracking)data).OnDeleting();
+                }
+
+                using (DbCommand command = builder.BuildSQLDeleteCommand(data))
+                {
+                    ExecuteSQL(command);
+                }
+
+                if (data is IPersistanceTracking)
+                {
+                    ((IPersistanceTracking)data).IsDeleted = true;
+                    ((IPersistanceTracking)data).OnDeleted();
                 }
             }
         }
@@ -224,12 +355,27 @@ namespace CruiseDAL.BaseDAL
 
         #region command execution methods
 
+        protected long GetLastInsertRowID()
+        {
+            using (DbCommand command = CreateCommand("SELECT last_insert_rowid()"))
+            {
+                return this.ExecuteScalar<long>(command);
+            }
+        }
+
+        protected object GetLastInsertPrimaryKeyValue(String tableName, String fieldName)
+        {
+            String query = "Select " + fieldName + " FROM " + tableName + " WHERE rowid = last_insert_rowid()";
+            return ExecuteScalar(query);
+        }
+
+
         public T ExecuteScalar<T>(String query)
         {
             return ExecuteScalar<T>(query, null);
         }
 
-        public T ExecuteScalar<T>(String query, IDictionary<String, object> parameters)
+        public T ExecuteScalar<T>(String query, IEnumerable<KeyValuePair<String, object>> parameters)
         {
             using (DbCommand comm = this.CreateCommand(query))
             {
@@ -247,11 +393,10 @@ namespace CruiseDAL.BaseDAL
 
 
         /// <summary>
-        /// Executes sql command returning single value
+        /// Executes SQL command returning single value
         /// </summary>
         /// <param name="command"></param>
         /// <returns>value or null</returns>
-        /// 
         public object ExecuteScalar(string query, params object[] parameters)
         {
             using (DbCommand comm = this.CreateCommand(query))
@@ -286,7 +431,6 @@ namespace CruiseDAL.BaseDAL
             }
         }
 
-
         internal object ExecuteScalar(DbCommand command)
         {
             lock (_readWriteConnectionSyncLock)
@@ -299,7 +443,7 @@ namespace CruiseDAL.BaseDAL
                 }
                 catch (Exception e)
                 {
-                    throw this.ThrowDatastoreExceptionHelper(conn, command, e);
+                    throw this.ThrowExceptionHelper(conn, command, e);
                 }
                 finally
                 {
@@ -307,6 +451,47 @@ namespace CruiseDAL.BaseDAL
                 }
             }
 
+        }
+
+        /// <summary>
+        /// Executes SQL command returning number of rows affected
+        /// </summary>
+        /// <param name="command"></param>
+        /// <returns></returns>
+        public int? Execute(String command, params object[] parameters)
+        {
+            using (DbCommand com = this.CreateCommand(command))
+            {
+                return this.Execute(com, parameters);
+            }
+        }
+
+        public int? Execute(String command, IEnumerable<KeyValuePair<String, object>> parameters)
+        {
+            using (DbCommand comm = this.CreateCommand(command))
+            {
+                if (parameters != null)
+                {
+                    foreach (var pair in parameters)
+                    {
+                        var param = CreateParameter(pair.Key, pair.Value);
+                        comm.Parameters.Add(param);
+                    }
+                }
+                return ExecuteSQL(comm);
+            }
+        }
+
+        private int? Execute(DbCommand command, params object[] parameters)
+        {
+            if (parameters != null)
+            {
+                foreach (object p in parameters)
+                {
+                    command.Parameters.Add(this.CreateParameter(null, p));
+                }
+            }
+            return ExecuteSQL(command);
         }
 
         internal int ExecuteSQL(DbCommand command)
@@ -334,7 +519,7 @@ namespace CruiseDAL.BaseDAL
             }
             catch (Exception e)
             {
-                throw this.ThrowDatastoreExceptionHelper(connection, command, e, false);
+                throw this.ThrowExceptionHelper(connection, command, e);
             }
         }
 
@@ -360,6 +545,32 @@ namespace CruiseDAL.BaseDAL
         protected virtual void OnConnectionStateChanged(System.Data.StateChangeEventArgs e)
         {
             Debug.WriteLine("Connection state changed From " + e.OriginalState.ToString() + " to " + e.CurrentState.ToString(), Logging.DS_EVENT);
+        }
+
+        protected void EnterConnectionHold()
+        {
+            System.Threading.Interlocked.Increment(ref this._holdConnection);
+        }
+
+        protected void ExitConnectionHold()
+        {
+            if (this._holdConnection > 0)
+            {
+                System.Threading.Interlocked.Decrement(ref this._holdConnection);
+            }
+        }
+
+        protected void ExitConnectionHold(int depth)
+        {
+            for(int i = 0; i < depth; i++)
+            {
+                ExitConnectionHold();
+            }
+        }
+
+        protected void ReleaseConnectionHold()
+        {
+            this._holdConnection = 0;
         }
 
         protected DbConnection CreateReadWriteConnection()
@@ -402,6 +613,7 @@ namespace CruiseDAL.BaseDAL
                     try
                     {
                         conn.Open();
+                        EnterConnectionHold();
                     }
                     catch (Exception e)
                     {
@@ -527,6 +739,7 @@ namespace CruiseDAL.BaseDAL
         {
             lock(_readOnlyConnectionSyncLock)
             {
+                Debug.Assert(_ReadOnlyConnection != null);
                 if(_ReadOnlyConnection == null) { return; }
                 ReleaseConnection(_ReadOnlyConnection);
                 _ReadOnlyConnection = null;
@@ -538,10 +751,15 @@ namespace CruiseDAL.BaseDAL
         {
             lock (_readWriteConnectionSyncLock)
             {
+                Debug.Assert(_ReadWriteConnection != null);
                 if (_ReadOnlyConnection == null) { return; }
-                ReleaseConnection(_ReadWriteConnection);
-                _ReadWriteConnection = null;
-                Debug.WriteLine("ReadWrite Connection Released", Logging.DB_CONTROL_VERBOSE);
+                ExitConnectionHold();
+                if (_holdConnection == 0)
+                {
+                    ReleaseConnection(_ReadWriteConnection);
+                    _ReadWriteConnection = null;
+                    Debug.WriteLine("ReadWrite Connection Released", Logging.DB_CONTROL_VERBOSE);
+                }
             }
         }
 
@@ -561,10 +779,10 @@ namespace CruiseDAL.BaseDAL
                     Debug.WriteLine("DatastoreContext Finalized ", Logging.DS_EVENT);
                 }
 
-                if(this._cache != null)
-                {
-                    _cache.Dispose();
-                }
+                //if(this._cache != null)
+                //{
+                //    _cache.Dispose();
+                //}
 
                 if (_ReadWriteConnection != null)
                 {
@@ -598,7 +816,9 @@ namespace CruiseDAL.BaseDAL
         public IList<T> Read<T>(WhereClause where, params Object[] selectionArgs)
             where T : new()
         {
-            EntityCommandBuilder commandBuilder = GetEntityCommandBuilder(typeof(T));
+            EntityDescription entityDescription = GetEntityInfo(typeof(T));
+            EntityCommandBuilder commandBuilder = entityDescription.CommandBuilder;
+
             using (DbCommand command = commandBuilder.BuildSelectCommand(where))
             {
                 //Add selection Arguments to command parameter list
@@ -610,15 +830,15 @@ namespace CruiseDAL.BaseDAL
                     }
                 }
 
-                return Read<T>(command);
+                return Read<T>(command, entityDescription);
             }
         }
 
-        internal IList<T> Read<T>(DbCommand command) where T : new()
+        internal IList<T> Read<T>(DbCommand command, EntityDescription entityDescription) where T : new()
         {
             List<T> doList = new List<T>();
             EntityCache cache = GetEntityCache(typeof(T));
-            EntityInflator inflator = GetEntityInflator(typeof(T));
+            EntityInflator inflator = entityDescription.Inflator;
 
             DbDataReader reader = null;
             lock (_readOnlyConnectionSyncLock)
@@ -669,24 +889,26 @@ namespace CruiseDAL.BaseDAL
 
 
         ///// <summary>
-        ///// Retrieves a single row from the database Note: dataobject type must match the
+        ///// Retrieves a single row from the database Note: data object type must match the
         ///// table.
         ///// </summary>
-        ///// <typeparam name="T">Type of dataobject to return</typeparam>
+        ///// <typeparam name="T">Type of data object to return</typeparam>
         ///// <param name="tableName">Name of table to read from</param>
         ///// <param name="selection">the where clause to define selection Note: only the first row from the resulting selection will be returned</param>
-        ///// <param name="selectionArgs">array of paramatures to use with selection string</param>
+        ///// <param name="selectionArgs">array of parameters to use with selection string</param>
         ///// <exception cref="DatabaseExecutionException"></exception>
-        ///// <returns>a single dataobject</returns>
+        ///// <returns>a single data object</returns>
         //public T ReadSingleRow<T>(String tableName, String selection, params Object[] selectionArgs) where T : ReadDataObject, new()
         //{
         //    return ReadSingleRow<T>(tableName, true, selection, selectionArgs);
         //}
 
-        public T ReadSingleRow<T>(WhereClause where, params Object[] selectionArgs) where T : DataObject, new()
+        public T ReadSingleRow<T>(WhereClause where, params Object[] selectionArgs) where T : new()
         {
 
-            EntityCommandBuilder commandBuilder = GetEntityCommandBuilder(typeof(T));
+            EntityDescription entityDescription = GetEntityInfo(typeof(T));
+            EntityCommandBuilder commandBuilder = entityDescription.CommandBuilder;
+
             using (DbCommand command = commandBuilder.BuildSelectCommand(where))
             {
                 //Add selection Arguments to command parameter list
@@ -698,29 +920,29 @@ namespace CruiseDAL.BaseDAL
                     }
                 }
 
-                return ReadSingleRow<T>(command);
+                return ReadSingleRow<T>(command, entityDescription);
             }
         }
 
         /// <summary>
-        /// Retrieves a single row from the database Note: dataobject type must match the 
+        /// Retrieves a single row from the database Note: data object type must match the 
         /// table. 
         /// </summary>
-        /// <typeparam name="T">Type of dataobject to return</typeparam>
+        /// <typeparam name="T">Type of data object to return</typeparam>
         /// <param name="tableName">Name of table to read from</param>
         /// <param name="rowID">row id of the row to read</param>
         /// <exception cref="DatabaseExecutionException"></exception>
-        /// <returns>a single databoject</returns>
-        public T ReadSingleRow<T>(object primaryKeyValue) where T : DataObject, new()
+        /// <returns>a single data object</returns>
+        public T ReadSingleRow<T>(object primaryKeyValue) where T : new()
         {
             return ReadSingleRow<T>(new WhereClause("rowID = ?"), primaryKeyValue);
         }
 
-        internal T ReadSingleRow<T>(DbCommand command) where T : new()
+        internal T ReadSingleRow<T>(DbCommand command, EntityDescription entityDescription) where T : new()
         {
             object entity = null;
             EntityCache cache = GetEntityCache(typeof(T));
-            EntityInflator inflator = GetEntityInflator(typeof(T));
+            EntityInflator inflator = entityDescription.Inflator;
 
             DbDataReader reader = null;
             lock (_readOnlyConnectionSyncLock)
@@ -769,9 +991,9 @@ namespace CruiseDAL.BaseDAL
         #endregion
 
         #region Query Methods
-        public List<T> Query<T>(DbCommand command) where T : new()
+        public List<T> Query<T>(DbCommand command, EntityDescription entityDescription) where T : new()
         {
-            EntityInflator inflator = GetEntityInflator(typeof(T));
+            EntityInflator inflator = entityDescription.Inflator;
             List<T> dataList = new List<T>();
             DbDataReader reader = null;
             lock (_readOnlyConnectionSyncLock)
@@ -806,7 +1028,9 @@ namespace CruiseDAL.BaseDAL
 
         public List<T> Query<T>(WhereClause where, params Object[] selectionArgs) where T : new()
         {
-            EntityCommandBuilder commandBuilder = GetEntityCommandBuilder(typeof(T));
+            EntityDescription entityDescription = GetEntityInfo(typeof(T));
+            EntityCommandBuilder commandBuilder = entityDescription.CommandBuilder;
+
             using (DbCommand command = commandBuilder.BuildSelectCommand(where))
             {
                 //Add selection Arguments to command parameter list
@@ -818,14 +1042,16 @@ namespace CruiseDAL.BaseDAL
                     }
                 }
 
-                return Query<T>(command);
+                return Query<T>(command, entityDescription);
             }
 
         }
 
         public T QuerySingleRecord<T>(WhereClause where, params Object[] selectionArgs) where T : new()
         {
-            EntityCommandBuilder commandBuilder = GetEntityCommandBuilder(typeof(T));
+            EntityDescription entityDescription = GetEntityInfo(typeof(T));
+            EntityCommandBuilder commandBuilder = entityDescription.CommandBuilder;
+
             using (DbCommand command = commandBuilder.BuildSelectCommand(where))
             {
                 //Add selection Arguments to command parameter list
@@ -837,14 +1063,14 @@ namespace CruiseDAL.BaseDAL
                     }
                 }
 
-                return QuerySingleRecord<T>(command);
+                return QuerySingleRecord<T>(command, entityDescription);
             }
 
         }
 
-        public T QuerySingleRecord<T>(DbCommand command)
+        public T QuerySingleRecord<T>(DbCommand command, EntityDescription entityDescription)
         {
-            EntityInflator inflator = GetEntityInflator(typeof(T));
+            EntityInflator inflator = entityDescription.Inflator;
 
             DbDataReader reader = null;
             lock (_readOnlyConnectionSyncLock)

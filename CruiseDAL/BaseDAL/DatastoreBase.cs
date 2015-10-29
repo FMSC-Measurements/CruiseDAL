@@ -314,7 +314,7 @@ namespace CruiseDAL
         
 
 
-        #region Persistance Methods
+        #region Persistence Methods
 
         /// <summary>
         /// 

@@ -13,10 +13,6 @@ namespace CruiseDAL.DataObjects
             base.OnDALChanged(newDAL);
         }
 
-        public override void Delete()
-        {
-            base.Delete();
-        }
 
         public int DeleteStratumStats(DAL dal, long? StratumStats_CN)
         {

@@ -11,7 +11,7 @@ namespace CruiseDAL.DataObjects
 {
 	#region Core Tables
 	[SQLEntity(SourceName = "Sale")]
-	public partial class SaleDO : DataObjectExtra
+	public partial class SaleDO : CruiseDALDataObject
 	{
 		//private static Persister persister;
 		private static RowValidator _validator;
@@ -322,7 +322,7 @@ namespace CruiseDAL.DataObjects
 		}
 	}
 	[SQLEntity(SourceName = "CuttingUnit")]
-	public partial class CuttingUnitDO : DataObjectExtra
+	public partial class CuttingUnitDO : CruiseDALDataObject
 	{
 		//private static Persister persister;
 		private static RowValidator _validator;
@@ -530,7 +530,7 @@ namespace CruiseDAL.DataObjects
 		}
 	}
 	[SQLEntity(SourceName = "Stratum")]
-	public partial class StratumDO : DataObjectExtra
+	public partial class StratumDO : CruiseDALDataObject
 	{
 		//private static Persister persister;
 		private static RowValidator _validator;
@@ -842,7 +842,7 @@ namespace CruiseDAL.DataObjects
 		}
 	}
 	[SQLEntity(SourceName = "CuttingUnitStratum")]
-	public partial class CuttingUnitStratumDO : DataObjectExtra
+	public partial class CuttingUnitStratumDO : CruiseDALDataObject
 	{
 		//private static Persister persister;
 		private static RowValidator _validator;
@@ -1025,7 +1025,7 @@ namespace CruiseDAL.DataObjects
 		}
 	}
 	[SQLEntity(SourceName = "SampleGroup")]
-	public partial class SampleGroupDO : DataObjectExtra
+	public partial class SampleGroupDO : CruiseDALDataObject
 	{
 		//private static Persister persister;
 		private static RowValidator _validator;
@@ -1530,7 +1530,7 @@ namespace CruiseDAL.DataObjects
 		}
 	}
 	[SQLEntity(SourceName = "TreeDefaultValue")]
-	public partial class TreeDefaultValueDO : DataObjectExtra
+	public partial class TreeDefaultValueDO : CruiseDALDataObject
 	{
 		//private static Persister persister;
 		private static RowValidator _validator;
@@ -1970,7 +1970,7 @@ namespace CruiseDAL.DataObjects
 		}
 	}
 	[SQLEntity(SourceName = "SampleGroupTreeDefaultValue")]
-	public partial class SampleGroupTreeDefaultValueDO : DataObjectExtra
+	public partial class SampleGroupTreeDefaultValueDO : CruiseDALDataObject
 	{
 		//private static Persister persister;
 		private static RowValidator _validator;
@@ -2131,7 +2131,7 @@ namespace CruiseDAL.DataObjects
 		}
 	}
 	[SQLEntity(SourceName = "Plot")]
-	public partial class PlotDO : DataObjectExtra
+	public partial class PlotDO : CruiseDALDataObject
 	{
 		//private static Persister persister;
 		private static RowValidator _validator;
@@ -2560,7 +2560,7 @@ namespace CruiseDAL.DataObjects
 		}
 	}
 	[SQLEntity(SourceName = "Tree")]
-	public partial class TreeDO : DataObjectExtra
+	public partial class TreeDO : CruiseDALDataObject
 	{
 		//private static Persister persister;
 		private static RowValidator _validator;
@@ -3760,7 +3760,7 @@ namespace CruiseDAL.DataObjects
 		}
 	}
 	[SQLEntity(SourceName = "Log")]
-	public partial class LogDO : DataObjectExtra
+	public partial class LogDO : CruiseDALDataObject
 	{
 		//private static Persister persister;
 		private static RowValidator _validator;
@@ -4238,7 +4238,7 @@ namespace CruiseDAL.DataObjects
 		}
 	}
 	[SQLEntity(SourceName = "Stem")]
-	public partial class StemDO : DataObjectExtra
+	public partial class StemDO : CruiseDALDataObject
 	{
 		//private static Persister persister;
 		private static RowValidator _validator;
@@ -4434,7 +4434,7 @@ namespace CruiseDAL.DataObjects
 		}
 	}
 	[SQLEntity(SourceName = "CountTree")]
-	public partial class CountTreeDO : DataObjectExtra
+	public partial class CountTreeDO : CruiseDALDataObject
 	{
 		//private static Persister persister;
 		private static RowValidator _validator;
@@ -4812,7 +4812,7 @@ namespace CruiseDAL.DataObjects
 		}
 	}
 	[SQLEntity(SourceName = "Tally")]
-	public partial class TallyDO : DataObjectExtra
+	public partial class TallyDO : CruiseDALDataObject
 	{
 		//private static Persister persister;
 		private static RowValidator _validator;
@@ -4960,7 +4960,7 @@ namespace CruiseDAL.DataObjects
 		}
 	}
 	[SQLEntity(SourceName = "TreeEstimate")]
-	public partial class TreeEstimateDO : DataObjectExtra
+	public partial class TreeEstimateDO : CruiseDALDataObject
 	{
 		//private static Persister persister;
 		private static RowValidator _validator;
@@ -5139,7 +5139,7 @@ namespace CruiseDAL.DataObjects
 	#endregion
 	#region Processing Tables
 	[SQLEntity(SourceName = "VolumeEquation")]
-	public partial class VolumeEquationDO : DataObjectExtra
+	public partial class VolumeEquationDO : CruiseDALDataObject
 	{
 		//private static Persister persister;
 		private static RowValidator _validator;
@@ -5623,7 +5623,7 @@ namespace CruiseDAL.DataObjects
 		}
 	}
 	[SQLEntity(SourceName = "BiomassEquation")]
-	public partial class BiomassEquationDO : DataObjectExtra
+	public partial class BiomassEquationDO : CruiseDALDataObject
 	{
 		//private static Persister persister;
 		private static RowValidator _validator;
@@ -5909,7 +5909,7 @@ namespace CruiseDAL.DataObjects
 		}
 	}
 	[SQLEntity(SourceName = "ValueEquation")]
-	public partial class ValueEquationDO : DataObjectExtra
+	public partial class ValueEquationDO : CruiseDALDataObject
 	{
 		//private static Persister persister;
 		private static RowValidator _validator;
@@ -6172,7 +6172,7 @@ namespace CruiseDAL.DataObjects
 		}
 	}
 	[SQLEntity(SourceName = "QualityAdjEquation")]
-	public partial class QualityAdjEquationDO : DataObjectExtra
+	public partial class QualityAdjEquationDO : CruiseDALDataObject
 	{
 		//private static Persister persister;
 		private static RowValidator _validator;
@@ -6434,7 +6434,7 @@ namespace CruiseDAL.DataObjects
 		}
 	}
 	[SQLEntity(SourceName = "Reports")]
-	public partial class ReportsDO : DataObjectExtra
+	public partial class ReportsDO : CruiseDALDataObject
 	{
 		//private static Persister persister;
 		private static RowValidator _validator;
@@ -6556,7 +6556,7 @@ namespace CruiseDAL.DataObjects
 		}
 	}
 	[SQLEntity(SourceName = "TreeCalculatedValues")]
-	public partial class TreeCalculatedValuesDO : DataObjectExtra
+	public partial class TreeCalculatedValuesDO : CruiseDALDataObject
 	{
 		//private static Persister persister;
 		private static RowValidator _validator;
@@ -7313,7 +7313,7 @@ namespace CruiseDAL.DataObjects
 		}
 	}
 	[SQLEntity(SourceName = "LCD")]
-	public partial class LCDDO : DataObjectExtra
+	public partial class LCDDO : CruiseDALDataObject
 	{
 		//private static Persister persister;
 		private static RowValidator _validator;
@@ -8450,7 +8450,7 @@ namespace CruiseDAL.DataObjects
 		}
 	}
 	[SQLEntity(SourceName = "POP")]
-	public partial class POPDO : DataObjectExtra
+	public partial class POPDO : CruiseDALDataObject
 	{
 		//private static Persister persister;
 		private static RowValidator _validator;
@@ -9522,7 +9522,7 @@ namespace CruiseDAL.DataObjects
 		}
 	}
 	[SQLEntity(SourceName = "PRO")]
-	public partial class PRODO : DataObjectExtra
+	public partial class PRODO : CruiseDALDataObject
 	{
 		//private static Persister persister;
 		private static RowValidator _validator;
@@ -9895,7 +9895,7 @@ namespace CruiseDAL.DataObjects
 		}
 	}
 	[SQLEntity(SourceName = "LogStock")]
-	public partial class LogStockDO : DataObjectExtra
+	public partial class LogStockDO : CruiseDALDataObject
 	{
 		//private static Persister persister;
 		private static RowValidator _validator;
@@ -10393,7 +10393,7 @@ namespace CruiseDAL.DataObjects
 		}
 	}
 	[SQLEntity(SourceName = "SampleGroupStats")]
-	public partial class SampleGroupStatsDO : DataObjectExtra
+	public partial class SampleGroupStatsDO : CruiseDALDataObject
 	{
 		//private static Persister persister;
 		private static RowValidator _validator;
@@ -11109,7 +11109,7 @@ namespace CruiseDAL.DataObjects
 		}
 	}
 	[SQLEntity(SourceName = "SampleGroupStatsTreeDefaultValue")]
-	public partial class SampleGroupStatsTreeDefaultValueDO : DataObjectExtra
+	public partial class SampleGroupStatsTreeDefaultValueDO : CruiseDALDataObject
 	{
 		//private static Persister persister;
 		private static RowValidator _validator;
@@ -11270,7 +11270,7 @@ namespace CruiseDAL.DataObjects
 		}
 	}
 	[SQLEntity(SourceName = "StratumStats")]
-	public partial class StratumStatsDO : DataObjectExtra
+	public partial class StratumStatsDO : CruiseDALDataObject
 	{
 		//private static Persister persister;
 		private static RowValidator _validator;
@@ -11746,7 +11746,7 @@ namespace CruiseDAL.DataObjects
 		}
 	}
 	[SQLEntity(SourceName = "Regression")]
-	public partial class RegressionDO : DataObjectExtra
+	public partial class RegressionDO : CruiseDALDataObject
 	{
 		//private static Persister persister;
 		private static RowValidator _validator;
@@ -12092,7 +12092,7 @@ namespace CruiseDAL.DataObjects
 		}
 	}
 	[SQLEntity(SourceName = "LogMatrix")]
-	public partial class LogMatrixDO : DataObjectExtra
+	public partial class LogMatrixDO : CruiseDALDataObject
 	{
 		//private static Persister persister;
 		private static RowValidator _validator;
@@ -12415,7 +12415,7 @@ namespace CruiseDAL.DataObjects
 	#endregion
 	#region Settings Tables
 	[SQLEntity(SourceName = "TreeDefaultValueTreeAuditValue")]
-	public partial class TreeDefaultValueTreeAuditValueDO : DataObjectExtra
+	public partial class TreeDefaultValueTreeAuditValueDO : CruiseDALDataObject
 	{
 		//private static Persister persister;
 		private static RowValidator _validator;
@@ -12578,7 +12578,7 @@ namespace CruiseDAL.DataObjects
 		}
 	}
 	[SQLEntity(SourceName = "TreeAuditValue")]
-	public partial class TreeAuditValueDO : DataObjectExtra
+	public partial class TreeAuditValueDO : CruiseDALDataObject
 	{
 		//private static Persister persister;
 		private static RowValidator _validator;
@@ -12745,7 +12745,7 @@ namespace CruiseDAL.DataObjects
 		}
 	}
 	[SQLEntity(SourceName = "LogFieldSetup")]
-	public partial class LogFieldSetupDO : DataObjectExtra
+	public partial class LogFieldSetupDO : CruiseDALDataObject
 	{
 		//private static Persister persister;
 		private static RowValidator _validator;
@@ -12998,7 +12998,7 @@ namespace CruiseDAL.DataObjects
 		}
 	}
 	[SQLEntity(SourceName = "TreeFieldSetup")]
-	public partial class TreeFieldSetupDO : DataObjectExtra
+	public partial class TreeFieldSetupDO : CruiseDALDataObject
 	{
 		//private static Persister persister;
 		private static RowValidator _validator;
@@ -13251,7 +13251,7 @@ namespace CruiseDAL.DataObjects
 		}
 	}
 	[SQLEntity(SourceName = "LogFieldSetupDefault")]
-	public partial class LogFieldSetupDefaultDO : DataObjectExtra
+	public partial class LogFieldSetupDefaultDO : CruiseDALDataObject
 	{
 		//private static Persister persister;
 		private static RowValidator _validator;
@@ -13478,7 +13478,7 @@ namespace CruiseDAL.DataObjects
 		}
 	}
 	[SQLEntity(SourceName = "TreeFieldSetupDefault")]
-	public partial class TreeFieldSetupDefaultDO : DataObjectExtra
+	public partial class TreeFieldSetupDefaultDO : CruiseDALDataObject
 	{
 		//private static Persister persister;
 		private static RowValidator _validator;
@@ -13728,7 +13728,7 @@ namespace CruiseDAL.DataObjects
 	#endregion
 	#region Lookup Tables
 	[SQLEntity(SourceName = "CruiseMethods")]
-	public partial class CruiseMethodsDO : DataObjectExtra
+	public partial class CruiseMethodsDO : CruiseDALDataObject
 	{
 		//private static Persister persister;
 		private static RowValidator _validator;
@@ -13834,7 +13834,7 @@ namespace CruiseDAL.DataObjects
 		}
 	}
 	[SQLEntity(SourceName = "LoggingMethods")]
-	public partial class LoggingMethodsDO : DataObjectExtra
+	public partial class LoggingMethodsDO : CruiseDALDataObject
 	{
 		//private static Persister persister;
 		private static RowValidator _validator;
@@ -13940,7 +13940,7 @@ namespace CruiseDAL.DataObjects
 		}
 	}
 	[SQLEntity(SourceName = "ProductCodes")]
-	public partial class ProductCodesDO : DataObjectExtra
+	public partial class ProductCodesDO : CruiseDALDataObject
 	{
 		//private static Persister persister;
 		private static RowValidator _validator;
@@ -14046,7 +14046,7 @@ namespace CruiseDAL.DataObjects
 		}
 	}
 	[SQLEntity(SourceName = "UOMCodes")]
-	public partial class UOMCodesDO : DataObjectExtra
+	public partial class UOMCodesDO : CruiseDALDataObject
 	{
 		//private static Persister persister;
 		private static RowValidator _validator;
@@ -14152,7 +14152,7 @@ namespace CruiseDAL.DataObjects
 		}
 	}
 	[SQLEntity(SourceName = "Regions")]
-	public partial class RegionsDO : DataObjectExtra
+	public partial class RegionsDO : CruiseDALDataObject
 	{
 		//private static Persister persister;
 		private static RowValidator _validator;
@@ -14258,7 +14258,7 @@ namespace CruiseDAL.DataObjects
 		}
 	}
 	[SQLEntity(SourceName = "Forests")]
-	public partial class ForestsDO : DataObjectExtra
+	public partial class ForestsDO : CruiseDALDataObject
 	{
 		//private static Persister persister;
 		private static RowValidator _validator;
@@ -14436,7 +14436,7 @@ namespace CruiseDAL.DataObjects
 	#endregion
 	#region Utility Tables
 	[SQLEntity(SourceName = "ErrorLog")]
-	public partial class ErrorLogDO : DataObjectExtra
+	public partial class ErrorLogDO : CruiseDALDataObject
 	{
 		//private static Persister persister;
 		private static RowValidator _validator;
@@ -14641,7 +14641,7 @@ namespace CruiseDAL.DataObjects
 		}
 	}
 	[SQLEntity(SourceName = "MessageLog")]
-	public partial class MessageLogDO : DataObjectExtra
+	public partial class MessageLogDO : CruiseDALDataObject
 	{
 		//private static Persister persister;
 		private static RowValidator _validator;
@@ -14807,7 +14807,7 @@ namespace CruiseDAL.DataObjects
 		}
 	}
 	[SQLEntity(SourceName = "Globals")]
-	public partial class GlobalsDO : DataObjectExtra
+	public partial class GlobalsDO : CruiseDALDataObject
 	{
 		//private static Persister persister;
 		private static RowValidator _validator;
@@ -14928,7 +14928,7 @@ namespace CruiseDAL.DataObjects
 		}
 	}
 	[SQLEntity(SourceName = "Component")]
-	public partial class ComponentDO : DataObjectExtra
+	public partial class ComponentDO : CruiseDALDataObject
 	{
 		//private static Persister persister;
 		private static RowValidator _validator;

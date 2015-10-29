@@ -4,13 +4,13 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Data.Common;
-using CruiseDAL.BaseDAL.SQL;
 using CruiseDAL.BaseDAL.EntityAttributes;
 using System.Diagnostics;
+using CruiseDAL.Core.SQL;
 
-namespace CruiseDAL.BaseDAL
+namespace CruiseDAL.Core
 {
-    class EntityCommandBuilder
+    public class EntityCommandBuilder
     {
         SQLSelectExpression _selectCommand;
         SQLInsertCommand _insertCommand;
@@ -83,9 +83,9 @@ namespace CruiseDAL.BaseDAL
         #endregion
 
         #region build insert
-        public DbCommand BuildInsertCommand(object data, OnConflictOption option)
+        public DbCommand BuildInsertCommand(object data, SQLConflictOption option)
         {
-            _insertCommand.ConflictOption = option.ToString();
+            _insertCommand.ConflictOption = option;
 
             DbCommand command = _providerFactory.CreateCommand(_insertCommand.ToString());
 
@@ -219,12 +219,12 @@ namespace CruiseDAL.BaseDAL
         #endregion
 
         #region build update
-        public DbCommand BuildUpdateCommand(object data, string ModifiedBy, OnConflictOption option)
+        public DbCommand BuildUpdateCommand(object data, string ModifiedBy, SQLConflictOption option)
         {
             Debug.Assert(_updateCommand != null);
             Debug.Assert(EntityDescription.Fields.PrimaryKeyField != null);
 
-            _updateCommand.ConflictOption = option.ToString();
+            _updateCommand.ConflictOption = option;
 
             DbCommand command = _providerFactory.CreateCommand(_updateCommand.ToString());
 

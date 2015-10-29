@@ -100,12 +100,18 @@
       <DependentUpon>DAL.AutoGen.tt</DependentUpon>
     </Compile>
     <Compile Include="BaseDAL\DataStoreContext.cs" />
+    <Compile Include="BaseDAL\DatastoreRedux.cs" />
     <Compile Include="Core\DbProviderFactoryAdapter.cs" />
     <Compile Include="Core\Constants\Logging.cs" />
+    <Compile Include="Core\EntityModel\DataObjectExtentions.cs" />
     <Compile Include="Core\EntityModel\IDataObject.cs" />
+    <Compile Include="Core\EntityModel\IPersistanceTracking.cs" />
+    <Compile Include="Core\SQL\SQLConflictOption.cs" />
+    <Compile Include="CruiseDAL\CruiseDALErrorCollection.cs" />
     <Compile Include="Core\EntityModel\Validation\FieldValidatorCollection.cs" />
     <Compile Include="Core\EntityModel\Validation\IFieldValidator.cs" />
     <Compile Include="Core\EntityModel\Validation\IValidatable.cs" />
+    <Compile Include="CruiseDAL\DALRedux.cs" />
     <Compile Include="SQLite\SQLiteDataStoreContext.cs" />
     <Compile Include="SQLite\SQLiteProviderFactory.cs" />
     <Compile Include="TableModels\TableModels.cs">
@@ -120,7 +126,7 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Schema.tt</DependentUpon>
     </Compile>
-    <Compile Include="BaseDAL\DataObject_Extra.cs" />
+    <Compile Include="CruiseDAL\DataObject_Extra.cs" />
     <Compile Include="Core\EntityAttributes\FieldAttributeCollection.cs" />
     <Compile Include="Core\EntityAttributes\InfrastructureFieldAttribute.cs" />
     <Compile Include="Core\EntityAttributes\ReferenceAttribute.cs" />

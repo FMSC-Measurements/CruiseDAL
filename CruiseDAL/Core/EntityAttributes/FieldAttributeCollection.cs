@@ -13,6 +13,7 @@ namespace CruiseDAL.BaseDAL.EntityAttributes
         public Dictionary<String, FieldAttribute> _fields;
 
         public PrimaryKeyFieldAttribute PrimaryKeyField { get; set; }
+        public PrimaryKeyFieldAttribute RowIDField { get; set; }
 
         public FieldAttribute this[string value]
         {

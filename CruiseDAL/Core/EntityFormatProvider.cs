@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace CruiseDAL.BaseDAL
+namespace CruiseDAL.Core
 {
     public class EntityFormatProvider : IFormatProvider
     {

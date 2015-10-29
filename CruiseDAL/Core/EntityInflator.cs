@@ -8,7 +8,7 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 
-namespace CruiseDAL.BaseDAL
+namespace CruiseDAL.Core
 {
     public class EntityInflator
     {

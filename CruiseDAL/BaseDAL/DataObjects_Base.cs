@@ -8,6 +8,7 @@ using System.Reflection;
 using CruiseDAL.DataObjects;
 using System.Text;
 using CruiseDAL.BaseDAL;
+using CruiseDAL.Core.EntityModel;
 
 namespace CruiseDAL
 {
@@ -24,27 +25,13 @@ namespace CruiseDAL
     public abstract class DataObject : 
         INotifyPropertyChanged, 
         ISupportInitialize,  
-        
-        IFormattable
+        IFormattable,
+        IDataObject,
+        IPersistanceTracking
     {
-        #region Fields 
-        #region protected fields 
         protected DatastoreBase _ds = null;
-        protected Dictionary<String, ErrorLogDO> errors;
-        protected object _errorsSyncLock = new object();
-        #endregion 
-        #endregion
 
         #region Properties
-
-        #region persistance utility properties
-
-        [XmlIgnore]
-        public Int64? rowID
-        {
-            get;
-            set;
-        }
 
         [XmlIgnore]
         public DatastoreBase DAL
@@ -65,11 +52,7 @@ namespace CruiseDAL
             }
         }
 
-
-        //public abstract Persister Persister { get; }
         protected RecordState _recordState = RecordState.Detached;
-        //protected bool inWriteMode = false;
-        //protected bool _hasChanges = false;
 
         [XmlIgnore]
         internal RecordState RecordState
@@ -79,37 +62,21 @@ namespace CruiseDAL
         }
 
         [XmlIgnore]
-        public bool HasChanges 
+        public bool IsPersisted
         {
-            get { return (this._recordState & RecordState.HasChanges) == RecordState.HasChanges; }
-            internal set 
-            {
-                if (value == true)
-                {
-                    this._recordState = _recordState | RecordState.HasChanges;
-                }
-                else
-                {
-                    this._recordState = _recordState & ~RecordState.HasChanges;
-                }
-            }
+            get { return (this._recordState & RecordState.Persisted) == RecordState.Persisted; }
         }
 
         [XmlIgnore]
-        public bool IsPersisted 
+        public bool HasChanges
         {
-            get { return (this._recordState & RecordState.Persisted) == RecordState.Persisted; }
-            internal set
-            {
-                if (value == true)
-                {
-                    this._recordState = (_recordState & RecordState.Validated) | RecordState.Persisted;//override all other states except Validated
-                }
-                else
-                {
-                    this._recordState = _recordState & ~RecordState.Persisted;
-                }
-            }
+            get { return (this._recordState & RecordState.HasChanges) == RecordState.HasChanges; }
+        }
+
+        [XmlIgnore]
+        public bool IsDeleted
+        {
+            get { return (this._recordState & RecordState.Deleted) == RecordState.Deleted; }
         }
 
         [XmlIgnore]
@@ -126,52 +93,16 @@ namespace CruiseDAL
                 {
                     this._recordState = _recordState & ~RecordState.Detached;
                 }
+
             }
         }
 
         [XmlIgnore]
-        public bool IsDeleted
-        {
-            get { return (this._recordState & RecordState.Deleted) == RecordState.Deleted; }
-            internal set
-            {
-                if (value == true)
-                {
-                    this._recordState = RecordState.Deleted;//override all other states
-                }
-                else
-                {
-                    this._recordState = _recordState & ~RecordState.Deleted;
-                }
-            }
+        public bool PropertyChangedEventsDisabled { get; protected set; }
 
-        }
 
-        
         #endregion
 
-       
-
-        
-
-        
-
-        //private RowValidator _validator;
-        //[XmlIgnore]
-        //public RowValidator Validator
-        //{
-        //    get
-        //    {
-
-        //        return _validator;
-        //    }
-        //    set
-        //    {
-        //        errors.Clear();
-        //        _validator = value;
-        //    }
-        //}
-        #endregion
 
         #region Events 
 
@@ -194,74 +125,7 @@ namespace CruiseDAL
 
        
 
-        public virtual void Save()
-        {
 
-            this.Save(OnConflictOption.Fail);
-//            if (DAL == null) 
-//            {
-//                throw new InvalidOperationException("DAL must be set before calling save");
-//            }
-//            if (HasChanges == false) { return; }
-//#if !WindowsCE
-//            Trace.Write(string.Format("Saving DO | {0:20} | {1:15} | IsPersisted = {2}\r\n", this.GetType().Name, this.GetID(), this.IsPersisted), "Info");
-//#endif
-//            //Log.V(string.Format("Saving DO | {0:20} | {1:15} | IsPersisted = {2}", this.GetType().Name, this.GetID(), this.IsPersisted));
-//            if (IsPersisted)
-//            {
-//                DAL.ExecuteSQL(Persister.CreateSQLUpdate(this, DAL.User));
-//            }
-//            else
-//            {
-//                rowID = DAL.ExecuteScalar(Persister.CreateSQLInsert(this, DAL.User));
-//                IsPersisted = true;
-//            }
-//            HasChanges = false;
-        }
-
-        public virtual void Save(OnConflictOption option)
-        {
-            if (DAL == null)
-            {
-                throw new InvalidOperationException("DAL must be set before calling save");
-            }
-
-            this.DAL.Save(this, option);
-            //if (HasChanges == false) { return; }
-
-            //Logger.Log.V(string.Format("Saving DO | {0:20} | {1:15} | IsPersisted = {2}\r\n", this.GetType().Name, this.GetID(), this.IsPersisted));
-
-            //if (IsPersisted)
-            //{
-            //    DAL.ExecuteSQL(ObjectDescription.CreateSQLUpdate(this, DAL.User, option));
-            //}
-            //else
-            //{
-            //    rowID = DAL.ExecuteScalar(ObjectDescription.CreateSQLInsert(this, DAL.User, option));
-            //    IsPersisted = true;
-            //}
-            //HasChanges = false;
-
-            
-
-
-        }
-
-        public virtual void Delete()
-        {
-            Debug.Assert(DAL != null);
-            DAL.Delete(this);
-
-            //if (IsPersisted)
-            //{
-            //    Logger.Log.V(string.Format("Deleting DO | {0:20} | {1:15} | IsPersisted = {2}\r\n", this.GetType().Name, this.GetID(), this.IsPersisted));
-
-            //    DAL.ExecuteSQL(ObjectDescription.CreateSQLDelete(this));
-            //    DAL._IDTable.Remove(this);
-
-            //    this.IsDeleted = true;
-            //}
-        }
 
         protected virtual void OnDALChanged(DatastoreBase newDAL)
         {
@@ -271,9 +135,9 @@ namespace CruiseDAL
 
         internal void InternalSetDAL(DatastoreBase newDAL)
         {
-            IsPersisted = false;
-            HasChanges = true;
-
+            SetIsPersisted(false);
+            SetHasChanges(true);
+            
             if (newDAL == null)
             {
                 IsDetached = true;
@@ -287,67 +151,6 @@ namespace CruiseDAL
 
         public abstract void SetValues(DataObject obj);
 
-        /// <summary>
-        /// Disables Property Changed events from fireing. 
-        /// This is useful when changing many propertys on an object 
-        /// and you need to protect against events fireing during the write process. 
-        /// </summary>
-        [Obsolete("Use SuspendEvents instead")]
-        public void StartWrite()
-        {
-            this.PropertyChangedEventsDisabled = true;
-        }
-
-        /// <summary>
-        /// Re-enables property changed events
-        /// </summary>
-        [Obsolete("Use RsumeEvents instead")]
-        public void EndWrite()
-        {
-            this.PropertyChangedEventsDisabled = false;
-        }
-
-        /// <summary>
-        /// Returns the object id
-        /// </summary>
-        /// <returns></returns>
-        public long GetID()
-        {
-            if (DAL != null && rowID != null)
-            {
-                return DatastoreBase.GetObjectDiscription(this.GetType()).GetID(this.rowID);
-            }
-            else
-            {
-                return -1;
-            }
-        }
-
-        
-
-        
-        
-
-        //protected void NotifyPropertyChanged(string name, object value)
-        //{
-        //    NotifyPropertyChanged(name);
-        //}
-
-        protected virtual void NotifyPropertyChanged(string name)
-        {
-            if (!PropertyChangedEventsDisabled)
-            {
-                HasChanges = true;
-                if (PropertyChanged != null)
-                {
-                    PropertyChanged(this, new PropertyChangedEventArgs(name));
-                }
-            }
-        }
-
-        [XmlIgnore]
-        public bool PropertyChangedEventsDisabled { get; protected set; }
-
         public void SuspendEvents()
         {
             PropertyChangedEventsDisabled = true;
@@ -358,6 +161,134 @@ namespace CruiseDAL
             PropertyChangedEventsDisabled = false;
         }
 
+        protected virtual void NotifyPropertyChanged(string name)
+        {
+            if (!PropertyChangedEventsDisabled)
+            {
+                SetHasChanges(true);
+                if (PropertyChanged != null)
+                {
+                    PropertyChanged(this, new PropertyChangedEventArgs(name));
+                }
+            }
+        }
+
+
+        #region IPersistanceTracking Members
+        bool IPersistanceTracking.IsPersisted
+        {
+            get
+            {
+                return this.IsPersisted;
+            }
+
+            set
+            {
+                SetIsPersisted(value);
+            }
+        }
+
+        bool IPersistanceTracking.HasChanges
+        {
+            get
+            {
+                return this.HasChanges;
+            }
+
+            set
+            {
+                SetHasChanges(value);
+            }
+        }
+
+        bool IPersistanceTracking.IsDeleted
+        {
+            get
+            {
+                return this.IsDeleted;
+            }
+            set
+            {
+                SetIsDeleted(value);
+            }
+        }
+
+        protected void SetIsPersisted(bool value)
+        {
+            if (value == true)
+            {
+                this._recordState = (_recordState & RecordState.Validated) | RecordState.Persisted;//override all other states except Validated
+            }
+            else
+            {
+                this._recordState = _recordState & ~RecordState.Persisted;
+            }
+        }
+
+        protected void SetHasChanges(bool value)
+        {
+            if (value == true)
+            {
+                this._recordState = _recordState | RecordState.HasChanges;
+            }
+            else
+            {
+                this._recordState = _recordState & ~RecordState.HasChanges;
+            }
+        }
+
+        protected void SetIsDeleted(bool value)
+        {
+
+            if (value == true)
+            {
+                this._recordState = RecordState.Deleted;//override all other states
+            }
+            else
+            {
+                this._recordState = _recordState & ~RecordState.Deleted;
+            }
+        }
+
+        void IPersistanceTracking.OnInserted()
+        {
+            OnInserted();
+        }
+
+        void IPersistanceTracking.OnUpdating()
+        {
+            OnUpdating();
+        }
+
+        void IPersistanceTracking.OnUpdated()
+        {
+            OnUpdated();
+        }
+
+        void IPersistanceTracking.OnDeleting()
+        {
+            OnDeleting();
+        }
+
+        void IPersistanceTracking.OnDeleted()
+        {
+            OnDeleted();
+        }
+
+        protected virtual void OnInserted()
+        { }
+
+        protected virtual void OnUpdating()
+        { }
+
+        protected virtual void OnUpdated()
+        { }
+
+        protected virtual void OnDeleting()
+        { }
+        protected virtual void OnDeleted()
+        { }
+        #endregion
 
         #region ISupportInitialize Members
         public void BeginInit()
@@ -389,9 +320,9 @@ namespace CruiseDAL
                 return base.ToString();
             }
         }
+
+        
         #endregion
-
-
     }
 }
         
