@@ -1,26 +1,19 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data.Common;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-using CruiseDAL.Core.Constants;
 using System.Diagnostics;
 using System.Threading;
-using System.ComponentModel;
+
 using CruiseDAL.Core.EntityModel;
 using CruiseDAL.Core.SQL;
-using CruiseDAL.BaseDAL.EntityAttributes;
-using CruiseDAL.BaseDAL;
+using CruiseDAL.Core.EntityAttributes;
+using CruiseDAL.Core.Constants;
 
 namespace CruiseDAL.Core
 {
-    public enum OnConflictOption { Default, Rollback, Abort, Fail, Ignore, Replace };
-
     public abstract class DataStoreContext : IDisposable
     {
-        public DatastoreBase DataStore { get; set; }
+        public DatastoreRedux DataStore { get; set; }
 
         public DbConnectionStringBuilder ConnectionStringBuilder { get; protected set; }
 
@@ -239,7 +232,7 @@ namespace CruiseDAL.Core
         #endregion
 
         #region Persistence Methods
-        public void Save<T>(T data, SQLConflictOption option) where T : IPersistanceTracking
+        public void Save<T>(T data, SQL.OnConflictOption option) where T : IPersistanceTracking
         {
             if (data.HasChanges == false) { return; }
             if (!data.IsPersisted)
@@ -259,11 +252,9 @@ namespace CruiseDAL.Core
             }
         }
 
-        public object Insert(object data,  SQLConflictOption option)
+        public object Insert(object data, SQL.OnConflictOption option)
         {
             EntityDescription entityDescription = GetEntityInfo(data.GetType());
-
-            PrimaryKeyFieldAttribute rowIDField = entityDescription.Fields.RowIDField;
             PrimaryKeyFieldAttribute primaryKeyField = entityDescription.Fields.PrimaryKeyField;
 
             EntityCommandBuilder builder = entityDescription.CommandBuilder;
@@ -273,14 +264,9 @@ namespace CruiseDAL.Core
             {
                 ExecuteSQL(command);
 
-                if(rowIDField != null)
-                {
-                    long rowID = GetLastInsertRowID();
-                    rowIDField.SetFieldValue(data, rowID);
-                }
                 if(primaryKeyField != null)
                 {
-                    primaryKey = GetLastInsertPrimaryKeyValue(entityDescription.SourceName
+                    primaryKey = GetLastInsertKeyValue(entityDescription.SourceName
                         , primaryKeyField.FieldName);
 
                     primaryKeyField.SetFieldValue(data, primaryKey);
@@ -298,13 +284,12 @@ namespace CruiseDAL.Core
         }
 
         
-
         //public void Update(DataObject data, OnConflictOption option)
         //{
         //    this.Update(data, data.rowID, option);
         //}
 
-        public void Update(object data, SQLConflictOption option)
+        public void Update(object data, SQL.OnConflictOption option)
         {
             EntityDescription entityDescription = GetEntityInfo(data.GetType());
             EntityCommandBuilder builder = entityDescription.CommandBuilder;
@@ -325,11 +310,15 @@ namespace CruiseDAL.Core
 
         public void Delete(object data)
         {
+            EntityDescription entityDescription = GetEntityInfo(data.GetType());
+            PrimaryKeyFieldAttribute keyFieldInfo = entityDescription.Fields.PrimaryKeyField;
+
+            if(keyFieldInfo == null) { throw new InvalidOperationException("type doesn't have primary key field"); }
+
+            EntityCommandBuilder builder = entityDescription.CommandBuilder;
+
             lock (data)
             {
-                EntityDescription entityDescription = GetEntityInfo(data.GetType());
-                EntityCommandBuilder builder = entityDescription.CommandBuilder;
-
                 if (data is IPersistanceTracking)
                 {
                     Debug.Assert(((IPersistanceTracking)data).IsPersisted == true);
@@ -337,7 +326,9 @@ namespace CruiseDAL.Core
                     ((IPersistanceTracking)data).OnDeleting();
                 }
 
-                using (DbCommand command = builder.BuildSQLDeleteCommand(data))
+                object keyValue = keyFieldInfo.GetFieldValue(data);
+                
+                using (DbCommand command = builder.BuildSQLDeleteCommand(keyFieldInfo.FieldName, keyValue))
                 {
                     ExecuteSQL(command);
                 }
@@ -363,7 +354,7 @@ namespace CruiseDAL.Core
             }
         }
 
-        protected object GetLastInsertPrimaryKeyValue(String tableName, String fieldName)
+        protected object GetLastInsertKeyValue(String tableName, String fieldName)
         {
             String query = "Select " + fieldName + " FROM " + tableName + " WHERE rowid = last_insert_rowid()";
             return ExecuteScalar(query);
@@ -523,17 +514,17 @@ namespace CruiseDAL.Core
             }
         }
 
-        protected DbDataReader ExecuteReader(DbCommand command)
-        {
-            lock(_readOnlyConnectionSyncLock)
-            {
-                DbConnection conn = OpenReadOnlyConnection(true);
-                command.Connection = conn;
-                return command.ExecuteReader();
+        //protected DbDataReader ExecuteReader(DbCommand command)
+        //{
+        //    lock(_readOnlyConnectionSyncLock)
+        //    {
+        //        DbConnection conn = OpenReadOnlyConnection(true);
+        //        command.Connection = conn;
+        //        return command.ExecuteReader();
 
-            }
+        //    }
 
-        }
+        //}
         #endregion
 
         #region Connection Management
@@ -762,52 +753,6 @@ namespace CruiseDAL.Core
                 }
             }
         }
-
-        #region IDisposable Support
-        private bool isDisposed = false; // To detect redundant calls
-
-        protected virtual void Dispose(bool disposing)
-        {
-            if (!isDisposed)
-            {
-                if (disposing)
-                {
-                    Debug.WriteLine("DatastoreContext Disposing ", Logging.DS_EVENT);
-                }
-                else
-                {
-                    Debug.WriteLine("DatastoreContext Finalized ", Logging.DS_EVENT);
-                }
-
-                //if(this._cache != null)
-                //{
-                //    _cache.Dispose();
-                //}
-
-                if (_ReadWriteConnection != null)
-                {
-                    ReleaseReadWriteConnection();
-                }
-                if (_ReadOnlyConnection != null)
-                {
-                    ReleaseReadOnlyConnection();
-                }
-
-                isDisposed = true;
-            }
-        }
-
-        ~DataStoreContext()
-        {
-            Dispose(false);
-        }
-
-        public void Dispose()
-        {
-            Dispose(true);
-            GC.SuppressFinalize(this);
-        }
-        #endregion
 
         #endregion
 
@@ -1103,6 +1048,52 @@ namespace CruiseDAL.Core
         }
 
 
+        #endregion
+
+        #region IDisposable Support
+        private bool isDisposed = false; // To detect redundant calls
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (!isDisposed)
+            {
+                if (disposing)
+                {
+                    Debug.WriteLine("DatastoreContext Disposing ", Logging.DS_EVENT);
+                }
+                else
+                {
+                    Debug.WriteLine("DatastoreContext Finalized ", Logging.DS_EVENT);
+                }
+
+                //if(this._cache != null)
+                //{
+                //    _cache.Dispose();
+                //}
+
+                if (_ReadWriteConnection != null)
+                {
+                    ReleaseReadWriteConnection();
+                }
+                if (_ReadOnlyConnection != null)
+                {
+                    ReleaseReadOnlyConnection();
+                }
+
+                isDisposed = true;
+            }
+        }
+
+        ~DataStoreContext()
+        {
+            Dispose(false);
+        }
+
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
         #endregion
     }
 }

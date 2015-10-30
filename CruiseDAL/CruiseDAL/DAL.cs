@@ -28,7 +28,6 @@ using System.Security.Permissions;
 
 namespace CruiseDAL
 {
-    public enum OnConflictOption { Rollback, Abort, Fail, Ignore, Replace };
     public enum CruiseFileType { Unknown, Cruise, Template, Design, Master, Component }
 
 

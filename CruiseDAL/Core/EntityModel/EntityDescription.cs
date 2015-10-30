@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Data;
 using System.Diagnostics;
-using CruiseDAL.BaseDAL.EntityAttributes;
+using CruiseDAL.Core.EntityAttributes;
 
 #if ANDROID
 using Mono.Data.Sqlite;
@@ -16,7 +16,7 @@ using System.Data.SQLite;
 #endif
 
 
-namespace CruiseDAL.Core
+namespace CruiseDAL.Core.EntityModel
 {
     public class EntityDescription
     {

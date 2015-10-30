@@ -18,8 +18,6 @@ using System.Diagnostics;
 
 namespace CruiseDAL
 {
-
-
     public abstract class DatastoreBase
     {
 
@@ -1127,10 +1125,4 @@ namespace CruiseDAL
 
 
     }
-
-    
-
-    
-
-    
 }

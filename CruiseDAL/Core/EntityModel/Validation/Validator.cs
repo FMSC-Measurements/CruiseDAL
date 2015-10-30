@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using System;
 using System.Reflection;
-using CruiseDAL.BaseDAL.EntityAttributes;
+using CruiseDAL.Core.EntityAttributes;
 
 namespace CruiseDAL.Core.EntityModel
 {

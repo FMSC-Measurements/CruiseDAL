@@ -1,10 +1,7 @@
 ﻿
 using System;
-using CruiseDAL.Schema;
 using System.Xml.Serialization;
-using System.Reflection;
-using CruiseDAL.BaseDAL;
-using CruiseDAL.BaseDAL.EntityAttributes;
+using CruiseDAL.Core.EntityAttributes;
 using CruiseDAL.Core.EntityModel;
 
 namespace CruiseDAL.DataObjects
@@ -13,9 +10,7 @@ namespace CruiseDAL.DataObjects
 	[SQLEntity(SourceName = "Sale")]
 	public partial class SaleDO : CruiseDALDataObject
 	{
-		//private static Persister persister;
 		private static RowValidator _validator;
-		//private static PropertyInfo[] _propertyInfo;
 		
 		[XmlIgnore]
 		public new DAL DAL
@@ -282,9 +277,9 @@ namespace CruiseDAL.DataObjects
 		
 		protected override bool DoValidate()
 		{
-			if(_errorsLoaded == false)
+			if(ErrorCollection.ErrorsLoaded == false)
 			{
-			    this.PopulateErrorList();
+				this.ErrorCollection.PopulateErrorList();
 			}
 			bool isValid = true;
 			isValid = ValidateProperty("SaleNumber", this.SaleNumber) && isValid;
@@ -324,9 +319,7 @@ namespace CruiseDAL.DataObjects
 	[SQLEntity(SourceName = "CuttingUnit")]
 	public partial class CuttingUnitDO : CruiseDALDataObject
 	{
-		//private static Persister persister;
 		private static RowValidator _validator;
-		//private static PropertyInfo[] _propertyInfo;
 		
 		[XmlIgnore]
 		public new DAL DAL
@@ -500,9 +493,9 @@ namespace CruiseDAL.DataObjects
 		
 		protected override bool DoValidate()
 		{
-			if(_errorsLoaded == false)
+			if(ErrorCollection.ErrorsLoaded == false)
 			{
-			    this.PopulateErrorList();
+				this.ErrorCollection.PopulateErrorList();
 			}
 			bool isValid = true;
 			isValid = ValidateProperty("Code", this.Code) && isValid;
@@ -532,9 +525,7 @@ namespace CruiseDAL.DataObjects
 	[SQLEntity(SourceName = "Stratum")]
 	public partial class StratumDO : CruiseDALDataObject
 	{
-		//private static Persister persister;
 		private static RowValidator _validator;
-		//private static PropertyInfo[] _propertyInfo;
 		
 		[XmlIgnore]
 		public new DAL DAL
@@ -802,9 +793,9 @@ namespace CruiseDAL.DataObjects
 		
 		protected override bool DoValidate()
 		{
-			if(_errorsLoaded == false)
+			if(ErrorCollection.ErrorsLoaded == false)
 			{
-			    this.PopulateErrorList();
+				this.ErrorCollection.PopulateErrorList();
 			}
 			bool isValid = true;
 			isValid = ValidateProperty("Code", this.Code) && isValid;
@@ -844,9 +835,7 @@ namespace CruiseDAL.DataObjects
 	[SQLEntity(SourceName = "CuttingUnitStratum")]
 	public partial class CuttingUnitStratumDO : CruiseDALDataObject
 	{
-		//private static Persister persister;
 		private static RowValidator _validator;
-		//private static PropertyInfo[] _propertyInfo;
 		
 		[XmlIgnore]
 		public new DAL DAL
@@ -1003,9 +992,9 @@ namespace CruiseDAL.DataObjects
 
 		protected override bool DoValidate()
 		{
-			if(_errorsLoaded == false)
+			if(ErrorCollection.ErrorsLoaded == false)
 			{
-			    this.PopulateErrorList();
+				this.ErrorCollection.PopulateErrorList();
 			}
 			bool isValid = true;
 			isValid = ValidateProperty("StratumArea", this.StratumArea) && isValid;
@@ -1027,9 +1016,7 @@ namespace CruiseDAL.DataObjects
 	[SQLEntity(SourceName = "SampleGroup")]
 	public partial class SampleGroupDO : CruiseDALDataObject
 	{
-		//private static Persister persister;
 		private static RowValidator _validator;
-		//private static PropertyInfo[] _propertyInfo;
 		
 		[XmlIgnore]
 		public new DAL DAL
@@ -1475,9 +1462,9 @@ namespace CruiseDAL.DataObjects
 		
 		protected override bool DoValidate()
 		{
-			if(_errorsLoaded == false)
+			if(ErrorCollection.ErrorsLoaded == false)
 			{
-			    this.PopulateErrorList();
+				this.ErrorCollection.PopulateErrorList();
 			}
 			bool isValid = true;
 			isValid = ValidateProperty("Code", this.Code) && isValid;
@@ -1532,9 +1519,7 @@ namespace CruiseDAL.DataObjects
 	[SQLEntity(SourceName = "TreeDefaultValue")]
 	public partial class TreeDefaultValueDO : CruiseDALDataObject
 	{
-		//private static Persister persister;
 		private static RowValidator _validator;
-		//private static PropertyInfo[] _propertyInfo;
 		
 		[XmlIgnore]
 		public new DAL DAL
@@ -1918,9 +1903,9 @@ namespace CruiseDAL.DataObjects
 		
 		protected override bool DoValidate()
 		{
-			if(_errorsLoaded == false)
+			if(ErrorCollection.ErrorsLoaded == false)
 			{
-			    this.PopulateErrorList();
+				this.ErrorCollection.PopulateErrorList();
 			}
 			bool isValid = true;
 			isValid = ValidateProperty("PrimaryProduct", this.PrimaryProduct) && isValid;
@@ -1972,9 +1957,7 @@ namespace CruiseDAL.DataObjects
 	[SQLEntity(SourceName = "SampleGroupTreeDefaultValue")]
 	public partial class SampleGroupTreeDefaultValueDO : CruiseDALDataObject
 	{
-		//private static Persister persister;
 		private static RowValidator _validator;
-		//private static PropertyInfo[] _propertyInfo;
 		
 		[XmlIgnore]
 		public new DAL DAL
@@ -2111,9 +2094,9 @@ namespace CruiseDAL.DataObjects
 
 		protected override bool DoValidate()
 		{
-			if(_errorsLoaded == false)
+			if(ErrorCollection.ErrorsLoaded == false)
 			{
-			    this.PopulateErrorList();
+				this.ErrorCollection.PopulateErrorList();
 			}
 			bool isValid = true;
 			isValid = ValidateProperty("TreeDefaultValue_CN", this.TreeDefaultValue_CN) && isValid ;
@@ -2133,9 +2116,7 @@ namespace CruiseDAL.DataObjects
 	[SQLEntity(SourceName = "Plot")]
 	public partial class PlotDO : CruiseDALDataObject
 	{
-		//private static Persister persister;
 		private static RowValidator _validator;
-		//private static PropertyInfo[] _propertyInfo;
 		
 		[XmlIgnore]
 		public new DAL DAL
@@ -2516,9 +2497,9 @@ namespace CruiseDAL.DataObjects
 		
 		protected override bool DoValidate()
 		{
-			if(_errorsLoaded == false)
+			if(ErrorCollection.ErrorsLoaded == false)
 			{
-			    this.PopulateErrorList();
+				this.ErrorCollection.PopulateErrorList();
 			}
 			bool isValid = true;
 			isValid = ValidateProperty("Plot_GUID", this.Plot_GUID) && isValid;
@@ -2562,9 +2543,7 @@ namespace CruiseDAL.DataObjects
 	[SQLEntity(SourceName = "Tree")]
 	public partial class TreeDO : CruiseDALDataObject
 	{
-		//private static Persister persister;
 		private static RowValidator _validator;
-		//private static PropertyInfo[] _propertyInfo;
 		
 		[XmlIgnore]
 		public new DAL DAL
@@ -3651,9 +3630,9 @@ namespace CruiseDAL.DataObjects
 		
 		protected override bool DoValidate()
 		{
-			if(_errorsLoaded == false)
+			if(ErrorCollection.ErrorsLoaded == false)
 			{
-			    this.PopulateErrorList();
+				this.ErrorCollection.PopulateErrorList();
 			}
 			bool isValid = true;
 			isValid = ValidateProperty("Tree_GUID", this.Tree_GUID) && isValid;
@@ -3762,9 +3741,7 @@ namespace CruiseDAL.DataObjects
 	[SQLEntity(SourceName = "Log")]
 	public partial class LogDO : CruiseDALDataObject
 	{
-		//private static Persister persister;
 		private static RowValidator _validator;
-		//private static PropertyInfo[] _propertyInfo;
 		
 		[XmlIgnore]
 		public new DAL DAL
@@ -4185,9 +4162,9 @@ namespace CruiseDAL.DataObjects
 		
 		protected override bool DoValidate()
 		{
-			if(_errorsLoaded == false)
+			if(ErrorCollection.ErrorsLoaded == false)
 			{
-			    this.PopulateErrorList();
+				this.ErrorCollection.PopulateErrorList();
 			}
 			bool isValid = true;
 			isValid = ValidateProperty("Log_GUID", this.Log_GUID) && isValid;
@@ -4240,9 +4217,7 @@ namespace CruiseDAL.DataObjects
 	[SQLEntity(SourceName = "Stem")]
 	public partial class StemDO : CruiseDALDataObject
 	{
-		//private static Persister persister;
 		private static RowValidator _validator;
-		//private static PropertyInfo[] _propertyInfo;
 		
 		[XmlIgnore]
 		public new DAL DAL
@@ -4409,9 +4384,9 @@ namespace CruiseDAL.DataObjects
 		
 		protected override bool DoValidate()
 		{
-			if(_errorsLoaded == false)
+			if(ErrorCollection.ErrorsLoaded == false)
 			{
-			    this.PopulateErrorList();
+				this.ErrorCollection.PopulateErrorList();
 			}
 			bool isValid = true;
 			isValid = ValidateProperty("Stem_GUID", this.Stem_GUID) && isValid;
@@ -4436,9 +4411,7 @@ namespace CruiseDAL.DataObjects
 	[SQLEntity(SourceName = "CountTree")]
 	public partial class CountTreeDO : CruiseDALDataObject
 	{
-		//private static Persister persister;
 		private static RowValidator _validator;
-		//private static PropertyInfo[] _propertyInfo;
 		
 		[XmlIgnore]
 		public new DAL DAL
@@ -4785,9 +4758,9 @@ namespace CruiseDAL.DataObjects
 		
 		protected override bool DoValidate()
 		{
-			if(_errorsLoaded == false)
+			if(ErrorCollection.ErrorsLoaded == false)
 			{
-			    this.PopulateErrorList();
+				this.ErrorCollection.PopulateErrorList();
 			}
 			bool isValid = true;
 			isValid = ValidateProperty("TreeCount", this.TreeCount) && isValid;
@@ -4814,9 +4787,7 @@ namespace CruiseDAL.DataObjects
 	[SQLEntity(SourceName = "Tally")]
 	public partial class TallyDO : CruiseDALDataObject
 	{
-		//private static Persister persister;
 		private static RowValidator _validator;
-		//private static PropertyInfo[] _propertyInfo;
 		
 		[XmlIgnore]
 		public new DAL DAL
@@ -4934,9 +4905,9 @@ namespace CruiseDAL.DataObjects
 
 		protected override bool DoValidate()
 		{
-			if(_errorsLoaded == false)
+			if(ErrorCollection.ErrorsLoaded == false)
 			{
-			    this.PopulateErrorList();
+				this.ErrorCollection.PopulateErrorList();
 			}
 			bool isValid = true;
 			isValid = ValidateProperty("Hotkey", this.Hotkey) && isValid;
@@ -4962,9 +4933,7 @@ namespace CruiseDAL.DataObjects
 	[SQLEntity(SourceName = "TreeEstimate")]
 	public partial class TreeEstimateDO : CruiseDALDataObject
 	{
-		//private static Persister persister;
 		private static RowValidator _validator;
-		//private static PropertyInfo[] _propertyInfo;
 		
 		[XmlIgnore]
 		public new DAL DAL
@@ -5114,9 +5083,9 @@ namespace CruiseDAL.DataObjects
 		
 		protected override bool DoValidate()
 		{
-			if(_errorsLoaded == false)
+			if(ErrorCollection.ErrorsLoaded == false)
 			{
-			    this.PopulateErrorList();
+				this.ErrorCollection.PopulateErrorList();
 			}
 			bool isValid = true;
 			isValid = ValidateProperty("TreeEstimate_GUID", this.TreeEstimate_GUID) && isValid;
@@ -5141,9 +5110,7 @@ namespace CruiseDAL.DataObjects
 	[SQLEntity(SourceName = "VolumeEquation")]
 	public partial class VolumeEquationDO : CruiseDALDataObject
 	{
-		//private static Persister persister;
 		private static RowValidator _validator;
-		//private static PropertyInfo[] _propertyInfo;
 		
 		[XmlIgnore]
 		public new DAL DAL
@@ -5563,9 +5530,9 @@ namespace CruiseDAL.DataObjects
 
 		protected override bool DoValidate()
 		{
-			if(_errorsLoaded == false)
+			if(ErrorCollection.ErrorsLoaded == false)
 			{
-			    this.PopulateErrorList();
+				this.ErrorCollection.PopulateErrorList();
 			}
 			bool isValid = true;
 			isValid = ValidateProperty("Species", this.Species) && isValid;
@@ -5625,9 +5592,7 @@ namespace CruiseDAL.DataObjects
 	[SQLEntity(SourceName = "BiomassEquation")]
 	public partial class BiomassEquationDO : CruiseDALDataObject
 	{
-		//private static Persister persister;
 		private static RowValidator _validator;
-		//private static PropertyInfo[] _propertyInfo;
 		
 		[XmlIgnore]
 		public new DAL DAL
@@ -5869,9 +5834,9 @@ namespace CruiseDAL.DataObjects
 
 		protected override bool DoValidate()
 		{
-			if(_errorsLoaded == false)
+			if(ErrorCollection.ErrorsLoaded == false)
 			{
-			    this.PopulateErrorList();
+				this.ErrorCollection.PopulateErrorList();
 			}
 			bool isValid = true;
 			isValid = ValidateProperty("Species", this.Species) && isValid;
@@ -5911,9 +5876,7 @@ namespace CruiseDAL.DataObjects
 	[SQLEntity(SourceName = "ValueEquation")]
 	public partial class ValueEquationDO : CruiseDALDataObject
 	{
-		//private static Persister persister;
 		private static RowValidator _validator;
-		//private static PropertyInfo[] _propertyInfo;
 		
 		[XmlIgnore]
 		public new DAL DAL
@@ -6134,9 +6097,9 @@ namespace CruiseDAL.DataObjects
 
 		protected override bool DoValidate()
 		{
-			if(_errorsLoaded == false)
+			if(ErrorCollection.ErrorsLoaded == false)
 			{
-			    this.PopulateErrorList();
+				this.ErrorCollection.PopulateErrorList();
 			}
 			bool isValid = true;
 			isValid = ValidateProperty("Species", this.Species) && isValid;
@@ -6174,9 +6137,7 @@ namespace CruiseDAL.DataObjects
 	[SQLEntity(SourceName = "QualityAdjEquation")]
 	public partial class QualityAdjEquationDO : CruiseDALDataObject
 	{
-		//private static Persister persister;
 		private static RowValidator _validator;
-		//private static PropertyInfo[] _propertyInfo;
 		
 		[XmlIgnore]
 		public new DAL DAL
@@ -6396,9 +6357,9 @@ namespace CruiseDAL.DataObjects
 
 		protected override bool DoValidate()
 		{
-			if(_errorsLoaded == false)
+			if(ErrorCollection.ErrorsLoaded == false)
 			{
-			    this.PopulateErrorList();
+				this.ErrorCollection.PopulateErrorList();
 			}
 			bool isValid = true;
 			isValid = ValidateProperty("Species", this.Species) && isValid;
@@ -6436,9 +6397,7 @@ namespace CruiseDAL.DataObjects
 	[SQLEntity(SourceName = "Reports")]
 	public partial class ReportsDO : CruiseDALDataObject
 	{
-		//private static Persister persister;
 		private static RowValidator _validator;
-		//private static PropertyInfo[] _propertyInfo;
 		
 		[XmlIgnore]
 		public new DAL DAL
@@ -6532,9 +6491,9 @@ namespace CruiseDAL.DataObjects
 
 		protected override bool DoValidate()
 		{
-			if(_errorsLoaded == false)
+			if(ErrorCollection.ErrorsLoaded == false)
 			{
-			    this.PopulateErrorList();
+				this.ErrorCollection.PopulateErrorList();
 			}
 			bool isValid = true;
 			isValid = ValidateProperty("ReportID", this.ReportID) && isValid;
@@ -6558,9 +6517,7 @@ namespace CruiseDAL.DataObjects
 	[SQLEntity(SourceName = "TreeCalculatedValues")]
 	public partial class TreeCalculatedValuesDO : CruiseDALDataObject
 	{
-		//private static Persister persister;
 		private static RowValidator _validator;
-		//private static PropertyInfo[] _propertyInfo;
 		
 		[XmlIgnore]
 		public new DAL DAL
@@ -7230,9 +7187,9 @@ namespace CruiseDAL.DataObjects
 
 		protected override bool DoValidate()
 		{
-			if(_errorsLoaded == false)
+			if(ErrorCollection.ErrorsLoaded == false)
 			{
-			    this.PopulateErrorList();
+				this.ErrorCollection.PopulateErrorList();
 			}
 			bool isValid = true;
 			isValid = ValidateProperty("TotalCubicVolume", this.TotalCubicVolume) && isValid;
@@ -7315,9 +7272,7 @@ namespace CruiseDAL.DataObjects
 	[SQLEntity(SourceName = "LCD")]
 	public partial class LCDDO : CruiseDALDataObject
 	{
-		//private static Persister persister;
 		private static RowValidator _validator;
-		//private static PropertyInfo[] _propertyInfo;
 		
 		[XmlIgnore]
 		public new DAL DAL
@@ -8326,9 +8281,9 @@ namespace CruiseDAL.DataObjects
 
 		protected override bool DoValidate()
 		{
-			if(_errorsLoaded == false)
+			if(ErrorCollection.ErrorsLoaded == false)
 			{
-			    this.PopulateErrorList();
+				this.ErrorCollection.PopulateErrorList();
 			}
 			bool isValid = true;
 			isValid = ValidateProperty("CutLeave", this.CutLeave) && isValid;
@@ -8452,9 +8407,7 @@ namespace CruiseDAL.DataObjects
 	[SQLEntity(SourceName = "POP")]
 	public partial class POPDO : CruiseDALDataObject
 	{
-		//private static Persister persister;
 		private static RowValidator _validator;
-		//private static PropertyInfo[] _propertyInfo;
 		
 		[XmlIgnore]
 		public new DAL DAL
@@ -9404,9 +9357,9 @@ namespace CruiseDAL.DataObjects
 
 		protected override bool DoValidate()
 		{
-			if(_errorsLoaded == false)
+			if(ErrorCollection.ErrorsLoaded == false)
 			{
-			    this.PopulateErrorList();
+				this.ErrorCollection.PopulateErrorList();
 			}
 			bool isValid = true;
 			isValid = ValidateProperty("CutLeave", this.CutLeave) && isValid;
@@ -9524,9 +9477,7 @@ namespace CruiseDAL.DataObjects
 	[SQLEntity(SourceName = "PRO")]
 	public partial class PRODO : CruiseDALDataObject
 	{
-		//private static Persister persister;
 		private static RowValidator _validator;
-		//private static PropertyInfo[] _propertyInfo;
 		
 		[XmlIgnore]
 		public new DAL DAL
@@ -9847,9 +9798,9 @@ namespace CruiseDAL.DataObjects
 
 		protected override bool DoValidate()
 		{
-			if(_errorsLoaded == false)
+			if(ErrorCollection.ErrorsLoaded == false)
 			{
-			    this.PopulateErrorList();
+				this.ErrorCollection.PopulateErrorList();
 			}
 			bool isValid = true;
 			isValid = ValidateProperty("CutLeave", this.CutLeave) && isValid;
@@ -9897,9 +9848,7 @@ namespace CruiseDAL.DataObjects
 	[SQLEntity(SourceName = "LogStock")]
 	public partial class LogStockDO : CruiseDALDataObject
 	{
-		//private static Persister persister;
 		private static RowValidator _validator;
-		//private static PropertyInfo[] _propertyInfo;
 		
 		[XmlIgnore]
 		public new DAL DAL
@@ -10338,9 +10287,9 @@ namespace CruiseDAL.DataObjects
 		
 		protected override bool DoValidate()
 		{
-			if(_errorsLoaded == false)
+			if(ErrorCollection.ErrorsLoaded == false)
 			{
-			    this.PopulateErrorList();
+				this.ErrorCollection.PopulateErrorList();
 			}
 			bool isValid = true;
 			isValid = ValidateProperty("LogNumber", this.LogNumber) && isValid;
@@ -10395,9 +10344,7 @@ namespace CruiseDAL.DataObjects
 	[SQLEntity(SourceName = "SampleGroupStats")]
 	public partial class SampleGroupStatsDO : CruiseDALDataObject
 	{
-		//private static Persister persister;
 		private static RowValidator _validator;
-		//private static PropertyInfo[] _propertyInfo;
 		
 		[XmlIgnore]
 		public new DAL DAL
@@ -11030,9 +10977,9 @@ namespace CruiseDAL.DataObjects
 
 		protected override bool DoValidate()
 		{
-			if(_errorsLoaded == false)
+			if(ErrorCollection.ErrorsLoaded == false)
 			{
-			    this.PopulateErrorList();
+				this.ErrorCollection.PopulateErrorList();
 			}
 			bool isValid = true;
 			isValid = ValidateProperty("Code", this.Code) && isValid;
@@ -11111,9 +11058,7 @@ namespace CruiseDAL.DataObjects
 	[SQLEntity(SourceName = "SampleGroupStatsTreeDefaultValue")]
 	public partial class SampleGroupStatsTreeDefaultValueDO : CruiseDALDataObject
 	{
-		//private static Persister persister;
 		private static RowValidator _validator;
-		//private static PropertyInfo[] _propertyInfo;
 		
 		[XmlIgnore]
 		public new DAL DAL
@@ -11250,9 +11195,9 @@ namespace CruiseDAL.DataObjects
 
 		protected override bool DoValidate()
 		{
-			if(_errorsLoaded == false)
+			if(ErrorCollection.ErrorsLoaded == false)
 			{
-			    this.PopulateErrorList();
+				this.ErrorCollection.PopulateErrorList();
 			}
 			bool isValid = true;
 			isValid = ValidateProperty("TreeDefaultValue_CN", this.TreeDefaultValue_CN) && isValid ;
@@ -11272,9 +11217,7 @@ namespace CruiseDAL.DataObjects
 	[SQLEntity(SourceName = "StratumStats")]
 	public partial class StratumStatsDO : CruiseDALDataObject
 	{
-		//private static Persister persister;
 		private static RowValidator _validator;
-		//private static PropertyInfo[] _propertyInfo;
 		
 		[XmlIgnore]
 		public new DAL DAL
@@ -11691,9 +11634,9 @@ namespace CruiseDAL.DataObjects
 
 		protected override bool DoValidate()
 		{
-			if(_errorsLoaded == false)
+			if(ErrorCollection.ErrorsLoaded == false)
 			{
-			    this.PopulateErrorList();
+				this.ErrorCollection.PopulateErrorList();
 			}
 			bool isValid = true;
 			isValid = ValidateProperty("Code", this.Code) && isValid;
@@ -11748,9 +11691,7 @@ namespace CruiseDAL.DataObjects
 	[SQLEntity(SourceName = "Regression")]
 	public partial class RegressionDO : CruiseDALDataObject
 	{
-		//private static Persister persister;
 		private static RowValidator _validator;
-		//private static PropertyInfo[] _propertyInfo;
 		
 		[XmlIgnore]
 		public new DAL DAL
@@ -12046,9 +11987,9 @@ namespace CruiseDAL.DataObjects
 
 		protected override bool DoValidate()
 		{
-			if(_errorsLoaded == false)
+			if(ErrorCollection.ErrorsLoaded == false)
 			{
-			    this.PopulateErrorList();
+				this.ErrorCollection.PopulateErrorList();
 			}
 			bool isValid = true;
 			isValid = ValidateProperty("rVolume", this.rVolume) && isValid;
@@ -12094,9 +12035,7 @@ namespace CruiseDAL.DataObjects
 	[SQLEntity(SourceName = "LogMatrix")]
 	public partial class LogMatrixDO : CruiseDALDataObject
 	{
-		//private static Persister persister;
 		private static RowValidator _validator;
-		//private static PropertyInfo[] _propertyInfo;
 		
 		[XmlIgnore]
 		public new DAL DAL
@@ -12369,9 +12308,9 @@ namespace CruiseDAL.DataObjects
 
 		protected override bool DoValidate()
 		{
-			if(_errorsLoaded == false)
+			if(ErrorCollection.ErrorsLoaded == false)
 			{
-			    this.PopulateErrorList();
+				this.ErrorCollection.PopulateErrorList();
 			}
 			bool isValid = true;
 			isValid = ValidateProperty("ReportNumber", this.ReportNumber) && isValid;
@@ -12417,9 +12356,7 @@ namespace CruiseDAL.DataObjects
 	[SQLEntity(SourceName = "TreeDefaultValueTreeAuditValue")]
 	public partial class TreeDefaultValueTreeAuditValueDO : CruiseDALDataObject
 	{
-		//private static Persister persister;
 		private static RowValidator _validator;
-		//private static PropertyInfo[] _propertyInfo;
 		
 		[XmlIgnore]
 		public new DAL DAL
@@ -12558,9 +12495,9 @@ namespace CruiseDAL.DataObjects
 
 		protected override bool DoValidate()
 		{
-			if(_errorsLoaded == false)
+			if(ErrorCollection.ErrorsLoaded == false)
 			{
-			    this.PopulateErrorList();
+				this.ErrorCollection.PopulateErrorList();
 			}
 			bool isValid = true;
 			isValid = ValidateProperty("TreeAuditValue_CN", this.TreeAuditValue_CN) && isValid ;
@@ -12580,9 +12517,7 @@ namespace CruiseDAL.DataObjects
 	[SQLEntity(SourceName = "TreeAuditValue")]
 	public partial class TreeAuditValueDO : CruiseDALDataObject
 	{
-		//private static Persister persister;
 		private static RowValidator _validator;
-		//private static PropertyInfo[] _propertyInfo;
 		
 		[XmlIgnore]
 		public new DAL DAL
@@ -12717,9 +12652,9 @@ namespace CruiseDAL.DataObjects
 
 		protected override bool DoValidate()
 		{
-			if(_errorsLoaded == false)
+			if(ErrorCollection.ErrorsLoaded == false)
 			{
-			    this.PopulateErrorList();
+				this.ErrorCollection.PopulateErrorList();
 			}
 			bool isValid = true;
 			isValid = ValidateProperty("Field", this.Field) && isValid;
@@ -12747,9 +12682,7 @@ namespace CruiseDAL.DataObjects
 	[SQLEntity(SourceName = "LogFieldSetup")]
 	public partial class LogFieldSetupDO : CruiseDALDataObject
 	{
-		//private static Persister persister;
 		private static RowValidator _validator;
-		//private static PropertyInfo[] _propertyInfo;
 		
 		[XmlIgnore]
 		public new DAL DAL
@@ -12965,9 +12898,9 @@ namespace CruiseDAL.DataObjects
 
 		protected override bool DoValidate()
 		{
-			if(_errorsLoaded == false)
+			if(ErrorCollection.ErrorsLoaded == false)
 			{
-			    this.PopulateErrorList();
+				this.ErrorCollection.PopulateErrorList();
 			}
 			bool isValid = true;
 			isValid = ValidateProperty("Field", this.Field) && isValid;
@@ -13000,9 +12933,7 @@ namespace CruiseDAL.DataObjects
 	[SQLEntity(SourceName = "TreeFieldSetup")]
 	public partial class TreeFieldSetupDO : CruiseDALDataObject
 	{
-		//private static Persister persister;
 		private static RowValidator _validator;
-		//private static PropertyInfo[] _propertyInfo;
 		
 		[XmlIgnore]
 		public new DAL DAL
@@ -13218,9 +13149,9 @@ namespace CruiseDAL.DataObjects
 
 		protected override bool DoValidate()
 		{
-			if(_errorsLoaded == false)
+			if(ErrorCollection.ErrorsLoaded == false)
 			{
-			    this.PopulateErrorList();
+				this.ErrorCollection.PopulateErrorList();
 			}
 			bool isValid = true;
 			isValid = ValidateProperty("Field", this.Field) && isValid;
@@ -13253,9 +13184,7 @@ namespace CruiseDAL.DataObjects
 	[SQLEntity(SourceName = "LogFieldSetupDefault")]
 	public partial class LogFieldSetupDefaultDO : CruiseDALDataObject
 	{
-		//private static Persister persister;
 		private static RowValidator _validator;
-		//private static PropertyInfo[] _propertyInfo;
 		
 		[XmlIgnore]
 		public new DAL DAL
@@ -13444,9 +13373,9 @@ namespace CruiseDAL.DataObjects
 
 		protected override bool DoValidate()
 		{
-			if(_errorsLoaded == false)
+			if(ErrorCollection.ErrorsLoaded == false)
 			{
-			    this.PopulateErrorList();
+				this.ErrorCollection.PopulateErrorList();
 			}
 			bool isValid = true;
 			isValid = ValidateProperty("Field", this.Field) && isValid;
@@ -13480,9 +13409,7 @@ namespace CruiseDAL.DataObjects
 	[SQLEntity(SourceName = "TreeFieldSetupDefault")]
 	public partial class TreeFieldSetupDefaultDO : CruiseDALDataObject
 	{
-		//private static Persister persister;
 		private static RowValidator _validator;
-		//private static PropertyInfo[] _propertyInfo;
 		
 		[XmlIgnore]
 		public new DAL DAL
@@ -13690,9 +13617,9 @@ namespace CruiseDAL.DataObjects
 
 		protected override bool DoValidate()
 		{
-			if(_errorsLoaded == false)
+			if(ErrorCollection.ErrorsLoaded == false)
 			{
-			    this.PopulateErrorList();
+				this.ErrorCollection.PopulateErrorList();
 			}
 			bool isValid = true;
 			isValid = ValidateProperty("Method", this.Method) && isValid;
@@ -13730,9 +13657,7 @@ namespace CruiseDAL.DataObjects
 	[SQLEntity(SourceName = "CruiseMethods")]
 	public partial class CruiseMethodsDO : CruiseDALDataObject
 	{
-		//private static Persister persister;
 		private static RowValidator _validator;
-		//private static PropertyInfo[] _propertyInfo;
 		
 		[XmlIgnore]
 		public new DAL DAL
@@ -13812,9 +13737,9 @@ namespace CruiseDAL.DataObjects
 
 		protected override bool DoValidate()
 		{
-			if(_errorsLoaded == false)
+			if(ErrorCollection.ErrorsLoaded == false)
 			{
-			    this.PopulateErrorList();
+				this.ErrorCollection.PopulateErrorList();
 			}
 			bool isValid = true;
 			isValid = ValidateProperty("Code", this.Code) && isValid;
@@ -13836,9 +13761,7 @@ namespace CruiseDAL.DataObjects
 	[SQLEntity(SourceName = "LoggingMethods")]
 	public partial class LoggingMethodsDO : CruiseDALDataObject
 	{
-		//private static Persister persister;
 		private static RowValidator _validator;
-		//private static PropertyInfo[] _propertyInfo;
 		
 		[XmlIgnore]
 		public new DAL DAL
@@ -13918,9 +13841,9 @@ namespace CruiseDAL.DataObjects
 
 		protected override bool DoValidate()
 		{
-			if(_errorsLoaded == false)
+			if(ErrorCollection.ErrorsLoaded == false)
 			{
-			    this.PopulateErrorList();
+				this.ErrorCollection.PopulateErrorList();
 			}
 			bool isValid = true;
 			isValid = ValidateProperty("Code", this.Code) && isValid;
@@ -13942,9 +13865,7 @@ namespace CruiseDAL.DataObjects
 	[SQLEntity(SourceName = "ProductCodes")]
 	public partial class ProductCodesDO : CruiseDALDataObject
 	{
-		//private static Persister persister;
 		private static RowValidator _validator;
-		//private static PropertyInfo[] _propertyInfo;
 		
 		[XmlIgnore]
 		public new DAL DAL
@@ -14024,9 +13945,9 @@ namespace CruiseDAL.DataObjects
 
 		protected override bool DoValidate()
 		{
-			if(_errorsLoaded == false)
+			if(ErrorCollection.ErrorsLoaded == false)
 			{
-			    this.PopulateErrorList();
+				this.ErrorCollection.PopulateErrorList();
 			}
 			bool isValid = true;
 			isValid = ValidateProperty("Code", this.Code) && isValid;
@@ -14048,9 +13969,7 @@ namespace CruiseDAL.DataObjects
 	[SQLEntity(SourceName = "UOMCodes")]
 	public partial class UOMCodesDO : CruiseDALDataObject
 	{
-		//private static Persister persister;
 		private static RowValidator _validator;
-		//private static PropertyInfo[] _propertyInfo;
 		
 		[XmlIgnore]
 		public new DAL DAL
@@ -14130,9 +14049,9 @@ namespace CruiseDAL.DataObjects
 
 		protected override bool DoValidate()
 		{
-			if(_errorsLoaded == false)
+			if(ErrorCollection.ErrorsLoaded == false)
 			{
-			    this.PopulateErrorList();
+				this.ErrorCollection.PopulateErrorList();
 			}
 			bool isValid = true;
 			isValid = ValidateProperty("Code", this.Code) && isValid;
@@ -14154,9 +14073,7 @@ namespace CruiseDAL.DataObjects
 	[SQLEntity(SourceName = "Regions")]
 	public partial class RegionsDO : CruiseDALDataObject
 	{
-		//private static Persister persister;
 		private static RowValidator _validator;
-		//private static PropertyInfo[] _propertyInfo;
 		
 		[XmlIgnore]
 		public new DAL DAL
@@ -14236,9 +14153,9 @@ namespace CruiseDAL.DataObjects
 
 		protected override bool DoValidate()
 		{
-			if(_errorsLoaded == false)
+			if(ErrorCollection.ErrorsLoaded == false)
 			{
-			    this.PopulateErrorList();
+				this.ErrorCollection.PopulateErrorList();
 			}
 			bool isValid = true;
 			isValid = ValidateProperty("Number", this.Number) && isValid;
@@ -14260,9 +14177,7 @@ namespace CruiseDAL.DataObjects
 	[SQLEntity(SourceName = "Forests")]
 	public partial class ForestsDO : CruiseDALDataObject
 	{
-		//private static Persister persister;
 		private static RowValidator _validator;
-		//private static PropertyInfo[] _propertyInfo;
 		
 		[XmlIgnore]
 		public new DAL DAL
@@ -14409,9 +14324,9 @@ namespace CruiseDAL.DataObjects
 
 		protected override bool DoValidate()
 		{
-			if(_errorsLoaded == false)
+			if(ErrorCollection.ErrorsLoaded == false)
 			{
-			    this.PopulateErrorList();
+				this.ErrorCollection.PopulateErrorList();
 			}
 			bool isValid = true;
 			isValid = ValidateProperty("State", this.State) && isValid;
@@ -14438,9 +14353,7 @@ namespace CruiseDAL.DataObjects
 	[SQLEntity(SourceName = "ErrorLog")]
 	public partial class ErrorLogDO : CruiseDALDataObject
 	{
-		//private static Persister persister;
 		private static RowValidator _validator;
-		//private static PropertyInfo[] _propertyInfo;
 		
 		[XmlIgnore]
 		public new DAL DAL
@@ -14609,9 +14522,9 @@ namespace CruiseDAL.DataObjects
 
 		protected override bool DoValidate()
 		{
-			if(_errorsLoaded == false)
+			if(ErrorCollection.ErrorsLoaded == false)
 			{
-			    this.PopulateErrorList();
+				this.ErrorCollection.PopulateErrorList();
 			}
 			bool isValid = true;
 			isValid = ValidateProperty("TableName", this.TableName) && isValid;
@@ -14643,9 +14556,7 @@ namespace CruiseDAL.DataObjects
 	[SQLEntity(SourceName = "MessageLog")]
 	public partial class MessageLogDO : CruiseDALDataObject
 	{
-		//private static Persister persister;
 		private static RowValidator _validator;
-		//private static PropertyInfo[] _propertyInfo;
 		
 		[XmlIgnore]
 		public new DAL DAL
@@ -14779,9 +14690,9 @@ namespace CruiseDAL.DataObjects
 
 		protected override bool DoValidate()
 		{
-			if(_errorsLoaded == false)
+			if(ErrorCollection.ErrorsLoaded == false)
 			{
-			    this.PopulateErrorList();
+				this.ErrorCollection.PopulateErrorList();
 			}
 			bool isValid = true;
 			isValid = ValidateProperty("Program", this.Program) && isValid;
@@ -14809,9 +14720,7 @@ namespace CruiseDAL.DataObjects
 	[SQLEntity(SourceName = "Globals")]
 	public partial class GlobalsDO : CruiseDALDataObject
 	{
-		//private static Persister persister;
 		private static RowValidator _validator;
-		//private static PropertyInfo[] _propertyInfo;
 		
 		[XmlIgnore]
 		public new DAL DAL
@@ -14904,9 +14813,9 @@ namespace CruiseDAL.DataObjects
 
 		protected override bool DoValidate()
 		{
-			if(_errorsLoaded == false)
+			if(ErrorCollection.ErrorsLoaded == false)
 			{
-			    this.PopulateErrorList();
+				this.ErrorCollection.PopulateErrorList();
 			}
 			bool isValid = true;
 			isValid = ValidateProperty("Block", this.Block) && isValid;
@@ -14930,9 +14839,7 @@ namespace CruiseDAL.DataObjects
 	[SQLEntity(SourceName = "Component")]
 	public partial class ComponentDO : CruiseDALDataObject
 	{
-		//private static Persister persister;
 		private static RowValidator _validator;
-		//private static PropertyInfo[] _propertyInfo;
 		
 		[XmlIgnore]
 		public new DAL DAL
@@ -15030,9 +14937,9 @@ namespace CruiseDAL.DataObjects
 
 		protected override bool DoValidate()
 		{
-			if(_errorsLoaded == false)
+			if(ErrorCollection.ErrorsLoaded == false)
 			{
-			    this.PopulateErrorList();
+				this.ErrorCollection.PopulateErrorList();
 			}
 			bool isValid = true;
 			isValid = ValidateProperty("GUID", this.GUID) && isValid;

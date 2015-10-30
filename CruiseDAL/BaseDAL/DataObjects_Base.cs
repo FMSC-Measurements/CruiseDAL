@@ -1,14 +1,8 @@
 ﻿using System;
 using System.ComponentModel;
-using System.Collections.Generic;
 using System.Xml.Serialization;
-using System.Diagnostics;
-using System.Text.RegularExpressions;
-using System.Reflection;
-using CruiseDAL.DataObjects;
-using System.Text;
-using CruiseDAL.BaseDAL;
 using CruiseDAL.Core.EntityModel;
+using CruiseDAL.Core;
 
 namespace CruiseDAL
 {
@@ -29,12 +23,12 @@ namespace CruiseDAL
         IDataObject,
         IPersistanceTracking
     {
-        protected DatastoreBase _ds = null;
+        protected DatastoreRedux _ds = null;
 
         #region Properties
 
         [XmlIgnore]
-        public DatastoreBase DAL
+        public DatastoreRedux DAL
         {
             get
             {

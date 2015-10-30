@@ -1,14 +1,13 @@
-﻿using CruiseDAL.BaseDAL.EntityAttributes;
+﻿
 using System;
-using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Diagnostics;
-using System.Linq;
 using System.Reflection;
-using System.Text;
 
-namespace CruiseDAL.Core
+using CruiseDAL.Core.EntityAttributes;
+
+namespace CruiseDAL.Core.EntityModel
 {
     public class EntityInflator
     {

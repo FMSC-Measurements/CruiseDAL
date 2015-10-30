@@ -1,11 +1,10 @@
-﻿using CruiseDAL.BaseDAL;
-using CruiseDAL.DataObjects;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
+
+using CruiseDAL.Core.EntityModel;
+using CruiseDAL.DataObjects;
 
 namespace CruiseDAL
 {
@@ -216,7 +215,7 @@ namespace CruiseDAL
             }
         }
 
-        protected void PopulateErrorList()
+        public void PopulateErrorList()
         {
             if (_dataObject.rowID == null) { return; }
             string tableName = _entityDescription.SourceName;

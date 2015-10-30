@@ -1,11 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 
-namespace CruiseDAL.Core
+namespace CruiseDAL.Core.EntityModel
 {
     public class EntityFormatter : ICustomFormatter
     {
@@ -21,7 +17,7 @@ namespace CruiseDAL.Core
             if(string.IsNullOrEmpty(formatString))
             { return obj.ToString(); }
 
-            //get a list of all propertie place holders in format
+            //get a list of all properties place holders in format
             System.Text.RegularExpressions.Regex rx = new System.Text.RegularExpressions.Regex(@"\[(?<prop>[a-zA-Z]\w+)(?:(?:\|)(?<ifnull>\w+))?(?:(?::)(?<pad>(?:[-]?\d+)?[ULC]?))?\]", RegexOptions.Compiled);
 
             return rx.Replace(formatString, this.ProcessFormatElementMatch);

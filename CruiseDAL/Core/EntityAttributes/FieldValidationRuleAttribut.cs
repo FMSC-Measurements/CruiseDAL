@@ -1,11 +1,8 @@
-﻿using CruiseDAL.Core.EntityModel;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System;
 
-namespace CruiseDAL.BaseDAL.EntityAttributes
+using CruiseDAL.Core.EntityModel;
+
+namespace CruiseDAL.Core.EntityAttributes
 {
     [AttributeUsage(AttributeTargets.Property, Inherited = true)]
     public class FieldValidationRuleAttribut : Attribute, IFieldValidator
@@ -47,7 +44,8 @@ namespace CruiseDAL.BaseDAL.EntityAttributes
 
             if (isValid && value != null && Values != null)
             {
-                if (!Values.Contains(value.ToString())) { isValid = false; }
+                //values doesn't contain value
+                if (Array.IndexOf(Values, value.ToString()) < 0 ) { isValid = false; }
             }
             return isValid;
         }

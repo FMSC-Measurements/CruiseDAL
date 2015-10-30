@@ -29,14 +29,14 @@ namespace CruiseDAL.MappingCollections
 
         protected override CuttingUnitStratumDO retrieveMapObject(CuttingUnitDO child)
         {
-            return DAL.ReadSingleRow<CuttingUnitStratumDO>(Schema.CUTTINGUNITSTRATUM._NAME,
+            return DAL.ReadSingleRow<CuttingUnitStratumDO>(CUTTINGUNITSTRATUM._NAME,
                 "WHERE CuttingUnit_CN = ? AND Stratum_CN = ?", child.CuttingUnit_CN, Parent.Stratum_CN);
         }
 
         protected override List<CuttingUnitDO> retrieveChildList()
         {
             //return DAL.Read<CuttingUnitDO>(createJoinChildCommand());
-            return DAL.Read<CuttingUnitDO>(Schema.CUTTINGUNIT._NAME,
+            return DAL.Read<CuttingUnitDO>(CUTTINGUNIT._NAME,
                 "JOIN CuttingUnitStratum Using (CuttingUnit_CN) WHERE Stratum_CN = ?;",
                 Parent.Stratum_CN);
         }
@@ -67,14 +67,14 @@ namespace CruiseDAL.MappingCollections
 
         protected override CuttingUnitStratumDO  retrieveMapObject(StratumDO child)
         {
-            return DAL.ReadSingleRow<CuttingUnitStratumDO>(Schema.CUTTINGUNITSTRATUM._NAME,
+            return DAL.ReadSingleRow<CuttingUnitStratumDO>(CUTTINGUNITSTRATUM._NAME,
                 "WHERE Stratum_CN = ? AND CuttingUnit_CN = ?", child.Stratum_CN, Parent.CuttingUnit_CN);
         }
 
         protected override List<StratumDO>  retrieveChildList()
         {
             //return DAL.Read<StratumDO>(createJoinChildCommand());
-            return DAL.Read<StratumDO>(Schema.STRATUM._NAME,
+            return DAL.Read<StratumDO>(STRATUM._NAME,
                 "JOIN CuttingUnitStratum USING (Stratum_CN) WHERE CuttingUnit_CN = ?;",
                 Parent.CuttingUnit_CN);
         }
@@ -104,14 +104,14 @@ namespace CruiseDAL.MappingCollections
 
         protected override SampleGroupTreeDefaultValueDO retrieveMapObject(TreeDefaultValueDO child)
         {
-            return DAL.ReadSingleRow<SampleGroupTreeDefaultValueDO>(Schema.SAMPLEGROUPTREEDEFAULTVALUE._NAME,
+            return DAL.ReadSingleRow<SampleGroupTreeDefaultValueDO>(SAMPLEGROUPTREEDEFAULTVALUE._NAME,
                 "WHERE TreeDefaultValue_CN = ? AND SampleGroup_CN = ?", child.TreeDefaultValue_CN, Parent.SampleGroup_CN);
         }
 
         protected override List<TreeDefaultValueDO> retrieveChildList()
         {
             //return DAL.Read<TreeDefaultValueDO>(createJoinChildCommand());
-            return DAL.Read<TreeDefaultValueDO>(Schema.TREEDEFAULTVALUE._NAME,
+            return DAL.Read<TreeDefaultValueDO>(TREEDEFAULTVALUE._NAME,
                 "JOIN SampleGroupTreeDefaultValue Using (TreeDefaultValue_CN) WHERE SampleGroup_CN = ?;",
                 Parent.SampleGroup_CN);
 
@@ -146,13 +146,13 @@ namespace CruiseDAL.MappingCollections
 
         protected override TreeDefaultValueTreeAuditValueDO retrieveMapObject(TreeAuditValueDO child)
         {
-            return DAL.ReadSingleRow<TreeDefaultValueTreeAuditValueDO>(Schema.TREEDEFAULTVALUETREEAUDITVALUE._NAME,
+            return DAL.ReadSingleRow<TreeDefaultValueTreeAuditValueDO>(TREEDEFAULTVALUETREEAUDITVALUE._NAME,
                 "WHERE TreeAuditValue_CN = ? AND TreeDefaultValue_CN = ?", child.TreeAuditValue_CN, Parent.TreeDefaultValue_CN);
         }
 
         protected override List<TreeAuditValueDO> retrieveChildList()
         {
-            return DAL.Read<TreeAuditValueDO>(Schema.TREEAUDITVALUE._NAME,
+            return DAL.Read<TreeAuditValueDO>(TREEAUDITVALUE._NAME,
                 "JOIN TreeDefaultValueTreeAuditValue Using (TreeAuditValue_CN) WHERE TreeDefaultValue_CN = ?", Parent.TreeDefaultValue_CN);
         }
     }
@@ -174,13 +174,13 @@ namespace CruiseDAL.MappingCollections
 
         protected override TreeDefaultValueTreeAuditValueDO retrieveMapObject(TreeDefaultValueDO child)
         {
-            return DAL.ReadSingleRow<TreeDefaultValueTreeAuditValueDO>(Schema.TREEDEFAULTVALUETREEAUDITVALUE._NAME,
-                "WHERE " + Schema.TREEDEFAULTVALUETREEAUDITVALUE.TREEDEFAULTVALUE_CN + " = ? AND " + Schema.TREEDEFAULTVALUETREEAUDITVALUE.TREEAUDITVALUE_CN + " = ?", child.TreeDefaultValue_CN, Parent.TreeAuditValue_CN);
+            return DAL.ReadSingleRow<TreeDefaultValueTreeAuditValueDO>(TREEDEFAULTVALUETREEAUDITVALUE._NAME,
+                "WHERE " + TREEDEFAULTVALUETREEAUDITVALUE.TREEDEFAULTVALUE_CN + " = ? AND " + TREEDEFAULTVALUETREEAUDITVALUE.TREEAUDITVALUE_CN + " = ?", child.TreeDefaultValue_CN, Parent.TreeAuditValue_CN);
         }
 
         protected override List<TreeDefaultValueDO> retrieveChildList()
         {
-            return DAL.Read<TreeDefaultValueDO>(Schema.TREEDEFAULTVALUE._NAME,
+            return DAL.Read<TreeDefaultValueDO>(TREEDEFAULTVALUE._NAME,
                 "JOIN TreeDefaultValueTreeAuditValue USING (TreeDefaultValue_CN) WHERE TreeAuditValue_CN = ?", base.Parent.TreeAuditValue_CN);
         }
 
@@ -202,14 +202,14 @@ namespace CruiseDAL.MappingCollections
 
         protected override SampleGroupStatsTreeDefaultValueDO retrieveMapObject(TreeDefaultValueDO child)
         {
-            return DAL.ReadSingleRow<SampleGroupStatsTreeDefaultValueDO>(Schema.SAMPLEGROUPSTATSTREEDEFAULTVALUE._NAME,
-                "WHERE " + Schema.SAMPLEGROUPSTATSTREEDEFAULTVALUE.TREEDEFAULTVALUE_CN + "= ? AND " + Schema.SAMPLEGROUPSTATSTREEDEFAULTVALUE.SAMPLEGROUPSTATS_CN + " = ?", child.TreeDefaultValue_CN.ToString(), base.Parent.SampleGroupStats_CN);
+            return DAL.ReadSingleRow<SampleGroupStatsTreeDefaultValueDO>(SAMPLEGROUPSTATSTREEDEFAULTVALUE._NAME,
+                "WHERE " + SAMPLEGROUPSTATSTREEDEFAULTVALUE.TREEDEFAULTVALUE_CN + "= ? AND " + SAMPLEGROUPSTATSTREEDEFAULTVALUE.SAMPLEGROUPSTATS_CN + " = ?", child.TreeDefaultValue_CN.ToString(), base.Parent.SampleGroupStats_CN);
         }
 
         protected override List<TreeDefaultValueDO> retrieveChildList()
         {
             //return DAL.Read<TreeDefaultValueDO>(createJoinChildCommand());
-            return DAL.Read<TreeDefaultValueDO>(Schema.TREEDEFAULTVALUE._NAME,
+            return DAL.Read<TreeDefaultValueDO>(TREEDEFAULTVALUE._NAME,
                 "JOIN SampleGroupStatsTreeDefaultValue Using (TreeDefaultValue_CN) WHERE SampleGroupStats_CN = ?;",
                 Parent.SampleGroupStats_CN);
         }

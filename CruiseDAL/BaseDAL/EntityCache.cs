@@ -1,17 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace CruiseDAL.BaseDAL
+namespace CruiseDAL.Core
 {
     public class EntityCache : Dictionary<object, object> ,  IDisposable
     {
         
-
-
-
         #region IDisposable Support
         private bool disposedValue = false; // To detect redundant calls
 

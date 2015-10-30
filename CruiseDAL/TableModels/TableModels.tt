@@ -11,11 +11,8 @@ DataDictionaryReader dr = new DataDictionaryReader();
 ICollection<Table> TableList = dr.AllTables.Values;
 #>
 using System;
-using CruiseDAL.Schema;
 using System.Xml.Serialization;
-using System.Reflection;
-using CruiseDAL.BaseDAL;
-using CruiseDAL.BaseDAL.EntityAttributes;
+using CruiseDAL.Core.EntityAttributes;
 using CruiseDAL.Core.EntityModel;
 
 namespace CruiseDAL.DataObjects
@@ -47,12 +44,10 @@ PopIndent();
 public void MakeClass(Table table)
 {#>
 [SQLEntity(SourceName = "<#=table.Name#>")]
-public partial class <#=table.Name#>DO : DataObjectExtra
+public partial class <#=table.Name#>DO : CruiseDALDataObject
 {
 <#+  PushIndent("\t");#>
-//private static Persister persister;
 private static RowValidator _validator;
-//private static PropertyInfo[] _propertyInfo;
 
 [XmlIgnore]
 public new DAL DAL
@@ -170,9 +165,9 @@ public void MakePrimaryKeyProperty(Field field)
         WriteLine("{");
         PushIndent("\t");
         #>
-if(_errorsLoaded == false)
+if(ErrorCollection.ErrorsLoaded == false)
 {
-    this.PopulateErrorList();
+	this.ErrorCollection.PopulateErrorList();
 }
 <#+
         WriteLine("bool isValid = true;");

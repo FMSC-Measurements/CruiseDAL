@@ -99,19 +99,20 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>DAL.AutoGen.tt</DependentUpon>
     </Compile>
-    <Compile Include="BaseDAL\DataStoreContext.cs" />
+    <Compile Include="Core\DataStoreContext.cs" />
     <Compile Include="BaseDAL\DatastoreRedux.cs" />
     <Compile Include="Core\DbProviderFactoryAdapter.cs" />
     <Compile Include="Core\Constants\Logging.cs" />
     <Compile Include="Core\EntityModel\DataObjectExtentions.cs" />
     <Compile Include="Core\EntityModel\IDataObject.cs" />
     <Compile Include="Core\EntityModel\IPersistanceTracking.cs" />
-    <Compile Include="Core\SQL\SQLConflictOption.cs" />
+    <Compile Include="Core\SQL\OnConflictOption.cs" />
     <Compile Include="CruiseDAL\CruiseDALErrorCollection.cs" />
     <Compile Include="Core\EntityModel\Validation\FieldValidatorCollection.cs" />
     <Compile Include="Core\EntityModel\Validation\IFieldValidator.cs" />
     <Compile Include="Core\EntityModel\Validation\IValidatable.cs" />
     <Compile Include="CruiseDAL\DALRedux.cs" />
+    <Compile Include="SQLite\SQLiteDatastore.cs" />
     <Compile Include="SQLite\SQLiteDataStoreContext.cs" />
     <Compile Include="SQLite\SQLiteProviderFactory.cs" />
     <Compile Include="TableModels\TableModels.cs">
@@ -131,21 +132,21 @@
     <Compile Include="Core\EntityAttributes\InfrastructureFieldAttribute.cs" />
     <Compile Include="Core\EntityAttributes\ReferenceAttribute.cs" />
     <Compile Include="BaseDAL\EntityCache.cs" />
-    <Compile Include="Core\EntityFormatProvider.cs" />
-    <Compile Include="Core\EntityInflator.cs" />
-    <Compile Include="Core\EntityFormatter.cs" />
+    <Compile Include="Core\EntityModel\EntityFormatProvider.cs" />
+    <Compile Include="Core\EntityModel\EntityInflator.cs" />
+    <Compile Include="Core\EntityModel\EntityFormatter.cs" />
     <Compile Include="Core\SQL\ColumnInfo.cs" />
-    <Compile Include="Core\EntityDescription.cs" />
-    <Compile Include="BaseDAL\DataObjectFactory.cs" />
+    <Compile Include="Core\EntityModel\EntityDescription.cs" />
+    <None Include="BaseDAL\DataObjectFactory.cs~" />
     <Compile Include="BaseDAL\DataObjects_Base.cs" />
     <Compile Include="BaseDAL\DatastoreBase.cs" />
     <Compile Include="Core\EntityAttributes\FieldAttribute.cs" />
     <Compile Include="Core\EntityAttributes\FieldValidationRuleAttribut.cs" />
     <Compile Include="Core\EntityAttributes\PrimaryKeyFieldAttribute.cs" />
     <Compile Include="Core\EntityAttributes\SQLEntityAttribute.cs" />
-    <Compile Include="Core\EntityCommandBuilder.cs" />
+    <Compile Include="Core\EntityModel\EntityCommandBuilder.cs" />
     <Compile Include="BaseDAL\Exceptions.cs" />
-    <Compile Include="BaseDAL\ObjectCache.cs" />
+    <None Include="BaseDAL\ObjectCache.cs~" />
     <Compile Include="Core\SQL\SQLInsertCommand.cs" />
     <Compile Include="Core\SQL\SQLSelectExpression.cs" />
     <Compile Include="Core\SQL\SQLUpdateCommand.cs" />

@@ -1,7 +1,7 @@
 using System;
 using System.Data;
 
-namespace CruiseDAL
+namespace CruiseDAL.Core.EntityAttributes
 {
     public enum SQLSourceType { Table, View, Query }
 

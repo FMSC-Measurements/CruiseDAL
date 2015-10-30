@@ -1,13 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace CruiseDAL.Core.EntityModel
+﻿namespace CruiseDAL.Core.EntityModel
 {
-    public interface IDataObject
+    public interface IDataObject : IPersistanceTracking
     {
-        DatastoreBase DAL { get; set; }
+        DatastoreRedux DAL { get; set; }
     }
 }

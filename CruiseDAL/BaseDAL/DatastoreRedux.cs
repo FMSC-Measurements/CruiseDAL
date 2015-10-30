@@ -5,11 +5,10 @@ using System.Text;
 using System.Collections;
 using System.Data.Common;
 
-using CruiseDAL.Core;
-using CruiseDAL.Core.SQL;
 using CruiseDAL.Core.EntityModel;
+using CruiseDAL.Core.SQL;
 
-namespace CruiseDAL.BaseDAL
+namespace CruiseDAL.Core
 {
     public class DatastoreRedux
     {
@@ -18,13 +17,7 @@ namespace CruiseDAL.BaseDAL
         protected DataStoreContext Context { get; set; }
 
         public string Path { get; protected set; }
-        public bool Exists
-        {
-            get
-            {
-                return System.IO.File.Exists(this.Path);
-            }
-        }
+
 
         #region sugar
         DbCommand CreateCommand(string commandText)
@@ -59,34 +52,34 @@ namespace CruiseDAL.BaseDAL
         }
         #endregion
 
-        public void Save<T>(T data, SQLConflictOption option) where T : IPersistanceTracking
+        public void Save<T>(T data, Core.SQL.OnConflictOption option) where T : IPersistanceTracking
         {
             Context.Save<T>(data, option);
         }
 
         public void Save(IEnumerable list)
         {
-            this.Save(list, SQLConflictOption.Fail);
+            this.Save(list, Core.SQL.OnConflictOption.Fail);
         }
 
-        public void Save(IEnumerable list, SQLConflictOption opt);
+        
 
-        public void Insert(object data, SQLConflictOption option)
+        public void Insert(object data, Core.SQL.OnConflictOption option)
         {
             Context.Insert(data, option);
         }
 
-        public void Insert(object data, object key, SQLConflictOption option)
+        public void Insert(object data, object key, Core.SQL.OnConflictOption option)
         {
             Context.Insert(data, option);
         }
 
-        public void Update(object data, SQLConflictOption option)
+        public void Update(object data, Core.SQL.OnConflictOption option)
         {
             Context.Update(data, option);
         }
 
-        public void Update(object data, object key, SQLConflictOption option)
+        public void Update(object data, object key, Core.SQL.OnConflictOption option)
         {
             Context.Update(data, key, option);
         }
@@ -96,7 +89,6 @@ namespace CruiseDAL.BaseDAL
             Context.Delete(data);
         }
 
-        public void Delete(string tableName, object key);
 
 
         public Int64 GetRowCount(string tableName, string selection, params Object[] selectionArgs)
@@ -182,6 +174,21 @@ namespace CruiseDAL.BaseDAL
             return Context.ExecuteScalar(query, parameters);
         }
 
+
+        #region not implemented 
+        protected abstract void BuildDBFile();
+
+        protected abstract string GetCreateSQL();
+
+        public abstract void LogMessage(string message, string level);
+
+        public void ChangeRowID(DataObject data, long newRowID, OnConflictOption option)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void Save(IEnumerable list, Core.SQL.OnConflictOption opt);
+        #endregion
 
 
     }

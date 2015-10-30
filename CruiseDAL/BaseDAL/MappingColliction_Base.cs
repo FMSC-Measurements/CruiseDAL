@@ -1,9 +1,8 @@
 ﻿using System;
 
 using System.Collections.Generic;
-using System.Text;
-using Logger;
-using System.Collections; 
+using System.Collections;
+using CruiseDAL.Core.EntityModel;
 
 #if ANDROID
 using Mono.Data.Sqlite;

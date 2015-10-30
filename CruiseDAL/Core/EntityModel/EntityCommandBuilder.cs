@@ -1,14 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Data.Common;
-using CruiseDAL.BaseDAL.EntityAttributes;
 using System.Diagnostics;
-using CruiseDAL.Core.SQL;
 
-namespace CruiseDAL.Core
+using CruiseDAL.Core.SQL;
+using CruiseDAL.Core.EntityAttributes;
+
+namespace CruiseDAL.Core.EntityModel
 {
     public class EntityCommandBuilder
     {
@@ -43,6 +41,8 @@ namespace CruiseDAL.Core
         #region build select 
         public DbCommand BuildSelectCommand(WhereClause where)
         {
+            Debug.Assert(_selectCommand != null);
+
             this._selectCommand.Where = where;
             string query = _selectCommand.ToString();
 
@@ -83,8 +83,11 @@ namespace CruiseDAL.Core
         #endregion
 
         #region build insert
-        public DbCommand BuildInsertCommand(object data, SQLConflictOption option)
+        public DbCommand BuildInsertCommand(object data, SQL.OnConflictOption option)
         {
+            Debug.Assert(data != null);
+            Debug.Assert(_insertCommand != null);
+
             _insertCommand.ConflictOption = option;
 
             DbCommand command = _providerFactory.CreateCommand(_insertCommand.ToString());
@@ -219,10 +222,11 @@ namespace CruiseDAL.Core
         #endregion
 
         #region build update
-        public DbCommand BuildUpdateCommand(object data, string ModifiedBy, SQLConflictOption option)
+        public DbCommand BuildUpdateCommand(object data, string ModifiedBy, SQL.OnConflictOption option)
         {
+            Debug.Assert(data != null);
             Debug.Assert(_updateCommand != null);
-            Debug.Assert(EntityDescription.Fields.PrimaryKeyField != null);
+
 
             _updateCommand.ConflictOption = option;
 
@@ -249,7 +253,7 @@ namespace CruiseDAL.Core
 
             
             PrimaryKeyFieldAttribute keyField = EntityDescription.Fields.PrimaryKeyField;
-            object keyValue = keyField.GetFieldValue(data);
+            object keyValue = keyField.GetFieldValueOrDefault(data);
             DbParameter p = _providerFactory.CreateParameter(keyField.SQLPramName, keyField);
             command.Parameters.Add(p);
 
@@ -337,24 +341,43 @@ namespace CruiseDAL.Core
         #endregion
 
         #region build delete
-        protected DbCommand GetSQLDeleteCommand()
-        {
-            string query = string.Format(@"DELETE FROM {0} WHERE rowID = @rowID;
-            DELETE FROM ErrorLog WHERE TableName = '{0}' AND CN_Number = @rowID;", EntityDescription.SourceName);
-            //TODO remove dependency on ErrorLogTable
+        //protected DbCommand GetSQLDeleteCommand()
+        //{
+        //    string query = string.Format(@"DELETE FROM {0} WHERE rowID = @rowID;
+        //    DELETE FROM ErrorLog WHERE TableName = '{0}' AND CN_Number = @rowID;", EntityDescription.SourceName);
+        //    //TODO remove dependency on ErrorLogTable
 
-            //string query = string.Format(@"DELETE FROM {0} WHERE rowID = @rowID;", EntityDescription.SourceName);
+        //    //string query = string.Format(@"DELETE FROM {0} WHERE rowID = @rowID;", EntityDescription.SourceName);
+
+        //    return _providerFactory.CreateCommand(query);
+        //}
+
+        //public DbCommand BuildSQLDeleteCommand(object data)
+        //{
+        //    var keyValue = EntityDescription.Fields.PrimaryKeyField.GetFieldValue(data);
+        //    var command = GetSQLDeleteCommand();
+
+        //    command.Parameters.Clear();
+        //    command.Parameters.Add(_providerFactory.CreateParameter("@rowID", keyValue));
+        //    return command;
+        //}
+
+        protected DbCommand GetSQLDeleteCommand(string keyFieldName)
+        {
+            string query = string.Format(@"DELETE FROM {0} WHERE {1} = @keyValue;", EntityDescription.SourceName, keyFieldName);
 
             return _providerFactory.CreateCommand(query);
         }
 
-        public DbCommand BuildSQLDeleteCommand(object data)
+        public DbCommand BuildSQLDeleteCommand(string fieldName, object keyValue)
         {
-            var keyValue = EntityDescription.Fields.PrimaryKeyField.GetFieldValue(data);
-            var command = GetSQLDeleteCommand();
+            Debug.Assert(keyValue != null);
+            Debug.Assert(!string.IsNullOrEmpty(fieldName));
+
+            var command = GetSQLDeleteCommand(fieldName);
 
             command.Parameters.Clear();
-            command.Parameters.Add(_providerFactory.CreateParameter("@rowID", keyValue));
+            command.Parameters.Add(_providerFactory.CreateParameter("@keyValue", keyValue));
             return command;
         }
         #endregion

@@ -1,9 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using CruiseDAL.Schema;
 using System.Xml.Serialization;
+
+using CruiseDAL.Core.EntityAttributes;
 
 namespace CruiseDAL.DataObjects
 {
