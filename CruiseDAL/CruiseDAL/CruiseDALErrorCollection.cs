@@ -5,6 +5,7 @@ using System.Text;
 
 using CruiseDAL.Core.EntityModel;
 using CruiseDAL.DataObjects;
+using CruiseDAL.Core.SQL;
 
 namespace CruiseDAL
 {
@@ -141,7 +142,7 @@ namespace CruiseDAL
         {
             lock (this._errorsSyncLock)
             {
-                if (this.HasErrors() == false) { return; }
+                if (this.HasErrors == false) { return; }
                 List<string> keysToRemove = new List<string>();
                 foreach (KeyValuePair<string, ErrorLogDO> kv in this.errors)
                 {
@@ -220,8 +221,8 @@ namespace CruiseDAL
             if (_dataObject.rowID == null) { return; }
             string tableName = _entityDescription.SourceName;
 
-            List<ErrorLogDO> errorList = _dataObject.DAL.Read<ErrorLogDO>("ErrorLog"
-                , "WHERE TableName = ? AND CN_Number = ?", tableName, _dataObject.rowID);
+            List<ErrorLogDO> errorList = _dataObject.DAL.Read<ErrorLogDO>( "WHERE TableName = ? AND CN_Number = ?"
+                , (object)tableName, _dataObject.rowID);
 
             foreach (ErrorLogDO e in errorList)
             {
@@ -244,7 +245,7 @@ namespace CruiseDAL
                 {
                     if (e.DAL == null || e.DAL != _dataObject.DAL)
                     {
-                        e.DAL = (DAL)_dataObject.DAL;
+                        e.DAL = (DALRedux)_dataObject.DAL;
                     }
 
                     e.CN_Number = _dataObject.rowID.Value;

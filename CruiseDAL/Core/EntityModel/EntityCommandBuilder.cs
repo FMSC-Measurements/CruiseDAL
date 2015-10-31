@@ -5,19 +5,22 @@ using System.Diagnostics;
 
 using CruiseDAL.Core.SQL;
 using CruiseDAL.Core.EntityAttributes;
+using System.Text;
 
 namespace CruiseDAL.Core.EntityModel
 {
     public class EntityCommandBuilder
     {
         SQLSelectExpression _selectCommand;
+        string _selectCommandFormat;
+
         SQLInsertCommand _insertCommand;
         SQLSelectExpression _afterInsertCommand;
 
         SQLUpdateCommand _updateCommand; 
 
-        string _insertCommandFormatString;
-        string _updateCommandFormat;
+        //string _insertCommandFormatString;
+        //string _updateCommandFormat;
 
         public EntityDescription EntityDescription { get; set; }
         private DbProviderFactoryAdapter _providerFactory;
@@ -34,7 +37,6 @@ namespace CruiseDAL.Core.EntityModel
                 InitializeInsertCommand();
                 InitializeUpdateCommand();
             }
-
         }
 
 
@@ -80,6 +82,47 @@ namespace CruiseDAL.Core.EntityModel
             expression.ResultColumns = columnExpressions;
             _selectCommand = expression;
         }
+
+        public DbCommand BuildSelectLegacy(string selection)
+        {
+            Debug.Assert(_selectCommandFormat != null);
+
+            string commandText = string.Format(_selectCommandFormat, selection);
+
+            DbCommand command = _providerFactory.CreateCommand(commandText);
+            return command;
+        }
+
+        protected void InitializeLegacySelectCommand()
+        {
+            if (_selectCommandFormat == null)
+            {
+                StringBuilder sb = new StringBuilder();
+                sb.AppendLine("SELECT");
+
+                bool first = true;
+                foreach (FieldAttribute field in EntityDescription.Fields)
+                {
+                    if (!string.IsNullOrEmpty(field.SQLExpression))
+                    {
+                        if (first) { sb.Append(", "); }
+                        sb.AppendLine(field.SQLExpression + " AS " + field.FieldName);
+                    }
+                    else
+                    {
+                        if (first) { sb.Append(", "); }
+                        sb.AppendLine(field.FieldName);
+                    }
+                }
+
+                sb.AppendLine("FROM " + EntityDescription.SourceName);
+                sb.AppendLine("{0};");//insert placeholder and close out command
+
+                _selectCommandFormat = sb.ToString();
+            }
+        }
+
+
         #endregion
 
         #region build insert
@@ -94,21 +137,16 @@ namespace CruiseDAL.Core.EntityModel
 
             foreach(FieldAttribute field in EntityDescription.Fields.GetPersistedFields())
             {
+                if (field is InfrastructureFieldAttribute
+                    && (((InfrastructureFieldAttribute)field).PersistMode & PersistMode.OnInsert) != PersistMode.OnInsert)
+                {
+                    continue;
+                }
+
                 object value = field.GetFieldValueOrDefault(data);
 
                 DbParameter pram = _providerFactory.CreateParameter(field.SQLPramName, value);
                 command.Parameters.Add(pram);
-            }
-
-            foreach(InfrastructureFieldAttribute field in EntityDescription.Fields.GetInfrastructureFields())
-            {
-                if (field.PopulatedByDB)
-                {
-                    object value = field.GetFieldValueOrDefault(data);
-
-                    DbParameter pram = _providerFactory.CreateParameter(field.SQLPramName, value);
-                    command.Parameters.Add(pram);
-                }
             }
 
             return command;
@@ -145,19 +183,17 @@ namespace CruiseDAL.Core.EntityModel
 
             List<String> columnNames = new List<string>();
             List<String> valueExpressions = new List<string>();
-            foreach (FieldAttribute fi in EntityDescription.Fields.GetPersistedFields())
+            foreach (FieldAttribute field in EntityDescription.Fields.GetPersistedFields())
             {
-                columnNames.Add(fi.FieldName);
-                valueExpressions.Add(fi.SQLPramName);
-            }
-
-            foreach (InfrastructureFieldAttribute field in EntityDescription.Fields.GetInfrastructureFields())
-            {
-                if (field.PopulatedByDB)
+                //if field is not persisted on insert populated skip
+                if (field is InfrastructureFieldAttribute
+                    && (((InfrastructureFieldAttribute)field).PersistMode & PersistMode.OnInsert) != PersistMode.OnInsert)
                 {
-                    columnNames.Add(field.FieldName);
-                    valueExpressions.Add(field.SQLPramName);
+                    continue;
                 }
+
+                columnNames.Add(field.FieldName);
+                valueExpressions.Add(field.SQLPramName);
             }
 
             expression.ColumnNames = columnNames;
@@ -222,7 +258,7 @@ namespace CruiseDAL.Core.EntityModel
         #endregion
 
         #region build update
-        public DbCommand BuildUpdateCommand(object data, string ModifiedBy, SQL.OnConflictOption option)
+        public DbCommand BuildUpdateCommand(object data, SQL.OnConflictOption option)
         {
             Debug.Assert(data != null);
             Debug.Assert(_updateCommand != null);
@@ -234,24 +270,18 @@ namespace CruiseDAL.Core.EntityModel
 
             foreach (FieldAttribute field in EntityDescription.Fields.GetPersistedFields())
             {
+                if (field is InfrastructureFieldAttribute
+                    && (((InfrastructureFieldAttribute)field).PersistMode & PersistMode.OnUpdate) != PersistMode.OnUpdate)
+                {
+                    continue;
+                }
+
                 object value = field.GetFieldValueOrDefault(data);
 
                 DbParameter pram = _providerFactory.CreateParameter(field.SQLPramName, value);
                 command.Parameters.Add(pram);
             }
 
-            foreach (InfrastructureFieldAttribute field in EntityDescription.Fields.GetInfrastructureFields())
-            {
-                if (field.PopulatedByDB)
-                {
-                    object value = field.GetFieldValueOrDefault(data);
-
-                    DbParameter pram = _providerFactory.CreateParameter(field.SQLPramName, value);
-                    command.Parameters.Add(pram);
-                }
-            }
-
-            
             PrimaryKeyFieldAttribute keyField = EntityDescription.Fields.PrimaryKeyField;
             object keyValue = keyField.GetFieldValueOrDefault(data);
             DbParameter p = _providerFactory.CreateParameter(keyField.SQLPramName, keyField);
@@ -286,21 +316,17 @@ namespace CruiseDAL.Core.EntityModel
             List<string> columnNames = new List<string>();
             List<string> columnExpressions = new List<string>();
 
-            
 
             foreach (FieldAttribute field in EntityDescription.Fields.GetPersistedFields())
             {
+                if (field is InfrastructureFieldAttribute
+                    && (((InfrastructureFieldAttribute)field).PersistMode & PersistMode.OnUpdate) != PersistMode.OnUpdate)
+                {
+                    continue;
+                }
+
                 columnNames.Add(field.FieldName);
                 columnExpressions.Add(field.SQLPramName);
-            }
-
-            foreach(InfrastructureFieldAttribute field in EntityDescription.Fields.GetInfrastructureFields())
-            {
-                if(!field.PopulatedByDB)
-                {
-                    columnNames.Add(field.FieldName);
-                    columnExpressions.Add(field.SQLPramName);
-                }
             }
 
             expression.ColumnNames = columnNames;

@@ -595,7 +595,6 @@ namespace CruiseDAL
 
         }
 
-
         protected override String GetCreateSQL()
         {
             return CruiseDAL.Properties.Resources.CruiseCreate;
@@ -623,6 +622,7 @@ namespace CruiseDAL
             //    if (reader != null) { reader.Close(); }
             //}
         }
+
 
         public string GetTableSQL(String tableName)
         {
@@ -662,7 +662,6 @@ namespace CruiseDAL
             return new string[0];
 
         }
-
 
         protected override void WriteTableDumpRowValues(System.IO.TextWriter writer, DbDataReader reader)
         {
@@ -711,7 +710,6 @@ namespace CruiseDAL
             return AppDomain.CurrentDomain.FriendlyName;
 
 #endif
-
         }
 
         
@@ -930,7 +928,6 @@ namespace CruiseDAL
             {
                 return CruiseFileType.Unknown;
             }
-
         }
 
         protected void WriteCruiseFileType(CruiseFileType cType)
@@ -1118,7 +1115,6 @@ namespace CruiseDAL
         /// <param name="tableName"></param>
         /// <param name="start"></param>
         /// <exception cref="DatabaseExecutionException"></exception>
-
         public virtual void SetTableAutoIncrementStart(String tableName, Int64 start)
         {
                         

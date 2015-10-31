@@ -103,6 +103,8 @@
     <Compile Include="BaseDAL\DatastoreRedux.cs" />
     <Compile Include="Core\DbProviderFactoryAdapter.cs" />
     <Compile Include="Core\Constants\Logging.cs" />
+    <Compile Include="Core\EntityAttributes\CreatedByFieldAttribute.cs" />
+    <Compile Include="Core\EntityAttributes\ModifiedByFieldAttribute.cs" />
     <Compile Include="Core\EntityModel\DataObjectExtentions.cs" />
     <Compile Include="Core\EntityModel\IDataObject.cs" />
     <Compile Include="Core\EntityModel\IPersistanceTracking.cs" />
@@ -111,7 +113,10 @@
     <Compile Include="Core\EntityModel\Validation\FieldValidatorCollection.cs" />
     <Compile Include="Core\EntityModel\Validation\IFieldValidator.cs" />
     <Compile Include="Core\EntityModel\Validation\IValidatable.cs" />
+    <Compile Include="CruiseDAL\DALExtentions.cs" />
     <Compile Include="CruiseDAL\DALRedux.cs" />
+    <Compile Include="CruiseDAL\DALValidationExtentions.cs" />
+    <Compile Include="CruiseDAL\Exceptions.cs" />
     <Compile Include="SQLite\SQLiteDatastore.cs" />
     <Compile Include="SQLite\SQLiteDataStoreContext.cs" />
     <Compile Include="SQLite\SQLiteProviderFactory.cs" />
@@ -137,7 +142,6 @@
     <Compile Include="Core\EntityModel\EntityFormatter.cs" />
     <Compile Include="Core\SQL\ColumnInfo.cs" />
     <Compile Include="Core\EntityModel\EntityDescription.cs" />
-    <None Include="BaseDAL\DataObjectFactory.cs~" />
     <Compile Include="BaseDAL\DataObjects_Base.cs" />
     <Compile Include="BaseDAL\DatastoreBase.cs" />
     <Compile Include="Core\EntityAttributes\FieldAttribute.cs" />
@@ -146,7 +150,6 @@
     <Compile Include="Core\EntityAttributes\SQLEntityAttribute.cs" />
     <Compile Include="Core\EntityModel\EntityCommandBuilder.cs" />
     <Compile Include="BaseDAL\Exceptions.cs" />
-    <None Include="BaseDAL\ObjectCache.cs~" />
     <Compile Include="Core\SQL\SQLInsertCommand.cs" />
     <Compile Include="Core\SQL\SQLSelectExpression.cs" />
     <Compile Include="Core\SQL\SQLUpdateCommand.cs" />

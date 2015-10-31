@@ -4,7 +4,6 @@ using System.Text;
 using System.Data.Common;
 using System.Collections;
 using Logger;
-using CruiseDAL.BaseDAL;
 
 #if ANDROID
 using Mono.Data.Sqlite;

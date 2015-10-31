@@ -30,7 +30,7 @@ namespace CruiseDAL.Core
 
         protected Stack<DbTransaction> _transactionStack = new Stack<DbTransaction>();
 
-        protected Dictionary<Type, EntityCache> _cache;
+        protected Dictionary<Type, EntityCache> _entityCache;
 
 
         #region abstract members
@@ -41,16 +41,16 @@ namespace CruiseDAL.Core
 
         private EntityCache GetEntityCache(Type type)
         {
-            if(_cache == null) { _cache = new Dictionary<Type, EntityCache>(); }
-            if (_cache.ContainsKey(type) == false)
+            if(_entityCache == null) { _entityCache = new Dictionary<Type, EntityCache>(); }
+            if (_entityCache.ContainsKey(type) == false)
             {
                 EntityCache newCache = new EntityCache();
-                _cache.Add(type, newCache);
+                _entityCache.Add(type, newCache);
                 return newCache;
             }
             else
             {
-                return _cache[type];
+                return _entityCache[type];
             }
         }
 
@@ -294,7 +294,7 @@ namespace CruiseDAL.Core
             EntityDescription entityDescription = GetEntityInfo(data.GetType());
             EntityCommandBuilder builder = entityDescription.CommandBuilder;
 
-            using (DbCommand command = builder.BuildUpdateCommand(data, DataStore.User, option))
+            using (DbCommand command = builder.BuildUpdateCommand(data, option))
             {
                 ExecuteSQL(command);
             }
@@ -363,7 +363,22 @@ namespace CruiseDAL.Core
 
         public T ExecuteScalar<T>(String query)
         {
-            return ExecuteScalar<T>(query, null);
+            return ExecuteScalar<T>(query, (object[])null);
+        }
+
+        public T ExecuteScalar<T>(String query, params object[] parameters)
+        {
+            using (DbCommand comm = this.CreateCommand(query))
+            {
+                if (parameters != null)
+                {
+                    foreach (object val in parameters)
+                    {
+                        comm.Parameters.Add(this.CreateParameter(null, val));
+                    }
+                }
+                return ExecuteScalar<T>(comm);
+            }
         }
 
         public T ExecuteScalar<T>(String query, IEnumerable<KeyValuePair<String, object>> parameters)
@@ -758,6 +773,27 @@ namespace CruiseDAL.Core
 
         #region Read Methods
 
+        public IList<T> Read<T>(string selection, params object[] selectionArgs) 
+            where T : new()
+        {
+            EntityDescription entityDescription = GetEntityInfo(typeof(T));
+            EntityCommandBuilder commandBuilder = entityDescription.CommandBuilder;
+
+            using (DbCommand command = commandBuilder.BuildSelectLegacy(selection))
+            {
+                //Add selection Arguments to command parameter list
+                if (selectionArgs != null)
+                {
+                    foreach (object obj in selectionArgs)
+                    {
+                        command.Parameters.Add(this.CreateParameter(null, obj));
+                    }
+                }
+
+                return Read<T>(command, entityDescription);
+            }
+        }
+
         public IList<T> Read<T>(WhereClause where, params Object[] selectionArgs)
             where T : new()
         {
@@ -779,7 +815,8 @@ namespace CruiseDAL.Core
             }
         }
 
-        internal IList<T> Read<T>(DbCommand command, EntityDescription entityDescription) where T : new()
+        internal IList<T> Read<T>(DbCommand command, EntityDescription entityDescription) 
+            where T : new()
         {
             List<T> doList = new List<T>();
             EntityCache cache = GetEntityCache(typeof(T));
@@ -848,7 +885,8 @@ namespace CruiseDAL.Core
         //    return ReadSingleRow<T>(tableName, true, selection, selectionArgs);
         //}
 
-        public T ReadSingleRow<T>(WhereClause where, params Object[] selectionArgs) where T : new()
+        public T ReadSingleRow<T>(WhereClause where, params Object[] selectionArgs) 
+            where T : new()
         {
 
             EntityDescription entityDescription = GetEntityInfo(typeof(T));
@@ -878,12 +916,14 @@ namespace CruiseDAL.Core
         /// <param name="rowID">row id of the row to read</param>
         /// <exception cref="DatabaseExecutionException"></exception>
         /// <returns>a single data object</returns>
-        public T ReadSingleRow<T>(object primaryKeyValue) where T : new()
+        public T ReadSingleRow<T>(object primaryKeyValue) 
+            where T : new()
         {
             return ReadSingleRow<T>(new WhereClause("rowID = ?"), primaryKeyValue);
         }
 
-        internal T ReadSingleRow<T>(DbCommand command, EntityDescription entityDescription) where T : new()
+        internal T ReadSingleRow<T>(DbCommand command, EntityDescription entityDescription) 
+            where T : new()
         {
             object entity = null;
             EntityCache cache = GetEntityCache(typeof(T));
@@ -936,7 +976,8 @@ namespace CruiseDAL.Core
         #endregion
 
         #region Query Methods
-        public List<T> Query<T>(DbCommand command, EntityDescription entityDescription) where T : new()
+        public List<T> Query<T>(DbCommand command, EntityDescription entityDescription) 
+            where T : new()
         {
             EntityInflator inflator = entityDescription.Inflator;
             List<T> dataList = new List<T>();
@@ -971,7 +1012,8 @@ namespace CruiseDAL.Core
             }
         }
 
-        public List<T> Query<T>(WhereClause where, params Object[] selectionArgs) where T : new()
+        public List<T> Query<T>(WhereClause where, params Object[] selectionArgs) 
+            where T : new()
         {
             EntityDescription entityDescription = GetEntityInfo(typeof(T));
             EntityCommandBuilder commandBuilder = entityDescription.CommandBuilder;
@@ -992,7 +1034,8 @@ namespace CruiseDAL.Core
 
         }
 
-        public T QuerySingleRecord<T>(WhereClause where, params Object[] selectionArgs) where T : new()
+        public T QuerySingleRecord<T>(WhereClause where, params Object[] selectionArgs) 
+            where T : new()
         {
             EntityDescription entityDescription = GetEntityInfo(typeof(T));
             EntityCommandBuilder commandBuilder = entityDescription.CommandBuilder;
@@ -1013,7 +1056,8 @@ namespace CruiseDAL.Core
 
         }
 
-        public T QuerySingleRecord<T>(DbCommand command, EntityDescription entityDescription)
+        public T QuerySingleRecord<T>(DbCommand command, EntityDescription entityDescription) 
+            where T : new()
         {
             EntityInflator inflator = entityDescription.Inflator;
 

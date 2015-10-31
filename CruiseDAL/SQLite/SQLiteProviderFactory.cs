@@ -1,6 +1,7 @@
-﻿using CruiseDAL.BaseDAL;
+﻿
 using System;
 
+using CruiseDAL.Core;
 using System.Data.Common;
 using System.Data.SQLite;
 

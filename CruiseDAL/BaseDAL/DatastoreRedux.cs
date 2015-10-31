@@ -10,7 +10,7 @@ using CruiseDAL.Core.SQL;
 
 namespace CruiseDAL.Core
 {
-    public class DatastoreRedux
+    public abstract class DatastoreRedux
     {
         protected Dictionary<string, EntityDescription> _entityDescriptionLookup = new Dictionary<string, EntityDescription>();
 
@@ -48,10 +48,10 @@ namespace CruiseDAL.Core
             }
 
             return _entityDescriptionLookup[t.Name];
-
         }
         #endregion
 
+        #region CRUD
         public void Save<T>(T data, Core.SQL.OnConflictOption option) where T : IPersistanceTracking
         {
             Context.Save<T>(data, option);
@@ -61,9 +61,7 @@ namespace CruiseDAL.Core
         {
             this.Save(list, Core.SQL.OnConflictOption.Fail);
         }
-
         
-
         public void Insert(object data, Core.SQL.OnConflictOption option)
         {
             Context.Insert(data, option);
@@ -169,11 +167,17 @@ namespace CruiseDAL.Core
             return Context.Execute(command, parameters);
         }
 
+
         public object ExecuteScalar(string query, params object[] parameters)
         {
             return Context.ExecuteScalar(query, parameters);
         }
 
+        public T ExecuteScalar<T>(string query, params object[] parameters)
+        {
+            return Context.ExecuteScalar<T>(query, parameters);
+        }
+        #endregion
 
         #region not implemented 
         protected abstract void BuildDBFile();
@@ -191,5 +195,43 @@ namespace CruiseDAL.Core
         #endregion
 
 
+        public string GetTableSQL(String tableName)
+        {
+            return (String)this.ExecuteScalar("SELECT sql FROM Sqlite_master WHERE name = ? COLLATE NOCASE and type = 'table';", tableName);
+        }
+
+        public string[] GetTableUniques(String tableName)
+        {
+            String tableSQL = this.GetTableSQL(tableName);
+            System.Text.RegularExpressions.Match match =
+                System.Text.RegularExpressions.Regex.Match(tableSQL, @"(?<=^\s+UNIQUE\s\()[^\)]+(?=\))", System.Text.RegularExpressions.RegexOptions.Multiline);
+            if (match != null && match.Success)
+            {
+                String[] a = match.Value.Split(new char[] { ',', ' ', '\r', '\n' });
+                int numNotEmpty = 0;
+                foreach (string s in a)
+                {
+                    if (!string.IsNullOrEmpty(s))
+                    {
+                        numNotEmpty++;
+                    }
+                }
+                string[] b = new string[numNotEmpty];
+                for (int i = 0, j = 0; i < a.Length; i++)
+                {
+                    if (!string.IsNullOrEmpty(a[i]))
+                    {
+                        b[j] = a[i];
+                        j++;
+                    }
+                }
+
+                return b;
+                //return match.Value.Split(new char[]{',',' ','\r','\n'},  StringSplitOptions.RemoveEmptyEntries);
+
+            }
+            return new string[0];
+
+        }
     }
 }

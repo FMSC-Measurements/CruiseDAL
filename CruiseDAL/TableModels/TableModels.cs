@@ -13,9 +13,9 @@ namespace CruiseDAL.DataObjects
 		private static RowValidator _validator;
 		
 		[XmlIgnore]
-		public new DAL DAL
+		public new DALRedux DAL
 		{
-			get { return (DAL)base.DAL; }
+			get { return (DALRedux)base.DAL; }
 			set { base.DAL = value; }
 		}
 		
@@ -256,23 +256,21 @@ namespace CruiseDAL.DataObjects
 		}
 
 		[XmlIgnore]
-		[InfrastructureFieldAttribute (FieldName = "CreatedBy",
-		 FieldType = InfrastructureFieldType.CreatedBy)]
+		[CreatedByField()]
 		public string CreatedBy { get; internal set; }
 		
 		[XmlIgnore]
 		[InfrastructureFieldAttribute (FieldName = "CreatedDate",
-		FieldType = InfrastructureFieldType.CreatedDate)]
+		PersistMode = PersistMode.Never)]
 		public DateTime CreatedDate { get; internal set; }
 		
 		[XmlIgnore]
-		[InfrastructureFieldAttribute (FieldName = "ModifiedBy",
-		 FieldType = InfrastructureFieldType.ModifiedBy)]
+		[ModifiedByField()]
 		public string ModifiedBy { get; internal set; }
 		
 		[XmlIgnore]
 		[InfrastructureFieldAttribute (FieldName = "ModifiedDate",
-		FieldType = InfrastructureFieldType.ModifiedDate)]
+		PersistMode = PersistMode.Never)]
 		public string ModifiedDate { get; internal set; }
 		
 		protected override bool DoValidate()
@@ -322,9 +320,9 @@ namespace CruiseDAL.DataObjects
 		private static RowValidator _validator;
 		
 		[XmlIgnore]
-		public new DAL DAL
+		public new DALRedux DAL
 		{
-			get { return (DAL)base.DAL; }
+			get { return (DALRedux)base.DAL; }
 			set { base.DAL = value; }
 		}
 		
@@ -472,23 +470,21 @@ namespace CruiseDAL.DataObjects
 		}
 
 		[XmlIgnore]
-		[InfrastructureFieldAttribute (FieldName = "CreatedBy",
-		 FieldType = InfrastructureFieldType.CreatedBy)]
+		[CreatedByField()]
 		public string CreatedBy { get; internal set; }
 		
 		[XmlIgnore]
 		[InfrastructureFieldAttribute (FieldName = "CreatedDate",
-		FieldType = InfrastructureFieldType.CreatedDate)]
+		PersistMode = PersistMode.Never)]
 		public DateTime CreatedDate { get; internal set; }
 		
 		[XmlIgnore]
-		[InfrastructureFieldAttribute (FieldName = "ModifiedBy",
-		 FieldType = InfrastructureFieldType.ModifiedBy)]
+		[ModifiedByField()]
 		public string ModifiedBy { get; internal set; }
 		
 		[XmlIgnore]
 		[InfrastructureFieldAttribute (FieldName = "ModifiedDate",
-		FieldType = InfrastructureFieldType.ModifiedDate)]
+		PersistMode = PersistMode.Never)]
 		public string ModifiedDate { get; internal set; }
 		
 		protected override bool DoValidate()
@@ -528,9 +524,9 @@ namespace CruiseDAL.DataObjects
 		private static RowValidator _validator;
 		
 		[XmlIgnore]
-		public new DAL DAL
+		public new DALRedux DAL
 		{
-			get { return (DAL)base.DAL; }
+			get { return (DALRedux)base.DAL; }
 			set { base.DAL = value; }
 		}
 		
@@ -772,23 +768,21 @@ namespace CruiseDAL.DataObjects
 		}
 
 		[XmlIgnore]
-		[InfrastructureFieldAttribute (FieldName = "CreatedBy",
-		 FieldType = InfrastructureFieldType.CreatedBy)]
+		[CreatedByField()]
 		public string CreatedBy { get; internal set; }
 		
 		[XmlIgnore]
 		[InfrastructureFieldAttribute (FieldName = "CreatedDate",
-		FieldType = InfrastructureFieldType.CreatedDate)]
+		PersistMode = PersistMode.Never)]
 		public DateTime CreatedDate { get; internal set; }
 		
 		[XmlIgnore]
-		[InfrastructureFieldAttribute (FieldName = "ModifiedBy",
-		 FieldType = InfrastructureFieldType.ModifiedBy)]
+		[ModifiedByField()]
 		public string ModifiedBy { get; internal set; }
 		
 		[XmlIgnore]
 		[InfrastructureFieldAttribute (FieldName = "ModifiedDate",
-		FieldType = InfrastructureFieldType.ModifiedDate)]
+		PersistMode = PersistMode.Never)]
 		public string ModifiedDate { get; internal set; }
 		
 		protected override bool DoValidate()
@@ -838,9 +832,9 @@ namespace CruiseDAL.DataObjects
 		private static RowValidator _validator;
 		
 		[XmlIgnore]
-		public new DAL DAL
+		public new DALRedux DAL
 		{
-			get { return (DAL)base.DAL; }
+			get { return (DALRedux)base.DAL; }
 			set { base.DAL = value; }
 		}
 		
@@ -1019,9 +1013,9 @@ namespace CruiseDAL.DataObjects
 		private static RowValidator _validator;
 		
 		[XmlIgnore]
-		public new DAL DAL
+		public new DALRedux DAL
 		{
-			get { return (DAL)base.DAL; }
+			get { return (DALRedux)base.DAL; }
 			set { base.DAL = value; }
 		}
 		
@@ -1441,23 +1435,21 @@ namespace CruiseDAL.DataObjects
 		}
 
 		[XmlIgnore]
-		[InfrastructureFieldAttribute (FieldName = "CreatedBy",
-		 FieldType = InfrastructureFieldType.CreatedBy)]
+		[CreatedByField()]
 		public string CreatedBy { get; internal set; }
 		
 		[XmlIgnore]
 		[InfrastructureFieldAttribute (FieldName = "CreatedDate",
-		FieldType = InfrastructureFieldType.CreatedDate)]
+		PersistMode = PersistMode.Never)]
 		public DateTime CreatedDate { get; internal set; }
 		
 		[XmlIgnore]
-		[InfrastructureFieldAttribute (FieldName = "ModifiedBy",
-		 FieldType = InfrastructureFieldType.ModifiedBy)]
+		[ModifiedByField()]
 		public string ModifiedBy { get; internal set; }
 		
 		[XmlIgnore]
 		[InfrastructureFieldAttribute (FieldName = "ModifiedDate",
-		FieldType = InfrastructureFieldType.ModifiedDate)]
+		PersistMode = PersistMode.Never)]
 		public string ModifiedDate { get; internal set; }
 		
 		protected override bool DoValidate()
@@ -1522,9 +1514,9 @@ namespace CruiseDAL.DataObjects
 		private static RowValidator _validator;
 		
 		[XmlIgnore]
-		public new DAL DAL
+		public new DALRedux DAL
 		{
-			get { return (DAL)base.DAL; }
+			get { return (DALRedux)base.DAL; }
 			set { base.DAL = value; }
 		}
 		
@@ -1882,23 +1874,21 @@ namespace CruiseDAL.DataObjects
 		}
 
 		[XmlIgnore]
-		[InfrastructureFieldAttribute (FieldName = "CreatedBy",
-		 FieldType = InfrastructureFieldType.CreatedBy)]
+		[CreatedByField()]
 		public string CreatedBy { get; internal set; }
 		
 		[XmlIgnore]
 		[InfrastructureFieldAttribute (FieldName = "CreatedDate",
-		FieldType = InfrastructureFieldType.CreatedDate)]
+		PersistMode = PersistMode.Never)]
 		public DateTime CreatedDate { get; internal set; }
 		
 		[XmlIgnore]
-		[InfrastructureFieldAttribute (FieldName = "ModifiedBy",
-		 FieldType = InfrastructureFieldType.ModifiedBy)]
+		[ModifiedByField()]
 		public string ModifiedBy { get; internal set; }
 		
 		[XmlIgnore]
 		[InfrastructureFieldAttribute (FieldName = "ModifiedDate",
-		FieldType = InfrastructureFieldType.ModifiedDate)]
+		PersistMode = PersistMode.Never)]
 		public string ModifiedDate { get; internal set; }
 		
 		protected override bool DoValidate()
@@ -1960,9 +1950,9 @@ namespace CruiseDAL.DataObjects
 		private static RowValidator _validator;
 		
 		[XmlIgnore]
-		public new DAL DAL
+		public new DALRedux DAL
 		{
-			get { return (DAL)base.DAL; }
+			get { return (DALRedux)base.DAL; }
 			set { base.DAL = value; }
 		}
 		
@@ -2119,9 +2109,9 @@ namespace CruiseDAL.DataObjects
 		private static RowValidator _validator;
 		
 		[XmlIgnore]
-		public new DAL DAL
+		public new DALRedux DAL
 		{
-			get { return (DAL)base.DAL; }
+			get { return (DALRedux)base.DAL; }
 			set { base.DAL = value; }
 		}
 		
@@ -2476,23 +2466,21 @@ namespace CruiseDAL.DataObjects
 		}
 
 		[XmlIgnore]
-		[InfrastructureFieldAttribute (FieldName = "CreatedBy",
-		 FieldType = InfrastructureFieldType.CreatedBy)]
+		[CreatedByField()]
 		public string CreatedBy { get; internal set; }
 		
 		[XmlIgnore]
 		[InfrastructureFieldAttribute (FieldName = "CreatedDate",
-		FieldType = InfrastructureFieldType.CreatedDate)]
+		PersistMode = PersistMode.Never)]
 		public DateTime CreatedDate { get; internal set; }
 		
 		[XmlIgnore]
-		[InfrastructureFieldAttribute (FieldName = "ModifiedBy",
-		 FieldType = InfrastructureFieldType.ModifiedBy)]
+		[ModifiedByField()]
 		public string ModifiedBy { get; internal set; }
 		
 		[XmlIgnore]
 		[InfrastructureFieldAttribute (FieldName = "ModifiedDate",
-		FieldType = InfrastructureFieldType.ModifiedDate)]
+		PersistMode = PersistMode.Never)]
 		public string ModifiedDate { get; internal set; }
 		
 		protected override bool DoValidate()
@@ -2546,9 +2534,9 @@ namespace CruiseDAL.DataObjects
 		private static RowValidator _validator;
 		
 		[XmlIgnore]
-		public new DAL DAL
+		public new DALRedux DAL
 		{
-			get { return (DAL)base.DAL; }
+			get { return (DALRedux)base.DAL; }
 			set { base.DAL = value; }
 		}
 		
@@ -3609,23 +3597,21 @@ namespace CruiseDAL.DataObjects
 		}
 
 		[XmlIgnore]
-		[InfrastructureFieldAttribute (FieldName = "CreatedBy",
-		 FieldType = InfrastructureFieldType.CreatedBy)]
+		[CreatedByField()]
 		public string CreatedBy { get; internal set; }
 		
 		[XmlIgnore]
 		[InfrastructureFieldAttribute (FieldName = "CreatedDate",
-		FieldType = InfrastructureFieldType.CreatedDate)]
+		PersistMode = PersistMode.Never)]
 		public DateTime CreatedDate { get; internal set; }
 		
 		[XmlIgnore]
-		[InfrastructureFieldAttribute (FieldName = "ModifiedBy",
-		 FieldType = InfrastructureFieldType.ModifiedBy)]
+		[ModifiedByField()]
 		public string ModifiedBy { get; internal set; }
 		
 		[XmlIgnore]
 		[InfrastructureFieldAttribute (FieldName = "ModifiedDate",
-		FieldType = InfrastructureFieldType.ModifiedDate)]
+		PersistMode = PersistMode.Never)]
 		public string ModifiedDate { get; internal set; }
 		
 		protected override bool DoValidate()
@@ -3744,9 +3730,9 @@ namespace CruiseDAL.DataObjects
 		private static RowValidator _validator;
 		
 		[XmlIgnore]
-		public new DAL DAL
+		public new DALRedux DAL
 		{
-			get { return (DAL)base.DAL; }
+			get { return (DALRedux)base.DAL; }
 			set { base.DAL = value; }
 		}
 		
@@ -4141,23 +4127,21 @@ namespace CruiseDAL.DataObjects
 		}
 
 		[XmlIgnore]
-		[InfrastructureFieldAttribute (FieldName = "CreatedBy",
-		 FieldType = InfrastructureFieldType.CreatedBy)]
+		[CreatedByField()]
 		public string CreatedBy { get; internal set; }
 		
 		[XmlIgnore]
 		[InfrastructureFieldAttribute (FieldName = "CreatedDate",
-		FieldType = InfrastructureFieldType.CreatedDate)]
+		PersistMode = PersistMode.Never)]
 		public DateTime CreatedDate { get; internal set; }
 		
 		[XmlIgnore]
-		[InfrastructureFieldAttribute (FieldName = "ModifiedBy",
-		 FieldType = InfrastructureFieldType.ModifiedBy)]
+		[ModifiedByField()]
 		public string ModifiedBy { get; internal set; }
 		
 		[XmlIgnore]
 		[InfrastructureFieldAttribute (FieldName = "ModifiedDate",
-		FieldType = InfrastructureFieldType.ModifiedDate)]
+		PersistMode = PersistMode.Never)]
 		public string ModifiedDate { get; internal set; }
 		
 		protected override bool DoValidate()
@@ -4220,9 +4204,9 @@ namespace CruiseDAL.DataObjects
 		private static RowValidator _validator;
 		
 		[XmlIgnore]
-		public new DAL DAL
+		public new DALRedux DAL
 		{
-			get { return (DAL)base.DAL; }
+			get { return (DALRedux)base.DAL; }
 			set { base.DAL = value; }
 		}
 		
@@ -4363,23 +4347,21 @@ namespace CruiseDAL.DataObjects
 		}
 
 		[XmlIgnore]
-		[InfrastructureFieldAttribute (FieldName = "CreatedBy",
-		 FieldType = InfrastructureFieldType.CreatedBy)]
+		[CreatedByField()]
 		public string CreatedBy { get; internal set; }
 		
 		[XmlIgnore]
 		[InfrastructureFieldAttribute (FieldName = "CreatedDate",
-		FieldType = InfrastructureFieldType.CreatedDate)]
+		PersistMode = PersistMode.Never)]
 		public DateTime CreatedDate { get; internal set; }
 		
 		[XmlIgnore]
-		[InfrastructureFieldAttribute (FieldName = "ModifiedBy",
-		 FieldType = InfrastructureFieldType.ModifiedBy)]
+		[ModifiedByField()]
 		public string ModifiedBy { get; internal set; }
 		
 		[XmlIgnore]
 		[InfrastructureFieldAttribute (FieldName = "ModifiedDate",
-		FieldType = InfrastructureFieldType.ModifiedDate)]
+		PersistMode = PersistMode.Never)]
 		public string ModifiedDate { get; internal set; }
 		
 		protected override bool DoValidate()
@@ -4414,9 +4396,9 @@ namespace CruiseDAL.DataObjects
 		private static RowValidator _validator;
 		
 		[XmlIgnore]
-		public new DAL DAL
+		public new DALRedux DAL
 		{
-			get { return (DAL)base.DAL; }
+			get { return (DALRedux)base.DAL; }
 			set { base.DAL = value; }
 		}
 		
@@ -4737,23 +4719,21 @@ namespace CruiseDAL.DataObjects
 		}
 
 		[XmlIgnore]
-		[InfrastructureFieldAttribute (FieldName = "CreatedBy",
-		 FieldType = InfrastructureFieldType.CreatedBy)]
+		[CreatedByField()]
 		public string CreatedBy { get; internal set; }
 		
 		[XmlIgnore]
 		[InfrastructureFieldAttribute (FieldName = "CreatedDate",
-		FieldType = InfrastructureFieldType.CreatedDate)]
+		PersistMode = PersistMode.Never)]
 		public DateTime CreatedDate { get; internal set; }
 		
 		[XmlIgnore]
-		[InfrastructureFieldAttribute (FieldName = "ModifiedBy",
-		 FieldType = InfrastructureFieldType.ModifiedBy)]
+		[ModifiedByField()]
 		public string ModifiedBy { get; internal set; }
 		
 		[XmlIgnore]
 		[InfrastructureFieldAttribute (FieldName = "ModifiedDate",
-		FieldType = InfrastructureFieldType.ModifiedDate)]
+		PersistMode = PersistMode.Never)]
 		public string ModifiedDate { get; internal set; }
 		
 		protected override bool DoValidate()
@@ -4790,9 +4770,9 @@ namespace CruiseDAL.DataObjects
 		private static RowValidator _validator;
 		
 		[XmlIgnore]
-		public new DAL DAL
+		public new DALRedux DAL
 		{
-			get { return (DAL)base.DAL; }
+			get { return (DALRedux)base.DAL; }
 			set { base.DAL = value; }
 		}
 		
@@ -4936,9 +4916,9 @@ namespace CruiseDAL.DataObjects
 		private static RowValidator _validator;
 		
 		[XmlIgnore]
-		public new DAL DAL
+		public new DALRedux DAL
 		{
-			get { return (DAL)base.DAL; }
+			get { return (DALRedux)base.DAL; }
 			set { base.DAL = value; }
 		}
 		
@@ -5062,23 +5042,21 @@ namespace CruiseDAL.DataObjects
 		}
 
 		[XmlIgnore]
-		[InfrastructureFieldAttribute (FieldName = "CreatedBy",
-		 FieldType = InfrastructureFieldType.CreatedBy)]
+		[CreatedByField()]
 		public string CreatedBy { get; internal set; }
 		
 		[XmlIgnore]
 		[InfrastructureFieldAttribute (FieldName = "CreatedDate",
-		FieldType = InfrastructureFieldType.CreatedDate)]
+		PersistMode = PersistMode.Never)]
 		public DateTime CreatedDate { get; internal set; }
 		
 		[XmlIgnore]
-		[InfrastructureFieldAttribute (FieldName = "ModifiedBy",
-		 FieldType = InfrastructureFieldType.ModifiedBy)]
+		[ModifiedByField()]
 		public string ModifiedBy { get; internal set; }
 		
 		[XmlIgnore]
 		[InfrastructureFieldAttribute (FieldName = "ModifiedDate",
-		FieldType = InfrastructureFieldType.ModifiedDate)]
+		PersistMode = PersistMode.Never)]
 		public string ModifiedDate { get; internal set; }
 		
 		protected override bool DoValidate()
@@ -5113,9 +5091,9 @@ namespace CruiseDAL.DataObjects
 		private static RowValidator _validator;
 		
 		[XmlIgnore]
-		public new DAL DAL
+		public new DALRedux DAL
 		{
-			get { return (DAL)base.DAL; }
+			get { return (DALRedux)base.DAL; }
 			set { base.DAL = value; }
 		}
 		
@@ -5595,9 +5573,9 @@ namespace CruiseDAL.DataObjects
 		private static RowValidator _validator;
 		
 		[XmlIgnore]
-		public new DAL DAL
+		public new DALRedux DAL
 		{
-			get { return (DAL)base.DAL; }
+			get { return (DALRedux)base.DAL; }
 			set { base.DAL = value; }
 		}
 		
@@ -5879,9 +5857,9 @@ namespace CruiseDAL.DataObjects
 		private static RowValidator _validator;
 		
 		[XmlIgnore]
-		public new DAL DAL
+		public new DALRedux DAL
 		{
-			get { return (DAL)base.DAL; }
+			get { return (DALRedux)base.DAL; }
 			set { base.DAL = value; }
 		}
 		
@@ -6140,9 +6118,9 @@ namespace CruiseDAL.DataObjects
 		private static RowValidator _validator;
 		
 		[XmlIgnore]
-		public new DAL DAL
+		public new DALRedux DAL
 		{
-			get { return (DAL)base.DAL; }
+			get { return (DALRedux)base.DAL; }
 			set { base.DAL = value; }
 		}
 		
@@ -6400,9 +6378,9 @@ namespace CruiseDAL.DataObjects
 		private static RowValidator _validator;
 		
 		[XmlIgnore]
-		public new DAL DAL
+		public new DALRedux DAL
 		{
-			get { return (DAL)base.DAL; }
+			get { return (DALRedux)base.DAL; }
 			set { base.DAL = value; }
 		}
 		
@@ -6520,9 +6498,9 @@ namespace CruiseDAL.DataObjects
 		private static RowValidator _validator;
 		
 		[XmlIgnore]
-		public new DAL DAL
+		public new DALRedux DAL
 		{
-			get { return (DAL)base.DAL; }
+			get { return (DALRedux)base.DAL; }
 			set { base.DAL = value; }
 		}
 		
@@ -7275,9 +7253,9 @@ namespace CruiseDAL.DataObjects
 		private static RowValidator _validator;
 		
 		[XmlIgnore]
-		public new DAL DAL
+		public new DALRedux DAL
 		{
-			get { return (DAL)base.DAL; }
+			get { return (DALRedux)base.DAL; }
 			set { base.DAL = value; }
 		}
 		
@@ -8410,9 +8388,9 @@ namespace CruiseDAL.DataObjects
 		private static RowValidator _validator;
 		
 		[XmlIgnore]
-		public new DAL DAL
+		public new DALRedux DAL
 		{
-			get { return (DAL)base.DAL; }
+			get { return (DALRedux)base.DAL; }
 			set { base.DAL = value; }
 		}
 		
@@ -9480,9 +9458,9 @@ namespace CruiseDAL.DataObjects
 		private static RowValidator _validator;
 		
 		[XmlIgnore]
-		public new DAL DAL
+		public new DALRedux DAL
 		{
-			get { return (DAL)base.DAL; }
+			get { return (DALRedux)base.DAL; }
 			set { base.DAL = value; }
 		}
 		
@@ -9851,9 +9829,9 @@ namespace CruiseDAL.DataObjects
 		private static RowValidator _validator;
 		
 		[XmlIgnore]
-		public new DAL DAL
+		public new DALRedux DAL
 		{
-			get { return (DAL)base.DAL; }
+			get { return (DALRedux)base.DAL; }
 			set { base.DAL = value; }
 		}
 		
@@ -10266,23 +10244,21 @@ namespace CruiseDAL.DataObjects
 		}
 
 		[XmlIgnore]
-		[InfrastructureFieldAttribute (FieldName = "CreatedBy",
-		 FieldType = InfrastructureFieldType.CreatedBy)]
+		[CreatedByField()]
 		public string CreatedBy { get; internal set; }
 		
 		[XmlIgnore]
 		[InfrastructureFieldAttribute (FieldName = "CreatedDate",
-		FieldType = InfrastructureFieldType.CreatedDate)]
+		PersistMode = PersistMode.Never)]
 		public DateTime CreatedDate { get; internal set; }
 		
 		[XmlIgnore]
-		[InfrastructureFieldAttribute (FieldName = "ModifiedBy",
-		 FieldType = InfrastructureFieldType.ModifiedBy)]
+		[ModifiedByField()]
 		public string ModifiedBy { get; internal set; }
 		
 		[XmlIgnore]
 		[InfrastructureFieldAttribute (FieldName = "ModifiedDate",
-		FieldType = InfrastructureFieldType.ModifiedDate)]
+		PersistMode = PersistMode.Never)]
 		public string ModifiedDate { get; internal set; }
 		
 		protected override bool DoValidate()
@@ -10347,9 +10323,9 @@ namespace CruiseDAL.DataObjects
 		private static RowValidator _validator;
 		
 		[XmlIgnore]
-		public new DAL DAL
+		public new DALRedux DAL
 		{
-			get { return (DAL)base.DAL; }
+			get { return (DALRedux)base.DAL; }
 			set { base.DAL = value; }
 		}
 		
@@ -11061,9 +11037,9 @@ namespace CruiseDAL.DataObjects
 		private static RowValidator _validator;
 		
 		[XmlIgnore]
-		public new DAL DAL
+		public new DALRedux DAL
 		{
-			get { return (DAL)base.DAL; }
+			get { return (DALRedux)base.DAL; }
 			set { base.DAL = value; }
 		}
 		
@@ -11220,9 +11196,9 @@ namespace CruiseDAL.DataObjects
 		private static RowValidator _validator;
 		
 		[XmlIgnore]
-		public new DAL DAL
+		public new DALRedux DAL
 		{
-			get { return (DAL)base.DAL; }
+			get { return (DALRedux)base.DAL; }
 			set { base.DAL = value; }
 		}
 		
@@ -11694,9 +11670,9 @@ namespace CruiseDAL.DataObjects
 		private static RowValidator _validator;
 		
 		[XmlIgnore]
-		public new DAL DAL
+		public new DALRedux DAL
 		{
-			get { return (DAL)base.DAL; }
+			get { return (DALRedux)base.DAL; }
 			set { base.DAL = value; }
 		}
 		
@@ -12038,9 +12014,9 @@ namespace CruiseDAL.DataObjects
 		private static RowValidator _validator;
 		
 		[XmlIgnore]
-		public new DAL DAL
+		public new DALRedux DAL
 		{
-			get { return (DAL)base.DAL; }
+			get { return (DALRedux)base.DAL; }
 			set { base.DAL = value; }
 		}
 		
@@ -12359,9 +12335,9 @@ namespace CruiseDAL.DataObjects
 		private static RowValidator _validator;
 		
 		[XmlIgnore]
-		public new DAL DAL
+		public new DALRedux DAL
 		{
-			get { return (DAL)base.DAL; }
+			get { return (DALRedux)base.DAL; }
 			set { base.DAL = value; }
 		}
 		
@@ -12520,9 +12496,9 @@ namespace CruiseDAL.DataObjects
 		private static RowValidator _validator;
 		
 		[XmlIgnore]
-		public new DAL DAL
+		public new DALRedux DAL
 		{
-			get { return (DAL)base.DAL; }
+			get { return (DALRedux)base.DAL; }
 			set { base.DAL = value; }
 		}
 		
@@ -12685,9 +12661,9 @@ namespace CruiseDAL.DataObjects
 		private static RowValidator _validator;
 		
 		[XmlIgnore]
-		public new DAL DAL
+		public new DALRedux DAL
 		{
-			get { return (DAL)base.DAL; }
+			get { return (DALRedux)base.DAL; }
 			set { base.DAL = value; }
 		}
 		
@@ -12936,9 +12912,9 @@ namespace CruiseDAL.DataObjects
 		private static RowValidator _validator;
 		
 		[XmlIgnore]
-		public new DAL DAL
+		public new DALRedux DAL
 		{
-			get { return (DAL)base.DAL; }
+			get { return (DALRedux)base.DAL; }
 			set { base.DAL = value; }
 		}
 		
@@ -13187,9 +13163,9 @@ namespace CruiseDAL.DataObjects
 		private static RowValidator _validator;
 		
 		[XmlIgnore]
-		public new DAL DAL
+		public new DALRedux DAL
 		{
-			get { return (DAL)base.DAL; }
+			get { return (DALRedux)base.DAL; }
 			set { base.DAL = value; }
 		}
 		
@@ -13412,9 +13388,9 @@ namespace CruiseDAL.DataObjects
 		private static RowValidator _validator;
 		
 		[XmlIgnore]
-		public new DAL DAL
+		public new DALRedux DAL
 		{
-			get { return (DAL)base.DAL; }
+			get { return (DALRedux)base.DAL; }
 			set { base.DAL = value; }
 		}
 		
@@ -13660,9 +13636,9 @@ namespace CruiseDAL.DataObjects
 		private static RowValidator _validator;
 		
 		[XmlIgnore]
-		public new DAL DAL
+		public new DALRedux DAL
 		{
-			get { return (DAL)base.DAL; }
+			get { return (DALRedux)base.DAL; }
 			set { base.DAL = value; }
 		}
 		
@@ -13764,9 +13740,9 @@ namespace CruiseDAL.DataObjects
 		private static RowValidator _validator;
 		
 		[XmlIgnore]
-		public new DAL DAL
+		public new DALRedux DAL
 		{
-			get { return (DAL)base.DAL; }
+			get { return (DALRedux)base.DAL; }
 			set { base.DAL = value; }
 		}
 		
@@ -13868,9 +13844,9 @@ namespace CruiseDAL.DataObjects
 		private static RowValidator _validator;
 		
 		[XmlIgnore]
-		public new DAL DAL
+		public new DALRedux DAL
 		{
-			get { return (DAL)base.DAL; }
+			get { return (DALRedux)base.DAL; }
 			set { base.DAL = value; }
 		}
 		
@@ -13972,9 +13948,9 @@ namespace CruiseDAL.DataObjects
 		private static RowValidator _validator;
 		
 		[XmlIgnore]
-		public new DAL DAL
+		public new DALRedux DAL
 		{
-			get { return (DAL)base.DAL; }
+			get { return (DALRedux)base.DAL; }
 			set { base.DAL = value; }
 		}
 		
@@ -14076,9 +14052,9 @@ namespace CruiseDAL.DataObjects
 		private static RowValidator _validator;
 		
 		[XmlIgnore]
-		public new DAL DAL
+		public new DALRedux DAL
 		{
-			get { return (DAL)base.DAL; }
+			get { return (DALRedux)base.DAL; }
 			set { base.DAL = value; }
 		}
 		
@@ -14180,9 +14156,9 @@ namespace CruiseDAL.DataObjects
 		private static RowValidator _validator;
 		
 		[XmlIgnore]
-		public new DAL DAL
+		public new DALRedux DAL
 		{
-			get { return (DAL)base.DAL; }
+			get { return (DALRedux)base.DAL; }
 			set { base.DAL = value; }
 		}
 		
@@ -14356,9 +14332,9 @@ namespace CruiseDAL.DataObjects
 		private static RowValidator _validator;
 		
 		[XmlIgnore]
-		public new DAL DAL
+		public new DALRedux DAL
 		{
-			get { return (DAL)base.DAL; }
+			get { return (DALRedux)base.DAL; }
 			set { base.DAL = value; }
 		}
 		
@@ -14559,9 +14535,9 @@ namespace CruiseDAL.DataObjects
 		private static RowValidator _validator;
 		
 		[XmlIgnore]
-		public new DAL DAL
+		public new DALRedux DAL
 		{
-			get { return (DAL)base.DAL; }
+			get { return (DALRedux)base.DAL; }
 			set { base.DAL = value; }
 		}
 		
@@ -14723,9 +14699,9 @@ namespace CruiseDAL.DataObjects
 		private static RowValidator _validator;
 		
 		[XmlIgnore]
-		public new DAL DAL
+		public new DALRedux DAL
 		{
-			get { return (DAL)base.DAL; }
+			get { return (DALRedux)base.DAL; }
 			set { base.DAL = value; }
 		}
 		
@@ -14842,9 +14818,9 @@ namespace CruiseDAL.DataObjects
 		private static RowValidator _validator;
 		
 		[XmlIgnore]
-		public new DAL DAL
+		public new DALRedux DAL
 		{
-			get { return (DAL)base.DAL; }
+			get { return (DALRedux)base.DAL; }
 			set { base.DAL = value; }
 		}
 		

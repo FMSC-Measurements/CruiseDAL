@@ -50,9 +50,9 @@ public partial class <#=table.Name#>DO : CruiseDALDataObject
 private static RowValidator _validator;
 
 [XmlIgnore]
-public new DAL DAL
+public new DALRedux DAL
 {
-	get { return (DAL)base.DAL; }
+	get { return (DALRedux)base.DAL; }
 	set { base.DAL = value; }
 }
 
@@ -325,13 +325,12 @@ public void MakeUtilProperties(bool trackCreated, bool trackModified, bool track
 	{
 #>
 [XmlIgnore]
-[InfrastructureFieldAttribute (FieldName = "CreatedBy",
- FieldType = InfrastructureFieldType.CreatedBy)]
+[CreatedByField()]
 public string CreatedBy { get; internal set; }
 
 [XmlIgnore]
 [InfrastructureFieldAttribute (FieldName = "CreatedDate",
-FieldType = InfrastructureFieldType.CreatedDate)]
+PersistMode = PersistMode.Never)]
 public DateTime CreatedDate { get; internal set; }
 <#+
 	}
@@ -341,13 +340,12 @@ public DateTime CreatedDate { get; internal set; }
 #>
 
 [XmlIgnore]
-[InfrastructureFieldAttribute (FieldName = "ModifiedBy",
- FieldType = InfrastructureFieldType.ModifiedBy)]
+[ModifiedByField()]
 public string ModifiedBy { get; internal set; }
 
 [XmlIgnore]
 [InfrastructureFieldAttribute (FieldName = "ModifiedDate",
-FieldType = InfrastructureFieldType.ModifiedDate)]
+PersistMode = PersistMode.Never)]
 public string ModifiedDate { get; internal set; }
 
 <#+

@@ -3,6 +3,7 @@
 using System.Collections.Generic;
 using System.Collections;
 using CruiseDAL.Core.EntityModel;
+using CruiseDAL.Core;
 
 #if ANDROID
 using Mono.Data.Sqlite;
@@ -55,8 +56,8 @@ namespace CruiseDAL
             protected set;
         }
 
-        private DatastoreBase _DAL;
-        internal DatastoreBase DAL
+        private DatastoreRedux _DAL;
+        internal DatastoreRedux DAL
         {
             get { return _DAL; }
             set
