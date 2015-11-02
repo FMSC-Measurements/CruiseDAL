@@ -773,7 +773,7 @@ namespace CruiseDAL.Core
 
         #region Read Methods
 
-        public IList<T> Read<T>(string selection, params object[] selectionArgs) 
+        public List<T> Read<T>(string selection, params object[] selectionArgs) 
             where T : new()
         {
             EntityDescription entityDescription = GetEntityInfo(typeof(T));
@@ -794,7 +794,7 @@ namespace CruiseDAL.Core
             }
         }
 
-        public IList<T> Read<T>(WhereClause where, params Object[] selectionArgs)
+        public List<T> Read<T>(WhereClause where, params Object[] selectionArgs)
             where T : new()
         {
             EntityDescription entityDescription = GetEntityInfo(typeof(T));
@@ -815,7 +815,7 @@ namespace CruiseDAL.Core
             }
         }
 
-        internal IList<T> Read<T>(DbCommand command, EntityDescription entityDescription) 
+        internal List<T> Read<T>(DbCommand command, EntityDescription entityDescription) 
             where T : new()
         {
             List<T> doList = new List<T>();
