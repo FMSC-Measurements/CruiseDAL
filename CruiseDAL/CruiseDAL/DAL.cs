@@ -26,7 +26,7 @@ using System.Security.Permissions;
 
 #endif
 
-namespace FMSCORM
+namespace CruiseDAL
 {
     public enum CruiseFileType { Unknown, Cruise, Template, Design, Master, Component }
 

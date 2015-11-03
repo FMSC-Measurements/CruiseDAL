@@ -83,8 +83,6 @@
     </Compile>
     <Compile Include="CruiseDAL\CruiseDALDatastoreBuilder.cs" />
     <Compile Include="CruiseDAL\CruiseDALErrorCollection.cs" />
-    <Compile Include="CruiseDAL\CustomTriggers.cs" />
-    <Compile Include="CruiseDAL\DAL.cs" />
     <Compile Include="CruiseDAL\DALExtentions.cs" />
     <Compile Include="CruiseDAL\DALRedux.cs" />
     <Compile Include="CruiseDAL\DALValidationExtentions.cs" />
@@ -92,6 +90,11 @@
     <Compile Include="CruiseDAL\Enums.cs" />
     <Compile Include="CruiseDAL\Exceptions.cs" />
     <Compile Include="CruiseDAL\Schema\Constants.cs" />
+    <Compile Include="CruiseDAL\Schema\Schema.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Schema.tt</DependentUpon>
+    </Compile>
     <Compile Include="CruiseDAL\Updater.cs" />
     <Compile Include="Logger\Logger.cs" />
     <Compile Include="Properties\AssemblyInfo_FF35.cs" />
@@ -113,11 +116,6 @@
     <Compile Include="TableModels\StrataStats_partal.cs" />
     <Compile Include="TableModels\Strata_partal.cs" />
     <Compile Include="TableModels\TableModels.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>TableModels.tt</DependentUpon>
-    </Compile>
-    <Compile Include="TableModels\TableModels1.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>TableModels.tt</DependentUpon>
@@ -164,10 +162,20 @@
     </None>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="CruiseDAL\Schema\Schema.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>Schema.cs</LastGenOutput>
+    </Content>
     <Content Include="TableModels\TableModels.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
       <LastGenOutput>TableModels1.cs</LastGenOutput>
     </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\FMSC.ORM\FMSC.ORM.Net35.csproj">
+      <Project>{0452719F-1CAA-4959-B00C-AB8B1C438571}</Project>
+      <Name>FMSC.ORM.Net35</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

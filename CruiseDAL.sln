@@ -19,6 +19,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CruiseDAL.CodeGenEngine", "
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FMSC.ORM.NetCF20", "FMSC.ORM\FMSC.ORM.NetCF20.csproj", "{D346BFEA-85A0-4A5D-BD89-D07E073B065E}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FMSC.ORM.Net35", "FMSC.ORM\FMSC.ORM.Net35.csproj", "{0452719F-1CAA-4959-B00C-AB8B1C438571}"
+EndProject
 Global
 	GlobalSection(SubversionScc) = preSolution
 		Svn-Managed = True
@@ -96,6 +98,16 @@ Global
 		{D346BFEA-85A0-4A5D-BD89-D07E073B065E}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
 		{D346BFEA-85A0-4A5D-BD89-D07E073B065E}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{D346BFEA-85A0-4A5D-BD89-D07E073B065E}.Release|x86.ActiveCfg = Release|Any CPU
+		{0452719F-1CAA-4959-B00C-AB8B1C438571}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0452719F-1CAA-4959-B00C-AB8B1C438571}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0452719F-1CAA-4959-B00C-AB8B1C438571}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{0452719F-1CAA-4959-B00C-AB8B1C438571}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{0452719F-1CAA-4959-B00C-AB8B1C438571}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{0452719F-1CAA-4959-B00C-AB8B1C438571}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0452719F-1CAA-4959-B00C-AB8B1C438571}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0452719F-1CAA-4959-B00C-AB8B1C438571}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{0452719F-1CAA-4959-B00C-AB8B1C438571}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{0452719F-1CAA-4959-B00C-AB8B1C438571}.Release|x86.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

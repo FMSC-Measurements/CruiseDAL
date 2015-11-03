@@ -5,11 +5,11 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("FMSC.ORM.Net35")]
+[assembly: AssemblyTitle("FMSC.ORM")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("USDA Forest Service")]
-[assembly: AssemblyProduct("FMSC.ORM.Net35")]
+[assembly: AssemblyProduct("FMSC.ORM")]
 [assembly: AssemblyCopyright("Copyright © USDA Forest Service 2015")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
