@@ -12,8 +12,10 @@ ICollection<Table> TableList = dr.AllTables.Values;
 #>
 using System;
 using System.Xml.Serialization;
-using CruiseDAL.Core.EntityAttributes;
-using CruiseDAL.Core.EntityModel;
+using FMSC.ORM.Core.EntityAttributes;
+using FMSC.ORM.Core.EntityModel;
+using FMSC.ORM.Core;
+using CruiseDAL.Schema;
 
 namespace CruiseDAL.DataObjects
 {
@@ -113,7 +115,7 @@ public <#=table.Name#>DO(<#=table.Name#>DO obj) : this()
     SetValues(obj);
 }
 
-public <#=table.Name#>DO(DAL DAL) : base(DAL)
+public <#=table.Name#>DO(DatastoreRedux DAL) : base(DAL)
 {}
 #endregion
 <#+     
@@ -235,7 +237,8 @@ public void MakeForeignKey(Field field, Table table)
 public virtual <#=field.Ref#>DO Get<#=field.Ref#>()
 {
     if(DAL == null) { return null; }
-    return DAL.ReadSingleRow<<#=field.Ref#>DO>(<#=field.Ref.ToUpper()#>._NAME, this.<#=field.Name#>);
+	return DAL.ReadSingleRow<<#=field.Ref#>DO>( this.<#=field.Name#>);
+    //return DAL.ReadSingleRow<<#=field.Ref#>DO>(<#=field.Ref.ToUpper()#>._NAME, this.<#=field.Name#>);
 }
  
 private <#=field.Ref#>DO _<#=field.Ref.ToLower()#> = null;

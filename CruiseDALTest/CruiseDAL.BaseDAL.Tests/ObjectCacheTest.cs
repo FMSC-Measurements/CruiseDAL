@@ -1,9 +1,9 @@
-﻿using CruiseDAL;
+﻿using FMSCORM;
 using System;
-using CruiseDAL.DataObjects;
+using FMSCORM.DataObjects;
 using Xunit;
 
-namespace CruiseDAL.BaseDAL.Tests
+namespace FMSCORM.BaseDAL.Tests
 {
     public class ObjectCacheTest
     {

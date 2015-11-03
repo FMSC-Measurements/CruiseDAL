@@ -1,6 +1,8 @@
 ﻿using System.Collections.Generic;
 using System;
-using CruiseDAL.Core.EntityModel;
+using FMSC.ORM.Core.EntityModel;
+using FMSC.ORM.Core;
+using CruiseDAL.Schema;
 
 namespace CruiseDAL.DataObjects
 {
@@ -21,7 +23,7 @@ namespace CruiseDAL.DataObjects
                         if (_validatorLookup.ContainsKey(this.TreeDefaultValue_CN.Value) == false)
                         {
                             //this.TreeDefaultValue.TreeAuditValues.Populate();
-                            List<TreeAuditValueDO> tavList = this.DAL.Read<TreeAuditValueDO>("TreeAuditValue",
+                            List<TreeAuditValueDO> tavList = this.DAL.Read<TreeAuditValueDO>(
                                 @"JOIN TreeDefaultValueTreeAuditValue Using (TreeAuditValue_CN) 
                             WHERE TreeDefaultValue_CN = ?", this.TreeDefaultValue_CN);
 
@@ -48,10 +50,10 @@ namespace CruiseDAL.DataObjects
         {
             lock (this)
             {
-                DAL db = this.DAL;
-                List<LogDO> logs = db.Read<LogDO>("Log", "WHERE Tree_CN = ?", this.Tree_CN);
-                List<TreeCalculatedValuesDO> tcvList = db.Read<TreeCalculatedValuesDO>("TreeCalculatedValues", "WHERE Tree_CN = ?", this.Tree_CN);
-                List<LogStockDO> lsList = db.Read<LogStockDO>("LogStock", "WHERE Tree_CN = ?", this.Tree_CN);
+                var db = this.DAL;
+                List<LogDO> logs = db.Read<LogDO>("WHERE Tree_CN = ?", this.Tree_CN);
+                List<TreeCalculatedValuesDO> tcvList = db.Read<TreeCalculatedValuesDO>("WHERE Tree_CN = ?", this.Tree_CN);
+                List<LogStockDO> lsList = db.Read<LogStockDO>("WHERE Tree_CN = ?", this.Tree_CN);
 
                 try
                 {
@@ -69,11 +71,11 @@ namespace CruiseDAL.DataObjects
                         ls.Delete();
                     }
                     base.Delete();
-                    db.EndTransaction();
+                    db.CommitTransaction();
                 }
                 catch (Exception e)
                 {
-                    db.CancelTransaction();
+                    db.RollbackTransaction();
                     throw e;
                 }
             }
@@ -107,7 +109,7 @@ namespace CruiseDAL.DataObjects
             if (name == "TreeDefaultValue" || name == TREE.TREEDEFAULTVALUE_CN)
             {
                 //_treeValidator = null;
-                this.ClearErrors();
+                this.ErrorCollection.ClearErrors();
                 this.Validate();
             }
         }
@@ -173,7 +175,7 @@ namespace CruiseDAL.DataObjects
 
             if (this.CountOrMeasure != null && (this.CountOrMeasure.ToUpper() == "C" || this.CountOrMeasure.ToUpper() == "I" ))
             {
-                this.ClearWarnings();
+                this.ErrorCollection.ClearWarnings();
                 return isValid; 
             }
 

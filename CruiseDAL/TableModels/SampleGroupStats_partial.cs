@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using CruiseDAL.MappingCollections;
+using FMSC.ORM.Core;
 
 namespace CruiseDAL.DataObjects
 {
@@ -19,12 +20,12 @@ namespace CruiseDAL.DataObjects
                 return _TreeDefaultValueStats;
             }
         }
-        protected override void OnDALChanged(DatastoreBase newDAL)
+        protected override void OnDALChanged(DatastoreRedux newDAL)
         {
             base.OnDALChanged(newDAL);
             if (_TreeDefaultValueStats != null)
             {
-                _TreeDefaultValueStats.DAL = (DAL)newDAL;
+                _TreeDefaultValueStats.DAL = newDAL;
             }
         }
 

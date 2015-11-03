@@ -2,11 +2,11 @@
 using System.Text;
 using System.Collections.Generic;
 using System.Linq;
-using CruiseDAL;
-using CruiseDAL.DataObjects;
+using FMSCORM;
+using FMSCORM.DataObjects;
 using Xunit;
 
-namespace CruiseDAL.Tests
+namespace FMSCORM.Tests
 {
 
     public class MappingCollectionTest

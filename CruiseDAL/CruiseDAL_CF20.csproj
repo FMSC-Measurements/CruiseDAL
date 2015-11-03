@@ -70,35 +70,18 @@
     <Compile Include="AutoGen\DataObjects.cs" />
     <Compile Include="AutoGen\Enums.AutoGen.cs" />
     <Compile Include="AutoGen\Schema.cs" />
-    <Compile Include="BaseDAL\ColumnInfo.cs" />
-    <Compile Include="BaseDAL\DataObjectAttributes.cs" />
-    <Compile Include="BaseDAL\DataObjectDiscription.cs" />
-    <Compile Include="BaseDAL\DataObjectFactory.cs" />
-    <Compile Include="BaseDAL\DataObjects_Base.cs" />
-    <Compile Include="BaseDAL\DatastoreBase.cs" />
-    <Compile Include="BaseDAL\Exceptions.cs" />
-    <Compile Include="BaseDAL\ObjectCache.cs" />
-    <Compile Include="BaseDAL\ReadDataObject.cs" />
-    <Compile Include="BaseDAL\Validator.cs" />
+    <Compile Include="CruiseDAL\CruiseDALDatastoreBuilder.cs" />
+    <Compile Include="CruiseDAL\CruiseDALErrorCollection.cs" />
+    <Compile Include="CruiseDAL\CustomTriggers.cs" />
     <Compile Include="CruiseDAL\DAL.cs" />
-    <Compile Include="CruiseDAL\DataObjects\AuditValue_partial.cs" />
-    <Compile Include="CruiseDAL\DataObjects\CruiseMethod_partial.cs" />
-    <Compile Include="CruiseDAL\DataObjects\CuttingUnit_partial.cs" />
-    <Compile Include="CruiseDAL\DataObjects\Globals_partial.cs" />
-    <Compile Include="CruiseDAL\DataObjects\LogMatrix_partial.cs" />
-    <Compile Include="CruiseDAL\DataObjects\Plot_partial.cs" />
-    <Compile Include="CruiseDAL\DataObjects\Sale_partial.cs" />
-    <Compile Include="CruiseDAL\DataObjects\SampleGroupStats_partial.cs" />
-    <Compile Include="CruiseDAL\DataObjects\SampleGroup_partial.cs" />
-    <Compile Include="CruiseDAL\DataObjects\StrataStats_partal.cs" />
-    <Compile Include="CruiseDAL\DataObjects\Strata_partal.cs" />
-    <Compile Include="CruiseDAL\DataObjects\TreeAuditValue_partial.cs" />
-    <Compile Include="CruiseDAL\DataObjects\TreeDefaultValue_partial.cs" />
-    <Compile Include="CruiseDAL\DataObjects\Tree_partial.cs" />
+    <Compile Include="CruiseDAL\DALExtentions.cs" />
+    <Compile Include="CruiseDAL\DALRedux.cs" />
+    <Compile Include="CruiseDAL\DALValidationExtentions.cs" />
+    <Compile Include="CruiseDAL\DataObject_Extra.cs" />
     <Compile Include="CruiseDAL\Enums.cs" />
-    <Compile Include="CruiseDAL\MappingCollections\MappingCollections.cs" />
-    <Compile Include="CruiseDAL\MappingCollections\MappingColliction_Base.cs" />
+    <Compile Include="CruiseDAL\Exceptions.cs" />
     <Compile Include="CruiseDAL\Schema\Constants.cs" />
+    <Compile Include="CruiseDAL\Schema\Schema.cs" />
     <Compile Include="CruiseDAL\Updater.cs" />
     <Compile Include="DeviceInfo.cs" />
     <Compile Include="Logger\Logger.cs" />
@@ -108,6 +91,24 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
+    <Compile Include="TableModels\AuditValue_partial.cs" />
+    <Compile Include="TableModels\CruiseMethod_partial.cs" />
+    <Compile Include="TableModels\CuttingUnit_partial.cs" />
+    <Compile Include="TableModels\Globals_partial.cs" />
+    <Compile Include="TableModels\LogMatrix_partial.cs" />
+    <Compile Include="TableModels\MappingCollections.cs" />
+    <Compile Include="TableModels\Plot_partial.cs" />
+    <Compile Include="TableModels\Sale_partial.cs" />
+    <Compile Include="TableModels\SampleGroupStats_partial.cs" />
+    <Compile Include="TableModels\SampleGroup_partial.cs" />
+    <Compile Include="TableModels\StrataStats_partal.cs" />
+    <Compile Include="TableModels\Strata_partal.cs" />
+    <Compile Include="TableModels\TableModels.cs" />
+    <Compile Include="TableModels\TreeAuditValue_partial.cs" />
+    <Compile Include="TableModels\TreeDefaultValue_partial.cs" />
+    <Compile Include="TableModels\Tree_partial.cs" />
+    <Compile Include="ViewModels\CountTree_ViewDO.cs" />
+    <Compile Include="ViewModels\StratumAcres_ViewDO.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="AutoGen\CreateTriggers.sql" />

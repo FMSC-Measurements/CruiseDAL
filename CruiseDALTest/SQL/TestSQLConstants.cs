@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace CruiseDAL.Tests.SQL
+namespace FMSCORM.Tests.SQL
 {
     public static class TestSQLConstants
     {

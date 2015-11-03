@@ -2,8 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using CruiseDAL;
-using CruiseDAL.BaseDAL.EntityAttributes;
+using FMSCORM;
+using FMSCORM.BaseDAL.EntityAttributes;
 
 namespace CruiseDALTest.TestTypes
 {

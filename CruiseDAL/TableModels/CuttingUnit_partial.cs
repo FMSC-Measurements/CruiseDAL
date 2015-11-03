@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 using CruiseDAL.MappingCollections;
+using FMSC.ORM.Core;
 
 namespace CruiseDAL.DataObjects
 {
@@ -23,7 +24,7 @@ namespace CruiseDAL.DataObjects
             
         }
 
-        protected override void OnDALChanged(DatastoreBase newDAL)
+        protected override void OnDALChanged(DatastoreRedux newDAL)
         {
             base.OnDALChanged(newDAL);
             if (_Strata != null)
@@ -40,10 +41,10 @@ namespace CruiseDAL.DataObjects
             this.Strata.Save();
         }
 
-        public static List<CuttingUnitDO> ReadByStratumCode(DAL dal, String code)
+        public static List<CuttingUnitDO> ReadByStratumCode(DatastoreRedux dal, String code)
         {
             if (dal == null) { return null; }
-            return dal.Read<CuttingUnitDO>("CuttingUnit", "JOIN CuttingUnitStratum JOIN Stratum WHERE CuttingUnit.CuttingUnit_CN = CuttingUnitStratum.CuttingUnit_CN AND CuttingUnitStratum.Stratum_CN = Stratum.Stratum_CN AND Stratum.Code = ?;", code);
+            return dal.Read<CuttingUnitDO>("JOIN CuttingUnitStratum JOIN Stratum WHERE CuttingUnit.CuttingUnit_CN = CuttingUnitStratum.CuttingUnit_CN AND CuttingUnitStratum.Stratum_CN = Stratum.Stratum_CN AND Stratum.Code = ?;", (object)code);
         }
 
         public List<StratumDO> ReadStrata()
@@ -53,14 +54,14 @@ namespace CruiseDAL.DataObjects
 
         public List<T> ReadStrata<T>() where T : StratumDO, new()
         {
-            return this.DAL.Read<T>(Schema.STRATUM._NAME, "JOIN CuttingUnitStratum USING (Stratum_CN) WHERE CuttingUnit_CN = ?", this.CuttingUnit_CN);
+            return this.DAL.Read<T>("JOIN CuttingUnitStratum USING (Stratum_CN) WHERE CuttingUnit_CN = ?", this.CuttingUnit_CN);
         }
 
         
 
         public static void RecursiveDelete(CuttingUnitDO unit)
         {
-            DAL dal = unit.DAL;
+            var dal = unit.DAL;
             string commandFormat =
 @"Delete From CuttingUnitStratum WHERE CuttingUnit_CN = {0};
 DELETE FROM Log WHERE EXISTS (SELECT 1 FROM Tree WHERE Tree.Tree_CN = Log.Tree_CN AND Tree.CuttingUnit_CN = {0});
@@ -76,11 +77,11 @@ DELETE FROM CountTree WHERE CuttingUnit_CN = {0};";
                 dal.Execute(String.Format(commandFormat, unit.CuttingUnit_CN));
                 unit.Delete();
 
-                dal.EndTransaction();
+                dal.CommitTransaction();
             }
             catch (Exception e)
             {
-                dal.CancelTransaction();
+                dal.RollbackTransaction();
                 throw e;
             }
         }

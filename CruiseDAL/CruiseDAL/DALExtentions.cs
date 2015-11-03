@@ -9,20 +9,7 @@ namespace CruiseDAL
 {
     public static class DALExtentions
     {
-        public static string ReadGlobalValue(this DALRedux dal, String block, String key)
-        {
-            return dal.ExecuteScalar("SELECT Value FROM GLOBALS WHERE " +
-            "ifnull(Block, '') = ifnull(?, '') " +
-            "AND ifnull(Key, '') = ifnull(?, '');", block, key) as string;
-        }
-
-        public static void WriteGlobalValue(this DALRedux dal, String block, String key, String value)
-        {
-            dal.Execute("INSERT OR REPLACE INTO Globals (Block, Key, Value) " +
-                "Values (?, ?, ?);", block, key, value);
-        }
-
-        public static void LogMessage(DALRedux dal, string message, string level)
+        public static void LogMessage(this DALRedux dal, string message, string level)
         {
             string appStr = GetCallingProgram();
             dal.LogMessage(appStr, message, level);

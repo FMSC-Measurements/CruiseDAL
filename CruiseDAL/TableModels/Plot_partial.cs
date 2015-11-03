@@ -1,4 +1,5 @@
-﻿using System;
+﻿using FMSC.ORM.Core;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -6,23 +7,23 @@ namespace CruiseDAL.DataObjects
 {
     public partial class PlotDO
     {
-        public static List<PlotDO> ReadyByUnitStratum(DAL dal, String unit, String stratum)
+        public static List<PlotDO> ReadyByUnitStratum(DatastoreRedux dal, String unit, String stratum)
         {
             if (dal == null) { return null; }
             if (String.IsNullOrEmpty(unit))
             {
-                return dal.Read<PlotDO>("Plot", "JOIN Stratum WHERE Plot.Stratum_CN = Stratum.Stratum_CN AND Stratum.Code = ?;", stratum);
+                return dal.Read<PlotDO>("JOIN Stratum WHERE Plot.Stratum_CN = Stratum.Stratum_CN AND Stratum.Code = ?;", (object)stratum);
             }
             else if (String.IsNullOrEmpty(stratum))
             {
-                return dal.Read<PlotDO>("Plot", "JOIN CuttingUnit WHERE Plot.CuttingUnit_CN = CuttingUnit.CuttingUnit_CN AND CuttingUnit.Code = ?;", unit);
+                return dal.Read<PlotDO>("JOIN CuttingUnit WHERE Plot.CuttingUnit_CN = CuttingUnit.CuttingUnit_CN AND CuttingUnit.Code = ?;", (object)unit);
             }
-            return dal.Read<PlotDO>("Plot", "JOIN CuttingUnit JOIN Stratum WHERE Plot.CuttingUnit_CN = CuttingUnit.CuttingUnit_CN AND CuttingUnit.Code = ? AND Plot.Stratum_CN = Stratum.Stratum_CN AND Stratum.Code = ?;", unit, stratum);
+            return dal.Read<PlotDO>("JOIN CuttingUnit JOIN Stratum WHERE Plot.CuttingUnit_CN = CuttingUnit.CuttingUnit_CN AND CuttingUnit.Code = ? AND Plot.Stratum_CN = Stratum.Stratum_CN AND Stratum.Code = ?;", (object)unit, stratum);
         }
 
         public static bool RecursiveDeletePlot(PlotDO plot)
         {
-            DAL dal = plot.DAL;
+            DatastoreRedux dal = plot.DAL;
             string command = string.Format(@"
 DELETE FROM Log WHERE EXISTS (SELECT 1 FROM Tree WHERE Tree.Tree_CN = Log.Tree_CN AND Tree.Plot_CN = {0});
 DELETE FROM TreeCalculatedValues WHERE EXISTS (SELECT 1 FROM Tree WHERE Tree.Tree_CN = TreeCalculatedValues.Tree_CN AND Tree.Plot_CN = {0};

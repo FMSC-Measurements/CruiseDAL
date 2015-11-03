@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 using CruiseDAL.MappingCollections;
+using FMSC.ORM.Core;
 using CruiseDAL.Enums;
 
 namespace CruiseDAL.DataObjects
@@ -44,7 +45,7 @@ namespace CruiseDAL.DataObjects
        //    } 
        //}
 
-       protected override void OnDALChanged(DatastoreBase newDAL)
+       protected override void OnDALChanged(DatastoreRedux newDAL)
        {
            base.OnDALChanged(newDAL);
            if (_TreeDefaultValues != null)
@@ -67,7 +68,7 @@ namespace CruiseDAL.DataObjects
 
         public static void RecutsiveDeleteSampleGroup(SampleGroupDO sg)
         {
-            DAL db = sg.DAL;
+            var db = sg.DAL;
             if (db == null) { return; }
             try
             {
@@ -82,16 +83,16 @@ namespace CruiseDAL.DataObjects
             DELETE FROM SampleGroupTreeDefaultValue WHERE SampleGroup_CN = {0};", sg.SampleGroup_CN);
                 db.Execute(command);
                 sg.Delete();
-                db.EndTransaction();
+                db.CommitTransaction();
             }
             catch (Exception e)
             {
-                db.CancelTransaction();
+                db.RollbackTransaction();
                 throw e; 
             }
         }
 
-       public int DeleteSampleGroup(DAL dal, long? SampleGroup_CN)
+       public int DeleteSampleGroup(DatastoreRedux dal, long? SampleGroup_CN)
        {
           // check tree table for data
           if (dal.GetRowCount("Tree", "WHERE SampleGroup_CN = ?", SampleGroup_CN) > 0) return (-1);
@@ -99,7 +100,7 @@ namespace CruiseDAL.DataObjects
           if (dal.GetRowCount("CountTree", "WHERE SampleGroup_CN = ? AND TreeCount > 0", SampleGroup_CN) > 0) return (-1);
 
           //Delete Count Records for stratum
-          List<CountTreeDO> allCountInSg = dal.Read<CountTreeDO>("CountTree", "WHERE SampleGroup_CN = ?", SampleGroup_CN);
+          List<CountTreeDO> allCountInSg = dal.Read<CountTreeDO>("WHERE SampleGroup_CN = ?", SampleGroup_CN);
           foreach (CountTreeDO Cnt in allCountInSg)
              Cnt.Delete();
 
@@ -203,7 +204,7 @@ namespace CruiseDAL.DataObjects
            return isValid;
        }
 
-       public CruiseDAL.Enums.TallyMode GetSampleGroupTallyMode()
+       public TallyMode GetSampleGroupTallyMode()
        {
            TallyMode mode = TallyMode.Unknown;
            if (base.DAL.GetRowCount("CountTree", "WHERE SampleGroup_CN = ?", this.SampleGroup_CN) == 0)

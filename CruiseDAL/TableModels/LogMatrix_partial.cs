@@ -8,10 +8,10 @@ namespace CruiseDAL.DataObjects
     public partial class LogMatrixDO
     {
 
-        public static Dictionary<String, List<LogMatrixDO>> GetByRowNumberGroupBySpecies(DAL cruiseDAL, string reportNum)
+        public static Dictionary<String, List<LogMatrixDO>> GetByRowNumberGroupBySpecies(DALRedux cruiseDAL, string reportNum)
         {
             Dictionary<string, List<LogMatrixDO>> dict = new Dictionary<string, List<LogMatrixDO>>();
-            List<LogMatrixDO> list = cruiseDAL.Read<LogMatrixDO>("LogMatrix", "WHERE ReportNumber = ?", reportNum);
+            List<LogMatrixDO> list = cruiseDAL.Read<LogMatrixDO>("WHERE ReportNumber = ?", (object)reportNum);
 
             foreach (LogMatrixDO lm in list)
             {

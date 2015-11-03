@@ -7,7 +7,7 @@ using System.Collections;
 using CruiseDAL.DataObjects;
 using System.Threading;
 using System.Data.Common;
-using CruiseDAL;
+using FMSCORM;
 using System.Text;
 
 #if ANDROID
@@ -26,7 +26,7 @@ using System.Security.Permissions;
 
 #endif
 
-namespace CruiseDAL
+namespace FMSCORM
 {
     public enum CruiseFileType { Unknown, Cruise, Template, Design, Master, Component }
 
@@ -60,7 +60,7 @@ namespace CruiseDAL
                 }
 
                 this.SchemaVersion = (long)this.ExecuteScalar("PRAGMA user_version;");
-                CruiseDAL.Updater.Update(this);
+                FMSCORM.Updater.Update(this);
 
                 try
                 {
@@ -115,7 +115,7 @@ namespace CruiseDAL
         /// Gets and Sets the file path to the database
         /// </summary>
         /// <exception cref="System.IO.IOException">File extension is not valid <see cref="VALID_EXTENSIONS"/></exception>
-        /// <exception cref="CruiseDAL.DatabaseShareException">File open in another application or thread</exception>
+        /// <exception cref="FMSCORM.DatabaseShareException">File open in another application or thread</exception>
         public string Path
         {
             get
@@ -569,7 +569,7 @@ namespace CruiseDAL
 
         internal string GetCreateTriggers()
         {
-            return CruiseDAL.Properties.Resources.CreateTriggers;
+            return FMSCORM.Properties.Resources.CreateTriggers;
 
             //String createTriggers = null;
             //StreamReader reader = null;
@@ -597,7 +597,7 @@ namespace CruiseDAL
 
         protected override String GetCreateSQL()
         {
-            return CruiseDAL.Properties.Resources.CruiseCreate;
+            return FMSCORM.Properties.Resources.CruiseCreate;
 
             //String createSQLText = null;
             //StreamReader reader = null;
@@ -1186,7 +1186,7 @@ namespace CruiseDAL
 
 
 
-    public class DatabaseMalformedException : CruiseDAL.FileAccessException
+    public class DatabaseMalformedException : FMSCORM.FileAccessException
     {
         public DatabaseMalformedException(DAL database, Exception innerException)
             : base("Database Malformed (" + database.Path + ")", innerException)

@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Text;
 using CruiseDAL.MappingCollections;
+using FMSC.ORM.Core;
+using CruiseDAL.Schema;
 
 namespace CruiseDAL.DataObjects
 {
@@ -20,7 +22,7 @@ namespace CruiseDAL.DataObjects
             }
         }
 
-        protected override void OnDALChanged(DatastoreBase newDAL)
+        protected override void OnDALChanged(DatastoreRedux newDAL)
         {
             base.OnDALChanged(newDAL);
             if (_CuttingUnits != null)
@@ -54,7 +56,7 @@ namespace CruiseDAL.DataObjects
             }
             else if (name == STRATUM.METHOD)
             {
-                if (Array.IndexOf(Schema.Constants.CruiseMethods.UNSUPPORTED_METHODS, this.Method) >= 0)
+                if (Array.IndexOf(CruiseDAL.Schema.Constants.CruiseMethods.UNSUPPORTED_METHODS, this.Method) >= 0)
                 {
                     isValid = false;
                     this.AddError(name, "Cruise Method Not Supported");
@@ -69,23 +71,23 @@ namespace CruiseDAL.DataObjects
             return isValid;
         }
 
-        public static List<StratumDO> ReadByUnitCode(DAL dal, String code)
+        public static List<StratumDO> ReadByUnitCode(DatastoreRedux dal, String code)
         {
             if (dal == null) { return null; }
-            return dal.Read<StratumDO>("Stratum", "JOIN CuttingUnitStratum JOIN CuttingUnit WHERE Stratum.Stratum_CN = CuttingUnitStratum.Stratum_CN AND CuttingUnitStratum.CuttingUnit_CN = CuttingUnit.CuttingUnit_CN AND CuttingUnit.Code = ?;", code);
+            return dal.Read<StratumDO>("JOIN CuttingUnitStratum JOIN CuttingUnit WHERE Stratum.Stratum_CN = CuttingUnitStratum.Stratum_CN AND CuttingUnitStratum.CuttingUnit_CN = CuttingUnit.CuttingUnit_CN AND CuttingUnit.Code = ?;", (object)code);
         }
 
-        public static void MirgeStratum(DAL dal, CuttingUnitDO unit, StratumDO fromStratum, StratumDO toStratum)
+        public static void MirgeStratum(DatastoreRedux dal, CuttingUnitDO unit, StratumDO fromStratum, StratumDO toStratum)
         {
             if (unit.DAL != fromStratum.DAL || unit.DAL != toStratum.DAL)
             {
                 throw new InvalidOperationException("can only mirge statum within the same file");
             }
 
-            List<TreeDO> allTreesInUnit = dal.Read<TreeDO>("Tree",
+            List<TreeDO> allTreesInUnit = dal.Read<TreeDO>(
                 "WHERE CuttingUnit_CN = ? AND Stratum_CN = ?",
-                unit.CuttingUnit_CN.ToString(),
-                fromStratum.Stratum_CN.ToString());
+                unit.CuttingUnit_CN,
+                fromStratum.Stratum_CN);
 
             foreach (TreeDO tree in allTreesInUnit)
             {
@@ -106,7 +108,7 @@ namespace CruiseDAL.DataObjects
             }
         }
 
-        public static int DeleteStratum(DAL dal, StratumDO stratum)
+        public static int DeleteStratum(DatastoreRedux dal, StratumDO stratum)
         {
            // check tree table for data
             if (dal.GetRowCount("Tree", "WHERE Stratum_CN = ?", stratum.Stratum_CN) > 0) { return (-1); }
@@ -116,11 +118,11 @@ namespace CruiseDAL.DataObjects
            if (dal.GetRowCount("CountTree", "JOIN SampleGroup ON CountTree.SampleGroup_CN = SampleGroup.SampleGroup_CN WHERE SampleGroup.Stratum_CN = ? AND CountTree.TreeCount > 0", stratum.Stratum_CN) > 0) return (-1);
 
            //Delete sample groups for stratum
-           List<SampleGroupDO> allSGInStratum = dal.Read<SampleGroupDO>("SampleGroup","WHERE Stratum_CN = ?", stratum.Stratum_CN);
+           List<SampleGroupDO> allSGInStratum = dal.Read<SampleGroupDO>("WHERE Stratum_CN = ?", stratum.Stratum_CN);
            foreach (SampleGroupDO Sg in allSGInStratum)
            {
               //Delete Count Records for stratum
-              List<CountTreeDO> allCountInSG = dal.Read<CountTreeDO>("CountTree", "WHERE SampleGroup_CN = ?", Sg.SampleGroup_CN);
+              List<CountTreeDO> allCountInSG = dal.Read<CountTreeDO>("WHERE SampleGroup_CN = ?", Sg.SampleGroup_CN);
               foreach (CountTreeDO Cnt in allCountInSG)
               {
                   Cnt.Delete();
@@ -129,7 +131,7 @@ namespace CruiseDAL.DataObjects
            }
 
            //Delete stratum stats for stratum
-           List<StratumStatsDO> allStratumStatsInStratum = dal.Read<StratumStatsDO>("StratumStats",
+           List<StratumStatsDO> allStratumStatsInStratum = dal.Read<StratumStatsDO>(
                "WHERE Stratum_CN = ?", stratum.Stratum_CN);
            foreach (StratumStatsDO StratumStats in allStratumStatsInStratum)
            {
@@ -143,7 +145,7 @@ namespace CruiseDAL.DataObjects
 
         public static void RecursiveDeleteStratum(StratumDO stratum)
         {
-            DAL db = stratum.DAL;
+            DatastoreRedux db = stratum.DAL;
             try
             {
                 db.BeginTransaction();
@@ -163,11 +165,11 @@ DELETE FROM LogFieldSetup WHERE Stratum_CN = {0};",
                 stratum.Stratum_CN);
                 db.Execute(command);
                 stratum.Delete();
-                db.EndTransaction();
+                db.CommitTransaction();
             }
             catch (Exception e)
             {
-                db.CancelTransaction();
+                db.RollbackTransaction();
                 throw e;
             }
 
@@ -176,7 +178,7 @@ DELETE FROM LogFieldSetup WHERE Stratum_CN = {0};",
 
         public List<T> ReadSampleGroups<T>() where T : SampleGroupDO, new()
         {
-            return this.DAL.Read<T>(SAMPLEGROUP._NAME, "WHERE Stratum_CN = ?", this.Stratum_CN);
+            return this.DAL.Read<T>("WHERE Stratum_CN = ?", this.Stratum_CN);
         }
 
         public List<SampleGroupDO> ReadSampleGroups()

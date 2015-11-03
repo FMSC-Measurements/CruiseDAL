@@ -1,5 +1,7 @@
-﻿using CruiseDAL.Core.EntityModel;
+﻿using FMSC.ORM.Core.EntityModel;
 using CruiseDAL.MappingCollections;
+using FMSC.ORM.Core;
+
 namespace CruiseDAL.DataObjects
 {
     public partial class TreeAuditValueDO : IFieldValidator
@@ -18,7 +20,7 @@ namespace CruiseDAL.DataObjects
             }
         }
 
-        protected override void OnDALChanged(DatastoreBase newDAL)
+        protected override void OnDALChanged(DatastoreRedux newDAL)
         {
             base.OnDALChanged(newDAL);
             if (_treeDefaultValueCollection != null)

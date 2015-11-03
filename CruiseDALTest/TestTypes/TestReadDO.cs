@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using CruiseDAL;
+using FMSCORM;
 
-namespace CruiseDAL.Test.TestTypes
+namespace FMSCORM.Test.TestTypes
 {
     [SQLEntity(TableName = "TestRead")]
     public class TestReadDO : DataObject

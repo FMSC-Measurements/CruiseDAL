@@ -1,11 +1,14 @@
 ﻿using System;
 using CruiseDAL.DataObjects;
+using FMSC.ORM.Core.SQL;
+using CruiseDAL.Schema;
+using FMSC.ORM;
 
 namespace CruiseDAL
 {
     internal static class Updater
     {
-        public static void Update(DAL db)
+        public static void Update(DALRedux db)
         {
             //PatchSureToMeasure(db);
 
@@ -121,22 +124,22 @@ namespace CruiseDAL
             }
 
 
-            if (db.HasForeignKeyErrors(Schema.TREEDEFAULTVALUETREEAUDITVALUE._NAME))
+            if (db.HasForeignKeyErrors(TREEDEFAULTVALUETREEAUDITVALUE._NAME))
             {
                 try
                 {
                     db.BeginTransaction();
                     db.Execute("DELETE FROM TreeDefaultValueTreeAuditValue WHERE TreeDefaultValue_CN NOT IN (Select TreeDefaultValue_CN FROM TreeDefaultValue);");
                     db.Execute("DELETE FROM TreeDefaultValueTreeAuditValue WHERE TreeAuditValue_CN NOT IN (SELECT TreeAuditValue_CN FROM TreeAuditValue);");
-                    db.EndTransaction();
+                    db.CommitTransaction();
                 }
                 catch 
                 {
-                    db.CancelTransaction();
+                    db.RollbackTransaction();
                 }
             }
 
-            foreach (ErrorLogDO el in db.Read<ErrorLogDO>("ErrorLog","WHERE CN_Number != 0"))
+            foreach (ErrorLogDO el in db.Read<ErrorLogDO>("WHERE CN_Number != 0"))
             {
                 InsureErrorLogEntry(db, el);
             }
@@ -145,7 +148,7 @@ namespace CruiseDAL
 
         
 
-        private static String[] ListTriggers(DAL db)
+        private static String[] ListTriggers(DALRedux db)
         {
             string result = db.ExecuteScalar("SELECT group_concat(name,',') FROM sqlite_master WHERE type LIKE 'trigger';") as string;
             if (result == null || result.Length == 0) { return new string[0]; }
@@ -156,7 +159,7 @@ namespace CruiseDAL
 
         }
 
-        private static void RebuildTable(DAL db, String tableName, String newTableDef, String columnList)
+        private static void RebuildTable(DALRedux db, String tableName, String newTableDef, String columnList)
         {
             //get all triggers accocated with table so we can recreate them later
             string getTriggers = String.Format("SELECT group_concat(sql,';\r\n') FROM sqlite_master WHERE tbl_name LIKE '{0}' and type LIKE 'trigger';", tableName);
@@ -185,18 +188,18 @@ namespace CruiseDAL
                 }
 
                 db.Execute("PRAGMA foreign_keys = on;");
-                db.EndTransaction();
+                db.CommitTransaction();
             }
             catch
             {
-                db.CancelTransaction();
+                db.RollbackTransaction();
                 throw;
             }
 
                
         }
 
-        private static void SetDatabaseVersion(DAL db, string newVersion)
+        private static void SetDatabaseVersion(DALRedux db, string newVersion)
         {
             string command = String.Format("UPDATE Globals SET Value = '{0}' WHERE Block = 'Database' AND Key = 'Version';", newVersion);
             db.Execute(command);
@@ -204,7 +207,7 @@ namespace CruiseDAL
             db.DatabaseVersion = newVersion;
         }
 
-        private static void InsureErrorLogEntry(DAL db, ErrorLogDO el)
+        private static void InsureErrorLogEntry(DALRedux db, ErrorLogDO el)
         {
 
             if (db.GetRowCount(el.TableName, "WHERE rowID = ?", el.CN_Number) == 0)
@@ -213,7 +216,7 @@ namespace CruiseDAL
             }
         }
 
-        private static void PatchSureToMeasure(DAL db)
+        private static void PatchSureToMeasure(DALRedux db)
         {
             string command = @"UPDATE TreeFieldSetup SET Field = 'STM' WHERE Field = 'SureToMeasure';
                                UPDATE TreeFieldSetupDefault SET Field = 'STM' WHERE Field = 'SureToMeasure';";
@@ -226,7 +229,7 @@ namespace CruiseDAL
 
         
 
-        private static void UpdateToVersion2013_05_30(DAL db)
+        private static void UpdateToVersion2013_05_30(DALRedux db)
         {
             try
             {
@@ -261,17 +264,17 @@ namespace CruiseDAL
                 db.AddField("CuttingUnit", "TallyHistory TEXT");
 
                 SetDatabaseVersion(db, "2013.05.30");
-                db.EndTransaction();
+                db.CommitTransaction();
             }
             catch (Exception e)
             {
-                db.CancelTransaction();
-                throw new DatabaseExecutionException("failed updateing database to version 2013.05.30", e);
+                db.RollbackTransaction();
+                throw new SchemaUpdateException(db.DatabaseVersion, "2013.05.30", e);
             }
 
         }
 
-        private static void UpdateToVersion2013_08_02(DAL db)
+        private static void UpdateToVersion2013_08_02(DALRedux db)
         {
             try
             {
@@ -295,18 +298,18 @@ namespace CruiseDAL
                 db.Execute(command);
 
                 SetDatabaseVersion(db, "2013.08.02");
-                db.EndTransaction();
+                db.CommitTransaction();
             }
             catch (Exception e)
             {
-                db.CancelTransaction();
-                throw new DatabaseExecutionException("failed updateing database to version 2013.08.02", e);
+                db.RollbackTransaction();
+                throw new SchemaUpdateException(db.DatabaseVersion, "2013.08.02", e);
             }
 
 
         }
 
-        private static void UpdateToVersion2013_08_29(DAL db)
+        private static void UpdateToVersion2013_08_29(DALRedux db)
         {
 
             try
@@ -315,16 +318,16 @@ namespace CruiseDAL
                 db.AddField("Stratum", "KZ3PPNT INTEGER Default 0");
 
                 SetDatabaseVersion(db, "2013.08.29");
-                db.EndTransaction();
+                db.CommitTransaction();
             }
             catch (Exception e)
             {
-                db.CancelTransaction();
-                throw new DatabaseExecutionException("failed updateing database to version 2013.08.29", e);
+                db.RollbackTransaction();
+                throw new SchemaUpdateException(db.DatabaseVersion, "2013.08.29", e);
             }
         }
 
-        private static void UpdateToVersion2013_10_29(DAL db)
+        private static void UpdateToVersion2013_10_29(DALRedux db)
         {
             try
             {
@@ -332,18 +335,18 @@ namespace CruiseDAL
 
                 db.AddField("Tree", "HiddenPrimary REAL Default 0.0");
                 SetDatabaseVersion(db, "2013.10.29");
-                db.EndTransaction();
+                db.CommitTransaction();
             }
             catch (Exception e)
             {
-                db.CancelTransaction();
-                throw new DatabaseExecutionException("failed updateing database to version 2013.10.29", e);
+                db.RollbackTransaction();
+                throw new SchemaUpdateException(db.DatabaseVersion, "2013.10.29", e);
             }
 
 
         }
 
-        private static void UpdateToVersion2013_11_01(DAL db)
+        private static void UpdateToVersion2013_11_01(DALRedux db)
         {
             try
             {
@@ -365,17 +368,17 @@ namespace CruiseDAL
 
                 db.Execute(command);
                 SetDatabaseVersion(db, "2013.11.01");
-                db.EndTransaction();
+                db.CommitTransaction();
             }
             catch (Exception e)
             {
-                db.CancelTransaction();
-                throw new DatabaseExecutionException("failed updateing database to version 2013.11.01", e);
+                db.RollbackTransaction();
+                throw new SchemaUpdateException(db.DatabaseVersion, "2013.11.01", e);
             }
         }
 
 
-        private static void UpdateToVersion2013_06_12(DAL db)
+        private static void UpdateToVersion2013_06_12(DALRedux db)
         {
             try
             {
@@ -406,17 +409,17 @@ namespace CruiseDAL
 
                 SetDatabaseVersion(db, "2013.06.12");
 
-                db.EndTransaction();
+                db.CommitTransaction();
             }
             catch (Exception e)
             {
-                db.CancelTransaction();
-                throw new DatabaseExecutionException("failed updateing database to version 2013.06.12", e);
+                db.RollbackTransaction();
+                throw new SchemaUpdateException(db.DatabaseVersion, "2013.06.12", e);
             }
 
         }
 
-        private static void UpdateToVersion2013_06_17(DAL db)
+        private static void UpdateToVersion2013_06_17(DALRedux db)
         {
             try
             {
@@ -490,17 +493,17 @@ namespace CruiseDAL
                 //db.Execute(command);
 
                 SetDatabaseVersion(db, "2013.06.17");
-                db.EndTransaction();
+                db.CommitTransaction();
             }
             catch (Exception e)
             {
-                db.CancelTransaction();
-                throw new DatabaseExecutionException("failed updateing database to version 2013.06.17", e);
+                db.RollbackTransaction();
+                throw new SchemaUpdateException(db.DatabaseVersion, "2013.06.17", e);
             }
 
         }
 
-        public static void UpdateToVersion2013_06_19(DAL db)
+        public static void UpdateToVersion2013_06_19(DALRedux db)
         {
             try
             {
@@ -526,19 +529,19 @@ namespace CruiseDAL
                 ////////////////////////////////////////////////////////////////////////
 
                 SetDatabaseVersion(db, "2013.06.19");
-                db.EndTransaction();
+                db.CommitTransaction();
 
             }
             catch (Exception e)
             {
-                db.CancelTransaction();
-                throw new DatabaseExecutionException("failed updateing database to version 2013.06.19", e);
+                db.RollbackTransaction();
+                throw new SchemaUpdateException(db.DatabaseVersion, "2013.06.19", e);
             }
 
         }
 
         //fixes bug in database version 2013_06_19, doesn't alter schema
-        private static void UpdateVersion2013_06_19(DAL db)
+        private static void UpdateVersion2013_06_19(DALRedux db)
         {
             try
             {
@@ -551,16 +554,16 @@ namespace CruiseDAL
                 db.Execute(command);
                 command = "UPDATE TreeFieldSetup set ColumnType = 'Combo' WHERE Field = 'CountOrMeasure' OR Field = 'LiveDead';";
                 db.Execute(command);
-                db.EndTransaction();
+                db.CommitTransaction();
             }
             catch (Exception e)
             {
-                db.CancelTransaction();
-                throw new DatabaseExecutionException("failed updateing database version 2013.06.19", e);
+                db.RollbackTransaction();
+                throw new SchemaUpdateException(db.DatabaseVersion, "2013.06.19", e);
             }
         }
 
-        public static void UpdateToVersion2013_11_22(DAL db)
+        public static void UpdateToVersion2013_11_22(DALRedux db)
         {
             try
             {
@@ -640,17 +643,17 @@ namespace CruiseDAL
                 db.Execute(command);
 
                 SetDatabaseVersion(db, "2013.11.22");
-                db.EndTransaction();
+                db.CommitTransaction();
             }
             catch (Exception e)
             {
-                db.CancelTransaction();
-                throw new DatabaseExecutionException("failed updateing database to version 2013.11.22", e);
+                db.RollbackTransaction();
+                throw new SchemaUpdateException(db.DatabaseVersion, "2013.11.22", e);
             }
 
         }
 
-        private static void UpdateToVersion2014_01_21(DAL db)
+        private static void UpdateToVersion2014_01_21(DALRedux db)
         {
             try
             {
@@ -658,17 +661,17 @@ namespace CruiseDAL
                 db.AddField("SampleGroup", "BigBAF INTEGER Default 0");
 
                 SetDatabaseVersion(db, "2014.01.21");
-                db.EndTransaction();
+                db.CommitTransaction();
             }
             catch (Exception e)
             {
-                db.CancelTransaction();
-                throw new DatabaseExecutionException("failed updateing database to version 2014.01.21", e);
+                db.RollbackTransaction();
+                throw new SchemaUpdateException(db.DatabaseVersion, "2014.01.21", e);
             }
 
         }
 
-        private static void UpdateToVersion2014_03_12(DAL db)
+        private static void UpdateToVersion2014_03_12(DALRedux db)
         {
             try
             {
@@ -695,16 +698,16 @@ namespace CruiseDAL
 
                 SetDatabaseVersion(db, "2014.03.12");
 
-                db.EndTransaction();
+                db.CommitTransaction();
             }
             catch (Exception e)
             {
-                db.CancelTransaction();
-                throw new DatabaseExecutionException("failed updating database to version 2014.03.12", e);
+                db.RollbackTransaction();
+                throw new SchemaUpdateException(db.DatabaseVersion, "2014.03.12", e);
             }
         }
 
-        private static void UpdateToVersion2014_06_04(DAL db)
+        private static void UpdateToVersion2014_06_04(DALRedux db)
         {
             try
             {
@@ -712,15 +715,15 @@ namespace CruiseDAL
                 db.AddField("Sale", "LogGradingEnabled BOOLEAN Default 0");
 
                 SetDatabaseVersion(db, "2014.06.04");
-                db.EndTransaction();
+                db.CommitTransaction();
             }
             catch (Exception e)
             {
-                db.CancelTransaction();
-                throw new DatabaseExecutionException("failed updating database to version 2014.06.04", e);
+                db.RollbackTransaction();
+                throw new SchemaUpdateException(db.DatabaseVersion, "2014.06.04", e);
             }
         }
-        private static void UpdateToVersion2014_07_02(DAL db)
+        private static void UpdateToVersion2014_07_02(DALRedux db)
         {
             try
             {
@@ -728,16 +731,16 @@ namespace CruiseDAL
                 db.AddField("LogStock", "BoardUtil REAL Default 0.0");
                 db.AddField("LogStock", "CubicUtil REAL Default 0.0");
                 SetDatabaseVersion(db, "2014.07.02");
-                db.EndTransaction();
+                db.CommitTransaction();
             }
             catch (Exception e) 
             {
-                db.CancelTransaction();
-                throw new DatabaseExecutionException("failded updating database to version 2014.07.02", e);
+                db.RollbackTransaction();
+                throw new SchemaUpdateException(db.DatabaseVersion, "2014.07.02", e);
             }
         }
 
-        private static void UpdateToVersion2014_07_07(DAL db)
+        private static void UpdateToVersion2014_07_07(DALRedux db)
         {
             try
             {
@@ -745,16 +748,16 @@ namespace CruiseDAL
                 db.AddField("SampleGroup", "MinKPI INTEGER Default 0");
                 db.AddField("SampleGroup", "MaxKPI INTEGER Default 0");
                 SetDatabaseVersion(db, "2014.07.07");
-                db.EndTransaction();
+                db.CommitTransaction();
             }
             catch (Exception e)
             {
-                db.CancelTransaction();
-                throw new DatabaseExecutionException("failded updating database to version 2014.07.07", e);
+                db.RollbackTransaction();
+                throw new SchemaUpdateException(db.DatabaseVersion, "2014.07.07", e);
             }
         }
 
-        private static void UpdateToVersion2014_07_17(DAL db)
+        private static void UpdateToVersion2014_07_17(DALRedux db)
         {
             try
             {
@@ -829,18 +832,18 @@ namespace CruiseDAL
                 //Add ReconTrees
                 db.AddField("SampleGroupStats", "ReconTrees INTEGER Default 0");
                 SetDatabaseVersion(db, "2014.07.17");
-                db.EndTransaction();
+                db.CommitTransaction();
 
             }
             catch (Exception e)
             {
-                db.CancelTransaction();
-                throw new DatabaseExecutionException("failed updating database to version 2014.07.17", e);
+                db.RollbackTransaction();
+                throw new SchemaUpdateException(db.DatabaseVersion, "2014.07.17", e);
             }
 
         }
 
-        private static void UpdateToVersion2014_07_24(DAL db)
+        private static void UpdateToVersion2014_07_24(DALRedux db)
         {
             try
             {
@@ -854,48 +857,49 @@ CREATE TRIGGER OnDeletePlot AFTER DELETE ON Plot BEGIN
 			INSERT INTO MessageLog (Message, Date, Time) VALUES (('Plot (' || OLD.Plot_CN || ') Deleted CU_cn:' || OLD.CuttingUnit_CN  || ' St_cn:' || OLD.Stratum_CN || ' Plt#:' || OLD.PlotNumber), date('now'), time('now')); END;
 ");
                 SetDatabaseVersion(db, "2014.07.24");
-                db.EndTransaction();
+                db.CommitTransaction();
             }
             catch(Exception e)
             {
-                db.CancelTransaction();
-                throw new DatabaseExecutionException("failed updating database to version 2014.07.24", e);
+                db.RollbackTransaction();
+                throw new SchemaUpdateException(db.DatabaseVersion, "2014.07.24", e);
             }
         }
 
-        private static void UpdateToVersion2014_08_20(DAL db)
+        private static void UpdateToVersion2014_08_20(DALRedux db)
         {
             try
             {
                 db.BeginTransaction();
                 db.AddField(Schema.VOLUMEEQUATION._NAME, "EvenOddSegment INTEGER Default 0");
                 SetDatabaseVersion(db, "2014.08.20");
-                db.EndTransaction();
+                db.CommitTransaction();
             }
             catch (Exception e)
             {
-                db.CancelTransaction();
-                throw new DatabaseExecutionException("failed updating database to version 2014.08.20", e);
+                db.RollbackTransaction();
+                throw new SchemaUpdateException(db.DatabaseVersion, "2014.08.20", e);
             }
         }
 
-        private static void UpdateToVersion2014_09_02(DAL db)
+        private static void UpdateToVersion2014_09_02(DALRedux db)
         {
             try
             {
                 db.BeginTransaction();
                 db.AddField(Schema.SAMPLEGROUP._NAME, "TallyMethod TEXT");
                 SetDatabaseVersion(db, "2014.09.02");
-                db.EndTransaction();
+                db.CommitTransaction();
             }
             catch (Exception e)
             {
-                db.CancelTransaction();
-                throw new DatabaseExecutionException("failed updating database to version 2014.09.02", e);
+                db.RollbackTransaction();
+
+                throw new SchemaUpdateException(db.DatabaseVersion, "2014.09.02", e);
             }
         }
 
-        private static void UpdateToVersion2014_10_01(DAL db)
+        private static void UpdateToVersion2014_10_01(DALRedux db)
         {
             try
             {
@@ -918,17 +922,17 @@ CREATE TRIGGER OnDeletePlot AFTER DELETE ON Plot BEGIN
 				rMinDbh REAL Default 0.0,
 				rMaxDbh REAL Default 0.0);");
                 SetDatabaseVersion(db, "2014.10.01");
-                db.EndTransaction();
+                db.CommitTransaction();
             }
             catch(Exception e)
             {
-                db.CancelTransaction();
-                throw new DatabaseExecutionException("failed updating database to version 2014.10.01", e);
+                db.RollbackTransaction();
+                throw new SchemaUpdateException(db.DatabaseVersion, "2014.10.01", e);
             }
 
         }
 
-        public static void UpdateToVersion2015_04_28(DAL db)
+        public static void UpdateToVersion2015_04_28(DALRedux db)
         {
             try
             {
@@ -1003,20 +1007,20 @@ JOIN Stratum USING (Stratum_CN);");
 
                 db.Execute("PRAGMA user_version = 1");
                 SetDatabaseVersion(db, "2015.04.28");
-                db.EndTransaction();
+                db.CommitTransaction();
 
 
             }
             catch (Exception e)
             {
-                db.CancelTransaction();
-                throw new DatabaseExecutionException("failed updating database to version 2015.04.28", e);
+                db.RollbackTransaction();
+                throw new SchemaUpdateException(db.DatabaseVersion, "2015.04.28", e);
 
 
             }
         }
 
-        public static void UpdateToVersion2015_08_03(DAL db)
+        public static void UpdateToVersion2015_08_03(DALRedux db)
         {
             try
             {
@@ -1029,17 +1033,17 @@ JOIN Stratum USING (Stratum_CN);");
 
                 SetDatabaseVersion(db, "2015.08.03");
 
-                db.EndTransaction();
+                db.CommitTransaction();
             }
             catch (Exception e)
             {
-                db.CancelTransaction();
-                throw new DatabaseExecutionException("failed updating database to version 2015.08.03", e);
+                db.RollbackTransaction();
+                throw new SchemaUpdateException(db.DatabaseVersion, "2015.08.03", e);
             }
 
         }
 
-        private static void UpdateToVersion2015_08_19(DAL db)
+        private static void UpdateToVersion2015_08_19(DALRedux db)
         {
             System.Collections.Generic.List<ColumnInfo> tavCols = db.GetTableInfo("TreeAuditValue");
             bool hasErrorMessageCol = false;
@@ -1060,17 +1064,17 @@ JOIN Stratum USING (Stratum_CN);");
                 }                               
 
                 SetDatabaseVersion(db, "2015.08.19");
-                db.EndTransaction();
+                db.CommitTransaction();
             }
             catch (Exception e)
             {
-                db.CancelTransaction();
-                throw new DatabaseExecutionException("failed updating database to version 2015.08.19", e);
+                db.RollbackTransaction();
+                throw new SchemaUpdateException(db.DatabaseVersion, "2015.08.19", e);
             }                        
         }
 
         //patch for some a version that got out in the wild with bad triggers
-        private static void UpdateToVersion2015_09_01(DAL db)
+        private static void UpdateToVersion2015_09_01(DALRedux db)
         {
             db.BeginTransaction();
             try
@@ -1083,17 +1087,17 @@ JOIN Stratum USING (Stratum_CN);");
                     db.Execute("DROP TRIGGER " + trigName + ";");
                 }
 
-                string createTriggers = db.GetCreateTriggers();
+                string createTriggers = CruiseDALDatastoreBuilder.GetCreateTriggers();
                 db.Execute(createTriggers);
 
 
                 SetDatabaseVersion(db, "2015.09.01");
-                db.EndTransaction();
+                db.CommitTransaction();
             }
             catch (Exception e)
             {
-                db.CancelTransaction();
-                throw new DatabaseExecutionException("failed updating database to version 2015.09.01", e);
+                db.RollbackTransaction();
+                throw new SchemaUpdateException(db.DatabaseVersion, "2015.09.01", e);
             } 
 
         }

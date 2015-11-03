@@ -1,24 +1,24 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
-using CruiseDAL.MappingCollections;
+using FMSC.ORM.Core;
 
 namespace CruiseDAL.DataObjects
 {
     public partial class StratumStatsDO
     {
 
-        protected override void OnDALChanged(DatastoreBase newDAL)
+        protected override void OnDALChanged(DatastoreRedux newDAL)
         {
             base.OnDALChanged(newDAL);
         }
 
 
-        public int DeleteStratumStats(DAL dal, long? StratumStats_CN)
+        public int DeleteStratumStats(DatastoreRedux dal, long? StratumStats_CN)
         {
            //Delete sample group stats for stratum
-           List<SampleGroupStatsDO> allSGStatsInStratumStats = dal.Read<SampleGroupStatsDO>("SampleGroupStats",
-               "WHERE StratumStats_CN = ?", StratumStats_CN.ToString());
+           List<SampleGroupStatsDO> allSGStatsInStratumStats = dal.Read<SampleGroupStatsDO>(
+               "WHERE StratumStats_CN = ?", StratumStats_CN);
            foreach (SampleGroupStatsDO SgStats in allSGStatsInStratumStats)
            {
               SgStats.Delete();

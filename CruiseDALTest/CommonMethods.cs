@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace CruiseDAL.Tests
+namespace FMSCORM.Tests
 {
     public static class CommonMethods
     {

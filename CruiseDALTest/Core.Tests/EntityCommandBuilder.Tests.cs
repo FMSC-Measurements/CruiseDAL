@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace CruiseDAL.Core.Tests
+namespace FMSCORM.Core.Tests
 {
     public class EntityCommandBuilderTests
     {

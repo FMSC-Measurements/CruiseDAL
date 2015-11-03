@@ -1,4 +1,6 @@
 using CruiseDAL.MappingCollections;
+using FMSC.ORM.Core;
+
 namespace CruiseDAL.DataObjects
 {
     public partial class TreeDefaultValueDO 
@@ -27,7 +29,7 @@ namespace CruiseDAL.DataObjects
             }
         }
 
-        protected override void OnDALChanged(DatastoreBase newDAL)
+        protected override void OnDALChanged(DatastoreRedux newDAL)
         {
             base.OnDALChanged(newDAL);
             if (_treeAuditValueCollection != null)

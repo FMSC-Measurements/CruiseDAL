@@ -3,6 +3,8 @@
 using System.Collections.Generic;
 using System.Text;
 using CruiseDAL.DataObjects;
+using FMSC.ORM.Core.EntityModel;
+using CruiseDAL.Schema;
 
 #if ANDROID
 using Mono.Data.Sqlite;
@@ -12,16 +14,15 @@ using System.Data.SQLite;
 
 namespace CruiseDAL.MappingCollections
 {
-    public class CuttingUnitCollection : MappingCollection<DataObjects.CuttingUnitStratumDO,DataObjects.StratumDO,DataObjects.CuttingUnitDO>
+    public class CuttingUnitCollection : MappingCollection<CuttingUnitStratumDO, StratumDO, CuttingUnitDO>
     {
-        public CuttingUnitCollection(DataObjects.StratumDO parent) : base(parent)
+        public CuttingUnitCollection(StratumDO parent) : base(parent)
         {}
 
-        protected override void addMap(DataObjects.CuttingUnitDO child)
+        protected override void addMap(CuttingUnitDO child)
         {
 
-            DataObjects.CuttingUnitStratumDO newMap = 
-                (DataObjects.CuttingUnitStratumDO)DAL.DOFactory.GetNew<DataObjects.CuttingUnitStratumDO>();
+            CuttingUnitStratumDO newMap = new CuttingUnitStratumDO(DAL);
             newMap.CuttingUnit = child;
             newMap.Stratum = base.Parent;
             newMap.Save();
@@ -29,14 +30,14 @@ namespace CruiseDAL.MappingCollections
 
         protected override CuttingUnitStratumDO retrieveMapObject(CuttingUnitDO child)
         {
-            return DAL.ReadSingleRow<CuttingUnitStratumDO>(CUTTINGUNITSTRATUM._NAME,
+            return DAL.ReadSingleRow<CuttingUnitStratumDO>(
                 "WHERE CuttingUnit_CN = ? AND Stratum_CN = ?", child.CuttingUnit_CN, Parent.Stratum_CN);
         }
 
         protected override List<CuttingUnitDO> retrieveChildList()
         {
             //return DAL.Read<CuttingUnitDO>(createJoinChildCommand());
-            return DAL.Read<CuttingUnitDO>(CUTTINGUNIT._NAME,
+            return DAL.Read<CuttingUnitDO>(
                 "JOIN CuttingUnitStratum Using (CuttingUnit_CN) WHERE Stratum_CN = ?;",
                 Parent.Stratum_CN);
         }
@@ -58,8 +59,7 @@ namespace CruiseDAL.MappingCollections
 
         protected override void  addMap(StratumDO child)
         {
-            DataObjects.CuttingUnitStratumDO newMap =
-                (DataObjects.CuttingUnitStratumDO)DAL.DOFactory.GetNew<DataObjects.CuttingUnitStratumDO>();
+            CuttingUnitStratumDO newMap = new CuttingUnitStratumDO(DAL);
             newMap.CuttingUnit = base.Parent;
             newMap.Stratum = child;
             newMap.Save();
@@ -67,14 +67,14 @@ namespace CruiseDAL.MappingCollections
 
         protected override CuttingUnitStratumDO  retrieveMapObject(StratumDO child)
         {
-            return DAL.ReadSingleRow<CuttingUnitStratumDO>(CUTTINGUNITSTRATUM._NAME,
+            return DAL.ReadSingleRow<CuttingUnitStratumDO>(
                 "WHERE Stratum_CN = ? AND CuttingUnit_CN = ?", child.Stratum_CN, Parent.CuttingUnit_CN);
         }
 
         protected override List<StratumDO>  retrieveChildList()
         {
             //return DAL.Read<StratumDO>(createJoinChildCommand());
-            return DAL.Read<StratumDO>(STRATUM._NAME,
+            return DAL.Read<StratumDO>(
                 "JOIN CuttingUnitStratum USING (Stratum_CN) WHERE CuttingUnit_CN = ?;",
                 Parent.CuttingUnit_CN);
         }
@@ -95,8 +95,7 @@ namespace CruiseDAL.MappingCollections
 
         protected override void addMap(TreeDefaultValueDO child)
         {
-            SampleGroupTreeDefaultValueDO newMap =
-                (SampleGroupTreeDefaultValueDO)DAL.DOFactory.GetNew<SampleGroupTreeDefaultValueDO>();
+            SampleGroupTreeDefaultValueDO newMap = new SampleGroupTreeDefaultValueDO(DAL);
             newMap.SampleGroup = base.Parent;
             newMap.TreeDefaultValue = child;
             newMap.Save();
@@ -104,14 +103,14 @@ namespace CruiseDAL.MappingCollections
 
         protected override SampleGroupTreeDefaultValueDO retrieveMapObject(TreeDefaultValueDO child)
         {
-            return DAL.ReadSingleRow<SampleGroupTreeDefaultValueDO>(SAMPLEGROUPTREEDEFAULTVALUE._NAME,
+            return DAL.ReadSingleRow<SampleGroupTreeDefaultValueDO>(
                 "WHERE TreeDefaultValue_CN = ? AND SampleGroup_CN = ?", child.TreeDefaultValue_CN, Parent.SampleGroup_CN);
         }
 
         protected override List<TreeDefaultValueDO> retrieveChildList()
         {
             //return DAL.Read<TreeDefaultValueDO>(createJoinChildCommand());
-            return DAL.Read<TreeDefaultValueDO>(TREEDEFAULTVALUE._NAME,
+            return DAL.Read<TreeDefaultValueDO>(
                 "JOIN SampleGroupTreeDefaultValue Using (TreeDefaultValue_CN) WHERE SampleGroup_CN = ?;",
                 Parent.SampleGroup_CN);
 
@@ -137,8 +136,7 @@ namespace CruiseDAL.MappingCollections
 
         protected override void addMap(TreeAuditValueDO child)
         {
-            TreeDefaultValueTreeAuditValueDO newMap =
-                (TreeDefaultValueTreeAuditValueDO)DAL.DOFactory.GetNew<TreeDefaultValueTreeAuditValueDO>();
+            TreeDefaultValueTreeAuditValueDO newMap = new TreeDefaultValueTreeAuditValueDO(DAL);
             newMap.TreeDefaultValue = base.Parent;
             newMap.TreeAuditValue = child;
             newMap.Save();
@@ -146,13 +144,13 @@ namespace CruiseDAL.MappingCollections
 
         protected override TreeDefaultValueTreeAuditValueDO retrieveMapObject(TreeAuditValueDO child)
         {
-            return DAL.ReadSingleRow<TreeDefaultValueTreeAuditValueDO>(TREEDEFAULTVALUETREEAUDITVALUE._NAME,
+            return DAL.ReadSingleRow<TreeDefaultValueTreeAuditValueDO>(
                 "WHERE TreeAuditValue_CN = ? AND TreeDefaultValue_CN = ?", child.TreeAuditValue_CN, Parent.TreeDefaultValue_CN);
         }
 
         protected override List<TreeAuditValueDO> retrieveChildList()
         {
-            return DAL.Read<TreeAuditValueDO>(TREEAUDITVALUE._NAME,
+            return DAL.Read<TreeAuditValueDO>(
                 "JOIN TreeDefaultValueTreeAuditValue Using (TreeAuditValue_CN) WHERE TreeDefaultValue_CN = ?", Parent.TreeDefaultValue_CN);
         }
     }
@@ -165,8 +163,7 @@ namespace CruiseDAL.MappingCollections
 
         protected override void addMap(TreeDefaultValueDO child)
         {
-            TreeDefaultValueTreeAuditValueDO newMap =
-                (TreeDefaultValueTreeAuditValueDO)DAL.DOFactory.GetNew<TreeDefaultValueTreeAuditValueDO>();
+            TreeDefaultValueTreeAuditValueDO newMap = new TreeDefaultValueTreeAuditValueDO(DAL);
             newMap.TreeAuditValue = base.Parent;
             newMap.TreeDefaultValue = child;
             newMap.Save();
@@ -174,13 +171,13 @@ namespace CruiseDAL.MappingCollections
 
         protected override TreeDefaultValueTreeAuditValueDO retrieveMapObject(TreeDefaultValueDO child)
         {
-            return DAL.ReadSingleRow<TreeDefaultValueTreeAuditValueDO>(TREEDEFAULTVALUETREEAUDITVALUE._NAME,
+            return DAL.ReadSingleRow<TreeDefaultValueTreeAuditValueDO>(
                 "WHERE " + TREEDEFAULTVALUETREEAUDITVALUE.TREEDEFAULTVALUE_CN + " = ? AND " + TREEDEFAULTVALUETREEAUDITVALUE.TREEAUDITVALUE_CN + " = ?", child.TreeDefaultValue_CN, Parent.TreeAuditValue_CN);
         }
 
         protected override List<TreeDefaultValueDO> retrieveChildList()
         {
-            return DAL.Read<TreeDefaultValueDO>(TREEDEFAULTVALUE._NAME,
+            return DAL.Read<TreeDefaultValueDO>(
                 "JOIN TreeDefaultValueTreeAuditValue USING (TreeDefaultValue_CN) WHERE TreeAuditValue_CN = ?", base.Parent.TreeAuditValue_CN);
         }
 
@@ -193,8 +190,7 @@ namespace CruiseDAL.MappingCollections
 
         protected override void addMap(TreeDefaultValueDO child)
         {
-            SampleGroupStatsTreeDefaultValueDO newMap =
-                (SampleGroupStatsTreeDefaultValueDO)DAL.DOFactory.GetNew<SampleGroupStatsTreeDefaultValueDO>();
+            SampleGroupStatsTreeDefaultValueDO newMap = new SampleGroupStatsTreeDefaultValueDO(DAL);
             newMap.SampleGroupStats = base.Parent;
             newMap.TreeDefaultValue = child;
             newMap.Save();
@@ -202,14 +198,14 @@ namespace CruiseDAL.MappingCollections
 
         protected override SampleGroupStatsTreeDefaultValueDO retrieveMapObject(TreeDefaultValueDO child)
         {
-            return DAL.ReadSingleRow<SampleGroupStatsTreeDefaultValueDO>(SAMPLEGROUPSTATSTREEDEFAULTVALUE._NAME,
-                "WHERE " + SAMPLEGROUPSTATSTREEDEFAULTVALUE.TREEDEFAULTVALUE_CN + "= ? AND " + SAMPLEGROUPSTATSTREEDEFAULTVALUE.SAMPLEGROUPSTATS_CN + " = ?", child.TreeDefaultValue_CN.ToString(), base.Parent.SampleGroupStats_CN);
+            return DAL.ReadSingleRow<SampleGroupStatsTreeDefaultValueDO>(
+                "WHERE " + SAMPLEGROUPSTATSTREEDEFAULTVALUE.TREEDEFAULTVALUE_CN + "= ? AND " + SAMPLEGROUPSTATSTREEDEFAULTVALUE.SAMPLEGROUPSTATS_CN + " = ?", child.TreeDefaultValue_CN, base.Parent.SampleGroupStats_CN);
         }
 
         protected override List<TreeDefaultValueDO> retrieveChildList()
         {
             //return DAL.Read<TreeDefaultValueDO>(createJoinChildCommand());
-            return DAL.Read<TreeDefaultValueDO>(TREEDEFAULTVALUE._NAME,
+            return DAL.Read<TreeDefaultValueDO>(
                 "JOIN SampleGroupStatsTreeDefaultValue Using (TreeDefaultValue_CN) WHERE SampleGroupStats_CN = ?;",
                 Parent.SampleGroupStats_CN);
         }

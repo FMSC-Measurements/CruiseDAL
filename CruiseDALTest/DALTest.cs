@@ -1,14 +1,14 @@
-﻿using CruiseDAL;
+﻿using FMSCORM;
 using System;
 using System.Collections.Generic;
-using CruiseDAL.DataObjects;
+using FMSCORM.DataObjects;
 using System.Threading;
 using System.IO;
-using CruiseDAL.Test.TestTypes;
+using FMSCORM.Test.TestTypes;
 using Xunit;
 using Xunit.Abstractions;
 
-namespace CruiseDAL.Tests
+namespace FMSCORM.Tests
 {
 
     public class DALTest
@@ -25,7 +25,7 @@ namespace CruiseDAL.Tests
         {
             _output = output;
 
-            _testDALInstance = CruiseDAL.Tests.CommonMethods.GetTestDAL();
+            _testDALInstance = FMSCORM.Tests.CommonMethods.GetTestDAL();
             Assert.True(_testDALInstance.Exists);
         }
 
@@ -128,7 +128,7 @@ namespace CruiseDAL.Tests
         public void DataObjectToStringTest()
         {
             DataObject obj;
-            obj = _testDALInstance.ReadSingleRow<SaleDO>(CruiseDAL.Schema.SALE._NAME, 1);
+            obj = _testDALInstance.ReadSingleRow<SaleDO>(FMSCORM.Schema.SALE._NAME, 1);
             CheckRow(obj);
             string s = obj.ToString("[District] hi mom ://\\ [rowID]", null);
             s = obj.ToString("[district] [District] [SaleNumber]", null);
@@ -156,7 +156,7 @@ namespace CruiseDAL.Tests
         public void ReadSingleRowTest()
         {
             DataObject obj;
-            obj = _testDALInstance.ReadSingleRow<SaleDO>(CruiseDAL.Schema.SALE._NAME, 1);
+            obj = _testDALInstance.ReadSingleRow<SaleDO>(FMSCORM.Schema.SALE._NAME, 1);
             CheckRow(obj);
 
             SaleDO sale = obj as SaleDO;
@@ -165,20 +165,20 @@ namespace CruiseDAL.Tests
             Assert.True(Object.ReferenceEquals(sale, obj));
 
 
-            obj = _testDALInstance.ReadSingleRow<CuttingUnitDO>(CruiseDAL.Schema.CUTTINGUNIT._NAME, 1);
+            obj = _testDALInstance.ReadSingleRow<CuttingUnitDO>(FMSCORM.Schema.CUTTINGUNIT._NAME, 1);
             CheckRow(obj);
 
-            obj = _testDALInstance.ReadSingleRow<StratumDO>(CruiseDAL.Schema.STRATUM._NAME, 1);
+            obj = _testDALInstance.ReadSingleRow<StratumDO>(FMSCORM.Schema.STRATUM._NAME, 1);
             CheckRow(obj);
 
-            obj = _testDALInstance.ReadSingleRow<SampleGroupDO>(CruiseDAL.Schema.SAMPLEGROUP._NAME, 1);
+            obj = _testDALInstance.ReadSingleRow<SampleGroupDO>(FMSCORM.Schema.SAMPLEGROUP._NAME, 1);
             CheckRow(obj);
 
-            obj = _testDALInstance.ReadSingleRow<TreeDefaultValueDO>(CruiseDAL.Schema.TREEDEFAULTVALUE._NAME, 1);
+            obj = _testDALInstance.ReadSingleRow<TreeDefaultValueDO>(FMSCORM.Schema.TREEDEFAULTVALUE._NAME, 1);
             //Assert.IsNotNull(((TreeDefaultValueDO)obj).);
             CheckRow(obj);
 
-            obj = _testDALInstance.ReadSingleRow<TreeDO>(CruiseDAL.Schema.TREE._NAME, 1);
+            obj = _testDALInstance.ReadSingleRow<TreeDO>(FMSCORM.Schema.TREE._NAME, 1);
             CheckRow(obj);
         }
 
@@ -271,7 +271,7 @@ namespace CruiseDAL.Tests
 
         public void TestCopyTo()
         {
-            DAL target = CruiseDAL.Tests.CommonMethods.GetTestDAL();
+            DAL target = FMSCORM.Tests.CommonMethods.GetTestDAL();
             string copyPath = System.IO.Path.GetDirectoryName(target.Path) + TEST_COPY_FILE_NAME;
             DAL copy = target.CopyTo(copyPath);
 

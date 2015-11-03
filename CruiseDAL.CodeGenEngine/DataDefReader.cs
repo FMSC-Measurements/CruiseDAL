@@ -6,7 +6,7 @@ using System.IO;
 using System.Text.RegularExpressions;
 using System.Reflection;
 
-namespace CruiseDAL.CodeGenEngine
+namespace FMSCORM.CodeGenEngine
 {
     
 

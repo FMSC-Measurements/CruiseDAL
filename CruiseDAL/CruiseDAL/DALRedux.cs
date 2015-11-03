@@ -1,15 +1,21 @@
 ﻿
-using CruiseDAL.Core.SQL;
-using CruiseDAL.SQLite;
+using FMSC.ORM.Core;
+using FMSC.ORM.Core.EntityModel;
+using FMSC.ORM.Core.SQL;
+using FMSC.ORM.SQLite;
 using System;
+using System.Collections;
 using System.Data.Common;
 using System.Data.SQLite;
+using System.Diagnostics;
 using System.IO;
 using System.Threading;
 
 namespace CruiseDAL
 {
-    public class DALRedux : SQLiteDatastore
+    public enum CruiseFileType { Unknown, Cruise, Template, Design, Master, Component }
+
+    public partial class DALRedux : SQLiteDatastore
     {
 
         /// <summary>
@@ -51,6 +57,29 @@ namespace CruiseDAL
             }
         }
 
+        private CruiseFileType _cruiseFileType;
+        public CruiseFileType CruiseFileType
+        {
+            get
+            {
+                _cruiseFileType = this.ReadCruiseFileType();
+                if (_cruiseFileType == CruiseFileType.Unknown)
+                {
+                    _cruiseFileType = ExtrapolateCruiseFileType(this.Path);
+                    if (_cruiseFileType == CruiseFileType.Unknown)
+                    {
+                        WriteCruiseFileType(_cruiseFileType);
+                    }
+                }
+                return _cruiseFileType;
+            }
+            protected set
+            {
+                _cruiseFileType = CruiseFileType.Unknown;
+                WriteCruiseFileType(value);
+            }
+        }
+
         /// <summary>
         /// Creates a DAL instance for a database @ path. 
         /// </summary>
@@ -62,29 +91,29 @@ namespace CruiseDAL
         {
         }
 
+        public DALRedux(string path, bool makeNew)
+            : this(path, makeNew, new CruiseDALDatastoreBuilder())
+        {
+
+        }
+
         /// <summary>
         /// Creates a DAL instance for a database @ path. 
         /// </summary>
         /// <exception cref="ArgumentNullException">path can not be null or an empty string</exception>
         /// <exception cref="System.IO.IOException">File extension is not valid <see cref="VALID_EXTENSIONS"/></exception>
         /// <exception cref="System.UnauthorizedAccessException">File open in another application or thread</exception>
-        public DALRedux(string path, bool makeNew)
+        public DALRedux(string path, bool makeNew, DatastoreBuilder builder)
         {
-            System.Diagnostics.Debug.Assert(!String.IsNullOrEmpty(path), "path is null or empty, is this intentional?");
+            Debug.Assert(builder != null);
+            System.Diagnostics.Debug.Assert(!String.IsNullOrEmpty(path), "path is null or empty");
+
+            builder.DataStore = this;
 
             Path = path;
-            if (makeNew)
-            {
-                BuildDBFile();
-            }
-            else if (!makeNew && !Exists)
-            {
-                throw new FileNotFoundException();
-            }
-
-
-            this.Initialize();
-            Logger.Log.V(String.Format("Created DAL instance. Path = {0},ConnectionString = {1} User = {2}\r\n", Path, _ConnectionString, User));
+            
+            this.Initialize(makeNew, builder);
+            Logger.Log.V(String.Format("Created DAL instance. Path = {0}\r\n", Path));
         }
 
         ~DALRedux()
@@ -92,40 +121,52 @@ namespace CruiseDAL
             this.Dispose(false);
         }
 
-
-        protected void Initialize()
+        
+        protected void Initialize(bool makeNew, DatastoreBuilder builder)
         {
-            DbConnection connection = null;
+            if (makeNew)
+            {
+                builder.CreateDatastore();
+            }
+            else if (!makeNew && !Exists)
+            {
+                throw new FileNotFoundException();
+            }
+
+            String dbVersion = this.ReadGlobalValue("Database", "Version");
+            if (dbVersion != null)
+            {
+                DatabaseVersion = dbVersion;
+            }
+
+
+            this.SchemaVersion = this.ExecuteScalar<long>("PRAGMA user_version;");
+            builder.UpdateDatastore();
+
             try
             {
-                String dbVersion = this.ReadGlobalValue("Database", "Version");
-                if (dbVersion != null)
-                {
-                    DatabaseVersion = dbVersion;
-                }
-
-
-                this.SchemaVersion = this.ExecuteScalar<long>("PRAGMA user_version;");
-                CruiseDAL.Updater.Update(this);
-
-                try
-                {
-                    this.LogMessage("File Opened" , "normal");
-                }
-                catch (ReadOnlyException)
-                {/*ignore, in case we want to allow access to a read-only DB*/}
+                this.LogMessage("File Opened" , "normal");
             }
-            catch (Exception e)
-            {
-                throw this.ThrowDatastoreExceptionHelper(connection, null, e);
-            }
-
-
+            catch (FMSC.ORM.ReadOnlyException)
+            {/*ignore, in case we want to allow access to a read-only DB*/}
         }
 
-        public CruiseFileType ExtrapolateCruiseFileType(String path)
+        public string ReadGlobalValue(String block, String key)
         {
-            String normPath = this.Path.ToLower().TrimEnd();
+            return this.ExecuteScalar("SELECT Value FROM GLOBALS WHERE " +
+            "ifnull(Block, '') = ifnull(?, '') " +
+            "AND ifnull(Key, '') = ifnull(?, '');", block, key) as string;
+        }
+
+        public void WriteGlobalValue(String block, String key, String value)
+        {
+            this.Execute("INSERT OR REPLACE INTO Globals (Block, Key, Value) " +
+                "Values (?, ?, ?);", block, key, value);
+        }
+
+        public static CruiseFileType ExtrapolateCruiseFileType(String path)
+        {
+            String normPath = path.ToLower().TrimEnd();
             if (String.IsNullOrEmpty(normPath))
             {
                 return CruiseFileType.Unknown;
@@ -155,43 +196,26 @@ namespace CruiseDAL
             return CruiseFileType.Unknown;
         }
 
-
-        protected void BuildDBFile(string path)
+        protected CruiseFileType ReadCruiseFileType()
         {
-            if (File.Exists(path))
-            {
-                File.Delete(path);
-            }
-
-            String createSQL = this.GetCreateSQL();
-            String createTriggers = this.GetCreateTriggers();
-
-            SQLiteConnection.CreateFile(path);
-
+            String s = this.ReadGlobalValue("Database", "CruiseFileType");
             try
             {
-                Context.BeginTransaction();
-                Execute(createSQL);
-                Execute(createTriggers);
-
-                Context.CommitTransaction();
+                return (CruiseFileType)Enum.Parse(typeof(CruiseFileType), s, true);
             }
-            catch (Exception e)
+            catch
             {
-                Context.CancelTransaction();
-                throw this.ThrowDatastoreExceptionHelper(conn, sqlCommand, e);
+                return CruiseFileType.Unknown;
             }
+
         }
 
-        protected override String GetCreateSQL()
+        protected void WriteCruiseFileType(CruiseFileType cType)
         {
-            return CruiseDAL.Properties.Resources.CruiseCreate;
+            this.WriteGlobalValue("Database", "CruiseFileType", cType.ToString());
         }
 
-        internal string GetCreateTriggers()
-        {
-            return CruiseDAL.Properties.Resources.CreateTriggers;
-        }
+
 
         protected static string GetUserInformation()
         {
@@ -209,6 +233,35 @@ namespace CruiseDAL
             //return Environment.UserName + " on " + System.Windows.Forms.SystemInformation.ComputerName;
         }
 
+        public DALRedux CopyTo(string path)
+        {
+            return this.CopyTo(path, false);
+        }
+
+        public DALRedux CopyTo(string destPath, bool overwrite)
+        {
+
+            Context.ReleaseAllConnections(true);
+
+            System.IO.File.Copy(this.Path, destPath, overwrite);
+            //_DBFileInfo.CopyTo(destPath, overwrite);
+            return new DALRedux(destPath);
+        }
+
+        public void ChangeRowID(DataObject data, long newRowID, OnConflictOption option)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void Save(IEnumerable list)
+        {
+            this.Save(list, FMSC.ORM.Core.SQL.OnConflictOption.Fail);
+        }
+
+        public void Save(IEnumerable list, FMSC.ORM.Core.SQL.OnConflictOption opt)
+        {
+            throw new NotImplementedException();
+        }
 
         /// <summary>
         /// Copies selection directly from external Database
@@ -219,7 +272,7 @@ namespace CruiseDAL
         /// <param name="selectionArgs"></param>
         public void DirectCopy(String fileName, String table, String selection, params Object[] selectionArgs)
         {
-            DirectCopy(new DAL(fileName), table, selection, OnConflictOption.Abort, selectionArgs);
+            DirectCopy(new DALRedux(fileName), table, selection, OnConflictOption.Abort, selectionArgs);
         }
 
         /// <summary>
@@ -231,7 +284,7 @@ namespace CruiseDAL
         /// <param name="selectionArgs"></param>
         public void DirectCopy(String fileName, String table, String selection, OnConflictOption option, params Object[] selectionArgs)
         {
-            DirectCopy(new DAL(fileName), table, selection, option, selectionArgs);
+            DirectCopy(new DALRedux(fileName), table, selection, option, selectionArgs);
         }
 
         /// <summary>
@@ -241,7 +294,7 @@ namespace CruiseDAL
         /// <param name="table"></param>
         /// <param name="selection"></param>
         /// <param name="selectionArgs"></param>
-        public void DirectCopy(DAL dataBase, string table, String selection, OnConflictOption option, params Object[] selectionArgs)
+        public void DirectCopy(DALRedux dataBase, string table, String selection, OnConflictOption option, params Object[] selectionArgs)
         {
             if (dataBase.Exists == false) { return; }
 
@@ -262,7 +315,7 @@ namespace CruiseDAL
 
         }
 
-        public void AttachDB(DAL externalDB, string externalDBAlias)
+        public void AttachDB(DALRedux externalDB, string externalDBAlias)
         {
             lock (this._connectionSyncLock)
             {
@@ -292,43 +345,8 @@ namespace CruiseDAL
             }
         }
 
-        public void StartSavePoint(String name)
-        {
-            this.Execute("SAVEPOINT " + name + ";");
-        }
+        
 
-        public void ReleaseSavePoint(String name)
-        {
-            this.Execute("RELEASE SAVEPOINT " + name + ";");
-        }
-
-        public void RollbackSavePoint(String name)
-        {
-            this.Execute("ROLLBACK TO SAVEPOINT " + name + ";");
-        }
-
-        /// <summary>
-        /// Sets the starting value of a AutoIncrement field for a table
-        /// </summary>
-        /// <param name="tableName"></param>
-        /// <param name="start"></param>
-        /// <exception cref="DatabaseExecutionException"></exception>
-        public virtual void SetTableAutoIncrementStart(String tableName, Int64 start)
-        {
-            string commandText = null;
-            //check sqlite_sequence to see if we need to perform update or insert
-            if (this.GetRowCount("sqlite_sequence", "WHERE name = ?", tableName) >= 1)
-            {
-                commandText = "UPDATE sqlite_sequence SET seq = @start WHERE name = @tableName";
-            }
-            else
-            {
-                commandText = "INSERT INTO sqlite_sequence  (seq, name) VALUES (@start, @tableName);";
-            }
-
-            this.Execute(commandText, tableName, start);
-
-        }
 
         #region accessControl
         Mutex _accessControl;
@@ -385,12 +403,17 @@ namespace CruiseDAL
         #region IDisposable Members
         private bool _disposed = false;
 
-        protected override void Dispose(bool isDisposing)
+        protected void Dispose(bool isDisposing)
         {
-            base.Dispose(isDisposing);
+            //base.Dispose(isDisposing);
             if (_disposed)
             {
                 return;
+            }
+
+            if(isDisposing)
+            {
+
             }
 
             releaseAccessControl();

@@ -2,14 +2,14 @@
 using System.Text;
 using System.Collections.Generic;
 using System.Linq;
-using CruiseDAL;
+using FMSCORM;
 using CruiseDALTest.TestTypes;
 using Xunit;
 using Xunit.Abstractions;
 
-using CruiseDAL.BaseDAL;
+using FMSCORM.BaseDAL;
 
-namespace CruiseDAL.Core.Tests
+namespace FMSCORM.Core.Tests
 {
     public class DataObjectInfoTest 
     {
@@ -43,7 +43,7 @@ namespace CruiseDAL.Core.Tests
 
         public void LoadDataObjects()
         {
-            var types = (from t in System.Reflection.Assembly.GetAssembly(typeof(CruiseDAL.DataObject)).GetTypes()
+            var types = (from t in System.Reflection.Assembly.GetAssembly(typeof(FMSCORM.DataObject)).GetTypes()
                          where t.IsClass && t.Namespace == "CruiseDAL.DataObjects"
                          select t).ToList();
 

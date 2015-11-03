@@ -2,12 +2,12 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using CruiseDAL;
-using CruiseDAL.BaseDAL.EntityAttributes;
+using FMSCORM;
+using FMSCORM.BaseDAL.EntityAttributes;
 
 namespace CruiseDALTest.TestTypes
 {
-    [SQLEntity(SourceName = CruiseDAL.Tests.SQL.TestSQLConstants.MULTI_PROP_TABLE_NAME)]
+    [SQLEntity(SourceName = FMSCORM.Tests.SQL.TestSQLConstants.MULTI_PROP_TABLE_NAME)]
     public class DOMultiPropType : DataObject
     {
         [PrimaryKeyField(FieldName = "ID")]

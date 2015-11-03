@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Text;
 
-using CruiseDAL.Core.EntityModel;
+using FMSC.ORM.Core.EntityModel;
 using CruiseDAL.DataObjects;
-using CruiseDAL.Core.SQL;
+using FMSC.ORM.Core.SQL;
 
 namespace CruiseDAL
 {
@@ -14,15 +14,16 @@ namespace CruiseDAL
         Dictionary<String, ErrorLogDO> errors;
         object _errorsSyncLock = new object();
 
+        String _tableName;
         EntityDescription _entityDescription;
         CruiseDALDataObject _dataObject;
 
         public event EventHandler<DataErrorsChangedEventArgs> ErrorsChanged;
 
-        public CruiseDALErrorCollection(CruiseDALDataObject dataObject, EntityDescription entityDescription)
+        public CruiseDALErrorCollection(CruiseDALDataObject dataObject, String tableName)
         {
             _dataObject = dataObject;
-            _entityDescription = entityDescription;
+            _tableName = tableName;
         }
 
         public bool ErrorsLoaded { get; set; }
@@ -90,7 +91,7 @@ namespace CruiseDAL
                 e.Level = "E";
             }
 
-            e.TableName = _entityDescription.SourceName;
+            e.TableName = _tableName;
             e.ColumnName = propName;
             e.Message = error;
             e.Program = AppDomain.CurrentDomain.FriendlyName;
@@ -219,7 +220,7 @@ namespace CruiseDAL
         public void PopulateErrorList()
         {
             if (_dataObject.rowID == null) { return; }
-            string tableName = _entityDescription.SourceName;
+            string tableName = _tableName;
 
             List<ErrorLogDO> errorList = _dataObject.DAL.Read<ErrorLogDO>( "WHERE TableName = ? AND CN_Number = ?"
                 , (object)tableName, _dataObject.rowID);

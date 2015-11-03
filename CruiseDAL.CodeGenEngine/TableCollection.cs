@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Collections;
 
-namespace CruiseDAL.CodeGenEngine
+namespace FMSCORM.CodeGenEngine
 {
     //TODO Log and logical unimplemented
     public enum DeleteMethodType { Unknown = 0, None, Tombstone, Log, Logical, TombstoneGUID }

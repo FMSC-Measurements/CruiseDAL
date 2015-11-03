@@ -5,21 +5,27 @@ using System.ComponentModel;
 using System.Text;
 using System.Xml.Serialization;
 
-using CruiseDAL.Core.EntityModel;
+using FMSC.ORM.Core.EntityModel;
 using CruiseDAL.DataObjects;
 using System.Diagnostics;
+using FMSC.ORM.Core;
+using FMSC.ORM.Core.SQL;
 
 namespace CruiseDAL
 {
     public abstract class CruiseDALDataObject : DataObject, IDataErrorInfo, INotifyDataErrorInfo, IValidatable
     {
         public CruiseDALDataObject() : base()
-        { }
-
-
-        public CruiseDALDataObject(DatastoreBase ds) : base(ds)
         {
-            ErrorCollection = new CruiseDALErrorCollection(this, ds.GetEntityDescription(this.GetType()));
+            throw new NotImplementedException();
+            //TODO need to create error collection for instance
+        }
+
+
+        public CruiseDALDataObject(DatastoreRedux ds) : base(ds)
+        {
+            string tableName = ds.LookUpEntityByType(this.GetType()).SourceName;
+            ErrorCollection = new CruiseDALErrorCollection(this, tableName);
         }
 
         internal CruiseDALErrorCollection ErrorCollection;
@@ -141,6 +147,8 @@ namespace CruiseDAL
         #region IDataErrorInfo Members
 
 
+        
+
         string IDataErrorInfo.Error
         {
             get
@@ -182,20 +190,28 @@ namespace CruiseDAL
         {
             get
             {
-                lock (this._errorsSyncLock)
+                StringBuilder sb = new StringBuilder();
+                foreach(string s in ErrorCollection.GetErrors(columnName))
                 {
-                    if (this.HasErrors() == false) { return string.Empty; }
-                    if (!errors.ContainsKey(columnName)) { return string.Empty; }
-                    ErrorLogDO e = errors[columnName];
-                    if (e.Suppress == false)
-                    {
-                        return errors[columnName].Message;
-                    }
-                    else
-                    {
-                        return string.Empty;
-                    }
+                    sb.Append(s + ";");
                 }
+
+                return sb.ToString();
+
+                //lock (this._errorsSyncLock)
+                //{
+                //    if (this.HasErrors() == false) { return string.Empty; }
+                //    if (!errors.ContainsKey(columnName)) { return string.Empty; }
+                //    ErrorLogDO e = errors[columnName];
+                //    if (e.Suppress == false)
+                //    {
+                //        return errors[columnName].Message;
+                //    }
+                //    else
+                //    {
+                //        return string.Empty;
+                //    }
+                //}
             }
         }
 

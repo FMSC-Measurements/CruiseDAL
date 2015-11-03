@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 
 using CruiseDAL.DataObjects;
+using CruiseDAL.Schema;
 
 namespace CruiseDAL
 {
@@ -124,42 +125,6 @@ namespace CruiseDAL
             return dal.GetRowCount(STRATUM._NAME, "LEFT JOIN SampleGroup USING (Stratum_CN) WHERE SampleGroup.Stratum_CN IS NULL") > 0;
         }
 
-        public static bool HasForeignKeyErrors(this DALRedux dal, string table_name)
-        {
-            bool hasErrors = false;
-            string comStr;
-            if (string.IsNullOrEmpty(table_name))
-            {
-                comStr = "PRAGMA foreign_key_check;";
-            }
-            else
-            {
-                comStr = string.Format("PRAGMA foreign_key_check({0});", table_name);
-            }
-            lock (this._connectionSyncLock)
-            {
-                DbConnection conn = OpenConnection();
-                DbDataReader reader = null;
-                DbCommand command = this.CreateCommand(conn, comStr);
-                try
-                {
-                    reader = command.ExecuteReader();
-                    hasErrors = reader.Read();
-                }
-                catch (Exception e)
-                {
-                    throw this.ThrowDatastoreExceptionHelper(conn, command, e);
-                }
-                finally
-                {
-                    if (reader != null) { reader.Dispose(); }
-                    if (command != null) { command.Dispose(); }
-                    ReleaseConnection();
-                }
-
-                return hasErrors;
-            }
-
-        }
+        
     }
 }
