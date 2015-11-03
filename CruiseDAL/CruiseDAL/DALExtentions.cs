@@ -31,7 +31,7 @@ namespace CruiseDAL
 
         private static string GetCallingProgram()
         {
-#if !Mobile
+#if !NetCF
             try
             {
                 return System.Reflection.Assembly.GetEntryAssembly().FullName;

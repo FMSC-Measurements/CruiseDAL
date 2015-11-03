@@ -47,7 +47,6 @@
     <Compile Include="Properties\AssemblyInfo.Net45.cs" />
     <Compile Include="Core\Constants\Logging.cs" />
     <Compile Include="Core\DatastoreBuilder.cs" />
-    <Compile Include="Core\DataStoreContext.cs" />
     <Compile Include="Core\DatastoreRedux.cs" />
     <Compile Include="Core\DbProviderFactoryAdapter.cs" />
     <Compile Include="Core\EntityAttributes\CreatedByFieldAttribute.cs" />
@@ -82,7 +81,6 @@
     <Compile Include="Core\SQL\SQLUpdateCommand.cs" />
     <Compile Include="Core\SQL\WhereClause.cs" />
     <Compile Include="SQLite\SQLiteDatastore.cs" />
-    <Compile Include="SQLite\SQLiteDataStoreContext.cs" />
     <Compile Include="SQLite\SQLiteProviderFactory.cs" />
   </ItemGroup>
   <ItemGroup>

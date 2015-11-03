@@ -15,16 +15,13 @@ namespace CruiseDAL
 {
     public abstract class CruiseDALDataObject : DataObject, IDataErrorInfo, IValidatable
     {
-        public CruiseDALDataObject() : base()
-        {
-            throw new NotImplementedException();
-            //TODO need to create error collection for instance
-        }
+        public CruiseDALDataObject() : this(null)
+        { }
 
 
         public CruiseDALDataObject(DatastoreRedux ds) : base(ds)
         {
-            string tableName = ds.LookUpEntityByType(this.GetType()).SourceName;
+            string tableName = DatastoreRedux.LookUpEntityByType(this.GetType()).SourceName;
             ErrorCollection = new CruiseDALErrorCollection(this, tableName);
         }
 

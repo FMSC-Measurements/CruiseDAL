@@ -24,7 +24,7 @@
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
     <OutputPath>bin\Debug\CF20\</OutputPath>
-    <DefineConstants>TRACE;DEBUG;WindowsCE, Mobile</DefineConstants>
+    <DefineConstants>TRACE;DEBUG;WindowsCE NetCF NetCF2</DefineConstants>
     <NoStdLib>true</NoStdLib>
     <NoConfig>true</NoConfig>
     <ErrorReport>prompt</ErrorReport>
@@ -36,7 +36,7 @@
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>bin\Release\CF20\</OutputPath>
-    <DefineConstants>TRACE;WindowsCE Mobile</DefineConstants>
+    <DefineConstants>TRACE;WindowsCE NetCF NetCF2</DefineConstants>
     <NoStdLib>true</NoStdLib>
     <NoConfig>true</NoConfig>
     <ErrorReport>prompt</ErrorReport>
@@ -49,7 +49,7 @@
     <NoConfig>true</NoConfig>
     <GenerateSerializationAssemblies>Off</GenerateSerializationAssemblies>
     <OutputPath>bin\Release PC\</OutputPath>
-    <DefineConstants>TRACE;WindowsCE Mobile</DefineConstants>
+    <DefineConstants>TRACE;WindowsCE NetCF NetCF2</DefineConstants>
     <Optimize>true</Optimize>
     <DebugType>pdbonly</DebugType>
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -67,13 +67,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AutoGen\DAL.AutoGen.cs" />
-    <Compile Include="AutoGen\DataObjects.cs" />
-    <Compile Include="AutoGen\Enums.AutoGen.cs" />
-    <Compile Include="AutoGen\Schema.cs" />
     <Compile Include="CruiseDAL\CruiseDALDatastoreBuilder.cs" />
     <Compile Include="CruiseDAL\CruiseDALErrorCollection.cs" />
-    <Compile Include="CruiseDAL\CustomTriggers.cs" />
-    <Compile Include="CruiseDAL\DAL.cs" />
     <Compile Include="CruiseDAL\DALExtentions.cs" />
     <Compile Include="CruiseDAL\DALRedux.cs" />
     <Compile Include="CruiseDAL\DALValidationExtentions.cs" />
@@ -83,7 +78,6 @@
     <Compile Include="CruiseDAL\Schema\Constants.cs" />
     <Compile Include="CruiseDAL\Schema\Schema.cs" />
     <Compile Include="CruiseDAL\Updater.cs" />
-    <Compile Include="DeviceInfo.cs" />
     <Compile Include="Logger\Logger.cs" />
     <Compile Include="Properties\AssemblyInfo_CF20.cs" />
     <Compile Include="Properties\Resources_CF20.Designer.cs">
@@ -126,6 +120,12 @@
       <Link>SQLite.Interop.094.dll</Link>
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\FMSC.ORM\FMSC.ORM.NetCF20.csproj">
+      <Project>{D346BFEA-85A0-4A5D-BD89-D07E073B065E}</Project>
+      <Name>FMSC.ORM.NetCF20</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CompactFramework.CSharp.targets" />
   <ProjectExtensions>

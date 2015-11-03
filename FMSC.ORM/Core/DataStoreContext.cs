@@ -13,10 +13,12 @@ namespace FMSC.ORM.Core
 {
     public abstract class DataStoreContext : IDisposable
     {
+        public DatastoreRedux DataStore { get; set; }
+
         bool DEFAULT_RETRY_RO_CONNECTION_BEHAVIOR = false;
         bool DEFAULT_RETRY_RW_CONNECTION_BEHAVIOR = false;
 
-        public DatastoreRedux DataStore { get; set; }
+        
 
         //public DbConnectionStringBuilder ConnectionStringBuilder { get; protected set; }
 
@@ -39,7 +41,8 @@ namespace FMSC.ORM.Core
         #region abstract members
         //protected abstract DbConnection CreateConnection(string connectionString);
         protected abstract Exception ThrowExceptionHelper(DbConnection conn, DbCommand comm, Exception innerException);
-
+        public abstract bool HasForeignKeyErrors(string table_name);
+        public abstract List<ColumnInfo> GetTableInfo(string tableName);
         #endregion
 
         private EntityCache GetEntityCache(Type type)
@@ -84,11 +87,6 @@ namespace FMSC.ORM.Core
         //}
         #endregion
 
-        #region abstract members
-        public abstract bool HasForeignKeyErrors(string table_name);
-        public abstract List<ColumnInfo> GetTableInfo(string tableName);
-
-        #endregion 
 
         #region Transaction Management
         public void BeginTransaction()

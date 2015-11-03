@@ -118,7 +118,6 @@
       <DependentUpon>Schema.tt</DependentUpon>
     </Compile>
     <Compile Include="CruiseDAL\DataObject_Extra.cs" />
-    <None Include="CruiseDAL\DAL.cs" />
     <Compile Include="TableModels\AuditValue_partial.cs" />
     <Compile Include="ViewModels\CountTree_ViewDO.cs" />
     <Compile Include="TableModels\CruiseMethod_partial.cs" />

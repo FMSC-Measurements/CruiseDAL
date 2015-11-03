@@ -15,7 +15,7 @@ namespace CruiseDAL
         object _errorsSyncLock = new object();
 
         String _tableName;
-        EntityDescription _entityDescription;
+        //EntityDescription _entityDescription;
         CruiseDALDataObject _dataObject;
 
         //public event EventHandler<DataErrorsChangedEventArgs> ErrorsChanged;

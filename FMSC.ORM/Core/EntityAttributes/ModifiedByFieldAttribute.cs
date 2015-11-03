@@ -25,7 +25,7 @@ namespace FMSC.ORM.Core.EntityAttributes
 
             set
             {
-                throw new NotImplementedException();
+                throw new NotSupportedException();
             }
         }
 

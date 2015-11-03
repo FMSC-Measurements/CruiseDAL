@@ -1,4 +1,5 @@
 ﻿
+using FMSC.ORM;
 using FMSC.ORM.Core;
 using FMSC.ORM.Core.EntityModel;
 using FMSC.ORM.Core.SQL;
@@ -17,6 +18,13 @@ namespace CruiseDAL
 
     public partial class DALRedux : SQLiteDatastore
     {
+        private string _userInfo;
+        private string _databaseVersion = "Unknown";
+        private CruiseFileType _cruiseFileType;
+
+        protected object _multiDatabaseConnectionSyncLock;
+        protected DbConnection _multiDatabaseConnection;
+        protected int _holdMultiDatabaseConnection;
 
         /// <summary>
         /// represents value returned by PRAGMA user_version;  
@@ -26,7 +34,6 @@ namespace CruiseDAL
         /// <summary>
         /// Get the database version
         /// </summary>
-        private string _databaseVersion = "Unknown";
         public string DatabaseVersion
         {
             get
@@ -40,7 +47,7 @@ namespace CruiseDAL
 
         }
 
-        private string _userInfo;
+        
         /// <summary>
         /// Gets the string used to identify the user, for the purpose of CreatedBy and ModifiedBy values
         /// </summary>
@@ -57,7 +64,6 @@ namespace CruiseDAL
             }
         }
 
-        private CruiseFileType _cruiseFileType;
         public CruiseFileType CruiseFileType
         {
             get
@@ -103,7 +109,7 @@ namespace CruiseDAL
         /// <exception cref="ArgumentNullException">path can not be null or an empty string</exception>
         /// <exception cref="System.IO.IOException">File extension is not valid <see cref="VALID_EXTENSIONS"/></exception>
         /// <exception cref="System.UnauthorizedAccessException">File open in another application or thread</exception>
-        public DALRedux(string path, bool makeNew, DatastoreBuilder builder)
+        public DALRedux(string path, bool makeNew, DatastoreBuilder builder) : base(path)
         {
             Debug.Assert(builder != null);
             System.Diagnostics.Debug.Assert(!String.IsNullOrEmpty(path), "path is null or empty");
@@ -116,10 +122,7 @@ namespace CruiseDAL
             Logger.Log.V(String.Format("Created DAL instance. Path = {0}\r\n", Path));
         }
 
-        ~DALRedux()
-        {
-            this.Dispose(false);
-        }
+        
 
         
         protected void Initialize(bool makeNew, DatastoreBuilder builder)
@@ -151,19 +154,24 @@ namespace CruiseDAL
             {/*ignore, in case we want to allow access to a read-only DB*/}
         }
 
-        public string ReadGlobalValue(String block, String key)
+        protected static string GetUserInformation()
         {
-            return this.ExecuteScalar("SELECT Value FROM GLOBALS WHERE " +
-            "ifnull(Block, '') = ifnull(?, '') " +
-            "AND ifnull(Key, '') = ifnull(?, '');", block, key) as string;
+#if NetCF
+
+            return FMSC.Util.DeviceInfo.GetMachineDescription() + "|" + FMSC.Util.DeviceInfo.GetMachineName();
+            //FMSC.Utility.MobileDeviceInfo di = new FMSC.Utility.MobileDeviceInfo();
+            //return di.GetModelAndSerialNumber();
+            //return "Mobile User";
+
+#elif ANDROID
+			return "AndroidUser";
+#else 
+            return Environment.UserName + " on " + System.Environment.MachineName;
+#endif
+            //return Environment.UserName + " on " + System.Windows.Forms.SystemInformation.ComputerName;
         }
 
-        public void WriteGlobalValue(String block, String key, String value)
-        {
-            this.Execute("INSERT OR REPLACE INTO Globals (Block, Key, Value) " +
-                "Values (?, ?, ?);", block, key, value);
-        }
-
+        #region cruise/cut specific stuff
         public static CruiseFileType ExtrapolateCruiseFileType(String path)
         {
             String normPath = path.ToLower().TrimEnd();
@@ -216,23 +224,21 @@ namespace CruiseDAL
         }
 
 
-
-        protected static string GetUserInformation()
+        public string ReadGlobalValue(String block, String key)
         {
-#if Mobile
-
-            return FMSC.Util.DeviceInfo.GetMachineDescription() + "|" + FMSC.Util.DeviceInfo.GetMachineName();
-            //FMSC.Utility.MobileDeviceInfo di = new FMSC.Utility.MobileDeviceInfo();
-            //return di.GetModelAndSerialNumber();
-            //return "Mobile User";
-#elif FullFramework
-            return Environment.UserName + " on " + System.Environment.MachineName;
-#elif ANDROID
-			return "AndroidUser";
-#endif
-            //return Environment.UserName + " on " + System.Windows.Forms.SystemInformation.ComputerName;
+            return this.ExecuteScalar("SELECT Value FROM GLOBALS WHERE " +
+            "ifnull(Block, '') = ifnull(?, '') " +
+            "AND ifnull(Key, '') = ifnull(?, '');", block, key) as string;
         }
 
+        public void WriteGlobalValue(String block, String key, String value)
+        {
+            this.Execute("INSERT OR REPLACE INTO Globals (Block, Key, Value) " +
+                "Values (?, ?, ?);", block, key, value);
+        }
+        #endregion
+
+        #region file util
         public DALRedux CopyTo(string path)
         {
             return this.CopyTo(path, false);
@@ -241,27 +247,16 @@ namespace CruiseDAL
         public DALRedux CopyTo(string destPath, bool overwrite)
         {
 
-            Context.ReleaseAllConnections(true);
+            ReleaseAllConnections(true);
 
             System.IO.File.Copy(this.Path, destPath, overwrite);
             //_DBFileInfo.CopyTo(destPath, overwrite);
             return new DALRedux(destPath);
         }
+        #endregion
 
-        public void ChangeRowID(DataObject data, long newRowID, OnConflictOption option)
-        {
-            throw new NotImplementedException();
-        }
 
-        public void Save(IEnumerable list)
-        {
-            this.Save(list, FMSC.ORM.Core.SQL.OnConflictOption.Fail);
-        }
-
-        public void Save(IEnumerable list, FMSC.ORM.Core.SQL.OnConflictOption opt)
-        {
-            throw new NotImplementedException();
-        }
+        
 
         /// <summary>
         /// Copies selection directly from external Database
@@ -317,16 +312,16 @@ namespace CruiseDAL
 
         public void AttachDB(DALRedux externalDB, string externalDBAlias)
         {
-            lock (this._connectionSyncLock)
+            lock (_multiDatabaseConnectionSyncLock)
             {
                 try
                 {
-                    OpenConnection();
+                    OpenMultiDatabaseConnection(true);
                     this.Execute("ATTACH DATABASE ? AS ?;", externalDB.Path, externalDBAlias);
                 }
                 catch
                 {
-                    ReleaseConnection();
+                    ReleaseMultiDatabaseConnection(true);
                     throw;
                 }
             }
@@ -341,12 +336,104 @@ namespace CruiseDAL
             }
             finally
             {
-                this.ReleaseConnection();
+                this.ReleaseMultiDatabaseConnection(false);
             }
         }
 
-        
+        protected void EnterMultiDatabaseConnectionHold()
+        {
+            System.Threading.Interlocked.Increment(ref this._holdMultiDatabaseConnection);
+        }
 
+        protected void ExitMultiDatabaseConnectionHold()
+        {
+            if (this._holdMultiDatabaseConnection > 0)
+            {
+                System.Threading.Interlocked.Decrement(ref this._holdMultiDatabaseConnection);
+            }
+        }
+
+        protected DbConnection OpenMultiDatabaseConnection(bool retry)
+        {
+            lock(_multiDatabaseConnectionSyncLock)
+            {
+                DbConnection conn;
+                if (_multiDatabaseConnection == null)
+                {
+                    _multiDatabaseConnection = CreateReadWriteConnection();
+                }
+                conn = _multiDatabaseConnection;
+
+                try
+                {
+                    if (conn.State != System.Data.ConnectionState.Open)
+                    {
+                        conn.Open();
+                    }
+                    EnterMultiDatabaseConnectionHold();
+                    return conn;
+                }
+                catch (Exception e)
+                {
+                    if (!retry)
+                    {
+                        var newEx = new ConnectionException(null, e);
+                        newEx.AddConnectionInfo(conn);
+                        throw newEx;
+                    }
+                    else
+                    {
+                        conn.Dispose();
+                        _multiDatabaseConnection = null;
+                        Thread.Sleep(100);
+                        return OpenMultiDatabaseConnection(false);
+                    }
+                }
+            }
+        }
+
+        protected void ReleaseMultiDatabaseConnection(bool force)
+        {
+            lock(_multiDatabaseConnection)
+            {
+                Debug.Assert(_multiDatabaseConnection != null);
+                ExitMultiDatabaseConnectionHold();
+                if(_multiDatabaseConnection == null) { return; }
+                if (_holdMultiDatabaseConnection == 0 || force)
+                {
+                    ReleaseConnection(_multiDatabaseConnection);
+                    _multiDatabaseConnection = null;
+                    Debug.WriteLine("Multi Database Connection Released", FMSC.ORM.Core.Constants.Logging.DB_CONTROL_VERBOSE);
+                }
+                else
+                {
+                    Debug.WriteLine("Multi Database Connection Survived", FMSC.ORM.Core.Constants.Logging.DB_CONTROL_VERBOSE);
+                }
+            }
+        }
+
+        public override void ReleaseAllConnections(bool force)
+        {
+            base.ReleaseAllConnections(force);
+            ReleaseMultiDatabaseConnection(force);
+        }
+
+        #region not implemented 
+        public void ChangeRowID(DataObject data, long newRowID, OnConflictOption option)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void Save(IEnumerable list)
+        {
+            this.Save(list, FMSC.ORM.Core.SQL.OnConflictOption.Fail);
+        }
+
+        public void Save(IEnumerable list, FMSC.ORM.Core.SQL.OnConflictOption opt)
+        {
+            throw new NotImplementedException();
+        }
+        #endregion
 
         #region accessControl
         Mutex _accessControl;
@@ -374,7 +461,7 @@ namespace CruiseDAL
         private void establishAccessControl()
         {
             //releaseAccessControl();
-
+#if !NetCF
             try
             {
                 string semaName = "CruiseDAL" + Path.GetHashCode().ToString();
@@ -397,15 +484,16 @@ namespace CruiseDAL
                     throw new DatabaseShareException("File Open Somewhere Else");
                 }
             }
+#endif
         }
         #endregion
 
         #region IDisposable Members
         private bool _disposed = false;
 
-        protected void Dispose(bool isDisposing)
+        protected override void Dispose(bool isDisposing)
         {
-            //base.Dispose(isDisposing);
+            base.Dispose(isDisposing);
             if (_disposed)
             {
                 return;
@@ -419,6 +507,11 @@ namespace CruiseDAL
             releaseAccessControl();
 
             _disposed = true;
+        }
+
+        ~DALRedux()
+        {
+            this.Dispose(false);
         }
 
         #endregion

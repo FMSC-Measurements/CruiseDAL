@@ -13,9 +13,8 @@ namespace FMSC.ORM.Core.EntityModel
 
         public object GetFormat(Type formatType)
         {
-            throw new NotImplementedException();
-            //EntityDescription description = DatastoreRedux.GetObjectDiscription(formatType);
-            //return new EntityFormatter(description);
+            EntityDescription description = DatastoreRedux.LookUpEntityByType(formatType);
+            return new EntityFormatter(description);
         }
     }
 }

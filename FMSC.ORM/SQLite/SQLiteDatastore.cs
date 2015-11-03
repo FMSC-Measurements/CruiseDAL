@@ -3,16 +3,12 @@ using FMSC.ORM.Core.SQL;
 using System;
 using System.Collections.Generic;
 using System.Data.Common;
+using System.Data.SQLite;
 
 namespace FMSC.ORM.SQLite
 {
     public class SQLiteDatastore : DatastoreRedux
     {
-
-
-
-
-
         /// <summary>
         /// 
         /// </summary>
@@ -32,8 +28,17 @@ namespace FMSC.ORM.SQLite
             get { return System.IO.Path.GetExtension(base.Path); }
         }
 
+        public SQLiteDatastore() : base(new SQLiteProviderFactory())
+        {
+            Path = ":memory:";
+        }
 
+        public SQLiteDatastore(string path) : base(new SQLiteProviderFactory())
+        {
+            Path = path;
+        }
 
+        #region SavePoints
         public void StartSavePoint(String name)
         {
             this.Execute("SAVEPOINT " + name + ";");
@@ -48,6 +53,7 @@ namespace FMSC.ORM.SQLite
         {
             this.Execute("ROLLBACK TO SAVEPOINT " + name + ";");
         }
+        #endregion
 
         /// <summary>
         /// Sets the starting value of a AutoIncrement field for a table
@@ -97,39 +103,165 @@ namespace FMSC.ORM.SQLite
             }
         }
 
-        public List<ColumnInfo> GetTableInfo(string tableName)
+        public override List<ColumnInfo> GetTableInfo(string tableName)
         {
-            return Context.GetTableInfo(tableName);
+            List<ColumnInfo> colList = new List<ColumnInfo>();
+            lock (_readOnlyConnectionSyncLock)
+            {
+
+                using (DbCommand command = Provider.CreateCommand("PRAGMA table_info(" + tableName + ");"))
+                {
+                    using (DbConnection conn = OpenReadOnlyConnection())
+                    {
+                        command.Connection = conn;
+
+                        try
+                        {
+                            using (var reader = command.ExecuteReader())
+                            {
+                                int nameOrd = reader.GetOrdinal("name");
+                                int dbTypeOrd = reader.GetOrdinal("type");
+                                int pkOrd = reader.GetOrdinal("pk");
+                                int notNullOrd = reader.GetOrdinal("notnull");
+                                int defaultValOrd = reader.GetOrdinal("dflt_value");
+                                while (reader.Read())
+                                {
+                                    ColumnInfo colInfo = new ColumnInfo();
+                                    colInfo.Name = reader.GetString(nameOrd);
+                                    colInfo.DBType = reader.GetString(dbTypeOrd);
+                                    colInfo.IsPK = reader.GetBoolean(pkOrd);
+                                    colInfo.IsRequired = reader.GetBoolean(notNullOrd);
+                                    if (!reader.IsDBNull(defaultValOrd))
+                                    {
+                                        colInfo.Default = reader.GetString(defaultValOrd);
+                                    }
+                                    colList.Add(colInfo);
+                                }
+                            }
+                        }
+                        catch (Exception e)
+                        {
+                            throw this.ThrowExceptionHelper(conn, command, e);
+                        }
+                        finally
+                        {
+                            ReleaseReadOnlyConnection();
+                        }
+                    }
+                }
+                return colList;
+            }
         }
 
-        public bool HasForeignKeyErrors(string table_name)
+        public override bool HasForeignKeyErrors(string table_name)
         {
-            return Context.HasForeignKeyErrors(table_name);
+            bool hasErrors = false;
+            string comStr;
+            if (string.IsNullOrEmpty(table_name))
+            {
+                comStr = "PRAGMA foreign_key_check;";
+            }
+            else
+            {
+                comStr = "PRAGMA foreign_key_check(" + table_name + ");";
+            }
+            lock (_readOnlyConnectionSyncLock)
+            {
+                using (DbCommand command = Provider.CreateCommand(comStr))
+                {
+                    using (DbConnection conn = OpenReadOnlyConnection())
+                    {
+                        command.Connection = conn;
+
+                        try
+                        {
+                            using (var reader = command.ExecuteReader())
+                            {
+                                hasErrors = reader.Read();
+                            }
+                        }
+                        catch (Exception e)
+                        {
+                            throw this.ThrowExceptionHelper(conn, command, e);
+                        }
+                        finally
+                        {
+                            ReleaseReadOnlyConnection();
+                        }
+                    }
+                }
+                return hasErrors;
+            }
+        }
+
+        public override Int64 GetRowCount(string tableName, string selection, params Object[] selectionArgs)
+        {
+            string query = string.Format("SELECT Count(1) FROM {0} {1};", tableName, selection);
+            return ExecuteScalar<Int64>(query);
+        }
+
+        public string GetTableSQL(String tableName)
+        {
+            return (String)this.ExecuteScalar("SELECT sql FROM Sqlite_master WHERE name = ? COLLATE NOCASE and type = 'table';", tableName);
+        }
+
+        public string[] GetTableUniques(String tableName)
+        {
+            String tableSQL = this.GetTableSQL(tableName);
+            System.Text.RegularExpressions.Match match =
+                System.Text.RegularExpressions.Regex.Match(tableSQL, @"(?<=^\s+UNIQUE\s\()[^\)]+(?=\))", System.Text.RegularExpressions.RegexOptions.Multiline);
+            if (match != null && match.Success)
+            {
+                String[] a = match.Value.Split(new char[] { ',', ' ', '\r', '\n' });
+                int numNotEmpty = 0;
+                foreach (string s in a)
+                {
+                    if (!string.IsNullOrEmpty(s))
+                    {
+                        numNotEmpty++;
+                    }
+                }
+                string[] b = new string[numNotEmpty];
+                for (int i = 0, j = 0; i < a.Length; i++)
+                {
+                    if (!string.IsNullOrEmpty(a[i]))
+                    {
+                        b[j] = a[i];
+                        j++;
+                    }
+                }
+
+                return b;
+                //return match.Value.Split(new char[]{',',' ','\r','\n'},  StringSplitOptions.RemoveEmptyEntries);
+
+            }
+            return new string[0];
+
         }
 
         #region File utility methods
-            ///// <summary>
-            ///// Copies entire file to <paramref name="path"/> Overwriting any existing file
-            ///// </summary>
-            ///// <param name="path"></param>
-            //public void CopyTo(string path)
-            //{
-            //    this.CopyTo(path, false);
-            //}
+        ///// <summary>
+        ///// Copies entire file to <paramref name="path"/> Overwriting any existing file
+        ///// </summary>
+        ///// <param name="path"></param>
+        //public void CopyTo(string path)
+        //{
+        //    this.CopyTo(path, false);
+        //}
 
-            //public void CopyTo(string destPath, bool overwrite)
-            //{
-            //    Context.ReleaseAllConnections(true);
-            //    System.IO.File.Copy(this.Path, destPath, overwrite);
-            //}
+        //public void CopyTo(string destPath, bool overwrite)
+        //{
+        //    Context.ReleaseAllConnections(true);
+        //    System.IO.File.Copy(this.Path, destPath, overwrite);
+        //}
 
-            /// <summary>
-            /// Creates copy at location, and changes database path to new location
-            /// </summary>
-            /// <param name="desPath"></param>
+        /// <summary>
+        /// Creates copy at location, and changes database path to new location
+        /// </summary>
+        /// <param name="desPath"></param>
         public bool CopyAs(string desPath)
         {
-            Context.ReleaseAllConnections(true);
+            ReleaseAllConnections(true);
             try
             {
                 System.IO.File.Copy(this.Path, desPath);
@@ -146,9 +278,11 @@ namespace FMSC.ORM.SQLite
             return true;
         }
 
+        
+
         public bool MoveTo(string path)
         {
-            Context.ReleaseAllConnections(true);
+            ReleaseAllConnections(true);
             try
             {
                 System.IO.File.Move(this.Path, path);
@@ -165,6 +299,73 @@ namespace FMSC.ORM.SQLite
         }
 
         #endregion
+
+        protected override Exception ThrowExceptionHelper(DbConnection conn, DbCommand comm, Exception innerException)
+        {
+            if (innerException is SQLiteException)
+            {
+                SQLException sqlEx;
+                SQLiteException ex = innerException as SQLiteException;
+                switch (ex.ResultCode)
+                {
+                    case SQLiteErrorCode.Corrupt:
+                    case SQLiteErrorCode.NotADb:
+                    case SQLiteErrorCode.Perm:
+                    case SQLiteErrorCode.IoErr:
+                    case SQLiteErrorCode.CantOpen:
+                    case SQLiteErrorCode.Full:
+                    case SQLiteErrorCode.Auth:
+                        {
+                            return new FileAccessException(ex.ResultCode.ToString(), innerException);
+                        }
+                    case SQLiteErrorCode.ReadOnly:
+                        {
+                            sqlEx = new ReadOnlyException(null, innerException);
+                            break;
+                        }
+                    case SQLiteErrorCode.Constraint:
+                        {
+                            if (innerException.Message.IndexOf("UNIQUE constraint failed") >= 0)
+                            {
+                                sqlEx = new UniqueConstraintException(null, innerException);
+                            }
+                            else
+                            {
+                                sqlEx = new ConstraintException(null, innerException);
+                            }
+                            break;
+                        }
+                    default:
+                        {
+                            sqlEx = new SQLException(null, innerException);
+                            break;
+                        }
+                }
+                if (conn != null)
+                {
+                    try
+                    {
+                        sqlEx.ConnectionString = conn.ConnectionString;
+                        sqlEx.ConnectionState = conn.State.ToString();
+                    }
+                    catch (ObjectDisposedException)
+                    {
+                        sqlEx.ConnectionState = "Disposed";
+                    }
+                }
+                if (comm != null)
+                {
+                    sqlEx.CommandText = comm.CommandText;
+                    //newEx.Data.Add("CommandText", comm.CommandText);
+                }
+
+                return sqlEx;
+            }
+            else
+            {
+                return new ORMException(null, innerException);
+            }
+        }
 
     }
 }
