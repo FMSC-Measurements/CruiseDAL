@@ -13,6 +13,9 @@ namespace FMSC.ORM.Core
 {
     public abstract class DataStoreContext : IDisposable
     {
+        bool DEFAULT_RETRY_RO_CONNECTION_BEHAVIOR = false;
+        bool DEFAULT_RETRY_RW_CONNECTION_BEHAVIOR = false;
+
         public DatastoreRedux DataStore { get; set; }
 
         //public DbConnectionStringBuilder ConnectionStringBuilder { get; protected set; }
@@ -65,12 +68,12 @@ namespace FMSC.ORM.Core
         }
 
         #region sugar
-        DbCommand CreateCommand(string commandText)
+        protected DbCommand CreateCommand(string commandText)
         {
             return DbProviderFactoryAdapter.Instance.CreateCommand(commandText);
         }
 
-        DbParameter CreateParameter(string name, object value)
+        protected DbParameter CreateParameter(string name, object value)
         {
             return DbProviderFactoryAdapter.Instance.CreateParameter(name, value);
         }
@@ -80,6 +83,12 @@ namespace FMSC.ORM.Core
         //    throw new NotImplementedException();
         //}
         #endregion
+
+        #region abstract members
+        public abstract bool HasForeignKeyErrors(string table_name);
+        public abstract List<ColumnInfo> GetTableInfo(string tableName);
+
+        #endregion 
 
         #region Transaction Management
         public void BeginTransaction()
@@ -604,6 +613,11 @@ namespace FMSC.ORM.Core
             //return conn;
         }
 
+        protected DbConnection OpenReadWriteConnection()
+        {
+            return OpenReadWriteConnection(DEFAULT_RETRY_RW_CONNECTION_BEHAVIOR);
+        }
+
         protected virtual DbConnection OpenReadWriteConnection(bool retry)
         {
             lock(this._readWriteConnectionSyncLock)
@@ -629,11 +643,9 @@ namespace FMSC.ORM.Core
                     {
                         if(!retry)
                         {
-                            throw new ConnectionException(null, e)
-                            {
-                                ConnectionString = conn.ConnectionString,
-                                ConnectionState = conn.State
-                            };
+                            var newEx = new ConnectionException(null, e);
+                            newEx.AddConnectionInfo(conn);
+                            throw newEx;
                         }
                         else
                         {
@@ -650,14 +662,17 @@ namespace FMSC.ORM.Core
             }
         }
 
+        protected DbConnection OpenReadOnlyConnection()
+        {
+            return OpenReadOnlyConnection(DEFAULT_RETRY_RO_CONNECTION_BEHAVIOR);
+        }
+
         protected virtual DbConnection OpenReadOnlyConnection(bool retry)
         {
 
             lock (this._readOnlyConnectionSyncLock)
             {
                 DbConnection conn;
-
-                
 
                 if (_ReadOnlyConnection == null)
                 {
@@ -752,7 +767,7 @@ namespace FMSC.ORM.Core
             conn.Dispose();
         }
 
-        void ReleaseReadOnlyConnection()
+        protected void ReleaseReadOnlyConnection()
         {
             lock(_readOnlyConnectionSyncLock)
             {
@@ -764,7 +779,7 @@ namespace FMSC.ORM.Core
             }
         }
 
-        void ReleaseReadWriteConnection()
+        protected void ReleaseReadWriteConnection()
         {
             lock (_readWriteConnectionSyncLock)
             {

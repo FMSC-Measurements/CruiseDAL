@@ -99,85 +99,12 @@ namespace FMSC.ORM.SQLite
 
         public List<ColumnInfo> GetTableInfo(string tableName)
         {
-            List<ColumnInfo> colList = new List<ColumnInfo>();
-
-            DbDataReader reader = null;
-            lock (this._connectionSyncLock)
-            {
-                DbConnection conn = OpenConnection();
-                DbCommand command = this.CreateCommand(conn, String.Format("PRAGMA table_info({0});", tableName));
-
-                try
-                {
-                    reader = command.ExecuteReader();
-                    int nameOrd = reader.GetOrdinal("name");
-                    int dbTypeOrd = reader.GetOrdinal("type");
-                    int pkOrd = reader.GetOrdinal("pk");
-                    int notNullOrd = reader.GetOrdinal("notnull");
-                    int defaultValOrd = reader.GetOrdinal("dflt_value");
-                    while (reader.Read())
-                    {
-                        ColumnInfo colInfo = new ColumnInfo();
-                        colInfo.Name = reader.GetString(nameOrd);
-                        colInfo.DBType = reader.GetString(dbTypeOrd);
-                        colInfo.IsPK = reader.GetBoolean(pkOrd);
-                        colInfo.IsRequired = reader.GetBoolean(notNullOrd);
-                        if (!reader.IsDBNull(defaultValOrd))
-                        {
-                            colInfo.Default = reader.GetString(defaultValOrd);
-                        }
-                        colList.Add(colInfo);
-                    }
-                }
-                catch (Exception e)
-                {
-                    throw this.ThrowDatastoreExceptionHelper(conn, command, e);
-                }
-                finally
-                {
-                    if (reader != null) { reader.Dispose(); }
-                    if (command != null) { command.Dispose(); }
-                    ReleaseConnection();
-                }
-                return colList;
-            }
+            return Context.GetTableInfo(tableName);
         }
 
         public bool HasForeignKeyErrors(string table_name)
         {
-            bool hasErrors = false;
-            string comStr;
-            if (string.IsNullOrEmpty(table_name))
-            {
-                comStr = "PRAGMA foreign_key_check;";
-            }
-            else
-            {
-                comStr = "PRAGMA foreign_key_check(" + table_name + ");";
-            }
-            lock (this._connectionSyncLock)
-            {
-                DbConnection conn = OpenConnection();
-                DbDataReader reader = null;
-                DbCommand command = this.CreateCommand(conn, comStr);
-                try
-                {
-                    reader = command.ExecuteReader();
-                    hasErrors = reader.Read();
-                }
-                catch (Exception e)
-                {
-                    throw this.ThrowDatastoreExceptionHelper(conn, command, e);
-                }
-                finally
-                {
-                    if (reader != null) { reader.Dispose(); }
-                    if (command != null) { command.Dispose(); }
-                    ReleaseConnection();
-                }
-
-                return hasErrors;
-            }
+            return Context.HasForeignKeyErrors(table_name);
         }
 
         #region File utility methods

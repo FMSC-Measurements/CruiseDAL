@@ -21,12 +21,103 @@ namespace FMSC.ORM
     public class SQLException : DbException
 #endif
     {
-        public SQLException(string message, Exception innerException) : base(message, innerException)
+        public SQLException(Exception innerException) : base(null, innerException)
         { }
 
+        public SQLException(string message, Exception innerException)
+            : base(message, innerException)
+        { }
+
+        public SQLException(DbConnection connection, DbCommand command, Exception innerException)
+        {
+            AddConnectionInfo(connection);
+            AddCommandInfo(command);        
+        }
+
+        public void AddConnectionInfo(DbConnection connection)
+        {
+            if (connection != null)
+            {
+                try
+                {
+                    ConnectionString = connection.ConnectionString;
+                    ConnectionState = connection.State.ToString();
+                }
+                catch (ObjectDisposedException)
+                {
+                    ConnectionState = "Disposed";
+                }
+            }
+        }
+
+        public void AddCommandInfo(DbCommand command)
+        {
+            if (command != null)
+            {
+                CommandText = command.CommandText;
+            }
+        }
+
+        public override string Message
+        {
+            get
+            {
+                return String.Format("{0}\r\n: ConnectionString={1}, ConnectionState={2}, CommandText={3}"
+                    ,base.Message , ConnectionString, ConnectionState, CommandText);
+            }
+        }
+
+#if NetCF
         public string ConnectionString { get; set; }
         public string ConnectionState { get; set; }
         public string CommandText { get; set; }
+#else
+        public string ConnectionString 
+        { 
+            get { return Data.Contains("ConnectionString") ? Data["ConnectionString"].ToString() : string.Empty; }
+            set 
+            { 
+                if( Data.Contains("ConnectionString"))
+                {
+                    Data["ConnectionString"] = value;
+                }
+                else
+                {
+                    Data.Add("ConnectionString", value);
+                }
+            }
+        }
+        public string ConnectionState 
+        { 
+            get { return Data.Contains("ConnectionState") ? Data["ConnectionState"].ToString() : string.Empty; }
+            set 
+            { 
+                if( Data.Contains("ConnectionState"))
+                {
+                    Data["ConnectionState"] = value;
+                }
+                else
+                {
+                    Data.Add("ConnectionState", value);
+                }
+            }
+        }
+        public string CommandText 
+        { 
+            get { return Data.Contains("CommandText") ? Data["CommandText"].ToString() : string.Empty; }
+            set 
+            { 
+                if( Data.Contains("CommandText"))
+                {
+                    Data["CommandText"] = value;
+                }
+                else
+                {
+                    Data.Add("CommandText", value);
+                }
+            }
+        }
+#endif
 
     }
 
@@ -35,8 +126,7 @@ namespace FMSC.ORM
         public ConnectionException(string message, Exception innerException) : base(message, innerException)
         { }
 
-        public String ConnectionString { get; set; }
-        public System.Data.ConnectionState ConnectionState { get; set; }
+
     }
 
     public class ReadOnlyException : ConnectionException

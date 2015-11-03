@@ -19,7 +19,7 @@ namespace FMSC.ORM.Core.EntityModel
         string _selectCommandFormat;
 
         SQLInsertCommand _insertCommand;
-        SQLSelectExpression _afterInsertCommand;
+        //SQLSelectExpression _afterInsertCommand;
 
         SQLUpdateCommand _updateCommand; 
 
