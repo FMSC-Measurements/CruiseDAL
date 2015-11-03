@@ -13,7 +13,7 @@ using FMSC.ORM.Core.SQL;
 
 namespace CruiseDAL
 {
-    public abstract class CruiseDALDataObject : DataObject, IDataErrorInfo, INotifyDataErrorInfo, IValidatable
+    public abstract class CruiseDALDataObject : DataObject, IDataErrorInfo, IValidatable
     {
         public CruiseDALDataObject() : base()
         {
@@ -68,22 +68,7 @@ namespace CruiseDAL
         public Object Tag { get; set; }
 
 
-        public virtual void Save()
-        {
-            this.Save(OnConflictOption.Fail);
-        }
-
-        public virtual void Save(OnConflictOption option)
-        {
-            Debug.Assert(DAL != null);
-            this.DAL.Save(this, option);
-        }
-
-        public virtual void Delete()
-        {
-            Debug.Assert(DAL != null);
-            DAL.Delete(this);
-        }
+        
 
         protected override void NotifyPropertyChanged(string name)
         {
@@ -95,18 +80,30 @@ namespace CruiseDAL
         }
 
         #region validation
-        event EventHandler<DataErrorsChangedEventArgs> INotifyDataErrorInfo.ErrorsChanged
-        {
-            add
-            {
-                this.ErrorCollection.ErrorsChanged += value;
-            }
+        //requires Net45 or higher
+        //event EventHandler<DataErrorsChangedEventArgs> INotifyDataErrorInfo.ErrorsChanged
+        //{
+        //    add
+        //    {
+        //        this.ErrorCollection.ErrorsChanged += value;
+        //    }
 
-            remove
-            {
-                this.ErrorCollection.ErrorsChanged -= value;
-            }
-        }
+        //    remove
+        //    {
+        //        this.ErrorCollection.ErrorsChanged -= value;
+        //    }
+        //}
+        //bool INotifyDataErrorInfo.HasErrors
+        //{
+        //    get
+        //    {
+        //        return ErrorCollection.HasErrors;
+        //    }
+        //}
+        //IEnumerable INotifyDataErrorInfo.GetErrors(string propertyName)
+        //{
+        //    return this.ErrorCollection.GetErrors(propertyName);
+        //}
 
         [XmlIgnore]
         public abstract RowValidator Validator
@@ -131,18 +128,9 @@ namespace CruiseDAL
             }
         }
 
-        bool INotifyDataErrorInfo.HasErrors
-        {
-            get
-            {
-                return ErrorCollection.HasErrors;
-            }
-        }
+        
 
-        IEnumerable INotifyDataErrorInfo.GetErrors(string propertyName)
-        {
-            return this.ErrorCollection.GetErrors(propertyName);
-        }
+        
 
         #region IDataErrorInfo Members
 
@@ -417,7 +405,7 @@ namespace CruiseDAL
             //return this.errors.ContainsKey(propName) && this.errors[propName].Suppress == false;
         }
 
-        [Obsolete]
+
         public bool HasErrors()
         {
             return this.ErrorCollection.HasErrors;

@@ -18,7 +18,7 @@ namespace CruiseDAL
         EntityDescription _entityDescription;
         CruiseDALDataObject _dataObject;
 
-        public event EventHandler<DataErrorsChangedEventArgs> ErrorsChanged;
+        //public event EventHandler<DataErrorsChangedEventArgs> ErrorsChanged;
 
         public CruiseDALErrorCollection(CruiseDALDataObject dataObject, String tableName)
         {
@@ -113,7 +113,7 @@ namespace CruiseDAL
                     if (e1.Level[0] != e.Level[0] && e1.Suppress == true)
                     {
                         errors[propName] = e;
-                        OnErrorsChanged(new DataErrorsChangedEventArgs(propName));
+                        //OnErrorsChanged(new DataErrorsChangedEventArgs(propName));
                     }
                     else if (e1.Message == e.Message && (e.Suppress == true && e1.Suppress == false))
                     {
@@ -122,19 +122,19 @@ namespace CruiseDAL
                             e1.Delete();
                         }
                         errors[propName] = e;
-                        OnErrorsChanged(new DataErrorsChangedEventArgs(propName));
+                        //OnErrorsChanged(new DataErrorsChangedEventArgs(propName));
                     }
                     else if (e1.Level.StartsWith("W") && e.Level.StartsWith("E"))
                     {
                         errors[propName] = e;
-                        OnErrorsChanged(new DataErrorsChangedEventArgs(propName));
+                        //OnErrorsChanged(new DataErrorsChangedEventArgs(propName));
                     }
 
                 }
                 else
                 {
                     errors[propName] = e;
-                    OnErrorsChanged(new DataErrorsChangedEventArgs(propName));
+                    //OnErrorsChanged(new DataErrorsChangedEventArgs(propName));
                 }
             }
         }
@@ -196,13 +196,13 @@ namespace CruiseDAL
             }
         }
 
-        protected void OnErrorsChanged(DataErrorsChangedEventArgs e)
-        {
-            if(ErrorsChanged != null)
-            {
-                ErrorsChanged(this._dataObject, e);
-            }
-        }
+        //protected void OnErrorsChanged(DataErrorsChangedEventArgs e)
+        //{
+        //    if(ErrorsChanged != null)
+        //    {
+        //        ErrorsChanged(this._dataObject, e);
+        //    }
+        //}
 
         public void PurgeErrorList()
         {
@@ -274,7 +274,7 @@ namespace CruiseDAL
                         {
                             e.Delete();
                         }
-                        OnErrorsChanged(new DataErrorsChangedEventArgs(propName));
+                        //OnErrorsChanged(new DataErrorsChangedEventArgs(propName));
                     }
                 }
                 if (this.errors.Count == 0)

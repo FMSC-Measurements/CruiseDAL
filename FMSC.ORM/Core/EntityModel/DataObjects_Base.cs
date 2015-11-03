@@ -2,10 +2,12 @@
 using System.ComponentModel;
 using System.Xml.Serialization;
 using FMSC.ORM.Core;
+using FMSC.ORM.Core.SQL;
+using System.Diagnostics;
 
 namespace FMSC.ORM.Core.EntityModel
 {
-    public enum RecordState
+    public enum RecordState //make protected inside DataObject?
     {
         Persisted = 1,
         HasChanges = 2,
@@ -23,6 +25,7 @@ namespace FMSC.ORM.Core.EntityModel
         IPersistanceTracking
     {
         protected DatastoreRedux _ds = null;
+        protected RecordState _recordState = RecordState.Detached;
 
         #region Properties
 
@@ -43,15 +46,6 @@ namespace FMSC.ORM.Core.EntityModel
                 InternalSetDAL(value);
                 OnDALChanged(value);
             }
-        }
-
-        protected RecordState _recordState = RecordState.Detached;
-
-        [XmlIgnore]
-        internal RecordState RecordState
-        {
-            get { return _recordState; }
-            set { this._recordState = value; }
         }
 
         [XmlIgnore]
@@ -116,8 +110,23 @@ namespace FMSC.ORM.Core.EntityModel
 
         #endregion
 
-       
 
+        public virtual void Save()
+        {
+            this.Save(OnConflictOption.Fail);
+        }
+
+        public virtual void Save(OnConflictOption option)
+        {
+            Debug.Assert(DAL != null);
+            this.DAL.Save(this, option);
+        }
+
+        public virtual void Delete()
+        {
+            Debug.Assert(DAL != null);
+            DAL.Delete(this);
+        }
 
 
         protected virtual void OnDALChanged(DatastoreRedux newDAL)
@@ -165,6 +174,8 @@ namespace FMSC.ORM.Core.EntityModel
                 }
             }
         }
+
+        
 
 
         #region IPersistanceTracking Members
