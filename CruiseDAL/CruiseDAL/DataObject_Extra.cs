@@ -10,6 +10,7 @@ using CruiseDAL.DataObjects;
 using System.Diagnostics;
 using FMSC.ORM.Core;
 using FMSC.ORM.Core.SQL;
+using FMSC.ORM.Core.EntityAttributes;
 
 namespace CruiseDAL
 {
@@ -33,22 +34,25 @@ namespace CruiseDAL
 
 
         [XmlIgnore]
+        [IgnoreField]
         public Int64? rowID
         {
             get;
             set;
         }
 
-        [XmlIgnore]
-        public object PrimaryKey
-        {
-            get; set;
-        }
+        //[XmlIgnore]
+        //[IgnoreField]
+        //public object PrimaryKey
+        //{
+        //    get; set;
+        //}
 
         /// <summary>
         /// Property returns an instance of its self. Useful when using data binding 
         /// </summary>
         [XmlIgnore]
+        [IgnoreField]
         public DataObject Self
         {
             get
@@ -62,6 +66,7 @@ namespace CruiseDAL
         /// be attached to a data object. 
         /// </summary>
         [XmlIgnore]
+        [IgnoreField]
         public Object Tag { get; set; }
 
 
@@ -103,12 +108,14 @@ namespace CruiseDAL
         //}
 
         [XmlIgnore]
+        [IgnoreField]
         public abstract RowValidator Validator
         {
             get;
         }
 
         [XmlIgnore]
+        [IgnoreField]
         public bool IsValidated
         {
             get { return (this._recordState & RecordState.Validated) == RecordState.Validated; }
@@ -461,34 +468,34 @@ namespace CruiseDAL
             }
         }
 
-        //public virtual bool Validate(IEnumerable<String> fields)
-        //{
-        //    bool isValid = true;
-        //    foreach (String f in fields)
-        //    {
-        //        isValid = this.ValidateProperty(f) && isValid;
-        //    }
-        //    return isValid;
-        //}
+        public virtual bool Validate(IEnumerable<String> fields)
+        {
+            bool isValid = true;
+            foreach (String f in fields)
+            {
+                isValid = this.ValidateProperty(f) && isValid;
+            }
+            return isValid;
+        }
 
-        //depreciated
-        //public virtual bool ValidateProperty(string name)
-        //{
-        //    if (PropertyChangedEventsDisabled) { return true; }
-        //    object value = null;
-        //    try
-        //    {
-        //        value = DatastoreBase.GetObjectDiscription(this.GetType()).Fields[name]._getter.Invoke(this, null);
-        //        //PropertyInfo property = this.GetType().GetProperty(name, BindingFlags.Instance | BindingFlags.Public);
-        //        ////if (property == null) { return true; }
-        //        //value = property.GetValue(this, null);
-        //    }
-        //    catch
-        //    {
-        //        return true;
-        //    }
-        //    return this.ValidateProperty(name, value);
-        //}
+
+        public virtual bool ValidateProperty(string name)
+        {
+            if (PropertyChangedEventsDisabled) { return true; }
+            object value = null;
+            try
+            {
+                value = DatastoreRedux.LookUpEntityByType(this.GetType()).Fields[name].GetFieldValue(this);
+                //PropertyInfo property = this.GetType().GetProperty(name, BindingFlags.Instance | BindingFlags.Public);
+                ////if (property == null) { return true; }
+                //value = property.GetValue(this, null);
+            }
+            catch
+            {
+                return true;
+            }
+            return this.ValidateProperty(name, value);
+        }
 
         protected virtual bool ValidateProperty(string name, object value)
         {

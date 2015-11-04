@@ -24,7 +24,7 @@
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
     <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE;$(PlatformFamilyName)</DefineConstants>
+    <DefineConstants>TRACE;DEBUG;NetCF</DefineConstants>
     <NoStdLib>true</NoStdLib>
     <NoConfig>true</NoConfig>
     <ErrorReport>prompt</ErrorReport>
@@ -36,7 +36,7 @@
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>bin\Release\</OutputPath>
-    <DefineConstants>TRACE;PocketPC NetCF NetCF20</DefineConstants>
+    <DefineConstants>TRACE;NetCF</DefineConstants>
     <NoStdLib>true</NoStdLib>
     <NoConfig>true</NoConfig>
     <ErrorReport>prompt</ErrorReport>
@@ -64,6 +64,7 @@
     <Compile Include="Core\EntityAttributes\FieldAttribute.cs" />
     <Compile Include="Core\EntityAttributes\FieldAttributeCollection.cs" />
     <Compile Include="Core\EntityAttributes\FieldValidationRuleAttribut.cs" />
+    <Compile Include="Core\EntityAttributes\IgnoreFieldAttribute.cs" />
     <Compile Include="Core\EntityAttributes\InfrastructureFieldAttribute.cs" />
     <Compile Include="Core\EntityAttributes\ModifiedByFieldAttribute.cs" />
     <Compile Include="Core\EntityAttributes\PrimaryKeyFieldAttribute.cs" />

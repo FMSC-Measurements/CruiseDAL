@@ -246,7 +246,7 @@ namespace CruiseDAL
                 {
                     if (e.DAL == null || e.DAL != _dataObject.DAL)
                     {
-                        e.DAL = (DALRedux)_dataObject.DAL;
+                        e.DAL = (DAL)_dataObject.DAL;
                     }
 
                     e.CN_Number = _dataObject.rowID.Value;

@@ -1,7 +1,7 @@
 using System;
 namespace CruiseDAL
 {
-    public partial class DALRedux
+    public partial class DAL
     {
         internal const string CURENT_DBVERSION = "2015.09.01";
         internal const int SCHEMA_VERSION = 2;

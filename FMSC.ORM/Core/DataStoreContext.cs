@@ -71,15 +71,15 @@ namespace FMSC.ORM.Core
         }
 
         #region sugar
-        protected DbCommand CreateCommand(string commandText)
-        {
-            return DbProviderFactoryAdapter.Instance.CreateCommand(commandText);
-        }
+        //protected DbCommand CreateCommand(string commandText)
+        //{
+        //    return DbProviderFactoryAdapter.Instance.CreateCommand(commandText);
+        //}
 
-        protected DbParameter CreateParameter(string name, object value)
-        {
-            return DbProviderFactoryAdapter.Instance.CreateParameter(name, value);
-        }
+        //protected DbParameter CreateParameter(string name, object value)
+        //{
+        //    return DbProviderFactoryAdapter.Instance.CreateParameter(name, value);
+        //}
 
         //DbConnectionStringBuilder GetConnectionStringBuilder()
         //{

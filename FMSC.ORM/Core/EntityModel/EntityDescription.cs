@@ -44,6 +44,7 @@ namespace FMSC.ORM.Core.EntityModel
         public EntityDescription(Type type, DbProviderFactoryAdapter providerFactory) : this()
         {
             EntityType = type;
+            Initialize();
 
             this.Inflator = new EntityInflator(this);
             this.CommandBuilder = new EntityCommandBuilder(this, providerFactory);
@@ -61,6 +62,7 @@ namespace FMSC.ORM.Core.EntityModel
                 foreach (PropertyInfo p in EntityType.GetProperties(BindingFlags.Public | BindingFlags.Instance))
                 {
                     FieldAttribute fieldAttr = (FieldAttribute)Attribute.GetCustomAttribute(p, typeof(FieldAttribute));
+                    if (fieldAttr is IgnoreFieldAttribute) { continue; }
                     if (fieldAttr != null)
                     {
                         Fields.AddField(p, fieldAttr);
@@ -75,6 +77,7 @@ namespace FMSC.ORM.Core.EntityModel
                 foreach (PropertyInfo p in EntityType.GetProperties(BindingFlags.NonPublic | BindingFlags.Instance))
                 {
                     FieldAttribute fieldAttr = (FieldAttribute)Attribute.GetCustomAttribute(p, typeof(FieldAttribute));
+                    if (fieldAttr is IgnoreFieldAttribute) { continue; }
                     if (fieldAttr != null)
                     {
                         Fields.AddField(p, fieldAttr);

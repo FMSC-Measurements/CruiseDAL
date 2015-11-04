@@ -7,13 +7,13 @@ namespace CruiseDAL
 {
     public static class DALExtentions
     {
-        public static void LogMessage(this DALRedux dal, string message, string level)
+        public static void LogMessage(this DAL dal, string message, string level)
         {
             string appStr = GetCallingProgram();
             dal.LogMessage(appStr, message, level);
         }
 
-        public static void LogMessage(this DALRedux dal, string program, string message, string level)
+        public static void LogMessage(this DAL dal, string program, string message, string level)
         {
             Logger.Log.L(message);
 

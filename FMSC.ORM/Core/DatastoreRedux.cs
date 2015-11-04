@@ -89,6 +89,7 @@ namespace FMSC.ORM.Core
             string name = t.Name;
             if(!_globalEntityDescriptionLookup.ContainsKey(name))
             {
+                
                 _globalEntityDescriptionLookup.Add(name, new EntityDescription(t, DbProviderFactoryAdapter.Instance));
             }
 
@@ -924,7 +925,7 @@ namespace FMSC.ORM.Core
 
         protected DbConnection CreateReadWriteConnection()
         {
-            DbConnection conn = DbProviderFactoryAdapter.Instance.CreateConnection();
+            DbConnection conn = Provider.CreateConnection();
             conn.ConnectionString = BuildConnectionString(false);
             conn.StateChange += _Connection_StateChange;
             return conn;
@@ -932,7 +933,7 @@ namespace FMSC.ORM.Core
 
         protected DbConnection CreateReadOnlyConnection()
         {
-            DbConnection conn = DbProviderFactoryAdapter.Instance.CreateConnection();
+            DbConnection conn = Provider.CreateConnection();
             conn.ConnectionString = BuildConnectionString(true);
             conn.StateChange += _Connection_StateChange;
             return conn;

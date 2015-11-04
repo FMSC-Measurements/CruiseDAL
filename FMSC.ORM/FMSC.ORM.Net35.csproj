@@ -49,6 +49,7 @@
     <Compile Include="Core\EntityAttributes\FieldAttribute.cs" />
     <Compile Include="Core\EntityAttributes\FieldAttributeCollection.cs" />
     <Compile Include="Core\EntityAttributes\FieldValidationRuleAttribut.cs" />
+    <Compile Include="Core\EntityAttributes\IgnoreFieldAttribute.cs" />
     <Compile Include="Core\EntityAttributes\InfrastructureFieldAttribute.cs" />
     <Compile Include="Core\EntityAttributes\ModifiedByFieldAttribute.cs" />
     <Compile Include="Core\EntityAttributes\PrimaryKeyFieldAttribute.cs" />

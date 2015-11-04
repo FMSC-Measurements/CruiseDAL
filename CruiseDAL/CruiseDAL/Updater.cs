@@ -8,7 +8,7 @@ namespace CruiseDAL
 {
     internal static class Updater
     {
-        public static void Update(DALRedux db)
+        public static void Update(DAL db)
         {
             //PatchSureToMeasure(db);
 
@@ -148,7 +148,7 @@ namespace CruiseDAL
 
         
 
-        private static String[] ListTriggers(DALRedux db)
+        private static String[] ListTriggers(DAL db)
         {
             string result = db.ExecuteScalar("SELECT group_concat(name,',') FROM sqlite_master WHERE type LIKE 'trigger';") as string;
             if (result == null || result.Length == 0) { return new string[0]; }
@@ -159,7 +159,7 @@ namespace CruiseDAL
 
         }
 
-        private static void RebuildTable(DALRedux db, String tableName, String newTableDef, String columnList)
+        private static void RebuildTable(DAL db, String tableName, String newTableDef, String columnList)
         {
             //get all triggers accocated with table so we can recreate them later
             string getTriggers = String.Format("SELECT group_concat(sql,';\r\n') FROM sqlite_master WHERE tbl_name LIKE '{0}' and type LIKE 'trigger';", tableName);
@@ -199,7 +199,7 @@ namespace CruiseDAL
                
         }
 
-        private static void SetDatabaseVersion(DALRedux db, string newVersion)
+        private static void SetDatabaseVersion(DAL db, string newVersion)
         {
             string command = String.Format("UPDATE Globals SET Value = '{0}' WHERE Block = 'Database' AND Key = 'Version';", newVersion);
             db.Execute(command);
@@ -207,7 +207,7 @@ namespace CruiseDAL
             db.DatabaseVersion = newVersion;
         }
 
-        private static void InsureErrorLogEntry(DALRedux db, ErrorLogDO el)
+        private static void InsureErrorLogEntry(DAL db, ErrorLogDO el)
         {
 
             if (db.GetRowCount(el.TableName, "WHERE rowID = ?", el.CN_Number) == 0)
@@ -216,7 +216,7 @@ namespace CruiseDAL
             }
         }
 
-        private static void PatchSureToMeasure(DALRedux db)
+        private static void PatchSureToMeasure(DAL db)
         {
             string command = @"UPDATE TreeFieldSetup SET Field = 'STM' WHERE Field = 'SureToMeasure';
                                UPDATE TreeFieldSetupDefault SET Field = 'STM' WHERE Field = 'SureToMeasure';";
@@ -229,7 +229,7 @@ namespace CruiseDAL
 
         
 
-        private static void UpdateToVersion2013_05_30(DALRedux db)
+        private static void UpdateToVersion2013_05_30(DAL db)
         {
             try
             {
@@ -274,7 +274,7 @@ namespace CruiseDAL
 
         }
 
-        private static void UpdateToVersion2013_08_02(DALRedux db)
+        private static void UpdateToVersion2013_08_02(DAL db)
         {
             try
             {
@@ -309,7 +309,7 @@ namespace CruiseDAL
 
         }
 
-        private static void UpdateToVersion2013_08_29(DALRedux db)
+        private static void UpdateToVersion2013_08_29(DAL db)
         {
 
             try
@@ -327,7 +327,7 @@ namespace CruiseDAL
             }
         }
 
-        private static void UpdateToVersion2013_10_29(DALRedux db)
+        private static void UpdateToVersion2013_10_29(DAL db)
         {
             try
             {
@@ -346,7 +346,7 @@ namespace CruiseDAL
 
         }
 
-        private static void UpdateToVersion2013_11_01(DALRedux db)
+        private static void UpdateToVersion2013_11_01(DAL db)
         {
             try
             {
@@ -378,7 +378,7 @@ namespace CruiseDAL
         }
 
 
-        private static void UpdateToVersion2013_06_12(DALRedux db)
+        private static void UpdateToVersion2013_06_12(DAL db)
         {
             try
             {
@@ -419,7 +419,7 @@ namespace CruiseDAL
 
         }
 
-        private static void UpdateToVersion2013_06_17(DALRedux db)
+        private static void UpdateToVersion2013_06_17(DAL db)
         {
             try
             {
@@ -503,7 +503,7 @@ namespace CruiseDAL
 
         }
 
-        public static void UpdateToVersion2013_06_19(DALRedux db)
+        public static void UpdateToVersion2013_06_19(DAL db)
         {
             try
             {
@@ -541,7 +541,7 @@ namespace CruiseDAL
         }
 
         //fixes bug in database version 2013_06_19, doesn't alter schema
-        private static void UpdateVersion2013_06_19(DALRedux db)
+        private static void UpdateVersion2013_06_19(DAL db)
         {
             try
             {
@@ -563,7 +563,7 @@ namespace CruiseDAL
             }
         }
 
-        public static void UpdateToVersion2013_11_22(DALRedux db)
+        public static void UpdateToVersion2013_11_22(DAL db)
         {
             try
             {
@@ -653,7 +653,7 @@ namespace CruiseDAL
 
         }
 
-        private static void UpdateToVersion2014_01_21(DALRedux db)
+        private static void UpdateToVersion2014_01_21(DAL db)
         {
             try
             {
@@ -671,7 +671,7 @@ namespace CruiseDAL
 
         }
 
-        private static void UpdateToVersion2014_03_12(DALRedux db)
+        private static void UpdateToVersion2014_03_12(DAL db)
         {
             try
             {
@@ -707,7 +707,7 @@ namespace CruiseDAL
             }
         }
 
-        private static void UpdateToVersion2014_06_04(DALRedux db)
+        private static void UpdateToVersion2014_06_04(DAL db)
         {
             try
             {
@@ -723,7 +723,7 @@ namespace CruiseDAL
                 throw new SchemaUpdateException(db.DatabaseVersion, "2014.06.04", e);
             }
         }
-        private static void UpdateToVersion2014_07_02(DALRedux db)
+        private static void UpdateToVersion2014_07_02(DAL db)
         {
             try
             {
@@ -740,7 +740,7 @@ namespace CruiseDAL
             }
         }
 
-        private static void UpdateToVersion2014_07_07(DALRedux db)
+        private static void UpdateToVersion2014_07_07(DAL db)
         {
             try
             {
@@ -757,7 +757,7 @@ namespace CruiseDAL
             }
         }
 
-        private static void UpdateToVersion2014_07_17(DALRedux db)
+        private static void UpdateToVersion2014_07_17(DAL db)
         {
             try
             {
@@ -843,7 +843,7 @@ namespace CruiseDAL
 
         }
 
-        private static void UpdateToVersion2014_07_24(DALRedux db)
+        private static void UpdateToVersion2014_07_24(DAL db)
         {
             try
             {
@@ -866,7 +866,7 @@ CREATE TRIGGER OnDeletePlot AFTER DELETE ON Plot BEGIN
             }
         }
 
-        private static void UpdateToVersion2014_08_20(DALRedux db)
+        private static void UpdateToVersion2014_08_20(DAL db)
         {
             try
             {
@@ -882,7 +882,7 @@ CREATE TRIGGER OnDeletePlot AFTER DELETE ON Plot BEGIN
             }
         }
 
-        private static void UpdateToVersion2014_09_02(DALRedux db)
+        private static void UpdateToVersion2014_09_02(DAL db)
         {
             try
             {
@@ -899,7 +899,7 @@ CREATE TRIGGER OnDeletePlot AFTER DELETE ON Plot BEGIN
             }
         }
 
-        private static void UpdateToVersion2014_10_01(DALRedux db)
+        private static void UpdateToVersion2014_10_01(DAL db)
         {
             try
             {
@@ -932,7 +932,7 @@ CREATE TRIGGER OnDeletePlot AFTER DELETE ON Plot BEGIN
 
         }
 
-        public static void UpdateToVersion2015_04_28(DALRedux db)
+        public static void UpdateToVersion2015_04_28(DAL db)
         {
             try
             {
@@ -1020,7 +1020,7 @@ JOIN Stratum USING (Stratum_CN);");
             }
         }
 
-        public static void UpdateToVersion2015_08_03(DALRedux db)
+        public static void UpdateToVersion2015_08_03(DAL db)
         {
             try
             {
@@ -1043,7 +1043,7 @@ JOIN Stratum USING (Stratum_CN);");
 
         }
 
-        private static void UpdateToVersion2015_08_19(DALRedux db)
+        private static void UpdateToVersion2015_08_19(DAL db)
         {
             System.Collections.Generic.List<ColumnInfo> tavCols = db.GetTableInfo("TreeAuditValue");
             bool hasErrorMessageCol = false;
@@ -1074,7 +1074,7 @@ JOIN Stratum USING (Stratum_CN);");
         }
 
         //patch for some a version that got out in the wild with bad triggers
-        private static void UpdateToVersion2015_09_01(DALRedux db)
+        private static void UpdateToVersion2015_09_01(DAL db)
         {
             db.BeginTransaction();
             try

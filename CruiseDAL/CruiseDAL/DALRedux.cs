@@ -16,7 +16,7 @@ namespace CruiseDAL
 {
     public enum CruiseFileType { Unknown, Cruise, Template, Design, Master, Component }
 
-    public partial class DALRedux : SQLiteDatastore
+    public partial class DAL : SQLiteDatastore
     {
         private string _userInfo;
         private string _databaseVersion = "Unknown";
@@ -93,11 +93,11 @@ namespace CruiseDAL
         /// <exception cref="IOException">problem working with file. wrong extension</exception>
         /// <exception cref="FileNotFoundException"
         /// <param name="path"></param>
-        public DALRedux(string path) : this(path, false)
+        public DAL(string path) : this(path, false)
         {
         }
 
-        public DALRedux(string path, bool makeNew)
+        public DAL(string path, bool makeNew)
             : this(path, makeNew, new CruiseDALDatastoreBuilder())
         {
 
@@ -109,7 +109,7 @@ namespace CruiseDAL
         /// <exception cref="ArgumentNullException">path can not be null or an empty string</exception>
         /// <exception cref="System.IO.IOException">File extension is not valid <see cref="VALID_EXTENSIONS"/></exception>
         /// <exception cref="System.UnauthorizedAccessException">File open in another application or thread</exception>
-        public DALRedux(string path, bool makeNew, DatastoreBuilder builder) : base(path)
+        public DAL(string path, bool makeNew, DatastoreBuilder builder) : base(path)
         {
             Debug.Assert(builder != null);
             System.Diagnostics.Debug.Assert(!String.IsNullOrEmpty(path), "path is null or empty");
@@ -239,19 +239,19 @@ namespace CruiseDAL
         #endregion
 
         #region file util
-        public DALRedux CopyTo(string path)
+        public DAL CopyTo(string path)
         {
             return this.CopyTo(path, false);
         }
 
-        public DALRedux CopyTo(string destPath, bool overwrite)
+        public DAL CopyTo(string destPath, bool overwrite)
         {
 
             ReleaseAllConnections(true);
 
             System.IO.File.Copy(this.Path, destPath, overwrite);
             //_DBFileInfo.CopyTo(destPath, overwrite);
-            return new DALRedux(destPath);
+            return new DAL(destPath);
         }
         #endregion
 
@@ -267,7 +267,7 @@ namespace CruiseDAL
         /// <param name="selectionArgs"></param>
         public void DirectCopy(String fileName, String table, String selection, params Object[] selectionArgs)
         {
-            DirectCopy(new DALRedux(fileName), table, selection, OnConflictOption.Abort, selectionArgs);
+            DirectCopy(new DAL(fileName), table, selection, OnConflictOption.Abort, selectionArgs);
         }
 
         /// <summary>
@@ -279,7 +279,7 @@ namespace CruiseDAL
         /// <param name="selectionArgs"></param>
         public void DirectCopy(String fileName, String table, String selection, OnConflictOption option, params Object[] selectionArgs)
         {
-            DirectCopy(new DALRedux(fileName), table, selection, option, selectionArgs);
+            DirectCopy(new DAL(fileName), table, selection, option, selectionArgs);
         }
 
         /// <summary>
@@ -289,7 +289,7 @@ namespace CruiseDAL
         /// <param name="table"></param>
         /// <param name="selection"></param>
         /// <param name="selectionArgs"></param>
-        public void DirectCopy(DALRedux dataBase, string table, String selection, OnConflictOption option, params Object[] selectionArgs)
+        public void DirectCopy(DAL dataBase, string table, String selection, OnConflictOption option, params Object[] selectionArgs)
         {
             if (dataBase.Exists == false) { return; }
 
@@ -310,7 +310,7 @@ namespace CruiseDAL
 
         }
 
-        public void AttachDB(DALRedux externalDB, string externalDBAlias)
+        public void AttachDB(DAL externalDB, string externalDBAlias)
         {
             lock (_multiDatabaseConnectionSyncLock)
             {
@@ -509,7 +509,7 @@ namespace CruiseDAL
             _disposed = true;
         }
 
-        ~DALRedux()
+        ~DAL()
         {
             this.Dispose(false);
         }

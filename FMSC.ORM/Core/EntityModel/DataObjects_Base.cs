@@ -4,6 +4,7 @@ using System.Xml.Serialization;
 using FMSC.ORM.Core;
 using FMSC.ORM.Core.SQL;
 using System.Diagnostics;
+using FMSC.ORM.Core.EntityAttributes;
 
 namespace FMSC.ORM.Core.EntityModel
 {
@@ -30,6 +31,7 @@ namespace FMSC.ORM.Core.EntityModel
         #region Properties
 
         [XmlIgnore]
+        [IgnoreField]
         public DatastoreRedux DAL
         {
             get
@@ -49,24 +51,28 @@ namespace FMSC.ORM.Core.EntityModel
         }
 
         [XmlIgnore]
+        [IgnoreField]
         public bool IsPersisted
         {
             get { return (this._recordState & RecordState.Persisted) == RecordState.Persisted; }
         }
 
         [XmlIgnore]
+        [IgnoreField]
         public bool HasChanges
         {
             get { return (this._recordState & RecordState.HasChanges) == RecordState.HasChanges; }
         }
 
         [XmlIgnore]
+        [IgnoreField]
         public bool IsDeleted
         {
             get { return (this._recordState & RecordState.Deleted) == RecordState.Deleted; }
         }
 
         [XmlIgnore]
+        [IgnoreField]
         public bool IsDetached
         {
             get { return (this._recordState & RecordState.Detached) == RecordState.Detached; }
@@ -85,6 +91,7 @@ namespace FMSC.ORM.Core.EntityModel
         }
 
         [XmlIgnore]
+        [IgnoreField]
         public bool PropertyChangedEventsDisabled { get; protected set; }
 
 

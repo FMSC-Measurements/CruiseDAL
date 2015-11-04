@@ -7,7 +7,7 @@ namespace FMSC.ORM.Core.EntityAttributes
 {
     public class FieldAttributeCollection : IEnumerable<FieldAttribute>
     {
-        public Dictionary<String, FieldAttribute> _fields;
+        public Dictionary<String, FieldAttribute> _fields = new Dictionary<string,FieldAttribute>();
 
         public PrimaryKeyFieldAttribute PrimaryKeyField { get; set; }
 

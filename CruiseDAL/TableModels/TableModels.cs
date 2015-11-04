@@ -15,9 +15,9 @@ namespace CruiseDAL.DataObjects
 		private static RowValidator _validator;
 		
 		[XmlIgnore]
-		public new DALRedux DAL
+		public new DAL DAL
 		{
-			get { return (DALRedux)base.DAL; }
+			get { return (DAL)base.DAL; }
 			set { base.DAL = value; }
 		}
 		
@@ -322,9 +322,9 @@ namespace CruiseDAL.DataObjects
 		private static RowValidator _validator;
 		
 		[XmlIgnore]
-		public new DALRedux DAL
+		public new DAL DAL
 		{
-			get { return (DALRedux)base.DAL; }
+			get { return (DAL)base.DAL; }
 			set { base.DAL = value; }
 		}
 		
@@ -526,9 +526,9 @@ namespace CruiseDAL.DataObjects
 		private static RowValidator _validator;
 		
 		[XmlIgnore]
-		public new DALRedux DAL
+		public new DAL DAL
 		{
-			get { return (DALRedux)base.DAL; }
+			get { return (DAL)base.DAL; }
 			set { base.DAL = value; }
 		}
 		
@@ -834,9 +834,9 @@ namespace CruiseDAL.DataObjects
 		private static RowValidator _validator;
 		
 		[XmlIgnore]
-		public new DALRedux DAL
+		public new DAL DAL
 		{
-			get { return (DALRedux)base.DAL; }
+			get { return (DAL)base.DAL; }
 			set { base.DAL = value; }
 		}
 		
@@ -1017,9 +1017,9 @@ namespace CruiseDAL.DataObjects
 		private static RowValidator _validator;
 		
 		[XmlIgnore]
-		public new DALRedux DAL
+		public new DAL DAL
 		{
-			get { return (DALRedux)base.DAL; }
+			get { return (DAL)base.DAL; }
 			set { base.DAL = value; }
 		}
 		
@@ -1519,9 +1519,9 @@ namespace CruiseDAL.DataObjects
 		private static RowValidator _validator;
 		
 		[XmlIgnore]
-		public new DALRedux DAL
+		public new DAL DAL
 		{
-			get { return (DALRedux)base.DAL; }
+			get { return (DAL)base.DAL; }
 			set { base.DAL = value; }
 		}
 		
@@ -1955,9 +1955,9 @@ namespace CruiseDAL.DataObjects
 		private static RowValidator _validator;
 		
 		[XmlIgnore]
-		public new DALRedux DAL
+		public new DAL DAL
 		{
-			get { return (DALRedux)base.DAL; }
+			get { return (DAL)base.DAL; }
 			set { base.DAL = value; }
 		}
 		
@@ -2116,9 +2116,9 @@ namespace CruiseDAL.DataObjects
 		private static RowValidator _validator;
 		
 		[XmlIgnore]
-		public new DALRedux DAL
+		public new DAL DAL
 		{
-			get { return (DALRedux)base.DAL; }
+			get { return (DAL)base.DAL; }
 			set { base.DAL = value; }
 		}
 		
@@ -2543,9 +2543,9 @@ namespace CruiseDAL.DataObjects
 		private static RowValidator _validator;
 		
 		[XmlIgnore]
-		public new DALRedux DAL
+		public new DAL DAL
 		{
-			get { return (DALRedux)base.DAL; }
+			get { return (DAL)base.DAL; }
 			set { base.DAL = value; }
 		}
 		
@@ -3744,9 +3744,9 @@ namespace CruiseDAL.DataObjects
 		private static RowValidator _validator;
 		
 		[XmlIgnore]
-		public new DALRedux DAL
+		public new DAL DAL
 		{
-			get { return (DALRedux)base.DAL; }
+			get { return (DAL)base.DAL; }
 			set { base.DAL = value; }
 		}
 		
@@ -4219,9 +4219,9 @@ namespace CruiseDAL.DataObjects
 		private static RowValidator _validator;
 		
 		[XmlIgnore]
-		public new DALRedux DAL
+		public new DAL DAL
 		{
-			get { return (DALRedux)base.DAL; }
+			get { return (DAL)base.DAL; }
 			set { base.DAL = value; }
 		}
 		
@@ -4412,9 +4412,9 @@ namespace CruiseDAL.DataObjects
 		private static RowValidator _validator;
 		
 		[XmlIgnore]
-		public new DALRedux DAL
+		public new DAL DAL
 		{
-			get { return (DALRedux)base.DAL; }
+			get { return (DAL)base.DAL; }
 			set { base.DAL = value; }
 		}
 		
@@ -4791,9 +4791,9 @@ namespace CruiseDAL.DataObjects
 		private static RowValidator _validator;
 		
 		[XmlIgnore]
-		public new DALRedux DAL
+		public new DAL DAL
 		{
-			get { return (DALRedux)base.DAL; }
+			get { return (DAL)base.DAL; }
 			set { base.DAL = value; }
 		}
 		
@@ -4937,9 +4937,9 @@ namespace CruiseDAL.DataObjects
 		private static RowValidator _validator;
 		
 		[XmlIgnore]
-		public new DALRedux DAL
+		public new DAL DAL
 		{
-			get { return (DALRedux)base.DAL; }
+			get { return (DAL)base.DAL; }
 			set { base.DAL = value; }
 		}
 		
@@ -5113,9 +5113,9 @@ namespace CruiseDAL.DataObjects
 		private static RowValidator _validator;
 		
 		[XmlIgnore]
-		public new DALRedux DAL
+		public new DAL DAL
 		{
-			get { return (DALRedux)base.DAL; }
+			get { return (DAL)base.DAL; }
 			set { base.DAL = value; }
 		}
 		
@@ -5595,9 +5595,9 @@ namespace CruiseDAL.DataObjects
 		private static RowValidator _validator;
 		
 		[XmlIgnore]
-		public new DALRedux DAL
+		public new DAL DAL
 		{
-			get { return (DALRedux)base.DAL; }
+			get { return (DAL)base.DAL; }
 			set { base.DAL = value; }
 		}
 		
@@ -5879,9 +5879,9 @@ namespace CruiseDAL.DataObjects
 		private static RowValidator _validator;
 		
 		[XmlIgnore]
-		public new DALRedux DAL
+		public new DAL DAL
 		{
-			get { return (DALRedux)base.DAL; }
+			get { return (DAL)base.DAL; }
 			set { base.DAL = value; }
 		}
 		
@@ -6140,9 +6140,9 @@ namespace CruiseDAL.DataObjects
 		private static RowValidator _validator;
 		
 		[XmlIgnore]
-		public new DALRedux DAL
+		public new DAL DAL
 		{
-			get { return (DALRedux)base.DAL; }
+			get { return (DAL)base.DAL; }
 			set { base.DAL = value; }
 		}
 		
@@ -6400,9 +6400,9 @@ namespace CruiseDAL.DataObjects
 		private static RowValidator _validator;
 		
 		[XmlIgnore]
-		public new DALRedux DAL
+		public new DAL DAL
 		{
-			get { return (DALRedux)base.DAL; }
+			get { return (DAL)base.DAL; }
 			set { base.DAL = value; }
 		}
 		
@@ -6520,9 +6520,9 @@ namespace CruiseDAL.DataObjects
 		private static RowValidator _validator;
 		
 		[XmlIgnore]
-		public new DALRedux DAL
+		public new DAL DAL
 		{
-			get { return (DALRedux)base.DAL; }
+			get { return (DAL)base.DAL; }
 			set { base.DAL = value; }
 		}
 		
@@ -7276,9 +7276,9 @@ namespace CruiseDAL.DataObjects
 		private static RowValidator _validator;
 		
 		[XmlIgnore]
-		public new DALRedux DAL
+		public new DAL DAL
 		{
-			get { return (DALRedux)base.DAL; }
+			get { return (DAL)base.DAL; }
 			set { base.DAL = value; }
 		}
 		
@@ -8411,9 +8411,9 @@ namespace CruiseDAL.DataObjects
 		private static RowValidator _validator;
 		
 		[XmlIgnore]
-		public new DALRedux DAL
+		public new DAL DAL
 		{
-			get { return (DALRedux)base.DAL; }
+			get { return (DAL)base.DAL; }
 			set { base.DAL = value; }
 		}
 		
@@ -9481,9 +9481,9 @@ namespace CruiseDAL.DataObjects
 		private static RowValidator _validator;
 		
 		[XmlIgnore]
-		public new DALRedux DAL
+		public new DAL DAL
 		{
-			get { return (DALRedux)base.DAL; }
+			get { return (DAL)base.DAL; }
 			set { base.DAL = value; }
 		}
 		
@@ -9852,9 +9852,9 @@ namespace CruiseDAL.DataObjects
 		private static RowValidator _validator;
 		
 		[XmlIgnore]
-		public new DALRedux DAL
+		public new DAL DAL
 		{
-			get { return (DALRedux)base.DAL; }
+			get { return (DAL)base.DAL; }
 			set { base.DAL = value; }
 		}
 		
@@ -10347,9 +10347,9 @@ namespace CruiseDAL.DataObjects
 		private static RowValidator _validator;
 		
 		[XmlIgnore]
-		public new DALRedux DAL
+		public new DAL DAL
 		{
-			get { return (DALRedux)base.DAL; }
+			get { return (DAL)base.DAL; }
 			set { base.DAL = value; }
 		}
 		
@@ -11062,9 +11062,9 @@ namespace CruiseDAL.DataObjects
 		private static RowValidator _validator;
 		
 		[XmlIgnore]
-		public new DALRedux DAL
+		public new DAL DAL
 		{
-			get { return (DALRedux)base.DAL; }
+			get { return (DAL)base.DAL; }
 			set { base.DAL = value; }
 		}
 		
@@ -11223,9 +11223,9 @@ namespace CruiseDAL.DataObjects
 		private static RowValidator _validator;
 		
 		[XmlIgnore]
-		public new DALRedux DAL
+		public new DAL DAL
 		{
-			get { return (DALRedux)base.DAL; }
+			get { return (DAL)base.DAL; }
 			set { base.DAL = value; }
 		}
 		
@@ -11698,9 +11698,9 @@ namespace CruiseDAL.DataObjects
 		private static RowValidator _validator;
 		
 		[XmlIgnore]
-		public new DALRedux DAL
+		public new DAL DAL
 		{
-			get { return (DALRedux)base.DAL; }
+			get { return (DAL)base.DAL; }
 			set { base.DAL = value; }
 		}
 		
@@ -12042,9 +12042,9 @@ namespace CruiseDAL.DataObjects
 		private static RowValidator _validator;
 		
 		[XmlIgnore]
-		public new DALRedux DAL
+		public new DAL DAL
 		{
-			get { return (DALRedux)base.DAL; }
+			get { return (DAL)base.DAL; }
 			set { base.DAL = value; }
 		}
 		
@@ -12363,9 +12363,9 @@ namespace CruiseDAL.DataObjects
 		private static RowValidator _validator;
 		
 		[XmlIgnore]
-		public new DALRedux DAL
+		public new DAL DAL
 		{
-			get { return (DALRedux)base.DAL; }
+			get { return (DAL)base.DAL; }
 			set { base.DAL = value; }
 		}
 		
@@ -12526,9 +12526,9 @@ namespace CruiseDAL.DataObjects
 		private static RowValidator _validator;
 		
 		[XmlIgnore]
-		public new DALRedux DAL
+		public new DAL DAL
 		{
-			get { return (DALRedux)base.DAL; }
+			get { return (DAL)base.DAL; }
 			set { base.DAL = value; }
 		}
 		
@@ -12691,9 +12691,9 @@ namespace CruiseDAL.DataObjects
 		private static RowValidator _validator;
 		
 		[XmlIgnore]
-		public new DALRedux DAL
+		public new DAL DAL
 		{
-			get { return (DALRedux)base.DAL; }
+			get { return (DAL)base.DAL; }
 			set { base.DAL = value; }
 		}
 		
@@ -12943,9 +12943,9 @@ namespace CruiseDAL.DataObjects
 		private static RowValidator _validator;
 		
 		[XmlIgnore]
-		public new DALRedux DAL
+		public new DAL DAL
 		{
-			get { return (DALRedux)base.DAL; }
+			get { return (DAL)base.DAL; }
 			set { base.DAL = value; }
 		}
 		
@@ -13195,9 +13195,9 @@ namespace CruiseDAL.DataObjects
 		private static RowValidator _validator;
 		
 		[XmlIgnore]
-		public new DALRedux DAL
+		public new DAL DAL
 		{
-			get { return (DALRedux)base.DAL; }
+			get { return (DAL)base.DAL; }
 			set { base.DAL = value; }
 		}
 		
@@ -13420,9 +13420,9 @@ namespace CruiseDAL.DataObjects
 		private static RowValidator _validator;
 		
 		[XmlIgnore]
-		public new DALRedux DAL
+		public new DAL DAL
 		{
-			get { return (DALRedux)base.DAL; }
+			get { return (DAL)base.DAL; }
 			set { base.DAL = value; }
 		}
 		
@@ -13668,9 +13668,9 @@ namespace CruiseDAL.DataObjects
 		private static RowValidator _validator;
 		
 		[XmlIgnore]
-		public new DALRedux DAL
+		public new DAL DAL
 		{
-			get { return (DALRedux)base.DAL; }
+			get { return (DAL)base.DAL; }
 			set { base.DAL = value; }
 		}
 		
@@ -13772,9 +13772,9 @@ namespace CruiseDAL.DataObjects
 		private static RowValidator _validator;
 		
 		[XmlIgnore]
-		public new DALRedux DAL
+		public new DAL DAL
 		{
-			get { return (DALRedux)base.DAL; }
+			get { return (DAL)base.DAL; }
 			set { base.DAL = value; }
 		}
 		
@@ -13876,9 +13876,9 @@ namespace CruiseDAL.DataObjects
 		private static RowValidator _validator;
 		
 		[XmlIgnore]
-		public new DALRedux DAL
+		public new DAL DAL
 		{
-			get { return (DALRedux)base.DAL; }
+			get { return (DAL)base.DAL; }
 			set { base.DAL = value; }
 		}
 		
@@ -13980,9 +13980,9 @@ namespace CruiseDAL.DataObjects
 		private static RowValidator _validator;
 		
 		[XmlIgnore]
-		public new DALRedux DAL
+		public new DAL DAL
 		{
-			get { return (DALRedux)base.DAL; }
+			get { return (DAL)base.DAL; }
 			set { base.DAL = value; }
 		}
 		
@@ -14084,9 +14084,9 @@ namespace CruiseDAL.DataObjects
 		private static RowValidator _validator;
 		
 		[XmlIgnore]
-		public new DALRedux DAL
+		public new DAL DAL
 		{
-			get { return (DALRedux)base.DAL; }
+			get { return (DAL)base.DAL; }
 			set { base.DAL = value; }
 		}
 		
@@ -14188,9 +14188,9 @@ namespace CruiseDAL.DataObjects
 		private static RowValidator _validator;
 		
 		[XmlIgnore]
-		public new DALRedux DAL
+		public new DAL DAL
 		{
-			get { return (DALRedux)base.DAL; }
+			get { return (DAL)base.DAL; }
 			set { base.DAL = value; }
 		}
 		
@@ -14365,9 +14365,9 @@ namespace CruiseDAL.DataObjects
 		private static RowValidator _validator;
 		
 		[XmlIgnore]
-		public new DALRedux DAL
+		public new DAL DAL
 		{
-			get { return (DALRedux)base.DAL; }
+			get { return (DAL)base.DAL; }
 			set { base.DAL = value; }
 		}
 		
@@ -14568,9 +14568,9 @@ namespace CruiseDAL.DataObjects
 		private static RowValidator _validator;
 		
 		[XmlIgnore]
-		public new DALRedux DAL
+		public new DAL DAL
 		{
-			get { return (DALRedux)base.DAL; }
+			get { return (DAL)base.DAL; }
 			set { base.DAL = value; }
 		}
 		
@@ -14732,9 +14732,9 @@ namespace CruiseDAL.DataObjects
 		private static RowValidator _validator;
 		
 		[XmlIgnore]
-		public new DALRedux DAL
+		public new DAL DAL
 		{
-			get { return (DALRedux)base.DAL; }
+			get { return (DAL)base.DAL; }
 			set { base.DAL = value; }
 		}
 		
@@ -14851,9 +14851,9 @@ namespace CruiseDAL.DataObjects
 		private static RowValidator _validator;
 		
 		[XmlIgnore]
-		public new DALRedux DAL
+		public new DAL DAL
 		{
-			get { return (DALRedux)base.DAL; }
+			get { return (DAL)base.DAL; }
 			set { base.DAL = value; }
 		}
 		

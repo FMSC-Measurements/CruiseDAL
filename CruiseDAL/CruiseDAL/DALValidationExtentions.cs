@@ -9,7 +9,7 @@ namespace CruiseDAL
     public static class DALValidationExtentions
     {
 
-        public static bool HasCruiseErrors(this DALRedux dal, out string[] errors)
+        public static bool HasCruiseErrors(this DAL dal, out string[] errors)
         {
             bool hasErrors = false;
             List<string> errorList = new List<string>();
@@ -78,28 +78,28 @@ namespace CruiseDAL
             return hasErrors;
         }
 
-        public static bool HasCruiseErrors(this DALRedux dal)
+        public static bool HasCruiseErrors(this DAL dal)
         {
             string[] errors;
             return dal.HasCruiseErrors(out errors);
         }
 
-        private static bool HasBlankSpeciesCodes(this DALRedux dal)
+        private static bool HasBlankSpeciesCodes(this DAL dal)
         {
             return dal.GetRowCount(TREE._NAME, "WHERE ifnull(Species, '') = ''") > 0;
         }
 
-        private static bool HasBlankLiveDead(this DALRedux dal)
+        private static bool HasBlankLiveDead(this DAL dal)
         {
             return dal.GetRowCount(TREE._NAME, "WHERE ifnull(LiveDead, '') = ''") > 0;
         }
 
-        private static bool HasBlankCountOrMeasure(this DALRedux dal)
+        private static bool HasBlankCountOrMeasure(this DAL dal)
         {
             return dal.GetRowCount(TREE._NAME, "WHERE ifnull(CountOrMeasure, '') = ''") > 0;
         }
 
-        private static bool HasBlankDefaultLiveDead(this DALRedux dal)
+        private static bool HasBlankDefaultLiveDead(this DAL dal)
         {
             return dal.GetRowCount(SAMPLEGROUP._NAME, "WHERE ifnull(DefaultLiveDead, '') = ''") > 0;
         }
@@ -109,18 +109,18 @@ namespace CruiseDAL
         //    return this.GetRowCount("Tree", "JOIN TreeDefaultValue USING (TreeDefaultValue_CN) WHERE Tree.Species != TreeDefaultValue.Species") > 0;
         //}
 
-        private static bool HasSampleGroupUOMErrors(this DALRedux dal)
+        private static bool HasSampleGroupUOMErrors(this DAL dal)
         {
             return (dal.ExecuteScalar<long>("Select Count(DISTINCT UOM) FROM SampleGroup WHERE UOM != '04';")) > 1L;
             //return this.GetRowCount("SampleGroup", "WHERE UOM != '04' GROUP BY UOM") > 1;
         }
 
-        private static bool HasOrphanedStrata(this DALRedux dal)
+        private static bool HasOrphanedStrata(this DAL dal)
         {
             return dal.GetRowCount(STRATUM._NAME, "LEFT JOIN CuttingUnitStratum USING (Stratum_CN) WHERE CuttingUnitStratum.Stratum_CN IS NULL") > 0;
         }
 
-        private static bool HasStrataWithNoSampleGroups(this DALRedux dal)
+        private static bool HasStrataWithNoSampleGroups(this DAL dal)
         {
             return dal.GetRowCount(STRATUM._NAME, "LEFT JOIN SampleGroup USING (Stratum_CN) WHERE SampleGroup.Stratum_CN IS NULL") > 0;
         }

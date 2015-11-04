@@ -9,9 +9,9 @@ namespace CruiseDAL
 {
     public class CruiseDALDatastoreBuilder : DatastoreBuilder
     {
-        public new DALRedux DataStore
+        public new DAL DataStore
         {
-            get { return (DALRedux)base.DataStore; }
+            get { return (DAL)base.DataStore; }
             set { base.DataStore = value; }
         }
 
