@@ -114,7 +114,7 @@
   <ItemGroup>
     <Compile Include="CommonMethods.cs" />
     <Compile Include="Core.Tests\EntityCommandBuilder.Tests.cs" />
-    <Compile Include="Core.Tests\EntityDescription.Test.cs" />
+    <Compile Include="Core.Tests\EntityDescriptionTest.cs" />
     <None Include="CruiseDAL.DataObjects.Tests\CuttingUnitDOTest.cs" />
     <None Include="CruiseDAL.DataObjects.Tests\CuttingUnitStratumDOTest.cs" />
     <Compile Include="DALTest.cs" />
