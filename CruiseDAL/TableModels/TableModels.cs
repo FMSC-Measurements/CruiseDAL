@@ -15,9 +15,9 @@ namespace CruiseDAL.DataObjects
 		private static RowValidator _validator;
 		
 		[XmlIgnore]
-		public new DAL DAL
+		public new DALRedux DAL
 		{
-			get { return (DAL)base.DAL; }
+			get { return (DALRedux)base.DAL; }
 			set { base.DAL = value; }
 		}
 		
@@ -57,6 +57,7 @@ namespace CruiseDAL.DataObjects
 		public Int64? Sale_CN
 		{
 			get{ return base.rowID; }
+			set{ base.rowID = value; }
 		}
 		private String _salenumber ;
 		[XmlElement]
@@ -322,9 +323,9 @@ namespace CruiseDAL.DataObjects
 		private static RowValidator _validator;
 		
 		[XmlIgnore]
-		public new DAL DAL
+		public new DALRedux DAL
 		{
-			get { return (DAL)base.DAL; }
+			get { return (DALRedux)base.DAL; }
 			set { base.DAL = value; }
 		}
 		
@@ -361,6 +362,7 @@ namespace CruiseDAL.DataObjects
 		public Int64? CuttingUnit_CN
 		{
 			get{ return base.rowID; }
+			set{ base.rowID = value; }
 		}
 		private String _code ;
 		[XmlElement]
@@ -526,9 +528,9 @@ namespace CruiseDAL.DataObjects
 		private static RowValidator _validator;
 		
 		[XmlIgnore]
-		public new DAL DAL
+		public new DALRedux DAL
 		{
-			get { return (DAL)base.DAL; }
+			get { return (DALRedux)base.DAL; }
 			set { base.DAL = value; }
 		}
 		
@@ -569,6 +571,7 @@ namespace CruiseDAL.DataObjects
 		public Int64? Stratum_CN
 		{
 			get{ return base.rowID; }
+			set{ base.rowID = value; }
 		}
 		private String _code ;
 		[XmlElement]
@@ -834,9 +837,9 @@ namespace CruiseDAL.DataObjects
 		private static RowValidator _validator;
 		
 		[XmlIgnore]
-		public new DAL DAL
+		public new DALRedux DAL
 		{
-			get { return (DAL)base.DAL; }
+			get { return (DALRedux)base.DAL; }
 			set { base.DAL = value; }
 		}
 		
@@ -1017,9 +1020,9 @@ namespace CruiseDAL.DataObjects
 		private static RowValidator _validator;
 		
 		[XmlIgnore]
-		public new DAL DAL
+		public new DALRedux DAL
 		{
-			get { return (DAL)base.DAL; }
+			get { return (DALRedux)base.DAL; }
 			set { base.DAL = value; }
 		}
 		
@@ -1063,6 +1066,7 @@ namespace CruiseDAL.DataObjects
 		public Int64? SampleGroup_CN
 		{
 			get{ return base.rowID; }
+			set{ base.rowID = value; }
 		}
 		private long? _stratum_cn ;
 		[XmlIgnore]
@@ -1519,9 +1523,9 @@ namespace CruiseDAL.DataObjects
 		private static RowValidator _validator;
 		
 		[XmlIgnore]
-		public new DAL DAL
+		public new DALRedux DAL
 		{
-			get { return (DAL)base.DAL; }
+			get { return (DALRedux)base.DAL; }
 			set { base.DAL = value; }
 		}
 		
@@ -1570,6 +1574,7 @@ namespace CruiseDAL.DataObjects
 		public Int64? TreeDefaultValue_CN
 		{
 			get{ return base.rowID; }
+			set{ base.rowID = value; }
 		}
 		private String _primaryproduct ;
 		[XmlElement]
@@ -1955,9 +1960,9 @@ namespace CruiseDAL.DataObjects
 		private static RowValidator _validator;
 		
 		[XmlIgnore]
-		public new DAL DAL
+		public new DALRedux DAL
 		{
-			get { return (DAL)base.DAL; }
+			get { return (DALRedux)base.DAL; }
 			set { base.DAL = value; }
 		}
 		
@@ -2116,9 +2121,9 @@ namespace CruiseDAL.DataObjects
 		private static RowValidator _validator;
 		
 		[XmlIgnore]
-		public new DAL DAL
+		public new DALRedux DAL
 		{
-			get { return (DAL)base.DAL; }
+			get { return (DALRedux)base.DAL; }
 			set { base.DAL = value; }
 		}
 		
@@ -2156,6 +2161,7 @@ namespace CruiseDAL.DataObjects
 		public Int64? Plot_CN
 		{
 			get{ return base.rowID; }
+			set{ base.rowID = value; }
 		}
 		private long? _stratum_cn ;
 		[XmlIgnore]
@@ -2543,9 +2549,9 @@ namespace CruiseDAL.DataObjects
 		private static RowValidator _validator;
 		
 		[XmlIgnore]
-		public new DAL DAL
+		public new DALRedux DAL
 		{
-			get { return (DAL)base.DAL; }
+			get { return (DALRedux)base.DAL; }
 			set { base.DAL = value; }
 		}
 		
@@ -2584,6 +2590,7 @@ namespace CruiseDAL.DataObjects
 		public Int64? Tree_CN
 		{
 			get{ return base.rowID; }
+			set{ base.rowID = value; }
 		}
 		private long? _treedefaultvalue_cn ;
 		[XmlIgnore]
@@ -3744,9 +3751,9 @@ namespace CruiseDAL.DataObjects
 		private static RowValidator _validator;
 		
 		[XmlIgnore]
-		public new DAL DAL
+		public new DALRedux DAL
 		{
-			get { return (DAL)base.DAL; }
+			get { return (DALRedux)base.DAL; }
 			set { base.DAL = value; }
 		}
 		
@@ -3783,6 +3790,7 @@ namespace CruiseDAL.DataObjects
 		public Int64? Log_CN
 		{
 			get{ return base.rowID; }
+			set{ base.rowID = value; }
 		}
 		private long? _tree_cn ;
 		[XmlIgnore]
@@ -4219,9 +4227,9 @@ namespace CruiseDAL.DataObjects
 		private static RowValidator _validator;
 		
 		[XmlIgnore]
-		public new DAL DAL
+		public new DALRedux DAL
 		{
-			get { return (DAL)base.DAL; }
+			get { return (DALRedux)base.DAL; }
 			set { base.DAL = value; }
 		}
 		
@@ -4256,6 +4264,7 @@ namespace CruiseDAL.DataObjects
 		public Int64? Stem_CN
 		{
 			get{ return base.rowID; }
+			set{ base.rowID = value; }
 		}
 		private long? _tree_cn ;
 		[XmlIgnore]
@@ -4412,9 +4421,9 @@ namespace CruiseDAL.DataObjects
 		private static RowValidator _validator;
 		
 		[XmlIgnore]
-		public new DAL DAL
+		public new DALRedux DAL
 		{
-			get { return (DAL)base.DAL; }
+			get { return (DALRedux)base.DAL; }
 			set { base.DAL = value; }
 		}
 		
@@ -4451,6 +4460,7 @@ namespace CruiseDAL.DataObjects
 		public Int64? CountTree_CN
 		{
 			get{ return base.rowID; }
+			set{ base.rowID = value; }
 		}
 		private long? _samplegroup_cn ;
 		[XmlIgnore]
@@ -4791,9 +4801,9 @@ namespace CruiseDAL.DataObjects
 		private static RowValidator _validator;
 		
 		[XmlIgnore]
-		public new DAL DAL
+		public new DALRedux DAL
 		{
-			get { return (DAL)base.DAL; }
+			get { return (DALRedux)base.DAL; }
 			set { base.DAL = value; }
 		}
 		
@@ -4830,6 +4840,7 @@ namespace CruiseDAL.DataObjects
 		public Int64? Tally_CN
 		{
 			get{ return base.rowID; }
+			set{ base.rowID = value; }
 		}
 		private String _hotkey ;
 		[XmlElement]
@@ -4937,9 +4948,9 @@ namespace CruiseDAL.DataObjects
 		private static RowValidator _validator;
 		
 		[XmlIgnore]
-		public new DAL DAL
+		public new DALRedux DAL
 		{
-			get { return (DAL)base.DAL; }
+			get { return (DALRedux)base.DAL; }
 			set { base.DAL = value; }
 		}
 		
@@ -4975,6 +4986,7 @@ namespace CruiseDAL.DataObjects
 		public Int64? TreeEstimate_CN
 		{
 			get{ return base.rowID; }
+			set{ base.rowID = value; }
 		}
 		private long? _counttree_cn ;
 		[XmlIgnore]
@@ -5113,9 +5125,9 @@ namespace CruiseDAL.DataObjects
 		private static RowValidator _validator;
 		
 		[XmlIgnore]
-		public new DAL DAL
+		public new DALRedux DAL
 		{
-			get { return (DAL)base.DAL; }
+			get { return (DALRedux)base.DAL; }
 			set { base.DAL = value; }
 		}
 		
@@ -5595,9 +5607,9 @@ namespace CruiseDAL.DataObjects
 		private static RowValidator _validator;
 		
 		[XmlIgnore]
-		public new DAL DAL
+		public new DALRedux DAL
 		{
-			get { return (DAL)base.DAL; }
+			get { return (DALRedux)base.DAL; }
 			set { base.DAL = value; }
 		}
 		
@@ -5879,9 +5891,9 @@ namespace CruiseDAL.DataObjects
 		private static RowValidator _validator;
 		
 		[XmlIgnore]
-		public new DAL DAL
+		public new DALRedux DAL
 		{
-			get { return (DAL)base.DAL; }
+			get { return (DALRedux)base.DAL; }
 			set { base.DAL = value; }
 		}
 		
@@ -6140,9 +6152,9 @@ namespace CruiseDAL.DataObjects
 		private static RowValidator _validator;
 		
 		[XmlIgnore]
-		public new DAL DAL
+		public new DALRedux DAL
 		{
-			get { return (DAL)base.DAL; }
+			get { return (DALRedux)base.DAL; }
 			set { base.DAL = value; }
 		}
 		
@@ -6400,9 +6412,9 @@ namespace CruiseDAL.DataObjects
 		private static RowValidator _validator;
 		
 		[XmlIgnore]
-		public new DAL DAL
+		public new DALRedux DAL
 		{
-			get { return (DAL)base.DAL; }
+			get { return (DALRedux)base.DAL; }
 			set { base.DAL = value; }
 		}
 		
@@ -6520,9 +6532,9 @@ namespace CruiseDAL.DataObjects
 		private static RowValidator _validator;
 		
 		[XmlIgnore]
-		public new DAL DAL
+		public new DALRedux DAL
 		{
-			get { return (DAL)base.DAL; }
+			get { return (DALRedux)base.DAL; }
 			set { base.DAL = value; }
 		}
 		
@@ -6558,6 +6570,7 @@ namespace CruiseDAL.DataObjects
 		public Int64? TreeCalcValues_CN
 		{
 			get{ return base.rowID; }
+			set{ base.rowID = value; }
 		}
 		private long? _tree_cn ;
 		[XmlIgnore]
@@ -7276,9 +7289,9 @@ namespace CruiseDAL.DataObjects
 		private static RowValidator _validator;
 		
 		[XmlIgnore]
-		public new DAL DAL
+		public new DALRedux DAL
 		{
-			get { return (DAL)base.DAL; }
+			get { return (DALRedux)base.DAL; }
 			set { base.DAL = value; }
 		}
 		
@@ -7324,6 +7337,7 @@ namespace CruiseDAL.DataObjects
 		public Int64? LCD_CN
 		{
 			get{ return base.rowID; }
+			set{ base.rowID = value; }
 		}
 		private String _cutleave ;
 		[XmlElement]
@@ -8411,9 +8425,9 @@ namespace CruiseDAL.DataObjects
 		private static RowValidator _validator;
 		
 		[XmlIgnore]
-		public new DAL DAL
+		public new DALRedux DAL
 		{
-			get { return (DAL)base.DAL; }
+			get { return (DALRedux)base.DAL; }
 			set { base.DAL = value; }
 		}
 		
@@ -8454,6 +8468,7 @@ namespace CruiseDAL.DataObjects
 		public Int64? POP_CN
 		{
 			get{ return base.rowID; }
+			set{ base.rowID = value; }
 		}
 		private String _cutleave ;
 		[XmlElement]
@@ -9481,9 +9496,9 @@ namespace CruiseDAL.DataObjects
 		private static RowValidator _validator;
 		
 		[XmlIgnore]
-		public new DAL DAL
+		public new DALRedux DAL
 		{
-			get { return (DAL)base.DAL; }
+			get { return (DALRedux)base.DAL; }
 			set { base.DAL = value; }
 		}
 		
@@ -9525,6 +9540,7 @@ namespace CruiseDAL.DataObjects
 		public Int64? PRO_CN
 		{
 			get{ return base.rowID; }
+			set{ base.rowID = value; }
 		}
 		private String _cutleave ;
 		[XmlElement]
@@ -9852,9 +9868,9 @@ namespace CruiseDAL.DataObjects
 		private static RowValidator _validator;
 		
 		[XmlIgnore]
-		public new DAL DAL
+		public new DALRedux DAL
 		{
-			get { return (DAL)base.DAL; }
+			get { return (DALRedux)base.DAL; }
 			set { base.DAL = value; }
 		}
 		
@@ -9891,6 +9907,7 @@ namespace CruiseDAL.DataObjects
 		public Int64? LogStock_CN
 		{
 			get{ return base.rowID; }
+			set{ base.rowID = value; }
 		}
 		private long? _tree_cn ;
 		[XmlIgnore]
@@ -10347,9 +10364,9 @@ namespace CruiseDAL.DataObjects
 		private static RowValidator _validator;
 		
 		[XmlIgnore]
-		public new DAL DAL
+		public new DALRedux DAL
 		{
-			get { return (DAL)base.DAL; }
+			get { return (DALRedux)base.DAL; }
 			set { base.DAL = value; }
 		}
 		
@@ -10384,6 +10401,7 @@ namespace CruiseDAL.DataObjects
 		public Int64? SampleGroupStats_CN
 		{
 			get{ return base.rowID; }
+			set{ base.rowID = value; }
 		}
 		private long? _stratumstats_cn ;
 		[XmlIgnore]
@@ -11062,9 +11080,9 @@ namespace CruiseDAL.DataObjects
 		private static RowValidator _validator;
 		
 		[XmlIgnore]
-		public new DAL DAL
+		public new DALRedux DAL
 		{
-			get { return (DAL)base.DAL; }
+			get { return (DALRedux)base.DAL; }
 			set { base.DAL = value; }
 		}
 		
@@ -11223,9 +11241,9 @@ namespace CruiseDAL.DataObjects
 		private static RowValidator _validator;
 		
 		[XmlIgnore]
-		public new DAL DAL
+		public new DALRedux DAL
 		{
-			get { return (DAL)base.DAL; }
+			get { return (DALRedux)base.DAL; }
 			set { base.DAL = value; }
 		}
 		
@@ -11260,6 +11278,7 @@ namespace CruiseDAL.DataObjects
 		public Int64? StratumStats_CN
 		{
 			get{ return base.rowID; }
+			set{ base.rowID = value; }
 		}
 		private long? _stratum_cn ;
 		[XmlIgnore]
@@ -11698,9 +11717,9 @@ namespace CruiseDAL.DataObjects
 		private static RowValidator _validator;
 		
 		[XmlIgnore]
-		public new DAL DAL
+		public new DALRedux DAL
 		{
-			get { return (DAL)base.DAL; }
+			get { return (DALRedux)base.DAL; }
 			set { base.DAL = value; }
 		}
 		
@@ -11735,6 +11754,7 @@ namespace CruiseDAL.DataObjects
 		public Int64? Regression_CN
 		{
 			get{ return base.rowID; }
+			set{ base.rowID = value; }
 		}
 		private String _rvolume ;
 		[XmlElement]
@@ -12042,9 +12062,9 @@ namespace CruiseDAL.DataObjects
 		private static RowValidator _validator;
 		
 		[XmlIgnore]
-		public new DAL DAL
+		public new DALRedux DAL
 		{
-			get { return (DAL)base.DAL; }
+			get { return (DALRedux)base.DAL; }
 			set { base.DAL = value; }
 		}
 		
@@ -12363,9 +12383,9 @@ namespace CruiseDAL.DataObjects
 		private static RowValidator _validator;
 		
 		[XmlIgnore]
-		public new DAL DAL
+		public new DALRedux DAL
 		{
-			get { return (DAL)base.DAL; }
+			get { return (DALRedux)base.DAL; }
 			set { base.DAL = value; }
 		}
 		
@@ -12526,9 +12546,9 @@ namespace CruiseDAL.DataObjects
 		private static RowValidator _validator;
 		
 		[XmlIgnore]
-		public new DAL DAL
+		public new DALRedux DAL
 		{
-			get { return (DAL)base.DAL; }
+			get { return (DALRedux)base.DAL; }
 			set { base.DAL = value; }
 		}
 		
@@ -12564,6 +12584,7 @@ namespace CruiseDAL.DataObjects
 		public Int64? TreeAuditValue_CN
 		{
 			get{ return base.rowID; }
+			set{ base.rowID = value; }
 		}
 		private String _field ;
 		[XmlElement]
@@ -12691,9 +12712,9 @@ namespace CruiseDAL.DataObjects
 		private static RowValidator _validator;
 		
 		[XmlIgnore]
-		public new DAL DAL
+		public new DALRedux DAL
 		{
-			get { return (DAL)base.DAL; }
+			get { return (DALRedux)base.DAL; }
 			set { base.DAL = value; }
 		}
 		
@@ -12943,9 +12964,9 @@ namespace CruiseDAL.DataObjects
 		private static RowValidator _validator;
 		
 		[XmlIgnore]
-		public new DAL DAL
+		public new DALRedux DAL
 		{
-			get { return (DAL)base.DAL; }
+			get { return (DALRedux)base.DAL; }
 			set { base.DAL = value; }
 		}
 		
@@ -13195,9 +13216,9 @@ namespace CruiseDAL.DataObjects
 		private static RowValidator _validator;
 		
 		[XmlIgnore]
-		public new DAL DAL
+		public new DALRedux DAL
 		{
-			get { return (DAL)base.DAL; }
+			get { return (DALRedux)base.DAL; }
 			set { base.DAL = value; }
 		}
 		
@@ -13233,6 +13254,7 @@ namespace CruiseDAL.DataObjects
 		public Int64? LogFieldSetupDefault_CN
 		{
 			get{ return base.rowID; }
+			set{ base.rowID = value; }
 		}
 		private String _field ;
 		[XmlElement]
@@ -13420,9 +13442,9 @@ namespace CruiseDAL.DataObjects
 		private static RowValidator _validator;
 		
 		[XmlIgnore]
-		public new DAL DAL
+		public new DALRedux DAL
 		{
-			get { return (DAL)base.DAL; }
+			get { return (DALRedux)base.DAL; }
 			set { base.DAL = value; }
 		}
 		
@@ -13459,6 +13481,7 @@ namespace CruiseDAL.DataObjects
 		public Int64? TreeFieldSetupDefault_CN
 		{
 			get{ return base.rowID; }
+			set{ base.rowID = value; }
 		}
 		private String _method ;
 		[XmlElement]
@@ -13668,9 +13691,9 @@ namespace CruiseDAL.DataObjects
 		private static RowValidator _validator;
 		
 		[XmlIgnore]
-		public new DAL DAL
+		public new DALRedux DAL
 		{
-			get { return (DAL)base.DAL; }
+			get { return (DALRedux)base.DAL; }
 			set { base.DAL = value; }
 		}
 		
@@ -13705,6 +13728,7 @@ namespace CruiseDAL.DataObjects
 		public Int64? CruiseMethods_CN
 		{
 			get{ return base.rowID; }
+			set{ base.rowID = value; }
 		}
 		private String _code ;
 		[XmlElement]
@@ -13772,9 +13796,9 @@ namespace CruiseDAL.DataObjects
 		private static RowValidator _validator;
 		
 		[XmlIgnore]
-		public new DAL DAL
+		public new DALRedux DAL
 		{
-			get { return (DAL)base.DAL; }
+			get { return (DALRedux)base.DAL; }
 			set { base.DAL = value; }
 		}
 		
@@ -13809,6 +13833,7 @@ namespace CruiseDAL.DataObjects
 		public Int64? LoggingMethods_CN
 		{
 			get{ return base.rowID; }
+			set{ base.rowID = value; }
 		}
 		private String _code ;
 		[XmlElement]
@@ -13876,9 +13901,9 @@ namespace CruiseDAL.DataObjects
 		private static RowValidator _validator;
 		
 		[XmlIgnore]
-		public new DAL DAL
+		public new DALRedux DAL
 		{
-			get { return (DAL)base.DAL; }
+			get { return (DALRedux)base.DAL; }
 			set { base.DAL = value; }
 		}
 		
@@ -13913,6 +13938,7 @@ namespace CruiseDAL.DataObjects
 		public Int64? ProductCodes_CN
 		{
 			get{ return base.rowID; }
+			set{ base.rowID = value; }
 		}
 		private String _code ;
 		[XmlElement]
@@ -13980,9 +14006,9 @@ namespace CruiseDAL.DataObjects
 		private static RowValidator _validator;
 		
 		[XmlIgnore]
-		public new DAL DAL
+		public new DALRedux DAL
 		{
-			get { return (DAL)base.DAL; }
+			get { return (DALRedux)base.DAL; }
 			set { base.DAL = value; }
 		}
 		
@@ -14017,6 +14043,7 @@ namespace CruiseDAL.DataObjects
 		public Int64? UOMCodes_CN
 		{
 			get{ return base.rowID; }
+			set{ base.rowID = value; }
 		}
 		private String _code ;
 		[XmlElement]
@@ -14084,9 +14111,9 @@ namespace CruiseDAL.DataObjects
 		private static RowValidator _validator;
 		
 		[XmlIgnore]
-		public new DAL DAL
+		public new DALRedux DAL
 		{
-			get { return (DAL)base.DAL; }
+			get { return (DALRedux)base.DAL; }
 			set { base.DAL = value; }
 		}
 		
@@ -14121,6 +14148,7 @@ namespace CruiseDAL.DataObjects
 		public Int64? Region_CN
 		{
 			get{ return base.rowID; }
+			set{ base.rowID = value; }
 		}
 		private Int64 _number ;
 		[XmlElement]
@@ -14188,9 +14216,9 @@ namespace CruiseDAL.DataObjects
 		private static RowValidator _validator;
 		
 		[XmlIgnore]
-		public new DAL DAL
+		public new DALRedux DAL
 		{
-			get { return (DAL)base.DAL; }
+			get { return (DALRedux)base.DAL; }
 			set { base.DAL = value; }
 		}
 		
@@ -14225,6 +14253,7 @@ namespace CruiseDAL.DataObjects
 		public Int64? Forest_CN
 		{
 			get{ return base.rowID; }
+			set{ base.rowID = value; }
 		}
 		private long? _region_cn ;
 		[XmlIgnore]
@@ -14365,9 +14394,9 @@ namespace CruiseDAL.DataObjects
 		private static RowValidator _validator;
 		
 		[XmlIgnore]
-		public new DAL DAL
+		public new DALRedux DAL
 		{
-			get { return (DAL)base.DAL; }
+			get { return (DALRedux)base.DAL; }
 			set { base.DAL = value; }
 		}
 		
@@ -14568,9 +14597,9 @@ namespace CruiseDAL.DataObjects
 		private static RowValidator _validator;
 		
 		[XmlIgnore]
-		public new DAL DAL
+		public new DALRedux DAL
 		{
-			get { return (DAL)base.DAL; }
+			get { return (DALRedux)base.DAL; }
 			set { base.DAL = value; }
 		}
 		
@@ -14605,6 +14634,7 @@ namespace CruiseDAL.DataObjects
 		public Int64? Message_CN
 		{
 			get{ return base.rowID; }
+			set{ base.rowID = value; }
 		}
 		private String _program ;
 		[XmlElement]
@@ -14732,9 +14762,9 @@ namespace CruiseDAL.DataObjects
 		private static RowValidator _validator;
 		
 		[XmlIgnore]
-		public new DAL DAL
+		public new DALRedux DAL
 		{
-			get { return (DAL)base.DAL; }
+			get { return (DALRedux)base.DAL; }
 			set { base.DAL = value; }
 		}
 		
@@ -14851,9 +14881,9 @@ namespace CruiseDAL.DataObjects
 		private static RowValidator _validator;
 		
 		[XmlIgnore]
-		public new DAL DAL
+		public new DALRedux DAL
 		{
-			get { return (DAL)base.DAL; }
+			get { return (DALRedux)base.DAL; }
 			set { base.DAL = value; }
 		}
 		
@@ -14888,6 +14918,7 @@ namespace CruiseDAL.DataObjects
 		public Int64? Component_CN
 		{
 			get{ return base.rowID; }
+			set{ base.rowID = value; }
 		}
 		private String _guid ;
 		[XmlElement]

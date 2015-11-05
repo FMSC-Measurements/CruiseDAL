@@ -154,6 +154,7 @@ public void MakePrimaryKeyProperty(Field field)
             WriteLine("{");
             PushIndent("\t");
             WriteLine("get{ return base.rowID; }");
+			WriteLine("set{ base.rowID = value; }");
             PopIndent();
             WriteLine("}");
 }
