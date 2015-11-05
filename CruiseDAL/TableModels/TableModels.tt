@@ -150,6 +150,7 @@ public <#=table.Name#>DO(DatastoreRedux DAL) : base(DAL)
 public void MakePrimaryKeyProperty(Field field)
  {
             WriteLine("[XmlIgnore]");
+			WriteLine("[PrimaryKeyField(FieldName = \"" + field.Name +"\")]");
             WriteLine("public Int64? {0}", field.Name);
             WriteLine("{");
             PushIndent("\t");

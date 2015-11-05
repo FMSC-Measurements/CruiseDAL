@@ -54,6 +54,7 @@ namespace CruiseDAL.DataObjects
 		{}
 		#endregion
 		[XmlIgnore]
+		[PrimaryKeyField(FieldName = "Sale_CN")]
 		public Int64? Sale_CN
 		{
 			get{ return base.rowID; }
@@ -359,6 +360,7 @@ namespace CruiseDAL.DataObjects
 		{}
 		#endregion
 		[XmlIgnore]
+		[PrimaryKeyField(FieldName = "CuttingUnit_CN")]
 		public Int64? CuttingUnit_CN
 		{
 			get{ return base.rowID; }
@@ -568,6 +570,7 @@ namespace CruiseDAL.DataObjects
 		{}
 		#endregion
 		[XmlIgnore]
+		[PrimaryKeyField(FieldName = "Stratum_CN")]
 		public Int64? Stratum_CN
 		{
 			get{ return base.rowID; }
@@ -1063,6 +1066,7 @@ namespace CruiseDAL.DataObjects
 		{}
 		#endregion
 		[XmlIgnore]
+		[PrimaryKeyField(FieldName = "SampleGroup_CN")]
 		public Int64? SampleGroup_CN
 		{
 			get{ return base.rowID; }
@@ -1571,6 +1575,7 @@ namespace CruiseDAL.DataObjects
 		{}
 		#endregion
 		[XmlIgnore]
+		[PrimaryKeyField(FieldName = "TreeDefaultValue_CN")]
 		public Int64? TreeDefaultValue_CN
 		{
 			get{ return base.rowID; }
@@ -2158,6 +2163,7 @@ namespace CruiseDAL.DataObjects
 		{}
 		#endregion
 		[XmlIgnore]
+		[PrimaryKeyField(FieldName = "Plot_CN")]
 		public Int64? Plot_CN
 		{
 			get{ return base.rowID; }
@@ -2587,6 +2593,7 @@ namespace CruiseDAL.DataObjects
 		{}
 		#endregion
 		[XmlIgnore]
+		[PrimaryKeyField(FieldName = "Tree_CN")]
 		public Int64? Tree_CN
 		{
 			get{ return base.rowID; }
@@ -3787,6 +3794,7 @@ namespace CruiseDAL.DataObjects
 		{}
 		#endregion
 		[XmlIgnore]
+		[PrimaryKeyField(FieldName = "Log_CN")]
 		public Int64? Log_CN
 		{
 			get{ return base.rowID; }
@@ -4261,6 +4269,7 @@ namespace CruiseDAL.DataObjects
 		{}
 		#endregion
 		[XmlIgnore]
+		[PrimaryKeyField(FieldName = "Stem_CN")]
 		public Int64? Stem_CN
 		{
 			get{ return base.rowID; }
@@ -4457,6 +4466,7 @@ namespace CruiseDAL.DataObjects
 		{}
 		#endregion
 		[XmlIgnore]
+		[PrimaryKeyField(FieldName = "CountTree_CN")]
 		public Int64? CountTree_CN
 		{
 			get{ return base.rowID; }
@@ -4837,6 +4847,7 @@ namespace CruiseDAL.DataObjects
 		{}
 		#endregion
 		[XmlIgnore]
+		[PrimaryKeyField(FieldName = "Tally_CN")]
 		public Int64? Tally_CN
 		{
 			get{ return base.rowID; }
@@ -4983,6 +4994,7 @@ namespace CruiseDAL.DataObjects
 		{}
 		#endregion
 		[XmlIgnore]
+		[PrimaryKeyField(FieldName = "TreeEstimate_CN")]
 		public Int64? TreeEstimate_CN
 		{
 			get{ return base.rowID; }
@@ -6567,6 +6579,7 @@ namespace CruiseDAL.DataObjects
 		{}
 		#endregion
 		[XmlIgnore]
+		[PrimaryKeyField(FieldName = "TreeCalcValues_CN")]
 		public Int64? TreeCalcValues_CN
 		{
 			get{ return base.rowID; }
@@ -7334,6 +7347,7 @@ namespace CruiseDAL.DataObjects
 		{}
 		#endregion
 		[XmlIgnore]
+		[PrimaryKeyField(FieldName = "LCD_CN")]
 		public Int64? LCD_CN
 		{
 			get{ return base.rowID; }
@@ -8465,6 +8479,7 @@ namespace CruiseDAL.DataObjects
 		{}
 		#endregion
 		[XmlIgnore]
+		[PrimaryKeyField(FieldName = "POP_CN")]
 		public Int64? POP_CN
 		{
 			get{ return base.rowID; }
@@ -9537,6 +9552,7 @@ namespace CruiseDAL.DataObjects
 		{}
 		#endregion
 		[XmlIgnore]
+		[PrimaryKeyField(FieldName = "PRO_CN")]
 		public Int64? PRO_CN
 		{
 			get{ return base.rowID; }
@@ -9904,6 +9920,7 @@ namespace CruiseDAL.DataObjects
 		{}
 		#endregion
 		[XmlIgnore]
+		[PrimaryKeyField(FieldName = "LogStock_CN")]
 		public Int64? LogStock_CN
 		{
 			get{ return base.rowID; }
@@ -10398,6 +10415,7 @@ namespace CruiseDAL.DataObjects
 		{}
 		#endregion
 		[XmlIgnore]
+		[PrimaryKeyField(FieldName = "SampleGroupStats_CN")]
 		public Int64? SampleGroupStats_CN
 		{
 			get{ return base.rowID; }
@@ -11275,6 +11293,7 @@ namespace CruiseDAL.DataObjects
 		{}
 		#endregion
 		[XmlIgnore]
+		[PrimaryKeyField(FieldName = "StratumStats_CN")]
 		public Int64? StratumStats_CN
 		{
 			get{ return base.rowID; }
@@ -11751,6 +11770,7 @@ namespace CruiseDAL.DataObjects
 		{}
 		#endregion
 		[XmlIgnore]
+		[PrimaryKeyField(FieldName = "Regression_CN")]
 		public Int64? Regression_CN
 		{
 			get{ return base.rowID; }
@@ -12581,6 +12601,7 @@ namespace CruiseDAL.DataObjects
 		{}
 		#endregion
 		[XmlIgnore]
+		[PrimaryKeyField(FieldName = "TreeAuditValue_CN")]
 		public Int64? TreeAuditValue_CN
 		{
 			get{ return base.rowID; }
@@ -13251,6 +13272,7 @@ namespace CruiseDAL.DataObjects
 		{}
 		#endregion
 		[XmlIgnore]
+		[PrimaryKeyField(FieldName = "LogFieldSetupDefault_CN")]
 		public Int64? LogFieldSetupDefault_CN
 		{
 			get{ return base.rowID; }
@@ -13478,6 +13500,7 @@ namespace CruiseDAL.DataObjects
 		{}
 		#endregion
 		[XmlIgnore]
+		[PrimaryKeyField(FieldName = "TreeFieldSetupDefault_CN")]
 		public Int64? TreeFieldSetupDefault_CN
 		{
 			get{ return base.rowID; }
@@ -13725,6 +13748,7 @@ namespace CruiseDAL.DataObjects
 		{}
 		#endregion
 		[XmlIgnore]
+		[PrimaryKeyField(FieldName = "CruiseMethods_CN")]
 		public Int64? CruiseMethods_CN
 		{
 			get{ return base.rowID; }
@@ -13830,6 +13854,7 @@ namespace CruiseDAL.DataObjects
 		{}
 		#endregion
 		[XmlIgnore]
+		[PrimaryKeyField(FieldName = "LoggingMethods_CN")]
 		public Int64? LoggingMethods_CN
 		{
 			get{ return base.rowID; }
@@ -13935,6 +13960,7 @@ namespace CruiseDAL.DataObjects
 		{}
 		#endregion
 		[XmlIgnore]
+		[PrimaryKeyField(FieldName = "ProductCodes_CN")]
 		public Int64? ProductCodes_CN
 		{
 			get{ return base.rowID; }
@@ -14040,6 +14066,7 @@ namespace CruiseDAL.DataObjects
 		{}
 		#endregion
 		[XmlIgnore]
+		[PrimaryKeyField(FieldName = "UOMCodes_CN")]
 		public Int64? UOMCodes_CN
 		{
 			get{ return base.rowID; }
@@ -14145,6 +14172,7 @@ namespace CruiseDAL.DataObjects
 		{}
 		#endregion
 		[XmlIgnore]
+		[PrimaryKeyField(FieldName = "Region_CN")]
 		public Int64? Region_CN
 		{
 			get{ return base.rowID; }
@@ -14250,6 +14278,7 @@ namespace CruiseDAL.DataObjects
 		{}
 		#endregion
 		[XmlIgnore]
+		[PrimaryKeyField(FieldName = "Forest_CN")]
 		public Int64? Forest_CN
 		{
 			get{ return base.rowID; }
@@ -14631,6 +14660,7 @@ namespace CruiseDAL.DataObjects
 		{}
 		#endregion
 		[XmlIgnore]
+		[PrimaryKeyField(FieldName = "Message_CN")]
 		public Int64? Message_CN
 		{
 			get{ return base.rowID; }
@@ -14915,6 +14945,7 @@ namespace CruiseDAL.DataObjects
 		{}
 		#endregion
 		[XmlIgnore]
+		[PrimaryKeyField(FieldName = "Component_CN")]
 		public Int64? Component_CN
 		{
 			get{ return base.rowID; }
