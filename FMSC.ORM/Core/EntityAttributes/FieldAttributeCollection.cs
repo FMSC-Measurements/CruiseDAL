@@ -30,10 +30,19 @@ namespace FMSC.ORM.Core.EntityAttributes
             Debug.Assert(field != null);
             Debug.Assert(prop != null);
 
-            field.Getter = prop.GetGetMethod(true);
-            field.Setter = prop.GetSetMethod(true);
             field.RunTimeType = prop.PropertyType;
 
+            var getMethod = prop.GetGetMethod(true);
+            var setMethod = prop.GetSetMethod(true);
+
+            field.Getter = getMethod;
+            field.Setter = setMethod;
+
+            if(getMethod == null || setMethod == null)
+            {
+                throw new FieldAccesabilityException(field.FieldName, getMethod == null, setMethod == null);
+            }
+            
             if (field is PrimaryKeyFieldAttribute)
             {
                 if(PrimaryKeyField != null) { throw new InvalidOperationException("Primary Key field already set"); }

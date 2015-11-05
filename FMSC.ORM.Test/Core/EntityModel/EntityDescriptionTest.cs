@@ -100,6 +100,7 @@ namespace FMSC.ORM.Core.EntityModel
             Assert.NotNull(field.Getter);
             Assert.NotNull(field.Setter);
             Assert.NotNull(field.RunTimeType);
+            Assert.True(field.IsPersisted);
 
             _output.WriteLine("done");
 

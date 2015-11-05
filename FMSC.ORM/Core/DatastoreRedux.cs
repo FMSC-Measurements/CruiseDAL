@@ -205,13 +205,10 @@ namespace FMSC.ORM.Core
                 if (data is IPersistanceTracking)
                 {
                     Debug.Assert(((IPersistanceTracking)data).IsPersisted == true);
-                    ((IPersistanceTracking)data).IsDeleted = true;
                     ((IPersistanceTracking)data).OnDeleting();
                 }
 
-                object keyValue = keyFieldInfo.GetFieldValue(data);
-
-                using (DbCommand command = builder.BuildSQLDeleteCommand(Provider, keyFieldInfo.FieldName, keyValue))
+                using (DbCommand command = builder.BuildSQLDeleteCommand(Provider, data))
                 {
                     ExecuteSQL(command);
                 }

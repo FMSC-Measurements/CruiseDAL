@@ -89,6 +89,7 @@ namespace FMSC.ORM.Core.EntityModel
                 if (fieldAttr == null)
                 {
                     //TODO handle public property without attribute if we want automatic fields
+                    //catch FieldAccesabilityException for automatic fields
                     return;
                 }
                 if (fieldAttr is IgnoreFieldAttribute) { return; }

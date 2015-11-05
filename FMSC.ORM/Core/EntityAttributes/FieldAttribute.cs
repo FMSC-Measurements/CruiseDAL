@@ -9,11 +9,16 @@ namespace FMSC.ORM.Core.EntityAttributes
     public class FieldAttribute : BaseFieldAttribute
     {
         private int _ordinal = -1;
+        private bool _isPersisted = true;
         public int Ordinal { get { return _ordinal; } set { _ordinal = value; } }
 
         public string FieldName { get; set; }
         public string SQLExpression { get; set; }
-        public virtual bool IsPersisted { get; set; }
+        public virtual bool IsPersisted
+        {
+            get { return _isPersisted; }
+            set { _isPersisted = value; }
+        }
 
         public Type RunTimeType { get; set; }
         public MethodInfo Getter { get; set; }
@@ -27,7 +32,9 @@ namespace FMSC.ORM.Core.EntityAttributes
         //public bool IsDepreciated { get; set; }   
         
         public FieldAttribute()
-        { }
+        {
+            IsPersisted = true; 
+        }
 
         public FieldAttribute(string fieldName)
         {

@@ -413,12 +413,22 @@ namespace FMSC.ORM.Core.EntityModel
             return provider.CreateCommand(query);
         }
 
-        public DbCommand BuildSQLDeleteCommand(DbProviderFactoryAdapter provider, string fieldName, object keyValue)
+        public DbCommand BuildSQLDeleteCommand(DbProviderFactoryAdapter provider, object data)
+        {
+            PrimaryKeyFieldAttribute keyFieldInfo = EntityDescription.Fields.PrimaryKeyField;
+
+            if (keyFieldInfo == null) { throw new InvalidOperationException("type doesn't have primary key field"); }
+            object keyValue = keyFieldInfo.GetFieldValue(data);
+
+            return this.BuildSQLDeleteCommand(provider, keyFieldInfo.FieldName, keyValue);
+        }
+
+        protected DbCommand BuildSQLDeleteCommand(DbProviderFactoryAdapter provider, string keyFieldName, object keyValue)
         {
             Debug.Assert(keyValue != null);
-            Debug.Assert(!string.IsNullOrEmpty(fieldName));
+            Debug.Assert(!string.IsNullOrEmpty(keyFieldName));
 
-            var command = GetSQLDeleteCommand(provider, fieldName);
+            var command = GetSQLDeleteCommand(provider, keyFieldName);
 
             command.Parameters.Clear();
             command.Parameters.Add(provider.CreateParameter("@keyValue", keyValue));
