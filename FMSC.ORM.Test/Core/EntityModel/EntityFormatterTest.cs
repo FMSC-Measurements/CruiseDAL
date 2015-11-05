@@ -13,8 +13,15 @@ namespace FMSC.ORM.Core.EntityModel
             : base(output)
         { }
 
-        [Fact]
-        public void FormatTest()
+
+        [Theory]
+        [InlineData(":null")]
+        [InlineData(":8675307")]
+        [InlineData(":null:5U")]
+        [InlineData(":null:5L")]
+        [InlineData(":null:5C")]
+        [InlineData("::5U")]
+        public void FormatTest(string formatVariant)
         {
             var ed = new EntityDescription(typeof(DOMultiPropType));
             var formatter = new EntityFormatter(ed);
@@ -22,7 +29,7 @@ namespace FMSC.ORM.Core.EntityModel
 
             var formatString = String.Join(",",
                 (from string field in TestSupport.TestSQLConstants.MULTI_PROP_TABLE_FIELDS
-                 select "[" + field + ":null" + "]"));
+                 select "[" + field + formatVariant + "]"));
 
             _output.WriteLine(formatString);
 
@@ -30,7 +37,11 @@ namespace FMSC.ORM.Core.EntityModel
             Assert.NotNull(formatString);
             Assert.NotEmpty(formatString);
 
+            Assert.NotEqual(formatString, formatedString);
+
+            
             _output.WriteLine(formatedString);
+
         }
     }
 }
