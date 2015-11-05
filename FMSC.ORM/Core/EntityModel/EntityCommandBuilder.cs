@@ -33,6 +33,7 @@ namespace FMSC.ORM.Core.EntityModel
             EntityDescription = entDesc;
 
             InitializeSelectCommand();
+            InitializeLegacySelectCommand();
 
             if (EntityDescription.Fields.PrimaryKeyField != null)
             {
@@ -105,20 +106,35 @@ namespace FMSC.ORM.Core.EntityModel
                 bool first = true;
                 foreach (FieldAttribute field in EntityDescription.Fields)
                 {
-                    if (!string.IsNullOrEmpty(field.SQLExpression))
+                    string colExpr; 
+
+                    if(string.IsNullOrEmpty(field.SQLExpression))
                     {
-                        if (first) { sb.Append(", "); }
-                        sb.AppendLine(field.SQLExpression + " AS " + field.FieldName);
+                        colExpr = field.FieldName;
                     }
                     else
                     {
-                        if (first) { sb.Append(", "); }
-                        sb.AppendLine(field.FieldName);
+                        colExpr = field.SQLExpression + " AS " + field.FieldName;
                     }
+
+                    if (!first)
+                    {
+#if NetCF
+                        sb.Append(",\r\n");
+#else
+                        sb.Append("," + Environment.NewLine);
+#endif
+                    }
+                    else
+                    {
+                        first = false;
+                    }
+                    sb.Append(" " + colExpr);
+
                 }
 
-                sb.AppendLine("FROM " + EntityDescription.SourceName);
-                sb.AppendLine("{0};");//insert placeholder and close out command
+                sb.AppendLine(" FROM " + EntityDescription.SourceName);
+                sb.AppendLine(" {0};");//insert placeholder and close out command
 
                 _selectCommandFormat = sb.ToString();
             }

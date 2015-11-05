@@ -24,38 +24,39 @@ namespace FMSC.ORM.Core.SQL
             if (ConflictOption != OnConflictOption.Default)
             { sb.AppendLine("OR " + ConflictOption.ToString()); }
             sb.AppendLine("INTO " + TableName);
-
+            sb.Append("(");
             bool first = true;
             foreach(string colName in ColumnNames)
             {
                 if(first)
                 {
-                    sb.AppendLine(colName);
+                    sb.Append(" " + colName);
                     first = false;
                 }
                 else
                 {
-                    sb.AppendLine(colName + ",");
+                    sb.Append(", " + colName );
                 }
             }
+            sb.AppendLine(")");
 
             sb.AppendLine("VALUES");
-            sb.AppendLine("(");
+            sb.Append("(");
 
             first = true;
             foreach(string valExpr in ValueExpressions)
             {
                 if(first)
                 {
-                    sb.AppendLine(valExpr);
+                    sb.Append(valExpr);
                     first = false;
                 }
                 else
                 {
-                    sb.AppendLine(valExpr);
+                    sb.Append("," + valExpr);
                 }
             }
-            sb.AppendLine(");");
+            sb.Append(");");
             return sb.ToString();
         }
     }

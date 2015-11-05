@@ -56,7 +56,7 @@ namespace FMSC.ORM.Core
 
         protected string BuildConnectionString(bool readOnly)
         {
-            return string.Format("Data Source={0};Version=3;Read Only={2};", Path, readOnly);
+            return string.Format("Data Source={0};Version=3;Read Only={1};", Path, readOnly);
         }
 
         //DbConnectionStringBuilder GetConnectionStringBuilder()

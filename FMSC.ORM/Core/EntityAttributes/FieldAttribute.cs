@@ -18,6 +18,7 @@ namespace FMSC.ORM.Core.EntityAttributes
         public Type RunTimeType { get; set; }
         public MethodInfo Getter { get; set; }
         public MethodInfo Setter { get; set; }
+       
         public bool IsGuid;
 
         public string SQLPramName { get { return "@" + FieldName.ToLower();  } }
@@ -63,13 +64,22 @@ namespace FMSC.ORM.Core.EntityAttributes
         {
             try
             {
+                ////TODO fix hack
+                //if(RunTimeType == typeof(Nullable<Int64>) && value is Int64)
+                //{
+                //    value = new Nullable<Int64>((long)value);
+                //}
+
                 Setter.Invoke(dataObject, new Object[] { value, });
             }
-            catch
+            catch(Exception e)
             {
-                throw new ORMException(String.Format("unable to set value; Value = {0}; FieldInfo = {1}", value, this));
+                throw new ORMException(String.Format("unable to set value; Value = {0}; FieldInfo = {1}", value, this), e);
             }
         }
+
+
+        
 
         public void SetFieldValueOrDefault(Object dataObject, object value)
         {
