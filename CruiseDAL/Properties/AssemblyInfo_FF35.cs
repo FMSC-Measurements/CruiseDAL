@@ -32,7 +32,7 @@ using System.Runtime.InteropServices;
 // You can specify all the values or you can default the Build and Revision Numbers 
 // by using the '*' as shown below:
 // [assembly: AssemblyVersion("1.0.*")]
-[assembly: AssemblyVersion(CruiseDAL.DALRedux.CURENT_DBVERSION)]
+[assembly: AssemblyVersion(CruiseDAL.DAL.CURENT_DBVERSION)]
 [assembly: AssemblyFileVersion("1.0.0.1")]
 
 [assembly: System.Runtime.CompilerServices.InternalsVisibleTo("CruiseDALTest")]
