@@ -62,12 +62,15 @@
   </Choose>
   <ItemGroup>
     <Compile Include="Core\EntityModel\EntityDescriptionTest.cs" />
+    <Compile Include="Core\EntityModel\EntityFormatterTest.cs" />
+    <Compile Include="Core\EntityModel\EntityInflatorTest.cs" />
     <Compile Include="TestSupport\TestModels\DOMultiPropType.cs" />
     <Compile Include="TestSupport\TestModels\IInterface.cs" />
     <Compile Include="TestSupport\TestModels\POCOMultiTypeObject.cs" />
     <Compile Include="TestSupport\TestModels\TestReadDO.cs" />
     <Compile Include="TestSupport\TestSQLConstants.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="XUnit\TestClass.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

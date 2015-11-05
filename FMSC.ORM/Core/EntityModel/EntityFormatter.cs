@@ -18,15 +18,18 @@ namespace FMSC.ORM.Core.EntityModel
             { return obj.ToString(); }
 
             //get a list of all properties place holders in format
-            System.Text.RegularExpressions.Regex rx = new System.Text.RegularExpressions.Regex(@"\[(?<prop>[a-zA-Z]\w+)(?:(?:\|)(?<ifnull>\w+))?(?:(?::)(?<pad>(?:[-]?\d+)?[ULC]?))?\]", RegexOptions.Compiled);
+            System.Text.RegularExpressions.Regex rx = new System.Text.RegularExpressions.Regex(@"\[(?<prop>[a-zA-Z]\w+)(?:(?::)(?<ifnull>\w+)?)(?:(?::)(?<pad>(?:[-]?\d+)?[ULC]?))?\]", RegexOptions.Compiled);
 
-            return rx.Replace(formatString, this.ProcessFormatElementMatch);
+            return rx.Replace(formatString, (Match m) =>
+            {
+                return ProcessFormatElementMatch(obj, m);
+            });
         }
 
         /// <summary>
-        /// helper method for ToString(String format, IFormatProvider fomatProvider)
+        /// helper method 
         /// </summary>
-        private string ProcessFormatElementMatch(Match m)
+        private string ProcessFormatElementMatch(object data, Match m)
         {
             string sValue = string.Empty;
             string propName = m.Groups["prop"].Captures[0].Value;
@@ -38,7 +41,7 @@ namespace FMSC.ORM.Core.EntityModel
 
             try
             {
-                Object value = _description.Fields[propName].GetFieldValue(this);
+                Object value = _description.Fields[propName].GetFieldValue(data);
                 if (value != null && value is IFormattable)
                 {
                     sValue = ((IFormattable)value).ToString(null, null);

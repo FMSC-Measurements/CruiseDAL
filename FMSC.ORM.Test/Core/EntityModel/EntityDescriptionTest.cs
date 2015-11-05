@@ -1,4 +1,5 @@
 ﻿using FMSC.ORM.TestSupport.TestModels;
+using FMSC.ORM.XUnit;
 using System;
 using System.Linq;
 using Xunit;
@@ -6,15 +7,12 @@ using Xunit.Abstractions;
 
 namespace FMSC.ORM.Core.EntityModel
 {
-    public class EntityDescriptionTest
+    public class EntityDescriptionTest : TestClassBase 
     {
-        private readonly ITestOutputHelper _output;
 
         public EntityDescriptionTest(ITestOutputHelper output)
-        {
-            _output = output;
-
-        }
+            : base(output)
+        { }
 
         [Fact]
         public void Test_VanillaMultiTypeObject()
@@ -63,6 +61,7 @@ namespace FMSC.ORM.Core.EntityModel
             Assert.NotNull(doi.Fields.PrimaryKeyField.Getter);
             Assert.NotNull(doi.Fields.PrimaryKeyField.Setter);
 
+            VerifyField(doi, "ID");
             VerifyField(doi, "StringField");
             VerifyField(doi, "IntField");
             VerifyField(doi, "NIntField");

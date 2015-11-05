@@ -39,10 +39,8 @@ namespace FMSC.ORM.Core.EntityAttributes
                 if(PrimaryKeyField != null) { throw new InvalidOperationException("Primary Key field already set"); }
                 PrimaryKeyField = (PrimaryKeyFieldAttribute)field;
             }
-            else
-            {
-                _fields.Add(field.FieldName, field);
-            }
+
+            _fields.Add(field.FieldName, field);
         }
 
         public IEnumerable<FieldAttribute> GetPersistedFields()
