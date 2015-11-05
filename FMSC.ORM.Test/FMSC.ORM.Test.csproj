@@ -92,6 +92,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="TestSupport\CruiseCreate05_30_2013.txt" />
+    <None Include="README.md" />
   </ItemGroup>
   <Choose>
     <When Condition="'$(VisualStudioVersion)' == '10.0' And '$(IsCodedUITest)' == 'True'">
