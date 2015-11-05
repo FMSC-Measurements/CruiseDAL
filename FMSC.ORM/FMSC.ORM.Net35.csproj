@@ -42,9 +42,9 @@
   <ItemGroup>
     <Compile Include="Core\Constants\Logging.cs" />
     <Compile Include="Core\DatastoreBuilder.cs" />
-    <Compile Include="Core\DataStoreContext.cs" />
     <Compile Include="Core\DatastoreRedux.cs" />
     <Compile Include="Core\DbProviderFactoryAdapter.cs" />
+    <Compile Include="Core\EntityAttributes\BaseFieldAttribute.cs" />
     <Compile Include="Core\EntityAttributes\CreatedByFieldAttribute.cs" />
     <Compile Include="Core\EntityAttributes\FieldAttribute.cs" />
     <Compile Include="Core\EntityAttributes\FieldAttributeCollection.cs" />
@@ -79,7 +79,6 @@
     <Compile Include="Core\SQL\WhereClause.cs" />
     <Compile Include="Properties\AssemblyInfo.Net35.cs" />
     <Compile Include="SQLite\SQLiteDatastore.cs" />
-    <Compile Include="SQLite\SQLiteDataStoreContext.cs" />
     <Compile Include="SQLite\SQLiteProviderFactory.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
