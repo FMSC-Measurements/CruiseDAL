@@ -90,7 +90,7 @@ namespace FMSC.ORM.Core
             if(!_globalEntityDescriptionLookup.ContainsKey(name))
             {
                 
-                _globalEntityDescriptionLookup.Add(name, new EntityDescription(t, DbProviderFactoryAdapter.Instance));
+                _globalEntityDescriptionLookup.Add(name, new EntityDescription(t));
             }
 
             return _globalEntityDescriptionLookup[t.Name];
@@ -143,7 +143,7 @@ namespace FMSC.ORM.Core
             EntityCommandBuilder builder = entityDescription.CommandBuilder;
 
             object primaryKey = null;
-            using (DbCommand command = builder.BuildInsertCommand(data, option))
+            using (DbCommand command = builder.BuildInsertCommand(Provider, data, option))
             {
                 ExecuteSQL(command);
 
@@ -176,7 +176,7 @@ namespace FMSC.ORM.Core
             EntityDescription entityDescription = LookUpEntityByType(data.GetType());
             EntityCommandBuilder builder = entityDescription.CommandBuilder;
 
-            using (DbCommand command = builder.BuildUpdateCommand(data, option))
+            using (DbCommand command = builder.BuildUpdateCommand(Provider, data, option))
             {
                 ExecuteSQL(command);
             }
@@ -211,7 +211,7 @@ namespace FMSC.ORM.Core
 
                 object keyValue = keyFieldInfo.GetFieldValue(data);
 
-                using (DbCommand command = builder.BuildSQLDeleteCommand(keyFieldInfo.FieldName, keyValue))
+                using (DbCommand command = builder.BuildSQLDeleteCommand(Provider, keyFieldInfo.FieldName, keyValue))
                 {
                     ExecuteSQL(command);
                 }
@@ -238,7 +238,7 @@ namespace FMSC.ORM.Core
             EntityDescription entityDescription = LookUpEntityByType(typeof(T));
             EntityCommandBuilder commandBuilder = entityDescription.CommandBuilder;
 
-            using (DbCommand command = commandBuilder.BuildSelectLegacy(selection))
+            using (DbCommand command = commandBuilder.BuildSelectLegacy(Provider, selection))
             {
                 //Add selection Arguments to command parameter list
                 if (selectionArgs != null)
@@ -259,7 +259,7 @@ namespace FMSC.ORM.Core
             EntityDescription entityDescription = LookUpEntityByType(typeof(T));
             EntityCommandBuilder commandBuilder = entityDescription.CommandBuilder;
 
-            using (DbCommand command = commandBuilder.BuildSelectCommand(where))
+            using (DbCommand command = commandBuilder.BuildSelectCommand(Provider, where))
             {
                 //Add selection Arguments to command parameter list
                 if (selectionArgs != null)
@@ -343,7 +343,7 @@ namespace FMSC.ORM.Core
             EntityDescription entityDescription = LookUpEntityByType(typeof(T));
             EntityCommandBuilder commandBuilder = entityDescription.CommandBuilder;
 
-            using (DbCommand command = commandBuilder.BuildSelectLegacy(selection))
+            using (DbCommand command = commandBuilder.BuildSelectLegacy(Provider, selection))
             {
                 //Add selection Arguments to command parameter list
                 if (selectionArgs != null)
@@ -366,7 +366,7 @@ namespace FMSC.ORM.Core
             EntityDescription entityDescription = LookUpEntityByType(typeof(T));
             EntityCommandBuilder commandBuilder = entityDescription.CommandBuilder;
 
-            using (DbCommand command = commandBuilder.BuildSelectCommand(where))
+            using (DbCommand command = commandBuilder.BuildSelectCommand(Provider, where))
             {
                 //Add selection Arguments to command parameter list
                 if (selectionArgs != null)
@@ -492,7 +492,7 @@ namespace FMSC.ORM.Core
             EntityDescription entityDescription = LookUpEntityByType(typeof(T));
             EntityCommandBuilder commandBuilder = entityDescription.CommandBuilder;
 
-            using (DbCommand command = commandBuilder.BuildSelectCommand(where))
+            using (DbCommand command = commandBuilder.BuildSelectCommand(Provider, where))
             {
                 //Add selection Arguments to command parameter list
                 if (selectionArgs != null)
@@ -567,7 +567,7 @@ namespace FMSC.ORM.Core
             EntityDescription entityDescription = LookUpEntityByType(typeof(T));
             EntityCommandBuilder commandBuilder = entityDescription.CommandBuilder;
 
-            using (DbCommand command = commandBuilder.BuildSelectCommand(where))
+            using (DbCommand command = commandBuilder.BuildSelectCommand(Provider, where))
             {
                 //Add selection Arguments to command parameter list
                 if (selectionArgs != null)

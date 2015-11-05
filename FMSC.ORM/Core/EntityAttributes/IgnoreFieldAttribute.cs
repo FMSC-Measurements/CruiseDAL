@@ -4,7 +4,7 @@ using System.Text;
 
 namespace FMSC.ORM.Core.EntityAttributes
 {
-    public class IgnoreFieldAttribute : FieldAttribute
+    public class IgnoreFieldAttribute : BaseFieldAttribute
     {
     }
 }

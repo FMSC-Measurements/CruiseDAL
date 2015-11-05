@@ -62,7 +62,11 @@
   </Choose>
   <ItemGroup>
     <Compile Include="Core\EntityModel\EntityDescriptionTest.cs" />
-    <Compile Include="UnitTest1.cs" />
+    <Compile Include="TestSupport\TestModels\DOMultiPropType.cs" />
+    <Compile Include="TestSupport\TestModels\IInterface.cs" />
+    <Compile Include="TestSupport\TestModels\POCOMultiTypeObject.cs" />
+    <Compile Include="TestSupport\TestModels\TestReadDO.cs" />
+    <Compile Include="TestSupport\TestSQLConstants.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -70,6 +74,18 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="SQLite\" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\FMSC.ORM\FMSC.ORM.VS15.csproj">
+      <Project>{22432d40-9892-40a6-aa0c-cc8c2fa4bb91}</Project>
+      <Name>FMSC.ORM.VS15</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="TestSupport\CreateTestDB.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="TestSupport\CruiseCreate05_30_2013.txt" />
   </ItemGroup>
   <Choose>
     <When Condition="'$(VisualStudioVersion)' == '10.0' And '$(IsCodedUITest)' == 'True'">

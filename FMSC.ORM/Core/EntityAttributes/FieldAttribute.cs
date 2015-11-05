@@ -6,7 +6,7 @@ namespace FMSC.ORM.Core.EntityAttributes
     public enum SepcialFieldType { None = 0, CreatedBy, CreatedDate, ModifiedBy, ModifiedDate, RowVersion };
 
     [AttributeUsage(AttributeTargets.Property, Inherited = true)]
-    public class FieldAttribute : Attribute
+    public class FieldAttribute : BaseFieldAttribute
     {
         private int _ordinal = -1;
         public int Ordinal { get { return _ordinal; } set { _ordinal = value; } }

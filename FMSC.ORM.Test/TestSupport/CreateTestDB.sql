@@ -1,5 +1,6 @@
 ﻿CREATE TABLE MultiPropTable
 (
+	ID INTEGER Primary Key AUTOINCREMENT,
 	StringField TEXT, 
 	IntField INTEGER, 
 	NIntField INTEGER, 
@@ -13,4 +14,8 @@
 	NBoolField BOOLEAN, 
 	GuidField TEXT,
 	DateTimeField DATETIME
+	PartialyPublicField TEXT,
+	PrivateField TEXT,
+	CreatedBy TEXT,
+	ModifiedBy TEXT
 )

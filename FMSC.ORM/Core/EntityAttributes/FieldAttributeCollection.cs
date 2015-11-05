@@ -30,8 +30,8 @@ namespace FMSC.ORM.Core.EntityAttributes
             Debug.Assert(field != null);
             Debug.Assert(prop != null);
 
-            field.Getter = prop.GetGetMethod();
-            field.Setter = prop.GetSetMethod();
+            field.Getter = prop.GetGetMethod(true);
+            field.Setter = prop.GetSetMethod(true);
             field.RunTimeType = prop.PropertyType;
 
             if (field is PrimaryKeyFieldAttribute)

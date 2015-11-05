@@ -27,11 +27,9 @@ namespace FMSC.ORM.Core.EntityModel
         //string _updateCommandFormat;
 
         public EntityDescription EntityDescription { get; set; }
-        private DbProviderFactoryAdapter _providerFactory;
 
-        public EntityCommandBuilder(EntityDescription entDesc, DbProviderFactoryAdapter providerFactory)
+        public EntityCommandBuilder(EntityDescription entDesc)
         {
-            _providerFactory = providerFactory;
             EntityDescription = entDesc;
 
             InitializeSelectCommand();
@@ -45,14 +43,14 @@ namespace FMSC.ORM.Core.EntityModel
 
 
         #region build select 
-        public DbCommand BuildSelectCommand(WhereClause where)
+        public DbCommand BuildSelectCommand(DbProviderFactoryAdapter provider, WhereClause where)
         {
             Debug.Assert(_selectCommand != null);
 
             this._selectCommand.Where = where;
             string query = _selectCommand.ToString();
 
-            DbCommand command = _providerFactory.CreateCommand(query);
+            DbCommand command = provider.CreateCommand(query);
             return command;
 
         }
@@ -87,13 +85,13 @@ namespace FMSC.ORM.Core.EntityModel
             _selectCommand = expression;
         }
 
-        public DbCommand BuildSelectLegacy(string selection)
+        public DbCommand BuildSelectLegacy(DbProviderFactoryAdapter provider, string selection)
         {
             Debug.Assert(_selectCommandFormat != null);
 
             string commandText = string.Format(_selectCommandFormat, selection);
 
-            DbCommand command = _providerFactory.CreateCommand(commandText);
+            DbCommand command = provider.CreateCommand(commandText);
             return command;
         }
 
@@ -130,14 +128,14 @@ namespace FMSC.ORM.Core.EntityModel
         #endregion
 
         #region build insert
-        public DbCommand BuildInsertCommand(object data, SQL.OnConflictOption option)
+        public DbCommand BuildInsertCommand(DbProviderFactoryAdapter provider, object data, SQL.OnConflictOption option)
         {
             Debug.Assert(data != null);
             Debug.Assert(_insertCommand != null);
 
             _insertCommand.ConflictOption = option;
 
-            DbCommand command = _providerFactory.CreateCommand(_insertCommand.ToString());
+            DbCommand command = provider.CreateCommand(_insertCommand.ToString());
 
             foreach(FieldAttribute field in EntityDescription.Fields.GetPersistedFields())
             {
@@ -149,7 +147,7 @@ namespace FMSC.ORM.Core.EntityModel
 
                 object value = field.GetFieldValueOrDefault(data);
 
-                DbParameter pram = _providerFactory.CreateParameter(field.SQLPramName, value);
+                DbParameter pram = provider.CreateParameter(field.SQLPramName, value);
                 command.Parameters.Add(pram);
             }
 
@@ -262,7 +260,7 @@ namespace FMSC.ORM.Core.EntityModel
         #endregion
 
         #region build update
-        public DbCommand BuildUpdateCommand(object data, SQL.OnConflictOption option)
+        public DbCommand BuildUpdateCommand(DbProviderFactoryAdapter provider, object data, SQL.OnConflictOption option)
         {
             Debug.Assert(data != null);
             Debug.Assert(_updateCommand != null);
@@ -270,7 +268,7 @@ namespace FMSC.ORM.Core.EntityModel
 
             _updateCommand.ConflictOption = option;
 
-            DbCommand command = _providerFactory.CreateCommand(_updateCommand.ToString());
+            DbCommand command = provider.CreateCommand(_updateCommand.ToString());
 
             foreach (FieldAttribute field in EntityDescription.Fields.GetPersistedFields())
             {
@@ -282,13 +280,13 @@ namespace FMSC.ORM.Core.EntityModel
 
                 object value = field.GetFieldValueOrDefault(data);
 
-                DbParameter pram = _providerFactory.CreateParameter(field.SQLPramName, value);
+                DbParameter pram = provider.CreateParameter(field.SQLPramName, value);
                 command.Parameters.Add(pram);
             }
 
             PrimaryKeyFieldAttribute keyField = EntityDescription.Fields.PrimaryKeyField;
             object keyValue = keyField.GetFieldValueOrDefault(data);
-            DbParameter p = _providerFactory.CreateParameter(keyField.SQLPramName, keyField);
+            DbParameter p = provider.CreateParameter(keyField.SQLPramName, keyField);
             command.Parameters.Add(p);
 
 
@@ -392,22 +390,22 @@ namespace FMSC.ORM.Core.EntityModel
         //    return command;
         //}
 
-        protected DbCommand GetSQLDeleteCommand(string keyFieldName)
+        protected DbCommand GetSQLDeleteCommand(DbProviderFactoryAdapter provider, string keyFieldName)
         {
             string query = string.Format(@"DELETE FROM {0} WHERE {1} = @keyValue;", EntityDescription.SourceName, keyFieldName);
 
-            return _providerFactory.CreateCommand(query);
+            return provider.CreateCommand(query);
         }
 
-        public DbCommand BuildSQLDeleteCommand(string fieldName, object keyValue)
+        public DbCommand BuildSQLDeleteCommand(DbProviderFactoryAdapter provider, string fieldName, object keyValue)
         {
             Debug.Assert(keyValue != null);
             Debug.Assert(!string.IsNullOrEmpty(fieldName));
 
-            var command = GetSQLDeleteCommand(fieldName);
+            var command = GetSQLDeleteCommand(provider, fieldName);
 
             command.Parameters.Clear();
-            command.Parameters.Add(_providerFactory.CreateParameter("@keyValue", keyValue));
+            command.Parameters.Add(provider.CreateParameter("@keyValue", keyValue));
             return command;
         }
         #endregion

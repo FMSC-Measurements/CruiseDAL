@@ -41,13 +41,13 @@ namespace FMSC.ORM.Core.EntityModel
         }
 
 
-        public EntityDescription(Type type, DbProviderFactoryAdapter providerFactory) : this()
+        public EntityDescription(Type type) : this()
         {
             EntityType = type;
             Initialize();
 
             this.Inflator = new EntityInflator(this);
-            this.CommandBuilder = new EntityCommandBuilder(this, providerFactory);
+            this.CommandBuilder = new EntityCommandBuilder(this);
         }
 
         protected void Initialize()
@@ -58,39 +58,66 @@ namespace FMSC.ORM.Core.EntityModel
                 object[] tAttrs = EntityType.GetCustomAttributes(typeof(SQLEntityAttribute), true);
                 _entityAttr = (SQLEntityAttribute)tAttrs[0];
 
-                //find public properties
-                foreach (PropertyInfo p in EntityType.GetProperties(BindingFlags.Public | BindingFlags.Instance))
-                {
-                    FieldAttribute fieldAttr = (FieldAttribute)Attribute.GetCustomAttribute(p, typeof(FieldAttribute));
-                    if (fieldAttr is IgnoreFieldAttribute) { continue; }
-                    if (fieldAttr != null)
-                    {
-                        Fields.AddField(p, fieldAttr);
-                    }
-                    else
-                    {
-                        Fields.AddField(p);
-                    }
-                }
+                RegesterFields();
+            }
+            catch (Exception e)
+            {
+                throw new ORMException("Unable to initialize EntityDescription for " + EntityType.Name, e);
+            }
+        }
 
-                //find private properties
-                foreach (PropertyInfo p in EntityType.GetProperties(BindingFlags.NonPublic | BindingFlags.Instance))
+        protected void RegesterFields()
+        {
+            //find public properties
+            foreach (PropertyInfo p in EntityType.GetProperties(BindingFlags.Public | BindingFlags.Instance))
+            {
+                RegesterPublicProperty(p);
+            }
+
+            //find private properties
+            foreach (PropertyInfo p in EntityType.GetProperties(BindingFlags.NonPublic | BindingFlags.Instance))
+            {
+                RegesterNonPublicProperty(p);
+            }
+        }
+
+        protected void RegesterPublicProperty(PropertyInfo property)
+        {
+            BaseFieldAttribute fieldAttr = (BaseFieldAttribute)Attribute.GetCustomAttribute(property, typeof(BaseFieldAttribute));
+            try
+            {
+                if (fieldAttr == null)
                 {
-                    FieldAttribute fieldAttr = (FieldAttribute)Attribute.GetCustomAttribute(p, typeof(FieldAttribute));
-                    if (fieldAttr is IgnoreFieldAttribute) { continue; }
-                    if (fieldAttr != null)
-                    {
-                        Fields.AddField(p, fieldAttr);
-                    }
-                    else
-                    {
-                        Fields.AddField(p);
-                    }
+                    //TODO handle public property without attribute if we want automatic fields
+                    return;
+                }
+                if (fieldAttr is IgnoreFieldAttribute) { return; }
+                if (fieldAttr is FieldAttribute)
+                {
+                    Fields.AddField(property, (FieldAttribute)fieldAttr);
+                }
+            }
+            catch(Exception e)
+            {
+                throw new ORMException("Unable to register property: " + property.Name, e);
+            }
+        }
+
+        protected void RegesterNonPublicProperty(PropertyInfo property)
+        {
+            BaseFieldAttribute fieldAttr = (BaseFieldAttribute)Attribute.GetCustomAttribute(property, typeof(BaseFieldAttribute));
+            try
+            {
+                if (fieldAttr == null) { return; } //don't allow non public properties to be automatic fields
+                if (fieldAttr is IgnoreFieldAttribute) { return; }
+                if (fieldAttr is FieldAttribute)
+                {
+                    Fields.AddField(property, (FieldAttribute)fieldAttr);
                 }
             }
             catch (Exception e)
             {
-                throw new ORMException("Unable to create EntityDescription for " + EntityType.Name, e);
+                throw new ORMException("Unable to register property: " + property.Name, e);
             }
         }
     }

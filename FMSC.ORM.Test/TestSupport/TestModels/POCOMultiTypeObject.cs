@@ -6,6 +6,7 @@ using FMSC.ORM.Core.EntityAttributes;
 
 namespace FMSC.ORM.TestSupport.TestModels
 {
+    [SQLEntity(SourceName = FMSC.ORM.TestSupport.TestSQLConstants.MULTI_PROP_TABLE_NAME)]
     public class POCOMultiTypeObject
     {
         [PrimaryKeyField(FieldName = "ID")]
@@ -50,5 +51,31 @@ namespace FMSC.ORM.TestSupport.TestModels
         [Field(FieldName = "DateTimeField")]
         public DateTime DateTimeField { get; set; }
 
+        
+
+        [Field(FieldName = "PartialyPublicField")]
+        public string PartialyPublicField { get; protected set; }
+
+        [Field(FieldName = "PrivateField")]
+        private string PrivateField { get; set; }
+
+        [CreatedByField]
+        public string CreatedBy { get; set; }
+
+        [ModifiedByField]
+        public string ModifiedBy { get; set; }
+
+
+        #region non visible fields
+        [IgnoreField]
+        public string IgnoredField { get; set; }
+
+        [IgnoreField]
+        private string PrivateIgnoredField { get; set; }
+
+        public string PartialyPublicAutomaticField { get; protected set; }
+
+        private string PrivateAutomaticField { get; set; }
+        #endregion
     }
 }

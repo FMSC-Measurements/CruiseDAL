@@ -54,6 +54,35 @@ namespace FMSC.ORM.TestSupport.TestModels
         public DateTime DateTimeField { get; set; }
 
 
+        [Field(FieldName = "PartialyPublicField")]
+        public string PartialyPublicField { get; protected set; }
+
+        [Field(FieldName = "PrivateField")]
+        private string PrivateField { get; set; }
+
+        [CreatedByField]
+        public string CreatedBy { get; set; }
+
+        [ModifiedByField]
+        public string ModifiedBy { get; set; }
+
+        #region automatic fields
+        //TODO test automatic fields
+        #endregion
+
+
+        #region non visible fields
+        [IgnoreField]
+        public string IgnoredField { get; set; }
+
+        [IgnoreField]
+        private string PrivateIgnoredField { get; set; }
+
+        public string PartialyPublicAutomaticField { get; protected set; }
+
+        private string PrivateAutomaticField { get; set; }
+        #endregion
+
         public override void SetValues(DataObject obj)
         {
             throw new NotImplementedException();

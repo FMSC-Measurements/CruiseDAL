@@ -1,6 +1,8 @@
-﻿using System;
+﻿using FMSC.ORM.TestSupport.TestModels;
+using System;
 using System.Linq;
 using Xunit;
+using Xunit.Abstractions;
 
 namespace FMSC.ORM.Core.EntityModel
 {
@@ -13,9 +15,6 @@ namespace FMSC.ORM.Core.EntityModel
             _output = output;
 
         }
-
-
-
 
         [Fact]
         public void Test_VanillaMultiTypeObject()
@@ -36,7 +35,7 @@ namespace FMSC.ORM.Core.EntityModel
 
         public void LoadDataObjects()
         {
-            var types = (from t in System.Reflection.Assembly.GetAssembly(typeof(FMSCORM.DataObject)).GetTypes()
+            var types = (from t in System.Reflection.Assembly.GetAssembly(typeof(DataObject)).GetTypes()
                          where t.IsClass && t.Namespace == "CruiseDAL.DataObjects"
                          select t).ToList();
 
@@ -55,17 +54,54 @@ namespace FMSC.ORM.Core.EntityModel
             Assert.Equal(dataType, doi.EntityType);
             Assert.False(String.IsNullOrWhiteSpace(doi.SourceName));
 
+            VerifyDataObjectInfoFields(doi);
+        }
 
+        void VerifyDataObjectInfoFields(EntityDescription doi)
+        {
             Assert.NotNull(doi.Fields.PrimaryKeyField);
             Assert.NotNull(doi.Fields.PrimaryKeyField.Getter);
             Assert.NotNull(doi.Fields.PrimaryKeyField.Setter);
 
+            VerifyField(doi, "StringField");
+            VerifyField(doi, "IntField");
+            VerifyField(doi, "NIntField");
+            VerifyField(doi, "LongField");
+            VerifyField(doi, "NLongField");
+            VerifyField(doi, "BoolField");
+            VerifyField(doi, "NBoolField");
+            VerifyField(doi, "FloatField");
+            VerifyField(doi, "NFloatField");
+            VerifyField(doi, "DoubleField");
+            VerifyField(doi, "NDoubleField");
+            VerifyField(doi, "GuidField");
+            VerifyField(doi, "DateTimeField");
 
+            VerifyField(doi, "PartialyPublicField");
+            VerifyField(doi, "PrivateField");
+            VerifyField(doi, "CreatedBy");
+            VerifyField(doi, "ModifiedBy");
 
-            Assert.NotEmpty(doi.Fields);
-            Assert.True(doi.Fields.All(x => x.Getter != null));
-            Assert.True(doi.Fields.All(x => x.Setter != null));
-            Assert.True(doi.Fields.All(x => x.RunTimeType != null));
+            //verify 
+            Assert.DoesNotContain(doi.Fields, x => x.FieldName == "IgnoredField");
+            Assert.DoesNotContain(doi.Fields, x => x.FieldName == "PrivateIgnoredField");
+            Assert.DoesNotContain(doi.Fields, x => x.FieldName == "PartialyPublicAutomaticField");
+            Assert.DoesNotContain(doi.Fields, x => x.FieldName == "PrivateAutomaticField");
+        }
+
+        void VerifyField(EntityDescription doi, string fieldName)
+        {
+            _output.WriteLine("Verifying " + fieldName);
+            Assert.Contains(doi.Fields, x => x.FieldName == fieldName);
+
+            var field = doi.Fields[fieldName];
+            Assert.NotNull(field);
+            Assert.NotNull(field.Getter);
+            Assert.NotNull(field.Setter);
+            Assert.NotNull(field.RunTimeType);
+
+            _output.WriteLine("done");
+
         }
     }
 }
