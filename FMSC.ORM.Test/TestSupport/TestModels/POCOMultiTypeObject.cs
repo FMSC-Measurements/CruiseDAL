@@ -7,7 +7,7 @@ using FMSC.ORM.Core.EntityAttributes;
 namespace FMSC.ORM.TestSupport.TestModels
 {
     [SQLEntity(SourceName = FMSC.ORM.TestSupport.TestSQLConstants.MULTI_PROP_TABLE_NAME)]
-    public class POCOMultiTypeObject
+    public class POCOMultiTypeObject : IInterface
     {
         [PrimaryKeyField(FieldName = "ID")]
         public int ID { get; set; }
@@ -76,6 +76,13 @@ namespace FMSC.ORM.TestSupport.TestModels
         public string PartialyPublicAutomaticField { get; protected set; }
 
         private string PrivateAutomaticField { get; set; }
+
+        string IInterface.InterfaceProperty
+        {
+            get; set;
+        }
+
+
         #endregion
     }
 }

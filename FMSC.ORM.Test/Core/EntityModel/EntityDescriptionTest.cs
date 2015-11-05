@@ -87,6 +87,8 @@ namespace FMSC.ORM.Core.EntityModel
             Assert.DoesNotContain(doi.Fields, x => x.FieldName == "PrivateIgnoredField");
             Assert.DoesNotContain(doi.Fields, x => x.FieldName == "PartialyPublicAutomaticField");
             Assert.DoesNotContain(doi.Fields, x => x.FieldName == "PrivateAutomaticField");
+            Assert.DoesNotContain(doi.Fields, x => x.FieldName == "IInterface.InterfaceProperty");
+            Assert.DoesNotContain(doi.Fields, x => x.FieldName.Contains("InterfaceProperty"));
         }
 
         void VerifyField(EntityDescription doi, string fieldName)
