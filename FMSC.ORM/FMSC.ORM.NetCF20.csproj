@@ -61,6 +61,7 @@
     <Compile Include="Core\DbProviderFactoryAdapter.cs" />
     <Compile Include="Core\EntityAttributes\BaseFieldAttribute.cs" />
     <Compile Include="Core\EntityAttributes\CreatedByFieldAttribute.cs" />
+    <Compile Include="Core\EntityAttributes\FieldAccesabilityException.cs" />
     <Compile Include="Core\EntityAttributes\FieldAttribute.cs" />
     <Compile Include="Core\EntityAttributes\FieldAttributeCollection.cs" />
     <Compile Include="Core\EntityAttributes\FieldValidationRuleAttribut.cs" />
