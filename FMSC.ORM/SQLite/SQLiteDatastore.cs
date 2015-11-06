@@ -197,7 +197,7 @@ namespace FMSC.ORM.SQLite
         public override Int64 GetRowCount(string tableName, string selection, params Object[] selectionArgs)
         {
             string query = string.Format("SELECT Count(1) FROM {0} {1};", tableName, selection);
-            return ExecuteScalar<Int64>(query);
+            return ExecuteScalar<Int64>(query, selectionArgs);
         }
 
         public string GetTableSQL(String tableName)
