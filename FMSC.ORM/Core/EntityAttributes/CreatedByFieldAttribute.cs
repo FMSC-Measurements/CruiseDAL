@@ -34,8 +34,8 @@ namespace FMSC.ORM.Core.EntityAttributes
         protected static string GetUserInformation()
         {
 #if NetCF
-            throw new NotImplementedException();
-            //return FMSC.Util.DeviceInfo.GetMachineDescription() + "|" + FMSC.Util.DeviceInfo.GetMachineName();
+            //throw new NotImplementedException();
+            return FMSC.Util.DeviceInfo.GetMachineDescription() + "|" + FMSC.Util.DeviceInfo.GetMachineName();
             //FMSC.Utility.MobileDeviceInfo di = new FMSC.Utility.MobileDeviceInfo();
             //return di.GetModelAndSerialNumber();
             //return "Mobile User";
