@@ -73,11 +73,11 @@ namespace FMSC.ORM.Core.EntityModel
 
                 if (!string.IsNullOrEmpty(fi.SQLExpression))
                 {
-                    colExpression = fi.SQLExpression + " AS " + fi.FieldName;
+                    colExpression = fi.SQLExpression + " AS " + EntityDescription.SourceName + "." + fi.FieldName;
                 }
                 else
                 {
-                    colExpression = fi.FieldName;
+                    colExpression = EntityDescription.SourceName + "." + fi.FieldName;
                 }
 
                 columnExpressions.Add(colExpression);
@@ -110,11 +110,11 @@ namespace FMSC.ORM.Core.EntityModel
 
                     if(string.IsNullOrEmpty(field.SQLExpression))
                     {
-                        colExpr = field.FieldName;
+                        colExpr = EntityDescription.SourceName + "." + field.FieldName;
                     }
                     else
                     {
-                        colExpr = field.SQLExpression + " AS " + field.FieldName;
+                        colExpr = field.SQLExpression + " AS " + EntityDescription.SourceName + "." + field.FieldName;
                     }
 
                     if (!first)
