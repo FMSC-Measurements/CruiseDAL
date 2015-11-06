@@ -321,7 +321,17 @@ namespace FMSC.ORM.Core.EntityModel
         /// </summary>
         public string ToString(string format, IFormatProvider formatProvider)
         {
-            ICustomFormatter formatter = formatProvider.GetFormat(this.GetType()) as ICustomFormatter;
+            ICustomFormatter formatter;
+            if (formatProvider == null)
+            {
+                EntityDescription description = DatastoreRedux.LookUpEntityByType(this.GetType());
+                formatter = new EntityFormatter(description);
+            }
+            else
+            {
+                formatter = formatProvider.GetFormat(this.GetType()) as ICustomFormatter;
+            }
+
             if(formatter != null)
             {
                 return formatter.Format(format, this, formatProvider);
