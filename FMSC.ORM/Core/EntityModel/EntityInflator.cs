@@ -83,6 +83,12 @@ namespace FMSC.ORM.Core.EntityModel
                 ((ISupportInitialize)obj).EndInit();
             }
 
+            if (obj is IPersistanceTracking)
+            {
+                ((IPersistanceTracking)obj).IsPersisted = true;
+                ((IPersistanceTracking)obj).HasChanges = false;
+            }
+
         }
 
         public object ReadPrimaryKey(System.Data.IDataReader reader)
