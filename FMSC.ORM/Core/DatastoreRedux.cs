@@ -293,13 +293,17 @@ namespace FMSC.ORM.Core
                     {
                         Object entity = null;
                         object key = inflator.ReadPrimaryKey(reader);
-                        if (cache.ContainsKey(key))
+                        if (key != null && cache.ContainsKey(key))
                         {
                             entity = cache[key];
                         }
                         else
                         {
                             entity = inflator.CreateInstanceOfEntity();
+                            if (key != null)
+                            {
+                                cache.Add(key, entity);
+                            }
                             if (entity is IDataObject)
                             {
                                 ((IDataObject)entity).DAL = this;
