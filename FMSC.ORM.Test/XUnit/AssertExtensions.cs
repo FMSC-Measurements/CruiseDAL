@@ -17,5 +17,10 @@ namespace FMSC.ORM.XUnit
         {
             Xunit.Assert.False(String.IsNullOrWhiteSpace(str));
         }
+
+        public static void Fail()
+        {
+            Xunit.Assert.True(false);
+        }
     }
 }
