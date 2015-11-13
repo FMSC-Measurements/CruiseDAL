@@ -34,6 +34,21 @@ namespace FMSC.ORM.Core.EntityModel
             Assert.NotNull(instance);
         }
 
+        [Fact]
+        public void ReadDataTest()
+        {
+            throw new NotImplementedException();
+        }
+
+
+        [Fact]
+        public void ReadPrimaryKeyTest()
+        {
+            throw new NotImplementedException();
+        }
+
+
+
 
 
     }
