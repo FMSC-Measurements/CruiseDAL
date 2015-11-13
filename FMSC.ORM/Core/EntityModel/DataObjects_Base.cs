@@ -28,6 +28,11 @@ namespace FMSC.ORM.Core.EntityModel
         protected DatastoreRedux _ds = null;
         protected RecordState _recordState = RecordState.Detached;
 
+        bool _isDeleted;
+        bool _isPersisted;
+        bool _hasChanges;
+        //bool _isDetached = true;
+
         #region Properties
 
         [XmlIgnore]
@@ -54,41 +59,59 @@ namespace FMSC.ORM.Core.EntityModel
         [IgnoreField]
         public bool IsPersisted
         {
-            get { return (this._recordState & RecordState.Persisted) == RecordState.Persisted; }
+            get { return _isPersisted; }
+            protected set
+            {
+                if (_isPersisted == value) { return; }
+                _isPersisted = value;
+                OnIsPersistedChanged();
+            }
         }
 
         [XmlIgnore]
         [IgnoreField]
         public bool HasChanges
         {
-            get { return (this._recordState & RecordState.HasChanges) == RecordState.HasChanges; }
+            get { return _hasChanges; }
+            protected set
+            {
+                if (_hasChanges == value) { return; }
+                _hasChanges = value;
+                OnHasChangesChanged();
+            }
         }
 
         [XmlIgnore]
         [IgnoreField]
         public bool IsDeleted
         {
-            get { return (this._recordState & RecordState.Deleted) == RecordState.Deleted; }
-        }
-
-        [XmlIgnore]
-        [IgnoreField]
-        public bool IsDetached
-        {
-            get { return (this._recordState & RecordState.Detached) == RecordState.Detached; }
-            internal set
+            get { return _isDeleted; }
+            protected set
             {
-                if (value == true)
-                {
-                    this._recordState = RecordState.Detached;//override all other states 
-                }
-                else
-                {
-                    this._recordState = _recordState & ~RecordState.Detached;
-                }
-
+                if (_isDeleted == value) { return; }
+                _isDeleted = value;
+                OnIsDeletedChanged();
             }
         }
+
+        //[XmlIgnore]
+        //[IgnoreField]
+        //public bool IsDetached
+        //{
+        //    get { return (this._recordState & RecordState.Detached) == RecordState.Detached; }
+        //    internal set
+        //    {
+        //        if (value == true)
+        //        {
+        //            this._recordState = RecordState.Detached;//override all other states 
+        //        }
+        //        else
+        //        {
+        //            this._recordState = _recordState & ~RecordState.Detached;
+        //        }
+
+        //    }
+        //}
 
         [XmlIgnore]
         [IgnoreField]
@@ -144,17 +167,17 @@ namespace FMSC.ORM.Core.EntityModel
 
         internal void InternalSetDAL(DatastoreRedux newDAL)
         {
-            SetIsPersisted(false);
-            SetHasChanges(true);
+            IsPersisted = false;
+            HasChanges = true;
             
-            if (newDAL == null)
-            {
-                IsDetached = true;
-            }
-            else
-            {
-                IsDetached = false;
-            }
+            //if (newDAL == null)
+            //{
+            //    IsDetached = true;
+            //}
+            //else
+            //{
+            //    IsDetached = false;
+            //}
             _ds = newDAL;
         }
 
@@ -174,7 +197,7 @@ namespace FMSC.ORM.Core.EntityModel
         {
             if (!PropertyChangedEventsDisabled)
             {
-                SetHasChanges(true);
+                HasChanges = true;
                 if (PropertyChanged != null)
                 {
                     PropertyChanged(this, new PropertyChangedEventArgs(name));
@@ -192,11 +215,12 @@ namespace FMSC.ORM.Core.EntityModel
             {
                 return this.IsPersisted;
             }
-
             set
             {
-                SetIsPersisted(value);
+                this.IsPersisted = value;
             }
+
+            
         }
 
         bool IPersistanceTracking.HasChanges
@@ -205,11 +229,12 @@ namespace FMSC.ORM.Core.EntityModel
             {
                 return this.HasChanges;
             }
-
             set
             {
-                SetHasChanges(value);
+                this.HasChanges = value;
             }
+
+            
         }
 
         bool IPersistanceTracking.IsDeleted
@@ -220,46 +245,69 @@ namespace FMSC.ORM.Core.EntityModel
             }
             set
             {
-                SetIsDeleted(value);
+                this.IsDeleted = value;
             }
+            
         }
 
-        protected void SetIsPersisted(bool value)
+        protected virtual void OnIsPersistedChanged()
         {
-            if (value == true)
+            if(_isPersisted == true)
             {
-                this._recordState = (_recordState & RecordState.Validated) | RecordState.Persisted;//override all other states except Validated
-            }
-            else
-            {
-                this._recordState = _recordState & ~RecordState.Persisted;
+                _isDeleted = false;
+                _hasChanges = false;
             }
         }
 
-        protected void SetHasChanges(bool value)
-        {
-            if (value == true)
-            {
-                this._recordState = _recordState | RecordState.HasChanges;
-            }
-            else
-            {
-                this._recordState = _recordState & ~RecordState.HasChanges;
-            }
-        }
-
-        protected void SetIsDeleted(bool value)
+        protected virtual void OnHasChangesChanged()
         {
 
-            if (value == true)
+        }
+
+        protected virtual void OnIsDeletedChanged()
+        {
+            if(_isDeleted == true)
             {
-                this._recordState = RecordState.Deleted;//override all other states
-            }
-            else
-            {
-                this._recordState = _recordState & ~RecordState.Deleted;
+                _isPersisted = false;
             }
         }
+
+        //protected void SetIsPersisted(bool value)
+        //{
+        //    if (value == true)
+        //    {
+        //        this._recordState = (_recordState & RecordState.Validated) | RecordState.Persisted;//override all other states except Validated
+        //    }
+        //    else
+        //    {
+        //        this._recordState = _recordState & ~RecordState.Persisted;
+        //    }
+        //}
+
+        //protected void SetHasChanges(bool value)
+        //{
+        //    if (value == true)
+        //    {
+        //        this._recordState = _recordState | RecordState.HasChanges;
+        //    }
+        //    else
+        //    {
+        //        this._recordState = _recordState & ~RecordState.HasChanges;
+        //    }
+        //}
+
+        //protected void SetIsDeleted(bool value)
+        //{
+
+        //    if (value == true)
+        //    {
+        //        this._recordState = RecordState.Deleted;//override all other states
+        //    }
+        //    else
+        //    {
+        //        this._recordState = _recordState & ~RecordState.Deleted;
+        //    }
+        //}
 
         void IPersistanceTracking.OnInserted()
         {

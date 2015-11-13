@@ -62,6 +62,7 @@
     <Otherwise />
   </Choose>
   <ItemGroup>
+    <Compile Include="Core\EntityModel\DataObjectTest.cs" />
     <Compile Include="Core\EntityModel\EntityCommandBuilderTest.cs" />
     <Compile Include="Core\EntityModel\EntityDescriptionTest.cs" />
     <Compile Include="Core\EntityModel\EntityFormatterTest.cs" />
