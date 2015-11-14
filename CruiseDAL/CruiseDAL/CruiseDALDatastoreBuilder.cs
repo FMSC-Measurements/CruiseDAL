@@ -2,64 +2,33 @@
 using System.Collections.Generic;
 using System.Data.SQLite;
 using System.IO;
-using FMSC.ORM.Core;
-
+using FMSC.ORM.SQLite;
 
 namespace CruiseDAL
 {
-    public class CruiseDALDatastoreBuilder : DatastoreBuilder
+    public class CruiseDALDatastoreBuilder : SQLiteDatabaseBuilder
     {
-        public new DAL DataStore
+        public new DAL Datastore
         {
-            get { return (DAL)base.DataStore; }
-            set { base.DataStore = value; }
-        }
-
-        public override void CreateDatastore()
-        {
-            if(DataStore.Exists)
-            {
-                File.Delete(DataStore.Path);
-            }
-
-            try
-            {
-                SQLiteConnection.CreateFile(DataStore.Path);
-                DataStore.BeginTransaction();
-                try
-                {
-                    CreateTables();
-                    CreateTriggers();
-                    DataStore.CommitTransaction();
-                }
-                catch
-                {
-                    DataStore.RollbackTransaction();
-                    throw;
-                }
-            }
-            catch
-            {
-                File.Delete(DataStore.Path);
-                throw;
-            }
+            get { return (DAL)base.Datastore; }
+            set { base.Datastore = value; }
         }
 
         public override void CreateTables()
         {
             String createSQL = GetCreateSQL();
-            DataStore.Execute(createSQL);
+            Datastore.Execute(createSQL);
         }
 
         public override void CreateTriggers()
         {
             String createTriggers = GetCreateTriggers();
-            DataStore.Execute(createTriggers);
+            Datastore.Execute(createTriggers);
         }
 
         public override void UpdateDatastore()
         {
-            Updater.Update(DataStore);
+            Updater.Update(Datastore);
         }
 
         public static String GetCreateSQL()

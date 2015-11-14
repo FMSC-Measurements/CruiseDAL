@@ -89,6 +89,7 @@
     <Compile Include="Core\SQL\SQLSelectExpression.cs" />
     <Compile Include="Core\SQL\SQLUpdateCommand.cs" />
     <Compile Include="Core\SQL\WhereClause.cs" />
+    <Compile Include="SQLite\SQLiteDatabaseBuilder.cs" />
     <Compile Include="SQLite\SQLiteDatastore.cs" />
     <Compile Include="SQLite\SQLiteProviderFactory.cs" />
   </ItemGroup>

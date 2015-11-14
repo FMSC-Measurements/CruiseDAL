@@ -62,26 +62,28 @@
     <Otherwise />
   </Choose>
   <ItemGroup>
+    <Compile Include="Core\DatastoreTest.cs" />
     <Compile Include="Core\EntityModel\DataObjectTest.cs" />
     <Compile Include="Core\EntityModel\EntityCommandBuilderTest.cs" />
     <Compile Include="Core\EntityModel\EntityDescriptionTest.cs" />
     <Compile Include="Core\EntityModel\EntityFormatterTest.cs" />
     <Compile Include="Core\EntityModel\EntityInflatorTest.cs" />
+    <Compile Include="Core\EntityModel\MappingCollectionTest.cs" />
+    <Compile Include="SQLite\SQLiteDatastoreTest.cs" />
+    <Compile Include="TestSupport\TestDBBuilder.cs" />
     <Compile Include="TestSupport\TestModels\DOMultiPropType.cs" />
     <Compile Include="TestSupport\TestModels\IInterface.cs" />
     <Compile Include="TestSupport\TestModels\POCOMultiTypeObject.cs" />
     <Compile Include="TestSupport\TestModels\TestReadDO.cs" />
     <Compile Include="TestSupport\TestSQLConstants.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="XUnit\AssertExtensions.cs" />
-    <Compile Include="XUnit\TestClass.cs" />
+    <Compile Include="MyXUnit\AssertExtensions.cs" />
+    <Compile Include="MyXUnit\TestClass.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="SQLite\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <ProjectReference Include="..\FMSC.ORM\FMSC.ORM.VS15.csproj">
       <Project>{22432d40-9892-40a6-aa0c-cc8c2fa4bb91}</Project>

@@ -9,13 +9,20 @@ namespace FMSC.ORM.SQLite
 {
     public class SQLiteDatastore : DatastoreRedux
     {
+        const string IN_MEMORY_DB_PATH = ":memory:";
+
         /// <summary>
-        /// 
+        /// Gets value indicating if database file exists
         /// </summary>
         public bool Exists
         {
             get
             {
+                if(Path == IN_MEMORY_DB_PATH)
+                {
+                    throw new NotImplementedException();
+                }
+
                 return System.IO.File.Exists(this.Path);
             }
         }
@@ -28,15 +35,24 @@ namespace FMSC.ORM.SQLite
             get { return System.IO.Path.GetExtension(base.Path); }
         }
 
-        public SQLiteDatastore() : base(new SQLiteProviderFactory())
-        {
-            Path = ":memory:";
-        }
+
+        /// <summary>
+        /// creates instance representing an in memory database
+        /// </summary>
+        public SQLiteDatastore() : this(IN_MEMORY_DB_PATH)
+        { }
 
         public SQLiteDatastore(string path) : base(new SQLiteProviderFactory())
         {
             Path = path;
         }
+
+        #region abstract methods
+        protected override string BuildConnectionString(bool readOnly)
+        {
+            return string.Format("Data Source={0};Version=3;Read Only={1};", Path, readOnly);
+        }
+        #endregion
 
         #region SavePoints
         public void StartSavePoint(String name)

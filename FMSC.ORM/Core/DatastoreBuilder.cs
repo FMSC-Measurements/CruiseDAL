@@ -2,9 +2,9 @@
 
 namespace FMSC.ORM.Core
 {
-    public abstract class DatastoreBuilder
+    public abstract class DatabaseBuilder
     {
-        public DatastoreRedux DataStore { get; set; }
+        public DatastoreRedux Datastore { get; set; }
 
         public abstract void CreateDatastore();
 

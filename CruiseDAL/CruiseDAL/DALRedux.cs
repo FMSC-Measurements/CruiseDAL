@@ -109,12 +109,12 @@ namespace CruiseDAL
         /// <exception cref="ArgumentNullException">path can not be null or an empty string</exception>
         /// <exception cref="System.IO.IOException">File extension is not valid <see cref="VALID_EXTENSIONS"/></exception>
         /// <exception cref="System.UnauthorizedAccessException">File open in another application or thread</exception>
-        public DAL(string path, bool makeNew, DatastoreBuilder builder) : base(path)
+        public DAL(string path, bool makeNew, DatabaseBuilder builder) : base(path)
         {
             Debug.Assert(builder != null);
             System.Diagnostics.Debug.Assert(!String.IsNullOrEmpty(path), "path is null or empty");
 
-            builder.DataStore = this;
+            builder.Datastore = this;
 
             Path = path;
             
@@ -125,7 +125,7 @@ namespace CruiseDAL
         
 
         
-        protected void Initialize(bool makeNew, DatastoreBuilder builder)
+        protected void Initialize(bool makeNew, DatabaseBuilder builder)
         {
             if (makeNew)
             {

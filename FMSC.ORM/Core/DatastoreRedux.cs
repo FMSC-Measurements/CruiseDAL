@@ -13,7 +13,7 @@ using System.Threading;
 
 namespace FMSC.ORM.Core
 {
-    public abstract class DatastoreRedux
+    public abstract class DatastoreRedux : IDisposable
     {
         const bool DEFAULT_RETRY_RO_CONNECTION_BEHAVIOR = false;
         const bool DEFAULT_RETRY_RW_CONNECTION_BEHAVIOR = false;
@@ -33,8 +33,11 @@ namespace FMSC.ORM.Core
 
         protected static Dictionary<string, EntityDescription> _globalEntityDescriptionLookup = new Dictionary<string, EntityDescription>();
 
+
+        
         protected DbProviderFactoryAdapter Provider { get; set; }
 
+        public DatabaseBuilder DatabaseBuilder { get; set; }
         public string Path { get; protected set; }
 
         protected DatastoreRedux(DbProviderFactoryAdapter provider)
@@ -44,30 +47,6 @@ namespace FMSC.ORM.Core
 
 
         #region sugar
-        //public DbCommand CreateCommand(string commandText)
-        //{
-        //    return Provider.CreateCommand(commandText);
-        //}
-
-        //DbParameter CreateParameter(string name, object value)
-        //{
-        //    return Provider.CreateParameter(name, value);
-        //}
-
-        protected string BuildConnectionString(bool readOnly)
-        {
-            return string.Format("Data Source={0};Version=3;Read Only={1};", Path, readOnly);
-        }
-
-        //DbConnectionStringBuilder GetConnectionStringBuilder()
-        //{
-        //    throw new NotImplementedException();
-        //    //DbConnectionStringBuilder builder = new DbConnectionStringBuilder();
-        //    //builder.Add("Data Source", this.Path);
-
-        //    //return builder;
-
-        //}
 
         protected EntityCache GetEntityCache(Type type)
         {
@@ -104,7 +83,8 @@ namespace FMSC.ORM.Core
         #endregion
 
         #region abstract members
-        //protected abstract DbConnection CreateConnection(string connectionString);
+
+        protected abstract string BuildConnectionString(bool readOnly);
         protected abstract Exception ThrowExceptionHelper(DbConnection conn, DbCommand comm, Exception innerException);
         public abstract bool HasForeignKeyErrors(string table_name);
         public abstract List<ColumnInfo> GetTableInfo(string tableName);
@@ -189,7 +169,6 @@ namespace FMSC.ORM.Core
             }
 
         }
-
 
         public void Delete(object data)
         {
@@ -1081,6 +1060,8 @@ namespace FMSC.ORM.Core
         //    }
         //}
 
+
+        //TODO make protected 
         public virtual void ReleaseAllConnections(bool force)
         {
             ReleaseReadOnlyConnection();
