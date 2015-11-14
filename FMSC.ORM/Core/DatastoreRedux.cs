@@ -1091,7 +1091,7 @@ namespace FMSC.ORM.Core
             lock (_readWriteConnectionSyncLock)
             {
                 Debug.Assert(_ReadWriteConnection != null);
-                if (_ReadOnlyConnection == null) { return; }
+                if (_ReadWriteConnection == null) { return; }
                 ExitConnectionHold();
                 if (_holdConnection == 0 || force)
                 {
