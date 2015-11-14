@@ -7,6 +7,14 @@ using Xunit;
 
 namespace FMSC.ORM.Core.EntityModel
 {
+    public class ConcreateDataObject : DataObject
+    {
+        public override void SetValues(DataObject obj)
+        {
+            throw new NotImplementedException();
+        }
+    }
+
     public class DataObjectTest
     {
 
@@ -76,11 +84,5 @@ namespace FMSC.ORM.Core.EntityModel
 
     }
 
-    public class ConcreateDataObject : DataObject
-    {
-        public override void SetValues(DataObject obj)
-        {
-            throw new NotImplementedException();
-        }
-    }
+    
 }

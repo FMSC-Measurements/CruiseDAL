@@ -1,5 +1,5 @@
 ﻿using FMSC.ORM.TestSupport.TestModels;
-using FMSC.ORM.XUnit;
+using FMSC.ORM.MyXUnit;
 using System;
 using System.Collections.Generic;
 using System.Linq;

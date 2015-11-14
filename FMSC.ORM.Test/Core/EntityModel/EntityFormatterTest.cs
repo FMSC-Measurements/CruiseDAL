@@ -2,7 +2,7 @@
 using System.Linq;
 using Xunit;
 using FMSC.ORM.TestSupport.TestModels;
-using FMSC.ORM.XUnit;
+using FMSC.ORM.MyXUnit;
 using Xunit.Abstractions;
 
 namespace FMSC.ORM.Core.EntityModel
