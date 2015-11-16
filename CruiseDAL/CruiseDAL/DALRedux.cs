@@ -22,7 +22,7 @@ namespace CruiseDAL
         private string _databaseVersion = "Unknown";
         private CruiseFileType _cruiseFileType;
 
-        protected object _multiDatabaseConnectionSyncLock;
+        protected object _multiDatabaseConnectionSyncLock = new Object();
         protected DbConnection _multiDatabaseConnection;
         protected int _holdMultiDatabaseConnection;
 
@@ -394,7 +394,7 @@ namespace CruiseDAL
 
         protected void ReleaseMultiDatabaseConnection(bool force)
         {
-            lock(_multiDatabaseConnection)
+            lock(_multiDatabaseConnectionSyncLock)
             {
                 Debug.Assert(_multiDatabaseConnection != null);
                 ExitMultiDatabaseConnectionHold();
