@@ -81,7 +81,6 @@
     <Compile Include="CruiseDAL\CruiseDALDatastoreBuilder.cs" />
     <Compile Include="CruiseDAL\CruiseDALErrorCollection.cs" />
     <Compile Include="CruiseDAL\CustomTriggers.cs" />
-    <Compile Include="CruiseDAL\DAL.cs" />
     <Compile Include="CruiseDAL\DALExtentions.cs" />
     <Compile Include="CruiseDAL\DALRedux.cs" />
     <Compile Include="CruiseDAL\DALValidationExtentions.cs" />
