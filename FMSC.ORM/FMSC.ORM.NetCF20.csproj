@@ -97,6 +97,7 @@
     <Compile Include="NetCF\ExtensionAttribute.cs" />
     <Compile Include="NetCF\StringBuilderExtensions.cs" />
     <Compile Include="Properties\AssemblyInfo.NetCF20.cs" />
+    <Compile Include="SQLite\SQLiteDatabaseBuilder.cs" />
     <Compile Include="SQLite\SQLiteDatastore.cs" />
     <Compile Include="SQLite\SQLiteProviderFactory.cs" />
   </ItemGroup>
