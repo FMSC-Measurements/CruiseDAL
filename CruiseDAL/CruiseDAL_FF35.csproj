@@ -106,6 +106,7 @@
     <Compile Include="TableModels\AuditValue_partial.cs" />
     <Compile Include="TableModels\CruiseMethod_partial.cs" />
     <Compile Include="TableModels\CuttingUnit_partial.cs" />
+    <Compile Include="TableModels\ErrorLog_partial.cs" />
     <Compile Include="TableModels\Globals_partial.cs" />
     <Compile Include="TableModels\LogMatrix_partial.cs" />
     <Compile Include="TableModels\MappingCollections.cs" />

@@ -4,11 +4,11 @@ using System.Collections.Generic;
 using System.Text;
 using FMSC.ORM.Core.EntityAttributes;
 
-namespace CruiseDAL.TableModels
+namespace CruiseDAL.DataObjects
 {
     public partial class ErrorLogDO
     {
         [PrimaryKeyField(FieldName="RowID")]
-        public long? RowID {get; set;}
+        public long? MyRowID {get; set;}
     }
 }
