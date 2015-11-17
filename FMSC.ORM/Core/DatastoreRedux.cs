@@ -123,18 +123,35 @@ namespace FMSC.ORM.Core
             EntityCommandBuilder builder = entityDescription.CommandBuilder;
 
             object primaryKey = null;
-            using (DbCommand command = builder.BuildInsertCommand(Provider, data, option))
+            
+            try
             {
-                ExecuteSQL(command);
+                DbConnection conn = OpenReadWriteConnection();
+                using (DbCommand command = builder.BuildInsertCommand(Provider, data, option))
+                {
+                    ExecuteSQL( command, conn);
+                }
 
                 if (primaryKeyField != null)
                 {
-                    primaryKey = GetLastInsertKeyValue(entityDescription.SourceName
-                        , primaryKeyField.FieldName);
+                    if (primaryKeyField.KeyType == KeyType.RowID)
+                    {
+                        primaryKey = GetLastInsertIdentity(conn);
+                    }
+                    else
+                    {
+                        primaryKey = GetLastInsertKeyValue(entityDescription.SourceName
+                       , primaryKeyField.FieldName, conn);
+                    }
 
                     primaryKeyField.SetFieldValue(data, primaryKey);
                 }
             }
+            finally
+            {
+                ReleaseReadWriteConnection(false);
+            }
+            
 
             if (data is IPersistanceTracking)
             {
@@ -441,10 +458,28 @@ namespace FMSC.ORM.Core
             }
         }
 
-        protected object GetLastInsertKeyValue(String tableName, String fieldName)
+        protected object GetLastInsertKeyValue(String tableName, String fieldName, DbConnection conn)
         {
-            String query = "Select " + fieldName + " FROM " + tableName + " WHERE rowid = last_insert_rowid()";
-            return ExecuteScalar(query);
+            var ident = GetLastInsertIdentity(conn);
+
+            //String query = "Select " + fieldName + " FROM " + tableName + " WHERE rowid = last_insert_rowid();";
+            using (DbCommand command = Provider.CreateCommand("SELECT " + fieldName + " FROM " + tableName + " WHERE rowid = ?;"))
+            {
+                command.Parameters.Add(Provider.CreateParameter(null, ident));
+                var value = ExecuteScalar(command, conn);
+                Debug.Assert(value != null);
+                return value;
+            }
+        }
+
+        protected object GetLastInsertIdentity(DbConnection conn)
+        {
+            using(var command = Provider.CreateCommand("SELECT last_insert_rowid();"))
+            {
+                var value = ExecuteScalar(command, conn);
+                Debug.Assert(value != null);
+                return value;
+            }
         }
         #endregion
 
@@ -703,19 +738,26 @@ namespace FMSC.ORM.Core
                 DbConnection conn = OpenReadWriteConnection(false);
                 try
                 {
-                    command.Connection = conn;
-                    return command.ExecuteScalar();
-                }
-                catch (Exception e)
-                {
-                    throw this.ThrowExceptionHelper(conn, command, e);
+                    return ExecuteScalar(command, conn);
                 }
                 finally
                 {
                     ReleaseReadWriteConnection(false);
                 }
             }
+        }
 
+        protected object ExecuteScalar(DbCommand command, DbConnection conn)
+        {
+            try
+            {
+                command.Connection = conn;
+                return command.ExecuteScalar();
+            }
+            catch (Exception e)
+            {
+                throw this.ThrowExceptionHelper(conn, command, e);
+            }
         }
 
         public T ExecuteScalar<T>(String query)
@@ -975,7 +1017,6 @@ namespace FMSC.ORM.Core
 
         protected virtual DbConnection OpenReadOnlyConnection(bool retry)
         {
-
             lock (this._readOnlyConnectionSyncLock)
             {
                 DbConnection conn;
@@ -984,6 +1025,10 @@ namespace FMSC.ORM.Core
                 {
                     _ReadOnlyConnection = CreateReadOnlyConnection();
 
+                }
+                else
+                {
+                    Debug.WriteLine("Existing Connection used");
                 }
                 conn = _ReadOnlyConnection;
 
