@@ -302,7 +302,7 @@ namespace FMSC.ORM.Core.EntityModel
 
             PrimaryKeyFieldAttribute keyField = EntityDescription.Fields.PrimaryKeyField;
             object keyValue = keyField.GetFieldValueOrDefault(data);
-            DbParameter p = provider.CreateParameter(keyField.SQLPramName, keyField);
+            DbParameter p = provider.CreateParameter(keyField.SQLPramName, keyValue);
             command.Parameters.Add(p);
 
 
