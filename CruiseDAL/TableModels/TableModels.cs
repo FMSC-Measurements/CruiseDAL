@@ -902,6 +902,7 @@ namespace CruiseDAL.DataObjects
 		public virtual CuttingUnitDO GetCuttingUnit()
 		{
 		    if(DAL == null) { return null; }
+			if(this.CuttingUnit_CN == null) { return null; }//  don't bother reading if identity is null
 			return DAL.ReadSingleRow<CuttingUnitDO>( this.CuttingUnit_CN);
 		    //return DAL.ReadSingleRow<CuttingUnitDO>(CUTTINGUNIT._NAME, this.CuttingUnit_CN);
 		}
@@ -952,6 +953,7 @@ namespace CruiseDAL.DataObjects
 		public virtual StratumDO GetStratum()
 		{
 		    if(DAL == null) { return null; }
+			if(this.Stratum_CN == null) { return null; }//  don't bother reading if identity is null
 			return DAL.ReadSingleRow<StratumDO>( this.Stratum_CN);
 		    //return DAL.ReadSingleRow<StratumDO>(STRATUM._NAME, this.Stratum_CN);
 		}
@@ -1099,6 +1101,7 @@ namespace CruiseDAL.DataObjects
 		public virtual StratumDO GetStratum()
 		{
 		    if(DAL == null) { return null; }
+			if(this.Stratum_CN == null) { return null; }//  don't bother reading if identity is null
 			return DAL.ReadSingleRow<StratumDO>( this.Stratum_CN);
 		    //return DAL.ReadSingleRow<StratumDO>(STRATUM._NAME, this.Stratum_CN);
 		}
@@ -2025,6 +2028,7 @@ namespace CruiseDAL.DataObjects
 		public virtual TreeDefaultValueDO GetTreeDefaultValue()
 		{
 		    if(DAL == null) { return null; }
+			if(this.TreeDefaultValue_CN == null) { return null; }//  don't bother reading if identity is null
 			return DAL.ReadSingleRow<TreeDefaultValueDO>( this.TreeDefaultValue_CN);
 		    //return DAL.ReadSingleRow<TreeDefaultValueDO>(TREEDEFAULTVALUE._NAME, this.TreeDefaultValue_CN);
 		}
@@ -2075,6 +2079,7 @@ namespace CruiseDAL.DataObjects
 		public virtual SampleGroupDO GetSampleGroup()
 		{
 		    if(DAL == null) { return null; }
+			if(this.SampleGroup_CN == null) { return null; }//  don't bother reading if identity is null
 			return DAL.ReadSingleRow<SampleGroupDO>( this.SampleGroup_CN);
 		    //return DAL.ReadSingleRow<SampleGroupDO>(SAMPLEGROUP._NAME, this.SampleGroup_CN);
 		}
@@ -2196,6 +2201,7 @@ namespace CruiseDAL.DataObjects
 		public virtual StratumDO GetStratum()
 		{
 		    if(DAL == null) { return null; }
+			if(this.Stratum_CN == null) { return null; }//  don't bother reading if identity is null
 			return DAL.ReadSingleRow<StratumDO>( this.Stratum_CN);
 		    //return DAL.ReadSingleRow<StratumDO>(STRATUM._NAME, this.Stratum_CN);
 		}
@@ -2246,6 +2252,7 @@ namespace CruiseDAL.DataObjects
 		public virtual CuttingUnitDO GetCuttingUnit()
 		{
 		    if(DAL == null) { return null; }
+			if(this.CuttingUnit_CN == null) { return null; }//  don't bother reading if identity is null
 			return DAL.ReadSingleRow<CuttingUnitDO>( this.CuttingUnit_CN);
 		    //return DAL.ReadSingleRow<CuttingUnitDO>(CUTTINGUNIT._NAME, this.CuttingUnit_CN);
 		}
@@ -2626,6 +2633,7 @@ namespace CruiseDAL.DataObjects
 		public virtual TreeDefaultValueDO GetTreeDefaultValue()
 		{
 		    if(DAL == null) { return null; }
+			if(this.TreeDefaultValue_CN == null) { return null; }//  don't bother reading if identity is null
 			return DAL.ReadSingleRow<TreeDefaultValueDO>( this.TreeDefaultValue_CN);
 		    //return DAL.ReadSingleRow<TreeDefaultValueDO>(TREEDEFAULTVALUE._NAME, this.TreeDefaultValue_CN);
 		}
@@ -2676,6 +2684,7 @@ namespace CruiseDAL.DataObjects
 		public virtual StratumDO GetStratum()
 		{
 		    if(DAL == null) { return null; }
+			if(this.Stratum_CN == null) { return null; }//  don't bother reading if identity is null
 			return DAL.ReadSingleRow<StratumDO>( this.Stratum_CN);
 		    //return DAL.ReadSingleRow<StratumDO>(STRATUM._NAME, this.Stratum_CN);
 		}
@@ -2726,6 +2735,7 @@ namespace CruiseDAL.DataObjects
 		public virtual SampleGroupDO GetSampleGroup()
 		{
 		    if(DAL == null) { return null; }
+			if(this.SampleGroup_CN == null) { return null; }//  don't bother reading if identity is null
 			return DAL.ReadSingleRow<SampleGroupDO>( this.SampleGroup_CN);
 		    //return DAL.ReadSingleRow<SampleGroupDO>(SAMPLEGROUP._NAME, this.SampleGroup_CN);
 		}
@@ -2776,6 +2786,7 @@ namespace CruiseDAL.DataObjects
 		public virtual CuttingUnitDO GetCuttingUnit()
 		{
 		    if(DAL == null) { return null; }
+			if(this.CuttingUnit_CN == null) { return null; }//  don't bother reading if identity is null
 			return DAL.ReadSingleRow<CuttingUnitDO>( this.CuttingUnit_CN);
 		    //return DAL.ReadSingleRow<CuttingUnitDO>(CUTTINGUNIT._NAME, this.CuttingUnit_CN);
 		}
@@ -2826,6 +2837,7 @@ namespace CruiseDAL.DataObjects
 		public virtual PlotDO GetPlot()
 		{
 		    if(DAL == null) { return null; }
+			if(this.Plot_CN == null) { return null; }//  don't bother reading if identity is null
 			return DAL.ReadSingleRow<PlotDO>( this.Plot_CN);
 		    //return DAL.ReadSingleRow<PlotDO>(PLOT._NAME, this.Plot_CN);
 		}
@@ -3827,6 +3839,7 @@ namespace CruiseDAL.DataObjects
 		public virtual TreeDO GetTree()
 		{
 		    if(DAL == null) { return null; }
+			if(this.Tree_CN == null) { return null; }//  don't bother reading if identity is null
 			return DAL.ReadSingleRow<TreeDO>( this.Tree_CN);
 		    //return DAL.ReadSingleRow<TreeDO>(TREE._NAME, this.Tree_CN);
 		}
@@ -4302,6 +4315,7 @@ namespace CruiseDAL.DataObjects
 		public virtual TreeDO GetTree()
 		{
 		    if(DAL == null) { return null; }
+			if(this.Tree_CN == null) { return null; }//  don't bother reading if identity is null
 			return DAL.ReadSingleRow<TreeDO>( this.Tree_CN);
 		    //return DAL.ReadSingleRow<TreeDO>(TREE._NAME, this.Tree_CN);
 		}
@@ -4499,6 +4513,7 @@ namespace CruiseDAL.DataObjects
 		public virtual SampleGroupDO GetSampleGroup()
 		{
 		    if(DAL == null) { return null; }
+			if(this.SampleGroup_CN == null) { return null; }//  don't bother reading if identity is null
 			return DAL.ReadSingleRow<SampleGroupDO>( this.SampleGroup_CN);
 		    //return DAL.ReadSingleRow<SampleGroupDO>(SAMPLEGROUP._NAME, this.SampleGroup_CN);
 		}
@@ -4549,6 +4564,7 @@ namespace CruiseDAL.DataObjects
 		public virtual CuttingUnitDO GetCuttingUnit()
 		{
 		    if(DAL == null) { return null; }
+			if(this.CuttingUnit_CN == null) { return null; }//  don't bother reading if identity is null
 			return DAL.ReadSingleRow<CuttingUnitDO>( this.CuttingUnit_CN);
 		    //return DAL.ReadSingleRow<CuttingUnitDO>(CUTTINGUNIT._NAME, this.CuttingUnit_CN);
 		}
@@ -4599,6 +4615,7 @@ namespace CruiseDAL.DataObjects
 		public virtual TallyDO GetTally()
 		{
 		    if(DAL == null) { return null; }
+			if(this.Tally_CN == null) { return null; }//  don't bother reading if identity is null
 			return DAL.ReadSingleRow<TallyDO>( this.Tally_CN);
 		    //return DAL.ReadSingleRow<TallyDO>(TALLY._NAME, this.Tally_CN);
 		}
@@ -4649,6 +4666,7 @@ namespace CruiseDAL.DataObjects
 		public virtual TreeDefaultValueDO GetTreeDefaultValue()
 		{
 		    if(DAL == null) { return null; }
+			if(this.TreeDefaultValue_CN == null) { return null; }//  don't bother reading if identity is null
 			return DAL.ReadSingleRow<TreeDefaultValueDO>( this.TreeDefaultValue_CN);
 		    //return DAL.ReadSingleRow<TreeDefaultValueDO>(TREEDEFAULTVALUE._NAME, this.TreeDefaultValue_CN);
 		}
@@ -4699,6 +4717,7 @@ namespace CruiseDAL.DataObjects
 		public virtual ComponentDO GetComponent()
 		{
 		    if(DAL == null) { return null; }
+			if(this.Component_CN == null) { return null; }//  don't bother reading if identity is null
 			return DAL.ReadSingleRow<ComponentDO>( this.Component_CN);
 		    //return DAL.ReadSingleRow<ComponentDO>(COMPONENT._NAME, this.Component_CN);
 		}
@@ -5027,6 +5046,7 @@ namespace CruiseDAL.DataObjects
 		public virtual CountTreeDO GetCountTree()
 		{
 		    if(DAL == null) { return null; }
+			if(this.CountTree_CN == null) { return null; }//  don't bother reading if identity is null
 			return DAL.ReadSingleRow<CountTreeDO>( this.CountTree_CN);
 		    //return DAL.ReadSingleRow<CountTreeDO>(COUNTTREE._NAME, this.CountTree_CN);
 		}
@@ -6612,6 +6632,7 @@ namespace CruiseDAL.DataObjects
 		public virtual TreeDO GetTree()
 		{
 		    if(DAL == null) { return null; }
+			if(this.Tree_CN == null) { return null; }//  don't bother reading if identity is null
 			return DAL.ReadSingleRow<TreeDO>( this.Tree_CN);
 		    //return DAL.ReadSingleRow<TreeDO>(TREE._NAME, this.Tree_CN);
 		}
@@ -9953,6 +9974,7 @@ namespace CruiseDAL.DataObjects
 		public virtual TreeDO GetTree()
 		{
 		    if(DAL == null) { return null; }
+			if(this.Tree_CN == null) { return null; }//  don't bother reading if identity is null
 			return DAL.ReadSingleRow<TreeDO>( this.Tree_CN);
 		    //return DAL.ReadSingleRow<TreeDO>(TREE._NAME, this.Tree_CN);
 		}
@@ -10448,6 +10470,7 @@ namespace CruiseDAL.DataObjects
 		public virtual StratumStatsDO GetStratumStats()
 		{
 		    if(DAL == null) { return null; }
+			if(this.StratumStats_CN == null) { return null; }//  don't bother reading if identity is null
 			return DAL.ReadSingleRow<StratumStatsDO>( this.StratumStats_CN);
 		    //return DAL.ReadSingleRow<StratumStatsDO>(STRATUMSTATS._NAME, this.StratumStats_CN);
 		}
@@ -11158,6 +11181,7 @@ namespace CruiseDAL.DataObjects
 		public virtual TreeDefaultValueDO GetTreeDefaultValue()
 		{
 		    if(DAL == null) { return null; }
+			if(this.TreeDefaultValue_CN == null) { return null; }//  don't bother reading if identity is null
 			return DAL.ReadSingleRow<TreeDefaultValueDO>( this.TreeDefaultValue_CN);
 		    //return DAL.ReadSingleRow<TreeDefaultValueDO>(TREEDEFAULTVALUE._NAME, this.TreeDefaultValue_CN);
 		}
@@ -11208,6 +11232,7 @@ namespace CruiseDAL.DataObjects
 		public virtual SampleGroupStatsDO GetSampleGroupStats()
 		{
 		    if(DAL == null) { return null; }
+			if(this.SampleGroupStats_CN == null) { return null; }//  don't bother reading if identity is null
 			return DAL.ReadSingleRow<SampleGroupStatsDO>( this.SampleGroupStats_CN);
 		    //return DAL.ReadSingleRow<SampleGroupStatsDO>(SAMPLEGROUPSTATS._NAME, this.SampleGroupStats_CN);
 		}
@@ -11326,6 +11351,7 @@ namespace CruiseDAL.DataObjects
 		public virtual StratumDO GetStratum()
 		{
 		    if(DAL == null) { return null; }
+			if(this.Stratum_CN == null) { return null; }//  don't bother reading if identity is null
 			return DAL.ReadSingleRow<StratumDO>( this.Stratum_CN);
 		    //return DAL.ReadSingleRow<StratumDO>(STRATUM._NAME, this.Stratum_CN);
 		}
@@ -12465,6 +12491,7 @@ namespace CruiseDAL.DataObjects
 		public virtual TreeAuditValueDO GetTreeAuditValue()
 		{
 		    if(DAL == null) { return null; }
+			if(this.TreeAuditValue_CN == null) { return null; }//  don't bother reading if identity is null
 			return DAL.ReadSingleRow<TreeAuditValueDO>( this.TreeAuditValue_CN);
 		    //return DAL.ReadSingleRow<TreeAuditValueDO>(TREEAUDITVALUE._NAME, this.TreeAuditValue_CN);
 		}
@@ -12515,6 +12542,7 @@ namespace CruiseDAL.DataObjects
 		public virtual TreeDefaultValueDO GetTreeDefaultValue()
 		{
 		    if(DAL == null) { return null; }
+			if(this.TreeDefaultValue_CN == null) { return null; }//  don't bother reading if identity is null
 			return DAL.ReadSingleRow<TreeDefaultValueDO>( this.TreeDefaultValue_CN);
 		    //return DAL.ReadSingleRow<TreeDefaultValueDO>(TREEDEFAULTVALUE._NAME, this.TreeDefaultValue_CN);
 		}
@@ -12795,6 +12823,7 @@ namespace CruiseDAL.DataObjects
 		public virtual StratumDO GetStratum()
 		{
 		    if(DAL == null) { return null; }
+			if(this.Stratum_CN == null) { return null; }//  don't bother reading if identity is null
 			return DAL.ReadSingleRow<StratumDO>( this.Stratum_CN);
 		    //return DAL.ReadSingleRow<StratumDO>(STRATUM._NAME, this.Stratum_CN);
 		}
@@ -13047,6 +13076,7 @@ namespace CruiseDAL.DataObjects
 		public virtual StratumDO GetStratum()
 		{
 		    if(DAL == null) { return null; }
+			if(this.Stratum_CN == null) { return null; }//  don't bother reading if identity is null
 			return DAL.ReadSingleRow<StratumDO>( this.Stratum_CN);
 		    //return DAL.ReadSingleRow<StratumDO>(STRATUM._NAME, this.Stratum_CN);
 		}
@@ -14311,6 +14341,7 @@ namespace CruiseDAL.DataObjects
 		public virtual RegionsDO GetRegions()
 		{
 		    if(DAL == null) { return null; }
+			if(this.Region_CN == null) { return null; }//  don't bother reading if identity is null
 			return DAL.ReadSingleRow<RegionsDO>( this.Region_CN);
 		    //return DAL.ReadSingleRow<RegionsDO>(REGIONS._NAME, this.Region_CN);
 		}

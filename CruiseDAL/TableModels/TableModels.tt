@@ -239,6 +239,7 @@ public void MakeForeignKey(Field field, Table table)
 public virtual <#=field.Ref#>DO Get<#=field.Ref#>()
 {
     if(DAL == null) { return null; }
+	if(this.<#=field.Name#> == null) { return null; }//  don't bother reading if identity is null
 	return DAL.ReadSingleRow<<#=field.Ref#>DO>( this.<#=field.Name#>);
     //return DAL.ReadSingleRow<<#=field.Ref#>DO>(<#=field.Ref.ToUpper()#>._NAME, this.<#=field.Name#>);
 }
