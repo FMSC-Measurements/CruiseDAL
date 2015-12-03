@@ -985,7 +985,7 @@ namespace FMSC.ORM.Core
                     try
                     {
                         conn.Open();
-                        EnterConnectionHold();
+                        //EnterConnectionHold();
                     }
                     catch (Exception e)
                     {
@@ -1137,7 +1137,7 @@ namespace FMSC.ORM.Core
             {
                 Debug.Assert(_ReadWriteConnection != null);
                 if (_ReadWriteConnection == null) { return; }
-                ExitConnectionHold();
+                //ExitConnectionHold();
                 if (_holdConnection == 0 || force)
                 {
                     ReleaseConnection(_ReadWriteConnection);
