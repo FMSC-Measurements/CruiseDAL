@@ -8,19 +8,19 @@ namespace FMSC.ORM.MyXUnit
 {
     public static class AssertEx
     {
-        public static void NotNullOrEmpty(string str)
+        public static void NotNullOrEmpty(string str, string message = null)
         {
-            Xunit.Assert.False(String.IsNullOrEmpty(str));
+            Xunit.Assert.False(String.IsNullOrEmpty(str), message);
         }
 
-        public static void NotNullOrWhitespace(string str)
+        public static void NotNullOrWhitespace(string str, string message = null)
         {
-            Xunit.Assert.False(String.IsNullOrWhiteSpace(str));
+            Xunit.Assert.False(String.IsNullOrWhiteSpace(str), message);
         }
 
-        public static void Fail()
+        public static void Fail(String message = null)
         {
-            Xunit.Assert.True(false);
+            Xunit.Assert.True(false, message);
         }
     }
 }

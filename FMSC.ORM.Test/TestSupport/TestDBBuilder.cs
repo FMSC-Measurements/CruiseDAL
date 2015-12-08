@@ -9,9 +9,7 @@ namespace FMSC.ORM.TestSupport
 {
     public class TestDBBuilder : SQLiteDatabaseBuilder
     {
-        public override void CreateTables()
-        {
-            this.Datastore.Execute(
+        public const string CREATE_MULTIPROPTABLE =
 @"CREATE TABLE MultiPropTable
 (
 	ID INTEGER Primary Key AUTOINCREMENT,
@@ -27,12 +25,17 @@ namespace FMSC.ORM.TestSupport
 	BoolField BOOLEAN, 
 	NBoolField BOOLEAN, 
 	GuidField TEXT,
-	DateTimeField DATETIME
+	DateTimeField DATETIME,
 	PartialyPublicField TEXT,
 	PrivateField TEXT,
 	CreatedBy TEXT,
 	ModifiedBy TEXT
-)");
+)";
+
+
+        public override void CreateTables()
+        {
+            this.Datastore.Execute(CREATE_MULTIPROPTABLE);
                 
         }
 

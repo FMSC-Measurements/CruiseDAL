@@ -71,6 +71,7 @@
     <Compile Include="Core\EntityModel\MappingCollectionTest.cs" />
     <Compile Include="SQLite\SQLiteDatastoreTest.cs" />
     <Compile Include="TestSupport\TestDBBuilder.cs" />
+    <Compile Include="TestSupport\TestDBFixture.cs" />
     <Compile Include="TestSupport\TestModels\DOMultiPropType.cs" />
     <Compile Include="TestSupport\TestModels\IInterface.cs" />
     <Compile Include="TestSupport\TestModels\POCOMultiTypeObject.cs" />
