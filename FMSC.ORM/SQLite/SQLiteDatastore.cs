@@ -48,9 +48,9 @@ namespace FMSC.ORM.SQLite
         }
 
         #region abstract methods
-        protected override string BuildConnectionString(bool readOnly)
+        protected override string BuildConnectionString()
         {
-            return string.Format("Data Source={0};Version=3;Read Only={1};", Path, readOnly);
+            return string.Format("Data Source={0};Version=3;", Path);
         }
         #endregion
 
@@ -122,48 +122,47 @@ namespace FMSC.ORM.SQLite
         public override List<ColumnInfo> GetTableInfo(string tableName)
         {
             List<ColumnInfo> colList = new List<ColumnInfo>();
-            lock (_readOnlyConnectionSyncLock)
+            lock (_persistentConnectionSyncLock)
             {
 
                 using (DbCommand command = Provider.CreateCommand("PRAGMA table_info(" + tableName + ");"))
                 {
-                    using (DbConnection conn = OpenReadOnlyConnection())
-                    {
-                        command.Connection = conn;
+                    DbConnection conn = OpenConnection();
+                    command.Connection = conn;
 
-                        try
+                    try
+                    {
+                        using (var reader = command.ExecuteReader())
                         {
-                            using (var reader = command.ExecuteReader())
+                            int nameOrd = reader.GetOrdinal("name");
+                            int dbTypeOrd = reader.GetOrdinal("type");
+                            int pkOrd = reader.GetOrdinal("pk");
+                            int notNullOrd = reader.GetOrdinal("notnull");
+                            int defaultValOrd = reader.GetOrdinal("dflt_value");
+                            while (reader.Read())
                             {
-                                int nameOrd = reader.GetOrdinal("name");
-                                int dbTypeOrd = reader.GetOrdinal("type");
-                                int pkOrd = reader.GetOrdinal("pk");
-                                int notNullOrd = reader.GetOrdinal("notnull");
-                                int defaultValOrd = reader.GetOrdinal("dflt_value");
-                                while (reader.Read())
+                                ColumnInfo colInfo = new ColumnInfo();
+                                colInfo.Name = reader.GetString(nameOrd);
+                                colInfo.DBType = reader.GetString(dbTypeOrd);
+                                colInfo.IsPK = reader.GetBoolean(pkOrd);
+                                colInfo.IsRequired = reader.GetBoolean(notNullOrd);
+                                if (!reader.IsDBNull(defaultValOrd))
                                 {
-                                    ColumnInfo colInfo = new ColumnInfo();
-                                    colInfo.Name = reader.GetString(nameOrd);
-                                    colInfo.DBType = reader.GetString(dbTypeOrd);
-                                    colInfo.IsPK = reader.GetBoolean(pkOrd);
-                                    colInfo.IsRequired = reader.GetBoolean(notNullOrd);
-                                    if (!reader.IsDBNull(defaultValOrd))
-                                    {
-                                        colInfo.Default = reader.GetString(defaultValOrd);
-                                    }
-                                    colList.Add(colInfo);
+                                    colInfo.Default = reader.GetString(defaultValOrd);
                                 }
+                                colList.Add(colInfo);
                             }
                         }
-                        catch (Exception e)
-                        {
-                            throw this.ThrowExceptionHelper(conn, command, e);
-                        }
-                        finally
-                        {
-                            ReleaseReadOnlyConnection();
-                        }
                     }
+                    catch (Exception e)
+                    {
+                        throw this.ThrowExceptionHelper(conn, command, e);
+                    }
+                    finally
+                    {
+                        ReleaseConnection();
+                    }
+                    
                 }
                 return colList;
             }
@@ -181,30 +180,28 @@ namespace FMSC.ORM.SQLite
             {
                 comStr = "PRAGMA foreign_key_check(" + table_name + ");";
             }
-            lock (_readOnlyConnectionSyncLock)
+            lock (_persistentConnectionSyncLock)
             {
                 using (DbCommand command = Provider.CreateCommand(comStr))
                 {
-                    using (DbConnection conn = OpenReadOnlyConnection())
+                    DbConnection conn = OpenConnection();
+                    command.Connection = conn;
+                    try
                     {
-                        command.Connection = conn;
-
-                        try
+                        using (var reader = command.ExecuteReader())
                         {
-                            using (var reader = command.ExecuteReader())
-                            {
-                                hasErrors = reader.Read();
-                            }
-                        }
-                        catch (Exception e)
-                        {
-                            throw this.ThrowExceptionHelper(conn, command, e);
-                        }
-                        finally
-                        {
-                            ReleaseReadOnlyConnection();
+                            hasErrors = reader.Read();
                         }
                     }
+                    catch (Exception e)
+                    {
+                        throw this.ThrowExceptionHelper(conn, command, e);
+                    }
+                    finally
+                    {
+                        ReleaseConnection();
+                    }
+                    
                 }
                 return hasErrors;
             }
@@ -277,7 +274,7 @@ namespace FMSC.ORM.SQLite
         /// <param name="desPath"></param>
         public bool CopyAs(string desPath)
         {
-            ReleaseAllConnections(true);
+            System.Diagnostics.Debug.Assert(_holdConnection == 0);
             try
             {
                 System.IO.File.Copy(this.Path, desPath);
@@ -298,7 +295,7 @@ namespace FMSC.ORM.SQLite
 
         public bool MoveTo(string path)
         {
-            ReleaseAllConnections(true);
+            System.Diagnostics.Debug.Assert(_holdConnection == 0);
             try
             {
                 System.IO.File.Move(this.Path, path);
