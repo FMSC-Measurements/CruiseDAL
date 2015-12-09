@@ -15,7 +15,7 @@ namespace FMSC.ORM.Core.EntityModel
 {
     public class EntityCommandBuilder
     {
-        SQLSelectExpression _selectCommand;
+        SQLSelectBuilder _selectCommand;
         string _selectCommandFormat;
 
         SQLInsertCommand _insertCommand;
@@ -58,7 +58,7 @@ namespace FMSC.ORM.Core.EntityModel
 
         protected void InitializeSelectCommand()
         {
-            SQLSelectExpression expression = new SQLSelectExpression();
+            SQLSelectBuilder expression = new SQLSelectBuilder();
             expression.TableOrSubQuery = EntityDescription.SourceName;
 
             //order fields by ordinal

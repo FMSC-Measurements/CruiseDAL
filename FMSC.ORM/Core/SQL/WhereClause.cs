@@ -1,17 +1,32 @@
-﻿namespace FMSC.ORM.Core.SQL
+﻿using System;
+using System.Collections.Generic;
+
+namespace FMSC.ORM.Core.SQL
 {
-    public class WhereClause
+    public class WhereClause : SelectClause
     {
-        public WhereClause(string expression)
+        public WhereClause(SQLSelectBuilder builder, string expression) 
+            : base(null, builder)
         {
             Expression = expression;
         }
 
         public string Expression { get; set; }
 
-        public override string ToString()
+        public GroupByClause GroupBy(IEnumerable<string> groupByExprs)
         {
-            return "WHERE " + Expression;
+            return new GroupByClause(this, this.SelectExpression, groupByExprs);
+        }
+
+        public OrderByClause OrderBy(IEnumerable<string> orderingTerms)
+        {
+            return new OrderByClause(this, this.SelectExpression, orderingTerms);
+        }
+
+
+        public override string ToSQL()
+        {
+            return " WHERE " + Expression + Environment.NewLine;
         }
     }
 }
