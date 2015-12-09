@@ -1,5 +1,7 @@
-﻿using FMSC.ORM.MyXUnit;
+﻿using FMSC.ORM.Core.SQL;
+using FMSC.ORM.MyXUnit;
 using FMSC.ORM.TestSupport;
+using FMSC.ORM.TestSupport.TestModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -217,7 +219,44 @@ namespace FMSC.ORM.SQLite
             Assert.False(nResult.HasValue);
         }
 
+        [Fact]
+        public void QuerySingleRecordTest()
+        {
+            using (var ds = _fixture.WorkingDatastore)
+            {
+                var setup = "DELETE FROM MultiPropTable; "
+                            + "INSERT INTO MultiPropTable (IntField) VALUES (1);";
+                ds.Execute(setup);
 
+                Assert.Equal(1, ds.GetRowCount("MultiPropTable", "WHERE IntField = 1"));
+
+                var result = ds.QuerySingleRecord<POCOMultiTypeObject>(new WhereClause("IntField = 1"));
+                Assert.NotNull(result);
+                Assert.Equal(1, result.IntField);
+
+                var result1 = ds.QuerySingleRecord<POCOMultiTypeObject>(new WhereClause("IntField = 1"));
+                Assert.NotSame(result, result1);
+                Assert.Equal(1, result1.IntField);
+
+            }
+        }
+
+        [Fact]
+        public void QueryTest()
+        {
+            using (var ds = _fixture.WorkingDatastore)
+            {
+                var setup = "DELETE FROM MultiPropTable; "
+                            + "INSERT INTO MultiPropTable (IntField) VALUES (1);"
+                            + "INSERT INTO MultiPropTable (IntField) VALUES (2);";
+                ds.Execute(setup);
+
+                Assert.Equal(2, ds.GetRowCount("MultiPropTable", null));
+
+                var result = ds.Query<POCOMultiTypeObject>((WhereClause)null);
+                Assert.Equal(2, result.Count);
+            }
+        }
 
     }
 }
