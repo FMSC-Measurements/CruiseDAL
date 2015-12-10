@@ -11,8 +11,8 @@ namespace FMSC.ORM.Core.SQL
         public int LimitSize { get; set; }
         public int Offset { get; set; }
 
-        public LimitClause(SelectClause target, SQLSelectBuilder builder, int limitSize, int offset)
-            :base(target, builder)
+        public LimitClause(SelectClause target, int limitSize, int offset)
+            :base(target)
         {
             LimitSize = limitSize;
             Offset = offset;

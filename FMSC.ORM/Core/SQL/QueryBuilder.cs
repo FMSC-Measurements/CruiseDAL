@@ -25,19 +25,31 @@ namespace FMSC.ORM.Core.SQL
         }
     }
 
-    public abstract class LimitQueryBuilder<T> : QueryBuilder<T>, IAcceptsLimit
+    public abstract class LimitQueryBuilder<T> : QueryBuilder<T>
     {
-
+        public QueryBuilder<T> Limit(int limit, int offset)
+        {
+            builder.Limit(limit, offset);
+            return this;
+        }
     }
 
-    public abstract class GroupByQueryBuilder<T>: LimitQueryBuilder<T>, IAcceptsGroupBy
+    public abstract class GroupByQueryBuilder<T>: LimitQueryBuilder<T>
     {
-
+        public LimitQueryBuilder<T> GroupBy(IEnumerable<string> terms)
+        {
+            builder.GroupBy(terms);
+            return this;
+        }
     }
 
-    public class WhereQueryBuilder<T>: GroupByQueryBuilder<T>, IAcceptsWhere
+    public class WhereQueryBuilder<T>: GroupByQueryBuilder<T>
     {
-
+        public GroupByQueryBuilder<T> Where(string expression)
+        {
+            base.builder.Where(expression);
+            return this;
+        }
     }
 
     //public class QueryBuilder<T, S> : SelectElement 
@@ -45,25 +57,25 @@ namespace FMSC.ORM.Core.SQL
     //{
     //}
 
-    public static class QueryBuilderExtentions
-    {
-        public static GroupByQueryBuilder<T> Where<T>(this WhereQueryBuilder<T> qBilder, string expression)
-        {
-            var whereClause = new WhereClause(expression);
-            return qBilder;
-        }
+    //public static class QueryBuilderExtentions
+    //{
+    //    public static GroupByQueryBuilder<T> Where<T>(this WhereQueryBuilder<T> qBilder, string expression)
+    //    {
+    //        var whereClause = new WhereClause(expression);
+    //        return qBilder;
+    //    }
 
-        public static LimitQueryBuilder<T> GroupBy<T>(this GroupByQueryBuilder<T> qBuilder, IEnumerable<string> terms)
-        {
-            var groupByClause = new GroupByClause(groupByExprs);
-            return qBuilder;
-        }
+    //    public static LimitQueryBuilder<T> GroupBy<T>(this GroupByQueryBuilder<T> qBuilder, IEnumerable<string> terms)
+    //    {
+    //        var groupByClause = new GroupByClause(groupByExprs);
+    //        return qBuilder;
+    //    }
 
-        public static QueryBuilder<T> Limit<T>(this LimitQueryBuilder<T> qBuilder, int limit, int offset)
-        {
-            var limitClause = new LimitClause(limit, offset);
-            return qBuilder;
-        }
+    //    public static QueryBuilder<T> Limit<T>(this LimitQueryBuilder<T> qBuilder, int limit, int offset)
+    //    {
+    //        var limitClause = new LimitClause(limit, offset);
+    //        return qBuilder;
+    //    }
 
-    }
+    //}
 }

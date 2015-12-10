@@ -11,7 +11,7 @@ namespace FMSC.ORM.Core.SQL
         { }        
 
         public WhereClause(SQLSelectBuilder builder, string expression) 
-            : base((SelectClause)null, builder)
+            : base((SelectClause)null)
         {
             Expression = expression;
         }
@@ -20,12 +20,12 @@ namespace FMSC.ORM.Core.SQL
 
         public GroupByClause GroupBy(IEnumerable<string> groupByExprs)
         {
-            return new GroupByClause(this, this.SelectExpression, groupByExprs);
+            return new GroupByClause(this, groupByExprs);
         }
 
         public OrderByClause OrderBy(IEnumerable<string> orderingTerms)
         {
-            return new OrderByClause(this, this.SelectExpression, orderingTerms);
+            return new OrderByClause(this, orderingTerms);
         }
 
 

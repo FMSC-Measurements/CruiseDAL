@@ -10,7 +10,8 @@ namespace FMSC.ORM.Core.SQL
     {
         public List<String> Expressions { get; protected set; }
 
-        public GroupByClause(SelectClause target, SQLSelectBuilder builder, IEnumerable<string> groupByExprs) : base(target, builder)
+        public GroupByClause(SelectClause target, IEnumerable<string> groupByExprs) 
+            :base(target)
         {
             if(groupByExprs != null)
             {
@@ -33,7 +34,7 @@ namespace FMSC.ORM.Core.SQL
 
         public OrderByClause OrderBy(IEnumerable<string> orderingTerms)
         {
-            return new OrderByClause(this, this.SelectExpression, orderingTerms);
+            return new OrderByClause(this, orderingTerms);
         }
 
 

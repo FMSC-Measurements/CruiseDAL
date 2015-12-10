@@ -8,30 +8,25 @@ namespace FMSC.ORM.Core.SQL
 {
     public abstract class SelectComponent
     {
-        SQLSelectBuilder _builder; 
-        public SQLSelectBuilder SelectExpression
-        {
-            get { return _builder; }
-            set
-            {
-                if(_builder == value) { return; }
-                _builder = value;
-                OnBuilderChanged(_builder);
-            }
-        }
+        //SQLSelectBuilder _builder; 
+        //public SQLSelectBuilder SelectExpression
+        //{
+        //    get { return _builder; }
+        //    set
+        //    {
+        //        if(_builder == value) { return; }
+        //        _builder = value;
+        //        OnBuilderChanged(_builder);
+        //    }
+        //}
 
-        public SelectComponent(SQLSelectBuilder builder)
-        {
-            this.SelectExpression = builder;
-        }
+        //public SelectComponent(SQLSelectBuilder builder)
+        //{
+        //    this.SelectExpression = builder;
+        //}
 
-        protected abstract void OnBuilderChanged(SQLSelectBuilder builder);
+        //protected abstract void OnBuilderChanged(SQLSelectBuilder builder);
 
-
-        public IEnumerable<T> Select<T>()
-        {
-
-        }
 
         public abstract String ToSQL();
 

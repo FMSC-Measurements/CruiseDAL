@@ -8,5 +8,6 @@ namespace FMSC.ORM.Core.SQL.Interfaces
 {
     public interface IAcceptsWhere : IAcceptsGroupBy
     {
+        IAcceptsGroupBy Where(string expression);
     }
 }

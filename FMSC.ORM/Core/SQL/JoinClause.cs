@@ -10,18 +10,24 @@ namespace FMSC.ORM.Core.SQL
     {
         public SelectSource Target { get; protected set; }
 
-        public string JoinTable { get; set; }
-        public string JoinSubQuery { get; set; }
+        public TableOrSubQuery Source { get; set; }
         public string JoinConstraint { get; set; }
 
-        public JoinClause(SQLSelectBuilder builder, SelectSource target): base(builder)
+        public JoinClause(SelectSource target, TableOrSubQuery source, string constraint)
         {
             Target = target;
+            Source = source;
+            JoinConstraint = constraint;
+        }
+
+        public JoinClause(SelectSource target, string table, string constraint)
+            : this(target, new TableOrSubQuery(table), constraint)
+        {
         }
 
         public override string ToSQL()
         {
-            return Target + " JOIN " + (JoinTable ?? JoinSubQuery) + " " + JoinConstraint;
+            return Target + " JOIN " + (Source.Table ?? ("( " + Source.SubQuery + " )")) + " " + JoinConstraint;
         }
     }
 }

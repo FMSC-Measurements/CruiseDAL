@@ -8,6 +8,6 @@ namespace FMSC.ORM.Core.SQL.Interfaces
 {
     public interface SelectElement
     {
-
+        string ToSQL();
     }
 }

@@ -8,5 +8,6 @@ namespace FMSC.ORM.Core.SQL.Interfaces
 {
     public interface IAcceptsGroupBy : IAcceptsLimit
     {
+        IAcceptsLimit GroupBy(IEnumerable<string> terms);
     }
 }

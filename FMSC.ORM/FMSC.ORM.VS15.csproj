@@ -55,6 +55,7 @@
     <Compile Include="Core\EntityAttributes\IgnoreFieldAttribute.cs" />
     <Compile Include="Core\SQL\GroupByClause.cs" />
     <Compile Include="Core\SQL\Interfaces\IAcceptsGroupBy.cs" />
+    <Compile Include="Core\SQL\Interfaces\IAcceptsJoin.cs" />
     <Compile Include="Core\SQL\Interfaces\IAcceptsLimit.cs" />
     <Compile Include="Core\SQL\Interfaces\IAcceptsWhere.cs" />
     <Compile Include="Core\SQL\ISelectComponent.cs" />

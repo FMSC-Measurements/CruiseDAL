@@ -11,22 +11,19 @@ namespace FMSC.ORM.Core.SQL
 
         public SelectClause Target { get; protected set; }
 
-        public SelectClause(SelectClause target, SQLSelectBuilder builder) : base(builder)
+        public SelectClause(SelectClause target)
         {
             Target = target;
         }
 
-        public LimitClause Limit(int limitSize, int offset)
-        {
-            return new LimitClause(this, base.SelectExpression, limitSize, offset);
-        }
+        //public LimitClause Limit(int limitSize, int offset)
+        //{
+        //    return new LimitClause(this, base.SelectExpression, limitSize, offset);
+        //}
 
-        protected override void OnBuilderChanged(SQLSelectBuilder builder)
-        {
-            builder.Clause = this;
-        }
-
-
-
+        //protected override void OnBuilderChanged(SQLSelectBuilder builder)
+        //{
+        //    builder.Clause = this;
+        //}
     }
 }

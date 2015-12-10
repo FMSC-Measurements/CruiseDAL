@@ -10,8 +10,8 @@ namespace FMSC.ORM.Core.SQL
     {
         public List<string> OrderingTerms { get; protected set; }
 
-        public OrderByClause(SelectClause target, SQLSelectBuilder builder, IEnumerable<string> orderingTerms)
-            :base(target, builder)
+        public OrderByClause(SelectClause target, IEnumerable<string> orderingTerms)
+            :base(target)
         {
             AddRange(orderingTerms);
         }

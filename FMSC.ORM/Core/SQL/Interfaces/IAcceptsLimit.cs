@@ -8,5 +8,6 @@ namespace FMSC.ORM.Core.SQL.Interfaces
 {
     public interface IAcceptsLimit : SelectElement
     {
+        SelectElement Limit(int limit, int offset);
     }
 }

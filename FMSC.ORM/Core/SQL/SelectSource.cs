@@ -10,28 +10,25 @@ namespace FMSC.ORM.Core.SQL
     {
         
 
-        public SelectSource(SQLSelectBuilder builder) : base(builder)
-        {
+        //public SelectSource(SQLSelectBuilder builder) : base(builder)
+        //{
 
-        }
+        //}
 
-        protected override void OnBuilderChanged(SQLSelectBuilder builder)
-        {
-            builder.Source = this;
-        }
+        //protected override void OnBuilderChanged(SQLSelectBuilder builder)
+        //{
+        //    builder.Source = this;
+        //}
 
-        public SelectSource Join(string table, string joinConstraint)
-        {
-            return new JoinClause(SelectExpression, this)
-            {
-                JoinTable = table,
-                JoinConstraint = joinConstraint
-            };
-        }
+        //public SelectSource Join(string table, string joinConstraint)
+        //{
+        //    return new JoinClause(this, table, joinConstraint);
+ 
+        //}
 
-        public WhereClause Where(string expr)
-        {
-            return new WhereClause(SelectExpression, expr);
-        }
+        ////public WhereClause Where(string expr)
+        ////{
+        ////    return new WhereClause(SelectExpression, expr);
+        ////}
     }
 }
