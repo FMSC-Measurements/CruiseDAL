@@ -8,6 +8,8 @@ namespace FMSC.ORM.Core.SQL
 {
     public abstract class SelectSource : SelectComponent
     {
+        
+
         public SelectSource(SQLSelectBuilder builder) : base(builder)
         {
 

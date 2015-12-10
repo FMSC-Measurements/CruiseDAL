@@ -5,8 +5,13 @@ namespace FMSC.ORM.Core.SQL
 {
     public class WhereClause : SelectClause
     {
+
+        public WhereClause(string expression)
+            : this((SQLSelectBuilder)null, expression)
+        { }        
+
         public WhereClause(SQLSelectBuilder builder, string expression) 
-            : base(null, builder)
+            : base((SelectClause)null, builder)
         {
             Expression = expression;
         }

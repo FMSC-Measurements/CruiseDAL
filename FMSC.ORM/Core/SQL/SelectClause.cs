@@ -16,9 +16,9 @@ namespace FMSC.ORM.Core.SQL
             Target = target;
         }
 
-        public LimitClause Limit(int limitExpr, int offset)
+        public LimitClause Limit(int limitSize, int offset)
         {
-
+            return new LimitClause(this, base.SelectExpression, limitSize, offset);
         }
 
         protected override void OnBuilderChanged(SQLSelectBuilder builder)

@@ -30,6 +30,18 @@ namespace FMSC.ORM.Core.EntityAttributes
 
         public virtual object DefaultValue { get; set; }
         //public bool IsDepreciated { get; set; }   
+
+        public string GetResultColumnExpression(string sourceName)
+        {
+            if (!string.IsNullOrEmpty(SQLExpression))
+            {
+                return SQLExpression + " AS " + sourceName + "." + FieldName;
+            }
+            else
+            {
+                return sourceName + "." + FieldName;
+            }
+        }
         
         public FieldAttribute()
         {

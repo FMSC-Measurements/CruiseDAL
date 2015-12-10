@@ -11,6 +11,10 @@ namespace FMSC.ORM.Core.SQL
         public string Table { get; set; }
         public string SubQuery { get; set; }
 
+        public TableOrSubQuery(String tableName)
+            :this((SQLSelectBuilder)null)
+        { }
+
         public TableOrSubQuery(SQLSelectBuilder builder) : base(builder)
         { }
 

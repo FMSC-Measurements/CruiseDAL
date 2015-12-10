@@ -6,25 +6,9 @@ using System.Threading.Tasks;
 
 namespace FMSC.ORM.Core.SQL
 {
-    public class ResultColumnCollection : List<ColumnInfo>
+    public class ResultColumnCollection : List<string>
     {
         public bool Distinct { get; set; }
-
-        public void Add(String colName)
-        {
-            this.Add(new ColumnInfo()
-            {
-                Name = colName
-            });
-        }
-
-        public void AddRange(IEnumerable<String> colNames)
-        {
-            foreach(string name in colNames)
-            {
-                this.Add(name);
-            }
-        }
 
         public string ToSQL()
         {
@@ -40,7 +24,7 @@ namespace FMSC.ORM.Core.SQL
             else
             {
                 bool first = true;
-                foreach(ColumnInfo ci in this)
+                foreach(string colExpr in this)
                 {
                     if (!first)
                     {
@@ -50,7 +34,7 @@ namespace FMSC.ORM.Core.SQL
                     {
                         first = false;
                     }
-                    sBuilder.Append(ci.Name);
+                    sBuilder.Append(colExpr);
                 }
             }
             return sBuilder.ToString();
