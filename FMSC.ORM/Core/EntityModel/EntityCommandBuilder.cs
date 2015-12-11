@@ -7,9 +7,6 @@ using FMSC.ORM.Core.SQL;
 using FMSC.ORM.Core.EntityAttributes;
 using System.Text;
 
-#if NetCF
-using FMSC.ORM.NetCF;
-#endif
 
 namespace FMSC.ORM.Core.EntityModel
 {

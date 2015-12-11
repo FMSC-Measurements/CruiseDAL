@@ -14,7 +14,7 @@ namespace FMSC.ORM.Core.SQL
 
         public override string ToSQL()
         {
-            return " WHERE " + Expression + Environment.NewLine;
+            return " WHERE " + Expression + PlatformHelper.NewLine;
         }
     }
 }

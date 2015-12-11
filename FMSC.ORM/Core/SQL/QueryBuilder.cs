@@ -1,13 +1,11 @@
 ﻿using FMSC.ORM.Core.SQL.Interfaces;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace FMSC.ORM.Core.SQL
 {
-    public delegate IEnumerable<T> DatastoreMethod<out T>(SQLSelectBuilder builder);
+    public delegate IEnumerable<T> DatastoreMethod<T>(SQLSelectBuilder builder);
 
     public abstract class QueryBuilder
     {

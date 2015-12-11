@@ -1,9 +1,7 @@
 ﻿using System;
-
 using System.Collections.Generic;
-using System.Text;
 
-namespace FMSC.ORM.NetCF
+namespace System.Text
 {
     public static class StringBuilderExtensions
     {
