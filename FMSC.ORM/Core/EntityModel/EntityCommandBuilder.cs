@@ -15,7 +15,7 @@ namespace FMSC.ORM.Core.EntityModel
 {
     public class EntityCommandBuilder
     {
-        SQLSelectExpression _selectCommand;
+        SQLSelectBuilder _selectCommand;
         string _selectCommandFormat;
 
         SQLInsertCommand _insertCommand;
@@ -44,12 +44,13 @@ namespace FMSC.ORM.Core.EntityModel
 
 
         #region build select 
-        public DbCommand BuildSelectCommand(DbProviderFactoryAdapter provider, WhereClause where)
+        public DbCommand BuildSelectCommand(DbProviderFactoryAdapter provider, SelectClause clause)
         {
             Debug.Assert(_selectCommand != null);
 
-            this._selectCommand.Where = where;
-            string query = _selectCommand.ToString();
+            this._selectCommand.Clause = clause;
+
+            string query = _selectCommand.ToSQL();
 
             DbCommand command = provider.CreateCommand(query);
             return command;
@@ -58,32 +59,21 @@ namespace FMSC.ORM.Core.EntityModel
 
         protected void InitializeSelectCommand()
         {
-            SQLSelectExpression expression = new SQLSelectExpression();
-            expression.TableOrSubQuery = EntityDescription.SourceName;
+            SQLSelectBuilder selectBuilder = new SQLSelectBuilder();
+            selectBuilder.Source = new TableOrSubQuery(EntityDescription.SourceName, null);
 
             //order fields by ordinal
             List<FieldAttribute> fields = new List<FieldAttribute>(EntityDescription.Fields);
             fields.Sort(CompareFieldsByOrdinal);
 
-            List<string> columnExpressions = new List<string>();
-
-            foreach (FieldAttribute fi in fields)
+            var columns = new ResultColumnCollection();
+            foreach(FieldAttribute field in fields)
             {
-                String colExpression = null;
-
-                if (!string.IsNullOrEmpty(fi.SQLExpression))
-                {
-                    colExpression = fi.SQLExpression + " AS " + EntityDescription.SourceName + "." + fi.FieldName;
-                }
-                else
-                {
-                    colExpression = EntityDescription.SourceName + "." + fi.FieldName;
-                }
-
-                columnExpressions.Add(colExpression);
+                columns.Add(field.GetResultColumnExpression(EntityDescription.SourceName));
             }
-            expression.ResultColumns = columnExpressions;
-            _selectCommand = expression;
+
+            selectBuilder.ResultColumns = columns;
+            _selectCommand = selectBuilder;
         }
 
         public DbCommand BuildSelectLegacy(DbProviderFactoryAdapter provider, string selection)
