@@ -69,6 +69,7 @@
     <Compile Include="Core\EntityModel\EntityFormatterTest.cs" />
     <Compile Include="Core\EntityModel\EntityInflatorTest.cs" />
     <Compile Include="Core\EntityModel\MappingCollectionTest.cs" />
+    <Compile Include="Core\SQL\SQLSelectBuilderTest.cs" />
     <Compile Include="SQLite\SQLiteDatastoreTest.cs" />
     <Compile Include="TestSupport\TestDBBuilder.cs" />
     <Compile Include="TestSupport\TestDBFixture.cs" />

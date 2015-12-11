@@ -11,8 +11,7 @@ namespace FMSC.ORM.Core.SQL
         public int LimitSize { get; set; }
         public int Offset { get; set; }
 
-        public LimitClause(SelectClause target, int limitSize, int offset)
-            :base(target)
+        public LimitClause(int limitSize, int offset)
         {
             LimitSize = limitSize;
             Offset = offset;
@@ -21,9 +20,9 @@ namespace FMSC.ORM.Core.SQL
         public override string ToSQL()
         {
             var sBuilder = new StringBuilder();
-            if (Target != null)
+            if (ParentElement != null)
             {
-                sBuilder.Append(Target.ToSQL());
+                sBuilder.Append(ParentElement.ToSQL());
             }
 
             if (LimitSize > 0)

@@ -10,8 +10,7 @@ namespace FMSC.ORM.Core.SQL
     {
         public List<string> OrderingTerms { get; protected set; }
 
-        public OrderByClause(SelectClause target, IEnumerable<string> orderingTerms)
-            :base(target)
+        public OrderByClause(IEnumerable<string> orderingTerms)
         {
             AddRange(orderingTerms);
         }
@@ -37,9 +36,9 @@ namespace FMSC.ORM.Core.SQL
         public override string ToSQL()
         {
             var sBuilder = new StringBuilder();
-            if(Target != null)
+            if(ParentElement != null)
             {
-                sBuilder.Append(Target.ToSQL());
+                sBuilder.Append(ParentElement.ToSQL());
             }
             if (OrderingTerms.Count == 0)
             {

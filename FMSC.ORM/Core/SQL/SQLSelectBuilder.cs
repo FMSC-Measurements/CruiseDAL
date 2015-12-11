@@ -16,7 +16,12 @@ namespace FMSC.ORM.Core.SQL
         public SelectSource Source { get; set; }
         public ResultColumnCollection ResultColumns { get; set; }
         public SelectClause Clause { get; set; }
+        public SelectElement ParentElement { get; set; }
 
+        public SQLSelectBuilder()
+        {
+            this.ResultColumns = new ResultColumnCollection();
+        }
 
         public string ToSQL()
         {
@@ -31,7 +36,7 @@ namespace FMSC.ORM.Core.SQL
                 builder.Append(Clause.ToSQL());
             }
 
-            builder.AppendLine(";");
+            //builder.AppendLine(";");
 
             return builder.ToString();
         }
@@ -43,32 +48,66 @@ namespace FMSC.ORM.Core.SQL
 
         public IAcceptsJoin Join(TableOrSubQuery source, string constraint)
         {
-            this.Source = new JoinClause(this.Source, source, constraint);
+            this.Accept(new JoinClause(source, constraint));
             return this;
         }
 
-        public IAcceptsJoin Join(string table, string constraint)
+        public IAcceptsJoin Join(string table, string constraint, string alias)
         {
-            this.Source = new JoinClause(this.Source, table, constraint);
+            this.Accept(new JoinClause(table, constraint, alias));
             return this;
         }
 
         public IAcceptsGroupBy Where(string expression)
         {
-            this.Clause = new WhereClause(expression);
+            this.Accept(new WhereClause(expression));
             return this;
+        }
+
+        public IAcceptsLimit GroupBy(params string[] termArgs)
+        {
+            return GroupBy((IEnumerable<string>)termArgs);
         }
 
         public IAcceptsLimit GroupBy(IEnumerable<string> terms)
         {
-            this.Clause = new GroupByClause(this.Clause, terms);
+            this.Accept( new GroupByClause(terms));
             return this;
         }
 
         public SelectElement Limit(int limit, int offset)
         {
-            this.Clause = new LimitClause(this.Clause, limit, offset);
+            this.Accept( new LimitClause(limit, offset));
             return this;
+        }
+
+        public void Accept(SelectElement parent)
+        {
+            throw new NotSupportedException("select can't have parent");
+        }
+
+        public void Accept(JoinClause joinClause)
+        {
+            joinClause.Accept(this.Source);
+            this.Source = joinClause;
+        }
+
+        public void Accept(WhereClause whereClause)
+        {
+            whereClause.Accept(this);
+            this.Clause = whereClause;
+        }
+
+        public void Accept(GroupByClause groupByClause)
+        {
+            groupByClause.Accept((SelectElement)this.Clause ?? this);
+            this.Clause = groupByClause;
+        }
+
+        public void Accept(LimitClause limitClause)
+        {
+            limitClause.Accept((SelectElement)this.Clause ?? this);
+            this.Clause = limitClause;
         }
     }
 }

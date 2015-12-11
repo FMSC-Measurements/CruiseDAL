@@ -1,4 +1,5 @@
-﻿using System;
+﻿using FMSC.ORM.Core.SQL.Interfaces;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -6,29 +7,23 @@ using System.Threading.Tasks;
 
 namespace FMSC.ORM.Core.SQL
 {
-    public abstract class SelectSource : SelectComponent
+    public abstract class SelectSource : SelectElement
     {
         
 
-        //public SelectSource(SQLSelectBuilder builder) : base(builder)
-        //{
+        public SelectElement ParentElement { get; set; }
 
-        //}
+        public void Accept(SelectElement parent)
+        {
+            this.ParentElement = parent;
+        }
 
-        //protected override void OnBuilderChanged(SQLSelectBuilder builder)
-        //{
-        //    builder.Source = this;
-        //}
+        public abstract String ToSQL();
 
-        //public SelectSource Join(string table, string joinConstraint)
-        //{
-        //    return new JoinClause(this, table, joinConstraint);
- 
-        //}
+        public override string ToString()
+        {
+            return ToSQL();
+        }
 
-        ////public WhereClause Where(string expr)
-        ////{
-        ////    return new WhereClause(SelectExpression, expr);
-        ////}
     }
 }

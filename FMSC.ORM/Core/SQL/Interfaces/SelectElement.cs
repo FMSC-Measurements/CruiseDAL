@@ -8,6 +8,10 @@ namespace FMSC.ORM.Core.SQL.Interfaces
 {
     public interface SelectElement
     {
+        SelectElement ParentElement { get; set; }
+
+        void Accept(SelectElement parentElement);
+
         string ToSQL();
     }
 }

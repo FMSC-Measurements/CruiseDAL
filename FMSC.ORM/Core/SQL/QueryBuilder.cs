@@ -52,6 +52,15 @@ namespace FMSC.ORM.Core.SQL
         }
     }
 
+    public class JoinQueryBuilder<T> : WhereQueryBuilder<T>
+    {
+        public JoinQueryBuilder<T> Join(string table, string joinContraint, string alias)
+        {
+            builder.Join(table, joinContraint, alias);
+            return this;
+        }
+    }
+
     //public class QueryBuilder<T, S> : SelectElement 
     //    where S : SelectElement
     //{

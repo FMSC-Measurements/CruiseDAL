@@ -28,11 +28,11 @@ namespace FMSC.ORM.Core.SQL
         //protected abstract void OnBuilderChanged(SQLSelectBuilder builder);
 
 
-        public abstract String ToSQL();
+        //public abstract String ToSQL();
 
-        public override string ToString()
-        {
-            return ToSQL();
-        }
+        //public override string ToString()
+        //{
+        //    return ToSQL();
+        //}
     }
 }

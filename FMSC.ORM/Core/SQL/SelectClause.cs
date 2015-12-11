@@ -1,4 +1,5 @@
-﻿using System;
+﻿using FMSC.ORM.Core.SQL.Interfaces;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -6,14 +7,33 @@ using System.Threading.Tasks;
 
 namespace FMSC.ORM.Core.SQL
 {
-    public abstract class SelectClause : SelectComponent
+    public abstract class SelectClause : SelectElement
     {
 
-        public SelectClause Target { get; protected set; }
+        public SelectElement ParentElement { get; set; }
 
-        public SelectClause(SelectClause target)
+        //public SelectClause(SelectClause target)
+        //{
+        //    ParentElement = target;
+        //}
+
+        public void Accept(SelectElement node)
         {
-            Target = target;
+            if (this.ParentElement != null)
+            {
+                this.ParentElement.Accept(node);
+            }
+            else
+            {
+                this.ParentElement = node;
+            }
+        }
+
+        public abstract String ToSQL();
+
+        public override string ToString()
+        {
+            return ToSQL();
         }
 
         //public LimitClause Limit(int limitSize, int offset)

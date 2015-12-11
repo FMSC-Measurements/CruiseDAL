@@ -60,7 +60,7 @@ namespace FMSC.ORM.Core.EntityModel
         protected void InitializeSelectCommand()
         {
             SQLSelectBuilder selectBuilder = new SQLSelectBuilder();
-            selectBuilder.Source = new TableOrSubQuery(EntityDescription.SourceName);
+            selectBuilder.Source = new TableOrSubQuery(EntityDescription.SourceName, null);
 
             //order fields by ordinal
             List<FieldAttribute> fields = new List<FieldAttribute>(EntityDescription.Fields);

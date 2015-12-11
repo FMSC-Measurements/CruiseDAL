@@ -10,13 +10,18 @@ namespace FMSC.ORM.Core.SQL
     {
         public List<String> Expressions { get; protected set; }
 
-        public GroupByClause(SelectClause target, IEnumerable<string> groupByExprs) 
-            :base(target)
+        public GroupByClause(IEnumerable<string> groupByExprs) 
+            :this()
         {
             if(groupByExprs != null)
             {
                 AddRange(groupByExprs);
             }
+        }
+
+        public GroupByClause()
+        {
+            this.Expressions = new List<string>();
         }
 
         public void Add(String expression)
@@ -32,18 +37,13 @@ namespace FMSC.ORM.Core.SQL
             }
         }
 
-        public OrderByClause OrderBy(IEnumerable<string> orderingTerms)
-        {
-            return new OrderByClause(this, orderingTerms);
-        }
-
 
         public override string ToSQL()
         {
             var sBuilder = new StringBuilder();
-            if (Target != null)
+            if (ParentElement != null)
             {
-                sBuilder.Append(Target.ToSQL());
+                sBuilder.Append(ParentElement.ToSQL());
             }
 
             if(Expressions.Count != 0)
