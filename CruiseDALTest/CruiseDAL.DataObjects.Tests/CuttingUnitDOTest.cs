@@ -1,17 +1,11 @@
 ﻿using CruiseDAL.DataObjects;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using CruiseDAL.MappingCollections;
 using CruiseDAL;
+using Xunit;
 
 namespace CruiseDAL.DataObjects.Tests
 {
     
-    
-    /// <summary>
-    ///This is a test class for CuttingUnitDOTest and is intended
-    ///to contain all CuttingUnitDOTest Unit Tests
-    ///</summary>
-    [TestClass()]
     public class CuttingUnitDOTest
     {
         public readonly string TEST_FILE_PATH = @"C:\Documents and Settings\benjaminjcampbell\My Documents\Visual Studio 2008\Projects\CruiseDAL\Test.small.cruise";
@@ -19,60 +13,13 @@ namespace CruiseDAL.DataObjects.Tests
 
         private static DAL _DAL { get; set; }
         private static int CurrentCode = 0;
-        private TestContext testContextInstance;
 
-        /// <summary>
-        ///Gets or sets the test context which provides
-        ///information about and functionality for the current test run.
-        ///</summary>
-        public TestContext TestContext
-        {
-            get
-            {
-                return testContextInstance;
-            }
-            set
-            {
-                testContextInstance = value;
-            }
-        }
 
-        #region Additional test attributes
-        // 
-        //You can use the following additional attributes as you write your tests:
-        //
-        //Use ClassInitialize to run code before running the first test in the class
-        [ClassInitialize()]
-        public static void MyClassInitialize(TestContext testContext)
+        public CuttingUnitDOTest()
         {
             _DAL = new DAL("CuttingUnitDOTest.cruise", true);
         }
-        //
-        //Use ClassCleanup to run code after all tests in a class have run
-        //[ClassCleanup()]
-        //public static void MyClassCleanup()
-        //{
-        //}
-        //
-        //Use TestInitialize to run code before running each test
-        //[TestInitialize()]
-        //public void MyTestInitialize()
-        //{
-        //}
-        //
-        //Use TestCleanup to run code after each test has run
-        //[TestCleanup()]
-        //public void MyTestCleanup()
-        //{
-        //}
-        //
-        #endregion
-
-
-        /// <summary>
-        ///A test for Strata
-        ///</summary>
-        [TestMethod()]
+       
         public void StrataTest()
         {
             CuttingUnitDO cutUnit = getDummyCuttingUnit();
@@ -82,7 +29,7 @@ namespace CruiseDAL.DataObjects.Tests
             cutUnit.Strata.Add(stratum);
             cutUnit.Strata.Save();
             stratum.CuttingUnits.Populate();
-            Assert.AreEqual(1, stratum.CuttingUnits.Count);
+            Assert.Equal(1, stratum.CuttingUnits.Count);
 
             cutUnit = getDummyCuttingUnit();
             cutUnit.Save();
@@ -92,14 +39,13 @@ namespace CruiseDAL.DataObjects.Tests
             var cust = _DAL.Read<CuttingUnitStratumDO>("CuttingUnitStratum", null);
 
             cutUnit.Strata.Populate();
-            Assert.AreEqual(1, cutUnit.Strata.Count);
-            Assert.AreEqual(2, stratum.CuttingUnits.Count);
+            Assert.Equal(1, cutUnit.Strata.Count);
+            Assert.Equal(2, stratum.CuttingUnits.Count);
 
             
 
         }
 
-        [TestMethod()]
         public void StrataTest2()
         {
             //here we are going to copy all the cutting units

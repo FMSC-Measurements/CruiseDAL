@@ -7,7 +7,7 @@ using System.Collections;
 using CruiseDAL.DataObjects;
 using System.Threading;
 using System.Data.Common;
-using CruiseDAL;
+using FMSCORM;
 using System.Text;
 
 #if ANDROID
@@ -28,7 +28,6 @@ using System.Security.Permissions;
 
 namespace CruiseDAL
 {
-    public enum OnConflictOption { Rollback, Abort, Fail, Ignore, Replace };
     public enum CruiseFileType { Unknown, Cruise, Template, Design, Master, Component }
 
 
@@ -61,7 +60,7 @@ namespace CruiseDAL
                 }
 
                 this.SchemaVersion = (long)this.ExecuteScalar("PRAGMA user_version;");
-                CruiseDAL.Updater.Update(this);
+                FMSCORM.Updater.Update(this);
 
                 try
                 {
@@ -116,7 +115,7 @@ namespace CruiseDAL
         /// Gets and Sets the file path to the database
         /// </summary>
         /// <exception cref="System.IO.IOException">File extension is not valid <see cref="VALID_EXTENSIONS"/></exception>
-        /// <exception cref="CruiseDAL.DatabaseShareException">File open in another application or thread</exception>
+        /// <exception cref="FMSCORM.DatabaseShareException">File open in another application or thread</exception>
         public string Path
         {
             get
@@ -570,7 +569,7 @@ namespace CruiseDAL
 
         internal string GetCreateTriggers()
         {
-            return CruiseDAL.Properties.Resources.CreateTriggers;
+            return FMSCORM.Properties.Resources.CreateTriggers;
 
             //String createTriggers = null;
             //StreamReader reader = null;
@@ -596,10 +595,9 @@ namespace CruiseDAL
 
         }
 
-
         protected override String GetCreateSQL()
         {
-            return CruiseDAL.Properties.Resources.CruiseCreate;
+            return FMSCORM.Properties.Resources.CruiseCreate;
 
             //String createSQLText = null;
             //StreamReader reader = null;
@@ -624,6 +622,7 @@ namespace CruiseDAL
             //    if (reader != null) { reader.Close(); }
             //}
         }
+
 
         public string GetTableSQL(String tableName)
         {
@@ -663,7 +662,6 @@ namespace CruiseDAL
             return new string[0];
 
         }
-
 
         protected override void WriteTableDumpRowValues(System.IO.TextWriter writer, DbDataReader reader)
         {
@@ -712,7 +710,6 @@ namespace CruiseDAL
             return AppDomain.CurrentDomain.FriendlyName;
 
 #endif
-
         }
 
         
@@ -931,7 +928,6 @@ namespace CruiseDAL
             {
                 return CruiseFileType.Unknown;
             }
-
         }
 
         protected void WriteCruiseFileType(CruiseFileType cType)
@@ -1029,22 +1025,22 @@ namespace CruiseDAL
 
         private bool HasBlankSpeciesCodes()
         {
-            return this.GetRowCount(Schema.TREE._NAME, "WHERE ifnull(Species, '') = ''") > 0;
+            return this.GetRowCount(TREE._NAME, "WHERE ifnull(Species, '') = ''") > 0;
         }
 
         private bool HasBlankLiveDead()
         {
-            return this.GetRowCount(Schema.TREE._NAME, "WHERE ifnull(LiveDead, '') = ''") > 0;
+            return this.GetRowCount(TREE._NAME, "WHERE ifnull(LiveDead, '') = ''") > 0;
         }
 
         private bool HasBlankCountOrMeasure()
         {
-            return this.GetRowCount(Schema.TREE._NAME, "WHERE ifnull(CountOrMeasure, '') = ''") > 0;
+            return this.GetRowCount(TREE._NAME, "WHERE ifnull(CountOrMeasure, '') = ''") > 0;
         }
 
         private bool HasBlankDefaultLiveDead()
         {
-            return this.GetRowCount(Schema.SAMPLEGROUP._NAME, "WHERE ifnull(DefaultLiveDead, '') = ''") > 0;
+            return this.GetRowCount(SAMPLEGROUP._NAME, "WHERE ifnull(DefaultLiveDead, '') = ''") > 0;
         }
 
         //private bool HasMismatchSpecies()
@@ -1060,12 +1056,12 @@ namespace CruiseDAL
 
         private bool HasOrphanedStrata()
         {
-            return this.GetRowCount(Schema.STRATUM._NAME, "LEFT JOIN CuttingUnitStratum USING (Stratum_CN) WHERE CuttingUnitStratum.Stratum_CN IS NULL") > 0;
+            return this.GetRowCount(STRATUM._NAME, "LEFT JOIN CuttingUnitStratum USING (Stratum_CN) WHERE CuttingUnitStratum.Stratum_CN IS NULL") > 0;
         }
 
         private bool HasStrataWithNoSampleGroups()
         {
-            return this.GetRowCount(Schema.STRATUM._NAME, "LEFT JOIN SampleGroup USING (Stratum_CN) WHERE SampleGroup.Stratum_CN IS NULL") > 0;
+            return this.GetRowCount(STRATUM._NAME, "LEFT JOIN SampleGroup USING (Stratum_CN) WHERE SampleGroup.Stratum_CN IS NULL") > 0;
         }
 
 
@@ -1119,7 +1115,6 @@ namespace CruiseDAL
         /// <param name="tableName"></param>
         /// <param name="start"></param>
         /// <exception cref="DatabaseExecutionException"></exception>
-
         public virtual void SetTableAutoIncrementStart(String tableName, Int64 start)
         {
                         
@@ -1191,7 +1186,7 @@ namespace CruiseDAL
 
 
 
-    public class DatabaseMalformedException : CruiseDAL.FileAccessException
+    public class DatabaseMalformedException : FMSCORM.FileAccessException
     {
         public DatabaseMalformedException(DAL database, Exception innerException)
             : base("Database Malformed (" + database.Path + ")", innerException)

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace CruiseDAL.CodeGenEngine
+namespace FMSCORM.CodeGenEngine
 {
     public static class Constants
     {

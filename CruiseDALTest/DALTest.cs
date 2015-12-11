@@ -1,69 +1,32 @@
-﻿using CruiseDAL;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using FMSCORM;
 using System;
 using System.Collections.Generic;
-using CruiseDAL.DataObjects;
+using FMSCORM.DataObjects;
 using System.Threading;
 using System.IO;
-using CruiseDAL.Test.TestTypes;
+using FMSCORM.Test.TestTypes;
+using Xunit;
+using Xunit.Abstractions;
 
-namespace CruiseDAL.Tests
+namespace FMSCORM.Tests
 {
-    
-    
-    /// <summary>
-    ///This is a test class for DALTest and is intended
-    ///to contain all DALTest Unit Tests
-    ///</summary>
-    [TestClass()]
+
     public class DALTest
     {
         public static string TEST_COPY_FILE_NAME = "\\TestCopy.cruise";
         public static string TESTCRUISEDAL_PATH = "TestCruiseDAL.db";
 
-        private TestContext testContextInstance;
-
-        /// <summary>
-        ///Gets or sets the test context which provides
-        ///information about and functionality for the current test run.
-        ///</summary>
-        public TestContext TestContext
-        {
-            get
-            {
-                return testContextInstance;
-            }
-            set
-            {
-                testContextInstance = value;
-            }
-        }
-
-        #region Additional test attributes
-        // 
-        //You can use the following additional attributes as you write your tests:
-        //
-        //Use ClassInitialize to run code before running the first test in the class
+        private readonly ITestOutputHelper _output;
 
         public static DAL _testDALInstance;
         //public static Random _rand;
 
-        [ClassInitialize()]
-        public static void MyClassInitialize(TestContext testContext)
+        public DALTest(ITestOutputHelper output)
         {
-            _testDALInstance = CruiseDAL.Tests.CommonMethods.GetTestDAL();
-            Assert.IsTrue(_testDALInstance.Exists);
-            //_rand = new Random(0);
+            _output = output;
 
-            //_testDALInstance = MakeDB("Test.cruise");
-
-            //for (int i = 0; i < 10; i++)
-            //{
-            //    CuttingUnitDO newCU = new CuttingUnitDO(_testDALInstance);
-            //    newCU.Code = RandomString(10);
-            //    newCU.Area = (float)(1000 * _rand.NextDouble());
-            //    newCU.Save();
-            //}
+            _testDALInstance = FMSCORM.Tests.CommonMethods.GetTestDAL();
+            Assert.True(_testDALInstance.Exists);
         }
 
         //private static string _chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
@@ -109,9 +72,8 @@ namespace CruiseDAL.Tests
         //{
         //}
         //
-        #endregion
 
-        [TestMethod()]
+
         public void TestAllowMultDALOnSameThread()
         {
             try
@@ -121,33 +83,33 @@ namespace CruiseDAL.Tests
             }
             catch
             {
-                Assert.Fail();
+                Assert.True(false);
             }
         }
 
         void DoWorkBlockMultiThreadDALFileAcess()
         {
             DAL newDAL = new DAL("FileAccessTest.cruise");
-            TestContext.WriteLine("waiting");
+            _output.WriteLine("waiting");
             Thread.Sleep(2000);
         }
 
-        [TestMethod()]
+
         public void BlockMultiThreadDALFileAcess()
         {
 
             Thread thread = new Thread(DoWorkBlockMultiThreadDALFileAcess);
             thread.Start();
-            TestContext.WriteLine("start");
+            _output.WriteLine("start");
             try
             {
                 var dal = new DAL("FileAccessTest.cruise");
-                Assert.Fail();
+                Assert.True(false);
             }
             catch( Exception e)
             {
 
-                TestContext.WriteLine(e.ToString());
+                _output.WriteLine(e.ToString());
                 return;
             }
 
@@ -155,18 +117,18 @@ namespace CruiseDAL.Tests
             
         }
 
-        [TestMethod()]
+
         public void DatabaseUpdateTest()
         {
             throw new NotImplementedException();
 
         }
 
-        [TestMethod()]
+
         public void DataObjectToStringTest()
         {
             DataObject obj;
-            obj = _testDALInstance.ReadSingleRow<SaleDO>(CruiseDAL.Schema.SALE._NAME, 1);
+            obj = _testDALInstance.ReadSingleRow<SaleDO>(FMSCORM.Schema.SALE._NAME, 1);
             CheckRow(obj);
             string s = obj.ToString("[District] hi mom ://\\ [rowID]", null);
             s = obj.ToString("[district] [District] [SaleNumber]", null);
@@ -174,7 +136,7 @@ namespace CruiseDAL.Tests
             try
             {
                 s = obj.ToString(" [badPropName] ", null);
-                Assert.Fail("toString didn't fail with a bad Property name");
+                Assert.True(false,"toString didn't fail with a bad Property name");
             }
             catch
             {
@@ -183,53 +145,52 @@ namespace CruiseDAL.Tests
 
         }
 
-        [TestMethod]
+
         public void GetTableUniquesTest()
         {
             String[] result = _testDALInstance.GetTableUniques("tree");
-            Assert.IsNotNull(result);
+            Assert.NotNull(result);
         }
 
-        [TestMethod()]
+
         public void ReadSingleRowTest()
         {
             DataObject obj;
-            obj = _testDALInstance.ReadSingleRow<SaleDO>(CruiseDAL.Schema.SALE._NAME, 1);
+            obj = _testDALInstance.ReadSingleRow<SaleDO>(FMSCORM.Schema.SALE._NAME, 1);
             CheckRow(obj);
 
             SaleDO sale = obj as SaleDO;
-            Assert.IsNotNull(sale);
+            Assert.NotNull(sale);
             obj = _testDALInstance.ReadSingleRow<SaleDO>("Sale", "WHERE SaleNumber = ?", sale.SaleNumber);
-            Assert.IsTrue(Assert.ReferenceEquals(sale, obj));
+            Assert.True(Object.ReferenceEquals(sale, obj));
 
 
-            obj = _testDALInstance.ReadSingleRow<CuttingUnitDO>(CruiseDAL.Schema.CUTTINGUNIT._NAME, 1);
+            obj = _testDALInstance.ReadSingleRow<CuttingUnitDO>(FMSCORM.Schema.CUTTINGUNIT._NAME, 1);
             CheckRow(obj);
 
-            obj = _testDALInstance.ReadSingleRow<StratumDO>(CruiseDAL.Schema.STRATUM._NAME, 1);
+            obj = _testDALInstance.ReadSingleRow<StratumDO>(FMSCORM.Schema.STRATUM._NAME, 1);
             CheckRow(obj);
 
-            obj = _testDALInstance.ReadSingleRow<SampleGroupDO>(CruiseDAL.Schema.SAMPLEGROUP._NAME, 1);
+            obj = _testDALInstance.ReadSingleRow<SampleGroupDO>(FMSCORM.Schema.SAMPLEGROUP._NAME, 1);
             CheckRow(obj);
 
-            obj = _testDALInstance.ReadSingleRow<TreeDefaultValueDO>(CruiseDAL.Schema.TREEDEFAULTVALUE._NAME, 1);
+            obj = _testDALInstance.ReadSingleRow<TreeDefaultValueDO>(FMSCORM.Schema.TREEDEFAULTVALUE._NAME, 1);
             //Assert.IsNotNull(((TreeDefaultValueDO)obj).);
             CheckRow(obj);
 
-            obj = _testDALInstance.ReadSingleRow<TreeDO>(CruiseDAL.Schema.TREE._NAME, 1);
+            obj = _testDALInstance.ReadSingleRow<TreeDO>(FMSCORM.Schema.TREE._NAME, 1);
             CheckRow(obj);
         }
 
         private void CheckRow(DataObject obj)
         {
-            Assert.IsNotNull(obj);
-            Assert.IsNotNull(obj.DAL);
-            Assert.IsNotNull(obj.rowID);
-            Assert.IsTrue(obj.IsPersisted);
+            Assert.NotNull(obj);
+            Assert.NotNull(obj.DAL);
+            Assert.NotNull(obj.rowID);
+            Assert.True(obj.IsPersisted);
         }
 
 
-        [TestMethod()]
         public void WriteTest()
         {
             DAL dal = new DAL("WriteTest.cruise", true);
@@ -246,7 +207,7 @@ namespace CruiseDAL.Tests
             //Assert.IsTrue(object.ReferenceEquals(sale, saleRead));
             long saleID = sale.GetID();
             long saleReadID = saleRead.GetID();
-            Assert.IsTrue(saleReadID == saleID);
+            Assert.True(saleReadID == saleID);
             //Assert.IsNotNull(saleRead.CreatedDate);
             //DateTime time;
             //DateTime.TryParse(saleRead.CreatedDate, out time);
@@ -265,7 +226,6 @@ namespace CruiseDAL.Tests
 
         /// <summary>
         ///A test for Read
-        [TestMethod()]
         public void TestRead()
         {
             DAL db = new DAL(TESTCRUISEDAL_PATH);
@@ -278,7 +238,6 @@ namespace CruiseDAL.Tests
         /// <summary>
         ///A test for GetRowCount
         ///</summary>
-        [TestMethod()]
         public void GetRowCountTest()
         {
             DAL target = _testDALInstance;
@@ -288,14 +247,9 @@ namespace CruiseDAL.Tests
             Int64 expected = 9;
             Int64 actual;
             actual = target.GetRowCount(tableName, selection, selectionArgs);
-            Assert.AreEqual(expected, actual);
+            Assert.Equal(expected, actual);
         }
 
-
-
-        
-
-        [TestMethod()]
         public void FailWhenNoConnection()
         {
 
@@ -312,13 +266,12 @@ namespace CruiseDAL.Tests
             {
                 ex = e;
             }
-            Assert.IsTrue(ex != null, "Save should fail when dal trys to access a file that hasn't been created");
+            Assert.True(ex != null, "Save should fail when dal trys to access a file that hasn't been created");
         }
 
-        [TestMethod()]
         public void TestCopyTo()
         {
-            DAL target = CruiseDAL.Tests.CommonMethods.GetTestDAL();
+            DAL target = FMSCORM.Tests.CommonMethods.GetTestDAL();
             string copyPath = System.IO.Path.GetDirectoryName(target.Path) + TEST_COPY_FILE_NAME;
             DAL copy = target.CopyTo(copyPath);
 
@@ -328,7 +281,7 @@ namespace CruiseDAL.Tests
             {
                 //insure that schema of two files match 
                 int rowCnt = (int)target.Execute("SELECT * FROM main.sqlite_master EXCEPT SELECT * FROM copy.sqlite_master;");
-                Assert.IsTrue(rowCnt == 0);
+                Assert.True(rowCnt == 0);
             }
             finally
             {
@@ -340,10 +293,10 @@ namespace CruiseDAL.Tests
         }
 
 
-        private void EndBeginCreateTimer(IAsyncResult result)
-        {
-            this.TestContext.EndTimer("BeginCreateTest");
-        }
+        //private void EndBeginCreateTimer(IAsyncResult result)
+        //{
+        //    this.TestContext.EndTimer("BeginCreateTest");
+        //}
 
         /// <summary>
         ///A test for DAL Constructor

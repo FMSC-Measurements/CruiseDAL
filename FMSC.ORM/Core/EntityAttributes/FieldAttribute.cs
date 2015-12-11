@@ -1,0 +1,115 @@
+﻿using System;
+using System.Reflection;
+
+namespace FMSC.ORM.Core.EntityAttributes
+{
+    public enum SepcialFieldType { None = 0, CreatedBy, CreatedDate, ModifiedBy, ModifiedDate, RowVersion };
+
+    [AttributeUsage(AttributeTargets.Property, Inherited = true)]
+    public class FieldAttribute : BaseFieldAttribute
+    {
+        private int _ordinal = -1;
+        private bool _isPersisted = true;
+        public int Ordinal { get { return _ordinal; } set { _ordinal = value; } }
+
+        public string FieldName { get; set; }
+        public string SQLExpression { get; set; }
+        public virtual bool IsPersisted
+        {
+            get { return _isPersisted; }
+            set { _isPersisted = value; }
+        }
+
+        public Type RunTimeType { get; set; }
+        public MethodInfo Getter { get; set; }
+        public MethodInfo Setter { get; set; }
+       
+        public bool IsGuid;
+
+        public string SQLPramName { get { return "@" + FieldName.ToLower();  } }
+
+        public virtual object DefaultValue { get; set; }
+        //public bool IsDepreciated { get; set; }   
+
+        public string GetResultColumnExpression(string sourceName)
+        {
+            if (!string.IsNullOrEmpty(SQLExpression))
+            {
+                return SQLExpression + " AS " + sourceName + "." + FieldName;
+            }
+            else
+            {
+                return sourceName + "." + FieldName;
+            }
+        }
+        
+        public FieldAttribute()
+        {
+            IsPersisted = true; 
+        }
+
+        public FieldAttribute(string fieldName)
+        {
+            this.FieldName = fieldName;
+        }
+
+        
+
+        public object GetFieldValue(Object obj)
+        {
+            object value = Getter.Invoke(obj, null);
+            if (RunTimeType.IsEnum)
+            {
+                value = value.ToString();
+            }
+            else if (IsGuid)
+            {
+                value = value.ToString();
+            }
+            return value;
+        }
+
+        public object GetFieldValueOrDefault(Object obj)
+        {
+            object value = GetFieldValue(obj);
+            if(value == null)
+            {
+                value = DefaultValue;
+            }
+            return value;
+        }
+
+        public void SetFieldValue(Object dataObject, object value)
+        {
+            try
+            {
+                ////TODO fix hack
+                //if(RunTimeType == typeof(Nullable<Int64>) && value is Int64)
+                //{
+                //    value = new Nullable<Int64>((long)value);
+                //}
+
+                Setter.Invoke(dataObject, new Object[] { value, });
+            }
+            catch(Exception e)
+            {
+                throw new ORMException(String.Format("unable to set value; Value = {0}; FieldInfo = {1}", value, this), e);
+            }
+        }
+
+
+        
+
+        public void SetFieldValueOrDefault(Object dataObject, object value)
+        {
+            if(value == null) { value = DefaultValue; }
+            SetFieldValue(dataObject, value);
+        }
+
+        public override string ToString()
+        {
+            return String.Format("EntityFieldInfo RunTimeType({0}), FieldName({1}), Expression({2})",
+                 RunTimeType, FieldName ?? "null", SQLExpression ?? "null");
+        }
+    }
+}

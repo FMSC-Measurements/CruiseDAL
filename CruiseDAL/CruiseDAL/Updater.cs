@@ -1,5 +1,8 @@
 ﻿using System;
 using CruiseDAL.DataObjects;
+using FMSC.ORM.Core.SQL;
+using CruiseDAL.Schema;
+using FMSC.ORM;
 
 namespace CruiseDAL
 {
@@ -121,22 +124,22 @@ namespace CruiseDAL
             }
 
 
-            if (db.HasForeignKeyErrors(Schema.TREEDEFAULTVALUETREEAUDITVALUE._NAME))
+            if (db.HasForeignKeyErrors(TREEDEFAULTVALUETREEAUDITVALUE._NAME))
             {
                 try
                 {
                     db.BeginTransaction();
                     db.Execute("DELETE FROM TreeDefaultValueTreeAuditValue WHERE TreeDefaultValue_CN NOT IN (Select TreeDefaultValue_CN FROM TreeDefaultValue);");
                     db.Execute("DELETE FROM TreeDefaultValueTreeAuditValue WHERE TreeAuditValue_CN NOT IN (SELECT TreeAuditValue_CN FROM TreeAuditValue);");
-                    db.EndTransaction();
+                    db.CommitTransaction();
                 }
                 catch 
                 {
-                    db.CancelTransaction();
+                    db.RollbackTransaction();
                 }
             }
 
-            foreach (ErrorLogDO el in db.Read<ErrorLogDO>("ErrorLog","WHERE CN_Number != 0"))
+            foreach (ErrorLogDO el in db.Read<ErrorLogDO>("WHERE CN_Number != 0"))
             {
                 InsureErrorLogEntry(db, el);
             }
@@ -185,11 +188,11 @@ namespace CruiseDAL
                 }
 
                 db.Execute("PRAGMA foreign_keys = on;");
-                db.EndTransaction();
+                db.CommitTransaction();
             }
             catch
             {
-                db.CancelTransaction();
+                db.RollbackTransaction();
                 throw;
             }
 
@@ -261,12 +264,12 @@ namespace CruiseDAL
                 db.AddField("CuttingUnit", "TallyHistory TEXT");
 
                 SetDatabaseVersion(db, "2013.05.30");
-                db.EndTransaction();
+                db.CommitTransaction();
             }
             catch (Exception e)
             {
-                db.CancelTransaction();
-                throw new DatabaseExecutionException("failed updateing database to version 2013.05.30", e);
+                db.RollbackTransaction();
+                throw new SchemaUpdateException(db.DatabaseVersion, "2013.05.30", e);
             }
 
         }
@@ -295,12 +298,12 @@ namespace CruiseDAL
                 db.Execute(command);
 
                 SetDatabaseVersion(db, "2013.08.02");
-                db.EndTransaction();
+                db.CommitTransaction();
             }
             catch (Exception e)
             {
-                db.CancelTransaction();
-                throw new DatabaseExecutionException("failed updateing database to version 2013.08.02", e);
+                db.RollbackTransaction();
+                throw new SchemaUpdateException(db.DatabaseVersion, "2013.08.02", e);
             }
 
 
@@ -315,12 +318,12 @@ namespace CruiseDAL
                 db.AddField("Stratum", "KZ3PPNT INTEGER Default 0");
 
                 SetDatabaseVersion(db, "2013.08.29");
-                db.EndTransaction();
+                db.CommitTransaction();
             }
             catch (Exception e)
             {
-                db.CancelTransaction();
-                throw new DatabaseExecutionException("failed updateing database to version 2013.08.29", e);
+                db.RollbackTransaction();
+                throw new SchemaUpdateException(db.DatabaseVersion, "2013.08.29", e);
             }
         }
 
@@ -332,12 +335,12 @@ namespace CruiseDAL
 
                 db.AddField("Tree", "HiddenPrimary REAL Default 0.0");
                 SetDatabaseVersion(db, "2013.10.29");
-                db.EndTransaction();
+                db.CommitTransaction();
             }
             catch (Exception e)
             {
-                db.CancelTransaction();
-                throw new DatabaseExecutionException("failed updateing database to version 2013.10.29", e);
+                db.RollbackTransaction();
+                throw new SchemaUpdateException(db.DatabaseVersion, "2013.10.29", e);
             }
 
 
@@ -365,12 +368,12 @@ namespace CruiseDAL
 
                 db.Execute(command);
                 SetDatabaseVersion(db, "2013.11.01");
-                db.EndTransaction();
+                db.CommitTransaction();
             }
             catch (Exception e)
             {
-                db.CancelTransaction();
-                throw new DatabaseExecutionException("failed updateing database to version 2013.11.01", e);
+                db.RollbackTransaction();
+                throw new SchemaUpdateException(db.DatabaseVersion, "2013.11.01", e);
             }
         }
 
@@ -406,12 +409,12 @@ namespace CruiseDAL
 
                 SetDatabaseVersion(db, "2013.06.12");
 
-                db.EndTransaction();
+                db.CommitTransaction();
             }
             catch (Exception e)
             {
-                db.CancelTransaction();
-                throw new DatabaseExecutionException("failed updateing database to version 2013.06.12", e);
+                db.RollbackTransaction();
+                throw new SchemaUpdateException(db.DatabaseVersion, "2013.06.12", e);
             }
 
         }
@@ -490,12 +493,12 @@ namespace CruiseDAL
                 //db.Execute(command);
 
                 SetDatabaseVersion(db, "2013.06.17");
-                db.EndTransaction();
+                db.CommitTransaction();
             }
             catch (Exception e)
             {
-                db.CancelTransaction();
-                throw new DatabaseExecutionException("failed updateing database to version 2013.06.17", e);
+                db.RollbackTransaction();
+                throw new SchemaUpdateException(db.DatabaseVersion, "2013.06.17", e);
             }
 
         }
@@ -526,13 +529,13 @@ namespace CruiseDAL
                 ////////////////////////////////////////////////////////////////////////
 
                 SetDatabaseVersion(db, "2013.06.19");
-                db.EndTransaction();
+                db.CommitTransaction();
 
             }
             catch (Exception e)
             {
-                db.CancelTransaction();
-                throw new DatabaseExecutionException("failed updateing database to version 2013.06.19", e);
+                db.RollbackTransaction();
+                throw new SchemaUpdateException(db.DatabaseVersion, "2013.06.19", e);
             }
 
         }
@@ -551,12 +554,12 @@ namespace CruiseDAL
                 db.Execute(command);
                 command = "UPDATE TreeFieldSetup set ColumnType = 'Combo' WHERE Field = 'CountOrMeasure' OR Field = 'LiveDead';";
                 db.Execute(command);
-                db.EndTransaction();
+                db.CommitTransaction();
             }
             catch (Exception e)
             {
-                db.CancelTransaction();
-                throw new DatabaseExecutionException("failed updateing database version 2013.06.19", e);
+                db.RollbackTransaction();
+                throw new SchemaUpdateException(db.DatabaseVersion, "2013.06.19", e);
             }
         }
 
@@ -640,12 +643,12 @@ namespace CruiseDAL
                 db.Execute(command);
 
                 SetDatabaseVersion(db, "2013.11.22");
-                db.EndTransaction();
+                db.CommitTransaction();
             }
             catch (Exception e)
             {
-                db.CancelTransaction();
-                throw new DatabaseExecutionException("failed updateing database to version 2013.11.22", e);
+                db.RollbackTransaction();
+                throw new SchemaUpdateException(db.DatabaseVersion, "2013.11.22", e);
             }
 
         }
@@ -658,12 +661,12 @@ namespace CruiseDAL
                 db.AddField("SampleGroup", "BigBAF INTEGER Default 0");
 
                 SetDatabaseVersion(db, "2014.01.21");
-                db.EndTransaction();
+                db.CommitTransaction();
             }
             catch (Exception e)
             {
-                db.CancelTransaction();
-                throw new DatabaseExecutionException("failed updateing database to version 2014.01.21", e);
+                db.RollbackTransaction();
+                throw new SchemaUpdateException(db.DatabaseVersion, "2014.01.21", e);
             }
 
         }
@@ -695,12 +698,12 @@ namespace CruiseDAL
 
                 SetDatabaseVersion(db, "2014.03.12");
 
-                db.EndTransaction();
+                db.CommitTransaction();
             }
             catch (Exception e)
             {
-                db.CancelTransaction();
-                throw new DatabaseExecutionException("failed updating database to version 2014.03.12", e);
+                db.RollbackTransaction();
+                throw new SchemaUpdateException(db.DatabaseVersion, "2014.03.12", e);
             }
         }
 
@@ -712,12 +715,12 @@ namespace CruiseDAL
                 db.AddField("Sale", "LogGradingEnabled BOOLEAN Default 0");
 
                 SetDatabaseVersion(db, "2014.06.04");
-                db.EndTransaction();
+                db.CommitTransaction();
             }
             catch (Exception e)
             {
-                db.CancelTransaction();
-                throw new DatabaseExecutionException("failed updating database to version 2014.06.04", e);
+                db.RollbackTransaction();
+                throw new SchemaUpdateException(db.DatabaseVersion, "2014.06.04", e);
             }
         }
         private static void UpdateToVersion2014_07_02(DAL db)
@@ -728,12 +731,12 @@ namespace CruiseDAL
                 db.AddField("LogStock", "BoardUtil REAL Default 0.0");
                 db.AddField("LogStock", "CubicUtil REAL Default 0.0");
                 SetDatabaseVersion(db, "2014.07.02");
-                db.EndTransaction();
+                db.CommitTransaction();
             }
             catch (Exception e) 
             {
-                db.CancelTransaction();
-                throw new DatabaseExecutionException("failded updating database to version 2014.07.02", e);
+                db.RollbackTransaction();
+                throw new SchemaUpdateException(db.DatabaseVersion, "2014.07.02", e);
             }
         }
 
@@ -745,12 +748,12 @@ namespace CruiseDAL
                 db.AddField("SampleGroup", "MinKPI INTEGER Default 0");
                 db.AddField("SampleGroup", "MaxKPI INTEGER Default 0");
                 SetDatabaseVersion(db, "2014.07.07");
-                db.EndTransaction();
+                db.CommitTransaction();
             }
             catch (Exception e)
             {
-                db.CancelTransaction();
-                throw new DatabaseExecutionException("failded updating database to version 2014.07.07", e);
+                db.RollbackTransaction();
+                throw new SchemaUpdateException(db.DatabaseVersion, "2014.07.07", e);
             }
         }
 
@@ -829,13 +832,13 @@ namespace CruiseDAL
                 //Add ReconTrees
                 db.AddField("SampleGroupStats", "ReconTrees INTEGER Default 0");
                 SetDatabaseVersion(db, "2014.07.17");
-                db.EndTransaction();
+                db.CommitTransaction();
 
             }
             catch (Exception e)
             {
-                db.CancelTransaction();
-                throw new DatabaseExecutionException("failed updating database to version 2014.07.17", e);
+                db.RollbackTransaction();
+                throw new SchemaUpdateException(db.DatabaseVersion, "2014.07.17", e);
             }
 
         }
@@ -854,12 +857,12 @@ CREATE TRIGGER OnDeletePlot AFTER DELETE ON Plot BEGIN
 			INSERT INTO MessageLog (Message, Date, Time) VALUES (('Plot (' || OLD.Plot_CN || ') Deleted CU_cn:' || OLD.CuttingUnit_CN  || ' St_cn:' || OLD.Stratum_CN || ' Plt#:' || OLD.PlotNumber), date('now'), time('now')); END;
 ");
                 SetDatabaseVersion(db, "2014.07.24");
-                db.EndTransaction();
+                db.CommitTransaction();
             }
             catch(Exception e)
             {
-                db.CancelTransaction();
-                throw new DatabaseExecutionException("failed updating database to version 2014.07.24", e);
+                db.RollbackTransaction();
+                throw new SchemaUpdateException(db.DatabaseVersion, "2014.07.24", e);
             }
         }
 
@@ -870,12 +873,12 @@ CREATE TRIGGER OnDeletePlot AFTER DELETE ON Plot BEGIN
                 db.BeginTransaction();
                 db.AddField(Schema.VOLUMEEQUATION._NAME, "EvenOddSegment INTEGER Default 0");
                 SetDatabaseVersion(db, "2014.08.20");
-                db.EndTransaction();
+                db.CommitTransaction();
             }
             catch (Exception e)
             {
-                db.CancelTransaction();
-                throw new DatabaseExecutionException("failed updating database to version 2014.08.20", e);
+                db.RollbackTransaction();
+                throw new SchemaUpdateException(db.DatabaseVersion, "2014.08.20", e);
             }
         }
 
@@ -886,12 +889,13 @@ CREATE TRIGGER OnDeletePlot AFTER DELETE ON Plot BEGIN
                 db.BeginTransaction();
                 db.AddField(Schema.SAMPLEGROUP._NAME, "TallyMethod TEXT");
                 SetDatabaseVersion(db, "2014.09.02");
-                db.EndTransaction();
+                db.CommitTransaction();
             }
             catch (Exception e)
             {
-                db.CancelTransaction();
-                throw new DatabaseExecutionException("failed updating database to version 2014.09.02", e);
+                db.RollbackTransaction();
+
+                throw new SchemaUpdateException(db.DatabaseVersion, "2014.09.02", e);
             }
         }
 
@@ -918,12 +922,12 @@ CREATE TRIGGER OnDeletePlot AFTER DELETE ON Plot BEGIN
 				rMinDbh REAL Default 0.0,
 				rMaxDbh REAL Default 0.0);");
                 SetDatabaseVersion(db, "2014.10.01");
-                db.EndTransaction();
+                db.CommitTransaction();
             }
             catch(Exception e)
             {
-                db.CancelTransaction();
-                throw new DatabaseExecutionException("failed updating database to version 2014.10.01", e);
+                db.RollbackTransaction();
+                throw new SchemaUpdateException(db.DatabaseVersion, "2014.10.01", e);
             }
 
         }
@@ -1003,14 +1007,14 @@ JOIN Stratum USING (Stratum_CN);");
 
                 db.Execute("PRAGMA user_version = 1");
                 SetDatabaseVersion(db, "2015.04.28");
-                db.EndTransaction();
+                db.CommitTransaction();
 
 
             }
             catch (Exception e)
             {
-                db.CancelTransaction();
-                throw new DatabaseExecutionException("failed updating database to version 2015.04.28", e);
+                db.RollbackTransaction();
+                throw new SchemaUpdateException(db.DatabaseVersion, "2015.04.28", e);
 
 
             }
@@ -1029,12 +1033,12 @@ JOIN Stratum USING (Stratum_CN);");
 
                 SetDatabaseVersion(db, "2015.08.03");
 
-                db.EndTransaction();
+                db.CommitTransaction();
             }
             catch (Exception e)
             {
-                db.CancelTransaction();
-                throw new DatabaseExecutionException("failed updating database to version 2015.08.03", e);
+                db.RollbackTransaction();
+                throw new SchemaUpdateException(db.DatabaseVersion, "2015.08.03", e);
             }
 
         }
@@ -1060,12 +1064,12 @@ JOIN Stratum USING (Stratum_CN);");
                 }                               
 
                 SetDatabaseVersion(db, "2015.08.19");
-                db.EndTransaction();
+                db.CommitTransaction();
             }
             catch (Exception e)
             {
-                db.CancelTransaction();
-                throw new DatabaseExecutionException("failed updating database to version 2015.08.19", e);
+                db.RollbackTransaction();
+                throw new SchemaUpdateException(db.DatabaseVersion, "2015.08.19", e);
             }                        
         }
 
@@ -1083,17 +1087,17 @@ JOIN Stratum USING (Stratum_CN);");
                     db.Execute("DROP TRIGGER " + trigName + ";");
                 }
 
-                string createTriggers = db.GetCreateTriggers();
+                string createTriggers = CruiseDALDatastoreBuilder.GetCreateTriggers();
                 db.Execute(createTriggers);
 
 
                 SetDatabaseVersion(db, "2015.09.01");
-                db.EndTransaction();
+                db.CommitTransaction();
             }
             catch (Exception e)
             {
-                db.CancelTransaction();
-                throw new DatabaseExecutionException("failed updating database to version 2015.09.01", e);
+                db.RollbackTransaction();
+                throw new SchemaUpdateException(db.DatabaseVersion, "2015.09.01", e);
             } 
 
         }

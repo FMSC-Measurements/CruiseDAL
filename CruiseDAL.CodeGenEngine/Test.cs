@@ -7,7 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 
-namespace CruiseDAL.CodeGenEngine
+namespace FMSCORM.CodeGenEngine
 {
     public partial class Test : Form
     {

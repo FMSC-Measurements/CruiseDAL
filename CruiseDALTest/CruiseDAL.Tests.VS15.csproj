@@ -1,5 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="..\packages\xunit.runner.visualstudio.2.1.0\build\net20\xunit.runner.visualstudio.props" Condition="Exists('..\packages\xunit.runner.visualstudio.2.1.0\build\net20\xunit.runner.visualstudio.props')" />
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
@@ -13,10 +14,6 @@
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{3AC096D0-A1C2-E12C-1390-A8335801FDAB};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
-    <SccProjectName>Svn</SccProjectName>
-    <SccLocalPath>Svn</SccLocalPath>
-    <SccAuxPath>Svn</SccAuxPath>
-    <SccProvider>SubversionScc</SccProvider>
     <SignAssembly>false</SignAssembly>
     <AssemblyOriginatorKeyFile>
     </AssemblyOriginatorKeyFile>
@@ -83,7 +80,6 @@
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Microsoft.VisualStudio.QualityTools.UnitTestFramework, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
     <Reference Include="System" />
     <Reference Include="System.Core">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
@@ -98,32 +94,46 @@
     <Reference Include="System.Xml.Linq">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
     </Reference>
+    <Reference Include="xunit.abstractions, Version=2.0.0.0, Culture=neutral, PublicKeyToken=8d05b1bb7a6fdb6c, processorArchitecture=MSIL">
+      <HintPath>..\packages\xunit.abstractions.2.0.0\lib\net35\xunit.abstractions.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="xunit.assert, Version=2.1.0.3179, Culture=neutral, PublicKeyToken=8d05b1bb7a6fdb6c, processorArchitecture=MSIL">
+      <HintPath>..\packages\xunit.assert.2.1.0\lib\dotnet\xunit.assert.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="xunit.core, Version=2.1.0.3179, Culture=neutral, PublicKeyToken=8d05b1bb7a6fdb6c, processorArchitecture=MSIL">
+      <HintPath>..\packages\xunit.extensibility.core.2.1.0\lib\dotnet\xunit.core.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="xunit.execution.desktop, Version=2.1.0.3179, Culture=neutral, PublicKeyToken=8d05b1bb7a6fdb6c, processorArchitecture=MSIL">
+      <HintPath>..\packages\xunit.extensibility.execution.2.1.0\lib\net45\xunit.execution.desktop.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CommonMethods.cs" />
-    <Compile Include="CruiseDAL.BaseDAL.Tests\DataObjectInfoTest.cs" />
-    <Compile Include="CruiseDAL.DataObjects.Tests\CuttingUnitDOTest.cs" />
-    <Compile Include="CruiseDAL.DataObjects.Tests\CuttingUnitStratumDOTest.cs" />
+    <Compile Include="Core.Tests\EntityCommandBuilder.Tests.cs" />
+    <Compile Include="Core.Tests\EntityDescriptionTest.cs" />
+    <None Include="CruiseDAL.DataObjects.Tests\CuttingUnitDOTest.cs" />
+    <None Include="CruiseDAL.DataObjects.Tests\CuttingUnitStratumDOTest.cs" />
     <Compile Include="DALTest.cs" />
-    <Compile Include="CruiseDAL.DataObjects.Tests\LogMatrixDOTest.cs" />
+    <None Include="CruiseDAL.DataObjects.Tests\LogMatrixDOTest.cs" />
     <Compile Include="MappingCollectionTest.cs" />
     <Compile Include="CruiseDAL.BaseDAL.Tests\ObjectCacheTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="ReadTests.cs" />
     <Compile Include="SQL\TestSQLConstants.cs" />
     <Compile Include="TestTypes\TestReadDO.cs" />
     <Compile Include="TestTypes\DOMultiPropType.cs" />
-    <Compile Include="TestTypes\VanillaMultiTypeObject.cs" />
-    <Compile Include="CruiseDAL.DataObjects.Tests\TreeDOTest.cs" />
+    <Compile Include="TestTypes\POCOMultiTypeObject.cs" />
+    <None Include="CruiseDAL.DataObjects.Tests\TreeDOTest.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="AuthoringTests.txt" />
     <Content Include="SQL\CruiseCreate05_30_2013.txt" />
   </ItemGroup>
   <ItemGroup>
-    <Shadow Include="Test References\CruiseDAL.accessor" />
-  </ItemGroup>
-  <ItemGroup>
+    <None Include="packages.config" />
     <None Include="SQL\CreateTestDB.sql" />
     <None Include="TestResources\Test.cruise" />
     <None Include="TestResources\TestCruiseDAL.db" />
@@ -152,6 +162,12 @@
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
+    <PropertyGroup>
+      <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
+    </PropertyGroup>
+    <Error Condition="!Exists('..\packages\xunit.runner.visualstudio.2.1.0\build\net20\xunit.runner.visualstudio.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\xunit.runner.visualstudio.2.1.0\build\net20\xunit.runner.visualstudio.props'))" />
+  </Target>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">

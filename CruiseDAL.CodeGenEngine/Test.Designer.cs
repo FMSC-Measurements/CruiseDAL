@@ -1,4 +1,4 @@
-﻿namespace CruiseDAL.CodeGenEngine
+﻿namespace FMSCORM.CodeGenEngine
 {
     partial class Test
     {
