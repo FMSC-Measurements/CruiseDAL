@@ -10,6 +10,7 @@ using FMSC.ORM.Core.SQL;
 using FMSC.ORM.Core.EntityAttributes;
 using System.Diagnostics;
 using System.Threading;
+using FMSC.ORM.Core.SQL.QueryBuilder;
 
 namespace FMSC.ORM.Core
 {
@@ -97,8 +98,20 @@ namespace FMSC.ORM.Core
         #endregion
 
 
+        #region fluent interface
+        public QueryBuilder<T> From<T>()
+        {
+            EntityDescription entityDescription = LookUpEntityByType(typeof(T));
+            SQLSelectBuilder builder = entityDescription.CommandBuilder.MakeSelectCommand();
+
+            return new QueryBuilder<T>(this, builder);
+        }
+
+
+        #endregion
+
         #region CRUD
-        
+
 
         public object Insert(object data, SQL.OnConflictOption option)
         {
@@ -270,6 +283,136 @@ namespace FMSC.ORM.Core
             }
         }
 
+        internal IEnumerable<TResult> Read<TResult>(SQLSelectBuilder selectBuilder, params Object[] selectionArgs)
+        {
+
+            using (DbCommand command = Provider.CreateCommand())
+            {
+                command.CommandText = selectBuilder.ToSQL() + ";";
+
+                //Add selection Arguments to command parameter list
+                if (selectionArgs != null)
+                {
+                    foreach (object obj in selectionArgs)
+                    {
+                        command.Parameters.Add(Provider.CreateParameter(null, obj));
+                    }
+                }
+
+                EntityDescription entityDescription = LookUpEntityByType(typeof(TResult));
+                EntityCache cache = GetEntityCache(typeof(TResult));
+                EntityInflator inflator = entityDescription.Inflator;
+
+                lock (_persistentConnectionSyncLock)
+                {
+                    DbConnection conn = OpenConnection();
+                    try
+                    {
+                        command.Connection = conn;
+                        using (DbDataReader reader = command.ExecuteReader())
+                        {
+
+                            inflator.CheckOrdinals(reader);
+                            while (reader.Read())
+                            {
+                                Object entity = null;
+                                try
+                                {
+                                    object key = inflator.ReadPrimaryKey(reader);
+                                    if (key != null && cache.ContainsKey(key))
+                                    {
+                                        entity = cache[key];
+                                    }
+                                    else
+                                    {
+                                        entity = inflator.CreateInstanceOfEntity();
+                                        if (key != null)
+                                        {
+                                            cache.Add(key, entity);
+                                        }
+                                        if (entity is IDataObject)
+                                        {
+                                            ((IDataObject)entity).DAL = this;
+                                        }
+                                    }
+
+                                    inflator.ReadData(reader, entity);
+                                }
+                                catch (Exception e)
+                                {
+                                    throw this.ThrowExceptionHelper(conn, command, e);
+                                }
+
+                                yield return (TResult)entity;
+                            }
+                        }
+                    }
+                    finally
+                    {
+                        ReleaseConnection();
+                    }
+                }
+            }
+        }
+
+        //protected IEnumerable<TResult> Read<TResult>(DbCommand command)
+        //{
+        //    EntityDescription entityDescription = LookUpEntityByType(typeof(TResult));
+        //    EntityCache cache = GetEntityCache(typeof(TResult));
+        //    EntityInflator inflator = entityDescription.Inflator;
+
+        //    lock (_persistentConnectionSyncLock)
+        //    {
+        //        DbConnection conn = OpenConnection();
+        //        try
+        //        {
+        //            command.Connection = conn;
+        //            using (DbDataReader reader = command.ExecuteReader())
+        //            {
+
+        //                inflator.CheckOrdinals(reader);
+        //                while (reader.Read())
+        //                {
+        //                    Object entity = null;
+        //                    try
+        //                    {
+        //                        object key = inflator.ReadPrimaryKey(reader);
+        //                        if (key != null && cache.ContainsKey(key))
+        //                        {
+        //                            entity = cache[key];
+        //                        }
+        //                        else
+        //                        {
+        //                            entity = inflator.CreateInstanceOfEntity();
+        //                            if (key != null)
+        //                            {
+        //                                cache.Add(key, entity);
+        //                            }
+        //                            if (entity is IDataObject)
+        //                            {
+        //                                ((IDataObject)entity).DAL = this;
+        //                            }
+        //                        }
+
+        //                        inflator.ReadData(reader, entity);
+        //                    }
+        //                    catch (Exception e)
+        //                    {
+        //                        throw this.ThrowExceptionHelper(conn, command, e);
+        //                    }
+
+        //                    yield return (TResult)entity;
+        //                }
+        //            }
+        //        }
+        //        finally
+        //        {
+        //            ReleaseConnection();
+        //        }
+        //    }
+
+        //}
+
         protected List<T> Read<T>(DbCommand command, EntityDescription entityDescription)
             where T : new()
         {
@@ -277,41 +420,41 @@ namespace FMSC.ORM.Core
             EntityCache cache = GetEntityCache(typeof(T));
             EntityInflator inflator = entityDescription.Inflator;
 
-            DbDataReader reader = null;
             lock (_persistentConnectionSyncLock)
             {
                 DbConnection conn = OpenConnection();
                 try
                 {
-
                     command.Connection = conn;
-                    reader = command.ExecuteReader();
-
-                    inflator.CheckOrdinals(reader);
-                    while (reader.Read())
+                    using (DbDataReader reader = command.ExecuteReader())
                     {
-                        Object entity = null;
-                        object key = inflator.ReadPrimaryKey(reader);
-                        if (key != null && cache.ContainsKey(key))
-                        {
-                            entity = cache[key];
-                        }
-                        else
-                        {
-                            entity = inflator.CreateInstanceOfEntity();
-                            if (key != null)
-                            {
-                                cache.Add(key, entity);
-                            }
-                            if (entity is IDataObject)
-                            {
-                                ((IDataObject)entity).DAL = this;
-                            }
-                        }
 
-                        inflator.ReadData(reader, entity);
+                        inflator.CheckOrdinals(reader);
+                        while (reader.Read())
+                        {
+                            Object entity = null;
+                            object key = inflator.ReadPrimaryKey(reader);
+                            if (key != null && cache.ContainsKey(key))
+                            {
+                                entity = cache[key];
+                            }
+                            else
+                            {
+                                entity = inflator.CreateInstanceOfEntity();
+                                if (key != null)
+                                {
+                                    cache.Add(key, entity);
+                                }
+                                if (entity is IDataObject)
+                                {
+                                    ((IDataObject)entity).DAL = this;
+                                }
+                            }
 
-                        doList.Add((T)entity);
+                            inflator.ReadData(reader, entity);
+
+                            doList.Add((T)entity);
+                        }
                     }
                 }
 
@@ -321,7 +464,6 @@ namespace FMSC.ORM.Core
                 }
                 finally
                 {
-                    if (reader != null) { reader.Dispose(); }
                     ReleaseConnection();
                 }
                 return doList;
@@ -529,6 +671,98 @@ namespace FMSC.ORM.Core
             }
 
         }
+
+        internal IEnumerable<TResult> Query<TResult>(SQLSelectBuilder selectBuilder, params Object[] selectionArgs)
+        {
+
+            using (DbCommand command = Provider.CreateCommand())
+            {
+                command.CommandText = selectBuilder.ToSQL() + ";";
+
+                //Add selection Arguments to command parameter list
+                if (selectionArgs != null)
+                {
+                    foreach (object obj in selectionArgs)
+                    {
+                        command.Parameters.Add(Provider.CreateParameter(null, obj));
+                    }
+                }
+
+                EntityDescription entityDescription = LookUpEntityByType(typeof(TResult));
+                EntityInflator inflator = entityDescription.Inflator;
+
+                lock (_persistentConnectionSyncLock)
+                {
+                    DbConnection conn = OpenConnection();
+                    try
+                    {
+                        command.Connection = conn;
+                        using (DbDataReader reader = command.ExecuteReader())
+                        {
+                            inflator.CheckOrdinals(reader);
+
+                            while (reader.Read())
+                            {
+                                Object newDO = inflator.CreateInstanceOfEntity();
+                                try
+                                {
+                                    inflator.ReadData(reader, newDO);
+                                }
+                                catch (Exception e)
+                                {
+                                    throw this.ThrowExceptionHelper(conn, command, e);
+                                }
+                                yield return (TResult)newDO;
+                            }
+                        }
+
+                    }
+                    finally
+                    {
+                        ReleaseConnection();
+                    }
+                }
+
+            }
+        }
+
+        //protected IEnumerable<TResult> Query<TResult>(DbCommand command)
+        //{
+        //    EntityDescription entityDescription = LookUpEntityByType(typeof(TResult));
+        //    EntityInflator inflator = entityDescription.Inflator;
+
+        //    lock (_persistentConnectionSyncLock)
+        //    {
+        //        DbConnection conn = OpenConnection();
+        //        try
+        //        {
+        //            command.Connection = conn;
+        //            using (DbDataReader reader = command.ExecuteReader())
+        //            {
+        //                inflator.CheckOrdinals(reader);
+
+        //                while (reader.Read())
+        //                {
+        //                    Object newDO = inflator.CreateInstanceOfEntity();
+        //                    try
+        //                    {
+        //                        inflator.ReadData(reader, newDO);
+        //                    }
+        //                    catch (Exception e)
+        //                    {
+        //                        throw this.ThrowExceptionHelper(conn, command, e);
+        //                    }
+        //                    yield return (TResult)newDO;
+        //                }
+        //            }
+
+        //        }
+        //        finally
+        //        {
+        //            ReleaseConnection();
+        //        }
+        //    }
+        //}
 
         protected List<T> Query<T>(DbCommand command, EntityDescription entityDescription)
             where T : new()

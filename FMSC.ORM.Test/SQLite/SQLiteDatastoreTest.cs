@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Timers;
 using Xunit;
 using Xunit.Abstractions;
 
@@ -244,17 +245,52 @@ namespace FMSC.ORM.SQLite
         [Fact]
         public void QueryTest()
         {
+            int recordsToCreate = 1000;
             using (var ds = _fixture.WorkingDatastore)
             {
-                var setup = "DELETE FROM MultiPropTable; "
-                            + "INSERT INTO MultiPropTable (IntField) VALUES (1);"
-                            + "INSERT INTO MultiPropTable (IntField) VALUES (2);";
-                ds.Execute(setup);
+                
+                ds.Execute("DELETE FROM MultiPropTable;\r\n");
+                ds.BeginTransaction();
+                for (int i = 1; i <= recordsToCreate; i++)
+                {
+                    ds.Execute(string.Format(" INSERT INTO MultiPropTable (IntField) VALUES ({0});\r\n", i));
+                }
+                ds.CommitTransaction();
 
-                Assert.Equal(2, ds.GetRowCount("MultiPropTable", null));
+                //ds.Execute(setup.ToString());
 
+                Assert.Equal(recordsToCreate, ds.GetRowCount("MultiPropTable", null));
+
+                StartTimer();
                 var result = ds.Query<POCOMultiTypeObject>((WhereClause)null);
-                Assert.Equal(2, result.Count);
+                EndTimer();
+                Assert.Equal(recordsToCreate, result.Count);
+            }
+        }
+
+        [Fact]
+        public void FluentInterfaceTest()
+        {
+            int recordsToCreate = 1000;
+
+            using (var ds = _fixture.WorkingDatastore)
+            {
+                ds.Execute("DELETE FROM MultiPropTable;\r\n");
+                ds.BeginTransaction();
+                for (int i = 1; i <= recordsToCreate; i++)
+                {
+                    ds.Execute(string.Format(" INSERT INTO MultiPropTable (IntField) VALUES ({0});\r\n", i));
+                }
+                ds.CommitTransaction();
+
+                Assert.Equal(recordsToCreate, ds.GetRowCount("MultiPropTable", null));
+
+                StartTimer();
+                var result = ds.From<POCOMultiTypeObject>().Limit(5000, 0).Query().ToList();
+                EndTimer();
+
+                Assert.NotEmpty(result);
+                Assert.Equal(recordsToCreate, result.Count);
             }
         }
 

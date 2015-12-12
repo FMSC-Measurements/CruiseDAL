@@ -91,19 +91,19 @@ namespace FMSC.ORM.Core.SQL
 
         public void Accept(WhereClause whereClause)
         {
-            whereClause.Accept(this);
+            whereClause.Accept(null);
             this.Clause = whereClause;
         }
 
         public void Accept(GroupByClause groupByClause)
         {
-            groupByClause.Accept((SelectElement)this.Clause ?? this);
+            groupByClause.Accept((SelectElement)this.Clause);
             this.Clause = groupByClause;
         }
 
         public void Accept(LimitClause limitClause)
         {
-            limitClause.Accept((SelectElement)this.Clause ?? this);
+            limitClause.Accept((SelectElement)this.Clause);
             this.Clause = limitClause;
         }
     }

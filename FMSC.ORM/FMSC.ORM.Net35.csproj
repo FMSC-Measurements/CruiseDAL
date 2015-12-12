@@ -85,7 +85,8 @@
     <Compile Include="Core\SQL\LimitClause.cs" />
     <Compile Include="Core\SQL\OnConflictOption.cs" />
     <Compile Include="Core\SQL\OrderByClause.cs" />
-    <Compile Include="Core\SQL\QueryBuilder.cs" />
+    <Compile Include="Core\SQL\QueryBuilder\QueryBuilder.cs" />
+    <Compile Include="Core\SQL\QueryBuilder\QueryInterfaces.cs" />
     <Compile Include="Core\SQL\ResultColumnCollection.cs" />
     <Compile Include="Core\SQL\SelectClause.cs" />
     <Compile Include="Core\SQL\SelectSource.cs" />
