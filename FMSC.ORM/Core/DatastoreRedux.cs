@@ -21,6 +21,8 @@ namespace FMSC.ORM.Core
 
         int _transactionHold = 0;
         protected int _holdConnection = 0;
+        protected int _transactionDepth = 0;
+        protected bool _transactionCanceled = false;
 
         //protected Object _readOnlyConnectionSyncLock = new object();
         //protected Object _readWriteConnectionSyncLock = new object();
@@ -213,7 +215,7 @@ namespace FMSC.ORM.Core
             }
         }
 
-        public void Save<T>(T data, SQL.OnConflictOption option) where T : IPersistanceTracking
+        public void Save(IPersistanceTracking data, SQL.OnConflictOption option)
         {
             if (data.HasChanges == false) { return; }
             if (!data.IsPersisted)
@@ -221,7 +223,7 @@ namespace FMSC.ORM.Core
                 object primaryKey = Insert(data, option);
                 if (primaryKey != null)
                 {
-                    EntityCache cache = GetEntityCache(typeof(T));
+                    EntityCache cache = GetEntityCache(data.GetType());
 
                     Debug.Assert(cache.ContainsKey(primaryKey) == false);
                     cache.Add(primaryKey, data);
@@ -1083,20 +1085,21 @@ namespace FMSC.ORM.Core
         {
             lock (TransactionSyncLock)
             {
-                if (_CurrentTransaction != null)
+                _transactionDepth++;
+                if (_transactionDepth == 1)
                 {
-                    throw new InvalidOperationException("one transaction at a time");
-                }
+                    Debug.Assert(_CurrentTransaction == null);
 
-                
-                DbConnection connection = OpenConnection();
-                _CurrentTransaction = connection.BeginTransaction();
-                this.EnterConnectionHold();
-                OnTransactionStarted();
+                    DbConnection connection = OpenConnection();
+                    _CurrentTransaction = connection.BeginTransaction();
+
+                    _transactionCanceled = false;
+
+                    this.EnterConnectionHold();
+                    OnTransactionStarted();
+                }
             }
         }
-
-        
 
         [Obsolete("use CommitTransaction")]
         public void EndTransaction()
@@ -1109,16 +1112,24 @@ namespace FMSC.ORM.Core
             lock (TransactionSyncLock)
             {
                 OnTransactionEnding();
-                if (_CurrentTransaction == null)
+
+                _transactionDepth--;
+                if (_transactionDepth == 0)
                 {
-                    throw new InvalidOperationException("no active transaction");
+                    ReleaseTransaction();
                 }
-                
-                _CurrentTransaction.Commit();
-                _CurrentTransaction.Dispose();
-                _CurrentTransaction = null;
-                ExitConnectionHold();
-                ReleaseConnection();
+
+
+                //if (_CurrentTransaction == null)
+                //{
+                //    throw new InvalidOperationException("no active transaction");
+                //}
+
+                //_CurrentTransaction.Commit();
+                //_CurrentTransaction.Dispose();
+                //_CurrentTransaction = null;
+                //ExitConnectionHold();
+                //ReleaseConnection();
             }
         }
 
@@ -1133,17 +1144,44 @@ namespace FMSC.ORM.Core
             lock (TransactionSyncLock)
             {
                 OnTransactionCanceling();
-                if (_CurrentTransaction == null)
+                _transactionCanceled = true;
+                _transactionDepth--;
+                if (_transactionDepth == 0)
                 {
-                    throw new InvalidOperationException("no active transaction");
+                    ReleaseTransaction();
                 }
 
-                _CurrentTransaction.Rollback();
-                _CurrentTransaction.Dispose();
-                _CurrentTransaction = null;
-                ExitConnectionHold();
-                ReleaseConnection();
+
+                //if (_CurrentTransaction == null)
+                //{
+                //    throw new InvalidOperationException("no active transaction");
+                //}
+
+                //_CurrentTransaction.Rollback();
+                //_CurrentTransaction.Dispose();
+                //_CurrentTransaction = null;
+                //ExitConnectionHold();
+                //ReleaseConnection();
             }
+        }
+
+        private void ReleaseTransaction()
+        {
+            OnTransactionReleasing();
+
+            if (_transactionCanceled)
+            {
+                _CurrentTransaction.Rollback();
+            }
+            else
+            {
+                _CurrentTransaction.Commit();
+            }
+
+            _CurrentTransaction.Dispose();
+            _CurrentTransaction = null;
+            ExitConnectionHold();
+            ReleaseConnection();
         }
         #endregion
 
@@ -1483,6 +1521,11 @@ namespace FMSC.ORM.Core
         protected virtual void OnTransactionCanceling()
         {
             Debug.WriteLine("Transaction Canceling", Constants.Logging.DB_CONTROL);
+        }
+
+        protected virtual void OnTransactionReleasing()
+        {
+            Debug.WriteLine("Transaction Releasing", Constants.Logging.DB_CONTROL);
         }
         #endregion
 
