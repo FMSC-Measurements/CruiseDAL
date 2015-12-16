@@ -146,9 +146,11 @@ namespace CruiseDAL.DataObjects
         public static void RecursiveDeleteStratum(StratumDO stratum)
         {
             DatastoreRedux db = stratum.DAL;
+
+            db.BeginTransaction();
             try
             {
-                db.BeginTransaction();
+                
                 string command =
             String.Format(@"DELETE From CuttingUnitStratum WHERE Stratum_CN = {0};
 DELETE FROM Log WHERE Tree_CN IN (SELECT Tree_CN FROM Tree WHERE Tree.Stratum_CN = {0});

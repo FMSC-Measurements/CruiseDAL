@@ -55,9 +55,9 @@ namespace CruiseDAL.DataObjects
                 List<TreeCalculatedValuesDO> tcvList = db.Read<TreeCalculatedValuesDO>("WHERE Tree_CN = ?", this.Tree_CN);
                 List<LogStockDO> lsList = db.Read<LogStockDO>("WHERE Tree_CN = ?", this.Tree_CN);
 
+                db.BeginTransaction();
                 try
                 {
-                    db.BeginTransaction();
                     foreach (LogDO l in logs)
                     {
                         l.Delete();
@@ -73,10 +73,10 @@ namespace CruiseDAL.DataObjects
                     base.Delete();
                     db.CommitTransaction();
                 }
-                catch (Exception e)
+                catch (Exception)
                 {
                     db.RollbackTransaction();
-                    throw e;
+                    throw;
                 }
             }
         }

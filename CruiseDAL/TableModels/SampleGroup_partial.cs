@@ -70,9 +70,11 @@ namespace CruiseDAL.DataObjects
         {
             var db = sg.DAL;
             if (db == null) { return; }
+
+            db.BeginTransaction();
             try
             {
-                db.BeginTransaction();
+                
                 string command = String.Format(@"
             DELETE FROM Log WHERE Tree_CN IN (SELECT Tree_CN FROM Tree WHERE Tree.SampleGroup_CN = {0});
             DELETE FROM LogStock WHERE Tree_CN IN (SELECT Tree_CN FROM Tree WHERE Tree.SampleGroup_CN = {0});

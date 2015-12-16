@@ -71,9 +71,10 @@ DELETE FROM Tree WHERE CuttingUnit_CN = {0};
 DELETE FROM Plot WHERE CuttingUnit_CN = {0};
 DELETE FROM CountTree WHERE CuttingUnit_CN = {0};";
 
+            dal.BeginTransaction();
             try
             {
-                dal.BeginTransaction();
+                
                 dal.Execute(String.Format(commandFormat, unit.CuttingUnit_CN));
                 unit.Delete();
 
