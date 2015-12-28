@@ -40,6 +40,15 @@ ICollection<Table> TableList = dr.AllTables.Values;
 		{	
 
 #>
+CREATE TRIGGER OnInserted<#= table.Name#>
+AFTER INSERT 
+ON <#= table.Name #>
+BEGIN
+	UPDATE <#= table.Name #> 
+	SET CreatedDate = datetime(current_timestamp, 'localtime') 
+	WHERE rowID = new.rowID; 
+END; 
+ 
 CREATE TRIGGER OnUpdate<#= table.Name#> 
 AFTER UPDATE OF <#= table.ListTrackedFields() #> 
 ON <#= table.Name #> 
