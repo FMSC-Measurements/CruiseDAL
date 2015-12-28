@@ -217,16 +217,21 @@ namespace FMSC.ORM.Core
 
         public void Save(IPersistanceTracking data, SQL.OnConflictOption option)
         {
+            Save(data, option, true);
+        }
+
+        public void Save(IPersistanceTracking data, SQL.OnConflictOption option, bool cache)
+        {
             if (data.HasChanges == false) { return; }
             if (!data.IsPersisted)
             {
                 object primaryKey = Insert(data, option);
-                if (primaryKey != null)
+                if (cache && primaryKey != null)
                 {
-                    EntityCache cache = GetEntityCache(data.GetType());
+                    EntityCache cacheStore = GetEntityCache(data.GetType());
 
-                    Debug.Assert(cache.ContainsKey(primaryKey) == false);
-                    cache.Add(primaryKey, data);
+                    Debug.Assert(cacheStore.ContainsKey(primaryKey) == false);
+                    cacheStore.Add(primaryKey, data);
                 }
             }
             else
@@ -706,6 +711,10 @@ namespace FMSC.ORM.Core
                             while (reader.Read())
                             {
                                 Object newDO = inflator.CreateInstanceOfEntity();
+                                if (newDO is IDataObject)
+                                {
+                                    ((IDataObject)newDO).DAL = this;
+                                }
                                 try
                                 {
                                     inflator.ReadData(reader, newDO);
@@ -784,6 +793,10 @@ namespace FMSC.ORM.Core
                     while (reader.Read())
                     {
                         Object newDO = inflator.CreateInstanceOfEntity();
+                        if (newDO is IDataObject)
+                        {
+                            ((IDataObject)newDO).DAL = this;
+                        }
                         inflator.ReadData(reader, newDO);
                         dataList.Add((T)newDO);
                     }
@@ -860,6 +873,10 @@ namespace FMSC.ORM.Core
                     if (reader.Read())
                     {
                         newDO = inflator.CreateInstanceOfEntity();
+                        if (newDO is IDataObject)
+                        {
+                            ((IDataObject)newDO).DAL = this;
+                        }
                         inflator.ReadData(reader, newDO);
                     }
                 }
