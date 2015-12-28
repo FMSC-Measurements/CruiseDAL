@@ -53,6 +53,7 @@
     <Compile Include="Core\EntityAttributes\BaseFieldAttribute.cs" />
     <Compile Include="Core\EntityAttributes\FieldAccesabilityException.cs" />
     <Compile Include="Core\EntityAttributes\IgnoreFieldAttribute.cs" />
+    <Compile Include="Core\PlatformHelper.cs" />
     <Compile Include="Core\SQL\GroupByClause.cs" />
     <Compile Include="Core\SQL\Interfaces\IAcceptsGroupBy.cs" />
     <Compile Include="Core\SQL\Interfaces\IAcceptsJoin.cs" />
@@ -60,8 +61,9 @@
     <Compile Include="Core\SQL\Interfaces\IAcceptsWhere.cs" />
     <Compile Include="Core\SQL\ISelectComponent.cs" />
     <Compile Include="Core\SQL\LimitClause.cs" />
-    <Compile Include="Core\SQL\QueryBuilder.cs" />
+    <Compile Include="Core\SQL\QueryBuilder\QueryBuilder.cs" />
     <Compile Include="Core\SQL\Interfaces\SelectElement.cs" />
+    <Compile Include="Core\SQL\QueryBuilder\QueryInterfaces.cs" />
     <Compile Include="Core\SQL\SelectSource.cs" />
     <Compile Include="Core\SQL\JoinClause.cs" />
     <Compile Include="Core\SQL\OrderByClause.cs" />

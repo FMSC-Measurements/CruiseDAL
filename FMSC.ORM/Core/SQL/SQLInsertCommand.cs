@@ -2,9 +2,6 @@
 using System.Collections.Generic;
 using System.Text;
 
-#if NetCF
-using FMSC.ORM.NetCF;
-#endif
 
 namespace FMSC.ORM.Core.SQL
 {

@@ -7,9 +7,6 @@ using FMSC.ORM.Core.SQL;
 using FMSC.ORM.Core.EntityAttributes;
 using System.Text;
 
-#if NetCF
-using FMSC.ORM.NetCF;
-#endif
 
 namespace FMSC.ORM.Core.EntityModel
 {
@@ -32,7 +29,7 @@ namespace FMSC.ORM.Core.EntityModel
         {
             EntityDescription = entDesc;
 
-            InitializeSelectCommand();
+            _selectCommand = MakeSelectCommand();
             InitializeLegacySelectCommand();
 
             if (EntityDescription.Fields.PrimaryKeyField != null)
@@ -57,7 +54,7 @@ namespace FMSC.ORM.Core.EntityModel
 
         }
 
-        protected void InitializeSelectCommand()
+        public SQLSelectBuilder MakeSelectCommand()
         {
             SQLSelectBuilder selectBuilder = new SQLSelectBuilder();
             selectBuilder.Source = new TableOrSubQuery(EntityDescription.SourceName, null);
@@ -66,14 +63,12 @@ namespace FMSC.ORM.Core.EntityModel
             List<FieldAttribute> fields = new List<FieldAttribute>(EntityDescription.Fields);
             fields.Sort(CompareFieldsByOrdinal);
 
-            var columns = new ResultColumnCollection();
             foreach(FieldAttribute field in fields)
             {
-                columns.Add(field.GetResultColumnExpression(EntityDescription.SourceName));
+                selectBuilder.ResultColumns.Add(field.GetResultColumnExpression(EntityDescription.SourceName));
             }
 
-            selectBuilder.ResultColumns = columns;
-            _selectCommand = selectBuilder;
+            return selectBuilder;
         }
 
         public DbCommand BuildSelectLegacy(DbProviderFactoryAdapter provider, string selection)

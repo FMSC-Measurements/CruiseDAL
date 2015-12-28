@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace FMSC.ORM.Core.SQL
 {
@@ -19,7 +17,7 @@ namespace FMSC.ORM.Core.SQL
         {
             if(string.IsNullOrEmpty(term))
             {
-                throw new ArgumentException("Cant be null or empty", "term", null);
+                throw new ArgumentException("Cant be null or empty", "term");
             }
             OrderingTerms.Add(term);
         }

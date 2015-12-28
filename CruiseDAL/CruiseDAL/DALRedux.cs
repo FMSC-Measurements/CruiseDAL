@@ -22,9 +22,9 @@ namespace CruiseDAL
         private string _databaseVersion = "Unknown";
         private CruiseFileType _cruiseFileType;
 
-        protected object _multiDatabaseConnectionSyncLock = new Object();
-        protected DbConnection _multiDatabaseConnection;
-        protected int _holdMultiDatabaseConnection;
+        //protected object _multiDatabaseConnectionSyncLock = new Object();
+        //protected DbConnection _multiDatabaseConnection;
+        //protected int _holdMultiDatabaseConnection;
 
         /// <summary>
         /// represents value returned by PRAGMA user_version;  
@@ -246,8 +246,8 @@ namespace CruiseDAL
 
         public DAL CopyTo(string destPath, bool overwrite)
         {
-
-            ReleaseAllConnections(true);
+            ReleaseConnection();
+            //ReleaseMultiDatabaseConnection(true);
 
             System.IO.File.Copy(this.Path, destPath, overwrite);
             //_DBFileInfo.CopyTo(destPath, overwrite);
@@ -258,165 +258,160 @@ namespace CruiseDAL
 
         
 
-        /// <summary>
-        /// Copies selection directly from external Database
-        /// </summary>
-        /// <param name="fileName">Path to external file</param>
-        /// <param name="table"></param>
-        /// <param name="selection"></param>
-        /// <param name="selectionArgs"></param>
-        public void DirectCopy(String fileName, String table, String selection, params Object[] selectionArgs)
-        {
-            DirectCopy(new DAL(fileName), table, selection, OnConflictOption.Abort, selectionArgs);
-        }
+        ///// <summary>
+        ///// Copies selection directly from external Database
+        ///// </summary>
+        ///// <param name="fileName">Path to external file</param>
+        ///// <param name="table"></param>
+        ///// <param name="selection"></param>
+        ///// <param name="selectionArgs"></param>
+        //public void DirectCopy(String fileName, String table, String selection, params Object[] selectionArgs)
+        //{
+        //    DirectCopy(new DAL(fileName), table, selection, OnConflictOption.Abort, selectionArgs);
+        //}
 
-        /// <summary>
-        /// Copies selection directly from external Database
-        /// </summary>
-        /// <param name="fileName">Path to external file</param>
-        /// <param name="table"></param>
-        /// <param name="selection"></param>
-        /// <param name="selectionArgs"></param>
-        public void DirectCopy(String fileName, String table, String selection, OnConflictOption option, params Object[] selectionArgs)
-        {
-            DirectCopy(new DAL(fileName), table, selection, option, selectionArgs);
-        }
+        ///// <summary>
+        ///// Copies selection directly from external Database
+        ///// </summary>
+        ///// <param name="fileName">Path to external file</param>
+        ///// <param name="table"></param>
+        ///// <param name="selection"></param>
+        ///// <param name="selectionArgs"></param>
+        //public void DirectCopy(String fileName, String table, String selection, OnConflictOption option, params Object[] selectionArgs)
+        //{
+        //    DirectCopy(new DAL(fileName), table, selection, option, selectionArgs);
+        //}
 
-        /// <summary>
-        /// Copies selection directly FROM external database
-        /// </summary>
-        /// <param name="dataBase">external database</param>
-        /// <param name="table"></param>
-        /// <param name="selection"></param>
-        /// <param name="selectionArgs"></param>
-        public void DirectCopy(DAL dataBase, string table, String selection, OnConflictOption option, params Object[] selectionArgs)
-        {
-            if (dataBase.Exists == false) { return; }
+        ///// <summary>
+        ///// Copies selection directly FROM external database
+        ///// </summary>
+        ///// <param name="dataBase">external database</param>
+        ///// <param name="table"></param>
+        ///// <param name="selection"></param>
+        ///// <param name="selectionArgs"></param>
+        //public void DirectCopy(DAL dataBase, string table, String selection, OnConflictOption option, params Object[] selectionArgs)
+        //{
+        //    if (dataBase.Exists == false) { return; }
 
 
 
-            string cOpt = option.ToString().ToUpper();
-            string copy = String.Format("INSERT OR {2} INTO {0} SELECT * FROM destDB.{0} {1};", table, selection, cOpt);
+        //    string cOpt = option.ToString().ToUpper();
+        //    string copy = String.Format("INSERT OR {2} INTO {0} SELECT * FROM destDB.{0} {1};", table, selection, cOpt);
 
-            this.AttachDB(dataBase, "destDB");
-            try
-            {
-                this.Execute(copy);
-            }
-            finally
-            {
-                this.DetachDB("destDB");
-            }
+        //    this.AttachDB(dataBase, "destDB");
+        //    try
+        //    {
+        //        this.Execute(copy);
+        //    }
+        //    finally
+        //    {
+        //        this.DetachDB("destDB");
+        //    }
 
-        }
+        //}
 
-        public void AttachDB(DAL externalDB, string externalDBAlias)
-        {
-            lock (_multiDatabaseConnectionSyncLock)
-            {
-                try
-                {
-                    OpenMultiDatabaseConnection(true);
-                    this.Execute("ATTACH DATABASE ? AS ?;", externalDB.Path, externalDBAlias);
-                }
-                catch
-                {
-                    ReleaseMultiDatabaseConnection(true);
-                    throw;
-                }
-            }
-        }
+        //public void AttachDB(DAL externalDB, string externalDBAlias)
+        //{
+        //    lock (_multiDatabaseConnectionSyncLock)
+        //    {
+        //        try
+        //        {
+        //            OpenMultiDatabaseConnection(true);
+        //            this.Execute("ATTACH DATABASE ? AS ?;", externalDB.Path, externalDBAlias);
+        //        }
+        //        catch
+        //        {
+        //            ReleaseMultiDatabaseConnection(true);
+        //            throw;
+        //        }
+        //    }
+        //}
 
-        public void DetachDB(string externalDBAlias)
-        {
-            try
-            {
-                string detach = string.Format("DETACH DATABASE {0};", externalDBAlias);
-                this.Execute(detach);
-            }
-            finally
-            {
-                this.ReleaseMultiDatabaseConnection(false);
-            }
-        }
+        //public void DetachDB(string externalDBAlias)
+        //{
+        //    try
+        //    {
+        //        string detach = string.Format("DETACH DATABASE {0};", externalDBAlias);
+        //        this.Execute(detach);
+        //    }
+        //    finally
+        //    {
+        //        this.ReleaseMultiDatabaseConnection(false);
+        //    }
+        //}
 
-        protected void EnterMultiDatabaseConnectionHold()
-        {
-            System.Threading.Interlocked.Increment(ref this._holdMultiDatabaseConnection);
-        }
+        //protected void EnterMultiDatabaseConnectionHold()
+        //{
+        //    System.Threading.Interlocked.Increment(ref this._holdMultiDatabaseConnection);
+        //}
 
-        protected void ExitMultiDatabaseConnectionHold()
-        {
-            if (this._holdMultiDatabaseConnection > 0)
-            {
-                System.Threading.Interlocked.Decrement(ref this._holdMultiDatabaseConnection);
-            }
-        }
+        //protected void ExitMultiDatabaseConnectionHold()
+        //{
+        //    if (this._holdMultiDatabaseConnection > 0)
+        //    {
+        //        System.Threading.Interlocked.Decrement(ref this._holdMultiDatabaseConnection);
+        //    }
+        //}
 
-        protected DbConnection OpenMultiDatabaseConnection(bool retry)
-        {
-            lock(_multiDatabaseConnectionSyncLock)
-            {
-                DbConnection conn;
-                if (_multiDatabaseConnection == null)
-                {
-                    _multiDatabaseConnection = CreateReadWriteConnection();
-                }
-                conn = _multiDatabaseConnection;
+        //protected DbConnection OpenMultiDatabaseConnection(bool retry)
+        //{
+        //    lock(_multiDatabaseConnectionSyncLock)
+        //    {
+        //        DbConnection conn;
+        //        if (_multiDatabaseConnection == null)
+        //        {
+        //            _multiDatabaseConnection = CreateConnection();
+        //        }
+        //        conn = _multiDatabaseConnection;
 
-                try
-                {
-                    if (conn.State != System.Data.ConnectionState.Open)
-                    {
-                        conn.Open();
-                    }
-                    EnterMultiDatabaseConnectionHold();
-                    return conn;
-                }
-                catch (Exception e)
-                {
-                    if (!retry)
-                    {
-                        var newEx = new ConnectionException(null, e);
-                        newEx.AddConnectionInfo(conn);
-                        throw newEx;
-                    }
-                    else
-                    {
-                        conn.Dispose();
-                        _multiDatabaseConnection = null;
-                        Thread.Sleep(100);
-                        return OpenMultiDatabaseConnection(false);
-                    }
-                }
-            }
-        }
+        //        try
+        //        {
+        //            if (conn.State != System.Data.ConnectionState.Open)
+        //            {
+        //                conn.Open();
+        //            }
+        //            EnterMultiDatabaseConnectionHold();
+        //            return conn;
+        //        }
+        //        catch (Exception e)
+        //        {
+        //            if (!retry)
+        //            {
+        //                var newEx = new ConnectionException(null, e);
+        //                newEx.AddConnectionInfo(conn);
+        //                throw newEx;
+        //            }
+        //            else
+        //            {
+        //                conn.Dispose();
+        //                _multiDatabaseConnection = null;
+        //                Thread.Sleep(100);
+        //                return OpenMultiDatabaseConnection(false);
+        //            }
+        //        }
+        //    }
+        //}
 
-        protected void ReleaseMultiDatabaseConnection(bool force)
-        {
-            lock(_multiDatabaseConnectionSyncLock)
-            {
-                Debug.Assert(_multiDatabaseConnection != null);
-                ExitMultiDatabaseConnectionHold();
-                if(_multiDatabaseConnection == null) { return; }
-                if (_holdMultiDatabaseConnection == 0 || force)
-                {
-                    ReleaseConnection(_multiDatabaseConnection);
-                    _multiDatabaseConnection = null;
-                    Debug.WriteLine("Multi Database Connection Released", FMSC.ORM.Core.Constants.Logging.DB_CONTROL_VERBOSE);
-                }
-                else
-                {
-                    Debug.WriteLine("Multi Database Connection Survived", FMSC.ORM.Core.Constants.Logging.DB_CONTROL_VERBOSE);
-                }
-            }
-        }
+        //protected void ReleaseMultiDatabaseConnection(bool force)
+        //{
+        //    lock(_multiDatabaseConnectionSyncLock)
+        //    {
+        //        Debug.Assert(_multiDatabaseConnection != null);
+        //        ExitMultiDatabaseConnectionHold();
+        //        if(_multiDatabaseConnection == null) { return; }
+        //        if (_holdMultiDatabaseConnection == 0 || force)
+        //        {
+        //            ReleaseConnection(_multiDatabaseConnection);
+        //            _multiDatabaseConnection = null;
+        //            Debug.WriteLine("Multi Database Connection Released", FMSC.ORM.Core.Constants.Logging.DB_CONTROL_VERBOSE);
+        //        }
+        //        else
+        //        {
+        //            Debug.WriteLine("Multi Database Connection Survived", FMSC.ORM.Core.Constants.Logging.DB_CONTROL_VERBOSE);
+        //        }
+        //    }
+        //}
 
-        public override void ReleaseAllConnections(bool force)
-        {
-            base.ReleaseAllConnections(force);
-            ReleaseMultiDatabaseConnection(force);
-        }
 
         #region not implemented 
         public void ChangeRowID(DataObject data, long newRowID, OnConflictOption option)
@@ -504,6 +499,7 @@ namespace CruiseDAL
 
             }
 
+            //ReleaseMultiDatabaseConnection(true);
             releaseAccessControl();
 
             _disposed = true;
