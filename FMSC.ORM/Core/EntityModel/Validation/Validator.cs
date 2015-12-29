@@ -88,6 +88,9 @@ namespace FMSC.ORM.Core.EntityModel
 
     public class FieldValidator : IFieldValidator
     {
+        double _min = double.MinValue;
+        double _max = double.MinValue;
+
         public FieldValidator() { }
 
         public FieldValidator(string Field, string TableName, string ErrorMessage, 
@@ -124,9 +127,16 @@ namespace FMSC.ORM.Core.EntityModel
             set;
         }
 
-        public double Min { get; set; }
-
-        public double Max { get; set; }
+        public double Min
+        {
+            get { return _min; }
+            set { _min = value; }
+        }
+        public double Max
+        {
+            get { return _max; }
+            set { _max = value; }
+        }
 
         public bool Required { get; set; }
 
@@ -147,7 +157,7 @@ namespace FMSC.ORM.Core.EntityModel
 
             if (this.Required == true && value == null) { isValid = false; }
 
-            if (isValid && this.Min != double.NaN)
+            if (isValid && this.Min != double.MinValue)
             {
                 var num = value as float?;
                 if (num != null)
@@ -155,7 +165,7 @@ namespace FMSC.ORM.Core.EntityModel
                     if (num < this.Min) { isValid = false; }
                 }
             }
-            if (isValid && this.Max != double.NaN)
+            if (isValid && this.Max != double.MinValue)
             {
                 var num = value as float?;
                 if (num != null)

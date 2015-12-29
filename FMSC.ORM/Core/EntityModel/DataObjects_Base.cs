@@ -8,6 +8,7 @@ using FMSC.ORM.Core.EntityAttributes;
 
 namespace FMSC.ORM.Core.EntityModel
 {
+    [Flags]
     public enum RecordState //make protected inside DataObject?
     {
         Persisted = 1,

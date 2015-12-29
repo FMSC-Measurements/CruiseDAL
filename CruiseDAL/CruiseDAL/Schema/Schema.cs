@@ -19,7 +19,7 @@ namespace CruiseDAL.Schema
 		public const string LOGGRADINGENABLED = "LogGradingEnabled";
 		public const string REMARKS = "Remarks";
 		public const string DEFAULTUOM = "DefaultUOM";
-		public static string[] _ALL = new string []{ SALE_CN, SALENUMBER, NAME, PURPOSE, REGION, FOREST, DISTRICT, MEASUREMENTYEAR, CALENDARYEAR, LOGGRADINGENABLED, REMARKS, DEFAULTUOM };
+		public static string[] _ALL = { SALE_CN, SALENUMBER, NAME, PURPOSE, REGION, FOREST, DISTRICT, MEASUREMENTYEAR, CALENDARYEAR, LOGGRADINGENABLED, REMARKS, DEFAULTUOM };
 		public enum SALE_FIELDS { Sale_CN, SaleNumber, Name, Purpose, Region, Forest, District, MeasurementYear, CalendarYear, LogGradingEnabled, Remarks, DefaultUOM };
 	}
 
@@ -33,7 +33,7 @@ namespace CruiseDAL.Schema
 		public const string LOGGINGMETHOD = "LoggingMethod";
 		public const string PAYMENTUNIT = "PaymentUnit";
 		public const string TALLYHISTORY = "TallyHistory";
-		public static string[] _ALL = new string []{ CUTTINGUNIT_CN, CODE, AREA, DESCRIPTION, LOGGINGMETHOD, PAYMENTUNIT, TALLYHISTORY };
+		public static string[] _ALL = { CUTTINGUNIT_CN, CODE, AREA, DESCRIPTION, LOGGINGMETHOD, PAYMENTUNIT, TALLYHISTORY };
 		public enum CUTTINGUNIT_FIELDS { CuttingUnit_CN, Code, Area, Description, LoggingMethod, PaymentUnit, TallyHistory };
 	}
 
@@ -52,7 +52,7 @@ namespace CruiseDAL.Schema
 		public const string YIELDCOMPONENT = "YieldComponent";
 		public const string MONTH = "Month";
 		public const string YEAR = "Year";
-		public static string[] _ALL = new string []{ STRATUM_CN, CODE, DESCRIPTION, METHOD, BASALAREAFACTOR, FIXEDPLOTSIZE, KZ3PPNT, HOTKEY, FBSCODE, YIELDCOMPONENT, MONTH, YEAR };
+		public static string[] _ALL = { STRATUM_CN, CODE, DESCRIPTION, METHOD, BASALAREAFACTOR, FIXEDPLOTSIZE, KZ3PPNT, HOTKEY, FBSCODE, YIELDCOMPONENT, MONTH, YEAR };
 		public enum STRATUM_FIELDS { Stratum_CN, Code, Description, Method, BasalAreaFactor, FixedPlotSize, KZ3PPNT, Hotkey, FBSCode, YieldComponent, Month, Year };
 	}
 
@@ -62,7 +62,7 @@ namespace CruiseDAL.Schema
 		public const string CUTTINGUNIT_CN = "CuttingUnit_CN";
 		public const string STRATUM_CN = "Stratum_CN";
 		public const string STRATUMAREA = "StratumArea";
-		public static string[] _ALL = new string []{ CUTTINGUNIT_CN, STRATUM_CN, STRATUMAREA };
+		public static string[] _ALL = { CUTTINGUNIT_CN, STRATUM_CN, STRATUMAREA };
 		public enum CUTTINGUNITSTRATUM_FIELDS { CuttingUnit_CN, Stratum_CN, StratumArea };
 	}
 
@@ -89,7 +89,7 @@ namespace CruiseDAL.Schema
 		public const string SAMPLESELECTORSTATE = "SampleSelectorState";
 		public const string MINKPI = "MinKPI";
 		public const string MAXKPI = "MaxKPI";
-		public static string[] _ALL = new string []{ SAMPLEGROUP_CN, STRATUM_CN, CODE, CUTLEAVE, UOM, PRIMARYPRODUCT, SECONDARYPRODUCT, BIOMASSPRODUCT, DEFAULTLIVEDEAD, SAMPLINGFREQUENCY, INSURANCEFREQUENCY, KZ, BIGBAF, SMALLFPS, TALLYMETHOD, DESCRIPTION, SAMPLESELECTORTYPE, SAMPLESELECTORSTATE, MINKPI, MAXKPI };
+		public static string[] _ALL = { SAMPLEGROUP_CN, STRATUM_CN, CODE, CUTLEAVE, UOM, PRIMARYPRODUCT, SECONDARYPRODUCT, BIOMASSPRODUCT, DEFAULTLIVEDEAD, SAMPLINGFREQUENCY, INSURANCEFREQUENCY, KZ, BIGBAF, SMALLFPS, TALLYMETHOD, DESCRIPTION, SAMPLESELECTORTYPE, SAMPLESELECTORSTATE, MINKPI, MAXKPI };
 		public enum SAMPLEGROUP_FIELDS { SampleGroup_CN, Stratum_CN, Code, CutLeave, UOM, PrimaryProduct, SecondaryProduct, BiomassProduct, DefaultLiveDead, SamplingFrequency, InsuranceFrequency, KZ, BigBAF, SmallFPS, TallyMethod, Description, SampleSelectorType, SampleSelectorState, MinKPI, MaxKPI };
 	}
 
@@ -115,7 +115,7 @@ namespace CruiseDAL.Schema
 		public const string BARKTHICKNESSRATIO = "BarkThicknessRatio";
 		public const string AVERAGEZ = "AverageZ";
 		public const string REFERENCEHEIGHTPERCENT = "ReferenceHeightPercent";
-		public static string[] _ALL = new string []{ TREEDEFAULTVALUE_CN, PRIMARYPRODUCT, SPECIES, LIVEDEAD, FIACODE, CULLPRIMARY, HIDDENPRIMARY, CULLSECONDARY, HIDDENSECONDARY, RECOVERABLE, CHARGEABLE, CONTRACTSPECIES, TREEGRADE, MERCHHEIGHTLOGLENGTH, MERCHHEIGHTTYPE, FORMCLASS, BARKTHICKNESSRATIO, AVERAGEZ, REFERENCEHEIGHTPERCENT };
+		public static string[] _ALL = { TREEDEFAULTVALUE_CN, PRIMARYPRODUCT, SPECIES, LIVEDEAD, FIACODE, CULLPRIMARY, HIDDENPRIMARY, CULLSECONDARY, HIDDENSECONDARY, RECOVERABLE, CHARGEABLE, CONTRACTSPECIES, TREEGRADE, MERCHHEIGHTLOGLENGTH, MERCHHEIGHTTYPE, FORMCLASS, BARKTHICKNESSRATIO, AVERAGEZ, REFERENCEHEIGHTPERCENT };
 		public enum TREEDEFAULTVALUE_FIELDS { TreeDefaultValue_CN, PrimaryProduct, Species, LiveDead, FIAcode, CullPrimary, HiddenPrimary, CullSecondary, HiddenSecondary, Recoverable, Chargeable, ContractSpecies, TreeGrade, MerchHeightLogLength, MerchHeightType, FormClass, BarkThicknessRatio, AverageZ, ReferenceHeightPercent };
 	}
 
@@ -124,7 +124,7 @@ namespace CruiseDAL.Schema
 		public const string _NAME = "SampleGroupTreeDefaultValue";
 		public const string TREEDEFAULTVALUE_CN = "TreeDefaultValue_CN";
 		public const string SAMPLEGROUP_CN = "SampleGroup_CN";
-		public static string[] _ALL = new string []{ TREEDEFAULTVALUE_CN, SAMPLEGROUP_CN };
+		public static string[] _ALL = { TREEDEFAULTVALUE_CN, SAMPLEGROUP_CN };
 		public enum SAMPLEGROUPTREEDEFAULTVALUE_FIELDS { TreeDefaultValue_CN, SampleGroup_CN };
 	}
 
@@ -146,7 +146,7 @@ namespace CruiseDAL.Schema
 		public const string ZCOORDINATE = "ZCoordinate";
 		public const string METADATA = "MetaData";
 		public const string BLOB = "Blob";
-		public static string[] _ALL = new string []{ PLOT_CN, PLOT_GUID, STRATUM_CN, CUTTINGUNIT_CN, PLOTNUMBER, ISEMPTY, SLOPE, KPI, ASPECT, REMARKS, XCOORDINATE, YCOORDINATE, ZCOORDINATE, METADATA, BLOB };
+		public static string[] _ALL = { PLOT_CN, PLOT_GUID, STRATUM_CN, CUTTINGUNIT_CN, PLOTNUMBER, ISEMPTY, SLOPE, KPI, ASPECT, REMARKS, XCOORDINATE, YCOORDINATE, ZCOORDINATE, METADATA, BLOB };
 		public enum PLOT_FIELDS { Plot_CN, Plot_GUID, Stratum_CN, CuttingUnit_CN, PlotNumber, IsEmpty, Slope, KPI, Aspect, Remarks, XCoordinate, YCoordinate, ZCoordinate, MetaData, Blob };
 	}
 
@@ -203,7 +203,7 @@ namespace CruiseDAL.Schema
 		public const string EXPANSIONFACTOR = "ExpansionFactor";
 		public const string TREEFACTOR = "TreeFactor";
 		public const string POINTFACTOR = "PointFactor";
-		public static string[] _ALL = new string []{ TREE_CN, TREE_GUID, TREEDEFAULTVALUE_CN, STRATUM_CN, SAMPLEGROUP_CN, CUTTINGUNIT_CN, PLOT_CN, TREENUMBER, SPECIES, COUNTORMEASURE, TREECOUNT, KPI, STM, SEENDEFECTPRIMARY, SEENDEFECTSECONDARY, RECOVERABLEPRIMARY, HIDDENPRIMARY, INITIALS, LIVEDEAD, GRADE, HEIGHTTOFIRSTLIVELIMB, POLELENGTH, CLEARFACE, CROWNRATIO, DBH, DRC, TOTALHEIGHT, MERCHHEIGHTPRIMARY, MERCHHEIGHTSECONDARY, FORMCLASS, UPPERSTEMDOB, UPPERSTEMDIAMETER, UPPERSTEMHEIGHT, DBHDOUBLEBARKTHICKNESS, TOPDIBPRIMARY, TOPDIBSECONDARY, DEFECTCODE, DIAMETERATDEFECT, VOIDPERCENT, SLOPE, ASPECT, REMARKS, XCOORDINATE, YCOORDINATE, ZCOORDINATE, METADATA, ISFALLBUCKSCALE, EXPANSIONFACTOR, TREEFACTOR, POINTFACTOR };
+		public static string[] _ALL = { TREE_CN, TREE_GUID, TREEDEFAULTVALUE_CN, STRATUM_CN, SAMPLEGROUP_CN, CUTTINGUNIT_CN, PLOT_CN, TREENUMBER, SPECIES, COUNTORMEASURE, TREECOUNT, KPI, STM, SEENDEFECTPRIMARY, SEENDEFECTSECONDARY, RECOVERABLEPRIMARY, HIDDENPRIMARY, INITIALS, LIVEDEAD, GRADE, HEIGHTTOFIRSTLIVELIMB, POLELENGTH, CLEARFACE, CROWNRATIO, DBH, DRC, TOTALHEIGHT, MERCHHEIGHTPRIMARY, MERCHHEIGHTSECONDARY, FORMCLASS, UPPERSTEMDOB, UPPERSTEMDIAMETER, UPPERSTEMHEIGHT, DBHDOUBLEBARKTHICKNESS, TOPDIBPRIMARY, TOPDIBSECONDARY, DEFECTCODE, DIAMETERATDEFECT, VOIDPERCENT, SLOPE, ASPECT, REMARKS, XCOORDINATE, YCOORDINATE, ZCOORDINATE, METADATA, ISFALLBUCKSCALE, EXPANSIONFACTOR, TREEFACTOR, POINTFACTOR };
 		public enum TREE_FIELDS { Tree_CN, Tree_GUID, TreeDefaultValue_CN, Stratum_CN, SampleGroup_CN, CuttingUnit_CN, Plot_CN, TreeNumber, Species, CountOrMeasure, TreeCount, KPI, STM, SeenDefectPrimary, SeenDefectSecondary, RecoverablePrimary, HiddenPrimary, Initials, LiveDead, Grade, HeightToFirstLiveLimb, PoleLength, ClearFace, CrownRatio, DBH, DRC, TotalHeight, MerchHeightPrimary, MerchHeightSecondary, FormClass, UpperStemDOB, UpperStemDiameter, UpperStemHeight, DBHDoubleBarkThickness, TopDIBPrimary, TopDIBSecondary, DefectCode, DiameterAtDefect, VoidPercent, Slope, Aspect, Remarks, XCoordinate, YCoordinate, ZCoordinate, MetaData, IsFallBuckScale, ExpansionFactor, TreeFactor, PointFactor };
 	}
 
@@ -229,7 +229,7 @@ namespace CruiseDAL.Schema
 		public const string CUBICFOOTREMOVED = "CubicFootRemoved";
 		public const string DIBCLASS = "DIBClass";
 		public const string BARKTHICKNESS = "BarkThickness";
-		public static string[] _ALL = new string []{ LOG_CN, LOG_GUID, TREE_CN, LOGNUMBER, GRADE, SEENDEFECT, PERCENTRECOVERABLE, LENGTH, EXPORTGRADE, SMALLENDDIAMETER, LARGEENDDIAMETER, GROSSBOARDFOOT, NETBOARDFOOT, GROSSCUBICFOOT, NETCUBICFOOT, BOARDFOOTREMOVED, CUBICFOOTREMOVED, DIBCLASS, BARKTHICKNESS };
+		public static string[] _ALL = { LOG_CN, LOG_GUID, TREE_CN, LOGNUMBER, GRADE, SEENDEFECT, PERCENTRECOVERABLE, LENGTH, EXPORTGRADE, SMALLENDDIAMETER, LARGEENDDIAMETER, GROSSBOARDFOOT, NETBOARDFOOT, GROSSCUBICFOOT, NETCUBICFOOT, BOARDFOOTREMOVED, CUBICFOOTREMOVED, DIBCLASS, BARKTHICKNESS };
 		public enum LOG_FIELDS { Log_CN, Log_GUID, Tree_CN, LogNumber, Grade, SeenDefect, PercentRecoverable, Length, ExportGrade, SmallEndDiameter, LargeEndDiameter, GrossBoardFoot, NetBoardFoot, GrossCubicFoot, NetCubicFoot, BoardFootRemoved, CubicFootRemoved, DIBClass, BarkThickness };
 	}
 
@@ -241,7 +241,7 @@ namespace CruiseDAL.Schema
 		public const string TREE_CN = "Tree_CN";
 		public const string DIAMETER = "Diameter";
 		public const string DIAMETERTYPE = "DiameterType";
-		public static string[] _ALL = new string []{ STEM_CN, STEM_GUID, TREE_CN, DIAMETER, DIAMETERTYPE };
+		public static string[] _ALL = { STEM_CN, STEM_GUID, TREE_CN, DIAMETER, DIAMETERTYPE };
 		public enum STEM_FIELDS { Stem_CN, Stem_GUID, Tree_CN, Diameter, DiameterType };
 	}
 
@@ -256,7 +256,7 @@ namespace CruiseDAL.Schema
 		public const string COMPONENT_CN = "Component_CN";
 		public const string TREECOUNT = "TreeCount";
 		public const string SUMKPI = "SumKPI";
-		public static string[] _ALL = new string []{ COUNTTREE_CN, SAMPLEGROUP_CN, CUTTINGUNIT_CN, TALLY_CN, TREEDEFAULTVALUE_CN, COMPONENT_CN, TREECOUNT, SUMKPI };
+		public static string[] _ALL = { COUNTTREE_CN, SAMPLEGROUP_CN, CUTTINGUNIT_CN, TALLY_CN, TREEDEFAULTVALUE_CN, COMPONENT_CN, TREECOUNT, SUMKPI };
 		public enum COUNTTREE_FIELDS { CountTree_CN, SampleGroup_CN, CuttingUnit_CN, Tally_CN, TreeDefaultValue_CN, Component_CN, TreeCount, SumKPI };
 	}
 
@@ -268,7 +268,7 @@ namespace CruiseDAL.Schema
 		public const string DESCRIPTION = "Description";
 		public const string INDICATORVALUE = "IndicatorValue";
 		public const string INDICATORTYPE = "IndicatorType";
-		public static string[] _ALL = new string []{ TALLY_CN, HOTKEY, DESCRIPTION, INDICATORVALUE, INDICATORTYPE };
+		public static string[] _ALL = { TALLY_CN, HOTKEY, DESCRIPTION, INDICATORVALUE, INDICATORTYPE };
 		public enum TALLY_FIELDS { Tally_CN, Hotkey, Description, IndicatorValue, IndicatorType };
 	}
 
@@ -279,7 +279,7 @@ namespace CruiseDAL.Schema
 		public const string COUNTTREE_CN = "CountTree_CN";
 		public const string TREEESTIMATE_GUID = "TreeEstimate_GUID";
 		public const string KPI = "KPI";
-		public static string[] _ALL = new string []{ TREEESTIMATE_CN, COUNTTREE_CN, TREEESTIMATE_GUID, KPI };
+		public static string[] _ALL = { TREEESTIMATE_CN, COUNTTREE_CN, TREEESTIMATE_GUID, KPI };
 		public enum TREEESTIMATE_FIELDS { TreeEstimate_CN, CountTree_CN, TreeEstimate_GUID, KPI };
 	}
 
@@ -311,7 +311,7 @@ namespace CruiseDAL.Schema
 		public const string COMMONSPECIESNAME = "CommonSpeciesName";
 		public const string MERCHMODFLAG = "MerchModFlag";
 		public const string EVENODDSEGMENT = "EvenOddSegment";
-		public static string[] _ALL = new string []{ SPECIES, PRIMARYPRODUCT, VOLUMEEQUATIONNUMBER, STUMPHEIGHT, TOPDIBPRIMARY, TOPDIBSECONDARY, CALCTOTAL, CALCBOARD, CALCCUBIC, CALCCORD, CALCTOPWOOD, CALCBIOMASS, TRIM, SEGMENTATIONLOGIC, MINLOGLENGTHPRIMARY, MAXLOGLENGTHPRIMARY, MINLOGLENGTHSECONDARY, MAXLOGLENGTHSECONDARY, MINMERCHLENGTH, MODEL, COMMONSPECIESNAME, MERCHMODFLAG, EVENODDSEGMENT };
+		public static string[] _ALL = { SPECIES, PRIMARYPRODUCT, VOLUMEEQUATIONNUMBER, STUMPHEIGHT, TOPDIBPRIMARY, TOPDIBSECONDARY, CALCTOTAL, CALCBOARD, CALCCUBIC, CALCCORD, CALCTOPWOOD, CALCBIOMASS, TRIM, SEGMENTATIONLOGIC, MINLOGLENGTHPRIMARY, MAXLOGLENGTHPRIMARY, MINLOGLENGTHSECONDARY, MAXLOGLENGTHSECONDARY, MINMERCHLENGTH, MODEL, COMMONSPECIESNAME, MERCHMODFLAG, EVENODDSEGMENT };
 		public enum VOLUMEEQUATION_FIELDS { Species, PrimaryProduct, VolumeEquationNumber, StumpHeight, TopDIBPrimary, TopDIBSecondary, CalcTotal, CalcBoard, CalcCubic, CalcCord, CalcTopwood, CalcBiomass, Trim, SegmentationLogic, MinLogLengthPrimary, MaxLogLengthPrimary, MinLogLengthSecondary, MaxLogLengthSecondary, MinMerchLength, Model, CommonSpeciesName, MerchModFlag, EvenOddSegment };
 	}
 
@@ -329,7 +329,7 @@ namespace CruiseDAL.Schema
 		public const string METADATA = "MetaData";
 		public const string WEIGHTFACTORPRIMARY = "WeightFactorPrimary";
 		public const string WEIGHTFACTORSECONDARY = "WeightFactorSecondary";
-		public static string[] _ALL = new string []{ SPECIES, PRODUCT, COMPONENT, LIVEDEAD, FIACODE, EQUATION, PERCENTMOISTURE, PERCENTREMOVED, METADATA, WEIGHTFACTORPRIMARY, WEIGHTFACTORSECONDARY };
+		public static string[] _ALL = { SPECIES, PRODUCT, COMPONENT, LIVEDEAD, FIACODE, EQUATION, PERCENTMOISTURE, PERCENTREMOVED, METADATA, WEIGHTFACTORPRIMARY, WEIGHTFACTORSECONDARY };
 		public enum BIOMASSEQUATION_FIELDS { Species, Product, Component, LiveDead, FIAcode, Equation, PercentMoisture, PercentRemoved, MetaData, WeightFactorPrimary, WeightFactorSecondary };
 	}
 
@@ -346,7 +346,7 @@ namespace CruiseDAL.Schema
 		public const string COEFFICIENT4 = "Coefficient4";
 		public const string COEFFICIENT5 = "Coefficient5";
 		public const string COEFFICIENT6 = "Coefficient6";
-		public static string[] _ALL = new string []{ SPECIES, PRIMARYPRODUCT, VALUEEQUATIONNUMBER, GRADE, COEFFICIENT1, COEFFICIENT2, COEFFICIENT3, COEFFICIENT4, COEFFICIENT5, COEFFICIENT6 };
+		public static string[] _ALL = { SPECIES, PRIMARYPRODUCT, VALUEEQUATIONNUMBER, GRADE, COEFFICIENT1, COEFFICIENT2, COEFFICIENT3, COEFFICIENT4, COEFFICIENT5, COEFFICIENT6 };
 		public enum VALUEEQUATION_FIELDS { Species, PrimaryProduct, ValueEquationNumber, Grade, Coefficient1, Coefficient2, Coefficient3, Coefficient4, Coefficient5, Coefficient6 };
 	}
 
@@ -363,7 +363,7 @@ namespace CruiseDAL.Schema
 		public const string COEFFICIENT4 = "Coefficient4";
 		public const string COEFFICIENT5 = "Coefficient5";
 		public const string COEFFICIENT6 = "Coefficient6";
-		public static string[] _ALL = new string []{ SPECIES, QUALITYADJEQ, YEAR, GRADE, COEFFICIENT1, COEFFICIENT2, COEFFICIENT3, COEFFICIENT4, COEFFICIENT5, COEFFICIENT6 };
+		public static string[] _ALL = { SPECIES, QUALITYADJEQ, YEAR, GRADE, COEFFICIENT1, COEFFICIENT2, COEFFICIENT3, COEFFICIENT4, COEFFICIENT5, COEFFICIENT6 };
 		public enum QUALITYADJEQUATION_FIELDS { Species, QualityAdjEq, Year, Grade, Coefficient1, Coefficient2, Coefficient3, Coefficient4, Coefficient5, Coefficient6 };
 	}
 
@@ -373,7 +373,7 @@ namespace CruiseDAL.Schema
 		public const string REPORTID = "ReportID";
 		public const string SELECTED = "Selected";
 		public const string TITLE = "Title";
-		public static string[] _ALL = new string []{ REPORTID, SELECTED, TITLE };
+		public static string[] _ALL = { REPORTID, SELECTED, TITLE };
 		public enum REPORTS_FIELDS { ReportID, Selected, Title };
 	}
 
@@ -414,7 +414,7 @@ namespace CruiseDAL.Schema
 		public const string BIOMASSDEADBRANCHES = "Biomassdeadbranches";
 		public const string BIOMASSFOLIAGE = "Biomassfoliage";
 		public const string BIOMASSTIP = "BiomassTip";
-		public static string[] _ALL = new string []{ TREECALCVALUES_CN, TREE_CN, TOTALCUBICVOLUME, GROSSBDFTPP, NETBDFTPP, GROSSCUFTPP, NETCUFTPP, CORDSPP, GROSSBDFTREMVPP, GROSSCUFTREMVPP, GROSSBDFTSP, NETBDFTSP, GROSSCUFTSP, NETCUFTSP, CORDSSP, GROSSCUFTREMVSP, NUMBERLOGSMS, NUMBERLOGSTPW, GROSSBDFTRP, GROSSCUFTRP, CORDSRP, GROSSBDFTINTL, NETBDFTINTL, BIOMASSMAINSTEMPRIMARY, BIOMASSMAINSTEMSECONDARY, VALUEPP, VALUESP, VALUERP, BIOMASSPROD, BIOMASSTOTALSTEM, BIOMASSLIVEBRANCHES, BIOMASSDEADBRANCHES, BIOMASSFOLIAGE, BIOMASSTIP };
+		public static string[] _ALL = { TREECALCVALUES_CN, TREE_CN, TOTALCUBICVOLUME, GROSSBDFTPP, NETBDFTPP, GROSSCUFTPP, NETCUFTPP, CORDSPP, GROSSBDFTREMVPP, GROSSCUFTREMVPP, GROSSBDFTSP, NETBDFTSP, GROSSCUFTSP, NETCUFTSP, CORDSSP, GROSSCUFTREMVSP, NUMBERLOGSMS, NUMBERLOGSTPW, GROSSBDFTRP, GROSSCUFTRP, CORDSRP, GROSSBDFTINTL, NETBDFTINTL, BIOMASSMAINSTEMPRIMARY, BIOMASSMAINSTEMSECONDARY, VALUEPP, VALUESP, VALUERP, BIOMASSPROD, BIOMASSTOTALSTEM, BIOMASSLIVEBRANCHES, BIOMASSDEADBRANCHES, BIOMASSFOLIAGE, BIOMASSTIP };
 		public enum TREECALCULATEDVALUES_FIELDS { TreeCalcValues_CN, Tree_CN, TotalCubicVolume, GrossBDFTPP, NetBDFTPP, GrossCUFTPP, NetCUFTPP, CordsPP, GrossBDFTRemvPP, GrossCUFTRemvPP, GrossBDFTSP, NetBDFTSP, GrossCUFTSP, NetCUFTSP, CordsSP, GrossCUFTRemvSP, NumberlogsMS, NumberlogsTPW, GrossBDFTRP, GrossCUFTRP, CordsRP, GrossBDFTIntl, NetBDFTIntl, BiomassMainStemPrimary, BiomassMainStemSecondary, ValuePP, ValueSP, ValueRP, BiomassProd, Biomasstotalstem, Biomasslivebranches, Biomassdeadbranches, Biomassfoliage, BiomassTip };
 	}
 
@@ -475,7 +475,7 @@ namespace CruiseDAL.Schema
 		public const string SUMWGTBBD = "SumWgtBBD";
 		public const string SUMWGTBFT = "SumWgtBFT";
 		public const string SUMWGTTIP = "SumWgtTip";
-		public static string[] _ALL = new string []{ LCD_CN, CUTLEAVE, STRATUM, SAMPLEGROUP, SPECIES, PRIMARYPRODUCT, SECONDARYPRODUCT, UOM, LIVEDEAD, YIELD, CONTRACTSPECIES, TREEGRADE, STM, FIRSTSTAGETREES, MEASUREDTREES, TALLIEDTREES, SUMKPI, SUMMEASUREDKPI, SUMEXPANFACTOR, SUMDBHOB, SUMDBHOBSQRD, SUMTOTHGT, SUMHGTUPSTEM, SUMMERCHHGTPRIM, SUMMERCHHGTSECOND, SUMLOGSMS, SUMTOTCUBIC, SUMGBDFT, SUMNBDFT, SUMGCUFT, SUMNCUFT, SUMGBDFTREMV, SUMGCUFTREMV, SUMCORDS, SUMWGTMSP, SUMVALUE, SUMGBDFTTOP, SUMNBDFTTOP, SUMGCUFTTOP, SUMNCUFTTOP, SUMCORDSTOP, SUMWGTMSS, SUMTOPVALUE, SUMLOGSTOP, SUMBDFTRECV, SUMCUFTRECV, SUMCORDSRECV, SUMVALUERECV, BIOMASSPRODUCT, SUMWGTBAT, SUMWGTBBL, SUMWGTBBD, SUMWGTBFT, SUMWGTTIP };
+		public static string[] _ALL = { LCD_CN, CUTLEAVE, STRATUM, SAMPLEGROUP, SPECIES, PRIMARYPRODUCT, SECONDARYPRODUCT, UOM, LIVEDEAD, YIELD, CONTRACTSPECIES, TREEGRADE, STM, FIRSTSTAGETREES, MEASUREDTREES, TALLIEDTREES, SUMKPI, SUMMEASUREDKPI, SUMEXPANFACTOR, SUMDBHOB, SUMDBHOBSQRD, SUMTOTHGT, SUMHGTUPSTEM, SUMMERCHHGTPRIM, SUMMERCHHGTSECOND, SUMLOGSMS, SUMTOTCUBIC, SUMGBDFT, SUMNBDFT, SUMGCUFT, SUMNCUFT, SUMGBDFTREMV, SUMGCUFTREMV, SUMCORDS, SUMWGTMSP, SUMVALUE, SUMGBDFTTOP, SUMNBDFTTOP, SUMGCUFTTOP, SUMNCUFTTOP, SUMCORDSTOP, SUMWGTMSS, SUMTOPVALUE, SUMLOGSTOP, SUMBDFTRECV, SUMCUFTRECV, SUMCORDSRECV, SUMVALUERECV, BIOMASSPRODUCT, SUMWGTBAT, SUMWGTBBL, SUMWGTBBD, SUMWGTBFT, SUMWGTTIP };
 		public enum LCD_FIELDS { LCD_CN, CutLeave, Stratum, SampleGroup, Species, PrimaryProduct, SecondaryProduct, UOM, LiveDead, Yield, ContractSpecies, TreeGrade, STM, FirstStageTrees, MeasuredTrees, TalliedTrees, SumKPI, SumMeasuredKPI, SumExpanFactor, SumDBHOB, SumDBHOBsqrd, SumTotHgt, SumHgtUpStem, SumMerchHgtPrim, SumMerchHgtSecond, SumLogsMS, SumTotCubic, SumGBDFT, SumNBDFT, SumGCUFT, SumNCUFT, SumGBDFTremv, SumGCUFTremv, SumCords, SumWgtMSP, SumValue, SumGBDFTtop, SumNBDFTtop, SumGCUFTtop, SumNCUFTtop, SumCordsTop, SumWgtMSS, SumTopValue, SumLogsTop, SumBDFTrecv, SumCUFTrecv, SumCordsRecv, SumValueRecv, BiomassProduct, SumWgtBAT, SumWgtBBL, SumWgtBBD, SumWgtBFT, SumWgtTip };
 	}
 
@@ -533,7 +533,7 @@ namespace CruiseDAL.Schema
 		public const string STG2NETXSQRDRP = "Stg2NetXsqrdRP";
 		public const string STG2VALUEXRP = "Stg2ValueXRP";
 		public const string STG2VALUEXSQRDRP = "Stg2ValueXsqrdRP";
-		public static string[] _ALL = new string []{ POP_CN, CUTLEAVE, STRATUM, SAMPLEGROUP, PRIMARYPRODUCT, SECONDARYPRODUCT, STM, UOM, FIRSTSTAGETREES, MEASUREDTREES, TALLIEDTREES, SUMKPI, SUMMEASUREDKPI, STAGEONESAMPLES, STAGETWOSAMPLES, STG1GROSSXPP, STG1GROSSXSQRDPP, STG1NETXPP, STG1NETXSQRDPP, STG1VALUEXPP, STG1VALUEXSQRDPP, STG2GROSSXPP, STG2GROSSXSQRDPP, STG2NETXPP, STG2NETXSQRDPP, STG2VALUEXPP, STG2VALUEXSQRDPP, STG1GROSSXSP, STG1GROSSXSQRDSP, STG1NETXSP, STG1NETXSQRDSP, STG1VALUEXSP, STG1VALUEXSQRDSP, STG2GROSSXSP, STG2GROSSXSQRDSP, STG2NETXSP, STG2NETXSQRDSP, STG2VALUEXSP, STG2VALUEXSQRDSP, STG1GROSSXRP, STG1GROSSXSQRDRP, STG1NETXRP, STG1NETXRSQRDRP, STG1VALUEXRP, STG1VALUEXSQRDRP, STG2GROSSXRP, STG2GROSSXSQRDRP, STG2NETXRP, STG2NETXSQRDRP, STG2VALUEXRP, STG2VALUEXSQRDRP };
+		public static string[] _ALL = { POP_CN, CUTLEAVE, STRATUM, SAMPLEGROUP, PRIMARYPRODUCT, SECONDARYPRODUCT, STM, UOM, FIRSTSTAGETREES, MEASUREDTREES, TALLIEDTREES, SUMKPI, SUMMEASUREDKPI, STAGEONESAMPLES, STAGETWOSAMPLES, STG1GROSSXPP, STG1GROSSXSQRDPP, STG1NETXPP, STG1NETXSQRDPP, STG1VALUEXPP, STG1VALUEXSQRDPP, STG2GROSSXPP, STG2GROSSXSQRDPP, STG2NETXPP, STG2NETXSQRDPP, STG2VALUEXPP, STG2VALUEXSQRDPP, STG1GROSSXSP, STG1GROSSXSQRDSP, STG1NETXSP, STG1NETXSQRDSP, STG1VALUEXSP, STG1VALUEXSQRDSP, STG2GROSSXSP, STG2GROSSXSQRDSP, STG2NETXSP, STG2NETXSQRDSP, STG2VALUEXSP, STG2VALUEXSQRDSP, STG1GROSSXRP, STG1GROSSXSQRDRP, STG1NETXRP, STG1NETXRSQRDRP, STG1VALUEXRP, STG1VALUEXSQRDRP, STG2GROSSXRP, STG2GROSSXSQRDRP, STG2NETXRP, STG2NETXSQRDRP, STG2VALUEXRP, STG2VALUEXSQRDRP };
 		public enum POP_FIELDS { POP_CN, CutLeave, Stratum, SampleGroup, PrimaryProduct, SecondaryProduct, STM, UOM, FirstStageTrees, MeasuredTrees, TalliedTrees, SumKPI, SumMeasuredKPI, StageOneSamples, StageTwoSamples, Stg1GrossXPP, Stg1GrossXsqrdPP, Stg1NetXPP, Stg1NetXsqrdPP, Stg1ValueXPP, Stg1ValueXsqrdPP, Stg2GrossXPP, Stg2GrossXsqrdPP, Stg2NetXPP, Stg2NetXsqrdPP, Stg2ValueXPP, Stg2ValueXsqrdPP, Stg1GrossXSP, Stg1GrossXsqrdSP, Stg1NetXSP, Stg1NetXsqrdSP, Stg1ValueXSP, Stg1ValueXsqrdSP, Stg2GrossXSP, Stg2GrossXsqrdSP, Stg2NetXSP, Stg2NetXsqrdSP, Stg2ValueXSP, Stg2ValueXsqrdSP, Stg1GrossXRP, Stg1GrossXsqrdRP, Stg1NetXRP, Stg1NetXRsqrdRP, Stg1ValueXRP, Stg1ValueXsqrdRP, Stg2GrossXRP, Stg2GrossXsqrdRP, Stg2NetXRP, Stg2NetXsqrdRP, Stg2ValueXRP, Stg2ValueXsqrdRP };
 	}
 
@@ -556,7 +556,7 @@ namespace CruiseDAL.Schema
 		public const string SUMMEASUREDKPI = "SumMeasuredKPI";
 		public const string PRORATIONFACTOR = "ProrationFactor";
 		public const string PRORATEDESTIMATEDTREES = "ProratedEstimatedTrees";
-		public static string[] _ALL = new string []{ PRO_CN, CUTLEAVE, STRATUM, CUTTINGUNIT, SAMPLEGROUP, PRIMARYPRODUCT, SECONDARYPRODUCT, UOM, STM, FIRSTSTAGETREES, MEASUREDTREES, TALLIEDTREES, SUMKPI, SUMMEASUREDKPI, PRORATIONFACTOR, PRORATEDESTIMATEDTREES };
+		public static string[] _ALL = { PRO_CN, CUTLEAVE, STRATUM, CUTTINGUNIT, SAMPLEGROUP, PRIMARYPRODUCT, SECONDARYPRODUCT, UOM, STM, FIRSTSTAGETREES, MEASUREDTREES, TALLIEDTREES, SUMKPI, SUMMEASUREDKPI, PRORATIONFACTOR, PRORATEDESTIMATEDTREES };
 		public enum PRO_FIELDS { PRO_CN, CutLeave, Stratum, CuttingUnit, SampleGroup, PrimaryProduct, SecondaryProduct, UOM, STM, FirstStageTrees, MeasuredTrees, TalliedTrees, SumKPI, SumMeasuredKPI, ProrationFactor, ProratedEstimatedTrees };
 	}
 
@@ -583,7 +583,7 @@ namespace CruiseDAL.Schema
 		public const string BARKTHICKNESS = "BarkThickness";
 		public const string BOARDUTIL = "BoardUtil";
 		public const string CUBICUTIL = "CubicUtil";
-		public static string[] _ALL = new string []{ LOGSTOCK_CN, TREE_CN, LOGNUMBER, GRADE, SEENDEFECT, PERCENTRECOVERABLE, LENGTH, EXPORTGRADE, SMALLENDDIAMETER, LARGEENDDIAMETER, GROSSBOARDFOOT, NETBOARDFOOT, GROSSCUBICFOOT, NETCUBICFOOT, BOARDFOOTREMOVED, CUBICFOOTREMOVED, DIBCLASS, BARKTHICKNESS, BOARDUTIL, CUBICUTIL };
+		public static string[] _ALL = { LOGSTOCK_CN, TREE_CN, LOGNUMBER, GRADE, SEENDEFECT, PERCENTRECOVERABLE, LENGTH, EXPORTGRADE, SMALLENDDIAMETER, LARGEENDDIAMETER, GROSSBOARDFOOT, NETBOARDFOOT, GROSSCUBICFOOT, NETCUBICFOOT, BOARDFOOTREMOVED, CUBICFOOTREMOVED, DIBCLASS, BARKTHICKNESS, BOARDUTIL, CUBICUTIL };
 		public enum LOGSTOCK_FIELDS { LogStock_CN, Tree_CN, LogNumber, Grade, SeenDefect, PercentRecoverable, Length, ExportGrade, SmallEndDiameter, LargeEndDiameter, GrossBoardFoot, NetBoardFoot, GrossCubicFoot, NetCubicFoot, BoardFootRemoved, CubicFootRemoved, DIBClass, BarkThickness, BoardUtil, CubicUtil };
 	}
 
@@ -622,7 +622,7 @@ namespace CruiseDAL.Schema
 		public const string VPA_DEF = "VPA_Def";
 		public const string RECONPLOTS = "ReconPlots";
 		public const string RECONTREES = "ReconTrees";
-		public static string[] _ALL = new string []{ SAMPLEGROUPSTATS_CN, STRATUMSTATS_CN, CODE, SGSET, DESCRIPTION, CUTLEAVE, UOM, PRIMARYPRODUCT, SECONDARYPRODUCT, DEFAULTLIVEDEAD, SGERROR, SAMPLESIZE1, SAMPLESIZE2, CV1, CV2, TREESPERACRE, VOLUMEPERACRE, TREESPERPLOT, AVERAGEHEIGHT, SAMPLINGFREQUENCY, INSURANCEFREQUENCY, KZ, BIGBAF, BIGFIX, MINDBH, MAXDBH, CV_DEF, CV2_DEF, TPA_DEF, VPA_DEF, RECONPLOTS, RECONTREES };
+		public static string[] _ALL = { SAMPLEGROUPSTATS_CN, STRATUMSTATS_CN, CODE, SGSET, DESCRIPTION, CUTLEAVE, UOM, PRIMARYPRODUCT, SECONDARYPRODUCT, DEFAULTLIVEDEAD, SGERROR, SAMPLESIZE1, SAMPLESIZE2, CV1, CV2, TREESPERACRE, VOLUMEPERACRE, TREESPERPLOT, AVERAGEHEIGHT, SAMPLINGFREQUENCY, INSURANCEFREQUENCY, KZ, BIGBAF, BIGFIX, MINDBH, MAXDBH, CV_DEF, CV2_DEF, TPA_DEF, VPA_DEF, RECONPLOTS, RECONTREES };
 		public enum SAMPLEGROUPSTATS_FIELDS { SampleGroupStats_CN, StratumStats_CN, Code, SgSet, Description, CutLeave, UOM, PrimaryProduct, SecondaryProduct, DefaultLiveDead, SgError, SampleSize1, SampleSize2, CV1, CV2, TreesPerAcre, VolumePerAcre, TreesPerPlot, AverageHeight, SamplingFrequency, InsuranceFrequency, KZ, BigBAF, BigFIX, MinDbh, MaxDbh, CV_Def, CV2_Def, TPA_Def, VPA_Def, ReconPlots, ReconTrees };
 	}
 
@@ -631,7 +631,7 @@ namespace CruiseDAL.Schema
 		public const string _NAME = "SampleGroupStatsTreeDefaultValue";
 		public const string TREEDEFAULTVALUE_CN = "TreeDefaultValue_CN";
 		public const string SAMPLEGROUPSTATS_CN = "SampleGroupStats_CN";
-		public static string[] _ALL = new string []{ TREEDEFAULTVALUE_CN, SAMPLEGROUPSTATS_CN };
+		public static string[] _ALL = { TREEDEFAULTVALUE_CN, SAMPLEGROUPSTATS_CN };
 		public enum SAMPLEGROUPSTATSTREEDEFAULTVALUE_FIELDS { TreeDefaultValue_CN, SampleGroupStats_CN };
 	}
 
@@ -658,7 +658,7 @@ namespace CruiseDAL.Schema
 		public const string TOTALACRES = "TotalAcres";
 		public const string PLOTSPACING = "PlotSpacing";
 		public const string USED = "Used";
-		public static string[] _ALL = new string []{ STRATUMSTATS_CN, STRATUM_CN, CODE, DESCRIPTION, METHOD, SGSET, SGSETDESCRIPTION, BASALAREAFACTOR, FIXEDPLOTSIZE, STRERROR, SAMPLESIZE1, SAMPLESIZE2, WEIGHTEDCV1, WEIGHTEDCV2, TREESPERACRE, VOLUMEPERACRE, TOTALVOLUME, TOTALACRES, PLOTSPACING, USED };
+		public static string[] _ALL = { STRATUMSTATS_CN, STRATUM_CN, CODE, DESCRIPTION, METHOD, SGSET, SGSETDESCRIPTION, BASALAREAFACTOR, FIXEDPLOTSIZE, STRERROR, SAMPLESIZE1, SAMPLESIZE2, WEIGHTEDCV1, WEIGHTEDCV2, TREESPERACRE, VOLUMEPERACRE, TOTALVOLUME, TOTALACRES, PLOTSPACING, USED };
 		public enum STRATUMSTATS_FIELDS { StratumStats_CN, Stratum_CN, Code, Description, Method, SgSet, SgSetDescription, BasalAreaFactor, FixedPlotSize, StrError, SampleSize1, SampleSize2, WeightedCV1, WeightedCV2, TreesPerAcre, VolumePerAcre, TotalVolume, TotalAcres, PlotSpacing, Used };
 	}
 
@@ -680,7 +680,7 @@ namespace CruiseDAL.Schema
 		public const string REGRESSMODEL = "RegressModel";
 		public const string RMINDBH = "rMinDbh";
 		public const string RMAXDBH = "rMaxDbh";
-		public static string[] _ALL = new string []{ REGRESSION_CN, RVOLUME, RVOLTYPE, RSPEICES, RPRODUCT, RLIVEDEAD, COEFFICIENTA, COEFFICIENTB, COEFFICIENTC, TOTALTREES, MEANSE, RSQUARED, REGRESSMODEL, RMINDBH, RMAXDBH };
+		public static string[] _ALL = { REGRESSION_CN, RVOLUME, RVOLTYPE, RSPEICES, RPRODUCT, RLIVEDEAD, COEFFICIENTA, COEFFICIENTB, COEFFICIENTC, TOTALTREES, MEANSE, RSQUARED, REGRESSMODEL, RMINDBH, RMAXDBH };
 		public enum REGRESSION_FIELDS { Regression_CN, rVolume, rVolType, rSpeices, rProduct, rLiveDead, CoefficientA, CoefficientB, CoefficientC, TotalTrees, MeanSE, Rsquared, RegressModel, rMinDbh, rMaxDbh };
 	}
 
@@ -700,7 +700,7 @@ namespace CruiseDAL.Schema
 		public const string SEDLIMIT = "SEDlimit";
 		public const string SEDMINIMUM = "SEDminimum";
 		public const string SEDMAXIMUM = "SEDmaximum";
-		public static string[] _ALL = new string []{ REPORTNUMBER, GRADEDESCRIPTION, LOGSORTDESCRIPTION, SPECIES, LOGGRADE1, LOGGRADE2, LOGGRADE3, LOGGRADE4, LOGGRADE5, LOGGRADE6, SEDLIMIT, SEDMINIMUM, SEDMAXIMUM };
+		public static string[] _ALL = { REPORTNUMBER, GRADEDESCRIPTION, LOGSORTDESCRIPTION, SPECIES, LOGGRADE1, LOGGRADE2, LOGGRADE3, LOGGRADE4, LOGGRADE5, LOGGRADE6, SEDLIMIT, SEDMINIMUM, SEDMAXIMUM };
 		public enum LOGMATRIX_FIELDS { ReportNumber, GradeDescription, LogSortDescription, Species, LogGrade1, LogGrade2, LogGrade3, LogGrade4, LogGrade5, LogGrade6, SEDlimit, SEDminimum, SEDmaximum };
 	}
 
@@ -711,7 +711,7 @@ namespace CruiseDAL.Schema
 		public const string _NAME = "TreeDefaultValueTreeAuditValue";
 		public const string TREEAUDITVALUE_CN = "TreeAuditValue_CN";
 		public const string TREEDEFAULTVALUE_CN = "TreeDefaultValue_CN";
-		public static string[] _ALL = new string []{ TREEAUDITVALUE_CN, TREEDEFAULTVALUE_CN };
+		public static string[] _ALL = { TREEAUDITVALUE_CN, TREEDEFAULTVALUE_CN };
 		public enum TREEDEFAULTVALUETREEAUDITVALUE_FIELDS { TreeAuditValue_CN, TreeDefaultValue_CN };
 	}
 
@@ -725,7 +725,7 @@ namespace CruiseDAL.Schema
 		public const string VALUESET = "ValueSet";
 		public const string REQUIRED = "Required";
 		public const string ERRORMESSAGE = "ErrorMessage";
-		public static string[] _ALL = new string []{ TREEAUDITVALUE_CN, FIELD, MIN, MAX, VALUESET, REQUIRED, ERRORMESSAGE };
+		public static string[] _ALL = { TREEAUDITVALUE_CN, FIELD, MIN, MAX, VALUESET, REQUIRED, ERRORMESSAGE };
 		public enum TREEAUDITVALUE_FIELDS { TreeAuditValue_CN, Field, Min, Max, ValueSet, Required, ErrorMessage };
 	}
 
@@ -740,7 +740,7 @@ namespace CruiseDAL.Schema
 		public const string WIDTH = "Width";
 		public const string FORMAT = "Format";
 		public const string BEHAVIOR = "Behavior";
-		public static string[] _ALL = new string []{ STRATUM_CN, FIELD, FIELDORDER, COLUMNTYPE, HEADING, WIDTH, FORMAT, BEHAVIOR };
+		public static string[] _ALL = { STRATUM_CN, FIELD, FIELDORDER, COLUMNTYPE, HEADING, WIDTH, FORMAT, BEHAVIOR };
 		public enum LOGFIELDSETUP_FIELDS { Stratum_CN, Field, FieldOrder, ColumnType, Heading, Width, Format, Behavior };
 	}
 
@@ -755,7 +755,7 @@ namespace CruiseDAL.Schema
 		public const string WIDTH = "Width";
 		public const string FORMAT = "Format";
 		public const string BEHAVIOR = "Behavior";
-		public static string[] _ALL = new string []{ STRATUM_CN, FIELD, FIELDORDER, COLUMNTYPE, HEADING, WIDTH, FORMAT, BEHAVIOR };
+		public static string[] _ALL = { STRATUM_CN, FIELD, FIELDORDER, COLUMNTYPE, HEADING, WIDTH, FORMAT, BEHAVIOR };
 		public enum TREEFIELDSETUP_FIELDS { Stratum_CN, Field, FieldOrder, ColumnType, Heading, Width, Format, Behavior };
 	}
 
@@ -771,7 +771,7 @@ namespace CruiseDAL.Schema
 		public const string WIDTH = "Width";
 		public const string FORMAT = "Format";
 		public const string BEHAVIOR = "Behavior";
-		public static string[] _ALL = new string []{ LOGFIELDSETUPDEFAULT_CN, FIELD, FIELDNAME, FIELDORDER, COLUMNTYPE, HEADING, WIDTH, FORMAT, BEHAVIOR };
+		public static string[] _ALL = { LOGFIELDSETUPDEFAULT_CN, FIELD, FIELDNAME, FIELDORDER, COLUMNTYPE, HEADING, WIDTH, FORMAT, BEHAVIOR };
 		public enum LOGFIELDSETUPDEFAULT_FIELDS { LogFieldSetupDefault_CN, Field, FieldName, FieldOrder, ColumnType, Heading, Width, Format, Behavior };
 	}
 
@@ -788,7 +788,7 @@ namespace CruiseDAL.Schema
 		public const string WIDTH = "Width";
 		public const string FORMAT = "Format";
 		public const string BEHAVIOR = "Behavior";
-		public static string[] _ALL = new string []{ TREEFIELDSETUPDEFAULT_CN, METHOD, FIELD, FIELDNAME, FIELDORDER, COLUMNTYPE, HEADING, WIDTH, FORMAT, BEHAVIOR };
+		public static string[] _ALL = { TREEFIELDSETUPDEFAULT_CN, METHOD, FIELD, FIELDNAME, FIELDORDER, COLUMNTYPE, HEADING, WIDTH, FORMAT, BEHAVIOR };
 		public enum TREEFIELDSETUPDEFAULT_FIELDS { TreeFieldSetupDefault_CN, Method, Field, FieldName, FieldOrder, ColumnType, Heading, Width, Format, Behavior };
 	}
 
@@ -800,7 +800,7 @@ namespace CruiseDAL.Schema
 		public const string CRUISEMETHODS_CN = "CruiseMethods_CN";
 		public const string CODE = "Code";
 		public const string FRIENDLYVALUE = "FriendlyValue";
-		public static string[] _ALL = new string []{ CRUISEMETHODS_CN, CODE, FRIENDLYVALUE };
+		public static string[] _ALL = { CRUISEMETHODS_CN, CODE, FRIENDLYVALUE };
 		public enum CRUISEMETHODS_FIELDS { CruiseMethods_CN, Code, FriendlyValue };
 	}
 
@@ -810,7 +810,7 @@ namespace CruiseDAL.Schema
 		public const string LOGGINGMETHODS_CN = "LoggingMethods_CN";
 		public const string CODE = "Code";
 		public const string FRIENDLYVALUE = "FriendlyValue";
-		public static string[] _ALL = new string []{ LOGGINGMETHODS_CN, CODE, FRIENDLYVALUE };
+		public static string[] _ALL = { LOGGINGMETHODS_CN, CODE, FRIENDLYVALUE };
 		public enum LOGGINGMETHODS_FIELDS { LoggingMethods_CN, Code, FriendlyValue };
 	}
 
@@ -820,7 +820,7 @@ namespace CruiseDAL.Schema
 		public const string PRODUCTCODES_CN = "ProductCodes_CN";
 		public const string CODE = "Code";
 		public const string FRIENDLYVALUE = "FriendlyValue";
-		public static string[] _ALL = new string []{ PRODUCTCODES_CN, CODE, FRIENDLYVALUE };
+		public static string[] _ALL = { PRODUCTCODES_CN, CODE, FRIENDLYVALUE };
 		public enum PRODUCTCODES_FIELDS { ProductCodes_CN, Code, FriendlyValue };
 	}
 
@@ -830,7 +830,7 @@ namespace CruiseDAL.Schema
 		public const string UOMCODES_CN = "UOMCodes_CN";
 		public const string CODE = "Code";
 		public const string FRIENDLYVALUE = "FriendlyValue";
-		public static string[] _ALL = new string []{ UOMCODES_CN, CODE, FRIENDLYVALUE };
+		public static string[] _ALL = { UOMCODES_CN, CODE, FRIENDLYVALUE };
 		public enum UOMCODES_FIELDS { UOMCodes_CN, Code, FriendlyValue };
 	}
 
@@ -840,7 +840,7 @@ namespace CruiseDAL.Schema
 		public const string REGION_CN = "Region_CN";
 		public const string NUMBER = "Number";
 		public const string NAME = "Name";
-		public static string[] _ALL = new string []{ REGION_CN, NUMBER, NAME };
+		public static string[] _ALL = { REGION_CN, NUMBER, NAME };
 		public enum REGIONS_FIELDS { Region_CN, Number, Name };
 	}
 
@@ -852,7 +852,7 @@ namespace CruiseDAL.Schema
 		public const string STATE = "State";
 		public const string NAME = "Name";
 		public const string NUMBER = "Number";
-		public static string[] _ALL = new string []{ FOREST_CN, REGION_CN, STATE, NAME, NUMBER };
+		public static string[] _ALL = { FOREST_CN, REGION_CN, STATE, NAME, NUMBER };
 		public enum FORESTS_FIELDS { Forest_CN, Region_CN, State, Name, Number };
 	}
 
@@ -868,7 +868,7 @@ namespace CruiseDAL.Schema
 		public const string MESSAGE = "Message";
 		public const string PROGRAM = "Program";
 		public const string SUPPRESS = "Suppress";
-		public static string[] _ALL = new string []{ TABLENAME, CN_NUMBER, COLUMNNAME, LEVEL, MESSAGE, PROGRAM, SUPPRESS };
+		public static string[] _ALL = { TABLENAME, CN_NUMBER, COLUMNNAME, LEVEL, MESSAGE, PROGRAM, SUPPRESS };
 		public enum ERRORLOG_FIELDS { TableName, CN_Number, ColumnName, Level, Message, Program, Suppress };
 	}
 
@@ -881,7 +881,7 @@ namespace CruiseDAL.Schema
 		public const string DATE = "Date";
 		public const string TIME = "Time";
 		public const string LEVEL = "Level";
-		public static string[] _ALL = new string []{ MESSAGE_CN, PROGRAM, MESSAGE, DATE, TIME, LEVEL };
+		public static string[] _ALL = { MESSAGE_CN, PROGRAM, MESSAGE, DATE, TIME, LEVEL };
 		public enum MESSAGELOG_FIELDS { Message_CN, Program, Message, Date, Time, Level };
 	}
 
@@ -891,7 +891,7 @@ namespace CruiseDAL.Schema
 		public const string BLOCK = "Block";
 		public const string KEY = "Key";
 		public const string VALUE = "Value";
-		public static string[] _ALL = new string []{ BLOCK, KEY, VALUE };
+		public static string[] _ALL = { BLOCK, KEY, VALUE };
 		public enum GLOBALS_FIELDS { Block, Key, Value };
 	}
 
@@ -902,7 +902,7 @@ namespace CruiseDAL.Schema
 		public const string GUID = "GUID";
 		public const string LASTMERGE = "LastMerge";
 		public const string FILENAME = "FileName";
-		public static string[] _ALL = new string []{ COMPONENT_CN, GUID, LASTMERGE, FILENAME };
+		public static string[] _ALL = { COMPONENT_CN, GUID, LASTMERGE, FILENAME };
 		public enum COMPONENT_FIELDS { Component_CN, GUID, LastMerge, FileName };
 	}
 
@@ -910,7 +910,7 @@ namespace CruiseDAL.Schema
 
 	public static class Schema
 	{
-		public static String[] TABLE_NAMES = new String[] { "Sale","CuttingUnit","Stratum","CuttingUnitStratum","SampleGroup","TreeDefaultValue","SampleGroupTreeDefaultValue","Plot","Tree","Log","Stem","CountTree","Tally","TreeEstimate","VolumeEquation","BiomassEquation","ValueEquation","QualityAdjEquation","Reports","TreeCalculatedValues","LCD","POP","PRO","LogStock","SampleGroupStats","SampleGroupStatsTreeDefaultValue","StratumStats","Regression","LogMatrix","TreeDefaultValueTreeAuditValue","TreeAuditValue","LogFieldSetup","TreeFieldSetup","LogFieldSetupDefault","TreeFieldSetupDefault","CruiseMethods","LoggingMethods","ProductCodes","UOMCodes","Regions","Forests","ErrorLog","MessageLog","Globals","Component" };
+		public static String[] TABLE_NAMES = { "Sale","CuttingUnit","Stratum","CuttingUnitStratum","SampleGroup","TreeDefaultValue","SampleGroupTreeDefaultValue","Plot","Tree","Log","Stem","CountTree","Tally","TreeEstimate","VolumeEquation","BiomassEquation","ValueEquation","QualityAdjEquation","Reports","TreeCalculatedValues","LCD","POP","PRO","LogStock","SampleGroupStats","SampleGroupStatsTreeDefaultValue","StratumStats","Regression","LogMatrix","TreeDefaultValueTreeAuditValue","TreeAuditValue","LogFieldSetup","TreeFieldSetup","LogFieldSetupDefault","TreeFieldSetupDefault","CruiseMethods","LoggingMethods","ProductCodes","UOMCodes","Regions","Forests","ErrorLog","MessageLog","Globals","Component" };
 	}
 }
 

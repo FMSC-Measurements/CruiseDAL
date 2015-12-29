@@ -90,8 +90,8 @@ foreach(Field f in table.Fields)
             f.Name, 
             table.Name, 
             f.ErrorMessage, 
-            (f.Min!= null)? f.Min.ToString() : "double.NaN" , 
-            (f.Max != null)? f.Max.ToString() : "double.NaN", 
+            (f.Min!= null)? f.Min.ToString() : "double.MinValue" , 
+            (f.Max != null)? f.Max.ToString() : "double.MinValue", 
             (f.IsReq)? "true" : "false", 
             (string.IsNullOrEmpty(f.Values)) ? "null" : '"' + f.Values + '"');
     }

@@ -7,13 +7,24 @@ namespace FMSC.ORM.Core.EntityAttributes
     [AttributeUsage(AttributeTargets.Property, Inherited = true)]
     public class FieldValidationRuleAttribut : Attribute, IFieldValidator
     {
+        int _min = int.MinValue;
+        int _max = int.MinValue;
+
         public string Field { get; set; }
         public string TableName { get; set; }
         public string ErrorMessage { get; set; }
         public ErrorLevel Level { get; set; }
 
-        public int Min { get; set; }
-        public int Max { get; set; }
+        public int Min
+        {
+            get { return _min; }
+            set { _min = value; }
+        }
+        public int Max
+        {
+            get { return _max; }
+            set { _max = value; }
+        }
         public string[] Values { get; set; }
         public bool NotNull { get; set; }
 
@@ -25,7 +36,7 @@ namespace FMSC.ORM.Core.EntityAttributes
 
             if (this.NotNull == true && value == null) { isValid = false; }
 
-            if (isValid && this.Min != double.NaN)
+            if (isValid && this.Min != int.MinValue)
             {
                 var num = value as float?;
                 if (num != null)
@@ -33,7 +44,7 @@ namespace FMSC.ORM.Core.EntityAttributes
                     if (num < this.Min) { isValid = false; }
                 }
             }
-            if (isValid && this.Max != double.NaN)
+            if (isValid && this.Max != int.MinValue)
             {
                 var num = value as float?;
                 if (num != null)

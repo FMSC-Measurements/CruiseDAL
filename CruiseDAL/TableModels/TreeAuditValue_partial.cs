@@ -98,7 +98,7 @@ namespace CruiseDAL.DataObjects
 
             if (this.Required == true && value == null) { isValid = false; }
 
-            if (isValid && this.Min != double.NaN)
+            if (isValid && this.Min != 0)
             {
                 var num = value as float?;
                 if (num != null)
@@ -106,7 +106,7 @@ namespace CruiseDAL.DataObjects
                     if (num < this.Min) { isValid = false; }
                 }
             }
-            if (isValid && this.Max != double.NaN)
+            if (isValid && this.Max != 0)
             {
                 var num = value as float?;
                 if (num != null)

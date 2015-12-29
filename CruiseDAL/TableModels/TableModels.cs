@@ -37,7 +37,7 @@ namespace CruiseDAL.DataObjects
 		    _validator = new RowValidator();
 		    
 			_validator.Add(new NotNullRule("SaleNumber", "Sale", "SaleNumber is Required"));
-			_validator.Add(new FieldValidator("Region", "Sale", "Invalid Region", double.NaN, double.NaN, true, "01 02 03 04 05 06 07 08 09 10 11 12"));
+			_validator.Add(new FieldValidator("Region", "Sale", "Invalid Region", double.MinValue, double.MinValue, true, "01 02 03 04 05 06 07 08 09 10 11 12"));
 			_validator.Add(new NotNullRule("Forest", "Sale", "Forest is Required"));
 			_validator.Add(new NotNullRule("District", "Sale", "District is Required"));
 			_validator.Add(new FieldValidator("CalendarYear", "Sale", "Year Out of Range", 1000, 9999, false, null));
@@ -1048,13 +1048,13 @@ namespace CruiseDAL.DataObjects
 		    
 			_validator.Add(new NotNullRule("Stratum_CN", "SampleGroup", "Stratum_CN is Required"));
 			_validator.Add(new NotNullRule("Code", "SampleGroup", "Code is Required"));
-			_validator.Add(new FieldValidator("CutLeave", "SampleGroup", "Invalid Cut Leave Value", double.NaN, double.NaN, true, "C L"));
-			_validator.Add(new FieldValidator("UOM", "SampleGroup", "Invalid UOM ", double.NaN, double.NaN, true, "01 02 03 04 05"));
+			_validator.Add(new FieldValidator("CutLeave", "SampleGroup", "Invalid Cut Leave Value", double.MinValue, double.MinValue, true, "C L"));
+			_validator.Add(new FieldValidator("UOM", "SampleGroup", "Invalid UOM ", double.MinValue, double.MinValue, true, "01 02 03 04 05"));
 			_validator.Add(new NotNullRule("PrimaryProduct", "SampleGroup", "PrimaryProduct is Required"));
-			_validator.Add(new FieldValidator("SamplingFrequency", "SampleGroup", "Frequency Must Be a Positive Number", 0, double.NaN, false, null));
-			_validator.Add(new FieldValidator("InsuranceFrequency", "SampleGroup", "Frequency Must Be a Positive Number", 0, double.NaN, false, null));
-			_validator.Add(new FieldValidator("KZ", "SampleGroup", "KZ Must Be a Positive Number", 0, double.NaN, false, null));
-			_validator.Add(new FieldValidator("BigBAF", "SampleGroup", "BigBAG Must Be a Postive Number", 0, double.NaN, false, null));
+			_validator.Add(new FieldValidator("SamplingFrequency", "SampleGroup", "Frequency Must Be a Positive Number", 0, double.MinValue, false, null));
+			_validator.Add(new FieldValidator("InsuranceFrequency", "SampleGroup", "Frequency Must Be a Positive Number", 0, double.MinValue, false, null));
+			_validator.Add(new FieldValidator("KZ", "SampleGroup", "KZ Must Be a Positive Number", 0, double.MinValue, false, null));
+			_validator.Add(new FieldValidator("BigBAF", "SampleGroup", "BigBAG Must Be a Postive Number", 0, double.MinValue, false, null));
 		}
 		
 		public SampleGroupDO() {}
@@ -1553,14 +1553,14 @@ namespace CruiseDAL.DataObjects
 		    
 			_validator.Add(new NotNullRule("PrimaryProduct", "TreeDefaultValue", "PrimaryProduct is Required"));
 			_validator.Add(new NotNullRule("Species", "TreeDefaultValue", "Species is Required"));
-			_validator.Add(new FieldValidator("LiveDead", "TreeDefaultValue", "Invalid Live Dead Value", double.NaN, double.NaN, true, "L D"));
-			_validator.Add(new FieldValidator("FIAcode", "TreeDefaultValue", "Three digit FIA code", double.NaN, double.NaN, false, null));
+			_validator.Add(new FieldValidator("LiveDead", "TreeDefaultValue", "Invalid Live Dead Value", double.MinValue, double.MinValue, true, "L D"));
+			_validator.Add(new FieldValidator("FIAcode", "TreeDefaultValue", "Three digit FIA code", double.MinValue, double.MinValue, false, null));
 			_validator.Add(new FieldValidator("CullPrimary", "TreeDefaultValue", "Cull Primary Out of Range", 0, 100, false, null));
 			_validator.Add(new FieldValidator("HiddenPrimary", "TreeDefaultValue", "Hidden Primary Out of Range", 0, 100, false, null));
 			_validator.Add(new FieldValidator("CullSecondary", "TreeDefaultValue", "Cull Secondary Out of Range", 0, 100, false, null));
 			_validator.Add(new FieldValidator("HiddenSecondary", "TreeDefaultValue", "Hidden Secondary Out of Range", 0, 100, false, null));
 			_validator.Add(new FieldValidator("Recoverable", "TreeDefaultValue", "Recoverable Out of Range", 0, 100, false, null));
-			_validator.Add(new FieldValidator("TreeGrade", "TreeDefaultValue", "Invalid Tree Grade", double.NaN, double.NaN, false, "0 1 2 3 4 5 6 7 8 9"));
+			_validator.Add(new FieldValidator("TreeGrade", "TreeDefaultValue", "Invalid Tree Grade", double.MinValue, double.MinValue, false, "0 1 2 3 4 5 6 7 8 9"));
 			_validator.Add(new FieldValidator("MerchHeightLogLength", "TreeDefaultValue", "Merch Height Log Length Out of Range", 0, 50, false, null));
 			_validator.Add(new FieldValidator("FormClass", "TreeDefaultValue", "Form Class Out of Range", 0, 99, false, null));
 			_validator.Add(new FieldValidator("BarkThicknessRatio", "TreeDefaultValue", "Bark Thickness Ratio Out of Range", 0, 100, false, null));
@@ -2586,7 +2586,7 @@ namespace CruiseDAL.DataObjects
 			_validator.Add(new NotNullRule("Stratum_CN", "Tree", "Stratum_CN is Required"));
 			_validator.Add(new NotNullRule("CuttingUnit_CN", "Tree", "CuttingUnit_CN is Required"));
 			_validator.Add(new NotNullRule("TreeNumber", "Tree", "TreeNumber is Required"));
-			_validator.Add(new FieldValidator("DBH", "Tree", "DBH Out of range", 0, double.NaN, false, null));
+			_validator.Add(new FieldValidator("DBH", "Tree", "DBH Out of range", 0, double.MinValue, false, null));
 		}
 		
 		public TreeDO() {}

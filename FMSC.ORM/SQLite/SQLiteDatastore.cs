@@ -338,7 +338,7 @@ namespace FMSC.ORM.SQLite
                         }
                     case SQLiteErrorCode.Constraint:
                         {
-                            if (innerException.Message.IndexOf("UNIQUE constraint failed") >= 0)
+                            if (innerException.Message.IndexOf("UNIQUE constraint failed", StringComparison.OrdinalIgnoreCase) >= 0)
                             {
                                 sqlEx = new UniqueConstraintException(null, innerException);
                             }
