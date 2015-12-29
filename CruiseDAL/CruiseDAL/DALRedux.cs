@@ -188,15 +188,15 @@ namespace CruiseDAL
             {
                 return CruiseFileType.Component;
             }
-            else if (normPath.EndsWith(".cruise"))
+            else if (normPath.EndsWith(".cruise", StringComparison.OrdinalIgnoreCase))
             {
                 return CruiseFileType.Cruise;
             }
-            else if (normPath.EndsWith(".cut"))
+            else if (normPath.EndsWith(".cut", StringComparison.OrdinalIgnoreCase))
             {
                 return CruiseFileType.Template;
             }
-            else if (normPath.EndsWith(".design"))
+            else if (normPath.EndsWith(".design", StringComparison.OrdinalIgnoreCase))
             {
                 return CruiseFileType.Design;
             }
