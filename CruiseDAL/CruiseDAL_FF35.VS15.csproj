@@ -171,6 +171,7 @@
       <Generator>TextTemplatingFileGenerator</Generator>
       <LastGenOutput>DAL.AutoGen.cs</LastGenOutput>
     </None>
+    <None Include="packages.config" />
     <None Include="TableModels\TableModels.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
       <LastGenOutput>TableModels.cs</LastGenOutput>
@@ -179,7 +180,6 @@
       <Generator>TextTemplatingFileGenerator</Generator>
       <LastGenOutput>Schema.cs</LastGenOutput>
     </None>
-    <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="AutoGen\CreateTriggers.sql">
@@ -207,11 +207,11 @@
     </PropertyGroup>
     <Error Condition="!Exists('$(SolutionDir)packages\System.Data.SQLite.Core.1.0.98.1\build\net45\System.Data.SQLite.Core.targets')" Text="$([System.String]::Format('$(ErrorText)', '$(SolutionDir)packages\System.Data.SQLite.Core.1.0.98.1\build\net45\System.Data.SQLite.Core.targets'))" />
   </Target>
-  <Import Project="$(SolutionDir)packages\System.Data.SQLite.Core.1.0.98.1\build\net45\System.Data.SQLite.Core.targets" Condition="Exists('$(SolutionDir)packages\System.Data.SQLite.Core.1.0.98.1\build\net45\System.Data.SQLite.Core.targets')" />
   <PropertyGroup>
     <PreBuildEvent>
     </PreBuildEvent>
   </PropertyGroup>
+  <Import Project="$(SolutionDir)packages\System.Data.SQLite.Core.1.0.98.1\build\net45\System.Data.SQLite.Core.targets" Condition="Exists('$(SolutionDir)packages\System.Data.SQLite.Core.1.0.98.1\build\net45\System.Data.SQLite.Core.targets')" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">
