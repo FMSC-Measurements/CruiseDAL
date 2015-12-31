@@ -14,7 +14,7 @@ using System.Threading;
 
 namespace CruiseDAL
 {
-    public enum CruiseFileType { Unknown, Cruise, Template, Design, Master, Component }
+    public enum CruiseFileType { Unknown, Cruise, Template, Design, Master, Component, Backup}
 
     public partial class DAL : SQLiteDatastore
     {
@@ -199,6 +199,10 @@ namespace CruiseDAL
             else if (normPath.EndsWith(".design", StringComparison.OrdinalIgnoreCase))
             {
                 return CruiseFileType.Design;
+            }
+            else if (normPath.EndsWith(".back-cruise", StringComparison.OrdinalIgnoreCase))
+            {
+                return CruiseFileType.Backup;
             }
 
             return CruiseFileType.Unknown;
