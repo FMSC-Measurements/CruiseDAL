@@ -30,13 +30,27 @@ namespace FMSC.ORM.Core.SQL.QueryBuilder
             return Datastore.Read<T>(Builder, selectionArgs);
         }
 
+        
+
         public IQueryBuilder<T> Limit(int limit, int offset)
         {
             Builder.Limit(limit, offset);
             return this;
         }
 
-        public IQuerryAcceptsLimit<T> GroupBy(IEnumerable<string> terms)
+        public IQuerryAcceptsLimit<T> OrderBy(IEnumerable<string> terms)
+        {
+            Builder.OrderBy(terms);
+            return this;
+        }
+
+        public IQuerryAcceptsLimit<T> OrderBy(params String[] termsArgs)
+        {
+            Builder.OrderBy(termsArgs);
+            return this;
+        } 
+
+        public IQuerryAcceptsOrderBy<T> GroupBy(IEnumerable<string> terms)
         {
             Builder.GroupBy(terms);
             return this;
@@ -51,6 +65,12 @@ namespace FMSC.ORM.Core.SQL.QueryBuilder
         public IQuerryAcceptsJoin<T> Join(string table, string joinContraint, string alias)
         {
             Builder.Join(table, joinContraint, alias);
+            return this;
+        }
+
+        public IQuerryAcceptsJoin<T> Join(string table, string joinContraint)
+        {
+            Builder.Join(table, joinContraint, null);
             return this;
         }
     }

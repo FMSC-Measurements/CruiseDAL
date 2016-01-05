@@ -16,9 +16,14 @@ namespace FMSC.ORM.Core.SQL.QueryBuilder
         IQueryBuilder<T> Limit(int limit, int offset);
     }
 
-    public interface IQuerryAcceptsGroupBy<T> : IQuerryAcceptsLimit<T>
+    public interface IQuerryAcceptsOrderBy<T> : IQuerryAcceptsLimit<T>
     {
-        IQuerryAcceptsLimit<T> GroupBy(IEnumerable<string> terms);
+        IQuerryAcceptsLimit<T> OrderBy(IEnumerable<string> terms);
+    }
+
+    public interface IQuerryAcceptsGroupBy<T> : IQuerryAcceptsOrderBy<T>
+    {
+        IQuerryAcceptsOrderBy<T> GroupBy(IEnumerable<string> terms);
     }
 
     public interface IQuerryAcceptsWhere<T> : IQuerryAcceptsGroupBy<T>

@@ -61,14 +61,26 @@ namespace FMSC.ORM.Core.SQL
             return this;
         }
 
-        public IAcceptsLimit GroupBy(params string[] termArgs)
+        public IAcceptsOrderBy GroupBy(params string[] termArgs)
         {
             return GroupBy((IEnumerable<string>)termArgs);
         }
 
-        public IAcceptsLimit GroupBy(IEnumerable<string> terms)
+        public IAcceptsOrderBy GroupBy(IEnumerable<string> terms)
         {
             this.Accept( new GroupByClause(terms));
+            return this;
+        }
+
+        public IAcceptsLimit OrderBy(IEnumerable<string> terms)
+        {
+            this.Accept(new OrderByClause(terms));
+            return this;
+        }
+
+        public IAcceptsLimit OrderBy(params string[] termArgs)
+        {
+            this.Accept(new OrderByClause(termArgs));
             return this;
         }
 
@@ -99,6 +111,12 @@ namespace FMSC.ORM.Core.SQL
         {
             groupByClause.Accept((SelectElement)this.Clause);
             this.Clause = groupByClause;
+        }
+
+        public void Accept(OrderByClause orderByClause)
+        {
+            orderByClause.Accept((SelectElement)this.Clause);
+            this.Clause = orderByClause;
         }
 
         public void Accept(LimitClause limitClause)
