@@ -6,9 +6,17 @@ namespace FMSC.ORM.Core.SQL
 {
     public class OrderByClause : SelectClause
     {
+
+
         public List<string> OrderingTerms { get; protected set; }
 
+        OrderByClause()
+        {
+            this.OrderingTerms = new List<string>();
+        }
+
         public OrderByClause(IEnumerable<string> orderingTerms)
+            :this()
         {
             AddRange(orderingTerms);
         }

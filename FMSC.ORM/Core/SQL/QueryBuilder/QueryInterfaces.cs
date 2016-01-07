@@ -19,6 +19,7 @@ namespace FMSC.ORM.Core.SQL.QueryBuilder
     public interface IQuerryAcceptsOrderBy<T> : IQuerryAcceptsLimit<T>
     {
         IQuerryAcceptsLimit<T> OrderBy(IEnumerable<string> terms);
+        IQuerryAcceptsLimit<T> OrderBy(params String[] termsArgs);
     }
 
     public interface IQuerryAcceptsGroupBy<T> : IQuerryAcceptsOrderBy<T>

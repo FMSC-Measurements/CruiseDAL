@@ -14,6 +14,7 @@ namespace FMSC.ORM.Core.SQL
             : this()
         {
             this.Table = tableName;
+            this.Alias = alias;
         }
 
         public TableOrSubQuery(SQLSelectBuilder subQuery, string alias)
