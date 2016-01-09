@@ -59,7 +59,6 @@
     <Compile Include="Core\DatastoreBuilder.cs" />
     <Compile Include="Core\DatastoreRedux.cs" />
     <Compile Include="Core\DbProviderFactoryAdapter.cs" />
-    <Compile Include="Core\EntityAttributes\BaseFieldAttribute.cs" />
     <Compile Include="Core\EntityAttributes\CreatedByFieldAttribute.cs" />
     <Compile Include="Core\EntityAttributes\FieldAccesabilityException.cs" />
     <Compile Include="Core\EntityAttributes\FieldAttribute.cs" />
@@ -82,6 +81,7 @@
     <Compile Include="Core\EntityModel\IDataObject.cs" />
     <Compile Include="Core\EntityModel\IPersistanceTracking.cs" />
     <Compile Include="Core\EntityModel\MappingColliction_Base.cs" />
+    <Compile Include="Core\EntityModel\PropertyAccessor.cs" />
     <Compile Include="Core\EntityModel\Validation\FieldValidatorCollection.cs" />
     <Compile Include="Core\EntityModel\Validation\IFieldValidator.cs" />
     <Compile Include="Core\EntityModel\Validation\IValidatable.cs" />
@@ -123,6 +123,11 @@
     <Content Include="..\SQLite\Mobile_CF20\SQLite.Interop.094.dll">
       <Link>SQLite.Interop.094.dll</Link>
     </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Core\EntityAttributes\BaseFieldAttribute.cs">
+      <SubType>Code</SubType>
+    </Compile>
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CompactFramework.CSharp.targets" />
   <ProjectExtensions>

@@ -44,7 +44,6 @@
     <Compile Include="Core\DatastoreBuilder.cs" />
     <Compile Include="Core\DatastoreRedux.cs" />
     <Compile Include="Core\DbProviderFactoryAdapter.cs" />
-    <Compile Include="Core\EntityAttributes\BaseFieldAttribute.cs" />
     <Compile Include="Core\EntityAttributes\CreatedByFieldAttribute.cs" />
     <Compile Include="Core\EntityAttributes\FieldAccesabilityException.cs" />
     <Compile Include="Core\EntityAttributes\FieldAttribute.cs" />

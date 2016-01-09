@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Reflection;
+using FMSC.ORM.Core.EntityModel;
 
 namespace FMSC.ORM.Core.EntityAttributes
 {
@@ -20,9 +21,11 @@ namespace FMSC.ORM.Core.EntityAttributes
             set { _isPersisted = value; }
         }
 
-        public Type RunTimeType { get; set; }
-        public MethodInfo Getter { get; set; }
-        public MethodInfo Setter { get; set; }
+        public PropertyAccessor Property { get; set; }
+
+        public Type RunTimeType { get { return Property.RuntimeType; } }
+        //public MethodInfo Getter { get; set; }
+        //public MethodInfo Setter { get; set; }
        
         public bool IsGuid;
 
@@ -57,7 +60,7 @@ namespace FMSC.ORM.Core.EntityAttributes
 
         public object GetFieldValue(Object obj)
         {
-            object value = Getter.Invoke(obj, null);
+            object value = Property.Getter.Invoke(obj, null);
             if (RunTimeType.IsEnum)
             {
                 value = value.ToString();
@@ -88,8 +91,7 @@ namespace FMSC.ORM.Core.EntityAttributes
                 //{
                 //    value = new Nullable<Int64>((long)value);
                 //}
-
-                Setter.Invoke(dataObject, new Object[] { value, });
+                Property.Setter.Invoke(dataObject, new Object[] { value, });
             }
             catch(Exception e)
             {

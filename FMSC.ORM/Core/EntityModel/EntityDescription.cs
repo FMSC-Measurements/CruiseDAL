@@ -71,31 +71,43 @@ namespace FMSC.ORM.Core.EntityModel
             //find public properties
             foreach (PropertyInfo p in EntityType.GetProperties(BindingFlags.Public | BindingFlags.Instance))
             {
-                RegesterPublicProperty(p);
+                RegesterProperty(p, true);
             }
 
             //find private properties
             foreach (PropertyInfo p in EntityType.GetProperties(BindingFlags.NonPublic | BindingFlags.Instance))
             {
-                RegesterNonPublicProperty(p);
+                RegesterProperty(p, false);
             }
         }
 
-        protected void RegesterPublicProperty(PropertyInfo property)
+        protected void RegesterProperty(PropertyInfo property, bool isPublic)
         {
-            BaseFieldAttribute fieldAttr = (BaseFieldAttribute)Attribute.GetCustomAttribute(property, typeof(BaseFieldAttribute));
-            try
+            BaseFieldAttribute fieldAttr = Attribute.GetCustomAttribute(property, typeof(BaseFieldAttribute)) as BaseFieldAttribute;
+            
+            if (fieldAttr == null)
             {
-                if (fieldAttr == null)
+                if (isPublic)
                 {
                     //TODO handle public property without attribute if we want automatic fields
                     //catch FieldAccesabilityException for automatic fields
                     return;
                 }
-                if (fieldAttr is IgnoreFieldAttribute) { return; }
+                else
+                {
+                    return; //don't allow non public properties to be automatic fields
+                }
+            }
+
+            if (fieldAttr is IgnoreFieldAttribute) { return; }
+
+            try
+            {
                 if (fieldAttr is FieldAttribute)
                 {
-                    Fields.AddField(property, (FieldAttribute)fieldAttr);
+                    var accessor = new PropertyAccessor(property);
+                    ((FieldAttribute)fieldAttr).Property = accessor;
+                    Fields.AddField((FieldAttribute)fieldAttr);
                 }
             }
             catch(Exception e)
@@ -104,22 +116,22 @@ namespace FMSC.ORM.Core.EntityModel
             }
         }
 
-        protected void RegesterNonPublicProperty(PropertyInfo property)
-        {
-            BaseFieldAttribute fieldAttr = (BaseFieldAttribute)Attribute.GetCustomAttribute(property, typeof(BaseFieldAttribute));
-            try
-            {
-                if (fieldAttr == null) { return; } //don't allow non public properties to be automatic fields
-                if (fieldAttr is IgnoreFieldAttribute) { return; }
-                if (fieldAttr is FieldAttribute)
-                {
-                    Fields.AddField(property, (FieldAttribute)fieldAttr);
-                }
-            }
-            catch (Exception e)
-            {
-                throw new ORMException("Unable to register property: " + property.Name, e);
-            }
-        }
+        //protected void RegesterNonPublicProperty(PropertyInfo property)
+        //{
+        //    BaseFieldAttribute fieldAttr = (BaseFieldAttribute)Attribute.GetCustomAttribute(property, typeof(BaseFieldAttribute));
+        //    try
+        //    {
+        //        if (fieldAttr == null) { return; } //don't allow non public properties to be automatic fields
+        //        if (fieldAttr is IgnoreFieldAttribute) { return; }
+        //        if (fieldAttr is FieldAttribute)
+        //        {
+        //            Fields.AddField(property, (FieldAttribute)fieldAttr);
+        //        }
+        //    }
+        //    catch (Exception e)
+        //    {
+        //        throw new ORMException("Unable to register property: " + property.Name, e);
+        //    }
+        //}
     }
 }

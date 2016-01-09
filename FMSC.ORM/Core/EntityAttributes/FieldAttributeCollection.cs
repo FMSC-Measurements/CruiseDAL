@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Reflection;
+using FMSC.ORM.Core.EntityModel;
 
 namespace FMSC.ORM.Core.EntityAttributes
 {
@@ -15,33 +16,23 @@ namespace FMSC.ORM.Core.EntityAttributes
         {
             get
             {
-                return _fields[value];
+                return GetField(value, false);
             }
         }
 
-        public void AddField(PropertyInfo prop)
+        public void AddField(PropertyAccessor p)
         {
-            var field = new FieldAttribute(prop.Name);
-            this.AddField(prop, field);
+            var field = new FieldAttribute(p.Name);
+            field.Property = p;
+            this.AddField(field);
         }
 
-        public void AddField(PropertyInfo prop, FieldAttribute field)
+        public void AddField(FieldAttribute field)
         {
             Debug.Assert(field != null);
-            Debug.Assert(prop != null);
+            Debug.Assert(field.Property != null);
 
-            field.RunTimeType = prop.PropertyType;
-
-            var getMethod = prop.GetGetMethod(true);
-            var setMethod = prop.GetSetMethod(true);
-
-            field.Getter = getMethod;
-            field.Setter = setMethod;
-
-            if(getMethod == null || setMethod == null)
-            {
-                throw new FieldAccesabilityException(field.FieldName, getMethod == null, setMethod == null);
-            }
+            
             
             if (field is PrimaryKeyFieldAttribute)
             {
@@ -49,7 +40,15 @@ namespace FMSC.ORM.Core.EntityAttributes
                 PrimaryKeyField = (PrimaryKeyFieldAttribute)field;
             }
 
+
+            if (field.Property.CanRead == false
+                || field.Property.CanWrite == false)
+            {
+                throw new FieldAccesabilityException(field.FieldName, !field.Property.CanRead, !field.Property.CanWrite);
+            }
+
             _fields.Add(field.FieldName, field);
+            
         }
 
         public IEnumerable<FieldAttribute> GetPersistedFields()
@@ -76,6 +75,21 @@ namespace FMSC.ORM.Core.EntityAttributes
                 }
             }
             return fields;
+        }
+
+        public FieldAttribute GetField(string fieldName)
+        {
+            if (string.IsNullOrEmpty(fieldName))
+            { throw new ArgumentException("fieldName"); }
+
+            if (_fields.ContainsKey(fieldName))
+            {
+                return _fields[fieldName];
+            }
+            else
+            {
+                return null;
+            }
         }
 
         public IEnumerator<FieldAttribute> GetEnumerator()

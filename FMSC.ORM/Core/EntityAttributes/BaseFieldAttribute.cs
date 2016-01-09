@@ -7,7 +7,6 @@ namespace FMSC.ORM.Core.EntityAttributes
 {
     [AttributeUsage(AttributeTargets.Property, Inherited = true)]
     public class BaseFieldAttribute : Attribute
-    {
-        
+    {        
     }
 }
