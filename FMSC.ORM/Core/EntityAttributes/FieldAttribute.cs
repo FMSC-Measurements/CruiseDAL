@@ -60,7 +60,7 @@ namespace FMSC.ORM.Core.EntityAttributes
 
         public object GetFieldValue(Object obj)
         {
-            object value = Property.Getter.Invoke(obj, null);
+            object value = Property.GetValue(obj);
             if (RunTimeType.IsEnum)
             {
                 value = value.ToString();
@@ -91,7 +91,7 @@ namespace FMSC.ORM.Core.EntityAttributes
                 //{
                 //    value = new Nullable<Int64>((long)value);
                 //}
-                Property.Setter.Invoke(dataObject, new Object[] { value, });
+                Property.SetValue(dataObject, value);
             }
             catch(Exception e)
             {

@@ -30,6 +30,8 @@ namespace FMSC.ORM.Core.EntityModel
 
         public FieldAttributeCollection Fields { get; set; }
 
+        public Dictionary<string, PropertyAccessor> Properties { get; set; }
+
         //public Dictionary<String, ReferenceAttribute> ReferenceFields { get; set; }
 
         public EntityCommandBuilder CommandBuilder { get; set; }
@@ -38,6 +40,7 @@ namespace FMSC.ORM.Core.EntityModel
         protected EntityDescription()
         {
             Fields = new FieldAttributeCollection();
+            Properties = new Dictionary<string, PropertyAccessor>();
         }
 
 
@@ -75,14 +78,25 @@ namespace FMSC.ORM.Core.EntityModel
             }
 
             //find private properties
-            foreach (PropertyInfo p in EntityType.GetProperties(BindingFlags.NonPublic | BindingFlags.Instance))
-            {
-                RegesterProperty(p, false);
-            }
+            //foreach (PropertyInfo p in EntityType.GetProperties(BindingFlags.NonPublic | BindingFlags.Instance))
+            //{
+            //    RegesterProperty(p, false);
+            //}
         }
 
         protected void RegesterProperty(PropertyInfo property, bool isPublic)
         {
+            var accessor = new PropertyAccessor(property);
+
+            if (this.Properties.ContainsKey(accessor.Name) == false)
+            {
+                this.Properties.Add(accessor.Name, accessor);
+            }
+            else
+            {
+                Debug.Fail("property already registered: " + accessor.Name);
+            }
+
             BaseFieldAttribute fieldAttr = Attribute.GetCustomAttribute(property, typeof(BaseFieldAttribute)) as BaseFieldAttribute;
             
             if (fieldAttr == null)
@@ -99,20 +113,20 @@ namespace FMSC.ORM.Core.EntityModel
                 }
             }
 
+
             if (fieldAttr is IgnoreFieldAttribute) { return; }
 
-            try
+            if (fieldAttr is FieldAttribute)
             {
-                if (fieldAttr is FieldAttribute)
+                try
                 {
-                    var accessor = new PropertyAccessor(property);
                     ((FieldAttribute)fieldAttr).Property = accessor;
                     Fields.AddField((FieldAttribute)fieldAttr);
                 }
-            }
-            catch(Exception e)
-            {
-                throw new ORMException("Unable to register property: " + property.Name, e);
+                catch (Exception e)
+                {
+                    throw new ORMException("Unable to register property: " + property.Name, e);
+                }
             }
         }
 

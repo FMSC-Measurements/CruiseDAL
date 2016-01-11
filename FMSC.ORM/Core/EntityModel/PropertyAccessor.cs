@@ -31,5 +31,16 @@ namespace FMSC.ORM.Core.EntityModel
             RuntimeType = prop.PropertyType;
         }
 
+        public object GetValue(object target)
+        {
+            object value = Getter.Invoke(target, null);
+            return value;
+        }
+
+        public void SetValue(object target, object value)
+        {
+            Setter.Invoke(target, new Object[] { value, });
+        }
+
     }
 }

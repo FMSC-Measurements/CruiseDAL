@@ -16,7 +16,7 @@ namespace FMSC.ORM.Core.EntityAttributes
         {
             get
             {
-                return GetField(value, false);
+                return GetField(value);
             }
         }
 

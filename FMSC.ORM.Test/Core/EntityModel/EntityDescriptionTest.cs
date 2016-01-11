@@ -50,6 +50,7 @@ namespace FMSC.ORM.Core.EntityModel
         {
             Assert.NotNull(doi);
             Assert.Equal(dataType, doi.EntityType);
+
             Assert.False(String.IsNullOrWhiteSpace(doi.SourceName));
 
             VerifyDataObjectInfoFields(doi);
@@ -58,8 +59,8 @@ namespace FMSC.ORM.Core.EntityModel
         void VerifyDataObjectInfoFields(EntityDescription doi)
         {
             Assert.NotNull(doi.Fields.PrimaryKeyField);
-            Assert.NotNull(doi.Fields.PrimaryKeyField.Getter);
-            Assert.NotNull(doi.Fields.PrimaryKeyField.Setter);
+            Assert.NotNull(doi.Fields.PrimaryKeyField.Property.Getter);
+            Assert.NotNull(doi.Fields.PrimaryKeyField.Property.Setter);
 
             VerifyField(doi, "ID");
             VerifyField(doi, "StringField");
@@ -77,17 +78,18 @@ namespace FMSC.ORM.Core.EntityModel
             VerifyField(doi, "DateTimeField");
 
             VerifyField(doi, "PartialyPublicField");
-            VerifyField(doi, "PrivateField");
+            //VerifyField(doi, "PrivateField");
             VerifyField(doi, "CreatedBy");
             VerifyField(doi, "ModifiedBy");
 
-            //verify 
-            Assert.DoesNotContain(doi.Fields, x => x.FieldName == "IgnoredField");
-            Assert.DoesNotContain(doi.Fields, x => x.FieldName == "PrivateIgnoredField");
-            Assert.DoesNotContain(doi.Fields, x => x.FieldName == "PartialyPublicAutomaticField");
-            Assert.DoesNotContain(doi.Fields, x => x.FieldName == "PrivateAutomaticField");
-            Assert.DoesNotContain(doi.Fields, x => x.FieldName == "IInterface.InterfaceProperty");
-            Assert.DoesNotContain(doi.Fields, x => x.FieldName.Contains("InterfaceProperty"));
+            //verify non visible field
+            VerifyNonvisableField(doi, "IgnoredField");
+            VerifyNonvisableField(doi, "PartialyPublicAutomaticField");
+
+            VerifyNonvisableField(doi, "PrivateIgnoredField", true);            
+            VerifyNonvisableField(doi, "PrivateAutomaticField", true);
+            VerifyNonvisableField(doi, "IInterface.InterfaceProperty", true);
+            VerifyNonvisableField(doi, "InterfaceProperty", true);
         }
 
         void VerifyField(EntityDescription doi, string fieldName)
@@ -97,13 +99,32 @@ namespace FMSC.ORM.Core.EntityModel
 
             var field = doi.Fields[fieldName];
             Assert.NotNull(field);
-            Assert.NotNull(field.Getter);
-            Assert.NotNull(field.Setter);
+            Assert.NotNull(field.Property.Getter);
+            Assert.NotNull(field.Property.Setter);
             Assert.NotNull(field.RunTimeType);
             Assert.True(field.IsPersisted);
 
             _output.WriteLine("done");
+        }
 
+        void VerifyNonvisableField(EntityDescription doi, string fieldName)
+        {
+            VerifyNonvisableField(doi, fieldName, false);
+        }
+        
+
+        void VerifyNonvisableField(EntityDescription doi, string fieldName, bool isPrivate)
+        {
+            Assert.DoesNotContain(doi.Fields, x => x.FieldName == fieldName);
+
+            if (isPrivate)
+            {
+                Assert.DoesNotContain(doi.Properties, x => x.Key == fieldName);
+            }
+            else
+            {
+                Assert.Contains(doi.Properties, x => x.Key == fieldName);
+            }
         }
     }
 }

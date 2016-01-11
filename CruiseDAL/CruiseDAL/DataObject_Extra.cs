@@ -486,9 +486,7 @@ namespace CruiseDAL
             try
             {
                 value = DatastoreRedux.LookUpEntityByType(this.GetType())
-                    .Fields
-                    .GetField(name, true)
-                    .GetFieldValue(this);
+                    .Properties[name].GetValue(this);
                 //PropertyInfo property = this.GetType().GetProperty(name, BindingFlags.Instance | BindingFlags.Public);
                 ////if (property == null) { return true; }
                 //value = property.GetValue(this, null);
