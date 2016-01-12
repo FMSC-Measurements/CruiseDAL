@@ -26,22 +26,31 @@ namespace FMSC.ORM.Core.EntityModel
 
             Assert.NotNull(pData);
 
+
+            // check base state
             //Assert.True(data.IsDetached);
             Assert.False(data.IsDeleted);
             Assert.False(data.IsPersisted);
             Assert.False(data.HasChanges);
             
-
+            // base state -> has changes
             pData.HasChanges = true;
             //Assert.True(data.IsDetached);
             Assert.False(data.IsDeleted);
             Assert.False(data.IsPersisted);
             Assert.True(data.HasChanges);
 
+            // has changes -> persisted
             pData.IsPersisted = true;
             //Assert.True(data.IsDetached);
             Assert.False(data.IsDeleted);
             Assert.True(data.IsPersisted);
+            Assert.False(data.HasChanges);
+
+            // persisted -> deleted
+            pData.IsDeleted = true;
+            Assert.True(data.IsDeleted);
+            Assert.False(data.IsPersisted);
             Assert.False(data.HasChanges);
 
         }
