@@ -94,7 +94,8 @@ namespace FMSC.ORM.Core.EntityModel
             }
             else
             {
-                Debug.Fail("property already registered: " + accessor.Name);
+                Debug.WriteLine("Property hidden:" + property.ToString());
+                //Debug.Fail("property already registered: " + accessor.Name);
             }
 
             BaseFieldAttribute fieldAttr = Attribute.GetCustomAttribute(property, typeof(BaseFieldAttribute)) as BaseFieldAttribute;
