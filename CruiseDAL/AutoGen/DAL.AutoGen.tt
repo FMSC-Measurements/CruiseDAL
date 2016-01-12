@@ -9,7 +9,7 @@
 <#@ import namespace="System.Linq" #>
 <#@ import namespace="System.Collections" #>
 <#@ import namespace="System.Collections.Generic" #>
-<#@ import namespace="CruiseDAL.CodeGenEngine" #>
+<#@ import namespace="FMSCORM.CodeGenEngine" #>
 <#
 DataDictionaryReader dr = new DataDictionaryReader();
 

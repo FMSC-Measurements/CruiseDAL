@@ -9,7 +9,7 @@
 <#@ import namespace="System.Linq" #>
 <#@ import namespace="System.Collections" #>
 <#@ import namespace="System.Collections.Generic" #>
-<#@ import namespace="CruiseDAL.CodeGenEngine" #> 
+<#@ import namespace="FMSCORM.CodeGenEngine" #> 
 <#
 DataDictionaryReader dr = new DataDictionaryReader();
 
@@ -102,7 +102,7 @@ END;
 #>
 CREATE TRIGGER OnDelete<#= table.Name#> AFTER DELETE ON <#= table.Name#>  
 BEGIN
-	INSERT INTO <#= CruiseDAL.CodeGenEngine.Constants.TOMBSTONE_TABLENAME#> 
+	INSERT INTO <#= FMSCORM.CodeGenEngine.Constants.TOMBSTONE_TABLENAME#> 
 	(RecordID, TableName, Data, DeletedDate) 
 	VALUES 
 	(OLD.rowID, '<#= table.Name#>', <#=makeData#>, datetime(current_timestamp, 'localtime')); 
@@ -115,7 +115,7 @@ END;
 #>
 CREATE TRIGGER OnDelete<#= table.Name#> AFTER DELETE ON <#= table.Name#>  
 BEGIN
-	INSERT INTO <#= CruiseDAL.CodeGenEngine.Constants.TOMBSTONE_TABLENAME#> 
+	INSERT INTO <#= FMSCORM.CodeGenEngine.Constants.TOMBSTONE_TABLENAME#> 
 	(RecordID, RecordGUID, TableName, Data, DeletedDate) 
 	VALUES 
 	(OLD.rowID, OLD.<#=table.Name#>_GUID, '<#= table.Name#>', <#=makeData#>, datetime(current_timestamp, 'localtime')); 

@@ -9,7 +9,7 @@
 <#@ import namespace="System.Linq" #>
 <#@ import namespace="System.Collections" #>
 <#@ import namespace="System.Collections.Generic" #>
-<#@ import namespace="CruiseDAL.CodeGenEngine" #> 
+<#@ import namespace="FMSCORM.CodeGenEngine" #> 
 <#
 DataDictionaryReader dr = new DataDictionaryReader();
 
@@ -37,7 +37,7 @@ PRAGMA foreign_keys = ON;--is the nessicary? no data is being inserted yet.
 
 #>
 
-CREATE TABLE <#= CruiseDAL.CodeGenEngine.Constants.TOMBSTONE_TABLENAME#> (
+CREATE TABLE <#= FMSCORM.CodeGenEngine.Constants.TOMBSTONE_TABLENAME#> (
 RecordID INTEGER ,
 RecordGUID TEXT, 
 TableName TEXT NOT NULL COLLATE NOCASE,
