@@ -5,12 +5,12 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("FMSC.ORM")]
+[assembly: AssemblyTitle("CruiseDAL.Properties")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("USDA Forest Service")]
-[assembly: AssemblyProduct("FMSC.ORM")]
-[assembly: AssemblyCopyright("Copyright © USDA Forest Service 2015")]
+[assembly: AssemblyProduct("CruiseDAL.Properties")]
+[assembly: AssemblyCopyright("Copyright © USDA Forest Service 2016")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
@@ -20,7 +20,7 @@ using System.Runtime.InteropServices;
 [assembly: ComVisible(false)]
 
 // The following GUID is for the ID of the typelib if this project is exposed to COM
-[assembly: Guid("2f113e9e-f07b-4c7c-9d83-72d86a7a4bc1")]
+[assembly: Guid("6961343d-a6c4-4078-8cef-ce20d181acf1")]
 
 // Version information for an assembly consists of the following four values:
 //
@@ -29,8 +29,5 @@ using System.Runtime.InteropServices;
 //      Build Number
 //      Revision
 //
-// You can specify all the values or you can default the Build and Revision Numbers 
-// by using the '*' as shown below:
-// [assembly: AssemblyVersion("1.0.*")]
-[assembly: AssemblyVersion("1.0.0.*")]
-
+[assembly: AssemblyVersion(CruiseDAL.Constants.AssemblyVersion)]
+[assembly: AssemblyFileVersion("1.0.0.0")]

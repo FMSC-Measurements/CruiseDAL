@@ -1,7 +1,7 @@
 using System;
 
 
-namespace CruiseDAL.Schema.Constants
+namespace CruiseDAL.Schema
 {
     public static class CruiseMethods
     {

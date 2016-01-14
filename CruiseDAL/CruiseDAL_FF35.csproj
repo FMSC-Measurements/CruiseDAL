@@ -89,7 +89,7 @@
     <Compile Include="CruiseDAL\DataObject_Extra.cs" />
     <Compile Include="CruiseDAL\Enums.cs" />
     <Compile Include="CruiseDAL\Exceptions.cs" />
-    <Compile Include="CruiseDAL\Schema\Constants.cs" />
+    <Compile Include="CruiseDAL\Schema\CruiseMethods.cs" />
     <Compile Include="CruiseDAL\Schema\Schema.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>

@@ -322,7 +322,7 @@ namespace CruiseDAL.DataObjects
        {
            if (stratum == null) { return false; }
            if (stratum.Method == null) { return true; }
-           if (Array.IndexOf(Schema.Constants.CruiseMethods.THREE_P_METHODS, stratum.Method) >= 0)
+           if (Array.IndexOf(Schema.CruiseMethods.THREE_P_METHODS, stratum.Method) >= 0)
            {
                return true;
            }

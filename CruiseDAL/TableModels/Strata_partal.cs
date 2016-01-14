@@ -56,7 +56,7 @@ namespace CruiseDAL.DataObjects
             }
             else if (name == STRATUM.METHOD)
             {
-                if (Array.IndexOf(CruiseDAL.Schema.Constants.CruiseMethods.UNSUPPORTED_METHODS, this.Method) >= 0)
+                if (Array.IndexOf(CruiseDAL.Schema.CruiseMethods.UNSUPPORTED_METHODS, this.Method) >= 0)
                 {
                     isValid = false;
                     this.AddError(name, "Cruise Method Not Supported");
