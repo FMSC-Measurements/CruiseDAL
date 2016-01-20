@@ -41,7 +41,9 @@ namespace FMSC.ORM.Core.EntityModel
 
             try
             {
-                Object value = _description.Fields[propName].GetFieldValue(data);
+                object value = _description.Properties[propName].GetValue(data);
+
+                //Object value = _description.Fields[propName].GetFieldValue(data);
                 if (value != null && value is IFormattable)
                 {
                     sValue = ((IFormattable)value).ToString(null, null);

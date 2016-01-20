@@ -30,6 +30,7 @@ namespace FMSC.ORM.Core.EntityModel
 
             var formatString = String.Join(",",
                 (from string field in TestSupport.TestSQLConstants.MULTI_PROP_TABLE_FIELDS
+                 .Except(TestSupport.TestSQLConstants.NON_REFLECTED_MULTI_PROP_TABLE_FIELDS)
                  select "[" + field + formatVariant + "]"));
 
             _output.WriteLine(formatString);
@@ -59,7 +60,8 @@ namespace FMSC.ORM.Core.EntityModel
             var formatter = new EntityFormatter(ed);
             var data = new DOMultiPropType();
 
-            foreach (string fieldName in TestSupport.TestSQLConstants.MULTI_PROP_TABLE_FIELDS)
+            foreach (string fieldName in TestSupport.TestSQLConstants.MULTI_PROP_TABLE_FIELDS
+                .Except(TestSupport.TestSQLConstants.NON_REFLECTED_MULTI_PROP_TABLE_FIELDS))
             {
                 var formatString = "[" + fieldName + formatVariant + "]";
 
