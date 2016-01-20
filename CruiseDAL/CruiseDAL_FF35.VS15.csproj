@@ -105,6 +105,7 @@
     <Compile Include="CruiseDAL\DALRedux.cs" />
     <Compile Include="CruiseDAL\DALValidationExtentions.cs" />
     <Compile Include="CruiseDAL\Exceptions.cs" />
+    <Compile Include="CruiseDAL\Schema\CruiseMethods.cs" />
     <Compile Include="TableModels\TableModels.cs">
       <SubType>Code</SubType>
       <AutoGen>True</AutoGen>
@@ -136,7 +137,6 @@
     <Compile Include="TableModels\Tree_partial.cs" />
     <Compile Include="CruiseDAL\Enums.cs" />
     <Compile Include="TableModels\MappingCollections.cs" />
-    <Compile Include="CruiseDAL\Schema\Constants.cs" />
     <Compile Include="CruiseDAL\Updater.cs" />
     <Compile Include="Logger\Logger.cs" />
     <Compile Include="Properties\AssemblyInfo_FF35.cs" />
