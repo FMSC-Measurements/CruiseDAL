@@ -490,15 +490,15 @@ namespace CruiseDAL
         #region IDisposable Members
         private bool _disposed = false;
 
-        protected override void Dispose(bool isDisposing)
+        protected override void Dispose(bool disposing)
         {
-            base.Dispose(isDisposing);
+            base.Dispose(disposing);
             if (_disposed)
             {
                 return;
             }
 
-            if(isDisposing)
+            if(disposing)
             {
 
             }
