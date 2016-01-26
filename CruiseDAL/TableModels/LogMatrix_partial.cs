@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 using CruiseDAL.MappingCollections;
+using System.Linq;
 
 namespace CruiseDAL.DataObjects
 {
@@ -11,7 +12,11 @@ namespace CruiseDAL.DataObjects
         public static Dictionary<String, List<LogMatrixDO>> GetByRowNumberGroupBySpecies(DAL cruiseDAL, string reportNum)
         {
             Dictionary<string, List<LogMatrixDO>> dict = new Dictionary<string, List<LogMatrixDO>>();
-            List<LogMatrixDO> list = cruiseDAL.Read<LogMatrixDO>("WHERE ReportNumber = ?", (object)reportNum);
+            List<LogMatrixDO> list = cruiseDAL.From<LogMatrixDO>()
+                .Where("ReportNumber = ?")
+                .Read(reportNum).ToList();
+
+                //.Read<LogMatrixDO>("WHERE ReportNumber = ?", (object)reportNum);
 
             foreach (LogMatrixDO lm in list)
             {

@@ -11,6 +11,7 @@ using FMSC.ORM.Core.EntityAttributes;
 using System.Diagnostics;
 using System.Threading;
 using FMSC.ORM.Core.SQL.QueryBuilder;
+using System.Linq;
 
 namespace FMSC.ORM.Core
 {
@@ -242,14 +243,8 @@ namespace FMSC.ORM.Core
 
 
         #region read methods
-        [Obsolete("use Read<T>(string selection, params Object[] selectionArgs) instead")]
+        [Obsolete("use From<T>().Read() style instead")]
         public List<T> Read<T>(string tableName, string selection, params Object[] selectionArgs) where T : new()
-        {
-            return Read<T>(selection, selectionArgs);
-        }
-
-        public List<T> Read<T>(string selection, params object[] selectionArgs)
-            where T : new()
         {
             EntityDescription entityDescription = LookUpEntityByType(typeof(T));
             EntityCommandBuilder commandBuilder = entityDescription.CommandBuilder;
@@ -269,26 +264,47 @@ namespace FMSC.ORM.Core
             }
         }
 
-        public List<T> Read<T>(WhereClause where, params Object[] selectionArgs)
-            where T : new()
-        {
-            EntityDescription entityDescription = LookUpEntityByType(typeof(T));
-            EntityCommandBuilder commandBuilder = entityDescription.CommandBuilder;
+        //public List<T> Read<T>(string selection, params object[] selectionArgs)
+        //    where T : new()
+        //{
+        //    EntityDescription entityDescription = LookUpEntityByType(typeof(T));
+        //    EntityCommandBuilder commandBuilder = entityDescription.CommandBuilder;
 
-            using (DbCommand command = commandBuilder.BuildSelectCommand(Provider, where))
-            {
-                //Add selection Arguments to command parameter list
-                if (selectionArgs != null)
-                {
-                    foreach (object obj in selectionArgs)
-                    {
-                        command.Parameters.Add(Provider.CreateParameter(null, obj));
-                    }
-                }
+        //    using (DbCommand command = commandBuilder.BuildSelectLegacy(Provider, selection))
+        //    {
+        //        //Add selection Arguments to command parameter list
+        //        if (selectionArgs != null)
+        //        {
+        //            foreach (object obj in selectionArgs)
+        //            {
+        //                command.Parameters.Add(Provider.CreateParameter(null, obj));
+        //            }
+        //        }
 
-                return Read<T>(command, entityDescription);
-            }
-        }
+        //        return Read<T>(command, entityDescription);
+        //    }
+        //}
+
+        //public List<T> Read<T>(WhereClause where, params Object[] selectionArgs)
+        //    where T : new()
+        //{
+        //    EntityDescription entityDescription = LookUpEntityByType(typeof(T));
+        //    EntityCommandBuilder commandBuilder = entityDescription.CommandBuilder;
+
+        //    using (DbCommand command = commandBuilder.BuildSelectCommand(Provider, where))
+        //    {
+        //        //Add selection Arguments to command parameter list
+        //        if (selectionArgs != null)
+        //        {
+        //            foreach (object obj in selectionArgs)
+        //            {
+        //                command.Parameters.Add(Provider.CreateParameter(null, obj));
+        //            }
+        //        }
+
+        //        return Read<T>(command, entityDescription);
+        //    }
+        //}
 
         internal IEnumerable<TResult> Read<TResult>(SQLSelectBuilder selectBuilder, params Object[] selectionArgs)
         {
@@ -480,14 +496,8 @@ namespace FMSC.ORM.Core
         
 
 
-        [Obsolete("use ReadSingleRow<T>(string selection, params Object[] selectionArgs)")]
+        [Obsolete("use From<T>().Read().FirstOrDefault() style instead")]
         public T ReadSingleRow<T>(string tableName, string selection, params Object[] selectionArgs) where T : new()
-        {
-            return ReadSingleRow<T>(selection, selectionArgs);
-            //return Context.ReadSingleRow<T>(selection, selectionArgs);
-        }
-
-        public T ReadSingleRow<T>(string selection, params Object[] selectionArgs) where T : new()
         {
             EntityDescription entityDescription = LookUpEntityByType(typeof(T));
             EntityCommandBuilder commandBuilder = entityDescription.CommandBuilder;
@@ -505,30 +515,50 @@ namespace FMSC.ORM.Core
 
                 return ReadSingleRow<T>(command, entityDescription);
             }
-            //return Context.ReadSingleRow<T>(selection, selectionArgs);
         }
 
-        public T ReadSingleRow<T>(WhereClause where, params Object[] selectionArgs)
-            where T : new()
-        {
+        //public T ReadSingleRow<T>(string selection, params Object[] selectionArgs) where T : new()
+        //{
+        //    EntityDescription entityDescription = LookUpEntityByType(typeof(T));
+        //    EntityCommandBuilder commandBuilder = entityDescription.CommandBuilder;
 
-            EntityDescription entityDescription = LookUpEntityByType(typeof(T));
-            EntityCommandBuilder commandBuilder = entityDescription.CommandBuilder;
+        //    using (DbCommand command = commandBuilder.BuildSelectLegacy(Provider, selection))
+        //    {
+        //        //Add selection Arguments to command parameter list
+        //        if (selectionArgs != null)
+        //        {
+        //            foreach (object obj in selectionArgs)
+        //            {
+        //                command.Parameters.Add(Provider.CreateParameter(null, obj));
+        //            }
+        //        }
 
-            using (DbCommand command = commandBuilder.BuildSelectCommand(Provider, where))
-            {
-                //Add selection Arguments to command parameter list
-                if (selectionArgs != null)
-                {
-                    foreach (object obj in selectionArgs)
-                    {
-                        command.Parameters.Add(Provider.CreateParameter(null, obj));
-                    }
-                }
+        //        return ReadSingleRow<T>(command, entityDescription);
+        //    }
+        //    //return Context.ReadSingleRow<T>(selection, selectionArgs);
+        //}
 
-                return ReadSingleRow<T>(command, entityDescription);
-            }
-        }
+        //public T ReadSingleRow<T>(WhereClause where, params Object[] selectionArgs)
+        //    where T : new()
+        //{
+
+        //    EntityDescription entityDescription = LookUpEntityByType(typeof(T));
+        //    EntityCommandBuilder commandBuilder = entityDescription.CommandBuilder;
+
+        //    using (DbCommand command = commandBuilder.BuildSelectCommand(Provider, where))
+        //    {
+        //        //Add selection Arguments to command parameter list
+        //        if (selectionArgs != null)
+        //        {
+        //            foreach (object obj in selectionArgs)
+        //            {
+        //                command.Parameters.Add(Provider.CreateParameter(null, obj));
+        //            }
+        //        }
+
+        //        return ReadSingleRow<T>(command, entityDescription);
+        //    }
+        //}
 
         internal T ReadSingleRow<T>(DbCommand command, EntityDescription entityDescription)
             where T : new()
@@ -599,7 +629,8 @@ namespace FMSC.ORM.Core
         public T ReadSingleRow<T>(object primaryKeyValue)
             where T : new()
         {
-            return ReadSingleRow<T>(new WhereClause("rowID = ?"), primaryKeyValue);
+            return From<T>().Where("rowID = ?").Read(primaryKeyValue).FirstOrDefault();
+            //return ReadSingleRow<T>(null, "WHERE rowID = ?", primaryKeyValue);
         }
 
         protected long GetLastInsertRowID()

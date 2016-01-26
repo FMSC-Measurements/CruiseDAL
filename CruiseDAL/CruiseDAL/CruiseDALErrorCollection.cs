@@ -222,10 +222,11 @@ namespace CruiseDAL
             if (_dataObject.rowID == null) { return; }
             string tableName = _tableName;
 
-            List<ErrorLogDO> errorList = _dataObject.DAL.Read<ErrorLogDO>( "WHERE TableName = ? AND CN_Number = ?"
-                , (object)tableName, _dataObject.rowID);
+            var errors = _dataObject.DAL.From<ErrorLogDO>()
+                .Where("TableName = ? AND CN_Number = ? ")
+                .Read(tableName, _dataObject.rowID);                
 
-            foreach (ErrorLogDO e in errorList)
+            foreach (ErrorLogDO e in errors)
             {
                 this.AddError(e.ColumnName, e);
             }

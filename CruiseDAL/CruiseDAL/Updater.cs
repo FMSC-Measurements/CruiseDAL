@@ -139,7 +139,7 @@ namespace CruiseDAL
                 }
             }
 
-            foreach (ErrorLogDO el in db.Read<ErrorLogDO>("WHERE CN_Number != 0"))
+            foreach (ErrorLogDO el in db.From<ErrorLogDO>().Where("CN_Number != 0").Query())
             {
                 InsureErrorLogEntry(db, el);
             }
