@@ -1,4 +1,6 @@
 ﻿
+#pragma warning disable RECS0001 //disable warning that class is partial with only one part
+
 using System;
 using System.Xml.Serialization;
 using FMSC.ORM.Core.EntityAttributes;
@@ -261,21 +263,21 @@ namespace CruiseDAL.DataObjects
 
 		[XmlIgnore]
 		[CreatedByField()]
-		public string CreatedBy { get; internal set; }
+		public string CreatedBy { get;  set; }
 		
 		[XmlIgnore]
 		[InfrastructureFieldAttribute (FieldName = "CreatedDate",
 		PersistMode = PersistMode.Never)]
-		public DateTime CreatedDate { get; internal set; }
+		public DateTime CreatedDate { get; set; }
 		
 		[XmlIgnore]
 		[ModifiedByField()]
-		public string ModifiedBy { get; internal set; }
+		public string ModifiedBy { get; set; }
 		
 		[XmlIgnore]
 		[InfrastructureFieldAttribute (FieldName = "ModifiedDate",
 		PersistMode = PersistMode.Never)]
-		public string ModifiedDate { get; internal set; }
+		public string ModifiedDate { get; set; }
 		
 		protected override bool DoValidate()
 		{
@@ -396,7 +398,7 @@ namespace CruiseDAL.DataObjects
 		    }
 		    set 
 		    {
-		        if(_area == value) { return; }
+		        if(Math.Abs(_area - value) < float.Epsilon) { return; }
 		        _area = value;
 		        this.ValidateProperty(CUTTINGUNIT.AREA, _area);
 		        this.NotifyPropertyChanged(CUTTINGUNIT.AREA);
@@ -477,21 +479,21 @@ namespace CruiseDAL.DataObjects
 
 		[XmlIgnore]
 		[CreatedByField()]
-		public string CreatedBy { get; internal set; }
+		public string CreatedBy { get;  set; }
 		
 		[XmlIgnore]
 		[InfrastructureFieldAttribute (FieldName = "CreatedDate",
 		PersistMode = PersistMode.Never)]
-		public DateTime CreatedDate { get; internal set; }
+		public DateTime CreatedDate { get; set; }
 		
 		[XmlIgnore]
 		[ModifiedByField()]
-		public string ModifiedBy { get; internal set; }
+		public string ModifiedBy { get; set; }
 		
 		[XmlIgnore]
 		[InfrastructureFieldAttribute (FieldName = "ModifiedDate",
 		PersistMode = PersistMode.Never)]
-		public string ModifiedDate { get; internal set; }
+		public string ModifiedDate { get; set; }
 		
 		protected override bool DoValidate()
 		{
@@ -642,7 +644,7 @@ namespace CruiseDAL.DataObjects
 		    }
 		    set 
 		    {
-		        if(_basalareafactor == value) { return; }
+		        if(Math.Abs(_basalareafactor - value) < float.Epsilon) { return; }
 		        _basalareafactor = value;
 		        this.ValidateProperty(STRATUM.BASALAREAFACTOR, _basalareafactor);
 		        this.NotifyPropertyChanged(STRATUM.BASALAREAFACTOR);
@@ -660,7 +662,7 @@ namespace CruiseDAL.DataObjects
 		    }
 		    set 
 		    {
-		        if(_fixedplotsize == value) { return; }
+		        if(Math.Abs(_fixedplotsize - value) < float.Epsilon) { return; }
 		        _fixedplotsize = value;
 		        this.ValidateProperty(STRATUM.FIXEDPLOTSIZE, _fixedplotsize);
 		        this.NotifyPropertyChanged(STRATUM.FIXEDPLOTSIZE);
@@ -777,21 +779,21 @@ namespace CruiseDAL.DataObjects
 
 		[XmlIgnore]
 		[CreatedByField()]
-		public string CreatedBy { get; internal set; }
+		public string CreatedBy { get;  set; }
 		
 		[XmlIgnore]
 		[InfrastructureFieldAttribute (FieldName = "CreatedDate",
 		PersistMode = PersistMode.Never)]
-		public DateTime CreatedDate { get; internal set; }
+		public DateTime CreatedDate { get; set; }
 		
 		[XmlIgnore]
 		[ModifiedByField()]
-		public string ModifiedBy { get; internal set; }
+		public string ModifiedBy { get; set; }
 		
 		[XmlIgnore]
 		[InfrastructureFieldAttribute (FieldName = "ModifiedDate",
 		PersistMode = PersistMode.Never)]
-		public string ModifiedDate { get; internal set; }
+		public string ModifiedDate { get; set; }
 		
 		protected override bool DoValidate()
 		{
@@ -1317,7 +1319,7 @@ namespace CruiseDAL.DataObjects
 		    }
 		    set 
 		    {
-		        if(_bigbaf == value) { return; }
+		        if(Math.Abs(_bigbaf - value) < float.Epsilon) { return; }
 		        _bigbaf = value;
 		        this.ValidateProperty(SAMPLEGROUP.BIGBAF, _bigbaf);
 		        this.NotifyPropertyChanged(SAMPLEGROUP.BIGBAF);
@@ -1335,7 +1337,7 @@ namespace CruiseDAL.DataObjects
 		    }
 		    set 
 		    {
-		        if(_smallfps == value) { return; }
+		        if(Math.Abs(_smallfps - value) < float.Epsilon) { return; }
 		        _smallfps = value;
 		        this.ValidateProperty(SAMPLEGROUP.SMALLFPS, _smallfps);
 		        this.NotifyPropertyChanged(SAMPLEGROUP.SMALLFPS);
@@ -1452,21 +1454,21 @@ namespace CruiseDAL.DataObjects
 
 		[XmlIgnore]
 		[CreatedByField()]
-		public string CreatedBy { get; internal set; }
+		public string CreatedBy { get;  set; }
 		
 		[XmlIgnore]
 		[InfrastructureFieldAttribute (FieldName = "CreatedDate",
 		PersistMode = PersistMode.Never)]
-		public DateTime CreatedDate { get; internal set; }
+		public DateTime CreatedDate { get; set; }
 		
 		[XmlIgnore]
 		[ModifiedByField()]
-		public string ModifiedBy { get; internal set; }
+		public string ModifiedBy { get; set; }
 		
 		[XmlIgnore]
 		[InfrastructureFieldAttribute (FieldName = "ModifiedDate",
 		PersistMode = PersistMode.Never)]
-		public string ModifiedDate { get; internal set; }
+		public string ModifiedDate { get; set; }
 		
 		protected override bool DoValidate()
 		{
@@ -1668,7 +1670,7 @@ namespace CruiseDAL.DataObjects
 		    }
 		    set 
 		    {
-		        if(_cullprimary == value) { return; }
+		        if(Math.Abs(_cullprimary - value) < float.Epsilon) { return; }
 		        _cullprimary = value;
 		        this.ValidateProperty(TREEDEFAULTVALUE.CULLPRIMARY, _cullprimary);
 		        this.NotifyPropertyChanged(TREEDEFAULTVALUE.CULLPRIMARY);
@@ -1686,7 +1688,7 @@ namespace CruiseDAL.DataObjects
 		    }
 		    set 
 		    {
-		        if(_hiddenprimary == value) { return; }
+		        if(Math.Abs(_hiddenprimary - value) < float.Epsilon) { return; }
 		        _hiddenprimary = value;
 		        this.ValidateProperty(TREEDEFAULTVALUE.HIDDENPRIMARY, _hiddenprimary);
 		        this.NotifyPropertyChanged(TREEDEFAULTVALUE.HIDDENPRIMARY);
@@ -1704,7 +1706,7 @@ namespace CruiseDAL.DataObjects
 		    }
 		    set 
 		    {
-		        if(_cullsecondary == value) { return; }
+		        if(Math.Abs(_cullsecondary - value) < float.Epsilon) { return; }
 		        _cullsecondary = value;
 		        this.ValidateProperty(TREEDEFAULTVALUE.CULLSECONDARY, _cullsecondary);
 		        this.NotifyPropertyChanged(TREEDEFAULTVALUE.CULLSECONDARY);
@@ -1722,7 +1724,7 @@ namespace CruiseDAL.DataObjects
 		    }
 		    set 
 		    {
-		        if(_hiddensecondary == value) { return; }
+		        if(Math.Abs(_hiddensecondary - value) < float.Epsilon) { return; }
 		        _hiddensecondary = value;
 		        this.ValidateProperty(TREEDEFAULTVALUE.HIDDENSECONDARY, _hiddensecondary);
 		        this.NotifyPropertyChanged(TREEDEFAULTVALUE.HIDDENSECONDARY);
@@ -1740,7 +1742,7 @@ namespace CruiseDAL.DataObjects
 		    }
 		    set 
 		    {
-		        if(_recoverable == value) { return; }
+		        if(Math.Abs(_recoverable - value) < float.Epsilon) { return; }
 		        _recoverable = value;
 		        this.ValidateProperty(TREEDEFAULTVALUE.RECOVERABLE, _recoverable);
 		        this.NotifyPropertyChanged(TREEDEFAULTVALUE.RECOVERABLE);
@@ -1830,7 +1832,7 @@ namespace CruiseDAL.DataObjects
 		    }
 		    set 
 		    {
-		        if(_formclass == value) { return; }
+		        if(Math.Abs(_formclass - value) < float.Epsilon) { return; }
 		        _formclass = value;
 		        this.ValidateProperty(TREEDEFAULTVALUE.FORMCLASS, _formclass);
 		        this.NotifyPropertyChanged(TREEDEFAULTVALUE.FORMCLASS);
@@ -1848,7 +1850,7 @@ namespace CruiseDAL.DataObjects
 		    }
 		    set 
 		    {
-		        if(_barkthicknessratio == value) { return; }
+		        if(Math.Abs(_barkthicknessratio - value) < float.Epsilon) { return; }
 		        _barkthicknessratio = value;
 		        this.ValidateProperty(TREEDEFAULTVALUE.BARKTHICKNESSRATIO, _barkthicknessratio);
 		        this.NotifyPropertyChanged(TREEDEFAULTVALUE.BARKTHICKNESSRATIO);
@@ -1866,7 +1868,7 @@ namespace CruiseDAL.DataObjects
 		    }
 		    set 
 		    {
-		        if(_averagez == value) { return; }
+		        if(Math.Abs(_averagez - value) < float.Epsilon) { return; }
 		        _averagez = value;
 		        this.ValidateProperty(TREEDEFAULTVALUE.AVERAGEZ, _averagez);
 		        this.NotifyPropertyChanged(TREEDEFAULTVALUE.AVERAGEZ);
@@ -1884,7 +1886,7 @@ namespace CruiseDAL.DataObjects
 		    }
 		    set 
 		    {
-		        if(_referenceheightpercent == value) { return; }
+		        if(Math.Abs(_referenceheightpercent - value) < float.Epsilon) { return; }
 		        _referenceheightpercent = value;
 		        this.ValidateProperty(TREEDEFAULTVALUE.REFERENCEHEIGHTPERCENT, _referenceheightpercent);
 		        this.NotifyPropertyChanged(TREEDEFAULTVALUE.REFERENCEHEIGHTPERCENT);
@@ -1893,21 +1895,21 @@ namespace CruiseDAL.DataObjects
 
 		[XmlIgnore]
 		[CreatedByField()]
-		public string CreatedBy { get; internal set; }
+		public string CreatedBy { get;  set; }
 		
 		[XmlIgnore]
 		[InfrastructureFieldAttribute (FieldName = "CreatedDate",
 		PersistMode = PersistMode.Never)]
-		public DateTime CreatedDate { get; internal set; }
+		public DateTime CreatedDate { get; set; }
 		
 		[XmlIgnore]
 		[ModifiedByField()]
-		public string ModifiedBy { get; internal set; }
+		public string ModifiedBy { get; set; }
 		
 		[XmlIgnore]
 		[InfrastructureFieldAttribute (FieldName = "ModifiedDate",
 		PersistMode = PersistMode.Never)]
-		public string ModifiedDate { get; internal set; }
+		public string ModifiedDate { get; set; }
 		
 		protected override bool DoValidate()
 		{
@@ -2342,7 +2344,7 @@ namespace CruiseDAL.DataObjects
 		    }
 		    set 
 		    {
-		        if(_slope == value) { return; }
+		        if(Math.Abs(_slope - value) < float.Epsilon) { return; }
 		        _slope = value;
 		        this.ValidateProperty(PLOT.SLOPE, _slope);
 		        this.NotifyPropertyChanged(PLOT.SLOPE);
@@ -2360,7 +2362,7 @@ namespace CruiseDAL.DataObjects
 		    }
 		    set 
 		    {
-		        if(_kpi == value) { return; }
+		        if(Math.Abs(_kpi - value) < float.Epsilon) { return; }
 		        _kpi = value;
 		        this.ValidateProperty(PLOT.KPI, _kpi);
 		        this.NotifyPropertyChanged(PLOT.KPI);
@@ -2378,7 +2380,7 @@ namespace CruiseDAL.DataObjects
 		    }
 		    set 
 		    {
-		        if(_aspect == value) { return; }
+		        if(Math.Abs(_aspect - value) < float.Epsilon) { return; }
 		        _aspect = value;
 		        this.ValidateProperty(PLOT.ASPECT, _aspect);
 		        this.NotifyPropertyChanged(PLOT.ASPECT);
@@ -2414,7 +2416,7 @@ namespace CruiseDAL.DataObjects
 		    }
 		    set 
 		    {
-		        if(_xcoordinate == value) { return; }
+		        if(Math.Abs(_xcoordinate - value) < float.Epsilon) { return; }
 		        _xcoordinate = value;
 		        this.ValidateProperty(PLOT.XCOORDINATE, _xcoordinate);
 		        this.NotifyPropertyChanged(PLOT.XCOORDINATE);
@@ -2432,7 +2434,7 @@ namespace CruiseDAL.DataObjects
 		    }
 		    set 
 		    {
-		        if(_ycoordinate == value) { return; }
+		        if(Math.Abs(_ycoordinate - value) < float.Epsilon) { return; }
 		        _ycoordinate = value;
 		        this.ValidateProperty(PLOT.YCOORDINATE, _ycoordinate);
 		        this.NotifyPropertyChanged(PLOT.YCOORDINATE);
@@ -2450,7 +2452,7 @@ namespace CruiseDAL.DataObjects
 		    }
 		    set 
 		    {
-		        if(_zcoordinate == value) { return; }
+		        if(Math.Abs(_zcoordinate - value) < float.Epsilon) { return; }
 		        _zcoordinate = value;
 		        this.ValidateProperty(PLOT.ZCOORDINATE, _zcoordinate);
 		        this.NotifyPropertyChanged(PLOT.ZCOORDINATE);
@@ -2495,21 +2497,21 @@ namespace CruiseDAL.DataObjects
 
 		[XmlIgnore]
 		[CreatedByField()]
-		public string CreatedBy { get; internal set; }
+		public string CreatedBy { get;  set; }
 		
 		[XmlIgnore]
 		[InfrastructureFieldAttribute (FieldName = "CreatedDate",
 		PersistMode = PersistMode.Never)]
-		public DateTime CreatedDate { get; internal set; }
+		public DateTime CreatedDate { get; set; }
 		
 		[XmlIgnore]
 		[ModifiedByField()]
-		public string ModifiedBy { get; internal set; }
+		public string ModifiedBy { get; set; }
 		
 		[XmlIgnore]
 		[InfrastructureFieldAttribute (FieldName = "ModifiedDate",
 		PersistMode = PersistMode.Never)]
-		public string ModifiedDate { get; internal set; }
+		public string ModifiedDate { get; set; }
 		
 		protected override bool DoValidate()
 		{
@@ -2945,7 +2947,7 @@ namespace CruiseDAL.DataObjects
 		    }
 		    set 
 		    {
-		        if(_treecount == value) { return; }
+		        if(Math.Abs(_treecount - value) < float.Epsilon) { return; }
 		        _treecount = value;
 		        this.ValidateProperty(TREE.TREECOUNT, _treecount);
 		        this.NotifyPropertyChanged(TREE.TREECOUNT);
@@ -2963,7 +2965,7 @@ namespace CruiseDAL.DataObjects
 		    }
 		    set 
 		    {
-		        if(_kpi == value) { return; }
+		        if(Math.Abs(_kpi - value) < float.Epsilon) { return; }
 		        _kpi = value;
 		        this.ValidateProperty(TREE.KPI, _kpi);
 		        this.NotifyPropertyChanged(TREE.KPI);
@@ -2999,7 +3001,7 @@ namespace CruiseDAL.DataObjects
 		    }
 		    set 
 		    {
-		        if(_seendefectprimary == value) { return; }
+		        if(Math.Abs(_seendefectprimary - value) < float.Epsilon) { return; }
 		        _seendefectprimary = value;
 		        this.ValidateProperty(TREE.SEENDEFECTPRIMARY, _seendefectprimary);
 		        this.NotifyPropertyChanged(TREE.SEENDEFECTPRIMARY);
@@ -3017,7 +3019,7 @@ namespace CruiseDAL.DataObjects
 		    }
 		    set 
 		    {
-		        if(_seendefectsecondary == value) { return; }
+		        if(Math.Abs(_seendefectsecondary - value) < float.Epsilon) { return; }
 		        _seendefectsecondary = value;
 		        this.ValidateProperty(TREE.SEENDEFECTSECONDARY, _seendefectsecondary);
 		        this.NotifyPropertyChanged(TREE.SEENDEFECTSECONDARY);
@@ -3035,7 +3037,7 @@ namespace CruiseDAL.DataObjects
 		    }
 		    set 
 		    {
-		        if(_recoverableprimary == value) { return; }
+		        if(Math.Abs(_recoverableprimary - value) < float.Epsilon) { return; }
 		        _recoverableprimary = value;
 		        this.ValidateProperty(TREE.RECOVERABLEPRIMARY, _recoverableprimary);
 		        this.NotifyPropertyChanged(TREE.RECOVERABLEPRIMARY);
@@ -3053,7 +3055,7 @@ namespace CruiseDAL.DataObjects
 		    }
 		    set 
 		    {
-		        if(_hiddenprimary == value) { return; }
+		        if(Math.Abs(_hiddenprimary - value) < float.Epsilon) { return; }
 		        _hiddenprimary = value;
 		        this.ValidateProperty(TREE.HIDDENPRIMARY, _hiddenprimary);
 		        this.NotifyPropertyChanged(TREE.HIDDENPRIMARY);
@@ -3125,7 +3127,7 @@ namespace CruiseDAL.DataObjects
 		    }
 		    set 
 		    {
-		        if(_heighttofirstlivelimb == value) { return; }
+		        if(Math.Abs(_heighttofirstlivelimb - value) < float.Epsilon) { return; }
 		        _heighttofirstlivelimb = value;
 		        this.ValidateProperty(TREE.HEIGHTTOFIRSTLIVELIMB, _heighttofirstlivelimb);
 		        this.NotifyPropertyChanged(TREE.HEIGHTTOFIRSTLIVELIMB);
@@ -3143,7 +3145,7 @@ namespace CruiseDAL.DataObjects
 		    }
 		    set 
 		    {
-		        if(_polelength == value) { return; }
+		        if(Math.Abs(_polelength - value) < float.Epsilon) { return; }
 		        _polelength = value;
 		        this.ValidateProperty(TREE.POLELENGTH, _polelength);
 		        this.NotifyPropertyChanged(TREE.POLELENGTH);
@@ -3179,7 +3181,7 @@ namespace CruiseDAL.DataObjects
 		    }
 		    set 
 		    {
-		        if(_crownratio == value) { return; }
+		        if(Math.Abs(_crownratio - value) < float.Epsilon) { return; }
 		        _crownratio = value;
 		        this.ValidateProperty(TREE.CROWNRATIO, _crownratio);
 		        this.NotifyPropertyChanged(TREE.CROWNRATIO);
@@ -3197,7 +3199,7 @@ namespace CruiseDAL.DataObjects
 		    }
 		    set 
 		    {
-		        if(_dbh == value) { return; }
+		        if(Math.Abs(_dbh - value) < float.Epsilon) { return; }
 		        _dbh = value;
 		        this.ValidateProperty(TREE.DBH, _dbh);
 		        this.NotifyPropertyChanged(TREE.DBH);
@@ -3215,7 +3217,7 @@ namespace CruiseDAL.DataObjects
 		    }
 		    set 
 		    {
-		        if(_drc == value) { return; }
+		        if(Math.Abs(_drc - value) < float.Epsilon) { return; }
 		        _drc = value;
 		        this.ValidateProperty(TREE.DRC, _drc);
 		        this.NotifyPropertyChanged(TREE.DRC);
@@ -3233,7 +3235,7 @@ namespace CruiseDAL.DataObjects
 		    }
 		    set 
 		    {
-		        if(_totalheight == value) { return; }
+		        if(Math.Abs(_totalheight - value) < float.Epsilon) { return; }
 		        _totalheight = value;
 		        this.ValidateProperty(TREE.TOTALHEIGHT, _totalheight);
 		        this.NotifyPropertyChanged(TREE.TOTALHEIGHT);
@@ -3251,7 +3253,7 @@ namespace CruiseDAL.DataObjects
 		    }
 		    set 
 		    {
-		        if(_merchheightprimary == value) { return; }
+		        if(Math.Abs(_merchheightprimary - value) < float.Epsilon) { return; }
 		        _merchheightprimary = value;
 		        this.ValidateProperty(TREE.MERCHHEIGHTPRIMARY, _merchheightprimary);
 		        this.NotifyPropertyChanged(TREE.MERCHHEIGHTPRIMARY);
@@ -3269,7 +3271,7 @@ namespace CruiseDAL.DataObjects
 		    }
 		    set 
 		    {
-		        if(_merchheightsecondary == value) { return; }
+		        if(Math.Abs(_merchheightsecondary - value) < float.Epsilon) { return; }
 		        _merchheightsecondary = value;
 		        this.ValidateProperty(TREE.MERCHHEIGHTSECONDARY, _merchheightsecondary);
 		        this.NotifyPropertyChanged(TREE.MERCHHEIGHTSECONDARY);
@@ -3287,7 +3289,7 @@ namespace CruiseDAL.DataObjects
 		    }
 		    set 
 		    {
-		        if(_formclass == value) { return; }
+		        if(Math.Abs(_formclass - value) < float.Epsilon) { return; }
 		        _formclass = value;
 		        this.ValidateProperty(TREE.FORMCLASS, _formclass);
 		        this.NotifyPropertyChanged(TREE.FORMCLASS);
@@ -3305,7 +3307,7 @@ namespace CruiseDAL.DataObjects
 		    }
 		    set 
 		    {
-		        if(_upperstemdiameter == value) { return; }
+		        if(Math.Abs(_upperstemdiameter - value) < float.Epsilon) { return; }
 		        _upperstemdiameter = value;
 		        this.ValidateProperty(TREE.UPPERSTEMDIAMETER, _upperstemdiameter);
 		        this.NotifyPropertyChanged(TREE.UPPERSTEMDIAMETER);
@@ -3323,7 +3325,7 @@ namespace CruiseDAL.DataObjects
 		    }
 		    set 
 		    {
-		        if(_upperstemheight == value) { return; }
+		        if(Math.Abs(_upperstemheight - value) < float.Epsilon) { return; }
 		        _upperstemheight = value;
 		        this.ValidateProperty(TREE.UPPERSTEMHEIGHT, _upperstemheight);
 		        this.NotifyPropertyChanged(TREE.UPPERSTEMHEIGHT);
@@ -3341,7 +3343,7 @@ namespace CruiseDAL.DataObjects
 		    }
 		    set 
 		    {
-		        if(_dbhdoublebarkthickness == value) { return; }
+		        if(Math.Abs(_dbhdoublebarkthickness - value) < float.Epsilon) { return; }
 		        _dbhdoublebarkthickness = value;
 		        this.ValidateProperty(TREE.DBHDOUBLEBARKTHICKNESS, _dbhdoublebarkthickness);
 		        this.NotifyPropertyChanged(TREE.DBHDOUBLEBARKTHICKNESS);
@@ -3359,7 +3361,7 @@ namespace CruiseDAL.DataObjects
 		    }
 		    set 
 		    {
-		        if(_topdibprimary == value) { return; }
+		        if(Math.Abs(_topdibprimary - value) < float.Epsilon) { return; }
 		        _topdibprimary = value;
 		        this.ValidateProperty(TREE.TOPDIBPRIMARY, _topdibprimary);
 		        this.NotifyPropertyChanged(TREE.TOPDIBPRIMARY);
@@ -3377,7 +3379,7 @@ namespace CruiseDAL.DataObjects
 		    }
 		    set 
 		    {
-		        if(_topdibsecondary == value) { return; }
+		        if(Math.Abs(_topdibsecondary - value) < float.Epsilon) { return; }
 		        _topdibsecondary = value;
 		        this.ValidateProperty(TREE.TOPDIBSECONDARY, _topdibsecondary);
 		        this.NotifyPropertyChanged(TREE.TOPDIBSECONDARY);
@@ -3413,7 +3415,7 @@ namespace CruiseDAL.DataObjects
 		    }
 		    set 
 		    {
-		        if(_diameteratdefect == value) { return; }
+		        if(Math.Abs(_diameteratdefect - value) < float.Epsilon) { return; }
 		        _diameteratdefect = value;
 		        this.ValidateProperty(TREE.DIAMETERATDEFECT, _diameteratdefect);
 		        this.NotifyPropertyChanged(TREE.DIAMETERATDEFECT);
@@ -3431,7 +3433,7 @@ namespace CruiseDAL.DataObjects
 		    }
 		    set 
 		    {
-		        if(_voidpercent == value) { return; }
+		        if(Math.Abs(_voidpercent - value) < float.Epsilon) { return; }
 		        _voidpercent = value;
 		        this.ValidateProperty(TREE.VOIDPERCENT, _voidpercent);
 		        this.NotifyPropertyChanged(TREE.VOIDPERCENT);
@@ -3449,7 +3451,7 @@ namespace CruiseDAL.DataObjects
 		    }
 		    set 
 		    {
-		        if(_slope == value) { return; }
+		        if(Math.Abs(_slope - value) < float.Epsilon) { return; }
 		        _slope = value;
 		        this.ValidateProperty(TREE.SLOPE, _slope);
 		        this.NotifyPropertyChanged(TREE.SLOPE);
@@ -3467,7 +3469,7 @@ namespace CruiseDAL.DataObjects
 		    }
 		    set 
 		    {
-		        if(_aspect == value) { return; }
+		        if(Math.Abs(_aspect - value) < float.Epsilon) { return; }
 		        _aspect = value;
 		        this.ValidateProperty(TREE.ASPECT, _aspect);
 		        this.NotifyPropertyChanged(TREE.ASPECT);
@@ -3503,7 +3505,7 @@ namespace CruiseDAL.DataObjects
 		    }
 		    set 
 		    {
-		        if(_xcoordinate == value) { return; }
+		        if(Math.Abs(_xcoordinate - value) < Double.Epsilon) { return; }
 		        _xcoordinate = value;
 		        this.ValidateProperty(TREE.XCOORDINATE, _xcoordinate);
 		        this.NotifyPropertyChanged(TREE.XCOORDINATE);
@@ -3521,7 +3523,7 @@ namespace CruiseDAL.DataObjects
 		    }
 		    set 
 		    {
-		        if(_ycoordinate == value) { return; }
+		        if(Math.Abs(_ycoordinate - value) < Double.Epsilon) { return; }
 		        _ycoordinate = value;
 		        this.ValidateProperty(TREE.YCOORDINATE, _ycoordinate);
 		        this.NotifyPropertyChanged(TREE.YCOORDINATE);
@@ -3539,7 +3541,7 @@ namespace CruiseDAL.DataObjects
 		    }
 		    set 
 		    {
-		        if(_zcoordinate == value) { return; }
+		        if(Math.Abs(_zcoordinate - value) < Double.Epsilon) { return; }
 		        _zcoordinate = value;
 		        this.ValidateProperty(TREE.ZCOORDINATE, _zcoordinate);
 		        this.NotifyPropertyChanged(TREE.ZCOORDINATE);
@@ -3593,7 +3595,7 @@ namespace CruiseDAL.DataObjects
 		    }
 		    set 
 		    {
-		        if(_expansionfactor == value) { return; }
+		        if(Math.Abs(_expansionfactor - value) < float.Epsilon) { return; }
 		        _expansionfactor = value;
 		        this.ValidateProperty(TREE.EXPANSIONFACTOR, _expansionfactor);
 		        this.NotifyPropertyChanged(TREE.EXPANSIONFACTOR);
@@ -3611,7 +3613,7 @@ namespace CruiseDAL.DataObjects
 		    }
 		    set 
 		    {
-		        if(_treefactor == value) { return; }
+		        if(Math.Abs(_treefactor - value) < float.Epsilon) { return; }
 		        _treefactor = value;
 		        this.ValidateProperty(TREE.TREEFACTOR, _treefactor);
 		        this.NotifyPropertyChanged(TREE.TREEFACTOR);
@@ -3629,7 +3631,7 @@ namespace CruiseDAL.DataObjects
 		    }
 		    set 
 		    {
-		        if(_pointfactor == value) { return; }
+		        if(Math.Abs(_pointfactor - value) < float.Epsilon) { return; }
 		        _pointfactor = value;
 		        this.ValidateProperty(TREE.POINTFACTOR, _pointfactor);
 		        this.NotifyPropertyChanged(TREE.POINTFACTOR);
@@ -3638,21 +3640,21 @@ namespace CruiseDAL.DataObjects
 
 		[XmlIgnore]
 		[CreatedByField()]
-		public string CreatedBy { get; internal set; }
+		public string CreatedBy { get;  set; }
 		
 		[XmlIgnore]
 		[InfrastructureFieldAttribute (FieldName = "CreatedDate",
 		PersistMode = PersistMode.Never)]
-		public DateTime CreatedDate { get; internal set; }
+		public DateTime CreatedDate { get; set; }
 		
 		[XmlIgnore]
 		[ModifiedByField()]
-		public string ModifiedBy { get; internal set; }
+		public string ModifiedBy { get; set; }
 		
 		[XmlIgnore]
 		[InfrastructureFieldAttribute (FieldName = "ModifiedDate",
 		PersistMode = PersistMode.Never)]
-		public string ModifiedDate { get; internal set; }
+		public string ModifiedDate { get; set; }
 		
 		protected override bool DoValidate()
 		{
@@ -3929,7 +3931,7 @@ namespace CruiseDAL.DataObjects
 		    }
 		    set 
 		    {
-		        if(_seendefect == value) { return; }
+		        if(Math.Abs(_seendefect - value) < float.Epsilon) { return; }
 		        _seendefect = value;
 		        this.ValidateProperty(LOG.SEENDEFECT, _seendefect);
 		        this.NotifyPropertyChanged(LOG.SEENDEFECT);
@@ -3947,7 +3949,7 @@ namespace CruiseDAL.DataObjects
 		    }
 		    set 
 		    {
-		        if(_percentrecoverable == value) { return; }
+		        if(Math.Abs(_percentrecoverable - value) < float.Epsilon) { return; }
 		        _percentrecoverable = value;
 		        this.ValidateProperty(LOG.PERCENTRECOVERABLE, _percentrecoverable);
 		        this.NotifyPropertyChanged(LOG.PERCENTRECOVERABLE);
@@ -4001,7 +4003,7 @@ namespace CruiseDAL.DataObjects
 		    }
 		    set 
 		    {
-		        if(_smallenddiameter == value) { return; }
+		        if(Math.Abs(_smallenddiameter - value) < float.Epsilon) { return; }
 		        _smallenddiameter = value;
 		        this.ValidateProperty(LOG.SMALLENDDIAMETER, _smallenddiameter);
 		        this.NotifyPropertyChanged(LOG.SMALLENDDIAMETER);
@@ -4019,7 +4021,7 @@ namespace CruiseDAL.DataObjects
 		    }
 		    set 
 		    {
-		        if(_largeenddiameter == value) { return; }
+		        if(Math.Abs(_largeenddiameter - value) < float.Epsilon) { return; }
 		        _largeenddiameter = value;
 		        this.ValidateProperty(LOG.LARGEENDDIAMETER, _largeenddiameter);
 		        this.NotifyPropertyChanged(LOG.LARGEENDDIAMETER);
@@ -4037,7 +4039,7 @@ namespace CruiseDAL.DataObjects
 		    }
 		    set 
 		    {
-		        if(_grossboardfoot == value) { return; }
+		        if(Math.Abs(_grossboardfoot - value) < float.Epsilon) { return; }
 		        _grossboardfoot = value;
 		        this.ValidateProperty(LOG.GROSSBOARDFOOT, _grossboardfoot);
 		        this.NotifyPropertyChanged(LOG.GROSSBOARDFOOT);
@@ -4055,7 +4057,7 @@ namespace CruiseDAL.DataObjects
 		    }
 		    set 
 		    {
-		        if(_netboardfoot == value) { return; }
+		        if(Math.Abs(_netboardfoot - value) < float.Epsilon) { return; }
 		        _netboardfoot = value;
 		        this.ValidateProperty(LOG.NETBOARDFOOT, _netboardfoot);
 		        this.NotifyPropertyChanged(LOG.NETBOARDFOOT);
@@ -4073,7 +4075,7 @@ namespace CruiseDAL.DataObjects
 		    }
 		    set 
 		    {
-		        if(_grosscubicfoot == value) { return; }
+		        if(Math.Abs(_grosscubicfoot - value) < float.Epsilon) { return; }
 		        _grosscubicfoot = value;
 		        this.ValidateProperty(LOG.GROSSCUBICFOOT, _grosscubicfoot);
 		        this.NotifyPropertyChanged(LOG.GROSSCUBICFOOT);
@@ -4091,7 +4093,7 @@ namespace CruiseDAL.DataObjects
 		    }
 		    set 
 		    {
-		        if(_netcubicfoot == value) { return; }
+		        if(Math.Abs(_netcubicfoot - value) < float.Epsilon) { return; }
 		        _netcubicfoot = value;
 		        this.ValidateProperty(LOG.NETCUBICFOOT, _netcubicfoot);
 		        this.NotifyPropertyChanged(LOG.NETCUBICFOOT);
@@ -4109,7 +4111,7 @@ namespace CruiseDAL.DataObjects
 		    }
 		    set 
 		    {
-		        if(_boardfootremoved == value) { return; }
+		        if(Math.Abs(_boardfootremoved - value) < float.Epsilon) { return; }
 		        _boardfootremoved = value;
 		        this.ValidateProperty(LOG.BOARDFOOTREMOVED, _boardfootremoved);
 		        this.NotifyPropertyChanged(LOG.BOARDFOOTREMOVED);
@@ -4127,7 +4129,7 @@ namespace CruiseDAL.DataObjects
 		    }
 		    set 
 		    {
-		        if(_cubicfootremoved == value) { return; }
+		        if(Math.Abs(_cubicfootremoved - value) < float.Epsilon) { return; }
 		        _cubicfootremoved = value;
 		        this.ValidateProperty(LOG.CUBICFOOTREMOVED, _cubicfootremoved);
 		        this.NotifyPropertyChanged(LOG.CUBICFOOTREMOVED);
@@ -4145,7 +4147,7 @@ namespace CruiseDAL.DataObjects
 		    }
 		    set 
 		    {
-		        if(_dibclass == value) { return; }
+		        if(Math.Abs(_dibclass - value) < float.Epsilon) { return; }
 		        _dibclass = value;
 		        this.ValidateProperty(LOG.DIBCLASS, _dibclass);
 		        this.NotifyPropertyChanged(LOG.DIBCLASS);
@@ -4163,7 +4165,7 @@ namespace CruiseDAL.DataObjects
 		    }
 		    set 
 		    {
-		        if(_barkthickness == value) { return; }
+		        if(Math.Abs(_barkthickness - value) < float.Epsilon) { return; }
 		        _barkthickness = value;
 		        this.ValidateProperty(LOG.BARKTHICKNESS, _barkthickness);
 		        this.NotifyPropertyChanged(LOG.BARKTHICKNESS);
@@ -4172,21 +4174,21 @@ namespace CruiseDAL.DataObjects
 
 		[XmlIgnore]
 		[CreatedByField()]
-		public string CreatedBy { get; internal set; }
+		public string CreatedBy { get;  set; }
 		
 		[XmlIgnore]
 		[InfrastructureFieldAttribute (FieldName = "CreatedDate",
 		PersistMode = PersistMode.Never)]
-		public DateTime CreatedDate { get; internal set; }
+		public DateTime CreatedDate { get; set; }
 		
 		[XmlIgnore]
 		[ModifiedByField()]
-		public string ModifiedBy { get; internal set; }
+		public string ModifiedBy { get; set; }
 		
 		[XmlIgnore]
 		[InfrastructureFieldAttribute (FieldName = "ModifiedDate",
 		PersistMode = PersistMode.Never)]
-		public string ModifiedDate { get; internal set; }
+		public string ModifiedDate { get; set; }
 		
 		protected override bool DoValidate()
 		{
@@ -4369,7 +4371,7 @@ namespace CruiseDAL.DataObjects
 		    }
 		    set 
 		    {
-		        if(_diameter == value) { return; }
+		        if(Math.Abs(_diameter - value) < float.Epsilon) { return; }
 		        _diameter = value;
 		        this.ValidateProperty(STEM.DIAMETER, _diameter);
 		        this.NotifyPropertyChanged(STEM.DIAMETER);
@@ -4396,21 +4398,21 @@ namespace CruiseDAL.DataObjects
 
 		[XmlIgnore]
 		[CreatedByField()]
-		public string CreatedBy { get; internal set; }
+		public string CreatedBy { get;  set; }
 		
 		[XmlIgnore]
 		[InfrastructureFieldAttribute (FieldName = "CreatedDate",
 		PersistMode = PersistMode.Never)]
-		public DateTime CreatedDate { get; internal set; }
+		public DateTime CreatedDate { get; set; }
 		
 		[XmlIgnore]
 		[ModifiedByField()]
-		public string ModifiedBy { get; internal set; }
+		public string ModifiedBy { get; set; }
 		
 		[XmlIgnore]
 		[InfrastructureFieldAttribute (FieldName = "ModifiedDate",
 		PersistMode = PersistMode.Never)]
-		public string ModifiedDate { get; internal set; }
+		public string ModifiedDate { get; set; }
 		
 		protected override bool DoValidate()
 		{
@@ -4780,21 +4782,21 @@ namespace CruiseDAL.DataObjects
 
 		[XmlIgnore]
 		[CreatedByField()]
-		public string CreatedBy { get; internal set; }
+		public string CreatedBy { get;  set; }
 		
 		[XmlIgnore]
 		[InfrastructureFieldAttribute (FieldName = "CreatedDate",
 		PersistMode = PersistMode.Never)]
-		public DateTime CreatedDate { get; internal set; }
+		public DateTime CreatedDate { get; set; }
 		
 		[XmlIgnore]
 		[ModifiedByField()]
-		public string ModifiedBy { get; internal set; }
+		public string ModifiedBy { get; set; }
 		
 		[XmlIgnore]
 		[InfrastructureFieldAttribute (FieldName = "ModifiedDate",
 		PersistMode = PersistMode.Never)]
-		public string ModifiedDate { get; internal set; }
+		public string ModifiedDate { get; set; }
 		
 		protected override bool DoValidate()
 		{
@@ -5100,7 +5102,7 @@ namespace CruiseDAL.DataObjects
 		    }
 		    set 
 		    {
-		        if(_kpi == value) { return; }
+		        if(Math.Abs(_kpi - value) < float.Epsilon) { return; }
 		        _kpi = value;
 		        this.ValidateProperty(TREEESTIMATE.KPI, _kpi);
 		        this.NotifyPropertyChanged(TREEESTIMATE.KPI);
@@ -5109,21 +5111,21 @@ namespace CruiseDAL.DataObjects
 
 		[XmlIgnore]
 		[CreatedByField()]
-		public string CreatedBy { get; internal set; }
+		public string CreatedBy { get;  set; }
 		
 		[XmlIgnore]
 		[InfrastructureFieldAttribute (FieldName = "CreatedDate",
 		PersistMode = PersistMode.Never)]
-		public DateTime CreatedDate { get; internal set; }
+		public DateTime CreatedDate { get; set; }
 		
 		[XmlIgnore]
 		[ModifiedByField()]
-		public string ModifiedBy { get; internal set; }
+		public string ModifiedBy { get; set; }
 		
 		[XmlIgnore]
 		[InfrastructureFieldAttribute (FieldName = "ModifiedDate",
 		PersistMode = PersistMode.Never)]
-		public string ModifiedDate { get; internal set; }
+		public string ModifiedDate { get; set; }
 		
 		protected override bool DoValidate()
 		{
@@ -5259,7 +5261,7 @@ namespace CruiseDAL.DataObjects
 		    }
 		    set 
 		    {
-		        if(_stumpheight == value) { return; }
+		        if(Math.Abs(_stumpheight - value) < float.Epsilon) { return; }
 		        _stumpheight = value;
 		        this.ValidateProperty(VOLUMEEQUATION.STUMPHEIGHT, _stumpheight);
 		        this.NotifyPropertyChanged(VOLUMEEQUATION.STUMPHEIGHT);
@@ -5277,7 +5279,7 @@ namespace CruiseDAL.DataObjects
 		    }
 		    set 
 		    {
-		        if(_topdibprimary == value) { return; }
+		        if(Math.Abs(_topdibprimary - value) < float.Epsilon) { return; }
 		        _topdibprimary = value;
 		        this.ValidateProperty(VOLUMEEQUATION.TOPDIBPRIMARY, _topdibprimary);
 		        this.NotifyPropertyChanged(VOLUMEEQUATION.TOPDIBPRIMARY);
@@ -5295,7 +5297,7 @@ namespace CruiseDAL.DataObjects
 		    }
 		    set 
 		    {
-		        if(_topdibsecondary == value) { return; }
+		        if(Math.Abs(_topdibsecondary - value) < float.Epsilon) { return; }
 		        _topdibsecondary = value;
 		        this.ValidateProperty(VOLUMEEQUATION.TOPDIBSECONDARY, _topdibsecondary);
 		        this.NotifyPropertyChanged(VOLUMEEQUATION.TOPDIBSECONDARY);
@@ -5421,7 +5423,7 @@ namespace CruiseDAL.DataObjects
 		    }
 		    set 
 		    {
-		        if(_trim == value) { return; }
+		        if(Math.Abs(_trim - value) < float.Epsilon) { return; }
 		        _trim = value;
 		        this.ValidateProperty(VOLUMEEQUATION.TRIM, _trim);
 		        this.NotifyPropertyChanged(VOLUMEEQUATION.TRIM);
@@ -5457,7 +5459,7 @@ namespace CruiseDAL.DataObjects
 		    }
 		    set 
 		    {
-		        if(_minloglengthprimary == value) { return; }
+		        if(Math.Abs(_minloglengthprimary - value) < float.Epsilon) { return; }
 		        _minloglengthprimary = value;
 		        this.ValidateProperty(VOLUMEEQUATION.MINLOGLENGTHPRIMARY, _minloglengthprimary);
 		        this.NotifyPropertyChanged(VOLUMEEQUATION.MINLOGLENGTHPRIMARY);
@@ -5475,7 +5477,7 @@ namespace CruiseDAL.DataObjects
 		    }
 		    set 
 		    {
-		        if(_maxloglengthprimary == value) { return; }
+		        if(Math.Abs(_maxloglengthprimary - value) < float.Epsilon) { return; }
 		        _maxloglengthprimary = value;
 		        this.ValidateProperty(VOLUMEEQUATION.MAXLOGLENGTHPRIMARY, _maxloglengthprimary);
 		        this.NotifyPropertyChanged(VOLUMEEQUATION.MAXLOGLENGTHPRIMARY);
@@ -5493,7 +5495,7 @@ namespace CruiseDAL.DataObjects
 		    }
 		    set 
 		    {
-		        if(_minmerchlength == value) { return; }
+		        if(Math.Abs(_minmerchlength - value) < float.Epsilon) { return; }
 		        _minmerchlength = value;
 		        this.ValidateProperty(VOLUMEEQUATION.MINMERCHLENGTH, _minmerchlength);
 		        this.NotifyPropertyChanged(VOLUMEEQUATION.MINMERCHLENGTH);
@@ -5797,7 +5799,7 @@ namespace CruiseDAL.DataObjects
 		    }
 		    set 
 		    {
-		        if(_percentmoisture == value) { return; }
+		        if(Math.Abs(_percentmoisture - value) < float.Epsilon) { return; }
 		        _percentmoisture = value;
 		        this.ValidateProperty(BIOMASSEQUATION.PERCENTMOISTURE, _percentmoisture);
 		        this.NotifyPropertyChanged(BIOMASSEQUATION.PERCENTMOISTURE);
@@ -5815,7 +5817,7 @@ namespace CruiseDAL.DataObjects
 		    }
 		    set 
 		    {
-		        if(_percentremoved == value) { return; }
+		        if(Math.Abs(_percentremoved - value) < float.Epsilon) { return; }
 		        _percentremoved = value;
 		        this.ValidateProperty(BIOMASSEQUATION.PERCENTREMOVED, _percentremoved);
 		        this.NotifyPropertyChanged(BIOMASSEQUATION.PERCENTREMOVED);
@@ -5851,7 +5853,7 @@ namespace CruiseDAL.DataObjects
 		    }
 		    set 
 		    {
-		        if(_weightfactorprimary == value) { return; }
+		        if(Math.Abs(_weightfactorprimary - value) < float.Epsilon) { return; }
 		        _weightfactorprimary = value;
 		        this.ValidateProperty(BIOMASSEQUATION.WEIGHTFACTORPRIMARY, _weightfactorprimary);
 		        this.NotifyPropertyChanged(BIOMASSEQUATION.WEIGHTFACTORPRIMARY);
@@ -5869,7 +5871,7 @@ namespace CruiseDAL.DataObjects
 		    }
 		    set 
 		    {
-		        if(_weightfactorsecondary == value) { return; }
+		        if(Math.Abs(_weightfactorsecondary - value) < float.Epsilon) { return; }
 		        _weightfactorsecondary = value;
 		        this.ValidateProperty(BIOMASSEQUATION.WEIGHTFACTORSECONDARY, _weightfactorsecondary);
 		        this.NotifyPropertyChanged(BIOMASSEQUATION.WEIGHTFACTORSECONDARY);
@@ -6042,7 +6044,7 @@ namespace CruiseDAL.DataObjects
 		    }
 		    set 
 		    {
-		        if(_coefficient1 == value) { return; }
+		        if(Math.Abs(_coefficient1 - value) < float.Epsilon) { return; }
 		        _coefficient1 = value;
 		        this.ValidateProperty(VALUEEQUATION.COEFFICIENT1, _coefficient1);
 		        this.NotifyPropertyChanged(VALUEEQUATION.COEFFICIENT1);
@@ -6060,7 +6062,7 @@ namespace CruiseDAL.DataObjects
 		    }
 		    set 
 		    {
-		        if(_coefficient2 == value) { return; }
+		        if(Math.Abs(_coefficient2 - value) < float.Epsilon) { return; }
 		        _coefficient2 = value;
 		        this.ValidateProperty(VALUEEQUATION.COEFFICIENT2, _coefficient2);
 		        this.NotifyPropertyChanged(VALUEEQUATION.COEFFICIENT2);
@@ -6078,7 +6080,7 @@ namespace CruiseDAL.DataObjects
 		    }
 		    set 
 		    {
-		        if(_coefficient3 == value) { return; }
+		        if(Math.Abs(_coefficient3 - value) < float.Epsilon) { return; }
 		        _coefficient3 = value;
 		        this.ValidateProperty(VALUEEQUATION.COEFFICIENT3, _coefficient3);
 		        this.NotifyPropertyChanged(VALUEEQUATION.COEFFICIENT3);
@@ -6096,7 +6098,7 @@ namespace CruiseDAL.DataObjects
 		    }
 		    set 
 		    {
-		        if(_coefficient4 == value) { return; }
+		        if(Math.Abs(_coefficient4 - value) < float.Epsilon) { return; }
 		        _coefficient4 = value;
 		        this.ValidateProperty(VALUEEQUATION.COEFFICIENT4, _coefficient4);
 		        this.NotifyPropertyChanged(VALUEEQUATION.COEFFICIENT4);
@@ -6114,7 +6116,7 @@ namespace CruiseDAL.DataObjects
 		    }
 		    set 
 		    {
-		        if(_coefficient5 == value) { return; }
+		        if(Math.Abs(_coefficient5 - value) < float.Epsilon) { return; }
 		        _coefficient5 = value;
 		        this.ValidateProperty(VALUEEQUATION.COEFFICIENT5, _coefficient5);
 		        this.NotifyPropertyChanged(VALUEEQUATION.COEFFICIENT5);
@@ -6132,7 +6134,7 @@ namespace CruiseDAL.DataObjects
 		    }
 		    set 
 		    {
-		        if(_coefficient6 == value) { return; }
+		        if(Math.Abs(_coefficient6 - value) < float.Epsilon) { return; }
 		        _coefficient6 = value;
 		        this.ValidateProperty(VALUEEQUATION.COEFFICIENT6, _coefficient6);
 		        this.NotifyPropertyChanged(VALUEEQUATION.COEFFICIENT6);
@@ -6302,7 +6304,7 @@ namespace CruiseDAL.DataObjects
 		    }
 		    set 
 		    {
-		        if(_coefficient1 == value) { return; }
+		        if(Math.Abs(_coefficient1 - value) < float.Epsilon) { return; }
 		        _coefficient1 = value;
 		        this.ValidateProperty(QUALITYADJEQUATION.COEFFICIENT1, _coefficient1);
 		        this.NotifyPropertyChanged(QUALITYADJEQUATION.COEFFICIENT1);
@@ -6320,7 +6322,7 @@ namespace CruiseDAL.DataObjects
 		    }
 		    set 
 		    {
-		        if(_coefficient2 == value) { return; }
+		        if(Math.Abs(_coefficient2 - value) < float.Epsilon) { return; }
 		        _coefficient2 = value;
 		        this.ValidateProperty(QUALITYADJEQUATION.COEFFICIENT2, _coefficient2);
 		        this.NotifyPropertyChanged(QUALITYADJEQUATION.COEFFICIENT2);
@@ -6338,7 +6340,7 @@ namespace CruiseDAL.DataObjects
 		    }
 		    set 
 		    {
-		        if(_coefficient3 == value) { return; }
+		        if(Math.Abs(_coefficient3 - value) < float.Epsilon) { return; }
 		        _coefficient3 = value;
 		        this.ValidateProperty(QUALITYADJEQUATION.COEFFICIENT3, _coefficient3);
 		        this.NotifyPropertyChanged(QUALITYADJEQUATION.COEFFICIENT3);
@@ -6356,7 +6358,7 @@ namespace CruiseDAL.DataObjects
 		    }
 		    set 
 		    {
-		        if(_coefficient4 == value) { return; }
+		        if(Math.Abs(_coefficient4 - value) < float.Epsilon) { return; }
 		        _coefficient4 = value;
 		        this.ValidateProperty(QUALITYADJEQUATION.COEFFICIENT4, _coefficient4);
 		        this.NotifyPropertyChanged(QUALITYADJEQUATION.COEFFICIENT4);
@@ -6374,7 +6376,7 @@ namespace CruiseDAL.DataObjects
 		    }
 		    set 
 		    {
-		        if(_coefficient5 == value) { return; }
+		        if(Math.Abs(_coefficient5 - value) < float.Epsilon) { return; }
 		        _coefficient5 = value;
 		        this.ValidateProperty(QUALITYADJEQUATION.COEFFICIENT5, _coefficient5);
 		        this.NotifyPropertyChanged(QUALITYADJEQUATION.COEFFICIENT5);
@@ -6392,7 +6394,7 @@ namespace CruiseDAL.DataObjects
 		    }
 		    set 
 		    {
-		        if(_coefficient6 == value) { return; }
+		        if(Math.Abs(_coefficient6 - value) < float.Epsilon) { return; }
 		        _coefficient6 = value;
 		        this.ValidateProperty(QUALITYADJEQUATION.COEFFICIENT6, _coefficient6);
 		        this.NotifyPropertyChanged(QUALITYADJEQUATION.COEFFICIENT6);
@@ -6668,7 +6670,7 @@ namespace CruiseDAL.DataObjects
 		    }
 		    set 
 		    {
-		        if(_totalcubicvolume == value) { return; }
+		        if(Math.Abs(_totalcubicvolume - value) < float.Epsilon) { return; }
 		        _totalcubicvolume = value;
 		        this.ValidateProperty(TREECALCULATEDVALUES.TOTALCUBICVOLUME, _totalcubicvolume);
 		        this.NotifyPropertyChanged(TREECALCULATEDVALUES.TOTALCUBICVOLUME);
@@ -6686,7 +6688,7 @@ namespace CruiseDAL.DataObjects
 		    }
 		    set 
 		    {
-		        if(_grossbdftpp == value) { return; }
+		        if(Math.Abs(_grossbdftpp - value) < float.Epsilon) { return; }
 		        _grossbdftpp = value;
 		        this.ValidateProperty(TREECALCULATEDVALUES.GROSSBDFTPP, _grossbdftpp);
 		        this.NotifyPropertyChanged(TREECALCULATEDVALUES.GROSSBDFTPP);
@@ -6704,7 +6706,7 @@ namespace CruiseDAL.DataObjects
 		    }
 		    set 
 		    {
-		        if(_netbdftpp == value) { return; }
+		        if(Math.Abs(_netbdftpp - value) < float.Epsilon) { return; }
 		        _netbdftpp = value;
 		        this.ValidateProperty(TREECALCULATEDVALUES.NETBDFTPP, _netbdftpp);
 		        this.NotifyPropertyChanged(TREECALCULATEDVALUES.NETBDFTPP);
@@ -6722,7 +6724,7 @@ namespace CruiseDAL.DataObjects
 		    }
 		    set 
 		    {
-		        if(_grosscuftpp == value) { return; }
+		        if(Math.Abs(_grosscuftpp - value) < float.Epsilon) { return; }
 		        _grosscuftpp = value;
 		        this.ValidateProperty(TREECALCULATEDVALUES.GROSSCUFTPP, _grosscuftpp);
 		        this.NotifyPropertyChanged(TREECALCULATEDVALUES.GROSSCUFTPP);
@@ -6740,7 +6742,7 @@ namespace CruiseDAL.DataObjects
 		    }
 		    set 
 		    {
-		        if(_netcuftpp == value) { return; }
+		        if(Math.Abs(_netcuftpp - value) < float.Epsilon) { return; }
 		        _netcuftpp = value;
 		        this.ValidateProperty(TREECALCULATEDVALUES.NETCUFTPP, _netcuftpp);
 		        this.NotifyPropertyChanged(TREECALCULATEDVALUES.NETCUFTPP);
@@ -6758,7 +6760,7 @@ namespace CruiseDAL.DataObjects
 		    }
 		    set 
 		    {
-		        if(_cordspp == value) { return; }
+		        if(Math.Abs(_cordspp - value) < float.Epsilon) { return; }
 		        _cordspp = value;
 		        this.ValidateProperty(TREECALCULATEDVALUES.CORDSPP, _cordspp);
 		        this.NotifyPropertyChanged(TREECALCULATEDVALUES.CORDSPP);
@@ -6776,7 +6778,7 @@ namespace CruiseDAL.DataObjects
 		    }
 		    set 
 		    {
-		        if(_grossbdftremvpp == value) { return; }
+		        if(Math.Abs(_grossbdftremvpp - value) < float.Epsilon) { return; }
 		        _grossbdftremvpp = value;
 		        this.ValidateProperty(TREECALCULATEDVALUES.GROSSBDFTREMVPP, _grossbdftremvpp);
 		        this.NotifyPropertyChanged(TREECALCULATEDVALUES.GROSSBDFTREMVPP);
@@ -6794,7 +6796,7 @@ namespace CruiseDAL.DataObjects
 		    }
 		    set 
 		    {
-		        if(_grosscuftremvpp == value) { return; }
+		        if(Math.Abs(_grosscuftremvpp - value) < float.Epsilon) { return; }
 		        _grosscuftremvpp = value;
 		        this.ValidateProperty(TREECALCULATEDVALUES.GROSSCUFTREMVPP, _grosscuftremvpp);
 		        this.NotifyPropertyChanged(TREECALCULATEDVALUES.GROSSCUFTREMVPP);
@@ -6812,7 +6814,7 @@ namespace CruiseDAL.DataObjects
 		    }
 		    set 
 		    {
-		        if(_grossbdftsp == value) { return; }
+		        if(Math.Abs(_grossbdftsp - value) < float.Epsilon) { return; }
 		        _grossbdftsp = value;
 		        this.ValidateProperty(TREECALCULATEDVALUES.GROSSBDFTSP, _grossbdftsp);
 		        this.NotifyPropertyChanged(TREECALCULATEDVALUES.GROSSBDFTSP);
@@ -6830,7 +6832,7 @@ namespace CruiseDAL.DataObjects
 		    }
 		    set 
 		    {
-		        if(_netbdftsp == value) { return; }
+		        if(Math.Abs(_netbdftsp - value) < float.Epsilon) { return; }
 		        _netbdftsp = value;
 		        this.ValidateProperty(TREECALCULATEDVALUES.NETBDFTSP, _netbdftsp);
 		        this.NotifyPropertyChanged(TREECALCULATEDVALUES.NETBDFTSP);
@@ -6848,7 +6850,7 @@ namespace CruiseDAL.DataObjects
 		    }
 		    set 
 		    {
-		        if(_grosscuftsp == value) { return; }
+		        if(Math.Abs(_grosscuftsp - value) < float.Epsilon) { return; }
 		        _grosscuftsp = value;
 		        this.ValidateProperty(TREECALCULATEDVALUES.GROSSCUFTSP, _grosscuftsp);
 		        this.NotifyPropertyChanged(TREECALCULATEDVALUES.GROSSCUFTSP);
@@ -6866,7 +6868,7 @@ namespace CruiseDAL.DataObjects
 		    }
 		    set 
 		    {
-		        if(_netcuftsp == value) { return; }
+		        if(Math.Abs(_netcuftsp - value) < float.Epsilon) { return; }
 		        _netcuftsp = value;
 		        this.ValidateProperty(TREECALCULATEDVALUES.NETCUFTSP, _netcuftsp);
 		        this.NotifyPropertyChanged(TREECALCULATEDVALUES.NETCUFTSP);
@@ -6884,7 +6886,7 @@ namespace CruiseDAL.DataObjects
 		    }
 		    set 
 		    {
-		        if(_cordssp == value) { return; }
+		        if(Math.Abs(_cordssp - value) < float.Epsilon) { return; }
 		        _cordssp = value;
 		        this.ValidateProperty(TREECALCULATEDVALUES.CORDSSP, _cordssp);
 		        this.NotifyPropertyChanged(TREECALCULATEDVALUES.CORDSSP);
@@ -6902,7 +6904,7 @@ namespace CruiseDAL.DataObjects
 		    }
 		    set 
 		    {
-		        if(_grosscuftremvsp == value) { return; }
+		        if(Math.Abs(_grosscuftremvsp - value) < float.Epsilon) { return; }
 		        _grosscuftremvsp = value;
 		        this.ValidateProperty(TREECALCULATEDVALUES.GROSSCUFTREMVSP, _grosscuftremvsp);
 		        this.NotifyPropertyChanged(TREECALCULATEDVALUES.GROSSCUFTREMVSP);
@@ -6920,7 +6922,7 @@ namespace CruiseDAL.DataObjects
 		    }
 		    set 
 		    {
-		        if(_numberlogsms == value) { return; }
+		        if(Math.Abs(_numberlogsms - value) < float.Epsilon) { return; }
 		        _numberlogsms = value;
 		        this.ValidateProperty(TREECALCULATEDVALUES.NUMBERLOGSMS, _numberlogsms);
 		        this.NotifyPropertyChanged(TREECALCULATEDVALUES.NUMBERLOGSMS);
@@ -6938,7 +6940,7 @@ namespace CruiseDAL.DataObjects
 		    }
 		    set 
 		    {
-		        if(_numberlogstpw == value) { return; }
+		        if(Math.Abs(_numberlogstpw - value) < float.Epsilon) { return; }
 		        _numberlogstpw = value;
 		        this.ValidateProperty(TREECALCULATEDVALUES.NUMBERLOGSTPW, _numberlogstpw);
 		        this.NotifyPropertyChanged(TREECALCULATEDVALUES.NUMBERLOGSTPW);
@@ -6956,7 +6958,7 @@ namespace CruiseDAL.DataObjects
 		    }
 		    set 
 		    {
-		        if(_grossbdftrp == value) { return; }
+		        if(Math.Abs(_grossbdftrp - value) < float.Epsilon) { return; }
 		        _grossbdftrp = value;
 		        this.ValidateProperty(TREECALCULATEDVALUES.GROSSBDFTRP, _grossbdftrp);
 		        this.NotifyPropertyChanged(TREECALCULATEDVALUES.GROSSBDFTRP);
@@ -6974,7 +6976,7 @@ namespace CruiseDAL.DataObjects
 		    }
 		    set 
 		    {
-		        if(_grosscuftrp == value) { return; }
+		        if(Math.Abs(_grosscuftrp - value) < float.Epsilon) { return; }
 		        _grosscuftrp = value;
 		        this.ValidateProperty(TREECALCULATEDVALUES.GROSSCUFTRP, _grosscuftrp);
 		        this.NotifyPropertyChanged(TREECALCULATEDVALUES.GROSSCUFTRP);
@@ -6992,7 +6994,7 @@ namespace CruiseDAL.DataObjects
 		    }
 		    set 
 		    {
-		        if(_cordsrp == value) { return; }
+		        if(Math.Abs(_cordsrp - value) < float.Epsilon) { return; }
 		        _cordsrp = value;
 		        this.ValidateProperty(TREECALCULATEDVALUES.CORDSRP, _cordsrp);
 		        this.NotifyPropertyChanged(TREECALCULATEDVALUES.CORDSRP);
@@ -7010,7 +7012,7 @@ namespace CruiseDAL.DataObjects
 		    }
 		    set 
 		    {
-		        if(_grossbdftintl == value) { return; }
+		        if(Math.Abs(_grossbdftintl - value) < float.Epsilon) { return; }
 		        _grossbdftintl = value;
 		        this.ValidateProperty(TREECALCULATEDVALUES.GROSSBDFTINTL, _grossbdftintl);
 		        this.NotifyPropertyChanged(TREECALCULATEDVALUES.GROSSBDFTINTL);
@@ -7028,7 +7030,7 @@ namespace CruiseDAL.DataObjects
 		    }
 		    set 
 		    {
-		        if(_netbdftintl == value) { return; }
+		        if(Math.Abs(_netbdftintl - value) < float.Epsilon) { return; }
 		        _netbdftintl = value;
 		        this.ValidateProperty(TREECALCULATEDVALUES.NETBDFTINTL, _netbdftintl);
 		        this.NotifyPropertyChanged(TREECALCULATEDVALUES.NETBDFTINTL);
@@ -7046,7 +7048,7 @@ namespace CruiseDAL.DataObjects
 		    }
 		    set 
 		    {
-		        if(_biomassmainstemprimary == value) { return; }
+		        if(Math.Abs(_biomassmainstemprimary - value) < float.Epsilon) { return; }
 		        _biomassmainstemprimary = value;
 		        this.ValidateProperty(TREECALCULATEDVALUES.BIOMASSMAINSTEMPRIMARY, _biomassmainstemprimary);
 		        this.NotifyPropertyChanged(TREECALCULATEDVALUES.BIOMASSMAINSTEMPRIMARY);
@@ -7064,7 +7066,7 @@ namespace CruiseDAL.DataObjects
 		    }
 		    set 
 		    {
-		        if(_biomassmainstemsecondary == value) { return; }
+		        if(Math.Abs(_biomassmainstemsecondary - value) < float.Epsilon) { return; }
 		        _biomassmainstemsecondary = value;
 		        this.ValidateProperty(TREECALCULATEDVALUES.BIOMASSMAINSTEMSECONDARY, _biomassmainstemsecondary);
 		        this.NotifyPropertyChanged(TREECALCULATEDVALUES.BIOMASSMAINSTEMSECONDARY);
@@ -7082,7 +7084,7 @@ namespace CruiseDAL.DataObjects
 		    }
 		    set 
 		    {
-		        if(_valuepp == value) { return; }
+		        if(Math.Abs(_valuepp - value) < float.Epsilon) { return; }
 		        _valuepp = value;
 		        this.ValidateProperty(TREECALCULATEDVALUES.VALUEPP, _valuepp);
 		        this.NotifyPropertyChanged(TREECALCULATEDVALUES.VALUEPP);
@@ -7100,7 +7102,7 @@ namespace CruiseDAL.DataObjects
 		    }
 		    set 
 		    {
-		        if(_valuesp == value) { return; }
+		        if(Math.Abs(_valuesp - value) < float.Epsilon) { return; }
 		        _valuesp = value;
 		        this.ValidateProperty(TREECALCULATEDVALUES.VALUESP, _valuesp);
 		        this.NotifyPropertyChanged(TREECALCULATEDVALUES.VALUESP);
@@ -7118,7 +7120,7 @@ namespace CruiseDAL.DataObjects
 		    }
 		    set 
 		    {
-		        if(_valuerp == value) { return; }
+		        if(Math.Abs(_valuerp - value) < float.Epsilon) { return; }
 		        _valuerp = value;
 		        this.ValidateProperty(TREECALCULATEDVALUES.VALUERP, _valuerp);
 		        this.NotifyPropertyChanged(TREECALCULATEDVALUES.VALUERP);
@@ -7136,7 +7138,7 @@ namespace CruiseDAL.DataObjects
 		    }
 		    set 
 		    {
-		        if(_biomassprod == value) { return; }
+		        if(Math.Abs(_biomassprod - value) < float.Epsilon) { return; }
 		        _biomassprod = value;
 		        this.ValidateProperty(TREECALCULATEDVALUES.BIOMASSPROD, _biomassprod);
 		        this.NotifyPropertyChanged(TREECALCULATEDVALUES.BIOMASSPROD);
@@ -7154,7 +7156,7 @@ namespace CruiseDAL.DataObjects
 		    }
 		    set 
 		    {
-		        if(_biomasstotalstem == value) { return; }
+		        if(Math.Abs(_biomasstotalstem - value) < float.Epsilon) { return; }
 		        _biomasstotalstem = value;
 		        this.ValidateProperty(TREECALCULATEDVALUES.BIOMASSTOTALSTEM, _biomasstotalstem);
 		        this.NotifyPropertyChanged(TREECALCULATEDVALUES.BIOMASSTOTALSTEM);
@@ -7172,7 +7174,7 @@ namespace CruiseDAL.DataObjects
 		    }
 		    set 
 		    {
-		        if(_biomasslivebranches == value) { return; }
+		        if(Math.Abs(_biomasslivebranches - value) < float.Epsilon) { return; }
 		        _biomasslivebranches = value;
 		        this.ValidateProperty(TREECALCULATEDVALUES.BIOMASSLIVEBRANCHES, _biomasslivebranches);
 		        this.NotifyPropertyChanged(TREECALCULATEDVALUES.BIOMASSLIVEBRANCHES);
@@ -7190,7 +7192,7 @@ namespace CruiseDAL.DataObjects
 		    }
 		    set 
 		    {
-		        if(_biomassdeadbranches == value) { return; }
+		        if(Math.Abs(_biomassdeadbranches - value) < float.Epsilon) { return; }
 		        _biomassdeadbranches = value;
 		        this.ValidateProperty(TREECALCULATEDVALUES.BIOMASSDEADBRANCHES, _biomassdeadbranches);
 		        this.NotifyPropertyChanged(TREECALCULATEDVALUES.BIOMASSDEADBRANCHES);
@@ -7208,7 +7210,7 @@ namespace CruiseDAL.DataObjects
 		    }
 		    set 
 		    {
-		        if(_biomassfoliage == value) { return; }
+		        if(Math.Abs(_biomassfoliage - value) < float.Epsilon) { return; }
 		        _biomassfoliage = value;
 		        this.ValidateProperty(TREECALCULATEDVALUES.BIOMASSFOLIAGE, _biomassfoliage);
 		        this.NotifyPropertyChanged(TREECALCULATEDVALUES.BIOMASSFOLIAGE);
@@ -7226,7 +7228,7 @@ namespace CruiseDAL.DataObjects
 		    }
 		    set 
 		    {
-		        if(_biomasstip == value) { return; }
+		        if(Math.Abs(_biomasstip - value) < float.Epsilon) { return; }
 		        _biomasstip = value;
 		        this.ValidateProperty(TREECALCULATEDVALUES.BIOMASSTIP, _biomasstip);
 		        this.NotifyPropertyChanged(TREECALCULATEDVALUES.BIOMASSTIP);
@@ -7602,7 +7604,7 @@ namespace CruiseDAL.DataObjects
 		    }
 		    set 
 		    {
-		        if(_firststagetrees == value) { return; }
+		        if(Math.Abs(_firststagetrees - value) < Double.Epsilon) { return; }
 		        _firststagetrees = value;
 		        this.ValidateProperty(LCD.FIRSTSTAGETREES, _firststagetrees);
 		        this.NotifyPropertyChanged(LCD.FIRSTSTAGETREES);
@@ -7620,7 +7622,7 @@ namespace CruiseDAL.DataObjects
 		    }
 		    set 
 		    {
-		        if(_measuredtrees == value) { return; }
+		        if(Math.Abs(_measuredtrees - value) < Double.Epsilon) { return; }
 		        _measuredtrees = value;
 		        this.ValidateProperty(LCD.MEASUREDTREES, _measuredtrees);
 		        this.NotifyPropertyChanged(LCD.MEASUREDTREES);
@@ -7638,7 +7640,7 @@ namespace CruiseDAL.DataObjects
 		    }
 		    set 
 		    {
-		        if(_talliedtrees == value) { return; }
+		        if(Math.Abs(_talliedtrees - value) < Double.Epsilon) { return; }
 		        _talliedtrees = value;
 		        this.ValidateProperty(LCD.TALLIEDTREES, _talliedtrees);
 		        this.NotifyPropertyChanged(LCD.TALLIEDTREES);
@@ -7656,7 +7658,7 @@ namespace CruiseDAL.DataObjects
 		    }
 		    set 
 		    {
-		        if(_sumkpi == value) { return; }
+		        if(Math.Abs(_sumkpi - value) < Double.Epsilon) { return; }
 		        _sumkpi = value;
 		        this.ValidateProperty(LCD.SUMKPI, _sumkpi);
 		        this.NotifyPropertyChanged(LCD.SUMKPI);
@@ -7674,7 +7676,7 @@ namespace CruiseDAL.DataObjects
 		    }
 		    set 
 		    {
-		        if(_summeasuredkpi == value) { return; }
+		        if(Math.Abs(_summeasuredkpi - value) < Double.Epsilon) { return; }
 		        _summeasuredkpi = value;
 		        this.ValidateProperty(LCD.SUMMEASUREDKPI, _summeasuredkpi);
 		        this.NotifyPropertyChanged(LCD.SUMMEASUREDKPI);
@@ -7692,7 +7694,7 @@ namespace CruiseDAL.DataObjects
 		    }
 		    set 
 		    {
-		        if(_sumexpanfactor == value) { return; }
+		        if(Math.Abs(_sumexpanfactor - value) < Double.Epsilon) { return; }
 		        _sumexpanfactor = value;
 		        this.ValidateProperty(LCD.SUMEXPANFACTOR, _sumexpanfactor);
 		        this.NotifyPropertyChanged(LCD.SUMEXPANFACTOR);
@@ -7710,7 +7712,7 @@ namespace CruiseDAL.DataObjects
 		    }
 		    set 
 		    {
-		        if(_sumdbhob == value) { return; }
+		        if(Math.Abs(_sumdbhob - value) < Double.Epsilon) { return; }
 		        _sumdbhob = value;
 		        this.ValidateProperty(LCD.SUMDBHOB, _sumdbhob);
 		        this.NotifyPropertyChanged(LCD.SUMDBHOB);
@@ -7728,7 +7730,7 @@ namespace CruiseDAL.DataObjects
 		    }
 		    set 
 		    {
-		        if(_sumdbhobsqrd == value) { return; }
+		        if(Math.Abs(_sumdbhobsqrd - value) < Double.Epsilon) { return; }
 		        _sumdbhobsqrd = value;
 		        this.ValidateProperty(LCD.SUMDBHOBSQRD, _sumdbhobsqrd);
 		        this.NotifyPropertyChanged(LCD.SUMDBHOBSQRD);
@@ -7746,7 +7748,7 @@ namespace CruiseDAL.DataObjects
 		    }
 		    set 
 		    {
-		        if(_sumtothgt == value) { return; }
+		        if(Math.Abs(_sumtothgt - value) < Double.Epsilon) { return; }
 		        _sumtothgt = value;
 		        this.ValidateProperty(LCD.SUMTOTHGT, _sumtothgt);
 		        this.NotifyPropertyChanged(LCD.SUMTOTHGT);
@@ -7764,7 +7766,7 @@ namespace CruiseDAL.DataObjects
 		    }
 		    set 
 		    {
-		        if(_sumhgtupstem == value) { return; }
+		        if(Math.Abs(_sumhgtupstem - value) < Double.Epsilon) { return; }
 		        _sumhgtupstem = value;
 		        this.ValidateProperty(LCD.SUMHGTUPSTEM, _sumhgtupstem);
 		        this.NotifyPropertyChanged(LCD.SUMHGTUPSTEM);
@@ -7782,7 +7784,7 @@ namespace CruiseDAL.DataObjects
 		    }
 		    set 
 		    {
-		        if(_summerchhgtprim == value) { return; }
+		        if(Math.Abs(_summerchhgtprim - value) < Double.Epsilon) { return; }
 		        _summerchhgtprim = value;
 		        this.ValidateProperty(LCD.SUMMERCHHGTPRIM, _summerchhgtprim);
 		        this.NotifyPropertyChanged(LCD.SUMMERCHHGTPRIM);
@@ -7800,7 +7802,7 @@ namespace CruiseDAL.DataObjects
 		    }
 		    set 
 		    {
-		        if(_summerchhgtsecond == value) { return; }
+		        if(Math.Abs(_summerchhgtsecond - value) < Double.Epsilon) { return; }
 		        _summerchhgtsecond = value;
 		        this.ValidateProperty(LCD.SUMMERCHHGTSECOND, _summerchhgtsecond);
 		        this.NotifyPropertyChanged(LCD.SUMMERCHHGTSECOND);
@@ -7818,7 +7820,7 @@ namespace CruiseDAL.DataObjects
 		    }
 		    set 
 		    {
-		        if(_sumlogsms == value) { return; }
+		        if(Math.Abs(_sumlogsms - value) < Double.Epsilon) { return; }
 		        _sumlogsms = value;
 		        this.ValidateProperty(LCD.SUMLOGSMS, _sumlogsms);
 		        this.NotifyPropertyChanged(LCD.SUMLOGSMS);
@@ -7836,7 +7838,7 @@ namespace CruiseDAL.DataObjects
 		    }
 		    set 
 		    {
-		        if(_sumtotcubic == value) { return; }
+		        if(Math.Abs(_sumtotcubic - value) < Double.Epsilon) { return; }
 		        _sumtotcubic = value;
 		        this.ValidateProperty(LCD.SUMTOTCUBIC, _sumtotcubic);
 		        this.NotifyPropertyChanged(LCD.SUMTOTCUBIC);
@@ -7854,7 +7856,7 @@ namespace CruiseDAL.DataObjects
 		    }
 		    set 
 		    {
-		        if(_sumgbdft == value) { return; }
+		        if(Math.Abs(_sumgbdft - value) < Double.Epsilon) { return; }
 		        _sumgbdft = value;
 		        this.ValidateProperty(LCD.SUMGBDFT, _sumgbdft);
 		        this.NotifyPropertyChanged(LCD.SUMGBDFT);
@@ -7872,7 +7874,7 @@ namespace CruiseDAL.DataObjects
 		    }
 		    set 
 		    {
-		        if(_sumnbdft == value) { return; }
+		        if(Math.Abs(_sumnbdft - value) < Double.Epsilon) { return; }
 		        _sumnbdft = value;
 		        this.ValidateProperty(LCD.SUMNBDFT, _sumnbdft);
 		        this.NotifyPropertyChanged(LCD.SUMNBDFT);
@@ -7890,7 +7892,7 @@ namespace CruiseDAL.DataObjects
 		    }
 		    set 
 		    {
-		        if(_sumgcuft == value) { return; }
+		        if(Math.Abs(_sumgcuft - value) < Double.Epsilon) { return; }
 		        _sumgcuft = value;
 		        this.ValidateProperty(LCD.SUMGCUFT, _sumgcuft);
 		        this.NotifyPropertyChanged(LCD.SUMGCUFT);
@@ -7908,7 +7910,7 @@ namespace CruiseDAL.DataObjects
 		    }
 		    set 
 		    {
-		        if(_sumncuft == value) { return; }
+		        if(Math.Abs(_sumncuft - value) < Double.Epsilon) { return; }
 		        _sumncuft = value;
 		        this.ValidateProperty(LCD.SUMNCUFT, _sumncuft);
 		        this.NotifyPropertyChanged(LCD.SUMNCUFT);
@@ -7926,7 +7928,7 @@ namespace CruiseDAL.DataObjects
 		    }
 		    set 
 		    {
-		        if(_sumgbdftremv == value) { return; }
+		        if(Math.Abs(_sumgbdftremv - value) < Double.Epsilon) { return; }
 		        _sumgbdftremv = value;
 		        this.ValidateProperty(LCD.SUMGBDFTREMV, _sumgbdftremv);
 		        this.NotifyPropertyChanged(LCD.SUMGBDFTREMV);
@@ -7944,7 +7946,7 @@ namespace CruiseDAL.DataObjects
 		    }
 		    set 
 		    {
-		        if(_sumgcuftremv == value) { return; }
+		        if(Math.Abs(_sumgcuftremv - value) < Double.Epsilon) { return; }
 		        _sumgcuftremv = value;
 		        this.ValidateProperty(LCD.SUMGCUFTREMV, _sumgcuftremv);
 		        this.NotifyPropertyChanged(LCD.SUMGCUFTREMV);
@@ -7962,7 +7964,7 @@ namespace CruiseDAL.DataObjects
 		    }
 		    set 
 		    {
-		        if(_sumcords == value) { return; }
+		        if(Math.Abs(_sumcords - value) < Double.Epsilon) { return; }
 		        _sumcords = value;
 		        this.ValidateProperty(LCD.SUMCORDS, _sumcords);
 		        this.NotifyPropertyChanged(LCD.SUMCORDS);
@@ -7980,7 +7982,7 @@ namespace CruiseDAL.DataObjects
 		    }
 		    set 
 		    {
-		        if(_sumwgtmsp == value) { return; }
+		        if(Math.Abs(_sumwgtmsp - value) < Double.Epsilon) { return; }
 		        _sumwgtmsp = value;
 		        this.ValidateProperty(LCD.SUMWGTMSP, _sumwgtmsp);
 		        this.NotifyPropertyChanged(LCD.SUMWGTMSP);
@@ -7998,7 +8000,7 @@ namespace CruiseDAL.DataObjects
 		    }
 		    set 
 		    {
-		        if(_sumvalue == value) { return; }
+		        if(Math.Abs(_sumvalue - value) < Double.Epsilon) { return; }
 		        _sumvalue = value;
 		        this.ValidateProperty(LCD.SUMVALUE, _sumvalue);
 		        this.NotifyPropertyChanged(LCD.SUMVALUE);
@@ -8016,7 +8018,7 @@ namespace CruiseDAL.DataObjects
 		    }
 		    set 
 		    {
-		        if(_sumgbdfttop == value) { return; }
+		        if(Math.Abs(_sumgbdfttop - value) < Double.Epsilon) { return; }
 		        _sumgbdfttop = value;
 		        this.ValidateProperty(LCD.SUMGBDFTTOP, _sumgbdfttop);
 		        this.NotifyPropertyChanged(LCD.SUMGBDFTTOP);
@@ -8034,7 +8036,7 @@ namespace CruiseDAL.DataObjects
 		    }
 		    set 
 		    {
-		        if(_sumnbdfttop == value) { return; }
+		        if(Math.Abs(_sumnbdfttop - value) < Double.Epsilon) { return; }
 		        _sumnbdfttop = value;
 		        this.ValidateProperty(LCD.SUMNBDFTTOP, _sumnbdfttop);
 		        this.NotifyPropertyChanged(LCD.SUMNBDFTTOP);
@@ -8052,7 +8054,7 @@ namespace CruiseDAL.DataObjects
 		    }
 		    set 
 		    {
-		        if(_sumgcufttop == value) { return; }
+		        if(Math.Abs(_sumgcufttop - value) < Double.Epsilon) { return; }
 		        _sumgcufttop = value;
 		        this.ValidateProperty(LCD.SUMGCUFTTOP, _sumgcufttop);
 		        this.NotifyPropertyChanged(LCD.SUMGCUFTTOP);
@@ -8070,7 +8072,7 @@ namespace CruiseDAL.DataObjects
 		    }
 		    set 
 		    {
-		        if(_sumncufttop == value) { return; }
+		        if(Math.Abs(_sumncufttop - value) < Double.Epsilon) { return; }
 		        _sumncufttop = value;
 		        this.ValidateProperty(LCD.SUMNCUFTTOP, _sumncufttop);
 		        this.NotifyPropertyChanged(LCD.SUMNCUFTTOP);
@@ -8088,7 +8090,7 @@ namespace CruiseDAL.DataObjects
 		    }
 		    set 
 		    {
-		        if(_sumcordstop == value) { return; }
+		        if(Math.Abs(_sumcordstop - value) < Double.Epsilon) { return; }
 		        _sumcordstop = value;
 		        this.ValidateProperty(LCD.SUMCORDSTOP, _sumcordstop);
 		        this.NotifyPropertyChanged(LCD.SUMCORDSTOP);
@@ -8106,7 +8108,7 @@ namespace CruiseDAL.DataObjects
 		    }
 		    set 
 		    {
-		        if(_sumwgtmss == value) { return; }
+		        if(Math.Abs(_sumwgtmss - value) < Double.Epsilon) { return; }
 		        _sumwgtmss = value;
 		        this.ValidateProperty(LCD.SUMWGTMSS, _sumwgtmss);
 		        this.NotifyPropertyChanged(LCD.SUMWGTMSS);
@@ -8124,7 +8126,7 @@ namespace CruiseDAL.DataObjects
 		    }
 		    set 
 		    {
-		        if(_sumtopvalue == value) { return; }
+		        if(Math.Abs(_sumtopvalue - value) < Double.Epsilon) { return; }
 		        _sumtopvalue = value;
 		        this.ValidateProperty(LCD.SUMTOPVALUE, _sumtopvalue);
 		        this.NotifyPropertyChanged(LCD.SUMTOPVALUE);
@@ -8142,7 +8144,7 @@ namespace CruiseDAL.DataObjects
 		    }
 		    set 
 		    {
-		        if(_sumlogstop == value) { return; }
+		        if(Math.Abs(_sumlogstop - value) < Double.Epsilon) { return; }
 		        _sumlogstop = value;
 		        this.ValidateProperty(LCD.SUMLOGSTOP, _sumlogstop);
 		        this.NotifyPropertyChanged(LCD.SUMLOGSTOP);
@@ -8160,7 +8162,7 @@ namespace CruiseDAL.DataObjects
 		    }
 		    set 
 		    {
-		        if(_sumbdftrecv == value) { return; }
+		        if(Math.Abs(_sumbdftrecv - value) < Double.Epsilon) { return; }
 		        _sumbdftrecv = value;
 		        this.ValidateProperty(LCD.SUMBDFTRECV, _sumbdftrecv);
 		        this.NotifyPropertyChanged(LCD.SUMBDFTRECV);
@@ -8178,7 +8180,7 @@ namespace CruiseDAL.DataObjects
 		    }
 		    set 
 		    {
-		        if(_sumcuftrecv == value) { return; }
+		        if(Math.Abs(_sumcuftrecv - value) < Double.Epsilon) { return; }
 		        _sumcuftrecv = value;
 		        this.ValidateProperty(LCD.SUMCUFTRECV, _sumcuftrecv);
 		        this.NotifyPropertyChanged(LCD.SUMCUFTRECV);
@@ -8196,7 +8198,7 @@ namespace CruiseDAL.DataObjects
 		    }
 		    set 
 		    {
-		        if(_sumcordsrecv == value) { return; }
+		        if(Math.Abs(_sumcordsrecv - value) < Double.Epsilon) { return; }
 		        _sumcordsrecv = value;
 		        this.ValidateProperty(LCD.SUMCORDSRECV, _sumcordsrecv);
 		        this.NotifyPropertyChanged(LCD.SUMCORDSRECV);
@@ -8214,7 +8216,7 @@ namespace CruiseDAL.DataObjects
 		    }
 		    set 
 		    {
-		        if(_sumvaluerecv == value) { return; }
+		        if(Math.Abs(_sumvaluerecv - value) < Double.Epsilon) { return; }
 		        _sumvaluerecv = value;
 		        this.ValidateProperty(LCD.SUMVALUERECV, _sumvaluerecv);
 		        this.NotifyPropertyChanged(LCD.SUMVALUERECV);
@@ -8232,7 +8234,7 @@ namespace CruiseDAL.DataObjects
 		    }
 		    set 
 		    {
-		        if(_biomassproduct == value) { return; }
+		        if(Math.Abs(_biomassproduct - value) < Double.Epsilon) { return; }
 		        _biomassproduct = value;
 		        this.ValidateProperty(LCD.BIOMASSPRODUCT, _biomassproduct);
 		        this.NotifyPropertyChanged(LCD.BIOMASSPRODUCT);
@@ -8250,7 +8252,7 @@ namespace CruiseDAL.DataObjects
 		    }
 		    set 
 		    {
-		        if(_sumwgtbat == value) { return; }
+		        if(Math.Abs(_sumwgtbat - value) < Double.Epsilon) { return; }
 		        _sumwgtbat = value;
 		        this.ValidateProperty(LCD.SUMWGTBAT, _sumwgtbat);
 		        this.NotifyPropertyChanged(LCD.SUMWGTBAT);
@@ -8268,7 +8270,7 @@ namespace CruiseDAL.DataObjects
 		    }
 		    set 
 		    {
-		        if(_sumwgtbbl == value) { return; }
+		        if(Math.Abs(_sumwgtbbl - value) < Double.Epsilon) { return; }
 		        _sumwgtbbl = value;
 		        this.ValidateProperty(LCD.SUMWGTBBL, _sumwgtbbl);
 		        this.NotifyPropertyChanged(LCD.SUMWGTBBL);
@@ -8286,7 +8288,7 @@ namespace CruiseDAL.DataObjects
 		    }
 		    set 
 		    {
-		        if(_sumwgtbbd == value) { return; }
+		        if(Math.Abs(_sumwgtbbd - value) < Double.Epsilon) { return; }
 		        _sumwgtbbd = value;
 		        this.ValidateProperty(LCD.SUMWGTBBD, _sumwgtbbd);
 		        this.NotifyPropertyChanged(LCD.SUMWGTBBD);
@@ -8304,7 +8306,7 @@ namespace CruiseDAL.DataObjects
 		    }
 		    set 
 		    {
-		        if(_sumwgtbft == value) { return; }
+		        if(Math.Abs(_sumwgtbft - value) < Double.Epsilon) { return; }
 		        _sumwgtbft = value;
 		        this.ValidateProperty(LCD.SUMWGTBFT, _sumwgtbft);
 		        this.NotifyPropertyChanged(LCD.SUMWGTBFT);
@@ -8322,7 +8324,7 @@ namespace CruiseDAL.DataObjects
 		    }
 		    set 
 		    {
-		        if(_sumwgttip == value) { return; }
+		        if(Math.Abs(_sumwgttip - value) < Double.Epsilon) { return; }
 		        _sumwgttip = value;
 		        this.ValidateProperty(LCD.SUMWGTTIP, _sumwgttip);
 		        this.NotifyPropertyChanged(LCD.SUMWGTTIP);
@@ -8644,7 +8646,7 @@ namespace CruiseDAL.DataObjects
 		    }
 		    set 
 		    {
-		        if(_firststagetrees == value) { return; }
+		        if(Math.Abs(_firststagetrees - value) < Double.Epsilon) { return; }
 		        _firststagetrees = value;
 		        this.ValidateProperty(POP.FIRSTSTAGETREES, _firststagetrees);
 		        this.NotifyPropertyChanged(POP.FIRSTSTAGETREES);
@@ -8662,7 +8664,7 @@ namespace CruiseDAL.DataObjects
 		    }
 		    set 
 		    {
-		        if(_measuredtrees == value) { return; }
+		        if(Math.Abs(_measuredtrees - value) < Double.Epsilon) { return; }
 		        _measuredtrees = value;
 		        this.ValidateProperty(POP.MEASUREDTREES, _measuredtrees);
 		        this.NotifyPropertyChanged(POP.MEASUREDTREES);
@@ -8680,7 +8682,7 @@ namespace CruiseDAL.DataObjects
 		    }
 		    set 
 		    {
-		        if(_talliedtrees == value) { return; }
+		        if(Math.Abs(_talliedtrees - value) < Double.Epsilon) { return; }
 		        _talliedtrees = value;
 		        this.ValidateProperty(POP.TALLIEDTREES, _talliedtrees);
 		        this.NotifyPropertyChanged(POP.TALLIEDTREES);
@@ -8698,7 +8700,7 @@ namespace CruiseDAL.DataObjects
 		    }
 		    set 
 		    {
-		        if(_sumkpi == value) { return; }
+		        if(Math.Abs(_sumkpi - value) < Double.Epsilon) { return; }
 		        _sumkpi = value;
 		        this.ValidateProperty(POP.SUMKPI, _sumkpi);
 		        this.NotifyPropertyChanged(POP.SUMKPI);
@@ -8716,7 +8718,7 @@ namespace CruiseDAL.DataObjects
 		    }
 		    set 
 		    {
-		        if(_summeasuredkpi == value) { return; }
+		        if(Math.Abs(_summeasuredkpi - value) < Double.Epsilon) { return; }
 		        _summeasuredkpi = value;
 		        this.ValidateProperty(POP.SUMMEASUREDKPI, _summeasuredkpi);
 		        this.NotifyPropertyChanged(POP.SUMMEASUREDKPI);
@@ -8734,7 +8736,7 @@ namespace CruiseDAL.DataObjects
 		    }
 		    set 
 		    {
-		        if(_stageonesamples == value) { return; }
+		        if(Math.Abs(_stageonesamples - value) < Double.Epsilon) { return; }
 		        _stageonesamples = value;
 		        this.ValidateProperty(POP.STAGEONESAMPLES, _stageonesamples);
 		        this.NotifyPropertyChanged(POP.STAGEONESAMPLES);
@@ -8752,7 +8754,7 @@ namespace CruiseDAL.DataObjects
 		    }
 		    set 
 		    {
-		        if(_stagetwosamples == value) { return; }
+		        if(Math.Abs(_stagetwosamples - value) < Double.Epsilon) { return; }
 		        _stagetwosamples = value;
 		        this.ValidateProperty(POP.STAGETWOSAMPLES, _stagetwosamples);
 		        this.NotifyPropertyChanged(POP.STAGETWOSAMPLES);
@@ -8770,7 +8772,7 @@ namespace CruiseDAL.DataObjects
 		    }
 		    set 
 		    {
-		        if(_stg1grossxpp == value) { return; }
+		        if(Math.Abs(_stg1grossxpp - value) < Double.Epsilon) { return; }
 		        _stg1grossxpp = value;
 		        this.ValidateProperty(POP.STG1GROSSXPP, _stg1grossxpp);
 		        this.NotifyPropertyChanged(POP.STG1GROSSXPP);
@@ -8788,7 +8790,7 @@ namespace CruiseDAL.DataObjects
 		    }
 		    set 
 		    {
-		        if(_stg1grossxsqrdpp == value) { return; }
+		        if(Math.Abs(_stg1grossxsqrdpp - value) < Double.Epsilon) { return; }
 		        _stg1grossxsqrdpp = value;
 		        this.ValidateProperty(POP.STG1GROSSXSQRDPP, _stg1grossxsqrdpp);
 		        this.NotifyPropertyChanged(POP.STG1GROSSXSQRDPP);
@@ -8806,7 +8808,7 @@ namespace CruiseDAL.DataObjects
 		    }
 		    set 
 		    {
-		        if(_stg1netxpp == value) { return; }
+		        if(Math.Abs(_stg1netxpp - value) < Double.Epsilon) { return; }
 		        _stg1netxpp = value;
 		        this.ValidateProperty(POP.STG1NETXPP, _stg1netxpp);
 		        this.NotifyPropertyChanged(POP.STG1NETXPP);
@@ -8824,7 +8826,7 @@ namespace CruiseDAL.DataObjects
 		    }
 		    set 
 		    {
-		        if(_stg1netxsqrdpp == value) { return; }
+		        if(Math.Abs(_stg1netxsqrdpp - value) < Double.Epsilon) { return; }
 		        _stg1netxsqrdpp = value;
 		        this.ValidateProperty(POP.STG1NETXSQRDPP, _stg1netxsqrdpp);
 		        this.NotifyPropertyChanged(POP.STG1NETXSQRDPP);
@@ -8842,7 +8844,7 @@ namespace CruiseDAL.DataObjects
 		    }
 		    set 
 		    {
-		        if(_stg1valuexpp == value) { return; }
+		        if(Math.Abs(_stg1valuexpp - value) < Double.Epsilon) { return; }
 		        _stg1valuexpp = value;
 		        this.ValidateProperty(POP.STG1VALUEXPP, _stg1valuexpp);
 		        this.NotifyPropertyChanged(POP.STG1VALUEXPP);
@@ -8860,7 +8862,7 @@ namespace CruiseDAL.DataObjects
 		    }
 		    set 
 		    {
-		        if(_stg1valuexsqrdpp == value) { return; }
+		        if(Math.Abs(_stg1valuexsqrdpp - value) < Double.Epsilon) { return; }
 		        _stg1valuexsqrdpp = value;
 		        this.ValidateProperty(POP.STG1VALUEXSQRDPP, _stg1valuexsqrdpp);
 		        this.NotifyPropertyChanged(POP.STG1VALUEXSQRDPP);
@@ -8878,7 +8880,7 @@ namespace CruiseDAL.DataObjects
 		    }
 		    set 
 		    {
-		        if(_stg2grossxpp == value) { return; }
+		        if(Math.Abs(_stg2grossxpp - value) < Double.Epsilon) { return; }
 		        _stg2grossxpp = value;
 		        this.ValidateProperty(POP.STG2GROSSXPP, _stg2grossxpp);
 		        this.NotifyPropertyChanged(POP.STG2GROSSXPP);
@@ -8896,7 +8898,7 @@ namespace CruiseDAL.DataObjects
 		    }
 		    set 
 		    {
-		        if(_stg2grossxsqrdpp == value) { return; }
+		        if(Math.Abs(_stg2grossxsqrdpp - value) < Double.Epsilon) { return; }
 		        _stg2grossxsqrdpp = value;
 		        this.ValidateProperty(POP.STG2GROSSXSQRDPP, _stg2grossxsqrdpp);
 		        this.NotifyPropertyChanged(POP.STG2GROSSXSQRDPP);
@@ -8914,7 +8916,7 @@ namespace CruiseDAL.DataObjects
 		    }
 		    set 
 		    {
-		        if(_stg2netxpp == value) { return; }
+		        if(Math.Abs(_stg2netxpp - value) < Double.Epsilon) { return; }
 		        _stg2netxpp = value;
 		        this.ValidateProperty(POP.STG2NETXPP, _stg2netxpp);
 		        this.NotifyPropertyChanged(POP.STG2NETXPP);
@@ -8932,7 +8934,7 @@ namespace CruiseDAL.DataObjects
 		    }
 		    set 
 		    {
-		        if(_stg2netxsqrdpp == value) { return; }
+		        if(Math.Abs(_stg2netxsqrdpp - value) < Double.Epsilon) { return; }
 		        _stg2netxsqrdpp = value;
 		        this.ValidateProperty(POP.STG2NETXSQRDPP, _stg2netxsqrdpp);
 		        this.NotifyPropertyChanged(POP.STG2NETXSQRDPP);
@@ -8950,7 +8952,7 @@ namespace CruiseDAL.DataObjects
 		    }
 		    set 
 		    {
-		        if(_stg2valuexpp == value) { return; }
+		        if(Math.Abs(_stg2valuexpp - value) < Double.Epsilon) { return; }
 		        _stg2valuexpp = value;
 		        this.ValidateProperty(POP.STG2VALUEXPP, _stg2valuexpp);
 		        this.NotifyPropertyChanged(POP.STG2VALUEXPP);
@@ -8968,7 +8970,7 @@ namespace CruiseDAL.DataObjects
 		    }
 		    set 
 		    {
-		        if(_stg2valuexsqrdpp == value) { return; }
+		        if(Math.Abs(_stg2valuexsqrdpp - value) < Double.Epsilon) { return; }
 		        _stg2valuexsqrdpp = value;
 		        this.ValidateProperty(POP.STG2VALUEXSQRDPP, _stg2valuexsqrdpp);
 		        this.NotifyPropertyChanged(POP.STG2VALUEXSQRDPP);
@@ -8986,7 +8988,7 @@ namespace CruiseDAL.DataObjects
 		    }
 		    set 
 		    {
-		        if(_stg1grossxsp == value) { return; }
+		        if(Math.Abs(_stg1grossxsp - value) < Double.Epsilon) { return; }
 		        _stg1grossxsp = value;
 		        this.ValidateProperty(POP.STG1GROSSXSP, _stg1grossxsp);
 		        this.NotifyPropertyChanged(POP.STG1GROSSXSP);
@@ -9004,7 +9006,7 @@ namespace CruiseDAL.DataObjects
 		    }
 		    set 
 		    {
-		        if(_stg1grossxsqrdsp == value) { return; }
+		        if(Math.Abs(_stg1grossxsqrdsp - value) < Double.Epsilon) { return; }
 		        _stg1grossxsqrdsp = value;
 		        this.ValidateProperty(POP.STG1GROSSXSQRDSP, _stg1grossxsqrdsp);
 		        this.NotifyPropertyChanged(POP.STG1GROSSXSQRDSP);
@@ -9022,7 +9024,7 @@ namespace CruiseDAL.DataObjects
 		    }
 		    set 
 		    {
-		        if(_stg1netxsp == value) { return; }
+		        if(Math.Abs(_stg1netxsp - value) < Double.Epsilon) { return; }
 		        _stg1netxsp = value;
 		        this.ValidateProperty(POP.STG1NETXSP, _stg1netxsp);
 		        this.NotifyPropertyChanged(POP.STG1NETXSP);
@@ -9040,7 +9042,7 @@ namespace CruiseDAL.DataObjects
 		    }
 		    set 
 		    {
-		        if(_stg1netxsqrdsp == value) { return; }
+		        if(Math.Abs(_stg1netxsqrdsp - value) < Double.Epsilon) { return; }
 		        _stg1netxsqrdsp = value;
 		        this.ValidateProperty(POP.STG1NETXSQRDSP, _stg1netxsqrdsp);
 		        this.NotifyPropertyChanged(POP.STG1NETXSQRDSP);
@@ -9058,7 +9060,7 @@ namespace CruiseDAL.DataObjects
 		    }
 		    set 
 		    {
-		        if(_stg1valuexsp == value) { return; }
+		        if(Math.Abs(_stg1valuexsp - value) < Double.Epsilon) { return; }
 		        _stg1valuexsp = value;
 		        this.ValidateProperty(POP.STG1VALUEXSP, _stg1valuexsp);
 		        this.NotifyPropertyChanged(POP.STG1VALUEXSP);
@@ -9076,7 +9078,7 @@ namespace CruiseDAL.DataObjects
 		    }
 		    set 
 		    {
-		        if(_stg1valuexsqrdsp == value) { return; }
+		        if(Math.Abs(_stg1valuexsqrdsp - value) < Double.Epsilon) { return; }
 		        _stg1valuexsqrdsp = value;
 		        this.ValidateProperty(POP.STG1VALUEXSQRDSP, _stg1valuexsqrdsp);
 		        this.NotifyPropertyChanged(POP.STG1VALUEXSQRDSP);
@@ -9094,7 +9096,7 @@ namespace CruiseDAL.DataObjects
 		    }
 		    set 
 		    {
-		        if(_stg2grossxsp == value) { return; }
+		        if(Math.Abs(_stg2grossxsp - value) < Double.Epsilon) { return; }
 		        _stg2grossxsp = value;
 		        this.ValidateProperty(POP.STG2GROSSXSP, _stg2grossxsp);
 		        this.NotifyPropertyChanged(POP.STG2GROSSXSP);
@@ -9112,7 +9114,7 @@ namespace CruiseDAL.DataObjects
 		    }
 		    set 
 		    {
-		        if(_stg2grossxsqrdsp == value) { return; }
+		        if(Math.Abs(_stg2grossxsqrdsp - value) < Double.Epsilon) { return; }
 		        _stg2grossxsqrdsp = value;
 		        this.ValidateProperty(POP.STG2GROSSXSQRDSP, _stg2grossxsqrdsp);
 		        this.NotifyPropertyChanged(POP.STG2GROSSXSQRDSP);
@@ -9130,7 +9132,7 @@ namespace CruiseDAL.DataObjects
 		    }
 		    set 
 		    {
-		        if(_stg2netxsp == value) { return; }
+		        if(Math.Abs(_stg2netxsp - value) < Double.Epsilon) { return; }
 		        _stg2netxsp = value;
 		        this.ValidateProperty(POP.STG2NETXSP, _stg2netxsp);
 		        this.NotifyPropertyChanged(POP.STG2NETXSP);
@@ -9148,7 +9150,7 @@ namespace CruiseDAL.DataObjects
 		    }
 		    set 
 		    {
-		        if(_stg2netxsqrdsp == value) { return; }
+		        if(Math.Abs(_stg2netxsqrdsp - value) < Double.Epsilon) { return; }
 		        _stg2netxsqrdsp = value;
 		        this.ValidateProperty(POP.STG2NETXSQRDSP, _stg2netxsqrdsp);
 		        this.NotifyPropertyChanged(POP.STG2NETXSQRDSP);
@@ -9166,7 +9168,7 @@ namespace CruiseDAL.DataObjects
 		    }
 		    set 
 		    {
-		        if(_stg2valuexsp == value) { return; }
+		        if(Math.Abs(_stg2valuexsp - value) < Double.Epsilon) { return; }
 		        _stg2valuexsp = value;
 		        this.ValidateProperty(POP.STG2VALUEXSP, _stg2valuexsp);
 		        this.NotifyPropertyChanged(POP.STG2VALUEXSP);
@@ -9184,7 +9186,7 @@ namespace CruiseDAL.DataObjects
 		    }
 		    set 
 		    {
-		        if(_stg2valuexsqrdsp == value) { return; }
+		        if(Math.Abs(_stg2valuexsqrdsp - value) < Double.Epsilon) { return; }
 		        _stg2valuexsqrdsp = value;
 		        this.ValidateProperty(POP.STG2VALUEXSQRDSP, _stg2valuexsqrdsp);
 		        this.NotifyPropertyChanged(POP.STG2VALUEXSQRDSP);
@@ -9202,7 +9204,7 @@ namespace CruiseDAL.DataObjects
 		    }
 		    set 
 		    {
-		        if(_stg1grossxrp == value) { return; }
+		        if(Math.Abs(_stg1grossxrp - value) < Double.Epsilon) { return; }
 		        _stg1grossxrp = value;
 		        this.ValidateProperty(POP.STG1GROSSXRP, _stg1grossxrp);
 		        this.NotifyPropertyChanged(POP.STG1GROSSXRP);
@@ -9220,7 +9222,7 @@ namespace CruiseDAL.DataObjects
 		    }
 		    set 
 		    {
-		        if(_stg1grossxsqrdrp == value) { return; }
+		        if(Math.Abs(_stg1grossxsqrdrp - value) < Double.Epsilon) { return; }
 		        _stg1grossxsqrdrp = value;
 		        this.ValidateProperty(POP.STG1GROSSXSQRDRP, _stg1grossxsqrdrp);
 		        this.NotifyPropertyChanged(POP.STG1GROSSXSQRDRP);
@@ -9238,7 +9240,7 @@ namespace CruiseDAL.DataObjects
 		    }
 		    set 
 		    {
-		        if(_stg1netxrp == value) { return; }
+		        if(Math.Abs(_stg1netxrp - value) < Double.Epsilon) { return; }
 		        _stg1netxrp = value;
 		        this.ValidateProperty(POP.STG1NETXRP, _stg1netxrp);
 		        this.NotifyPropertyChanged(POP.STG1NETXRP);
@@ -9256,7 +9258,7 @@ namespace CruiseDAL.DataObjects
 		    }
 		    set 
 		    {
-		        if(_stg1netxrsqrdrp == value) { return; }
+		        if(Math.Abs(_stg1netxrsqrdrp - value) < Double.Epsilon) { return; }
 		        _stg1netxrsqrdrp = value;
 		        this.ValidateProperty(POP.STG1NETXRSQRDRP, _stg1netxrsqrdrp);
 		        this.NotifyPropertyChanged(POP.STG1NETXRSQRDRP);
@@ -9274,7 +9276,7 @@ namespace CruiseDAL.DataObjects
 		    }
 		    set 
 		    {
-		        if(_stg1valuexrp == value) { return; }
+		        if(Math.Abs(_stg1valuexrp - value) < Double.Epsilon) { return; }
 		        _stg1valuexrp = value;
 		        this.ValidateProperty(POP.STG1VALUEXRP, _stg1valuexrp);
 		        this.NotifyPropertyChanged(POP.STG1VALUEXRP);
@@ -9292,7 +9294,7 @@ namespace CruiseDAL.DataObjects
 		    }
 		    set 
 		    {
-		        if(_stg1valuexsqrdrp == value) { return; }
+		        if(Math.Abs(_stg1valuexsqrdrp - value) < Double.Epsilon) { return; }
 		        _stg1valuexsqrdrp = value;
 		        this.ValidateProperty(POP.STG1VALUEXSQRDRP, _stg1valuexsqrdrp);
 		        this.NotifyPropertyChanged(POP.STG1VALUEXSQRDRP);
@@ -9310,7 +9312,7 @@ namespace CruiseDAL.DataObjects
 		    }
 		    set 
 		    {
-		        if(_stg2grossxrp == value) { return; }
+		        if(Math.Abs(_stg2grossxrp - value) < Double.Epsilon) { return; }
 		        _stg2grossxrp = value;
 		        this.ValidateProperty(POP.STG2GROSSXRP, _stg2grossxrp);
 		        this.NotifyPropertyChanged(POP.STG2GROSSXRP);
@@ -9328,7 +9330,7 @@ namespace CruiseDAL.DataObjects
 		    }
 		    set 
 		    {
-		        if(_stg2grossxsqrdrp == value) { return; }
+		        if(Math.Abs(_stg2grossxsqrdrp - value) < Double.Epsilon) { return; }
 		        _stg2grossxsqrdrp = value;
 		        this.ValidateProperty(POP.STG2GROSSXSQRDRP, _stg2grossxsqrdrp);
 		        this.NotifyPropertyChanged(POP.STG2GROSSXSQRDRP);
@@ -9346,7 +9348,7 @@ namespace CruiseDAL.DataObjects
 		    }
 		    set 
 		    {
-		        if(_stg2netxrp == value) { return; }
+		        if(Math.Abs(_stg2netxrp - value) < Double.Epsilon) { return; }
 		        _stg2netxrp = value;
 		        this.ValidateProperty(POP.STG2NETXRP, _stg2netxrp);
 		        this.NotifyPropertyChanged(POP.STG2NETXRP);
@@ -9364,7 +9366,7 @@ namespace CruiseDAL.DataObjects
 		    }
 		    set 
 		    {
-		        if(_stg2netxsqrdrp == value) { return; }
+		        if(Math.Abs(_stg2netxsqrdrp - value) < Double.Epsilon) { return; }
 		        _stg2netxsqrdrp = value;
 		        this.ValidateProperty(POP.STG2NETXSQRDRP, _stg2netxsqrdrp);
 		        this.NotifyPropertyChanged(POP.STG2NETXSQRDRP);
@@ -9382,7 +9384,7 @@ namespace CruiseDAL.DataObjects
 		    }
 		    set 
 		    {
-		        if(_stg2valuexrp == value) { return; }
+		        if(Math.Abs(_stg2valuexrp - value) < Double.Epsilon) { return; }
 		        _stg2valuexrp = value;
 		        this.ValidateProperty(POP.STG2VALUEXRP, _stg2valuexrp);
 		        this.NotifyPropertyChanged(POP.STG2VALUEXRP);
@@ -9400,7 +9402,7 @@ namespace CruiseDAL.DataObjects
 		    }
 		    set 
 		    {
-		        if(_stg2valuexsqrdrp == value) { return; }
+		        if(Math.Abs(_stg2valuexsqrdrp - value) < Double.Epsilon) { return; }
 		        _stg2valuexsqrdrp = value;
 		        this.ValidateProperty(POP.STG2VALUEXSQRDRP, _stg2valuexsqrdrp);
 		        this.NotifyPropertyChanged(POP.STG2VALUEXSQRDRP);
@@ -9735,7 +9737,7 @@ namespace CruiseDAL.DataObjects
 		    }
 		    set 
 		    {
-		        if(_firststagetrees == value) { return; }
+		        if(Math.Abs(_firststagetrees - value) < Double.Epsilon) { return; }
 		        _firststagetrees = value;
 		        this.ValidateProperty(PRO.FIRSTSTAGETREES, _firststagetrees);
 		        this.NotifyPropertyChanged(PRO.FIRSTSTAGETREES);
@@ -9753,7 +9755,7 @@ namespace CruiseDAL.DataObjects
 		    }
 		    set 
 		    {
-		        if(_measuredtrees == value) { return; }
+		        if(Math.Abs(_measuredtrees - value) < Double.Epsilon) { return; }
 		        _measuredtrees = value;
 		        this.ValidateProperty(PRO.MEASUREDTREES, _measuredtrees);
 		        this.NotifyPropertyChanged(PRO.MEASUREDTREES);
@@ -9771,7 +9773,7 @@ namespace CruiseDAL.DataObjects
 		    }
 		    set 
 		    {
-		        if(_talliedtrees == value) { return; }
+		        if(Math.Abs(_talliedtrees - value) < Double.Epsilon) { return; }
 		        _talliedtrees = value;
 		        this.ValidateProperty(PRO.TALLIEDTREES, _talliedtrees);
 		        this.NotifyPropertyChanged(PRO.TALLIEDTREES);
@@ -9789,7 +9791,7 @@ namespace CruiseDAL.DataObjects
 		    }
 		    set 
 		    {
-		        if(_sumkpi == value) { return; }
+		        if(Math.Abs(_sumkpi - value) < Double.Epsilon) { return; }
 		        _sumkpi = value;
 		        this.ValidateProperty(PRO.SUMKPI, _sumkpi);
 		        this.NotifyPropertyChanged(PRO.SUMKPI);
@@ -9807,7 +9809,7 @@ namespace CruiseDAL.DataObjects
 		    }
 		    set 
 		    {
-		        if(_summeasuredkpi == value) { return; }
+		        if(Math.Abs(_summeasuredkpi - value) < Double.Epsilon) { return; }
 		        _summeasuredkpi = value;
 		        this.ValidateProperty(PRO.SUMMEASUREDKPI, _summeasuredkpi);
 		        this.NotifyPropertyChanged(PRO.SUMMEASUREDKPI);
@@ -9825,7 +9827,7 @@ namespace CruiseDAL.DataObjects
 		    }
 		    set 
 		    {
-		        if(_prorationfactor == value) { return; }
+		        if(Math.Abs(_prorationfactor - value) < Double.Epsilon) { return; }
 		        _prorationfactor = value;
 		        this.ValidateProperty(PRO.PRORATIONFACTOR, _prorationfactor);
 		        this.NotifyPropertyChanged(PRO.PRORATIONFACTOR);
@@ -9843,7 +9845,7 @@ namespace CruiseDAL.DataObjects
 		    }
 		    set 
 		    {
-		        if(_proratedestimatedtrees == value) { return; }
+		        if(Math.Abs(_proratedestimatedtrees - value) < Double.Epsilon) { return; }
 		        _proratedestimatedtrees = value;
 		        this.ValidateProperty(PRO.PRORATEDESTIMATEDTREES, _proratedestimatedtrees);
 		        this.NotifyPropertyChanged(PRO.PRORATEDESTIMATEDTREES);
@@ -10046,7 +10048,7 @@ namespace CruiseDAL.DataObjects
 		    }
 		    set 
 		    {
-		        if(_seendefect == value) { return; }
+		        if(Math.Abs(_seendefect - value) < float.Epsilon) { return; }
 		        _seendefect = value;
 		        this.ValidateProperty(LOGSTOCK.SEENDEFECT, _seendefect);
 		        this.NotifyPropertyChanged(LOGSTOCK.SEENDEFECT);
@@ -10064,7 +10066,7 @@ namespace CruiseDAL.DataObjects
 		    }
 		    set 
 		    {
-		        if(_percentrecoverable == value) { return; }
+		        if(Math.Abs(_percentrecoverable - value) < float.Epsilon) { return; }
 		        _percentrecoverable = value;
 		        this.ValidateProperty(LOGSTOCK.PERCENTRECOVERABLE, _percentrecoverable);
 		        this.NotifyPropertyChanged(LOGSTOCK.PERCENTRECOVERABLE);
@@ -10118,7 +10120,7 @@ namespace CruiseDAL.DataObjects
 		    }
 		    set 
 		    {
-		        if(_smallenddiameter == value) { return; }
+		        if(Math.Abs(_smallenddiameter - value) < float.Epsilon) { return; }
 		        _smallenddiameter = value;
 		        this.ValidateProperty(LOGSTOCK.SMALLENDDIAMETER, _smallenddiameter);
 		        this.NotifyPropertyChanged(LOGSTOCK.SMALLENDDIAMETER);
@@ -10136,7 +10138,7 @@ namespace CruiseDAL.DataObjects
 		    }
 		    set 
 		    {
-		        if(_largeenddiameter == value) { return; }
+		        if(Math.Abs(_largeenddiameter - value) < float.Epsilon) { return; }
 		        _largeenddiameter = value;
 		        this.ValidateProperty(LOGSTOCK.LARGEENDDIAMETER, _largeenddiameter);
 		        this.NotifyPropertyChanged(LOGSTOCK.LARGEENDDIAMETER);
@@ -10154,7 +10156,7 @@ namespace CruiseDAL.DataObjects
 		    }
 		    set 
 		    {
-		        if(_grossboardfoot == value) { return; }
+		        if(Math.Abs(_grossboardfoot - value) < float.Epsilon) { return; }
 		        _grossboardfoot = value;
 		        this.ValidateProperty(LOGSTOCK.GROSSBOARDFOOT, _grossboardfoot);
 		        this.NotifyPropertyChanged(LOGSTOCK.GROSSBOARDFOOT);
@@ -10172,7 +10174,7 @@ namespace CruiseDAL.DataObjects
 		    }
 		    set 
 		    {
-		        if(_netboardfoot == value) { return; }
+		        if(Math.Abs(_netboardfoot - value) < float.Epsilon) { return; }
 		        _netboardfoot = value;
 		        this.ValidateProperty(LOGSTOCK.NETBOARDFOOT, _netboardfoot);
 		        this.NotifyPropertyChanged(LOGSTOCK.NETBOARDFOOT);
@@ -10190,7 +10192,7 @@ namespace CruiseDAL.DataObjects
 		    }
 		    set 
 		    {
-		        if(_grosscubicfoot == value) { return; }
+		        if(Math.Abs(_grosscubicfoot - value) < float.Epsilon) { return; }
 		        _grosscubicfoot = value;
 		        this.ValidateProperty(LOGSTOCK.GROSSCUBICFOOT, _grosscubicfoot);
 		        this.NotifyPropertyChanged(LOGSTOCK.GROSSCUBICFOOT);
@@ -10208,7 +10210,7 @@ namespace CruiseDAL.DataObjects
 		    }
 		    set 
 		    {
-		        if(_netcubicfoot == value) { return; }
+		        if(Math.Abs(_netcubicfoot - value) < float.Epsilon) { return; }
 		        _netcubicfoot = value;
 		        this.ValidateProperty(LOGSTOCK.NETCUBICFOOT, _netcubicfoot);
 		        this.NotifyPropertyChanged(LOGSTOCK.NETCUBICFOOT);
@@ -10226,7 +10228,7 @@ namespace CruiseDAL.DataObjects
 		    }
 		    set 
 		    {
-		        if(_boardfootremoved == value) { return; }
+		        if(Math.Abs(_boardfootremoved - value) < float.Epsilon) { return; }
 		        _boardfootremoved = value;
 		        this.ValidateProperty(LOGSTOCK.BOARDFOOTREMOVED, _boardfootremoved);
 		        this.NotifyPropertyChanged(LOGSTOCK.BOARDFOOTREMOVED);
@@ -10244,7 +10246,7 @@ namespace CruiseDAL.DataObjects
 		    }
 		    set 
 		    {
-		        if(_cubicfootremoved == value) { return; }
+		        if(Math.Abs(_cubicfootremoved - value) < float.Epsilon) { return; }
 		        _cubicfootremoved = value;
 		        this.ValidateProperty(LOGSTOCK.CUBICFOOTREMOVED, _cubicfootremoved);
 		        this.NotifyPropertyChanged(LOGSTOCK.CUBICFOOTREMOVED);
@@ -10262,7 +10264,7 @@ namespace CruiseDAL.DataObjects
 		    }
 		    set 
 		    {
-		        if(_dibclass == value) { return; }
+		        if(Math.Abs(_dibclass - value) < float.Epsilon) { return; }
 		        _dibclass = value;
 		        this.ValidateProperty(LOGSTOCK.DIBCLASS, _dibclass);
 		        this.NotifyPropertyChanged(LOGSTOCK.DIBCLASS);
@@ -10280,7 +10282,7 @@ namespace CruiseDAL.DataObjects
 		    }
 		    set 
 		    {
-		        if(_barkthickness == value) { return; }
+		        if(Math.Abs(_barkthickness - value) < float.Epsilon) { return; }
 		        _barkthickness = value;
 		        this.ValidateProperty(LOGSTOCK.BARKTHICKNESS, _barkthickness);
 		        this.NotifyPropertyChanged(LOGSTOCK.BARKTHICKNESS);
@@ -10298,7 +10300,7 @@ namespace CruiseDAL.DataObjects
 		    }
 		    set 
 		    {
-		        if(_boardutil == value) { return; }
+		        if(Math.Abs(_boardutil - value) < float.Epsilon) { return; }
 		        _boardutil = value;
 		        this.ValidateProperty(LOGSTOCK.BOARDUTIL, _boardutil);
 		        this.NotifyPropertyChanged(LOGSTOCK.BOARDUTIL);
@@ -10316,7 +10318,7 @@ namespace CruiseDAL.DataObjects
 		    }
 		    set 
 		    {
-		        if(_cubicutil == value) { return; }
+		        if(Math.Abs(_cubicutil - value) < float.Epsilon) { return; }
 		        _cubicutil = value;
 		        this.ValidateProperty(LOGSTOCK.CUBICUTIL, _cubicutil);
 		        this.NotifyPropertyChanged(LOGSTOCK.CUBICUTIL);
@@ -10325,21 +10327,21 @@ namespace CruiseDAL.DataObjects
 
 		[XmlIgnore]
 		[CreatedByField()]
-		public string CreatedBy { get; internal set; }
+		public string CreatedBy { get;  set; }
 		
 		[XmlIgnore]
 		[InfrastructureFieldAttribute (FieldName = "CreatedDate",
 		PersistMode = PersistMode.Never)]
-		public DateTime CreatedDate { get; internal set; }
+		public DateTime CreatedDate { get; set; }
 		
 		[XmlIgnore]
 		[ModifiedByField()]
-		public string ModifiedBy { get; internal set; }
+		public string ModifiedBy { get; set; }
 		
 		[XmlIgnore]
 		[InfrastructureFieldAttribute (FieldName = "ModifiedDate",
 		PersistMode = PersistMode.Never)]
-		public string ModifiedDate { get; internal set; }
+		public string ModifiedDate { get; set; }
 		
 		protected override bool DoValidate()
 		{
@@ -10650,7 +10652,7 @@ namespace CruiseDAL.DataObjects
 		    }
 		    set 
 		    {
-		        if(_sgerror == value) { return; }
+		        if(Math.Abs(_sgerror - value) < float.Epsilon) { return; }
 		        _sgerror = value;
 		        this.ValidateProperty(SAMPLEGROUPSTATS.SGERROR, _sgerror);
 		        this.NotifyPropertyChanged(SAMPLEGROUPSTATS.SGERROR);
@@ -10704,7 +10706,7 @@ namespace CruiseDAL.DataObjects
 		    }
 		    set 
 		    {
-		        if(_cv1 == value) { return; }
+		        if(Math.Abs(_cv1 - value) < float.Epsilon) { return; }
 		        _cv1 = value;
 		        this.ValidateProperty(SAMPLEGROUPSTATS.CV1, _cv1);
 		        this.NotifyPropertyChanged(SAMPLEGROUPSTATS.CV1);
@@ -10722,7 +10724,7 @@ namespace CruiseDAL.DataObjects
 		    }
 		    set 
 		    {
-		        if(_cv2 == value) { return; }
+		        if(Math.Abs(_cv2 - value) < float.Epsilon) { return; }
 		        _cv2 = value;
 		        this.ValidateProperty(SAMPLEGROUPSTATS.CV2, _cv2);
 		        this.NotifyPropertyChanged(SAMPLEGROUPSTATS.CV2);
@@ -10740,7 +10742,7 @@ namespace CruiseDAL.DataObjects
 		    }
 		    set 
 		    {
-		        if(_treesperacre == value) { return; }
+		        if(Math.Abs(_treesperacre - value) < float.Epsilon) { return; }
 		        _treesperacre = value;
 		        this.ValidateProperty(SAMPLEGROUPSTATS.TREESPERACRE, _treesperacre);
 		        this.NotifyPropertyChanged(SAMPLEGROUPSTATS.TREESPERACRE);
@@ -10758,7 +10760,7 @@ namespace CruiseDAL.DataObjects
 		    }
 		    set 
 		    {
-		        if(_volumeperacre == value) { return; }
+		        if(Math.Abs(_volumeperacre - value) < float.Epsilon) { return; }
 		        _volumeperacre = value;
 		        this.ValidateProperty(SAMPLEGROUPSTATS.VOLUMEPERACRE, _volumeperacre);
 		        this.NotifyPropertyChanged(SAMPLEGROUPSTATS.VOLUMEPERACRE);
@@ -10776,7 +10778,7 @@ namespace CruiseDAL.DataObjects
 		    }
 		    set 
 		    {
-		        if(_treesperplot == value) { return; }
+		        if(Math.Abs(_treesperplot - value) < float.Epsilon) { return; }
 		        _treesperplot = value;
 		        this.ValidateProperty(SAMPLEGROUPSTATS.TREESPERPLOT, _treesperplot);
 		        this.NotifyPropertyChanged(SAMPLEGROUPSTATS.TREESPERPLOT);
@@ -10794,7 +10796,7 @@ namespace CruiseDAL.DataObjects
 		    }
 		    set 
 		    {
-		        if(_averageheight == value) { return; }
+		        if(Math.Abs(_averageheight - value) < float.Epsilon) { return; }
 		        _averageheight = value;
 		        this.ValidateProperty(SAMPLEGROUPSTATS.AVERAGEHEIGHT, _averageheight);
 		        this.NotifyPropertyChanged(SAMPLEGROUPSTATS.AVERAGEHEIGHT);
@@ -10866,7 +10868,7 @@ namespace CruiseDAL.DataObjects
 		    }
 		    set 
 		    {
-		        if(_bigbaf == value) { return; }
+		        if(Math.Abs(_bigbaf - value) < float.Epsilon) { return; }
 		        _bigbaf = value;
 		        this.ValidateProperty(SAMPLEGROUPSTATS.BIGBAF, _bigbaf);
 		        this.NotifyPropertyChanged(SAMPLEGROUPSTATS.BIGBAF);
@@ -10902,7 +10904,7 @@ namespace CruiseDAL.DataObjects
 		    }
 		    set 
 		    {
-		        if(_mindbh == value) { return; }
+		        if(Math.Abs(_mindbh - value) < float.Epsilon) { return; }
 		        _mindbh = value;
 		        this.ValidateProperty(SAMPLEGROUPSTATS.MINDBH, _mindbh);
 		        this.NotifyPropertyChanged(SAMPLEGROUPSTATS.MINDBH);
@@ -10920,7 +10922,7 @@ namespace CruiseDAL.DataObjects
 		    }
 		    set 
 		    {
-		        if(_maxdbh == value) { return; }
+		        if(Math.Abs(_maxdbh - value) < float.Epsilon) { return; }
 		        _maxdbh = value;
 		        this.ValidateProperty(SAMPLEGROUPSTATS.MAXDBH, _maxdbh);
 		        this.NotifyPropertyChanged(SAMPLEGROUPSTATS.MAXDBH);
@@ -11477,7 +11479,7 @@ namespace CruiseDAL.DataObjects
 		    }
 		    set 
 		    {
-		        if(_basalareafactor == value) { return; }
+		        if(Math.Abs(_basalareafactor - value) < float.Epsilon) { return; }
 		        _basalareafactor = value;
 		        this.ValidateProperty(STRATUMSTATS.BASALAREAFACTOR, _basalareafactor);
 		        this.NotifyPropertyChanged(STRATUMSTATS.BASALAREAFACTOR);
@@ -11495,7 +11497,7 @@ namespace CruiseDAL.DataObjects
 		    }
 		    set 
 		    {
-		        if(_fixedplotsize == value) { return; }
+		        if(Math.Abs(_fixedplotsize - value) < float.Epsilon) { return; }
 		        _fixedplotsize = value;
 		        this.ValidateProperty(STRATUMSTATS.FIXEDPLOTSIZE, _fixedplotsize);
 		        this.NotifyPropertyChanged(STRATUMSTATS.FIXEDPLOTSIZE);
@@ -11513,7 +11515,7 @@ namespace CruiseDAL.DataObjects
 		    }
 		    set 
 		    {
-		        if(_strerror == value) { return; }
+		        if(Math.Abs(_strerror - value) < float.Epsilon) { return; }
 		        _strerror = value;
 		        this.ValidateProperty(STRATUMSTATS.STRERROR, _strerror);
 		        this.NotifyPropertyChanged(STRATUMSTATS.STRERROR);
@@ -11567,7 +11569,7 @@ namespace CruiseDAL.DataObjects
 		    }
 		    set 
 		    {
-		        if(_weightedcv1 == value) { return; }
+		        if(Math.Abs(_weightedcv1 - value) < float.Epsilon) { return; }
 		        _weightedcv1 = value;
 		        this.ValidateProperty(STRATUMSTATS.WEIGHTEDCV1, _weightedcv1);
 		        this.NotifyPropertyChanged(STRATUMSTATS.WEIGHTEDCV1);
@@ -11585,7 +11587,7 @@ namespace CruiseDAL.DataObjects
 		    }
 		    set 
 		    {
-		        if(_weightedcv2 == value) { return; }
+		        if(Math.Abs(_weightedcv2 - value) < float.Epsilon) { return; }
 		        _weightedcv2 = value;
 		        this.ValidateProperty(STRATUMSTATS.WEIGHTEDCV2, _weightedcv2);
 		        this.NotifyPropertyChanged(STRATUMSTATS.WEIGHTEDCV2);
@@ -11603,7 +11605,7 @@ namespace CruiseDAL.DataObjects
 		    }
 		    set 
 		    {
-		        if(_treesperacre == value) { return; }
+		        if(Math.Abs(_treesperacre - value) < float.Epsilon) { return; }
 		        _treesperacre = value;
 		        this.ValidateProperty(STRATUMSTATS.TREESPERACRE, _treesperacre);
 		        this.NotifyPropertyChanged(STRATUMSTATS.TREESPERACRE);
@@ -11621,7 +11623,7 @@ namespace CruiseDAL.DataObjects
 		    }
 		    set 
 		    {
-		        if(_volumeperacre == value) { return; }
+		        if(Math.Abs(_volumeperacre - value) < float.Epsilon) { return; }
 		        _volumeperacre = value;
 		        this.ValidateProperty(STRATUMSTATS.VOLUMEPERACRE, _volumeperacre);
 		        this.NotifyPropertyChanged(STRATUMSTATS.VOLUMEPERACRE);
@@ -11639,7 +11641,7 @@ namespace CruiseDAL.DataObjects
 		    }
 		    set 
 		    {
-		        if(_totalvolume == value) { return; }
+		        if(Math.Abs(_totalvolume - value) < float.Epsilon) { return; }
 		        _totalvolume = value;
 		        this.ValidateProperty(STRATUMSTATS.TOTALVOLUME, _totalvolume);
 		        this.NotifyPropertyChanged(STRATUMSTATS.TOTALVOLUME);
@@ -11657,7 +11659,7 @@ namespace CruiseDAL.DataObjects
 		    }
 		    set 
 		    {
-		        if(_totalacres == value) { return; }
+		        if(Math.Abs(_totalacres - value) < float.Epsilon) { return; }
 		        _totalacres = value;
 		        this.ValidateProperty(STRATUMSTATS.TOTALACRES, _totalacres);
 		        this.NotifyPropertyChanged(STRATUMSTATS.TOTALACRES);
@@ -11904,7 +11906,7 @@ namespace CruiseDAL.DataObjects
 		    }
 		    set 
 		    {
-		        if(_coefficienta == value) { return; }
+		        if(Math.Abs(_coefficienta - value) < float.Epsilon) { return; }
 		        _coefficienta = value;
 		        this.ValidateProperty(REGRESSION.COEFFICIENTA, _coefficienta);
 		        this.NotifyPropertyChanged(REGRESSION.COEFFICIENTA);
@@ -11922,7 +11924,7 @@ namespace CruiseDAL.DataObjects
 		    }
 		    set 
 		    {
-		        if(_coefficientb == value) { return; }
+		        if(Math.Abs(_coefficientb - value) < float.Epsilon) { return; }
 		        _coefficientb = value;
 		        this.ValidateProperty(REGRESSION.COEFFICIENTB, _coefficientb);
 		        this.NotifyPropertyChanged(REGRESSION.COEFFICIENTB);
@@ -11940,7 +11942,7 @@ namespace CruiseDAL.DataObjects
 		    }
 		    set 
 		    {
-		        if(_coefficientc == value) { return; }
+		        if(Math.Abs(_coefficientc - value) < float.Epsilon) { return; }
 		        _coefficientc = value;
 		        this.ValidateProperty(REGRESSION.COEFFICIENTC, _coefficientc);
 		        this.NotifyPropertyChanged(REGRESSION.COEFFICIENTC);
@@ -11976,7 +11978,7 @@ namespace CruiseDAL.DataObjects
 		    }
 		    set 
 		    {
-		        if(_meanse == value) { return; }
+		        if(Math.Abs(_meanse - value) < float.Epsilon) { return; }
 		        _meanse = value;
 		        this.ValidateProperty(REGRESSION.MEANSE, _meanse);
 		        this.NotifyPropertyChanged(REGRESSION.MEANSE);
@@ -11994,7 +11996,7 @@ namespace CruiseDAL.DataObjects
 		    }
 		    set 
 		    {
-		        if(_rsquared == value) { return; }
+		        if(Math.Abs(_rsquared - value) < float.Epsilon) { return; }
 		        _rsquared = value;
 		        this.ValidateProperty(REGRESSION.RSQUARED, _rsquared);
 		        this.NotifyPropertyChanged(REGRESSION.RSQUARED);
@@ -12030,7 +12032,7 @@ namespace CruiseDAL.DataObjects
 		    }
 		    set 
 		    {
-		        if(_rmindbh == value) { return; }
+		        if(Math.Abs(_rmindbh - value) < float.Epsilon) { return; }
 		        _rmindbh = value;
 		        this.ValidateProperty(REGRESSION.RMINDBH, _rmindbh);
 		        this.NotifyPropertyChanged(REGRESSION.RMINDBH);
@@ -12048,7 +12050,7 @@ namespace CruiseDAL.DataObjects
 		    }
 		    set 
 		    {
-		        if(_rmaxdbh == value) { return; }
+		        if(Math.Abs(_rmaxdbh - value) < float.Epsilon) { return; }
 		        _rmaxdbh = value;
 		        this.ValidateProperty(REGRESSION.RMAXDBH, _rmaxdbh);
 		        this.NotifyPropertyChanged(REGRESSION.RMAXDBH);
@@ -12351,7 +12353,7 @@ namespace CruiseDAL.DataObjects
 		    }
 		    set 
 		    {
-		        if(_sedminimum == value) { return; }
+		        if(Math.Abs(_sedminimum - value) < Double.Epsilon) { return; }
 		        _sedminimum = value;
 		        this.ValidateProperty(LOGMATRIX.SEDMINIMUM, _sedminimum);
 		        this.NotifyPropertyChanged(LOGMATRIX.SEDMINIMUM);
@@ -12369,7 +12371,7 @@ namespace CruiseDAL.DataObjects
 		    }
 		    set 
 		    {
-		        if(_sedmaximum == value) { return; }
+		        if(Math.Abs(_sedmaximum - value) < Double.Epsilon) { return; }
 		        _sedmaximum = value;
 		        this.ValidateProperty(LOGMATRIX.SEDMAXIMUM, _sedmaximum);
 		        this.NotifyPropertyChanged(LOGMATRIX.SEDMAXIMUM);
@@ -12665,7 +12667,7 @@ namespace CruiseDAL.DataObjects
 		    }
 		    set 
 		    {
-		        if(_min == value) { return; }
+		        if(Math.Abs(_min - value) < float.Epsilon) { return; }
 		        _min = value;
 		        this.ValidateProperty(TREEAUDITVALUE.MIN, _min);
 		        this.NotifyPropertyChanged(TREEAUDITVALUE.MIN);
@@ -12683,7 +12685,7 @@ namespace CruiseDAL.DataObjects
 		    }
 		    set 
 		    {
-		        if(_max == value) { return; }
+		        if(Math.Abs(_max - value) < float.Epsilon) { return; }
 		        _max = value;
 		        this.ValidateProperty(TREEAUDITVALUE.MAX, _max);
 		        this.NotifyPropertyChanged(TREEAUDITVALUE.MAX);
@@ -12931,7 +12933,7 @@ namespace CruiseDAL.DataObjects
 		    }
 		    set 
 		    {
-		        if(_width == value) { return; }
+		        if(Math.Abs(_width - value) < float.Epsilon) { return; }
 		        _width = value;
 		        this.ValidateProperty(LOGFIELDSETUP.WIDTH, _width);
 		        this.NotifyPropertyChanged(LOGFIELDSETUP.WIDTH);
@@ -13184,7 +13186,7 @@ namespace CruiseDAL.DataObjects
 		    }
 		    set 
 		    {
-		        if(_width == value) { return; }
+		        if(Math.Abs(_width - value) < float.Epsilon) { return; }
 		        _width = value;
 		        this.ValidateProperty(TREEFIELDSETUP.WIDTH, _width);
 		        this.NotifyPropertyChanged(TREEFIELDSETUP.WIDTH);
@@ -13410,7 +13412,7 @@ namespace CruiseDAL.DataObjects
 		    }
 		    set 
 		    {
-		        if(_width == value) { return; }
+		        if(Math.Abs(_width - value) < float.Epsilon) { return; }
 		        _width = value;
 		        this.ValidateProperty(LOGFIELDSETUPDEFAULT.WIDTH, _width);
 		        this.NotifyPropertyChanged(LOGFIELDSETUPDEFAULT.WIDTH);
@@ -13656,7 +13658,7 @@ namespace CruiseDAL.DataObjects
 		    }
 		    set 
 		    {
-		        if(_width == value) { return; }
+		        if(Math.Abs(_width - value) < float.Epsilon) { return; }
 		        _width = value;
 		        this.ValidateProperty(TREEFIELDSETUPDEFAULT.WIDTH, _width);
 		        this.NotifyPropertyChanged(TREEFIELDSETUPDEFAULT.WIDTH);

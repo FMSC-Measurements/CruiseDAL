@@ -3,13 +3,15 @@
 <#@ import namespace="System.Diagnostics" #>
 <#@ import namespace="System.IO" #>
 <#@ import namespace="System.Collections.Generic" #>
-<#@ import namespace="CruiseDAL.CodeGenEngine" #>
+<#@ import namespace="FMSCORM.CodeGenEngine" #>
 
 <#
 DataDictionaryReader dr = new DataDictionaryReader();
 
 ICollection<Table> TableList = dr.AllTables.Values;
 #>
+#pragma warning disable RECS0001 //disable warning that class is partial with only one part
+
 using System;
 using System.Xml.Serialization;
 using FMSC.ORM.Core.EntityAttributes;
@@ -269,6 +271,13 @@ public <#=field.Ref#>DO <#=field.Ref#>
 //----------------------------------Method: MakeProperty------------------------------------------------------
 public void MakeProperty(Field field, Table table, bool isSerializable)
 {
+	string compareExpression = "_" + field.Name.ToLower() + " == value";
+
+	if(field.AccessableType.ToLower() == "float" || field.AccessableType.ToLower() == "double")
+    {
+		compareExpression = "Math.Abs(_" + field.Name.ToLower() + " - value) < " + field.AccessableType + ".Epsilon";
+    }
+
 	//make private field for storing property value
 	WriteLine(String.Format("private {0} _{1} {2};",
 		field.AccessableType,
@@ -305,7 +314,7 @@ public virtual <#=field.AccessableType#> <#=field.Name#>
     }
     set 
     {
-        if(_<#=field.Name.ToLower()#> == value) { return; }
+        if(<#=compareExpression#>) { return; }
 <#+
         if(field.IsFK)
         {
@@ -332,12 +341,12 @@ public void MakeUtilProperties(bool trackCreated, bool trackModified, bool track
 #>
 [XmlIgnore]
 [CreatedByField()]
-public string CreatedBy { get; internal set; }
+public string CreatedBy { get;  set; }
 
 [XmlIgnore]
 [InfrastructureFieldAttribute (FieldName = "CreatedDate",
 PersistMode = PersistMode.Never)]
-public DateTime CreatedDate { get; internal set; }
+public DateTime CreatedDate { get; set; }
 <#+
 	}
 	
@@ -347,12 +356,12 @@ public DateTime CreatedDate { get; internal set; }
 
 [XmlIgnore]
 [ModifiedByField()]
-public string ModifiedBy { get; internal set; }
+public string ModifiedBy { get; set; }
 
 [XmlIgnore]
 [InfrastructureFieldAttribute (FieldName = "ModifiedDate",
 PersistMode = PersistMode.Never)]
-public string ModifiedDate { get; internal set; }
+public string ModifiedDate { get; set; }
 
 <#+
 	}
