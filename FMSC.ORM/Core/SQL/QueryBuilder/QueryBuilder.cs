@@ -56,6 +56,12 @@ namespace FMSC.ORM.Core.SQL.QueryBuilder
             return this;
         }
 
+        public IQuerryAcceptsOrderBy<T> GroupBy(params string[] terms)
+        {
+            Builder.GroupBy(terms);
+            return this;
+        }
+
         public IQuerryAcceptsGroupBy<T> Where(string expression)
         {
             Builder.Where(expression);

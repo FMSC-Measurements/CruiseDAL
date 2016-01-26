@@ -25,6 +25,7 @@ namespace FMSC.ORM.Core.SQL.QueryBuilder
     public interface IQuerryAcceptsGroupBy<T> : IQuerryAcceptsOrderBy<T>
     {
         IQuerryAcceptsOrderBy<T> GroupBy(IEnumerable<string> terms);
+        IQuerryAcceptsOrderBy<T> GroupBy(params String[] termsArgs);
     }
 
     public interface IQuerryAcceptsWhere<T> : IQuerryAcceptsGroupBy<T>
@@ -34,6 +35,7 @@ namespace FMSC.ORM.Core.SQL.QueryBuilder
 
     public interface IQuerryAcceptsJoin<T> : IQuerryAcceptsWhere<T>
     {
+        IQuerryAcceptsJoin<T> Join(string table, string joinContraint);
         IQuerryAcceptsJoin<T> Join(string table, string joinContraint, string alias);
     }
 }
