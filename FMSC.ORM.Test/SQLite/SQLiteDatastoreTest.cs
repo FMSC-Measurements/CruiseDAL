@@ -289,6 +289,13 @@ namespace FMSC.ORM.SQLite
                 var result = ds.From<POCOMultiTypeObject>().Limit(5000, 0).Query().ToList();
                 EndTimer();
 
+                foreach(DOMultiPropType item in 
+                    ds.From<DOMultiPropType>().Read())
+                {
+                    item.FloatField = 1.0F;
+                    item.Save();                    
+                }
+
                 Assert.NotEmpty(result);
                 Assert.Equal(recordsToCreate, result.Count);
             }
