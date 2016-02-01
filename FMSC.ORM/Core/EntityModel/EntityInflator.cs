@@ -85,8 +85,7 @@ namespace FMSC.ORM.Core.EntityModel
 
             if (obj is IPersistanceTracking)
             {
-                ((IPersistanceTracking)obj).IsPersisted = true;
-                ((IPersistanceTracking)obj).HasChanges = false;
+                ((IPersistanceTracking)obj).OnRead();
             }
 
         }

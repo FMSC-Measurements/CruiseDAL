@@ -31,8 +31,7 @@ namespace FMSC.ORM.Core.EntityModel
 
         bool _isDeleted;
         bool _isPersisted;
-        bool _hasChanges;
-        //bool _isDetached = true;
+        bool _isChanged;
 
         #region Properties
 
@@ -56,77 +55,9 @@ namespace FMSC.ORM.Core.EntityModel
             }
         }
 
-        [XmlIgnore]
-        [IgnoreField]
-        public bool IsPersisted
-        {
-            get { return _isPersisted; }
-            protected set
-            {
-                if (_isPersisted == value) { return; }
-                _isPersisted = value;
-                OnIsPersistedChanged();
-            }
-        }
-
-        [XmlIgnore]
-        [IgnoreField]
-        public bool HasChanges
-        {
-            get { return _hasChanges; }
-            protected set
-            {
-                if (_hasChanges == value) { return; }
-                _hasChanges = value;
-                OnHasChangesChanged();
-            }
-        }
-
-        [XmlIgnore]
-        [IgnoreField]
-        public bool IsDeleted
-        {
-            get { return _isDeleted; }
-            protected set
-            {
-                if (_isDeleted == value) { return; }
-                _isDeleted = value;
-                OnIsDeletedChanged();
-            }
-        }
-
-        //[XmlIgnore]
-        //[IgnoreField]
-        //public bool IsDetached
-        //{
-        //    get { return (this._recordState & RecordState.Detached) == RecordState.Detached; }
-        //    internal set
-        //    {
-        //        if (value == true)
-        //        {
-        //            this._recordState = RecordState.Detached;//override all other states 
-        //        }
-        //        else
-        //        {
-        //            this._recordState = _recordState & ~RecordState.Detached;
-        //        }
-
-        //    }
-        //}
-
-        [XmlIgnore]
-        [IgnoreField]
-        public bool PropertyChangedEventsDisabled { get; protected set; }
-
-
+        
         #endregion
 
-
-        #region Events 
-
-        public event PropertyChangedEventHandler PropertyChanged;
-
-        #endregion
 
         #region ctor
         public DataObject()
@@ -162,23 +93,12 @@ namespace FMSC.ORM.Core.EntityModel
 
         protected virtual void OnDALChanged(DatastoreRedux newDAL)
         {
-
-
+            IsPersisted = false;
+            _isChanged = true;
         }
 
         internal void InternalSetDAL(DatastoreRedux newDAL)
         {
-            IsPersisted = false;
-            HasChanges = true;
-            
-            //if (newDAL == null)
-            //{
-            //    IsDetached = true;
-            //}
-            //else
-            //{
-            //    IsDetached = false;
-            //}
             _ds = newDAL;
         }
 
@@ -194,160 +114,110 @@ namespace FMSC.ORM.Core.EntityModel
             PropertyChangedEventsDisabled = false;
         }
 
+
+        #region INotifyPropertyChanged
+        [XmlIgnore]
+        [IgnoreField]
+        public bool PropertyChangedEventsDisabled { get; protected set; }
+
+        public event PropertyChangedEventHandler PropertyChanged;
+
         protected virtual void NotifyPropertyChanged(string name)
         {
             if (!PropertyChangedEventsDisabled)
             {
-                HasChanges = true;
+                _isChanged = true;
                 if (PropertyChanged != null)
                 {
                     PropertyChanged(this, new PropertyChangedEventArgs(name));
                 }
             }
         }
-
-        
-
+        #endregion
 
         #region IPersistanceTracking Members
-        bool IPersistanceTracking.IsPersisted
+        [XmlIgnore]
+        [IgnoreField]
+        public bool IsPersisted
         {
-            get
+            get { return _isPersisted; }
+            protected set
             {
-                return this.IsPersisted;
-            }
-            set
-            {
-                this.IsPersisted = value;
-            }
-
-            
-        }
-
-        bool IPersistanceTracking.HasChanges
-        {
-            get
-            {
-                return this.HasChanges;
-            }
-            set
-            {
-                this.HasChanges = value;
-            }
-
-            
-        }
-
-        bool IPersistanceTracking.IsDeleted
-        {
-            get
-            {
-                return this.IsDeleted;
-            }
-            set
-            {
-                this.IsDeleted = value;
-            }
-            
-        }
-
-        protected virtual void OnIsPersistedChanged()
-        {
-            if(_isPersisted == true)
-            {
-                _isDeleted = false;
-                _hasChanges = false;
+                if (_isPersisted == value) { return; }
+                _isPersisted = value;
             }
         }
 
-        protected virtual void OnHasChangesChanged()
+        [XmlIgnore]
+        [IgnoreField]
+        public bool IsDeleted
         {
-
-        }
-
-        protected virtual void OnIsDeletedChanged()
-        {
-            if(_isDeleted == true)
+            get { return _isDeleted; }
+            protected set
             {
-                _isPersisted = false;
+                if (_isDeleted == value) { return; }
+                _isDeleted = value;
             }
         }
 
-        //protected void SetIsPersisted(bool value)
-        //{
-        //    if (value == true)
-        //    {
-        //        this._recordState = (_recordState & RecordState.Validated) | RecordState.Persisted;//override all other states except Validated
-        //    }
-        //    else
-        //    {
-        //        this._recordState = _recordState & ~RecordState.Persisted;
-        //    }
-        //}
-
-        //protected void SetHasChanges(bool value)
-        //{
-        //    if (value == true)
-        //    {
-        //        this._recordState = _recordState | RecordState.HasChanges;
-        //    }
-        //    else
-        //    {
-        //        this._recordState = _recordState & ~RecordState.HasChanges;
-        //    }
-        //}
-
-        //protected void SetIsDeleted(bool value)
-        //{
-
-        //    if (value == true)
-        //    {
-        //        this._recordState = RecordState.Deleted;//override all other states
-        //    }
-        //    else
-        //    {
-        //        this._recordState = _recordState & ~RecordState.Deleted;
-        //    }
-        //}
-
-        void IPersistanceTracking.OnInserted()
+        public virtual void OnRead()
         {
-            OnInserted();
+            _isChanged = false;
+            _isPersisted = true;
         }
 
-        void IPersistanceTracking.OnUpdating()
-        {
-            OnUpdating();
-        }
-
-        void IPersistanceTracking.OnUpdated()
-        {
-            OnUpdated();
-        }
-
-        void IPersistanceTracking.OnDeleting()
-        {
-            OnDeleting();
-        }
-
-        void IPersistanceTracking.OnDeleted()
-        {
-            OnDeleted();
-        }
-
-        protected virtual void OnInserted()
+        public virtual void OnInserting()
         { }
 
-        protected virtual void OnUpdating()
+        public virtual void OnInserted()
+        {
+            _isChanged = false;
+            _isPersisted = true;
+        }
+
+        public virtual void OnUpdating()
         { }
 
-        protected virtual void OnUpdated()
+        public virtual void OnUpdated()
+        {
+            AcceptChanges();
+        }
+
+        public virtual void OnDeleting()
         { }
 
-        protected virtual void OnDeleting()
-        { }
-        protected virtual void OnDeleted()
-        { }
+        public virtual void OnDeleted()
+        {
+            _isPersisted = false;
+        }
+        #endregion
+
+        #region IChangeTracking 
+        [XmlIgnore]
+        [IgnoreField]
+        [Obsolete("use IsChanged")]
+        public bool HasChanges
+        {
+            get { return IsChanged; }
+        }
+
+        [XmlIgnore]
+        [IgnoreField]
+        public bool IsChanged
+        {
+            get { return _isChanged; }
+            protected set
+            {
+                if (_isChanged == value) { return; }
+                _isChanged = value;
+            }
+        }
+
+
+        public virtual void AcceptChanges()
+        {
+            this._isChanged = false;
+        }
         #endregion
 
         #region ISupportInitialize Members
@@ -392,122 +262,10 @@ namespace FMSC.ORM.Core.EntityModel
         }
 
         
+
+
+
         #endregion
     }
 }
         
-
-    //blueprint for data objects
-    //public class SaleObject : DataObject
-    //{
-    //    public int? Sale_CN {
-    //        get { return base.rowID; }
-    //        set { base.rowID = value; } 
-    //    }
-
-    //    public string SaleNumber { get; set; }
-    //    public string Name { get; set; } 
-    //    public string Purpose { get; set; }
-    //    public string Region { get; set; }
-    //    public string Forest { get; set; }
-    //    public string District { get; set; }
-
-
-    //    public SaleObject()
-    //    {
-    //        base.persister = new SalePersister();
-    //    }
-
-    //    public SaleObject(SaleObject sale) : this()
-    //    {
-    //        SetValues(sale);
-    //    }
-
-    //    public SaleObject(DAL DAL) : this()
-    //    {
-    //        this.DAL = DAL;
-    //    }
-
-    //    public void SetValues(SaleObject sale)
-    //    {
-    //        SaleNumber = sale.SaleNumber;
-    //        Name = sale.Name;
-    //        Purpose = sale.Purpose;
-    //    }
-
-    //    public static long GetID(string saleNumber)
-    //    {
-    //        return (typeof(SaleObject).GetHashCode() % 1000) * 1000 + (saleNumber.GetHashCode() % 1000);
-    //    }
-
-    //    public override long GetID()
-    //    {
-    //        return GetID(SaleNumber);
-    //    }
-    //}
-
-    //blueprint for dataObject with forgen keys 
-    //public partial class CruiseObject : DataObject
-    //{
-    //    public CruiseObject()
-    //    {
-    //        base.persister = new CruisePersister();
-    //    }
-    //    public CruiseObject(CruiseObject Cruise) : this()
-    //    {
-    //        SetValues(Cruise);
-    //    }
-    //    public CruiseObject(DAL DAL) : this()
-    //    {
-    //        this.DAL = DAL;
-    //    }
-
-    //    private SaleObject mySale = null;
-    //    public SaleObject Sale
-    //    {
-    //        get
-    //        {
-    //            if (mySale == null)
-    //            {
-    //                mySale = GetSale();
-    //            }
-    //            return mySale;
-    //        }
-    //        set
-    //        {
-
-    //            if (value.rowID != null)
-    //            {
-    //                Sale_CN = value.Sale_CN;
-    //                mySale = value;
-    //            }
-    //            else
-    //            {
-    //                throw new Exception("can not set forgen row to a dataobject that has not been persisted");
-    //            }
-    //            
-    //        }
-    //    }
-
-    //    public Int64? Cruise_CN
-    //    {
-    //        get { return base.rowID; }
-    //        set { base.rowID = (Int64)value; }
-    //    }
-
-
-    //    //forgenkeys
-    //    private Int64? mySale_CN = null;
-    //    public Int64? Sale_CN {
-    //        get
-    //        {
-    //            return mySale_CN;
-    //        }
-    //        set
-    //        {
-    //            mySale_CN = value;
-    //            mySale = null;
-    //        }
-    //    }
-
-    //}

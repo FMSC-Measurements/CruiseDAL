@@ -119,6 +119,12 @@ namespace FMSC.ORM.Core
         public object Insert(object data, SQL.OnConflictOption option)
         {
             OnInsertingData(data, option);
+            if (data is IPersistanceTracking)
+            {
+                ((IPersistanceTracking)data).OnInserting();
+
+            }
+
             EntityDescription entityDescription = LookUpEntityByType(data.GetType());
             PrimaryKeyFieldAttribute primaryKeyField = entityDescription.Fields.PrimaryKeyField;
 
@@ -157,9 +163,12 @@ namespace FMSC.ORM.Core
 
             if (data is IPersistanceTracking)
             {
-                ((IPersistanceTracking)data).IsPersisted = true;
-                ((IPersistanceTracking)data).HasChanges = false;
                 ((IPersistanceTracking)data).OnInserted();
+
+            }
+            if (data is System.ComponentModel.IChangeTracking)
+            {
+                ((System.ComponentModel.IChangeTracking)data).AcceptChanges();
             }
 
             return primaryKey;
@@ -168,6 +177,12 @@ namespace FMSC.ORM.Core
         public void Update(object data, SQL.OnConflictOption option)
         {
             OnUpdatingData(data);
+            if (data is IPersistanceTracking)
+            {
+                ((IPersistanceTracking)data).OnUpdating();
+
+            }
+
             EntityDescription entityDescription = LookUpEntityByType(data.GetType());
             EntityCommandBuilder builder = entityDescription.CommandBuilder;
 
@@ -178,8 +193,6 @@ namespace FMSC.ORM.Core
 
             if (data is IPersistanceTracking)
             {
-                ((IPersistanceTracking)data).IsPersisted = true;
-                ((IPersistanceTracking)data).HasChanges = false;
                 ((IPersistanceTracking)data).OnUpdated();
             }
 
@@ -188,6 +201,12 @@ namespace FMSC.ORM.Core
         public void Delete(object data)
         {
             OnDeletingData(data);
+            if (data is IPersistanceTracking)
+            {
+                ((IPersistanceTracking)data).OnDeleting();
+            }
+
+
             EntityDescription entityDescription = LookUpEntityByType(data.GetType());
             PrimaryKeyFieldAttribute keyFieldInfo = entityDescription.Fields.PrimaryKeyField;
 
@@ -210,7 +229,6 @@ namespace FMSC.ORM.Core
 
                 if (data is IPersistanceTracking)
                 {
-                    ((IPersistanceTracking)data).IsDeleted = true;
                     ((IPersistanceTracking)data).OnDeleted();
                 }
             }
@@ -223,7 +241,13 @@ namespace FMSC.ORM.Core
 
         public void Save(IPersistanceTracking data, SQL.OnConflictOption option, bool cache)
         {
-            if (data.HasChanges == false) { return; }
+            if(data is System.ComponentModel.IChangeTracking
+                && ((System.ComponentModel.IChangeTracking)data).IsChanged == false)
+            {
+                Debug.Write("object not saved because it has no changes");
+                return;
+            }
+
             if (!data.IsPersisted)
             {
                 object primaryKey = Insert(data, option);

@@ -2,10 +2,12 @@
 {
     public interface IPersistanceTracking
     {
-        bool IsPersisted { get; set; }
-        bool HasChanges { get; set; }
-        bool IsDeleted { get; set; }
+        bool IsPersisted { get;}
+        bool IsDeleted { get;}
 
+        void OnRead();
+
+        void OnInserting();
         void OnInserted();
 
         void OnUpdating();
