@@ -111,6 +111,8 @@ namespace FMSC.ORM.Core
         }
 
 
+
+
         #endregion
 
         #region CRUD
@@ -118,22 +120,16 @@ namespace FMSC.ORM.Core
 
         public object Insert(object data, SQL.OnConflictOption option)
         {
-            OnInsertingData(data, option);
-            if (data is IPersistanceTracking)
-            {
-                ((IPersistanceTracking)data).OnInserting();
-
-            }
-
             EntityDescription entityDescription = LookUpEntityByType(data.GetType());
-            PrimaryKeyFieldAttribute primaryKeyField = entityDescription.Fields.PrimaryKeyField;
-
             EntityCommandBuilder builder = entityDescription.CommandBuilder;
+
+            PrimaryKeyFieldAttribute primaryKeyField = entityDescription.Fields.PrimaryKeyField;
 
             object primaryKey = null;
             DbConnection conn = OpenConnection();
             try
             {
+                OnInsertingData(data, option);
                 
                 using (DbCommand command = builder.BuildInsertCommand(Provider, data, option))
                 {
@@ -159,19 +155,20 @@ namespace FMSC.ORM.Core
             {
                 ReleaseConnection();
             }
+
+            OnInsertedData(data);
             
 
-            if (data is IPersistanceTracking)
-            {
-                ((IPersistanceTracking)data).OnInserted();
-
-            }
-            if (data is System.ComponentModel.IChangeTracking)
-            {
-                ((System.ComponentModel.IChangeTracking)data).AcceptChanges();
-            }
-
             return primaryKey;
+        }
+
+        public void Insert(object data
+            , object keyValue
+            , EntityDescription entityDescription
+            , SQL.OnConflictOption option)
+        {
+
+
         }
 
         public void Update(object data, SQL.OnConflictOption option)
@@ -517,8 +514,22 @@ namespace FMSC.ORM.Core
             }
         }
 
-        
 
+        /// <summary>
+        /// Retrieves a single row from the database Note: data object type must match the 
+        /// table. 
+        /// </summary>
+        /// <typeparam name="T">Type of data object to return</typeparam>
+        /// <param name="tableName">Name of table to read from</param>
+        /// <param name="rowID">row id of the row to read</param>
+        /// <exception cref="DatabaseExecutionException"></exception>
+        /// <returns>a single data object</returns>
+        public T ReadSingleRow<T>(object primaryKeyValue)
+            where T : new()
+        {
+            return From<T>().Where("rowID = ?").Read(primaryKeyValue).FirstOrDefault();
+            //return ReadSingleRow<T>(null, "WHERE rowID = ?", primaryKeyValue);
+        }
 
         [Obsolete("use From<T>().Read().FirstOrDefault() style instead")]
         public T ReadSingleRow<T>(string tableName, string selection, params Object[] selectionArgs) where T : new()
@@ -541,48 +552,6 @@ namespace FMSC.ORM.Core
             }
         }
 
-        //public T ReadSingleRow<T>(string selection, params Object[] selectionArgs) where T : new()
-        //{
-        //    EntityDescription entityDescription = LookUpEntityByType(typeof(T));
-        //    EntityCommandBuilder commandBuilder = entityDescription.CommandBuilder;
-
-        //    using (DbCommand command = commandBuilder.BuildSelectLegacy(Provider, selection))
-        //    {
-        //        //Add selection Arguments to command parameter list
-        //        if (selectionArgs != null)
-        //        {
-        //            foreach (object obj in selectionArgs)
-        //            {
-        //                command.Parameters.Add(Provider.CreateParameter(null, obj));
-        //            }
-        //        }
-
-        //        return ReadSingleRow<T>(command, entityDescription);
-        //    }
-        //    //return Context.ReadSingleRow<T>(selection, selectionArgs);
-        //}
-
-        //public T ReadSingleRow<T>(WhereClause where, params Object[] selectionArgs)
-        //    where T : new()
-        //{
-
-        //    EntityDescription entityDescription = LookUpEntityByType(typeof(T));
-        //    EntityCommandBuilder commandBuilder = entityDescription.CommandBuilder;
-
-        //    using (DbCommand command = commandBuilder.BuildSelectCommand(Provider, where))
-        //    {
-        //        //Add selection Arguments to command parameter list
-        //        if (selectionArgs != null)
-        //        {
-        //            foreach (object obj in selectionArgs)
-        //            {
-        //                command.Parameters.Add(Provider.CreateParameter(null, obj));
-        //            }
-        //        }
-
-        //        return ReadSingleRow<T>(command, entityDescription);
-        //    }
-        //}
 
         internal T ReadSingleRow<T>(DbCommand command, EntityDescription entityDescription)
             where T : new()
@@ -641,21 +610,7 @@ namespace FMSC.ORM.Core
             return ReadSingleRow<T>(rowID);
         }
 
-        /// <summary>
-        /// Retrieves a single row from the database Note: data object type must match the 
-        /// table. 
-        /// </summary>
-        /// <typeparam name="T">Type of data object to return</typeparam>
-        /// <param name="tableName">Name of table to read from</param>
-        /// <param name="rowID">row id of the row to read</param>
-        /// <exception cref="DatabaseExecutionException"></exception>
-        /// <returns>a single data object</returns>
-        public T ReadSingleRow<T>(object primaryKeyValue)
-            where T : new()
-        {
-            return From<T>().Where("rowID = ?").Read(primaryKeyValue).FirstOrDefault();
-            //return ReadSingleRow<T>(null, "WHERE rowID = ?", primaryKeyValue);
-        }
+        
 
         protected long GetLastInsertRowID()
         {
@@ -1558,7 +1513,23 @@ namespace FMSC.ORM.Core
 
         protected virtual void OnInsertingData(object data, SQL.OnConflictOption option)
         {
+            if (data is IPersistanceTracking)
+            {
+                ((IPersistanceTracking)data).OnInserting();
+            }
+        }
 
+        protected virtual void OnInsertedData(object data)
+        {
+            if (data is IPersistanceTracking)
+            {
+                ((IPersistanceTracking)data).OnInserted();
+
+            }
+            if (data is System.ComponentModel.IChangeTracking)
+            {
+                ((System.ComponentModel.IChangeTracking)data).AcceptChanges();
+            }
         }
 
         protected virtual void OnUpdatingData(object data)
