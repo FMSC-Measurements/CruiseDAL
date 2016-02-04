@@ -9,9 +9,9 @@ namespace FMSC.ORM.Core.SQL
     {
         public string TableName { get; set; }
         public OnConflictOption ConflictOption { get; set; }
-        public ICollection<String> ColumnNames { get; set; }
+        public IEnumerable<String> ColumnNames { get; set; }
 
-        public ICollection<String> ValueExpressions { get; set; }
+        public IEnumerable<String> ValueExpressions { get; set; }
 
         public override string ToString()
         {
