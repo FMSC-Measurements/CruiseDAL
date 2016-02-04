@@ -102,7 +102,8 @@ namespace FMSC.ORM.Core.EntityModel
             Assert.NotNull(field.Property.Getter);
             Assert.NotNull(field.Property.Setter);
             Assert.NotNull(field.RunTimeType);
-            Assert.True(field.IsPersisted);
+            Assert.True(field.PersistanceFlags.HasFlag(EntityAttributes.PersistanceFlags.OnUpdate));
+            Assert.True(field.PersistanceFlags.HasFlag(EntityAttributes.PersistanceFlags.OnInsert));
 
             _output.WriteLine("done");
         }

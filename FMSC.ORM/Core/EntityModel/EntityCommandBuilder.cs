@@ -141,7 +141,7 @@ namespace FMSC.ORM.Core.EntityModel
             foreach(FieldAttribute field in EntityDescription.Fields.GetPersistedFields())
             {
                 if (field is InfrastructureFieldAttribute
-                    && (((InfrastructureFieldAttribute)field).PersistMode & PersistMode.OnInsert) != PersistMode.OnInsert)
+                    && (field.PersistanceFlags & PersistanceFlags.OnInsert) != PersistanceFlags.OnInsert)
                 {
                     continue;
                 }
@@ -186,14 +186,14 @@ namespace FMSC.ORM.Core.EntityModel
 
             List<String> columnNames = new List<string>();
             List<String> valueExpressions = new List<string>();
-            foreach (FieldAttribute field in EntityDescription.Fields.GetPersistedFields())
+            foreach (FieldAttribute field in EntityDescription.Fields.GetPersistedFields(false, PersistMode.OnInsert))
             {
-                //if field is not persisted on insert populated skip
-                if (field is InfrastructureFieldAttribute
-                    && (((InfrastructureFieldAttribute)field).PersistMode & PersistMode.OnInsert) != PersistMode.OnInsert)
-                {
-                    continue;
-                }
+                ////if field is not persisted on insert populated skip
+                //if (field is InfrastructureFieldAttribute
+                //    && (((InfrastructureFieldAttribute)field).PersistMode & PersistMode.OnInsert) != PersistMode.OnInsert)
+                //{
+                //    continue;
+                //}
 
                 columnNames.Add(field.FieldName);
                 valueExpressions.Add(field.SQLPramName);
@@ -271,13 +271,13 @@ namespace FMSC.ORM.Core.EntityModel
 
             DbCommand command = provider.CreateCommand(_updateCommand.ToString());
 
-            foreach (FieldAttribute field in EntityDescription.Fields.GetPersistedFields())
+            foreach (FieldAttribute field in EntityDescription.Fields.GetPersistedFields(false, PersistMode.OnUpdate))
             {
-                if (field is InfrastructureFieldAttribute
-                    && (((InfrastructureFieldAttribute)field).PersistMode & PersistMode.OnUpdate) != PersistMode.OnUpdate)
-                {
-                    continue;
-                }
+                //if (field is InfrastructureFieldAttribute
+                //    && (((InfrastructureFieldAttribute)field).PersistMode & PersistMode.OnUpdate) != PersistMode.OnUpdate)
+                //{
+                //    continue;
+                //}
 
                 object value = field.GetFieldValueOrDefault(data);
 
@@ -323,7 +323,7 @@ namespace FMSC.ORM.Core.EntityModel
             foreach (FieldAttribute field in EntityDescription.Fields.GetPersistedFields())
             {
                 if (field is InfrastructureFieldAttribute
-                    && (((InfrastructureFieldAttribute)field).PersistMode & PersistMode.OnUpdate) != PersistMode.OnUpdate)
+                    && (field.PersistanceFlags & PersistanceFlags.OnUpdate) != PersistanceFlags.OnUpdate)
                 {
                     continue;
                 }
