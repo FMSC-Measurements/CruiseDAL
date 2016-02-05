@@ -16,11 +16,6 @@ namespace FMSC.ORM.Core.EntityModel
         string _selectCommandFormat;
 
 
-        SQLUpdateCommand _updateCommand; 
-
-        //string _insertCommandFormatString;
-        //string _updateCommandFormat;
-
         public EntityDescription EntityDescription { get; set; }
 
         public EntityCommandBuilder(EntityDescription entDesc)
