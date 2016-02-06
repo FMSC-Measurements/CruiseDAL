@@ -75,7 +75,7 @@ namespace FMSC.ORM.Core.EntityModel
 
         public virtual void Save()
         {
-            this.Save(OnConflictOption.Fail);
+            this.Save(OnConflictOption.Default);
         }
 
         public virtual void Save(OnConflictOption option)
