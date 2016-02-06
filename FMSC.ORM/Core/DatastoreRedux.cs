@@ -102,6 +102,7 @@ namespace FMSC.ORM.Core
 
 
         #region fluent interface
+
         public QueryBuilder<T> From<T>()
         {
             EntityDescription entityDescription = LookUpEntityByType(typeof(T));
@@ -110,13 +111,9 @@ namespace FMSC.ORM.Core
             return new QueryBuilder<T>(this, builder);
         }
 
-
-
-
         #endregion
 
         #region CRUD
-
 
         public object Insert(object data, SQL.OnConflictOption option)
         {
