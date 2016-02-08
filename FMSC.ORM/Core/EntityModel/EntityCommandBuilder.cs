@@ -125,6 +125,22 @@ namespace FMSC.ORM.Core.EntityModel
 
             List<String> columnNames = new List<string>();
             List<String> valueExpressions = new List<string>();
+
+            var keyField = EntityDescription.Fields.PrimaryKeyField;
+            if (keyField != null)
+            {
+                var keyValue = keyField.GetFieldValueOrDefault(data);
+
+                if (keyValue != null)
+                {
+                    columnNames.Add(keyField.FieldName);
+                    valueExpressions.Add(keyField.SQLPramName);
+
+                    var pram = provider.CreateParameter(keyField.SQLPramName, keyValue);
+                    command.Parameters.Add(pram);
+                }
+            }
+                 
             foreach (FieldAttribute field in EntityDescription.Fields.GetPersistedFields(false, PersistanceFlags.OnInsert))
             {
                 columnNames.Add(field.FieldName);
@@ -134,7 +150,7 @@ namespace FMSC.ORM.Core.EntityModel
                 DbParameter pram = provider.CreateParameter(field.SQLPramName, value);
                 command.Parameters.Add(pram);
             }
-
+            
             SQLInsertCommand builder = new SQLInsertCommand()
             {
                 TableName = EntityDescription.SourceName,

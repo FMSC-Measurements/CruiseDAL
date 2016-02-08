@@ -155,18 +155,10 @@ namespace FMSC.ORM.Core
 
             OnInsertedData(data);
             
-
             return primaryKey;
         }
 
-        public void Insert(object data
-            , object keyValue
-            , EntityDescription entityDescription
-            , SQL.OnConflictOption option)
-        {
 
-
-        }
 
         public void Update(object data, SQL.OnConflictOption option)
         {
