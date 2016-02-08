@@ -1,15 +1,17 @@
 using System.Collections.Generic;
+using System.Linq;
+
 namespace CruiseDAL.DataObjects
 {
     public partial class CruiseMethodsDO 
     {
         public static List<T> ReadCruiseMethods<T>(DAL db, bool reconMethodsOnly) where T : CruiseMethodsDO, new()
         {
-            string condition = string.Format("WHERE Code NOT IN ( '{0}' ) {1}", 
+            string condition = string.Format("Code NOT IN ( '{0}' ) {1}", 
                 string.Join("', '", CruiseDAL.Schema.CruiseMethods.UNSUPPORTED_METHODS),
                 (reconMethodsOnly) ? "AND Code = 'FIX' OR Code = 'PNT'" : string.Empty);
 
-            return db.Read<T>(condition);
+            return db.From<T>().Where(condition).Read().ToList();
         }
 
         public static List<CruiseMethodsDO> ReadCruiseMethods(DAL db, bool reconMethodsOnly)

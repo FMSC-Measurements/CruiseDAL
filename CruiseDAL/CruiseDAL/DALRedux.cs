@@ -418,16 +418,19 @@ namespace CruiseDAL
 
 
         #region not implemented 
+        [Obsolete]
         public void ChangeRowID(DataObject data, long newRowID, OnConflictOption option)
         {
             throw new NotImplementedException();
         }
 
+        [Obsolete]
         public void Save(IEnumerable list)
         {
-            this.Save(list, FMSC.ORM.Core.SQL.OnConflictOption.Fail);
+            this.Save(list, FMSC.ORM.Core.SQL.OnConflictOption.Default);
         }
 
+        [Obsolete]
         public void Save(IEnumerable list, FMSC.ORM.Core.SQL.OnConflictOption opt)
         {
             throw new NotImplementedException();

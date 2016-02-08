@@ -11,6 +11,7 @@ using FMSC.ORM.Core.EntityAttributes;
 using System.Diagnostics;
 using System.Threading;
 using FMSC.ORM.Core.SQL.QueryBuilder;
+using System.Linq;
 
 namespace FMSC.ORM.Core
 {
@@ -101,6 +102,7 @@ namespace FMSC.ORM.Core
 
 
         #region fluent interface
+
         public QueryBuilder<T> From<T>()
         {
             EntityDescription entityDescription = LookUpEntityByType(typeof(T));
@@ -109,24 +111,22 @@ namespace FMSC.ORM.Core
             return new QueryBuilder<T>(this, builder);
         }
 
-
         #endregion
 
         #region CRUD
 
-
         public object Insert(object data, SQL.OnConflictOption option)
         {
-            OnInsertingData(data, option);
             EntityDescription entityDescription = LookUpEntityByType(data.GetType());
-            PrimaryKeyFieldAttribute primaryKeyField = entityDescription.Fields.PrimaryKeyField;
-
             EntityCommandBuilder builder = entityDescription.CommandBuilder;
+
+            PrimaryKeyFieldAttribute primaryKeyField = entityDescription.Fields.PrimaryKeyField;
 
             object primaryKey = null;
             DbConnection conn = OpenConnection();
             try
             {
+                OnInsertingData(data, option);
                 
                 using (DbCommand command = builder.BuildInsertCommand(Provider, data, option))
                 {
@@ -152,21 +152,23 @@ namespace FMSC.ORM.Core
             {
                 ReleaseConnection();
             }
+
+            OnInsertedData(data);
             
-
-            if (data is IPersistanceTracking)
-            {
-                ((IPersistanceTracking)data).IsPersisted = true;
-                ((IPersistanceTracking)data).HasChanges = false;
-                ((IPersistanceTracking)data).OnInserted();
-            }
-
             return primaryKey;
         }
+
+
 
         public void Update(object data, SQL.OnConflictOption option)
         {
             OnUpdatingData(data);
+            if (data is IPersistanceTracking)
+            {
+                ((IPersistanceTracking)data).OnUpdating();
+
+            }
+
             EntityDescription entityDescription = LookUpEntityByType(data.GetType());
             EntityCommandBuilder builder = entityDescription.CommandBuilder;
 
@@ -177,8 +179,6 @@ namespace FMSC.ORM.Core
 
             if (data is IPersistanceTracking)
             {
-                ((IPersistanceTracking)data).IsPersisted = true;
-                ((IPersistanceTracking)data).HasChanges = false;
                 ((IPersistanceTracking)data).OnUpdated();
             }
 
@@ -187,6 +187,12 @@ namespace FMSC.ORM.Core
         public void Delete(object data)
         {
             OnDeletingData(data);
+            if (data is IPersistanceTracking)
+            {
+                ((IPersistanceTracking)data).OnDeleting();
+            }
+
+
             EntityDescription entityDescription = LookUpEntityByType(data.GetType());
             PrimaryKeyFieldAttribute keyFieldInfo = entityDescription.Fields.PrimaryKeyField;
 
@@ -209,7 +215,6 @@ namespace FMSC.ORM.Core
 
                 if (data is IPersistanceTracking)
                 {
-                    ((IPersistanceTracking)data).IsDeleted = true;
                     ((IPersistanceTracking)data).OnDeleted();
                 }
             }
@@ -222,7 +227,13 @@ namespace FMSC.ORM.Core
 
         public void Save(IPersistanceTracking data, SQL.OnConflictOption option, bool cache)
         {
-            if (data.HasChanges == false) { return; }
+            if(data is System.ComponentModel.IChangeTracking
+                && ((System.ComponentModel.IChangeTracking)data).IsChanged == false)
+            {
+                Debug.Write("object not saved because it has no changes");
+                return;
+            }
+
             if (!data.IsPersisted)
             {
                 object primaryKey = Insert(data, option);
@@ -242,14 +253,8 @@ namespace FMSC.ORM.Core
 
 
         #region read methods
-        [Obsolete("use Read<T>(string selection, params Object[] selectionArgs) instead")]
+        [Obsolete("use From<T>().Read() style instead")]
         public List<T> Read<T>(string tableName, string selection, params Object[] selectionArgs) where T : new()
-        {
-            return Read<T>(selection, selectionArgs);
-        }
-
-        public List<T> Read<T>(string selection, params object[] selectionArgs)
-            where T : new()
         {
             EntityDescription entityDescription = LookUpEntityByType(typeof(T));
             EntityCommandBuilder commandBuilder = entityDescription.CommandBuilder;
@@ -269,26 +274,47 @@ namespace FMSC.ORM.Core
             }
         }
 
-        public List<T> Read<T>(WhereClause where, params Object[] selectionArgs)
-            where T : new()
-        {
-            EntityDescription entityDescription = LookUpEntityByType(typeof(T));
-            EntityCommandBuilder commandBuilder = entityDescription.CommandBuilder;
+        //public List<T> Read<T>(string selection, params object[] selectionArgs)
+        //    where T : new()
+        //{
+        //    EntityDescription entityDescription = LookUpEntityByType(typeof(T));
+        //    EntityCommandBuilder commandBuilder = entityDescription.CommandBuilder;
 
-            using (DbCommand command = commandBuilder.BuildSelectCommand(Provider, where))
-            {
-                //Add selection Arguments to command parameter list
-                if (selectionArgs != null)
-                {
-                    foreach (object obj in selectionArgs)
-                    {
-                        command.Parameters.Add(Provider.CreateParameter(null, obj));
-                    }
-                }
+        //    using (DbCommand command = commandBuilder.BuildSelectLegacy(Provider, selection))
+        //    {
+        //        //Add selection Arguments to command parameter list
+        //        if (selectionArgs != null)
+        //        {
+        //            foreach (object obj in selectionArgs)
+        //            {
+        //                command.Parameters.Add(Provider.CreateParameter(null, obj));
+        //            }
+        //        }
 
-                return Read<T>(command, entityDescription);
-            }
-        }
+        //        return Read<T>(command, entityDescription);
+        //    }
+        //}
+
+        //public List<T> Read<T>(WhereClause where, params Object[] selectionArgs)
+        //    where T : new()
+        //{
+        //    EntityDescription entityDescription = LookUpEntityByType(typeof(T));
+        //    EntityCommandBuilder commandBuilder = entityDescription.CommandBuilder;
+
+        //    using (DbCommand command = commandBuilder.BuildSelectCommand(Provider, where))
+        //    {
+        //        //Add selection Arguments to command parameter list
+        //        if (selectionArgs != null)
+        //        {
+        //            foreach (object obj in selectionArgs)
+        //            {
+        //                command.Parameters.Add(Provider.CreateParameter(null, obj));
+        //            }
+        //        }
+
+        //        return Read<T>(command, entityDescription);
+        //    }
+        //}
 
         internal IEnumerable<TResult> Read<TResult>(SQLSelectBuilder selectBuilder, params Object[] selectionArgs)
         {
@@ -477,17 +503,25 @@ namespace FMSC.ORM.Core
             }
         }
 
-        
 
-
-        [Obsolete("use ReadSingleRow<T>(string selection, params Object[] selectionArgs)")]
-        public T ReadSingleRow<T>(string tableName, string selection, params Object[] selectionArgs) where T : new()
+        /// <summary>
+        /// Retrieves a single row from the database Note: data object type must match the 
+        /// table. 
+        /// </summary>
+        /// <typeparam name="T">Type of data object to return</typeparam>
+        /// <param name="tableName">Name of table to read from</param>
+        /// <param name="rowID">row id of the row to read</param>
+        /// <exception cref="DatabaseExecutionException"></exception>
+        /// <returns>a single data object</returns>
+        public T ReadSingleRow<T>(object primaryKeyValue)
+            where T : new()
         {
-            return ReadSingleRow<T>(selection, selectionArgs);
-            //return Context.ReadSingleRow<T>(selection, selectionArgs);
+            return From<T>().Where("rowID = ?").Read(primaryKeyValue).FirstOrDefault();
+            //return ReadSingleRow<T>(null, "WHERE rowID = ?", primaryKeyValue);
         }
 
-        public T ReadSingleRow<T>(string selection, params Object[] selectionArgs) where T : new()
+        [Obsolete("use From<T>().Read().FirstOrDefault() style instead")]
+        public T ReadSingleRow<T>(string tableName, string selection, params Object[] selectionArgs) where T : new()
         {
             EntityDescription entityDescription = LookUpEntityByType(typeof(T));
             EntityCommandBuilder commandBuilder = entityDescription.CommandBuilder;
@@ -505,30 +539,8 @@ namespace FMSC.ORM.Core
 
                 return ReadSingleRow<T>(command, entityDescription);
             }
-            //return Context.ReadSingleRow<T>(selection, selectionArgs);
         }
 
-        public T ReadSingleRow<T>(WhereClause where, params Object[] selectionArgs)
-            where T : new()
-        {
-
-            EntityDescription entityDescription = LookUpEntityByType(typeof(T));
-            EntityCommandBuilder commandBuilder = entityDescription.CommandBuilder;
-
-            using (DbCommand command = commandBuilder.BuildSelectCommand(Provider, where))
-            {
-                //Add selection Arguments to command parameter list
-                if (selectionArgs != null)
-                {
-                    foreach (object obj in selectionArgs)
-                    {
-                        command.Parameters.Add(Provider.CreateParameter(null, obj));
-                    }
-                }
-
-                return ReadSingleRow<T>(command, entityDescription);
-            }
-        }
 
         internal T ReadSingleRow<T>(DbCommand command, EntityDescription entityDescription)
             where T : new()
@@ -587,20 +599,7 @@ namespace FMSC.ORM.Core
             return ReadSingleRow<T>(rowID);
         }
 
-        /// <summary>
-        /// Retrieves a single row from the database Note: data object type must match the 
-        /// table. 
-        /// </summary>
-        /// <typeparam name="T">Type of data object to return</typeparam>
-        /// <param name="tableName">Name of table to read from</param>
-        /// <param name="rowID">row id of the row to read</param>
-        /// <exception cref="DatabaseExecutionException"></exception>
-        /// <returns>a single data object</returns>
-        public T ReadSingleRow<T>(object primaryKeyValue)
-            where T : new()
-        {
-            return ReadSingleRow<T>(new WhereClause("rowID = ?"), primaryKeyValue);
-        }
+        
 
         protected long GetLastInsertRowID()
         {
@@ -1503,7 +1502,23 @@ namespace FMSC.ORM.Core
 
         protected virtual void OnInsertingData(object data, SQL.OnConflictOption option)
         {
+            if (data is IPersistanceTracking)
+            {
+                ((IPersistanceTracking)data).OnInserting();
+            }
+        }
 
+        protected virtual void OnInsertedData(object data)
+        {
+            if (data is IPersistanceTracking)
+            {
+                ((IPersistanceTracking)data).OnInserted();
+
+            }
+            if (data is System.ComponentModel.IChangeTracking)
+            {
+                ((System.ComponentModel.IChangeTracking)data).AcceptChanges();
+            }
         }
 
         protected virtual void OnUpdatingData(object data)

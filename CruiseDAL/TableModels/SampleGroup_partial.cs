@@ -4,6 +4,7 @@ using System.Text;
 using CruiseDAL.MappingCollections;
 using FMSC.ORM.Core;
 using CruiseDAL.Enums;
+using System.Linq;
 
 namespace CruiseDAL.DataObjects
 {
@@ -94,23 +95,26 @@ namespace CruiseDAL.DataObjects
             }
         }
 
-       public int DeleteSampleGroup(DatastoreRedux dal, long? SampleGroup_CN)
-       {
-          // check tree table for data
-          if (dal.GetRowCount("Tree", "WHERE SampleGroup_CN = ?", SampleGroup_CN) > 0) return (-1);
-          // Check Count table for each sample group
-          if (dal.GetRowCount("CountTree", "WHERE SampleGroup_CN = ? AND TreeCount > 0", SampleGroup_CN) > 0) return (-1);
+        public int DeleteSampleGroup(DatastoreRedux dal, long? SampleGroup_CN)
+        {
+            // check tree table for data
+            if (dal.GetRowCount("Tree", "WHERE SampleGroup_CN = ?", SampleGroup_CN) > 0) return (-1);
+            // Check Count table for each sample group
+            if (dal.GetRowCount("CountTree", "WHERE SampleGroup_CN = ? AND TreeCount > 0", SampleGroup_CN) > 0) return (-1);
 
-          //Delete Count Records for stratum
-          List<CountTreeDO> allCountInSg = dal.Read<CountTreeDO>("WHERE SampleGroup_CN = ?", SampleGroup_CN);
-          foreach (CountTreeDO Cnt in allCountInSg)
-             Cnt.Delete();
+            //Delete Count Records for stratum
+            var allCountInSg = dal.From<CountTreeDO>()
+                    .Where("SampleGroup_CN = ?")
+                    .Read(SampleGroup_CN).ToList();
+                                
+            foreach (CountTreeDO Cnt in allCountInSg)
+            { Cnt.Delete(); }
+             
+            Delete();
 
-          Delete();
-
-          return (0);
-       }
-       #endregion
+            return (0);
+        }
+        #endregion
 
        protected override bool ValidateProperty(string name, object value)
        {
@@ -162,7 +166,7 @@ namespace CruiseDAL.DataObjects
            {
                if (this.Stratum == null || this.Stratum.Method == "FCM" || this.Stratum.Method == "PCM")
                {
-                   //allow sampling frequency to be 0 for fcm and pcm
+                   //allow sampling frequency to be 0 for FCM and PCM
                    base.RemoveError(name, "Frequency can't be 0");
                }
                else if (CanEnableFrequency(this.Stratum))
@@ -277,7 +281,7 @@ namespace CruiseDAL.DataObjects
            if (sg.TreeDefaultValues.Count == 0)
            {
                isValid = false;
-               error += pre + " No Tree Tree Defaults Selected";
+               error += pre + " No Tree Defaults Selected";
            }
            
            isValid  = sg.ValidatePProdOnTDVs(ref error) && isValid;

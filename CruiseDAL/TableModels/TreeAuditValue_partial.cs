@@ -94,7 +94,7 @@ namespace CruiseDAL.DataObjects
 
         public bool Validate(object sender, object value)
         {
-            bool isValid = true;//valid until proven unvalid
+            bool isValid = true;//valid until proven invalid
 
             if (this.Required == true && value == null) { isValid = false; }
 

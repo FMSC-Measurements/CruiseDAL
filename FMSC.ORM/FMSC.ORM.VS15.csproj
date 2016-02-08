@@ -53,6 +53,7 @@
     <Compile Include="Core\EntityAttributes\BaseFieldAttribute.cs" />
     <Compile Include="Core\EntityAttributes\FieldAccesabilityException.cs" />
     <Compile Include="Core\EntityAttributes\IgnoreFieldAttribute.cs" />
+    <Compile Include="Core\EntityAttributes\PersistanceFlags.cs" />
     <Compile Include="Core\EntityModel\PropertyAccessor.cs" />
     <Compile Include="Core\PlatformHelper.cs" />
     <Compile Include="Core\SQL\GroupByClause.cs" />
@@ -110,6 +111,7 @@
     <Compile Include="Core\SQL\WhereClause.cs" />
     <Compile Include="SQLite\SQLiteDatabaseBuilder.cs" />
     <Compile Include="SQLite\SQLiteDatastore.cs" />
+    <Compile Include="SQLite\SQLiteMultiDBDataStore.cs" />
     <Compile Include="SQLite\SQLiteProviderFactory.cs" />
   </ItemGroup>
   <ItemGroup>

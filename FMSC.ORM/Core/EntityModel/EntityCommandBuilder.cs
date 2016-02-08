@@ -15,13 +15,6 @@ namespace FMSC.ORM.Core.EntityModel
         SQLSelectBuilder _selectCommand;
         string _selectCommandFormat;
 
-        SQLInsertCommand _insertCommand;
-        //SQLSelectExpression _afterInsertCommand;
-
-        SQLUpdateCommand _updateCommand; 
-
-        //string _insertCommandFormatString;
-        //string _updateCommandFormat;
 
         public EntityDescription EntityDescription { get; set; }
 
@@ -32,11 +25,6 @@ namespace FMSC.ORM.Core.EntityModel
             _selectCommand = MakeSelectCommand();
             InitializeLegacySelectCommand();
 
-            if (EntityDescription.Fields.PrimaryKeyField != null)
-            {
-                InitializeInsertCommand();
-                InitializeUpdateCommand();
-            }
         }
 
 
@@ -132,77 +120,48 @@ namespace FMSC.ORM.Core.EntityModel
         public DbCommand BuildInsertCommand(DbProviderFactoryAdapter provider, object data, SQL.OnConflictOption option)
         {
             Debug.Assert(data != null);
-            Debug.Assert(_insertCommand != null);
 
-            _insertCommand.ConflictOption = option;
-
-            DbCommand command = provider.CreateCommand(_insertCommand.ToString());
-
-            foreach(FieldAttribute field in EntityDescription.Fields.GetPersistedFields())
-            {
-                if (field is InfrastructureFieldAttribute
-                    && (((InfrastructureFieldAttribute)field).PersistMode & PersistMode.OnInsert) != PersistMode.OnInsert)
-                {
-                    continue;
-                }
-
-                object value = field.GetFieldValueOrDefault(data);
-
-                DbParameter pram = provider.CreateParameter(field.SQLPramName, value);
-                command.Parameters.Add(pram);
-            }
-
-            return command;
-
-
-            //string commandText = string.Format(GetInsertCommandFormatString(), option.ToString());
-            //DbCommand command = _dataStore.CreateCommand(commandText);
-            //foreach (EntityFieldInfo fi in EntityDescription.Fields.Values)
-            //{
-            //    if (fi.IsPersisted)
-            //    {
-            //        object value = fi.GetFieldValue(data);
-            //        command.Parameters.Add(_dataStore.CreateParameter("@" + fi._fieldAttr.FieldName, value));
-            //    }
-            //    if (fi._fieldAttr.SpecialFieldType == SepcialFieldType.CreatedBy)
-            //    {
-            //        command.Parameters.Add(_dataStore.CreateParameter("@" + fi._fieldAttr.FieldName, _dataStore.User));
-            //    }
-            //}
-
-            ////if (usePresetRowID)
-            ////{
-            ////    command.Parameters.AddWithValue("@rowID", data.rowID);
-            ////}
-
-            //return command;
-            
-        }
-
-        protected void InitializeInsertCommand()
-        {
-            SQLInsertCommand expression = new SQLInsertCommand();
-            expression.TableName = EntityDescription.SourceName;
+            DbCommand command = provider.CreateCommand();
 
             List<String> columnNames = new List<string>();
             List<String> valueExpressions = new List<string>();
-            foreach (FieldAttribute field in EntityDescription.Fields.GetPersistedFields())
-            {
-                //if field is not persisted on insert populated skip
-                if (field is InfrastructureFieldAttribute
-                    && (((InfrastructureFieldAttribute)field).PersistMode & PersistMode.OnInsert) != PersistMode.OnInsert)
-                {
-                    continue;
-                }
 
+            var keyField = EntityDescription.Fields.PrimaryKeyField;
+            if (keyField != null)
+            {
+                var keyValue = keyField.GetFieldValueOrDefault(data);
+
+                if (keyValue != null)
+                {
+                    columnNames.Add(keyField.FieldName);
+                    valueExpressions.Add(keyField.SQLPramName);
+
+                    var pram = provider.CreateParameter(keyField.SQLPramName, keyValue);
+                    command.Parameters.Add(pram);
+                }
+            }
+                 
+            foreach (FieldAttribute field in EntityDescription.Fields.GetPersistedFields(false, PersistanceFlags.OnInsert))
+            {
                 columnNames.Add(field.FieldName);
                 valueExpressions.Add(field.SQLPramName);
+
+                object value = field.GetFieldValueOrDefault(data);
+                DbParameter pram = provider.CreateParameter(field.SQLPramName, value);
+                command.Parameters.Add(pram);
             }
+            
+            SQLInsertCommand builder = new SQLInsertCommand()
+            {
+                TableName = EntityDescription.SourceName,
+                ConflictOption = option,
+                ColumnNames = columnNames,
+                ValueExpressions = valueExpressions
+            };
 
-            expression.ColumnNames = columnNames;
-            expression.ValueExpressions = valueExpressions;
+            command.CommandText = builder.ToString();
 
-            _insertCommand = expression;
+            return command;
         }
 
 
@@ -264,23 +223,19 @@ namespace FMSC.ORM.Core.EntityModel
         public DbCommand BuildUpdateCommand(DbProviderFactoryAdapter provider, object data, SQL.OnConflictOption option)
         {
             Debug.Assert(data != null);
-            Debug.Assert(_updateCommand != null);
+            Debug.Assert(EntityDescription.Fields.PrimaryKeyField != null);
+
+            DbCommand command = provider.CreateCommand();
 
 
-            _updateCommand.ConflictOption = option;
-
-            DbCommand command = provider.CreateCommand(_updateCommand.ToString());
-
-            foreach (FieldAttribute field in EntityDescription.Fields.GetPersistedFields())
+            List<string> columnNames = new List<string>();
+            List<string> columnExpressions = new List<string>();
+            foreach (FieldAttribute field in EntityDescription.Fields.GetPersistedFields(true, PersistanceFlags.OnUpdate))
             {
-                if (field is InfrastructureFieldAttribute
-                    && (((InfrastructureFieldAttribute)field).PersistMode & PersistMode.OnUpdate) != PersistMode.OnUpdate)
-                {
-                    continue;
-                }
+                columnNames.Add(field.FieldName);
+                columnExpressions.Add(field.SQLPramName);
 
                 object value = field.GetFieldValueOrDefault(data);
-
                 DbParameter pram = provider.CreateParameter(field.SQLPramName, value);
                 command.Parameters.Add(pram);
             }
@@ -290,113 +245,25 @@ namespace FMSC.ORM.Core.EntityModel
             DbParameter p = provider.CreateParameter(keyField.SQLPramName, keyValue);
             command.Parameters.Add(p);
 
+            WhereClause where = new WhereClause(keyField.FieldName + " = " + keyField.SQLPramName);
 
-            //string commandText = string.Format(GetUpdateCommandFormatString(), option.ToString());
-            //DbCommand command = _dataStore.CreateCommand(commandText);
-            //foreach (EntityFieldInfo fi in EntityDescription.Fields.Values)
-            //{
-            //    if (fi._fieldAttr.IsPersisted)
-            //    {
-            //        object value = fi.GetFieldValue(data);
-            //        command.Parameters.Add(_dataStore.CreateParameter("@" + fi._fieldAttr.FieldName, value));
-            //    }
-            //    //if (fi._fieldAttr.SpecialFieldType == SepcialFieldType.ModifiedBy)
-            //    //{
-            //    //    command.Parameters.Add(_dataStore.CreateParameter("@" + fi._fieldAttr.FieldName, ModifiedBy));
-            //    //}
-            //}
+            SQLUpdateCommand expression = new SQLUpdateCommand()
+            {
+                TableName = EntityDescription.SourceName,
+                ColumnNames = columnNames,
+                ValueExpressions = columnExpressions,
+                ConflictOption = option,
+                Where = where
+            };
 
-            //command.Parameters.Add(_dataStore.CreateParameter("@rowID", recordKey));
+            command.CommandText = expression.ToString();
 
             return command;
         }
 
-        protected void InitializeUpdateCommand()
-        {
-            SQLUpdateCommand expression = new SQLUpdateCommand();
-            expression.TableName = EntityDescription.SourceName;
-
-            List<string> columnNames = new List<string>();
-            List<string> columnExpressions = new List<string>();
-
-
-            foreach (FieldAttribute field in EntityDescription.Fields.GetPersistedFields())
-            {
-                if (field is InfrastructureFieldAttribute
-                    && (((InfrastructureFieldAttribute)field).PersistMode & PersistMode.OnUpdate) != PersistMode.OnUpdate)
-                {
-                    continue;
-                }
-
-                columnNames.Add(field.FieldName);
-                columnExpressions.Add(field.SQLPramName);
-            }
-
-            expression.ColumnNames = columnNames;
-            expression.ValueExpressions = columnExpressions;
-
-            PrimaryKeyFieldAttribute keyField = EntityDescription.Fields.PrimaryKeyField;
-            WhereClause where = new WhereClause(keyField.FieldName + " = " + keyField.SQLPramName);
-            expression.Where = where;
-
-            _updateCommand = expression;
-        }
-
-        //private string GetUpdateCommandFormatString()
-        //{
-        //    if (_updateCommandFormat == null)
-        //    {
-        //        StringBuilder sb = new StringBuilder();
-        //        //create first part of update command with place holder for OnConflictOption. 
-        //        sb.AppendFormat(null, "UPDATE OR {0} {1} SET ", "{0}", EntityDescription.SourceName);
-
-        //        String[] colExprs = new String[EntityDescription.Fields.Values.Count];
-        //        int i = 0;
-        //        foreach (EntityFieldInfo fi in EntityDescription.Fields.Values)
-        //        {
-        //            if (fi.IsPersisted == false) { continue; }
-
-        //            colExprs[i] = string.Format(" {0} = @{0}", fi._fieldAttr.FieldName);
-        //            i++;
-
-        //        }
-        //        sb.Append(string.Join(", ", colExprs, 0, i));
-
-        //        sb.Append("\r\n WHERE rowid = @rowID;");
-        //        _updateCommandFormat = sb.ToString();
-        //    }
-        //    return _updateCommandFormat;
-        //}
         #endregion
 
         #region build delete
-        //protected DbCommand GetSQLDeleteCommand()
-        //{
-        //    string query = string.Format(@"DELETE FROM {0} WHERE rowID = @rowID;
-        //    DELETE FROM ErrorLog WHERE TableName = '{0}' AND CN_Number = @rowID;", EntityDescription.SourceName);
-        //    //TODO remove dependency on ErrorLogTable
-
-        //    //string query = string.Format(@"DELETE FROM {0} WHERE rowID = @rowID;", EntityDescription.SourceName);
-
-        //    return _providerFactory.CreateCommand(query);
-        //}
-
-        //public DbCommand BuildSQLDeleteCommand(object data)
-        //{
-        //    var keyValue = EntityDescription.Fields.PrimaryKeyField.GetFieldValue(data);
-        //    var command = GetSQLDeleteCommand();
-
-        //    command.Parameters.Clear();
-        //    command.Parameters.Add(_providerFactory.CreateParameter("@rowID", keyValue));
-        //    return command;
-        //}
-
-        protected DbCommand GetSQLDeleteCommand(DbProviderFactoryAdapter provider, string keyFieldName)
-        {
-            string query = string.Format(@"DELETE FROM {0} WHERE {1} = @keyValue;", EntityDescription.SourceName, keyFieldName);
-
-            return provider.CreateCommand(query);
-        }
 
         public DbCommand BuildSQLDeleteCommand(DbProviderFactoryAdapter provider, object data)
         {
@@ -413,7 +280,9 @@ namespace FMSC.ORM.Core.EntityModel
             Debug.Assert(keyValue != null);
             Debug.Assert(!string.IsNullOrEmpty(keyFieldName));
 
-            var command = GetSQLDeleteCommand(provider, keyFieldName);
+            string query = string.Format(@"DELETE FROM {0} WHERE {1} = @keyValue;", EntityDescription.SourceName, keyFieldName);
+
+            var command = provider.CreateCommand(query);
 
             command.Parameters.Clear();
             command.Parameters.Add(provider.CreateParameter("@keyValue", keyValue));

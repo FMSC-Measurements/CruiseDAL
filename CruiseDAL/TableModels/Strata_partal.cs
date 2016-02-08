@@ -4,6 +4,7 @@ using System.Text;
 using CruiseDAL.MappingCollections;
 using FMSC.ORM.Core;
 using CruiseDAL.Schema;
+using System.Linq;
 
 namespace CruiseDAL.DataObjects
 {
@@ -74,27 +75,33 @@ namespace CruiseDAL.DataObjects
         public static List<StratumDO> ReadByUnitCode(DatastoreRedux dal, String code)
         {
             if (dal == null) { return null; }
-            return dal.Read<StratumDO>("JOIN CuttingUnitStratum JOIN CuttingUnit WHERE Stratum.Stratum_CN = CuttingUnitStratum.Stratum_CN AND CuttingUnitStratum.CuttingUnit_CN = CuttingUnit.CuttingUnit_CN AND CuttingUnit.Code = ?;", (object)code);
+            return dal.From<StratumDO>()
+                .Join("CuttingUnitStratum", "USING (Stratum_CN)")
+                .Join("CuttingUnit", "USING (CuttingUnit_CN)")
+                .Where("CuttingUnit.Code = ?")
+                .Read(code).ToList();
+
+            //.Read<StratumDO>("JOIN CuttingUnitStratum JOIN CuttingUnit WHERE Stratum.Stratum_CN = CuttingUnitStratum.Stratum_CN AND CuttingUnitStratum.CuttingUnit_CN = CuttingUnit.CuttingUnit_CN AND CuttingUnit.Code = ?;", (object)code);
         }
 
-        public static void MirgeStratum(DatastoreRedux dal, CuttingUnitDO unit, StratumDO fromStratum, StratumDO toStratum)
-        {
-            if (unit.DAL != fromStratum.DAL || unit.DAL != toStratum.DAL)
-            {
-                throw new InvalidOperationException("can only mirge statum within the same file");
-            }
+        //public static void MirgeStratum(DatastoreRedux dal, CuttingUnitDO unit, StratumDO fromStratum, StratumDO toStratum)
+        //{
+        //    if (unit.DAL != fromStratum.DAL || unit.DAL != toStratum.DAL)
+        //    {
+        //        throw new InvalidOperationException("can only mirge statum within the same file");
+        //    }
 
-            List<TreeDO> allTreesInUnit = dal.Read<TreeDO>(
-                "WHERE CuttingUnit_CN = ? AND Stratum_CN = ?",
-                unit.CuttingUnit_CN,
-                fromStratum.Stratum_CN);
+        //    List<TreeDO> allTreesInUnit = dal.Read<TreeDO>(
+        //        "WHERE CuttingUnit_CN = ? AND Stratum_CN = ?",
+        //        unit.CuttingUnit_CN,
+        //        fromStratum.Stratum_CN);
 
-            foreach (TreeDO tree in allTreesInUnit)
-            {
-                tree.Stratum = toStratum;
-                tree.Save();
-            }
-        }
+        //    foreach (TreeDO tree in allTreesInUnit)
+        //    {
+        //        tree.Stratum = toStratum;
+        //        tree.Save();
+        //    }
+        //}
 
         public static bool CanDefineTallys(StratumDO stratum)
         {
@@ -117,26 +124,38 @@ namespace CruiseDAL.DataObjects
            // Check Count table for each sample group
            if (dal.GetRowCount("CountTree", "JOIN SampleGroup ON CountTree.SampleGroup_CN = SampleGroup.SampleGroup_CN WHERE SampleGroup.Stratum_CN = ? AND CountTree.TreeCount > 0", stratum.Stratum_CN) > 0) return (-1);
 
-           //Delete sample groups for stratum
-           List<SampleGroupDO> allSGInStratum = dal.Read<SampleGroupDO>("WHERE Stratum_CN = ?", stratum.Stratum_CN);
+            //Delete sample groups for stratum
+            List<SampleGroupDO> allSGInStratum = dal.From<SampleGroupDO>()
+                 .Where("Stratum_CN = ?")
+                 .Read(stratum.Stratum_CN).ToList();
+            
+            //.Read<SampleGroupDO>("WHERE Stratum_CN = ?", stratum.Stratum_CN);
            foreach (SampleGroupDO Sg in allSGInStratum)
            {
-              //Delete Count Records for stratum
-              List<CountTreeDO> allCountInSG = dal.Read<CountTreeDO>("WHERE SampleGroup_CN = ?", Sg.SampleGroup_CN);
-              foreach (CountTreeDO Cnt in allCountInSG)
-              {
-                  Cnt.Delete();
-              }
-              Sg.Delete();
+                //Delete Count Records for stratum
+                List<CountTreeDO> allCountInSG = dal.From<CountTreeDO>()
+                      .Where("SampleGroup_CN = ?")
+                      .Read(Sg.SampleGroup_CN).ToList();
+
+                //.Read<CountTreeDO>("WHERE SampleGroup_CN = ?", Sg.SampleGroup_CN);
+                foreach (CountTreeDO Cnt in allCountInSG)
+                {
+                    Cnt.Delete();
+                }
+                Sg.Delete();
            }
 
-           //Delete stratum stats for stratum
-           List<StratumStatsDO> allStratumStatsInStratum = dal.Read<StratumStatsDO>(
-               "WHERE Stratum_CN = ?", stratum.Stratum_CN);
-           foreach (StratumStatsDO StratumStats in allStratumStatsInStratum)
-           {
-              StratumStats.DeleteStratumStats(dal, StratumStats.StratumStats_CN);
-           }
+            //Delete stratum stats for stratum
+            List<StratumStatsDO> allStratumStatsInStratum = dal.From<StratumStatsDO>()
+                 .Where("Stratum_CN = ?")
+                 .Read(stratum.Stratum_CN)
+                 .ToList();
+            //.Read<StratumStatsDO>(
+            //"WHERE Stratum_CN = ?", stratum.Stratum_CN);
+            foreach (StratumStatsDO StratumStats in allStratumStatsInStratum)
+            {
+                StratumStats.DeleteStratumStats(dal, StratumStats.StratumStats_CN);
+            }
 
            stratum.Delete();
            
@@ -180,7 +199,11 @@ DELETE FROM LogFieldSetup WHERE Stratum_CN = {0};",
 
         public List<T> ReadSampleGroups<T>() where T : SampleGroupDO, new()
         {
-            return this.DAL.Read<T>("WHERE Stratum_CN = ?", this.Stratum_CN);
+            return this.DAL.From<T>()
+                .Where("Stratum_CN = ?")
+                .Read(this.Stratum_CN).ToList();
+
+            //.Read<T>("WHERE Stratum_CN = ?", this.Stratum_CN);
         }
 
         public List<SampleGroupDO> ReadSampleGroups()

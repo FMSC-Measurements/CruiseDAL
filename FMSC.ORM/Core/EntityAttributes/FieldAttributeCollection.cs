@@ -51,31 +51,34 @@ namespace FMSC.ORM.Core.EntityAttributes
             
         }
 
-        public IEnumerable<FieldAttribute> GetPersistedFields()
-        {
-            List<FieldAttribute> fields = new List<FieldAttribute>();
+        public IEnumerable<FieldAttribute> GetPersistedFields(bool includeKeyField, PersistanceFlags filter)
+        {            
             foreach(FieldAttribute fa in _fields.Values)
             {
-                if(fa.IsPersisted)
+                if((fa.PersistanceFlags & filter) == filter)
                 {
-                    fields.Add(fa);
+                    yield return fa;
                 }
             }
-            return fields;
+            
+            if(includeKeyField && this.PrimaryKeyField != null)
+            {
+                yield return this.PrimaryKeyField;
+            }
         }
 
-        public IEnumerable<InfrastructureFieldAttribute> GetInfrastructureFields()
-        {
-            List<InfrastructureFieldAttribute> fields = new List<InfrastructureFieldAttribute>();
-            foreach(InfrastructureFieldAttribute fa in _fields.Values)
-            {
-                if(fa is InfrastructureFieldAttribute)
-                {
-                    fields.Add((InfrastructureFieldAttribute)fa);
-                }
-            }
-            return fields;
-        }
+        //public IEnumerable<InfrastructureFieldAttribute> GetInfrastructureFields()
+        //{
+        //    List<InfrastructureFieldAttribute> fields = new List<InfrastructureFieldAttribute>();
+        //    foreach(InfrastructureFieldAttribute fa in _fields.Values)
+        //    {
+        //        if(fa is InfrastructureFieldAttribute)
+        //        {
+        //            fields.Add((InfrastructureFieldAttribute)fa);
+        //        }
+        //    }
+        //    return fields;
+        //}
 
         public FieldAttribute GetField(string fieldName)
         {
