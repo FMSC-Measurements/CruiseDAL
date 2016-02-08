@@ -4,7 +4,7 @@ namespace FMSC.ORM.Core.EntityAttributes
 {
     //public enum InfrastructureFieldType { RowVersion, CreatedBy, CreatedDate, ModifiedBy, ModifiedDate }
     [Flags]
-    public enum PersistMode { Never, OnInsert, OnUpdate }
+    public enum PersistMode {Undefinded = 0, Never, OnInsert, OnUpdate }
 
 
     public class InfrastructureFieldAttribute : FieldAttribute

@@ -36,8 +36,7 @@ namespace CruiseDAL.DataObjects
 		#region Ctor
 		static SaleDO()
 		{    
-		    _validator = new RowValidator();
-		    
+			_validator = new RowValidator();
 			_validator.Add(new NotNullRule("SaleNumber", "Sale", "SaleNumber is Required"));
 			_validator.Add(new FieldValidator("Region", "Sale", "Invalid Region", double.MinValue, double.MinValue, true, "01 02 03 04 05 06 07 08 09 10 11 12"));
 			_validator.Add(new NotNullRule("Forest", "Sale", "Forest is Required"));
@@ -64,8 +63,7 @@ namespace CruiseDAL.DataObjects
 		}
 		private String _salenumber ;
 		[XmlElement]
-		[Field (FieldName = "SaleNumber",
-		 IsPersisted = true)]
+		[Field(FieldName = "SaleNumber")]
 		public virtual String SaleNumber
 		{
 		    get 
@@ -82,8 +80,7 @@ namespace CruiseDAL.DataObjects
 		}
 		private String _name ;
 		[XmlElement]
-		[Field (FieldName = "Name",
-		 IsPersisted = true)]
+		[Field(FieldName = "Name")]
 		public virtual String Name
 		{
 		    get 
@@ -100,8 +97,7 @@ namespace CruiseDAL.DataObjects
 		}
 		private String _purpose ;
 		[XmlElement]
-		[Field (FieldName = "Purpose",
-		 IsPersisted = true)]
+		[Field(FieldName = "Purpose")]
 		public virtual String Purpose
 		{
 		    get 
@@ -118,8 +114,7 @@ namespace CruiseDAL.DataObjects
 		}
 		private String _region ;
 		[XmlElement]
-		[Field (FieldName = "Region",
-		 IsPersisted = true)]
+		[Field(FieldName = "Region")]
 		public virtual String Region
 		{
 		    get 
@@ -136,8 +131,7 @@ namespace CruiseDAL.DataObjects
 		}
 		private String _forest ;
 		[XmlElement]
-		[Field (FieldName = "Forest",
-		 IsPersisted = true)]
+		[Field(FieldName = "Forest")]
 		public virtual String Forest
 		{
 		    get 
@@ -154,8 +148,7 @@ namespace CruiseDAL.DataObjects
 		}
 		private String _district ;
 		[XmlElement]
-		[Field (FieldName = "District",
-		 IsPersisted = true)]
+		[Field(FieldName = "District")]
 		public virtual String District
 		{
 		    get 
@@ -172,8 +165,7 @@ namespace CruiseDAL.DataObjects
 		}
 		private String _measurementyear ;
 		[XmlElement]
-		[Field (FieldName = "MeasurementYear",
-		 IsPersisted = true)]
+		[Field(FieldName = "MeasurementYear")]
 		public virtual String MeasurementYear
 		{
 		    get 
@@ -190,8 +182,7 @@ namespace CruiseDAL.DataObjects
 		}
 		private Int64 _calendaryear ;
 		[XmlElement]
-		[Field (FieldName = "CalendarYear",
-		 IsPersisted = true)]
+		[Field(FieldName = "CalendarYear")]
 		public virtual Int64 CalendarYear
 		{
 		    get 
@@ -208,8 +199,7 @@ namespace CruiseDAL.DataObjects
 		}
 		private bool _loggradingenabled  = false;
 		[XmlElement]
-		[Field (FieldName = "LogGradingEnabled",
-		 IsPersisted = true)]
+		[Field(FieldName = "LogGradingEnabled")]
 		public virtual bool LogGradingEnabled
 		{
 		    get 
@@ -226,8 +216,7 @@ namespace CruiseDAL.DataObjects
 		}
 		private String _remarks ;
 		[XmlElement]
-		[Field (FieldName = "Remarks",
-		 IsPersisted = true)]
+		[Field(FieldName = "Remarks")]
 		public virtual String Remarks
 		{
 		    get 
@@ -244,8 +233,7 @@ namespace CruiseDAL.DataObjects
 		}
 		private String _defaultuom ;
 		[XmlElement]
-		[Field (FieldName = "DefaultUOM",
-		 IsPersisted = true)]
+		[Field(FieldName = "DefaultUOM")]
 		public virtual String DefaultUOM
 		{
 		    get 
@@ -345,8 +333,7 @@ namespace CruiseDAL.DataObjects
 		#region Ctor
 		static CuttingUnitDO()
 		{    
-		    _validator = new RowValidator();
-		    
+			_validator = new RowValidator();
 			_validator.Add(new NotNullRule("Code", "CuttingUnit", "Code is Required"));
 			_validator.Add(new FieldValidator("Area", "CuttingUnit", "Area Out of Range", 0, 9999999, true, null));
 		}
@@ -370,8 +357,7 @@ namespace CruiseDAL.DataObjects
 		}
 		private String _code ;
 		[XmlElement]
-		[Field (FieldName = "Code",
-		 IsPersisted = true)]
+		[Field(FieldName = "Code")]
 		public virtual String Code
 		{
 		    get 
@@ -388,8 +374,7 @@ namespace CruiseDAL.DataObjects
 		}
 		private float _area  = 0.0f;
 		[XmlElement]
-		[Field (FieldName = "Area",
-		 IsPersisted = true)]
+		[Field(FieldName = "Area")]
 		public virtual float Area
 		{
 		    get 
@@ -406,8 +391,7 @@ namespace CruiseDAL.DataObjects
 		}
 		private String _description ;
 		[XmlElement]
-		[Field (FieldName = "Description",
-		 IsPersisted = true)]
+		[Field(FieldName = "Description")]
 		public virtual String Description
 		{
 		    get 
@@ -424,8 +408,7 @@ namespace CruiseDAL.DataObjects
 		}
 		private String _loggingmethod ;
 		[XmlElement]
-		[Field (FieldName = "LoggingMethod",
-		 IsPersisted = true)]
+		[Field(FieldName = "LoggingMethod")]
 		public virtual String LoggingMethod
 		{
 		    get 
@@ -442,8 +425,7 @@ namespace CruiseDAL.DataObjects
 		}
 		private String _paymentunit ;
 		[XmlElement]
-		[Field (FieldName = "PaymentUnit",
-		 IsPersisted = true)]
+		[Field(FieldName = "PaymentUnit")]
 		public virtual String PaymentUnit
 		{
 		    get 
@@ -460,8 +442,7 @@ namespace CruiseDAL.DataObjects
 		}
 		private String _tallyhistory ;
 		[XmlElement]
-		[Field (FieldName = "TallyHistory",
-		 IsPersisted = true)]
+		[Field(FieldName = "TallyHistory")]
 		public virtual String TallyHistory
 		{
 		    get 
@@ -551,8 +532,7 @@ namespace CruiseDAL.DataObjects
 		#region Ctor
 		static StratumDO()
 		{    
-		    _validator = new RowValidator();
-		    
+			_validator = new RowValidator();
 			_validator.Add(new NotNullRule("Code", "Stratum", "Code is Required"));
 			_validator.Add(new NotNullRule("Method", "Stratum", "Method is Required"));
 			_validator.Add(new FieldValidator("BasalAreaFactor", "Stratum", "BAF Out of Range", 0, 99.9899978637695, false, null));
@@ -580,8 +560,7 @@ namespace CruiseDAL.DataObjects
 		}
 		private String _code ;
 		[XmlElement]
-		[Field (FieldName = "Code",
-		 IsPersisted = true)]
+		[Field(FieldName = "Code")]
 		public virtual String Code
 		{
 		    get 
@@ -598,8 +577,7 @@ namespace CruiseDAL.DataObjects
 		}
 		private String _description ;
 		[XmlElement]
-		[Field (FieldName = "Description",
-		 IsPersisted = true)]
+		[Field(FieldName = "Description")]
 		public virtual String Description
 		{
 		    get 
@@ -616,8 +594,7 @@ namespace CruiseDAL.DataObjects
 		}
 		private String _method ;
 		[XmlElement]
-		[Field (FieldName = "Method",
-		 IsPersisted = true)]
+		[Field(FieldName = "Method")]
 		public virtual String Method
 		{
 		    get 
@@ -634,8 +611,7 @@ namespace CruiseDAL.DataObjects
 		}
 		private float _basalareafactor  = 0.0f;
 		[XmlElement]
-		[Field (FieldName = "BasalAreaFactor",
-		 IsPersisted = true)]
+		[Field(FieldName = "BasalAreaFactor")]
 		public virtual float BasalAreaFactor
 		{
 		    get 
@@ -652,8 +628,7 @@ namespace CruiseDAL.DataObjects
 		}
 		private float _fixedplotsize  = 0.0f;
 		[XmlElement]
-		[Field (FieldName = "FixedPlotSize",
-		 IsPersisted = true)]
+		[Field(FieldName = "FixedPlotSize")]
 		public virtual float FixedPlotSize
 		{
 		    get 
@@ -670,8 +645,7 @@ namespace CruiseDAL.DataObjects
 		}
 		private Int64 _kz3ppnt ;
 		[XmlElement]
-		[Field (FieldName = "KZ3PPNT",
-		 IsPersisted = true)]
+		[Field(FieldName = "KZ3PPNT")]
 		public virtual Int64 KZ3PPNT
 		{
 		    get 
@@ -688,8 +662,7 @@ namespace CruiseDAL.DataObjects
 		}
 		private String _hotkey ;
 		[XmlElement]
-		[Field (FieldName = "Hotkey",
-		 IsPersisted = true)]
+		[Field(FieldName = "Hotkey")]
 		public virtual String Hotkey
 		{
 		    get 
@@ -706,8 +679,7 @@ namespace CruiseDAL.DataObjects
 		}
 		private String _fbscode ;
 		[XmlElement]
-		[Field (FieldName = "FBSCode",
-		 IsPersisted = true)]
+		[Field(FieldName = "FBSCode")]
 		public virtual String FBSCode
 		{
 		    get 
@@ -724,8 +696,7 @@ namespace CruiseDAL.DataObjects
 		}
 		private String _yieldcomponent  = "CL";
 		[XmlElement]
-		[Field (FieldName = "YieldComponent",
-		 IsPersisted = true)]
+		[Field(FieldName = "YieldComponent")]
 		public virtual String YieldComponent
 		{
 		    get 
@@ -742,8 +713,7 @@ namespace CruiseDAL.DataObjects
 		}
 		private Int64 _month ;
 		[XmlElement]
-		[Field (FieldName = "Month",
-		 IsPersisted = true)]
+		[Field(FieldName = "Month")]
 		public virtual Int64 Month
 		{
 		    get 
@@ -760,8 +730,7 @@ namespace CruiseDAL.DataObjects
 		}
 		private Int64 _year ;
 		[XmlElement]
-		[Field (FieldName = "Year",
-		 IsPersisted = true)]
+		[Field(FieldName = "Year")]
 		public virtual Int64 Year
 		{
 		    get 
@@ -861,8 +830,7 @@ namespace CruiseDAL.DataObjects
 		#region Ctor
 		static CuttingUnitStratumDO()
 		{    
-		    _validator = new RowValidator();
-		    
+			_validator = new RowValidator();
 			_validator.Add(new NotNullRule("CuttingUnit_CN", "CuttingUnitStratum", "CuttingUnit_CN is Required"));
 			_validator.Add(new NotNullRule("Stratum_CN", "CuttingUnitStratum", "Stratum_CN is Required"));
 		}
@@ -879,8 +847,7 @@ namespace CruiseDAL.DataObjects
 		#endregion
 		private long? _cuttingunit_cn ;
 		[XmlIgnore]
-		[Field (FieldName = "CuttingUnit_CN",
-		 IsPersisted = true)]
+		[Field(FieldName = "CuttingUnit_CN")]
 		public virtual long? CuttingUnit_CN
 		{
 		    get 
@@ -930,8 +897,7 @@ namespace CruiseDAL.DataObjects
 		}
 		private long? _stratum_cn ;
 		[XmlIgnore]
-		[Field (FieldName = "Stratum_CN",
-		 IsPersisted = true)]
+		[Field(FieldName = "Stratum_CN")]
 		public virtual long? Stratum_CN
 		{
 		    get 
@@ -981,8 +947,7 @@ namespace CruiseDAL.DataObjects
 		}
 		private float? _stratumarea ;
 		[XmlElement]
-		[Field (FieldName = "StratumArea",
-		 IsPersisted = true)]
+		[Field(FieldName = "StratumArea")]
 		public virtual float? StratumArea
 		{
 		    get 
@@ -1046,8 +1011,7 @@ namespace CruiseDAL.DataObjects
 		#region Ctor
 		static SampleGroupDO()
 		{    
-		    _validator = new RowValidator();
-		    
+			_validator = new RowValidator();
 			_validator.Add(new NotNullRule("Stratum_CN", "SampleGroup", "Stratum_CN is Required"));
 			_validator.Add(new NotNullRule("Code", "SampleGroup", "Code is Required"));
 			_validator.Add(new FieldValidator("CutLeave", "SampleGroup", "Invalid Cut Leave Value", double.MinValue, double.MinValue, true, "C L"));
@@ -1078,8 +1042,7 @@ namespace CruiseDAL.DataObjects
 		}
 		private long? _stratum_cn ;
 		[XmlIgnore]
-		[Field (FieldName = "Stratum_CN",
-		 IsPersisted = true)]
+		[Field(FieldName = "Stratum_CN")]
 		public virtual long? Stratum_CN
 		{
 		    get 
@@ -1129,8 +1092,7 @@ namespace CruiseDAL.DataObjects
 		}
 		private String _code ;
 		[XmlElement]
-		[Field (FieldName = "Code",
-		 IsPersisted = true)]
+		[Field(FieldName = "Code")]
 		public virtual String Code
 		{
 		    get 
@@ -1147,8 +1109,7 @@ namespace CruiseDAL.DataObjects
 		}
 		private String _cutleave ;
 		[XmlElement]
-		[Field (FieldName = "CutLeave",
-		 IsPersisted = true)]
+		[Field(FieldName = "CutLeave")]
 		public virtual String CutLeave
 		{
 		    get 
@@ -1165,8 +1126,7 @@ namespace CruiseDAL.DataObjects
 		}
 		private String _uom ;
 		[XmlElement]
-		[Field (FieldName = "UOM",
-		 IsPersisted = true)]
+		[Field(FieldName = "UOM")]
 		public virtual String UOM
 		{
 		    get 
@@ -1183,8 +1143,7 @@ namespace CruiseDAL.DataObjects
 		}
 		private String _primaryproduct ;
 		[XmlElement]
-		[Field (FieldName = "PrimaryProduct",
-		 IsPersisted = true)]
+		[Field(FieldName = "PrimaryProduct")]
 		public virtual String PrimaryProduct
 		{
 		    get 
@@ -1201,8 +1160,7 @@ namespace CruiseDAL.DataObjects
 		}
 		private String _secondaryproduct ;
 		[XmlElement]
-		[Field (FieldName = "SecondaryProduct",
-		 IsPersisted = true)]
+		[Field(FieldName = "SecondaryProduct")]
 		public virtual String SecondaryProduct
 		{
 		    get 
@@ -1219,8 +1177,7 @@ namespace CruiseDAL.DataObjects
 		}
 		private String _biomassproduct ;
 		[XmlElement]
-		[Field (FieldName = "BiomassProduct",
-		 IsPersisted = true)]
+		[Field(FieldName = "BiomassProduct")]
 		public virtual String BiomassProduct
 		{
 		    get 
@@ -1237,8 +1194,7 @@ namespace CruiseDAL.DataObjects
 		}
 		private String _defaultlivedead ;
 		[XmlElement]
-		[Field (FieldName = "DefaultLiveDead",
-		 IsPersisted = true)]
+		[Field(FieldName = "DefaultLiveDead")]
 		public virtual String DefaultLiveDead
 		{
 		    get 
@@ -1255,8 +1211,7 @@ namespace CruiseDAL.DataObjects
 		}
 		private Int64 _samplingfrequency ;
 		[XmlElement]
-		[Field (FieldName = "SamplingFrequency",
-		 IsPersisted = true)]
+		[Field(FieldName = "SamplingFrequency")]
 		public virtual Int64 SamplingFrequency
 		{
 		    get 
@@ -1273,8 +1228,7 @@ namespace CruiseDAL.DataObjects
 		}
 		private Int64 _insurancefrequency ;
 		[XmlElement]
-		[Field (FieldName = "InsuranceFrequency",
-		 IsPersisted = true)]
+		[Field(FieldName = "InsuranceFrequency")]
 		public virtual Int64 InsuranceFrequency
 		{
 		    get 
@@ -1291,8 +1245,7 @@ namespace CruiseDAL.DataObjects
 		}
 		private Int64 _kz ;
 		[XmlElement]
-		[Field (FieldName = "KZ",
-		 IsPersisted = true)]
+		[Field(FieldName = "KZ")]
 		public virtual Int64 KZ
 		{
 		    get 
@@ -1309,8 +1262,7 @@ namespace CruiseDAL.DataObjects
 		}
 		private float _bigbaf  = 0.0f;
 		[XmlElement]
-		[Field (FieldName = "BigBAF",
-		 IsPersisted = true)]
+		[Field(FieldName = "BigBAF")]
 		public virtual float BigBAF
 		{
 		    get 
@@ -1327,8 +1279,7 @@ namespace CruiseDAL.DataObjects
 		}
 		private float _smallfps  = 0.0f;
 		[XmlElement]
-		[Field (FieldName = "SmallFPS",
-		 IsPersisted = true)]
+		[Field(FieldName = "SmallFPS")]
 		public virtual float SmallFPS
 		{
 		    get 
@@ -1345,8 +1296,7 @@ namespace CruiseDAL.DataObjects
 		}
 		private CruiseDAL.Enums.TallyMode _tallymethod  = 0;
 		[XmlElement]
-		[Field (FieldName = "TallyMethod",
-		 IsPersisted = true)]
+		[Field(FieldName = "TallyMethod")]
 		public virtual CruiseDAL.Enums.TallyMode TallyMethod
 		{
 		    get 
@@ -1363,8 +1313,7 @@ namespace CruiseDAL.DataObjects
 		}
 		private String _description ;
 		[XmlElement]
-		[Field (FieldName = "Description",
-		 IsPersisted = true)]
+		[Field(FieldName = "Description")]
 		public virtual String Description
 		{
 		    get 
@@ -1381,8 +1330,7 @@ namespace CruiseDAL.DataObjects
 		}
 		private String _sampleselectortype ;
 		[XmlElement]
-		[Field (FieldName = "SampleSelectorType",
-		 IsPersisted = true)]
+		[Field(FieldName = "SampleSelectorType")]
 		public virtual String SampleSelectorType
 		{
 		    get 
@@ -1399,8 +1347,7 @@ namespace CruiseDAL.DataObjects
 		}
 		private String _sampleselectorstate ;
 		[XmlElement]
-		[Field (FieldName = "SampleSelectorState",
-		 IsPersisted = true)]
+		[Field(FieldName = "SampleSelectorState")]
 		public virtual String SampleSelectorState
 		{
 		    get 
@@ -1417,8 +1364,7 @@ namespace CruiseDAL.DataObjects
 		}
 		private Int64 _minkpi ;
 		[XmlElement]
-		[Field (FieldName = "MinKPI",
-		 IsPersisted = true)]
+		[Field(FieldName = "MinKPI")]
 		public virtual Int64 MinKPI
 		{
 		    get 
@@ -1435,8 +1381,7 @@ namespace CruiseDAL.DataObjects
 		}
 		private Int64 _maxkpi ;
 		[XmlElement]
-		[Field (FieldName = "MaxKPI",
-		 IsPersisted = true)]
+		[Field(FieldName = "MaxKPI")]
 		public virtual Int64 MaxKPI
 		{
 		    get 
@@ -1551,8 +1496,7 @@ namespace CruiseDAL.DataObjects
 		#region Ctor
 		static TreeDefaultValueDO()
 		{    
-		    _validator = new RowValidator();
-		    
+			_validator = new RowValidator();
 			_validator.Add(new NotNullRule("PrimaryProduct", "TreeDefaultValue", "PrimaryProduct is Required"));
 			_validator.Add(new NotNullRule("Species", "TreeDefaultValue", "Species is Required"));
 			_validator.Add(new FieldValidator("LiveDead", "TreeDefaultValue", "Invalid Live Dead Value", double.MinValue, double.MinValue, true, "L D"));
@@ -1588,8 +1532,7 @@ namespace CruiseDAL.DataObjects
 		}
 		private String _primaryproduct ;
 		[XmlElement]
-		[Field (FieldName = "PrimaryProduct",
-		 IsPersisted = true)]
+		[Field(FieldName = "PrimaryProduct")]
 		public virtual String PrimaryProduct
 		{
 		    get 
@@ -1606,8 +1549,7 @@ namespace CruiseDAL.DataObjects
 		}
 		private String _species ;
 		[XmlElement]
-		[Field (FieldName = "Species",
-		 IsPersisted = true)]
+		[Field(FieldName = "Species")]
 		public virtual String Species
 		{
 		    get 
@@ -1624,8 +1566,7 @@ namespace CruiseDAL.DataObjects
 		}
 		private String _livedead ;
 		[XmlElement]
-		[Field (FieldName = "LiveDead",
-		 IsPersisted = true)]
+		[Field(FieldName = "LiveDead")]
 		public virtual String LiveDead
 		{
 		    get 
@@ -1642,8 +1583,7 @@ namespace CruiseDAL.DataObjects
 		}
 		private Int64 _fiacode ;
 		[XmlElement]
-		[Field (FieldName = "FIAcode",
-		 IsPersisted = true)]
+		[Field(FieldName = "FIAcode")]
 		public virtual Int64 FIAcode
 		{
 		    get 
@@ -1660,8 +1600,7 @@ namespace CruiseDAL.DataObjects
 		}
 		private float _cullprimary  = 0.0f;
 		[XmlElement]
-		[Field (FieldName = "CullPrimary",
-		 IsPersisted = true)]
+		[Field(FieldName = "CullPrimary")]
 		public virtual float CullPrimary
 		{
 		    get 
@@ -1678,8 +1617,7 @@ namespace CruiseDAL.DataObjects
 		}
 		private float _hiddenprimary  = 0.0f;
 		[XmlElement]
-		[Field (FieldName = "HiddenPrimary",
-		 IsPersisted = true)]
+		[Field(FieldName = "HiddenPrimary")]
 		public virtual float HiddenPrimary
 		{
 		    get 
@@ -1696,8 +1634,7 @@ namespace CruiseDAL.DataObjects
 		}
 		private float _cullsecondary  = 0.0f;
 		[XmlElement]
-		[Field (FieldName = "CullSecondary",
-		 IsPersisted = true)]
+		[Field(FieldName = "CullSecondary")]
 		public virtual float CullSecondary
 		{
 		    get 
@@ -1714,8 +1651,7 @@ namespace CruiseDAL.DataObjects
 		}
 		private float _hiddensecondary  = 0.0f;
 		[XmlElement]
-		[Field (FieldName = "HiddenSecondary",
-		 IsPersisted = true)]
+		[Field(FieldName = "HiddenSecondary")]
 		public virtual float HiddenSecondary
 		{
 		    get 
@@ -1732,8 +1668,7 @@ namespace CruiseDAL.DataObjects
 		}
 		private float _recoverable  = 0.0f;
 		[XmlElement]
-		[Field (FieldName = "Recoverable",
-		 IsPersisted = true)]
+		[Field(FieldName = "Recoverable")]
 		public virtual float Recoverable
 		{
 		    get 
@@ -1750,8 +1685,7 @@ namespace CruiseDAL.DataObjects
 		}
 		private String _contractspecies ;
 		[XmlElement]
-		[Field (FieldName = "ContractSpecies",
-		 IsPersisted = true)]
+		[Field(FieldName = "ContractSpecies")]
 		public virtual String ContractSpecies
 		{
 		    get 
@@ -1768,8 +1702,7 @@ namespace CruiseDAL.DataObjects
 		}
 		private String _treegrade  = "0";
 		[XmlElement]
-		[Field (FieldName = "TreeGrade",
-		 IsPersisted = true)]
+		[Field(FieldName = "TreeGrade")]
 		public virtual String TreeGrade
 		{
 		    get 
@@ -1786,8 +1719,7 @@ namespace CruiseDAL.DataObjects
 		}
 		private Int64 _merchheightloglength ;
 		[XmlElement]
-		[Field (FieldName = "MerchHeightLogLength",
-		 IsPersisted = true)]
+		[Field(FieldName = "MerchHeightLogLength")]
 		public virtual Int64 MerchHeightLogLength
 		{
 		    get 
@@ -1804,8 +1736,7 @@ namespace CruiseDAL.DataObjects
 		}
 		private String _merchheighttype  = "F";
 		[XmlElement]
-		[Field (FieldName = "MerchHeightType",
-		 IsPersisted = true)]
+		[Field(FieldName = "MerchHeightType")]
 		public virtual String MerchHeightType
 		{
 		    get 
@@ -1822,8 +1753,7 @@ namespace CruiseDAL.DataObjects
 		}
 		private float _formclass  = 0.0f;
 		[XmlElement]
-		[Field (FieldName = "FormClass",
-		 IsPersisted = true)]
+		[Field(FieldName = "FormClass")]
 		public virtual float FormClass
 		{
 		    get 
@@ -1840,8 +1770,7 @@ namespace CruiseDAL.DataObjects
 		}
 		private float _barkthicknessratio  = 0.0f;
 		[XmlElement]
-		[Field (FieldName = "BarkThicknessRatio",
-		 IsPersisted = true)]
+		[Field(FieldName = "BarkThicknessRatio")]
 		public virtual float BarkThicknessRatio
 		{
 		    get 
@@ -1858,8 +1787,7 @@ namespace CruiseDAL.DataObjects
 		}
 		private float _averagez  = 0.0f;
 		[XmlElement]
-		[Field (FieldName = "AverageZ",
-		 IsPersisted = true)]
+		[Field(FieldName = "AverageZ")]
 		public virtual float AverageZ
 		{
 		    get 
@@ -1876,8 +1804,7 @@ namespace CruiseDAL.DataObjects
 		}
 		private float _referenceheightpercent  = 0.0f;
 		[XmlElement]
-		[Field (FieldName = "ReferenceHeightPercent",
-		 IsPersisted = true)]
+		[Field(FieldName = "ReferenceHeightPercent")]
 		public virtual float ReferenceHeightPercent
 		{
 		    get 
@@ -1989,8 +1916,7 @@ namespace CruiseDAL.DataObjects
 		#region Ctor
 		static SampleGroupTreeDefaultValueDO()
 		{    
-		    _validator = new RowValidator();
-		    
+			_validator = new RowValidator();
 		}
 		
 		public SampleGroupTreeDefaultValueDO() {}
@@ -2005,8 +1931,7 @@ namespace CruiseDAL.DataObjects
 		#endregion
 		private long? _treedefaultvalue_cn ;
 		[XmlIgnore]
-		[Field (FieldName = "TreeDefaultValue_CN",
-		 IsPersisted = true)]
+		[Field(FieldName = "TreeDefaultValue_CN")]
 		public virtual long? TreeDefaultValue_CN
 		{
 		    get 
@@ -2056,8 +1981,7 @@ namespace CruiseDAL.DataObjects
 		}
 		private long? _samplegroup_cn ;
 		[XmlIgnore]
-		[Field (FieldName = "SampleGroup_CN",
-		 IsPersisted = true)]
+		[Field(FieldName = "SampleGroup_CN")]
 		public virtual long? SampleGroup_CN
 		{
 		    get 
@@ -2152,8 +2076,7 @@ namespace CruiseDAL.DataObjects
 		#region Ctor
 		static PlotDO()
 		{    
-		    _validator = new RowValidator();
-		    
+			_validator = new RowValidator();
 			_validator.Add(new NotNullRule("Stratum_CN", "Plot", "Stratum_CN is Required"));
 			_validator.Add(new NotNullRule("CuttingUnit_CN", "Plot", "CuttingUnit_CN is Required"));
 			_validator.Add(new NotNullRule("PlotNumber", "Plot", "PlotNumber is Required"));
@@ -2178,8 +2101,7 @@ namespace CruiseDAL.DataObjects
 		}
 		private long? _stratum_cn ;
 		[XmlIgnore]
-		[Field (FieldName = "Stratum_CN",
-		 IsPersisted = true)]
+		[Field(FieldName = "Stratum_CN")]
 		public virtual long? Stratum_CN
 		{
 		    get 
@@ -2229,8 +2151,7 @@ namespace CruiseDAL.DataObjects
 		}
 		private long? _cuttingunit_cn ;
 		[XmlIgnore]
-		[Field (FieldName = "CuttingUnit_CN",
-		 IsPersisted = true)]
+		[Field(FieldName = "CuttingUnit_CN")]
 		public virtual long? CuttingUnit_CN
 		{
 		    get 
@@ -2280,8 +2201,7 @@ namespace CruiseDAL.DataObjects
 		}
 		private Guid _plot_guid  = Guid.NewGuid();
 		[XmlElement]
-		[Field (FieldName = "Plot_GUID",
-		 IsPersisted = true)]
+		[Field(FieldName = "Plot_GUID")]
 		public virtual Guid Plot_GUID
 		{
 		    get 
@@ -2298,8 +2218,7 @@ namespace CruiseDAL.DataObjects
 		}
 		private Int64 _plotnumber ;
 		[XmlElement]
-		[Field (FieldName = "PlotNumber",
-		 IsPersisted = true)]
+		[Field(FieldName = "PlotNumber")]
 		public virtual Int64 PlotNumber
 		{
 		    get 
@@ -2316,8 +2235,7 @@ namespace CruiseDAL.DataObjects
 		}
 		private String _isempty ;
 		[XmlElement]
-		[Field (FieldName = "IsEmpty",
-		 IsPersisted = true)]
+		[Field(FieldName = "IsEmpty")]
 		public virtual String IsEmpty
 		{
 		    get 
@@ -2334,8 +2252,7 @@ namespace CruiseDAL.DataObjects
 		}
 		private float _slope  = 0.0f;
 		[XmlElement]
-		[Field (FieldName = "Slope",
-		 IsPersisted = true)]
+		[Field(FieldName = "Slope")]
 		public virtual float Slope
 		{
 		    get 
@@ -2352,8 +2269,7 @@ namespace CruiseDAL.DataObjects
 		}
 		private float _kpi  = 0.0f;
 		[XmlElement]
-		[Field (FieldName = "KPI",
-		 IsPersisted = true)]
+		[Field(FieldName = "KPI")]
 		public virtual float KPI
 		{
 		    get 
@@ -2370,8 +2286,7 @@ namespace CruiseDAL.DataObjects
 		}
 		private float _aspect  = 0.0f;
 		[XmlElement]
-		[Field (FieldName = "Aspect",
-		 IsPersisted = true)]
+		[Field(FieldName = "Aspect")]
 		public virtual float Aspect
 		{
 		    get 
@@ -2388,8 +2303,7 @@ namespace CruiseDAL.DataObjects
 		}
 		private String _remarks ;
 		[XmlElement]
-		[Field (FieldName = "Remarks",
-		 IsPersisted = true)]
+		[Field(FieldName = "Remarks")]
 		public virtual String Remarks
 		{
 		    get 
@@ -2406,8 +2320,7 @@ namespace CruiseDAL.DataObjects
 		}
 		private float _xcoordinate  = 0.0f;
 		[XmlElement]
-		[Field (FieldName = "XCoordinate",
-		 IsPersisted = true)]
+		[Field(FieldName = "XCoordinate")]
 		public virtual float XCoordinate
 		{
 		    get 
@@ -2424,8 +2337,7 @@ namespace CruiseDAL.DataObjects
 		}
 		private float _ycoordinate  = 0.0f;
 		[XmlElement]
-		[Field (FieldName = "YCoordinate",
-		 IsPersisted = true)]
+		[Field(FieldName = "YCoordinate")]
 		public virtual float YCoordinate
 		{
 		    get 
@@ -2442,8 +2354,7 @@ namespace CruiseDAL.DataObjects
 		}
 		private float _zcoordinate  = 0.0f;
 		[XmlElement]
-		[Field (FieldName = "ZCoordinate",
-		 IsPersisted = true)]
+		[Field(FieldName = "ZCoordinate")]
 		public virtual float ZCoordinate
 		{
 		    get 
@@ -2460,8 +2371,7 @@ namespace CruiseDAL.DataObjects
 		}
 		private String _metadata ;
 		[XmlElement]
-		[Field (FieldName = "MetaData",
-		 IsPersisted = true)]
+		[Field(FieldName = "MetaData")]
 		public virtual String MetaData
 		{
 		    get 
@@ -2478,8 +2388,7 @@ namespace CruiseDAL.DataObjects
 		}
 		private byte[] _blob ;
 		[XmlElement]
-		[Field (FieldName = "Blob",
-		 IsPersisted = true)]
+		[Field(FieldName = "Blob")]
 		public virtual byte[] Blob
 		{
 		    get 
@@ -2583,8 +2492,7 @@ namespace CruiseDAL.DataObjects
 		#region Ctor
 		static TreeDO()
 		{    
-		    _validator = new RowValidator();
-		    
+			_validator = new RowValidator();
 			_validator.Add(new NotNullRule("Stratum_CN", "Tree", "Stratum_CN is Required"));
 			_validator.Add(new NotNullRule("CuttingUnit_CN", "Tree", "CuttingUnit_CN is Required"));
 			_validator.Add(new NotNullRule("TreeNumber", "Tree", "TreeNumber is Required"));
@@ -2610,8 +2518,7 @@ namespace CruiseDAL.DataObjects
 		}
 		private long? _treedefaultvalue_cn ;
 		[XmlIgnore]
-		[Field (FieldName = "TreeDefaultValue_CN",
-		 IsPersisted = true)]
+		[Field(FieldName = "TreeDefaultValue_CN")]
 		public virtual long? TreeDefaultValue_CN
 		{
 		    get 
@@ -2661,8 +2568,7 @@ namespace CruiseDAL.DataObjects
 		}
 		private long? _stratum_cn ;
 		[XmlIgnore]
-		[Field (FieldName = "Stratum_CN",
-		 IsPersisted = true)]
+		[Field(FieldName = "Stratum_CN")]
 		public virtual long? Stratum_CN
 		{
 		    get 
@@ -2712,8 +2618,7 @@ namespace CruiseDAL.DataObjects
 		}
 		private long? _samplegroup_cn ;
 		[XmlIgnore]
-		[Field (FieldName = "SampleGroup_CN",
-		 IsPersisted = true)]
+		[Field(FieldName = "SampleGroup_CN")]
 		public virtual long? SampleGroup_CN
 		{
 		    get 
@@ -2763,8 +2668,7 @@ namespace CruiseDAL.DataObjects
 		}
 		private long? _cuttingunit_cn ;
 		[XmlIgnore]
-		[Field (FieldName = "CuttingUnit_CN",
-		 IsPersisted = true)]
+		[Field(FieldName = "CuttingUnit_CN")]
 		public virtual long? CuttingUnit_CN
 		{
 		    get 
@@ -2814,8 +2718,7 @@ namespace CruiseDAL.DataObjects
 		}
 		private long? _plot_cn ;
 		[XmlIgnore]
-		[Field (FieldName = "Plot_CN",
-		 IsPersisted = true)]
+		[Field(FieldName = "Plot_CN")]
 		public virtual long? Plot_CN
 		{
 		    get 
@@ -2865,8 +2768,7 @@ namespace CruiseDAL.DataObjects
 		}
 		private Guid _tree_guid  = Guid.NewGuid();
 		[XmlElement]
-		[Field (FieldName = "Tree_GUID",
-		 IsPersisted = true)]
+		[Field(FieldName = "Tree_GUID")]
 		public virtual Guid Tree_GUID
 		{
 		    get 
@@ -2883,8 +2785,7 @@ namespace CruiseDAL.DataObjects
 		}
 		private Int64 _treenumber ;
 		[XmlElement]
-		[Field (FieldName = "TreeNumber",
-		 IsPersisted = true)]
+		[Field(FieldName = "TreeNumber")]
 		public virtual Int64 TreeNumber
 		{
 		    get 
@@ -2901,8 +2802,7 @@ namespace CruiseDAL.DataObjects
 		}
 		private String _species ;
 		[XmlElement]
-		[Field (FieldName = "Species",
-		 IsPersisted = true)]
+		[Field(FieldName = "Species")]
 		public virtual String Species
 		{
 		    get 
@@ -2919,8 +2819,7 @@ namespace CruiseDAL.DataObjects
 		}
 		private String _countormeasure ;
 		[XmlElement]
-		[Field (FieldName = "CountOrMeasure",
-		 IsPersisted = true)]
+		[Field(FieldName = "CountOrMeasure")]
 		public virtual String CountOrMeasure
 		{
 		    get 
@@ -2937,8 +2836,7 @@ namespace CruiseDAL.DataObjects
 		}
 		private float _treecount  = 0.0f;
 		[XmlElement]
-		[Field (FieldName = "TreeCount",
-		 IsPersisted = true)]
+		[Field(FieldName = "TreeCount")]
 		public virtual float TreeCount
 		{
 		    get 
@@ -2955,8 +2853,7 @@ namespace CruiseDAL.DataObjects
 		}
 		private float _kpi  = 0.0f;
 		[XmlElement]
-		[Field (FieldName = "KPI",
-		 IsPersisted = true)]
+		[Field(FieldName = "KPI")]
 		public virtual float KPI
 		{
 		    get 
@@ -2973,8 +2870,7 @@ namespace CruiseDAL.DataObjects
 		}
 		private String _stm  = "N";
 		[XmlElement]
-		[Field (FieldName = "STM",
-		 IsPersisted = true)]
+		[Field(FieldName = "STM")]
 		public virtual String STM
 		{
 		    get 
@@ -2991,8 +2887,7 @@ namespace CruiseDAL.DataObjects
 		}
 		private float _seendefectprimary  = 0.0f;
 		[XmlElement]
-		[Field (FieldName = "SeenDefectPrimary",
-		 IsPersisted = true)]
+		[Field(FieldName = "SeenDefectPrimary")]
 		public virtual float SeenDefectPrimary
 		{
 		    get 
@@ -3009,8 +2904,7 @@ namespace CruiseDAL.DataObjects
 		}
 		private float _seendefectsecondary  = 0.0f;
 		[XmlElement]
-		[Field (FieldName = "SeenDefectSecondary",
-		 IsPersisted = true)]
+		[Field(FieldName = "SeenDefectSecondary")]
 		public virtual float SeenDefectSecondary
 		{
 		    get 
@@ -3027,8 +2921,7 @@ namespace CruiseDAL.DataObjects
 		}
 		private float _recoverableprimary  = 0.0f;
 		[XmlElement]
-		[Field (FieldName = "RecoverablePrimary",
-		 IsPersisted = true)]
+		[Field(FieldName = "RecoverablePrimary")]
 		public virtual float RecoverablePrimary
 		{
 		    get 
@@ -3045,8 +2938,7 @@ namespace CruiseDAL.DataObjects
 		}
 		private float _hiddenprimary  = 0.0f;
 		[XmlElement]
-		[Field (FieldName = "HiddenPrimary",
-		 IsPersisted = true)]
+		[Field(FieldName = "HiddenPrimary")]
 		public virtual float HiddenPrimary
 		{
 		    get 
@@ -3063,8 +2955,7 @@ namespace CruiseDAL.DataObjects
 		}
 		private String _initials ;
 		[XmlElement]
-		[Field (FieldName = "Initials",
-		 IsPersisted = true)]
+		[Field(FieldName = "Initials")]
 		public virtual String Initials
 		{
 		    get 
@@ -3081,8 +2972,7 @@ namespace CruiseDAL.DataObjects
 		}
 		private String _livedead ;
 		[XmlElement]
-		[Field (FieldName = "LiveDead",
-		 IsPersisted = true)]
+		[Field(FieldName = "LiveDead")]
 		public virtual String LiveDead
 		{
 		    get 
@@ -3099,8 +2989,7 @@ namespace CruiseDAL.DataObjects
 		}
 		private String _grade ;
 		[XmlElement]
-		[Field (FieldName = "Grade",
-		 IsPersisted = true)]
+		[Field(FieldName = "Grade")]
 		public virtual String Grade
 		{
 		    get 
@@ -3117,8 +3006,7 @@ namespace CruiseDAL.DataObjects
 		}
 		private float _heighttofirstlivelimb  = 0.0f;
 		[XmlElement]
-		[Field (FieldName = "HeightToFirstLiveLimb",
-		 IsPersisted = true)]
+		[Field(FieldName = "HeightToFirstLiveLimb")]
 		public virtual float HeightToFirstLiveLimb
 		{
 		    get 
@@ -3135,8 +3023,7 @@ namespace CruiseDAL.DataObjects
 		}
 		private float _polelength  = 0.0f;
 		[XmlElement]
-		[Field (FieldName = "PoleLength",
-		 IsPersisted = true)]
+		[Field(FieldName = "PoleLength")]
 		public virtual float PoleLength
 		{
 		    get 
@@ -3153,8 +3040,7 @@ namespace CruiseDAL.DataObjects
 		}
 		private String _clearface ;
 		[XmlElement]
-		[Field (FieldName = "ClearFace",
-		 IsPersisted = true)]
+		[Field(FieldName = "ClearFace")]
 		public virtual String ClearFace
 		{
 		    get 
@@ -3171,8 +3057,7 @@ namespace CruiseDAL.DataObjects
 		}
 		private float _crownratio  = 0.0f;
 		[XmlElement]
-		[Field (FieldName = "CrownRatio",
-		 IsPersisted = true)]
+		[Field(FieldName = "CrownRatio")]
 		public virtual float CrownRatio
 		{
 		    get 
@@ -3189,8 +3074,7 @@ namespace CruiseDAL.DataObjects
 		}
 		private float _dbh  = 0.0f;
 		[XmlElement]
-		[Field (FieldName = "DBH",
-		 IsPersisted = true)]
+		[Field(FieldName = "DBH")]
 		public virtual float DBH
 		{
 		    get 
@@ -3207,8 +3091,7 @@ namespace CruiseDAL.DataObjects
 		}
 		private float _drc  = 0.0f;
 		[XmlElement]
-		[Field (FieldName = "DRC",
-		 IsPersisted = true)]
+		[Field(FieldName = "DRC")]
 		public virtual float DRC
 		{
 		    get 
@@ -3225,8 +3108,7 @@ namespace CruiseDAL.DataObjects
 		}
 		private float _totalheight  = 0.0f;
 		[XmlElement]
-		[Field (FieldName = "TotalHeight",
-		 IsPersisted = true)]
+		[Field(FieldName = "TotalHeight")]
 		public virtual float TotalHeight
 		{
 		    get 
@@ -3243,8 +3125,7 @@ namespace CruiseDAL.DataObjects
 		}
 		private float _merchheightprimary  = 0.0f;
 		[XmlElement]
-		[Field (FieldName = "MerchHeightPrimary",
-		 IsPersisted = true)]
+		[Field(FieldName = "MerchHeightPrimary")]
 		public virtual float MerchHeightPrimary
 		{
 		    get 
@@ -3261,8 +3142,7 @@ namespace CruiseDAL.DataObjects
 		}
 		private float _merchheightsecondary  = 0.0f;
 		[XmlElement]
-		[Field (FieldName = "MerchHeightSecondary",
-		 IsPersisted = true)]
+		[Field(FieldName = "MerchHeightSecondary")]
 		public virtual float MerchHeightSecondary
 		{
 		    get 
@@ -3279,8 +3159,7 @@ namespace CruiseDAL.DataObjects
 		}
 		private float _formclass  = 0.0f;
 		[XmlElement]
-		[Field (FieldName = "FormClass",
-		 IsPersisted = true)]
+		[Field(FieldName = "FormClass")]
 		public virtual float FormClass
 		{
 		    get 
@@ -3297,8 +3176,7 @@ namespace CruiseDAL.DataObjects
 		}
 		private float _upperstemdiameter  = 0.0f;
 		[XmlElement]
-		[Field (FieldName = "UpperStemDiameter",
-		 IsPersisted = true)]
+		[Field(FieldName = "UpperStemDiameter")]
 		public virtual float UpperStemDiameter
 		{
 		    get 
@@ -3315,8 +3193,7 @@ namespace CruiseDAL.DataObjects
 		}
 		private float _upperstemheight  = 0.0f;
 		[XmlElement]
-		[Field (FieldName = "UpperStemHeight",
-		 IsPersisted = true)]
+		[Field(FieldName = "UpperStemHeight")]
 		public virtual float UpperStemHeight
 		{
 		    get 
@@ -3333,8 +3210,7 @@ namespace CruiseDAL.DataObjects
 		}
 		private float _dbhdoublebarkthickness  = 0.0f;
 		[XmlElement]
-		[Field (FieldName = "DBHDoubleBarkThickness",
-		 IsPersisted = true)]
+		[Field(FieldName = "DBHDoubleBarkThickness")]
 		public virtual float DBHDoubleBarkThickness
 		{
 		    get 
@@ -3351,8 +3227,7 @@ namespace CruiseDAL.DataObjects
 		}
 		private float _topdibprimary  = 0.0f;
 		[XmlElement]
-		[Field (FieldName = "TopDIBPrimary",
-		 IsPersisted = true)]
+		[Field(FieldName = "TopDIBPrimary")]
 		public virtual float TopDIBPrimary
 		{
 		    get 
@@ -3369,8 +3244,7 @@ namespace CruiseDAL.DataObjects
 		}
 		private float _topdibsecondary  = 0.0f;
 		[XmlElement]
-		[Field (FieldName = "TopDIBSecondary",
-		 IsPersisted = true)]
+		[Field(FieldName = "TopDIBSecondary")]
 		public virtual float TopDIBSecondary
 		{
 		    get 
@@ -3387,8 +3261,7 @@ namespace CruiseDAL.DataObjects
 		}
 		private String _defectcode ;
 		[XmlElement]
-		[Field (FieldName = "DefectCode",
-		 IsPersisted = true)]
+		[Field(FieldName = "DefectCode")]
 		public virtual String DefectCode
 		{
 		    get 
@@ -3405,8 +3278,7 @@ namespace CruiseDAL.DataObjects
 		}
 		private float _diameteratdefect  = 0.0f;
 		[XmlElement]
-		[Field (FieldName = "DiameterAtDefect",
-		 IsPersisted = true)]
+		[Field(FieldName = "DiameterAtDefect")]
 		public virtual float DiameterAtDefect
 		{
 		    get 
@@ -3423,8 +3295,7 @@ namespace CruiseDAL.DataObjects
 		}
 		private float _voidpercent  = 0.0f;
 		[XmlElement]
-		[Field (FieldName = "VoidPercent",
-		 IsPersisted = true)]
+		[Field(FieldName = "VoidPercent")]
 		public virtual float VoidPercent
 		{
 		    get 
@@ -3441,8 +3312,7 @@ namespace CruiseDAL.DataObjects
 		}
 		private float _slope  = 0.0f;
 		[XmlElement]
-		[Field (FieldName = "Slope",
-		 IsPersisted = true)]
+		[Field(FieldName = "Slope")]
 		public virtual float Slope
 		{
 		    get 
@@ -3459,8 +3329,7 @@ namespace CruiseDAL.DataObjects
 		}
 		private float _aspect  = 0.0f;
 		[XmlElement]
-		[Field (FieldName = "Aspect",
-		 IsPersisted = true)]
+		[Field(FieldName = "Aspect")]
 		public virtual float Aspect
 		{
 		    get 
@@ -3477,8 +3346,7 @@ namespace CruiseDAL.DataObjects
 		}
 		private String _remarks ;
 		[XmlElement]
-		[Field (FieldName = "Remarks",
-		 IsPersisted = true)]
+		[Field(FieldName = "Remarks")]
 		public virtual String Remarks
 		{
 		    get 
@@ -3495,8 +3363,7 @@ namespace CruiseDAL.DataObjects
 		}
 		private Double _xcoordinate  = 0.0;
 		[XmlElement]
-		[Field (FieldName = "XCoordinate",
-		 IsPersisted = true)]
+		[Field(FieldName = "XCoordinate")]
 		public virtual Double XCoordinate
 		{
 		    get 
@@ -3513,8 +3380,7 @@ namespace CruiseDAL.DataObjects
 		}
 		private Double _ycoordinate  = 0.0;
 		[XmlElement]
-		[Field (FieldName = "YCoordinate",
-		 IsPersisted = true)]
+		[Field(FieldName = "YCoordinate")]
 		public virtual Double YCoordinate
 		{
 		    get 
@@ -3531,8 +3397,7 @@ namespace CruiseDAL.DataObjects
 		}
 		private Double _zcoordinate  = 0.0;
 		[XmlElement]
-		[Field (FieldName = "ZCoordinate",
-		 IsPersisted = true)]
+		[Field(FieldName = "ZCoordinate")]
 		public virtual Double ZCoordinate
 		{
 		    get 
@@ -3549,8 +3414,7 @@ namespace CruiseDAL.DataObjects
 		}
 		private String _metadata ;
 		[XmlElement]
-		[Field (FieldName = "MetaData",
-		 IsPersisted = true)]
+		[Field(FieldName = "MetaData")]
 		public virtual String MetaData
 		{
 		    get 
@@ -3567,8 +3431,7 @@ namespace CruiseDAL.DataObjects
 		}
 		private Int64 _isfallbuckscale ;
 		[XmlElement]
-		[Field (FieldName = "IsFallBuckScale",
-		 IsPersisted = true)]
+		[Field(FieldName = "IsFallBuckScale")]
 		public virtual Int64 IsFallBuckScale
 		{
 		    get 
@@ -3585,8 +3448,7 @@ namespace CruiseDAL.DataObjects
 		}
 		private float _expansionfactor  = 0.0f;
 		[XmlElement]
-		[Field (FieldName = "ExpansionFactor",
-		 IsPersisted = true)]
+		[Field(FieldName = "ExpansionFactor")]
 		public virtual float ExpansionFactor
 		{
 		    get 
@@ -3603,8 +3465,7 @@ namespace CruiseDAL.DataObjects
 		}
 		private float _treefactor  = 0.0f;
 		[XmlElement]
-		[Field (FieldName = "TreeFactor",
-		 IsPersisted = true)]
+		[Field(FieldName = "TreeFactor")]
 		public virtual float TreeFactor
 		{
 		    get 
@@ -3621,8 +3482,7 @@ namespace CruiseDAL.DataObjects
 		}
 		private float _pointfactor  = 0.0f;
 		[XmlElement]
-		[Field (FieldName = "PointFactor",
-		 IsPersisted = true)]
+		[Field(FieldName = "PointFactor")]
 		public virtual float PointFactor
 		{
 		    get 
@@ -3791,8 +3651,7 @@ namespace CruiseDAL.DataObjects
 		#region Ctor
 		static LogDO()
 		{    
-		    _validator = new RowValidator();
-		    
+			_validator = new RowValidator();
 			_validator.Add(new NotNullRule("Tree_CN", "Log", "Tree_CN is Required"));
 			_validator.Add(new NotNullRule("LogNumber", "Log", "LogNumber is Required"));
 		}
@@ -3816,8 +3675,7 @@ namespace CruiseDAL.DataObjects
 		}
 		private long? _tree_cn ;
 		[XmlIgnore]
-		[Field (FieldName = "Tree_CN",
-		 IsPersisted = true)]
+		[Field(FieldName = "Tree_CN")]
 		public virtual long? Tree_CN
 		{
 		    get 
@@ -3867,8 +3725,7 @@ namespace CruiseDAL.DataObjects
 		}
 		private Guid _log_guid  = Guid.NewGuid();
 		[XmlElement]
-		[Field (FieldName = "Log_GUID",
-		 IsPersisted = true)]
+		[Field(FieldName = "Log_GUID")]
 		public virtual Guid Log_GUID
 		{
 		    get 
@@ -3885,8 +3742,7 @@ namespace CruiseDAL.DataObjects
 		}
 		private String _lognumber ;
 		[XmlElement]
-		[Field (FieldName = "LogNumber",
-		 IsPersisted = true)]
+		[Field(FieldName = "LogNumber")]
 		public virtual String LogNumber
 		{
 		    get 
@@ -3903,8 +3759,7 @@ namespace CruiseDAL.DataObjects
 		}
 		private String _grade ;
 		[XmlElement]
-		[Field (FieldName = "Grade",
-		 IsPersisted = true)]
+		[Field(FieldName = "Grade")]
 		public virtual String Grade
 		{
 		    get 
@@ -3921,8 +3776,7 @@ namespace CruiseDAL.DataObjects
 		}
 		private float _seendefect  = 0.0f;
 		[XmlElement]
-		[Field (FieldName = "SeenDefect",
-		 IsPersisted = true)]
+		[Field(FieldName = "SeenDefect")]
 		public virtual float SeenDefect
 		{
 		    get 
@@ -3939,8 +3793,7 @@ namespace CruiseDAL.DataObjects
 		}
 		private float _percentrecoverable  = 0.0f;
 		[XmlElement]
-		[Field (FieldName = "PercentRecoverable",
-		 IsPersisted = true)]
+		[Field(FieldName = "PercentRecoverable")]
 		public virtual float PercentRecoverable
 		{
 		    get 
@@ -3957,8 +3810,7 @@ namespace CruiseDAL.DataObjects
 		}
 		private Int64 _length ;
 		[XmlElement]
-		[Field (FieldName = "Length",
-		 IsPersisted = true)]
+		[Field(FieldName = "Length")]
 		public virtual Int64 Length
 		{
 		    get 
@@ -3975,8 +3827,7 @@ namespace CruiseDAL.DataObjects
 		}
 		private String _exportgrade ;
 		[XmlElement]
-		[Field (FieldName = "ExportGrade",
-		 IsPersisted = true)]
+		[Field(FieldName = "ExportGrade")]
 		public virtual String ExportGrade
 		{
 		    get 
@@ -3993,8 +3844,7 @@ namespace CruiseDAL.DataObjects
 		}
 		private float _smallenddiameter  = 0.0f;
 		[XmlElement]
-		[Field (FieldName = "SmallEndDiameter",
-		 IsPersisted = true)]
+		[Field(FieldName = "SmallEndDiameter")]
 		public virtual float SmallEndDiameter
 		{
 		    get 
@@ -4011,8 +3861,7 @@ namespace CruiseDAL.DataObjects
 		}
 		private float _largeenddiameter  = 0.0f;
 		[XmlElement]
-		[Field (FieldName = "LargeEndDiameter",
-		 IsPersisted = true)]
+		[Field(FieldName = "LargeEndDiameter")]
 		public virtual float LargeEndDiameter
 		{
 		    get 
@@ -4029,8 +3878,7 @@ namespace CruiseDAL.DataObjects
 		}
 		private float _grossboardfoot  = 0.0f;
 		[XmlElement]
-		[Field (FieldName = "GrossBoardFoot",
-		 IsPersisted = true)]
+		[Field(FieldName = "GrossBoardFoot")]
 		public virtual float GrossBoardFoot
 		{
 		    get 
@@ -4047,8 +3895,7 @@ namespace CruiseDAL.DataObjects
 		}
 		private float _netboardfoot  = 0.0f;
 		[XmlElement]
-		[Field (FieldName = "NetBoardFoot",
-		 IsPersisted = true)]
+		[Field(FieldName = "NetBoardFoot")]
 		public virtual float NetBoardFoot
 		{
 		    get 
@@ -4065,8 +3912,7 @@ namespace CruiseDAL.DataObjects
 		}
 		private float _grosscubicfoot  = 0.0f;
 		[XmlElement]
-		[Field (FieldName = "GrossCubicFoot",
-		 IsPersisted = true)]
+		[Field(FieldName = "GrossCubicFoot")]
 		public virtual float GrossCubicFoot
 		{
 		    get 
@@ -4083,8 +3929,7 @@ namespace CruiseDAL.DataObjects
 		}
 		private float _netcubicfoot  = 0.0f;
 		[XmlElement]
-		[Field (FieldName = "NetCubicFoot",
-		 IsPersisted = true)]
+		[Field(FieldName = "NetCubicFoot")]
 		public virtual float NetCubicFoot
 		{
 		    get 
@@ -4101,8 +3946,7 @@ namespace CruiseDAL.DataObjects
 		}
 		private float _boardfootremoved  = 0.0f;
 		[XmlElement]
-		[Field (FieldName = "BoardFootRemoved",
-		 IsPersisted = true)]
+		[Field(FieldName = "BoardFootRemoved")]
 		public virtual float BoardFootRemoved
 		{
 		    get 
@@ -4119,8 +3963,7 @@ namespace CruiseDAL.DataObjects
 		}
 		private float _cubicfootremoved  = 0.0f;
 		[XmlElement]
-		[Field (FieldName = "CubicFootRemoved",
-		 IsPersisted = true)]
+		[Field(FieldName = "CubicFootRemoved")]
 		public virtual float CubicFootRemoved
 		{
 		    get 
@@ -4137,8 +3980,7 @@ namespace CruiseDAL.DataObjects
 		}
 		private float _dibclass  = 0.0f;
 		[XmlElement]
-		[Field (FieldName = "DIBClass",
-		 IsPersisted = true)]
+		[Field(FieldName = "DIBClass")]
 		public virtual float DIBClass
 		{
 		    get 
@@ -4155,8 +3997,7 @@ namespace CruiseDAL.DataObjects
 		}
 		private float _barkthickness  = 0.0f;
 		[XmlElement]
-		[Field (FieldName = "BarkThickness",
-		 IsPersisted = true)]
+		[Field(FieldName = "BarkThickness")]
 		public virtual float BarkThickness
 		{
 		    get 
@@ -4269,8 +4110,7 @@ namespace CruiseDAL.DataObjects
 		#region Ctor
 		static StemDO()
 		{    
-		    _validator = new RowValidator();
-		    
+			_validator = new RowValidator();
 		}
 		
 		public StemDO() {}
@@ -4292,8 +4132,7 @@ namespace CruiseDAL.DataObjects
 		}
 		private long? _tree_cn ;
 		[XmlIgnore]
-		[Field (FieldName = "Tree_CN",
-		 IsPersisted = true)]
+		[Field(FieldName = "Tree_CN")]
 		public virtual long? Tree_CN
 		{
 		    get 
@@ -4343,8 +4182,7 @@ namespace CruiseDAL.DataObjects
 		}
 		private Guid _stem_guid  = Guid.NewGuid();
 		[XmlElement]
-		[Field (FieldName = "Stem_GUID",
-		 IsPersisted = true)]
+		[Field(FieldName = "Stem_GUID")]
 		public virtual Guid Stem_GUID
 		{
 		    get 
@@ -4361,8 +4199,7 @@ namespace CruiseDAL.DataObjects
 		}
 		private float _diameter  = 0.0f;
 		[XmlElement]
-		[Field (FieldName = "Diameter",
-		 IsPersisted = true)]
+		[Field(FieldName = "Diameter")]
 		public virtual float Diameter
 		{
 		    get 
@@ -4379,8 +4216,7 @@ namespace CruiseDAL.DataObjects
 		}
 		private String _diametertype ;
 		[XmlElement]
-		[Field (FieldName = "DiameterType",
-		 IsPersisted = true)]
+		[Field(FieldName = "DiameterType")]
 		public virtual String DiameterType
 		{
 		    get 
@@ -4465,8 +4301,7 @@ namespace CruiseDAL.DataObjects
 		#region Ctor
 		static CountTreeDO()
 		{    
-		    _validator = new RowValidator();
-		    
+			_validator = new RowValidator();
 			_validator.Add(new NotNullRule("SampleGroup_CN", "CountTree", "SampleGroup_CN is Required"));
 			_validator.Add(new NotNullRule("CuttingUnit_CN", "CountTree", "CuttingUnit_CN is Required"));
 		}
@@ -4490,8 +4325,7 @@ namespace CruiseDAL.DataObjects
 		}
 		private long? _samplegroup_cn ;
 		[XmlIgnore]
-		[Field (FieldName = "SampleGroup_CN",
-		 IsPersisted = true)]
+		[Field(FieldName = "SampleGroup_CN")]
 		public virtual long? SampleGroup_CN
 		{
 		    get 
@@ -4541,8 +4375,7 @@ namespace CruiseDAL.DataObjects
 		}
 		private long? _cuttingunit_cn ;
 		[XmlIgnore]
-		[Field (FieldName = "CuttingUnit_CN",
-		 IsPersisted = true)]
+		[Field(FieldName = "CuttingUnit_CN")]
 		public virtual long? CuttingUnit_CN
 		{
 		    get 
@@ -4592,8 +4425,7 @@ namespace CruiseDAL.DataObjects
 		}
 		private long? _tally_cn ;
 		[XmlIgnore]
-		[Field (FieldName = "Tally_CN",
-		 IsPersisted = true)]
+		[Field(FieldName = "Tally_CN")]
 		public virtual long? Tally_CN
 		{
 		    get 
@@ -4643,8 +4475,7 @@ namespace CruiseDAL.DataObjects
 		}
 		private long? _treedefaultvalue_cn ;
 		[XmlIgnore]
-		[Field (FieldName = "TreeDefaultValue_CN",
-		 IsPersisted = true)]
+		[Field(FieldName = "TreeDefaultValue_CN")]
 		public virtual long? TreeDefaultValue_CN
 		{
 		    get 
@@ -4694,8 +4525,7 @@ namespace CruiseDAL.DataObjects
 		}
 		private long? _component_cn ;
 		[XmlIgnore]
-		[Field (FieldName = "Component_CN",
-		 IsPersisted = true)]
+		[Field(FieldName = "Component_CN")]
 		public virtual long? Component_CN
 		{
 		    get 
@@ -4745,8 +4575,7 @@ namespace CruiseDAL.DataObjects
 		}
 		private Int64 _treecount ;
 		[XmlElement]
-		[Field (FieldName = "TreeCount",
-		 IsPersisted = true)]
+		[Field(FieldName = "TreeCount")]
 		public virtual Int64 TreeCount
 		{
 		    get 
@@ -4763,8 +4592,7 @@ namespace CruiseDAL.DataObjects
 		}
 		private Int64 _sumkpi ;
 		[XmlElement]
-		[Field (FieldName = "SumKPI",
-		 IsPersisted = true)]
+		[Field(FieldName = "SumKPI")]
 		public virtual Int64 SumKPI
 		{
 		    get 
@@ -4851,8 +4679,7 @@ namespace CruiseDAL.DataObjects
 		#region Ctor
 		static TallyDO()
 		{    
-		    _validator = new RowValidator();
-		    
+			_validator = new RowValidator();
 			_validator.Add(new NotNullRule("Hotkey", "Tally", "Hotkey is Required"));
 			_validator.Add(new NotNullRule("Description", "Tally", "Description is Required"));
 		}
@@ -4876,8 +4703,7 @@ namespace CruiseDAL.DataObjects
 		}
 		private String _hotkey ;
 		[XmlElement]
-		[Field (FieldName = "Hotkey",
-		 IsPersisted = true)]
+		[Field(FieldName = "Hotkey")]
 		public virtual String Hotkey
 		{
 		    get 
@@ -4894,8 +4720,7 @@ namespace CruiseDAL.DataObjects
 		}
 		private String _description ;
 		[XmlElement]
-		[Field (FieldName = "Description",
-		 IsPersisted = true)]
+		[Field(FieldName = "Description")]
 		public virtual String Description
 		{
 		    get 
@@ -4912,8 +4737,7 @@ namespace CruiseDAL.DataObjects
 		}
 		private String _indicatorvalue ;
 		[XmlElement]
-		[Field (FieldName = "IndicatorValue",
-		 IsPersisted = true)]
+		[Field(FieldName = "IndicatorValue")]
 		public virtual String IndicatorValue
 		{
 		    get 
@@ -4930,8 +4754,7 @@ namespace CruiseDAL.DataObjects
 		}
 		private String _indicatortype ;
 		[XmlElement]
-		[Field (FieldName = "IndicatorType",
-		 IsPersisted = true)]
+		[Field(FieldName = "IndicatorType")]
 		public virtual String IndicatorType
 		{
 		    get 
@@ -4999,8 +4822,7 @@ namespace CruiseDAL.DataObjects
 		#region Ctor
 		static TreeEstimateDO()
 		{    
-		    _validator = new RowValidator();
-		    
+			_validator = new RowValidator();
 			_validator.Add(new NotNullRule("KPI", "TreeEstimate", "KPI is Required"));
 		}
 		
@@ -5023,8 +4845,7 @@ namespace CruiseDAL.DataObjects
 		}
 		private long? _counttree_cn ;
 		[XmlIgnore]
-		[Field (FieldName = "CountTree_CN",
-		 IsPersisted = true)]
+		[Field(FieldName = "CountTree_CN")]
 		public virtual long? CountTree_CN
 		{
 		    get 
@@ -5074,8 +4895,7 @@ namespace CruiseDAL.DataObjects
 		}
 		private Guid _treeestimate_guid  = Guid.NewGuid();
 		[XmlElement]
-		[Field (FieldName = "TreeEstimate_GUID",
-		 IsPersisted = true)]
+		[Field(FieldName = "TreeEstimate_GUID")]
 		public virtual Guid TreeEstimate_GUID
 		{
 		    get 
@@ -5092,8 +4912,7 @@ namespace CruiseDAL.DataObjects
 		}
 		private float _kpi  = 0.0f;
 		[XmlElement]
-		[Field (FieldName = "KPI",
-		 IsPersisted = true)]
+		[Field(FieldName = "KPI")]
 		public virtual float KPI
 		{
 		    get 
@@ -5178,8 +4997,7 @@ namespace CruiseDAL.DataObjects
 		#region Ctor
 		static VolumeEquationDO()
 		{    
-		    _validator = new RowValidator();
-		    
+			_validator = new RowValidator();
 			_validator.Add(new NotNullRule("Species", "VolumeEquation", "Species is Required"));
 			_validator.Add(new NotNullRule("PrimaryProduct", "VolumeEquation", "PrimaryProduct is Required"));
 			_validator.Add(new NotNullRule("VolumeEquationNumber", "VolumeEquation", "VolumeEquationNumber is Required"));
@@ -5197,8 +5015,7 @@ namespace CruiseDAL.DataObjects
 		#endregion
 		private String _species ;
 		[XmlElement]
-		[Field (FieldName = "Species",
-		 IsPersisted = true)]
+		[Field(FieldName = "Species")]
 		public virtual String Species
 		{
 		    get 
@@ -5215,8 +5032,7 @@ namespace CruiseDAL.DataObjects
 		}
 		private String _primaryproduct ;
 		[XmlElement]
-		[Field (FieldName = "PrimaryProduct",
-		 IsPersisted = true)]
+		[Field(FieldName = "PrimaryProduct")]
 		public virtual String PrimaryProduct
 		{
 		    get 
@@ -5233,8 +5049,7 @@ namespace CruiseDAL.DataObjects
 		}
 		private String _volumeequationnumber ;
 		[XmlElement]
-		[Field (FieldName = "VolumeEquationNumber",
-		 IsPersisted = true)]
+		[Field(FieldName = "VolumeEquationNumber")]
 		public virtual String VolumeEquationNumber
 		{
 		    get 
@@ -5251,8 +5066,7 @@ namespace CruiseDAL.DataObjects
 		}
 		private float _stumpheight  = 0.0f;
 		[XmlElement]
-		[Field (FieldName = "StumpHeight",
-		 IsPersisted = true)]
+		[Field(FieldName = "StumpHeight")]
 		public virtual float StumpHeight
 		{
 		    get 
@@ -5269,8 +5083,7 @@ namespace CruiseDAL.DataObjects
 		}
 		private float _topdibprimary  = 0.0f;
 		[XmlElement]
-		[Field (FieldName = "TopDIBPrimary",
-		 IsPersisted = true)]
+		[Field(FieldName = "TopDIBPrimary")]
 		public virtual float TopDIBPrimary
 		{
 		    get 
@@ -5287,8 +5100,7 @@ namespace CruiseDAL.DataObjects
 		}
 		private float _topdibsecondary  = 0.0f;
 		[XmlElement]
-		[Field (FieldName = "TopDIBSecondary",
-		 IsPersisted = true)]
+		[Field(FieldName = "TopDIBSecondary")]
 		public virtual float TopDIBSecondary
 		{
 		    get 
@@ -5305,8 +5117,7 @@ namespace CruiseDAL.DataObjects
 		}
 		private Int64 _calctotal ;
 		[XmlElement]
-		[Field (FieldName = "CalcTotal",
-		 IsPersisted = true)]
+		[Field(FieldName = "CalcTotal")]
 		public virtual Int64 CalcTotal
 		{
 		    get 
@@ -5323,8 +5134,7 @@ namespace CruiseDAL.DataObjects
 		}
 		private Int64 _calcboard ;
 		[XmlElement]
-		[Field (FieldName = "CalcBoard",
-		 IsPersisted = true)]
+		[Field(FieldName = "CalcBoard")]
 		public virtual Int64 CalcBoard
 		{
 		    get 
@@ -5341,8 +5151,7 @@ namespace CruiseDAL.DataObjects
 		}
 		private Int64 _calccubic ;
 		[XmlElement]
-		[Field (FieldName = "CalcCubic",
-		 IsPersisted = true)]
+		[Field(FieldName = "CalcCubic")]
 		public virtual Int64 CalcCubic
 		{
 		    get 
@@ -5359,8 +5168,7 @@ namespace CruiseDAL.DataObjects
 		}
 		private Int64 _calccord ;
 		[XmlElement]
-		[Field (FieldName = "CalcCord",
-		 IsPersisted = true)]
+		[Field(FieldName = "CalcCord")]
 		public virtual Int64 CalcCord
 		{
 		    get 
@@ -5377,8 +5185,7 @@ namespace CruiseDAL.DataObjects
 		}
 		private Int64 _calctopwood ;
 		[XmlElement]
-		[Field (FieldName = "CalcTopwood",
-		 IsPersisted = true)]
+		[Field(FieldName = "CalcTopwood")]
 		public virtual Int64 CalcTopwood
 		{
 		    get 
@@ -5395,8 +5202,7 @@ namespace CruiseDAL.DataObjects
 		}
 		private Int64 _calcbiomass ;
 		[XmlElement]
-		[Field (FieldName = "CalcBiomass",
-		 IsPersisted = true)]
+		[Field(FieldName = "CalcBiomass")]
 		public virtual Int64 CalcBiomass
 		{
 		    get 
@@ -5413,8 +5219,7 @@ namespace CruiseDAL.DataObjects
 		}
 		private float _trim  = 0.0f;
 		[XmlElement]
-		[Field (FieldName = "Trim",
-		 IsPersisted = true)]
+		[Field(FieldName = "Trim")]
 		public virtual float Trim
 		{
 		    get 
@@ -5431,8 +5236,7 @@ namespace CruiseDAL.DataObjects
 		}
 		private Int64 _segmentationlogic ;
 		[XmlElement]
-		[Field (FieldName = "SegmentationLogic",
-		 IsPersisted = true)]
+		[Field(FieldName = "SegmentationLogic")]
 		public virtual Int64 SegmentationLogic
 		{
 		    get 
@@ -5449,8 +5253,7 @@ namespace CruiseDAL.DataObjects
 		}
 		private float _minloglengthprimary  = 0.0f;
 		[XmlElement]
-		[Field (FieldName = "MinLogLengthPrimary",
-		 IsPersisted = true)]
+		[Field(FieldName = "MinLogLengthPrimary")]
 		public virtual float MinLogLengthPrimary
 		{
 		    get 
@@ -5467,8 +5270,7 @@ namespace CruiseDAL.DataObjects
 		}
 		private float _maxloglengthprimary  = 0.0f;
 		[XmlElement]
-		[Field (FieldName = "MaxLogLengthPrimary",
-		 IsPersisted = true)]
+		[Field(FieldName = "MaxLogLengthPrimary")]
 		public virtual float MaxLogLengthPrimary
 		{
 		    get 
@@ -5485,8 +5287,7 @@ namespace CruiseDAL.DataObjects
 		}
 		private float _minmerchlength  = 0.0f;
 		[XmlElement]
-		[Field (FieldName = "MinMerchLength",
-		 IsPersisted = true)]
+		[Field(FieldName = "MinMerchLength")]
 		public virtual float MinMerchLength
 		{
 		    get 
@@ -5503,8 +5304,7 @@ namespace CruiseDAL.DataObjects
 		}
 		private String _model ;
 		[XmlElement]
-		[Field (FieldName = "Model",
-		 IsPersisted = true)]
+		[Field(FieldName = "Model")]
 		public virtual String Model
 		{
 		    get 
@@ -5521,8 +5321,7 @@ namespace CruiseDAL.DataObjects
 		}
 		private String _commonspeciesname ;
 		[XmlElement]
-		[Field (FieldName = "CommonSpeciesName",
-		 IsPersisted = true)]
+		[Field(FieldName = "CommonSpeciesName")]
 		public virtual String CommonSpeciesName
 		{
 		    get 
@@ -5539,8 +5338,7 @@ namespace CruiseDAL.DataObjects
 		}
 		private Int64 _merchmodflag ;
 		[XmlElement]
-		[Field (FieldName = "MerchModFlag",
-		 IsPersisted = true)]
+		[Field(FieldName = "MerchModFlag")]
 		public virtual Int64 MerchModFlag
 		{
 		    get 
@@ -5557,8 +5355,7 @@ namespace CruiseDAL.DataObjects
 		}
 		private Int64 _evenoddsegment ;
 		[XmlElement]
-		[Field (FieldName = "EvenOddSegment",
-		 IsPersisted = true)]
+		[Field(FieldName = "EvenOddSegment")]
 		public virtual Int64 EvenOddSegment
 		{
 		    get 
@@ -5660,8 +5457,7 @@ namespace CruiseDAL.DataObjects
 		#region Ctor
 		static BiomassEquationDO()
 		{    
-		    _validator = new RowValidator();
-		    
+			_validator = new RowValidator();
 			_validator.Add(new NotNullRule("Species", "BiomassEquation", "Species is Required"));
 			_validator.Add(new NotNullRule("Product", "BiomassEquation", "Product is Required"));
 			_validator.Add(new NotNullRule("Component", "BiomassEquation", "Component is Required"));
@@ -5681,8 +5477,7 @@ namespace CruiseDAL.DataObjects
 		#endregion
 		private String _species ;
 		[XmlElement]
-		[Field (FieldName = "Species",
-		 IsPersisted = true)]
+		[Field(FieldName = "Species")]
 		public virtual String Species
 		{
 		    get 
@@ -5699,8 +5494,7 @@ namespace CruiseDAL.DataObjects
 		}
 		private String _product ;
 		[XmlElement]
-		[Field (FieldName = "Product",
-		 IsPersisted = true)]
+		[Field(FieldName = "Product")]
 		public virtual String Product
 		{
 		    get 
@@ -5717,8 +5511,7 @@ namespace CruiseDAL.DataObjects
 		}
 		private String _component ;
 		[XmlElement]
-		[Field (FieldName = "Component",
-		 IsPersisted = true)]
+		[Field(FieldName = "Component")]
 		public virtual String Component
 		{
 		    get 
@@ -5735,8 +5528,7 @@ namespace CruiseDAL.DataObjects
 		}
 		private String _livedead ;
 		[XmlElement]
-		[Field (FieldName = "LiveDead",
-		 IsPersisted = true)]
+		[Field(FieldName = "LiveDead")]
 		public virtual String LiveDead
 		{
 		    get 
@@ -5753,8 +5545,7 @@ namespace CruiseDAL.DataObjects
 		}
 		private Int64 _fiacode ;
 		[XmlElement]
-		[Field (FieldName = "FIAcode",
-		 IsPersisted = true)]
+		[Field(FieldName = "FIAcode")]
 		public virtual Int64 FIAcode
 		{
 		    get 
@@ -5771,8 +5562,7 @@ namespace CruiseDAL.DataObjects
 		}
 		private String _equation ;
 		[XmlElement]
-		[Field (FieldName = "Equation",
-		 IsPersisted = true)]
+		[Field(FieldName = "Equation")]
 		public virtual String Equation
 		{
 		    get 
@@ -5789,8 +5579,7 @@ namespace CruiseDAL.DataObjects
 		}
 		private float _percentmoisture  = 0.0f;
 		[XmlElement]
-		[Field (FieldName = "PercentMoisture",
-		 IsPersisted = true)]
+		[Field(FieldName = "PercentMoisture")]
 		public virtual float PercentMoisture
 		{
 		    get 
@@ -5807,8 +5596,7 @@ namespace CruiseDAL.DataObjects
 		}
 		private float _percentremoved  = 0.0f;
 		[XmlElement]
-		[Field (FieldName = "PercentRemoved",
-		 IsPersisted = true)]
+		[Field(FieldName = "PercentRemoved")]
 		public virtual float PercentRemoved
 		{
 		    get 
@@ -5825,8 +5613,7 @@ namespace CruiseDAL.DataObjects
 		}
 		private String _metadata ;
 		[XmlElement]
-		[Field (FieldName = "MetaData",
-		 IsPersisted = true)]
+		[Field(FieldName = "MetaData")]
 		public virtual String MetaData
 		{
 		    get 
@@ -5843,8 +5630,7 @@ namespace CruiseDAL.DataObjects
 		}
 		private float _weightfactorprimary  = 0.0f;
 		[XmlElement]
-		[Field (FieldName = "WeightFactorPrimary",
-		 IsPersisted = true)]
+		[Field(FieldName = "WeightFactorPrimary")]
 		public virtual float WeightFactorPrimary
 		{
 		    get 
@@ -5861,8 +5647,7 @@ namespace CruiseDAL.DataObjects
 		}
 		private float _weightfactorsecondary  = 0.0f;
 		[XmlElement]
-		[Field (FieldName = "WeightFactorSecondary",
-		 IsPersisted = true)]
+		[Field(FieldName = "WeightFactorSecondary")]
 		public virtual float WeightFactorSecondary
 		{
 		    get 
@@ -5944,8 +5729,7 @@ namespace CruiseDAL.DataObjects
 		#region Ctor
 		static ValueEquationDO()
 		{    
-		    _validator = new RowValidator();
-		    
+			_validator = new RowValidator();
 			_validator.Add(new NotNullRule("Species", "ValueEquation", "Species is Required"));
 			_validator.Add(new NotNullRule("PrimaryProduct", "ValueEquation", "PrimaryProduct is Required"));
 		}
@@ -5962,8 +5746,7 @@ namespace CruiseDAL.DataObjects
 		#endregion
 		private String _species ;
 		[XmlElement]
-		[Field (FieldName = "Species",
-		 IsPersisted = true)]
+		[Field(FieldName = "Species")]
 		public virtual String Species
 		{
 		    get 
@@ -5980,8 +5763,7 @@ namespace CruiseDAL.DataObjects
 		}
 		private String _primaryproduct ;
 		[XmlElement]
-		[Field (FieldName = "PrimaryProduct",
-		 IsPersisted = true)]
+		[Field(FieldName = "PrimaryProduct")]
 		public virtual String PrimaryProduct
 		{
 		    get 
@@ -5998,8 +5780,7 @@ namespace CruiseDAL.DataObjects
 		}
 		private String _valueequationnumber ;
 		[XmlElement]
-		[Field (FieldName = "ValueEquationNumber",
-		 IsPersisted = true)]
+		[Field(FieldName = "ValueEquationNumber")]
 		public virtual String ValueEquationNumber
 		{
 		    get 
@@ -6016,8 +5797,7 @@ namespace CruiseDAL.DataObjects
 		}
 		private String _grade ;
 		[XmlElement]
-		[Field (FieldName = "Grade",
-		 IsPersisted = true)]
+		[Field(FieldName = "Grade")]
 		public virtual String Grade
 		{
 		    get 
@@ -6034,8 +5814,7 @@ namespace CruiseDAL.DataObjects
 		}
 		private float _coefficient1  = 0.0f;
 		[XmlElement]
-		[Field (FieldName = "Coefficient1",
-		 IsPersisted = true)]
+		[Field(FieldName = "Coefficient1")]
 		public virtual float Coefficient1
 		{
 		    get 
@@ -6052,8 +5831,7 @@ namespace CruiseDAL.DataObjects
 		}
 		private float _coefficient2  = 0.0f;
 		[XmlElement]
-		[Field (FieldName = "Coefficient2",
-		 IsPersisted = true)]
+		[Field(FieldName = "Coefficient2")]
 		public virtual float Coefficient2
 		{
 		    get 
@@ -6070,8 +5848,7 @@ namespace CruiseDAL.DataObjects
 		}
 		private float _coefficient3  = 0.0f;
 		[XmlElement]
-		[Field (FieldName = "Coefficient3",
-		 IsPersisted = true)]
+		[Field(FieldName = "Coefficient3")]
 		public virtual float Coefficient3
 		{
 		    get 
@@ -6088,8 +5865,7 @@ namespace CruiseDAL.DataObjects
 		}
 		private float _coefficient4  = 0.0f;
 		[XmlElement]
-		[Field (FieldName = "Coefficient4",
-		 IsPersisted = true)]
+		[Field(FieldName = "Coefficient4")]
 		public virtual float Coefficient4
 		{
 		    get 
@@ -6106,8 +5882,7 @@ namespace CruiseDAL.DataObjects
 		}
 		private float _coefficient5  = 0.0f;
 		[XmlElement]
-		[Field (FieldName = "Coefficient5",
-		 IsPersisted = true)]
+		[Field(FieldName = "Coefficient5")]
 		public virtual float Coefficient5
 		{
 		    get 
@@ -6124,8 +5899,7 @@ namespace CruiseDAL.DataObjects
 		}
 		private float _coefficient6  = 0.0f;
 		[XmlElement]
-		[Field (FieldName = "Coefficient6",
-		 IsPersisted = true)]
+		[Field(FieldName = "Coefficient6")]
 		public virtual float Coefficient6
 		{
 		    get 
@@ -6205,8 +5979,7 @@ namespace CruiseDAL.DataObjects
 		#region Ctor
 		static QualityAdjEquationDO()
 		{    
-		    _validator = new RowValidator();
-		    
+			_validator = new RowValidator();
 			_validator.Add(new NotNullRule("Species", "QualityAdjEquation", "Species is Required"));
 		}
 		
@@ -6222,8 +5995,7 @@ namespace CruiseDAL.DataObjects
 		#endregion
 		private String _species ;
 		[XmlElement]
-		[Field (FieldName = "Species",
-		 IsPersisted = true)]
+		[Field(FieldName = "Species")]
 		public virtual String Species
 		{
 		    get 
@@ -6240,8 +6012,7 @@ namespace CruiseDAL.DataObjects
 		}
 		private String _qualityadjeq ;
 		[XmlElement]
-		[Field (FieldName = "QualityAdjEq",
-		 IsPersisted = true)]
+		[Field(FieldName = "QualityAdjEq")]
 		public virtual String QualityAdjEq
 		{
 		    get 
@@ -6258,8 +6029,7 @@ namespace CruiseDAL.DataObjects
 		}
 		private Int64 _year ;
 		[XmlElement]
-		[Field (FieldName = "Year",
-		 IsPersisted = true)]
+		[Field(FieldName = "Year")]
 		public virtual Int64 Year
 		{
 		    get 
@@ -6276,8 +6046,7 @@ namespace CruiseDAL.DataObjects
 		}
 		private String _grade ;
 		[XmlElement]
-		[Field (FieldName = "Grade",
-		 IsPersisted = true)]
+		[Field(FieldName = "Grade")]
 		public virtual String Grade
 		{
 		    get 
@@ -6294,8 +6063,7 @@ namespace CruiseDAL.DataObjects
 		}
 		private float _coefficient1  = 0.0f;
 		[XmlElement]
-		[Field (FieldName = "Coefficient1",
-		 IsPersisted = true)]
+		[Field(FieldName = "Coefficient1")]
 		public virtual float Coefficient1
 		{
 		    get 
@@ -6312,8 +6080,7 @@ namespace CruiseDAL.DataObjects
 		}
 		private float _coefficient2  = 0.0f;
 		[XmlElement]
-		[Field (FieldName = "Coefficient2",
-		 IsPersisted = true)]
+		[Field(FieldName = "Coefficient2")]
 		public virtual float Coefficient2
 		{
 		    get 
@@ -6330,8 +6097,7 @@ namespace CruiseDAL.DataObjects
 		}
 		private float _coefficient3  = 0.0f;
 		[XmlElement]
-		[Field (FieldName = "Coefficient3",
-		 IsPersisted = true)]
+		[Field(FieldName = "Coefficient3")]
 		public virtual float Coefficient3
 		{
 		    get 
@@ -6348,8 +6114,7 @@ namespace CruiseDAL.DataObjects
 		}
 		private float _coefficient4  = 0.0f;
 		[XmlElement]
-		[Field (FieldName = "Coefficient4",
-		 IsPersisted = true)]
+		[Field(FieldName = "Coefficient4")]
 		public virtual float Coefficient4
 		{
 		    get 
@@ -6366,8 +6131,7 @@ namespace CruiseDAL.DataObjects
 		}
 		private float _coefficient5  = 0.0f;
 		[XmlElement]
-		[Field (FieldName = "Coefficient5",
-		 IsPersisted = true)]
+		[Field(FieldName = "Coefficient5")]
 		public virtual float Coefficient5
 		{
 		    get 
@@ -6384,8 +6148,7 @@ namespace CruiseDAL.DataObjects
 		}
 		private float _coefficient6  = 0.0f;
 		[XmlElement]
-		[Field (FieldName = "Coefficient6",
-		 IsPersisted = true)]
+		[Field(FieldName = "Coefficient6")]
 		public virtual float Coefficient6
 		{
 		    get 
@@ -6465,8 +6228,7 @@ namespace CruiseDAL.DataObjects
 		#region Ctor
 		static ReportsDO()
 		{    
-		    _validator = new RowValidator();
-		    
+			_validator = new RowValidator();
 			_validator.Add(new NotNullRule("ReportID", "Reports", "ReportID is Required"));
 		}
 		
@@ -6482,8 +6244,7 @@ namespace CruiseDAL.DataObjects
 		#endregion
 		private String _reportid ;
 		[XmlElement]
-		[Field (FieldName = "ReportID",
-		 IsPersisted = true)]
+		[Field(FieldName = "ReportID")]
 		public virtual String ReportID
 		{
 		    get 
@@ -6500,8 +6261,7 @@ namespace CruiseDAL.DataObjects
 		}
 		private bool _selected  = false;
 		[XmlElement]
-		[Field (FieldName = "Selected",
-		 IsPersisted = true)]
+		[Field(FieldName = "Selected")]
 		public virtual bool Selected
 		{
 		    get 
@@ -6518,8 +6278,7 @@ namespace CruiseDAL.DataObjects
 		}
 		private String _title ;
 		[XmlElement]
-		[Field (FieldName = "Title",
-		 IsPersisted = true)]
+		[Field(FieldName = "Title")]
 		public virtual String Title
 		{
 		    get 
@@ -6585,8 +6344,7 @@ namespace CruiseDAL.DataObjects
 		#region Ctor
 		static TreeCalculatedValuesDO()
 		{    
-		    _validator = new RowValidator();
-		    
+			_validator = new RowValidator();
 			_validator.Add(new NotNullRule("Tree_CN", "TreeCalculatedValues", "Tree_CN is Required"));
 		}
 		
@@ -6609,8 +6367,7 @@ namespace CruiseDAL.DataObjects
 		}
 		private long? _tree_cn ;
 		[XmlIgnore]
-		[Field (FieldName = "Tree_CN",
-		 IsPersisted = true)]
+		[Field(FieldName = "Tree_CN")]
 		public virtual long? Tree_CN
 		{
 		    get 
@@ -6660,8 +6417,7 @@ namespace CruiseDAL.DataObjects
 		}
 		private float _totalcubicvolume  = 0.0f;
 		[XmlElement]
-		[Field (FieldName = "TotalCubicVolume",
-		 IsPersisted = true)]
+		[Field(FieldName = "TotalCubicVolume")]
 		public virtual float TotalCubicVolume
 		{
 		    get 
@@ -6678,8 +6434,7 @@ namespace CruiseDAL.DataObjects
 		}
 		private float _grossbdftpp  = 0.0f;
 		[XmlElement]
-		[Field (FieldName = "GrossBDFTPP",
-		 IsPersisted = true)]
+		[Field(FieldName = "GrossBDFTPP")]
 		public virtual float GrossBDFTPP
 		{
 		    get 
@@ -6696,8 +6451,7 @@ namespace CruiseDAL.DataObjects
 		}
 		private float _netbdftpp  = 0.0f;
 		[XmlElement]
-		[Field (FieldName = "NetBDFTPP",
-		 IsPersisted = true)]
+		[Field(FieldName = "NetBDFTPP")]
 		public virtual float NetBDFTPP
 		{
 		    get 
@@ -6714,8 +6468,7 @@ namespace CruiseDAL.DataObjects
 		}
 		private float _grosscuftpp  = 0.0f;
 		[XmlElement]
-		[Field (FieldName = "GrossCUFTPP",
-		 IsPersisted = true)]
+		[Field(FieldName = "GrossCUFTPP")]
 		public virtual float GrossCUFTPP
 		{
 		    get 
@@ -6732,8 +6485,7 @@ namespace CruiseDAL.DataObjects
 		}
 		private float _netcuftpp  = 0.0f;
 		[XmlElement]
-		[Field (FieldName = "NetCUFTPP",
-		 IsPersisted = true)]
+		[Field(FieldName = "NetCUFTPP")]
 		public virtual float NetCUFTPP
 		{
 		    get 
@@ -6750,8 +6502,7 @@ namespace CruiseDAL.DataObjects
 		}
 		private float _cordspp  = 0.0f;
 		[XmlElement]
-		[Field (FieldName = "CordsPP",
-		 IsPersisted = true)]
+		[Field(FieldName = "CordsPP")]
 		public virtual float CordsPP
 		{
 		    get 
@@ -6768,8 +6519,7 @@ namespace CruiseDAL.DataObjects
 		}
 		private float _grossbdftremvpp  = 0.0f;
 		[XmlElement]
-		[Field (FieldName = "GrossBDFTRemvPP",
-		 IsPersisted = true)]
+		[Field(FieldName = "GrossBDFTRemvPP")]
 		public virtual float GrossBDFTRemvPP
 		{
 		    get 
@@ -6786,8 +6536,7 @@ namespace CruiseDAL.DataObjects
 		}
 		private float _grosscuftremvpp  = 0.0f;
 		[XmlElement]
-		[Field (FieldName = "GrossCUFTRemvPP",
-		 IsPersisted = true)]
+		[Field(FieldName = "GrossCUFTRemvPP")]
 		public virtual float GrossCUFTRemvPP
 		{
 		    get 
@@ -6804,8 +6553,7 @@ namespace CruiseDAL.DataObjects
 		}
 		private float _grossbdftsp  = 0.0f;
 		[XmlElement]
-		[Field (FieldName = "GrossBDFTSP",
-		 IsPersisted = true)]
+		[Field(FieldName = "GrossBDFTSP")]
 		public virtual float GrossBDFTSP
 		{
 		    get 
@@ -6822,8 +6570,7 @@ namespace CruiseDAL.DataObjects
 		}
 		private float _netbdftsp  = 0.0f;
 		[XmlElement]
-		[Field (FieldName = "NetBDFTSP",
-		 IsPersisted = true)]
+		[Field(FieldName = "NetBDFTSP")]
 		public virtual float NetBDFTSP
 		{
 		    get 
@@ -6840,8 +6587,7 @@ namespace CruiseDAL.DataObjects
 		}
 		private float _grosscuftsp  = 0.0f;
 		[XmlElement]
-		[Field (FieldName = "GrossCUFTSP",
-		 IsPersisted = true)]
+		[Field(FieldName = "GrossCUFTSP")]
 		public virtual float GrossCUFTSP
 		{
 		    get 
@@ -6858,8 +6604,7 @@ namespace CruiseDAL.DataObjects
 		}
 		private float _netcuftsp  = 0.0f;
 		[XmlElement]
-		[Field (FieldName = "NetCUFTSP",
-		 IsPersisted = true)]
+		[Field(FieldName = "NetCUFTSP")]
 		public virtual float NetCUFTSP
 		{
 		    get 
@@ -6876,8 +6621,7 @@ namespace CruiseDAL.DataObjects
 		}
 		private float _cordssp  = 0.0f;
 		[XmlElement]
-		[Field (FieldName = "CordsSP",
-		 IsPersisted = true)]
+		[Field(FieldName = "CordsSP")]
 		public virtual float CordsSP
 		{
 		    get 
@@ -6894,8 +6638,7 @@ namespace CruiseDAL.DataObjects
 		}
 		private float _grosscuftremvsp  = 0.0f;
 		[XmlElement]
-		[Field (FieldName = "GrossCUFTRemvSP",
-		 IsPersisted = true)]
+		[Field(FieldName = "GrossCUFTRemvSP")]
 		public virtual float GrossCUFTRemvSP
 		{
 		    get 
@@ -6912,8 +6655,7 @@ namespace CruiseDAL.DataObjects
 		}
 		private float _numberlogsms  = 0.0f;
 		[XmlElement]
-		[Field (FieldName = "NumberlogsMS",
-		 IsPersisted = true)]
+		[Field(FieldName = "NumberlogsMS")]
 		public virtual float NumberlogsMS
 		{
 		    get 
@@ -6930,8 +6672,7 @@ namespace CruiseDAL.DataObjects
 		}
 		private float _numberlogstpw  = 0.0f;
 		[XmlElement]
-		[Field (FieldName = "NumberlogsTPW",
-		 IsPersisted = true)]
+		[Field(FieldName = "NumberlogsTPW")]
 		public virtual float NumberlogsTPW
 		{
 		    get 
@@ -6948,8 +6689,7 @@ namespace CruiseDAL.DataObjects
 		}
 		private float _grossbdftrp  = 0.0f;
 		[XmlElement]
-		[Field (FieldName = "GrossBDFTRP",
-		 IsPersisted = true)]
+		[Field(FieldName = "GrossBDFTRP")]
 		public virtual float GrossBDFTRP
 		{
 		    get 
@@ -6966,8 +6706,7 @@ namespace CruiseDAL.DataObjects
 		}
 		private float _grosscuftrp  = 0.0f;
 		[XmlElement]
-		[Field (FieldName = "GrossCUFTRP",
-		 IsPersisted = true)]
+		[Field(FieldName = "GrossCUFTRP")]
 		public virtual float GrossCUFTRP
 		{
 		    get 
@@ -6984,8 +6723,7 @@ namespace CruiseDAL.DataObjects
 		}
 		private float _cordsrp  = 0.0f;
 		[XmlElement]
-		[Field (FieldName = "CordsRP",
-		 IsPersisted = true)]
+		[Field(FieldName = "CordsRP")]
 		public virtual float CordsRP
 		{
 		    get 
@@ -7002,8 +6740,7 @@ namespace CruiseDAL.DataObjects
 		}
 		private float _grossbdftintl  = 0.0f;
 		[XmlElement]
-		[Field (FieldName = "GrossBDFTIntl",
-		 IsPersisted = true)]
+		[Field(FieldName = "GrossBDFTIntl")]
 		public virtual float GrossBDFTIntl
 		{
 		    get 
@@ -7020,8 +6757,7 @@ namespace CruiseDAL.DataObjects
 		}
 		private float _netbdftintl  = 0.0f;
 		[XmlElement]
-		[Field (FieldName = "NetBDFTIntl",
-		 IsPersisted = true)]
+		[Field(FieldName = "NetBDFTIntl")]
 		public virtual float NetBDFTIntl
 		{
 		    get 
@@ -7038,8 +6774,7 @@ namespace CruiseDAL.DataObjects
 		}
 		private float _biomassmainstemprimary  = 0.0f;
 		[XmlElement]
-		[Field (FieldName = "BiomassMainStemPrimary",
-		 IsPersisted = true)]
+		[Field(FieldName = "BiomassMainStemPrimary")]
 		public virtual float BiomassMainStemPrimary
 		{
 		    get 
@@ -7056,8 +6791,7 @@ namespace CruiseDAL.DataObjects
 		}
 		private float _biomassmainstemsecondary  = 0.0f;
 		[XmlElement]
-		[Field (FieldName = "BiomassMainStemSecondary",
-		 IsPersisted = true)]
+		[Field(FieldName = "BiomassMainStemSecondary")]
 		public virtual float BiomassMainStemSecondary
 		{
 		    get 
@@ -7074,8 +6808,7 @@ namespace CruiseDAL.DataObjects
 		}
 		private float _valuepp  = 0.0f;
 		[XmlElement]
-		[Field (FieldName = "ValuePP",
-		 IsPersisted = true)]
+		[Field(FieldName = "ValuePP")]
 		public virtual float ValuePP
 		{
 		    get 
@@ -7092,8 +6825,7 @@ namespace CruiseDAL.DataObjects
 		}
 		private float _valuesp  = 0.0f;
 		[XmlElement]
-		[Field (FieldName = "ValueSP",
-		 IsPersisted = true)]
+		[Field(FieldName = "ValueSP")]
 		public virtual float ValueSP
 		{
 		    get 
@@ -7110,8 +6842,7 @@ namespace CruiseDAL.DataObjects
 		}
 		private float _valuerp  = 0.0f;
 		[XmlElement]
-		[Field (FieldName = "ValueRP",
-		 IsPersisted = true)]
+		[Field(FieldName = "ValueRP")]
 		public virtual float ValueRP
 		{
 		    get 
@@ -7128,8 +6859,7 @@ namespace CruiseDAL.DataObjects
 		}
 		private float _biomassprod  = 0.0f;
 		[XmlElement]
-		[Field (FieldName = "BiomassProd",
-		 IsPersisted = true)]
+		[Field(FieldName = "BiomassProd")]
 		public virtual float BiomassProd
 		{
 		    get 
@@ -7146,8 +6876,7 @@ namespace CruiseDAL.DataObjects
 		}
 		private float _biomasstotalstem  = 0.0f;
 		[XmlElement]
-		[Field (FieldName = "Biomasstotalstem",
-		 IsPersisted = true)]
+		[Field(FieldName = "Biomasstotalstem")]
 		public virtual float Biomasstotalstem
 		{
 		    get 
@@ -7164,8 +6893,7 @@ namespace CruiseDAL.DataObjects
 		}
 		private float _biomasslivebranches  = 0.0f;
 		[XmlElement]
-		[Field (FieldName = "Biomasslivebranches",
-		 IsPersisted = true)]
+		[Field(FieldName = "Biomasslivebranches")]
 		public virtual float Biomasslivebranches
 		{
 		    get 
@@ -7182,8 +6910,7 @@ namespace CruiseDAL.DataObjects
 		}
 		private float _biomassdeadbranches  = 0.0f;
 		[XmlElement]
-		[Field (FieldName = "Biomassdeadbranches",
-		 IsPersisted = true)]
+		[Field(FieldName = "Biomassdeadbranches")]
 		public virtual float Biomassdeadbranches
 		{
 		    get 
@@ -7200,8 +6927,7 @@ namespace CruiseDAL.DataObjects
 		}
 		private float _biomassfoliage  = 0.0f;
 		[XmlElement]
-		[Field (FieldName = "Biomassfoliage",
-		 IsPersisted = true)]
+		[Field(FieldName = "Biomassfoliage")]
 		public virtual float Biomassfoliage
 		{
 		    get 
@@ -7218,8 +6944,7 @@ namespace CruiseDAL.DataObjects
 		}
 		private float _biomasstip  = 0.0f;
 		[XmlElement]
-		[Field (FieldName = "BiomassTip",
-		 IsPersisted = true)]
+		[Field(FieldName = "BiomassTip")]
 		public virtual float BiomassTip
 		{
 		    get 
@@ -7344,8 +7069,7 @@ namespace CruiseDAL.DataObjects
 		#region Ctor
 		static LCDDO()
 		{    
-		    _validator = new RowValidator();
-		    
+			_validator = new RowValidator();
 			_validator.Add(new NotNullRule("CutLeave", "LCD", "CutLeave is Required"));
 			_validator.Add(new NotNullRule("Stratum", "LCD", "Stratum is Required"));
 			_validator.Add(new NotNullRule("SampleGroup", "LCD", "SampleGroup is Required"));
@@ -7378,8 +7102,7 @@ namespace CruiseDAL.DataObjects
 		}
 		private String _cutleave ;
 		[XmlElement]
-		[Field (FieldName = "CutLeave",
-		 IsPersisted = true)]
+		[Field(FieldName = "CutLeave")]
 		public virtual String CutLeave
 		{
 		    get 
@@ -7396,8 +7119,7 @@ namespace CruiseDAL.DataObjects
 		}
 		private String _stratum ;
 		[XmlElement]
-		[Field (FieldName = "Stratum",
-		 IsPersisted = true)]
+		[Field(FieldName = "Stratum")]
 		public virtual String Stratum
 		{
 		    get 
@@ -7414,8 +7136,7 @@ namespace CruiseDAL.DataObjects
 		}
 		private String _samplegroup ;
 		[XmlElement]
-		[Field (FieldName = "SampleGroup",
-		 IsPersisted = true)]
+		[Field(FieldName = "SampleGroup")]
 		public virtual String SampleGroup
 		{
 		    get 
@@ -7432,8 +7153,7 @@ namespace CruiseDAL.DataObjects
 		}
 		private String _species ;
 		[XmlElement]
-		[Field (FieldName = "Species",
-		 IsPersisted = true)]
+		[Field(FieldName = "Species")]
 		public virtual String Species
 		{
 		    get 
@@ -7450,8 +7170,7 @@ namespace CruiseDAL.DataObjects
 		}
 		private String _primaryproduct ;
 		[XmlElement]
-		[Field (FieldName = "PrimaryProduct",
-		 IsPersisted = true)]
+		[Field(FieldName = "PrimaryProduct")]
 		public virtual String PrimaryProduct
 		{
 		    get 
@@ -7468,8 +7187,7 @@ namespace CruiseDAL.DataObjects
 		}
 		private String _secondaryproduct ;
 		[XmlElement]
-		[Field (FieldName = "SecondaryProduct",
-		 IsPersisted = true)]
+		[Field(FieldName = "SecondaryProduct")]
 		public virtual String SecondaryProduct
 		{
 		    get 
@@ -7486,8 +7204,7 @@ namespace CruiseDAL.DataObjects
 		}
 		private String _uom ;
 		[XmlElement]
-		[Field (FieldName = "UOM",
-		 IsPersisted = true)]
+		[Field(FieldName = "UOM")]
 		public virtual String UOM
 		{
 		    get 
@@ -7504,8 +7221,7 @@ namespace CruiseDAL.DataObjects
 		}
 		private String _livedead ;
 		[XmlElement]
-		[Field (FieldName = "LiveDead",
-		 IsPersisted = true)]
+		[Field(FieldName = "LiveDead")]
 		public virtual String LiveDead
 		{
 		    get 
@@ -7522,8 +7238,7 @@ namespace CruiseDAL.DataObjects
 		}
 		private String _yield ;
 		[XmlElement]
-		[Field (FieldName = "Yield",
-		 IsPersisted = true)]
+		[Field(FieldName = "Yield")]
 		public virtual String Yield
 		{
 		    get 
@@ -7540,8 +7255,7 @@ namespace CruiseDAL.DataObjects
 		}
 		private String _contractspecies ;
 		[XmlElement]
-		[Field (FieldName = "ContractSpecies",
-		 IsPersisted = true)]
+		[Field(FieldName = "ContractSpecies")]
 		public virtual String ContractSpecies
 		{
 		    get 
@@ -7558,8 +7272,7 @@ namespace CruiseDAL.DataObjects
 		}
 		private String _treegrade ;
 		[XmlElement]
-		[Field (FieldName = "TreeGrade",
-		 IsPersisted = true)]
+		[Field(FieldName = "TreeGrade")]
 		public virtual String TreeGrade
 		{
 		    get 
@@ -7576,8 +7289,7 @@ namespace CruiseDAL.DataObjects
 		}
 		private String _stm ;
 		[XmlElement]
-		[Field (FieldName = "STM",
-		 IsPersisted = true)]
+		[Field(FieldName = "STM")]
 		public virtual String STM
 		{
 		    get 
@@ -7594,8 +7306,7 @@ namespace CruiseDAL.DataObjects
 		}
 		private Double _firststagetrees  = 0.0;
 		[XmlElement]
-		[Field (FieldName = "FirstStageTrees",
-		 IsPersisted = true)]
+		[Field(FieldName = "FirstStageTrees")]
 		public virtual Double FirstStageTrees
 		{
 		    get 
@@ -7612,8 +7323,7 @@ namespace CruiseDAL.DataObjects
 		}
 		private Double _measuredtrees  = 0.0;
 		[XmlElement]
-		[Field (FieldName = "MeasuredTrees",
-		 IsPersisted = true)]
+		[Field(FieldName = "MeasuredTrees")]
 		public virtual Double MeasuredTrees
 		{
 		    get 
@@ -7630,8 +7340,7 @@ namespace CruiseDAL.DataObjects
 		}
 		private Double _talliedtrees  = 0.0;
 		[XmlElement]
-		[Field (FieldName = "TalliedTrees",
-		 IsPersisted = true)]
+		[Field(FieldName = "TalliedTrees")]
 		public virtual Double TalliedTrees
 		{
 		    get 
@@ -7648,8 +7357,7 @@ namespace CruiseDAL.DataObjects
 		}
 		private Double _sumkpi  = 0.0;
 		[XmlElement]
-		[Field (FieldName = "SumKPI",
-		 IsPersisted = true)]
+		[Field(FieldName = "SumKPI")]
 		public virtual Double SumKPI
 		{
 		    get 
@@ -7666,8 +7374,7 @@ namespace CruiseDAL.DataObjects
 		}
 		private Double _summeasuredkpi  = 0.0;
 		[XmlElement]
-		[Field (FieldName = "SumMeasuredKPI",
-		 IsPersisted = true)]
+		[Field(FieldName = "SumMeasuredKPI")]
 		public virtual Double SumMeasuredKPI
 		{
 		    get 
@@ -7684,8 +7391,7 @@ namespace CruiseDAL.DataObjects
 		}
 		private Double _sumexpanfactor  = 0.0;
 		[XmlElement]
-		[Field (FieldName = "SumExpanFactor",
-		 IsPersisted = true)]
+		[Field(FieldName = "SumExpanFactor")]
 		public virtual Double SumExpanFactor
 		{
 		    get 
@@ -7702,8 +7408,7 @@ namespace CruiseDAL.DataObjects
 		}
 		private Double _sumdbhob  = 0.0;
 		[XmlElement]
-		[Field (FieldName = "SumDBHOB",
-		 IsPersisted = true)]
+		[Field(FieldName = "SumDBHOB")]
 		public virtual Double SumDBHOB
 		{
 		    get 
@@ -7720,8 +7425,7 @@ namespace CruiseDAL.DataObjects
 		}
 		private Double _sumdbhobsqrd  = 0.0;
 		[XmlElement]
-		[Field (FieldName = "SumDBHOBsqrd",
-		 IsPersisted = true)]
+		[Field(FieldName = "SumDBHOBsqrd")]
 		public virtual Double SumDBHOBsqrd
 		{
 		    get 
@@ -7738,8 +7442,7 @@ namespace CruiseDAL.DataObjects
 		}
 		private Double _sumtothgt  = 0.0;
 		[XmlElement]
-		[Field (FieldName = "SumTotHgt",
-		 IsPersisted = true)]
+		[Field(FieldName = "SumTotHgt")]
 		public virtual Double SumTotHgt
 		{
 		    get 
@@ -7756,8 +7459,7 @@ namespace CruiseDAL.DataObjects
 		}
 		private Double _sumhgtupstem  = 0.0;
 		[XmlElement]
-		[Field (FieldName = "SumHgtUpStem",
-		 IsPersisted = true)]
+		[Field(FieldName = "SumHgtUpStem")]
 		public virtual Double SumHgtUpStem
 		{
 		    get 
@@ -7774,8 +7476,7 @@ namespace CruiseDAL.DataObjects
 		}
 		private Double _summerchhgtprim  = 0.0;
 		[XmlElement]
-		[Field (FieldName = "SumMerchHgtPrim",
-		 IsPersisted = true)]
+		[Field(FieldName = "SumMerchHgtPrim")]
 		public virtual Double SumMerchHgtPrim
 		{
 		    get 
@@ -7792,8 +7493,7 @@ namespace CruiseDAL.DataObjects
 		}
 		private Double _summerchhgtsecond  = 0.0;
 		[XmlElement]
-		[Field (FieldName = "SumMerchHgtSecond",
-		 IsPersisted = true)]
+		[Field(FieldName = "SumMerchHgtSecond")]
 		public virtual Double SumMerchHgtSecond
 		{
 		    get 
@@ -7810,8 +7510,7 @@ namespace CruiseDAL.DataObjects
 		}
 		private Double _sumlogsms  = 0.0;
 		[XmlElement]
-		[Field (FieldName = "SumLogsMS",
-		 IsPersisted = true)]
+		[Field(FieldName = "SumLogsMS")]
 		public virtual Double SumLogsMS
 		{
 		    get 
@@ -7828,8 +7527,7 @@ namespace CruiseDAL.DataObjects
 		}
 		private Double _sumtotcubic  = 0.0;
 		[XmlElement]
-		[Field (FieldName = "SumTotCubic",
-		 IsPersisted = true)]
+		[Field(FieldName = "SumTotCubic")]
 		public virtual Double SumTotCubic
 		{
 		    get 
@@ -7846,8 +7544,7 @@ namespace CruiseDAL.DataObjects
 		}
 		private Double _sumgbdft  = 0.0;
 		[XmlElement]
-		[Field (FieldName = "SumGBDFT",
-		 IsPersisted = true)]
+		[Field(FieldName = "SumGBDFT")]
 		public virtual Double SumGBDFT
 		{
 		    get 
@@ -7864,8 +7561,7 @@ namespace CruiseDAL.DataObjects
 		}
 		private Double _sumnbdft  = 0.0;
 		[XmlElement]
-		[Field (FieldName = "SumNBDFT",
-		 IsPersisted = true)]
+		[Field(FieldName = "SumNBDFT")]
 		public virtual Double SumNBDFT
 		{
 		    get 
@@ -7882,8 +7578,7 @@ namespace CruiseDAL.DataObjects
 		}
 		private Double _sumgcuft  = 0.0;
 		[XmlElement]
-		[Field (FieldName = "SumGCUFT",
-		 IsPersisted = true)]
+		[Field(FieldName = "SumGCUFT")]
 		public virtual Double SumGCUFT
 		{
 		    get 
@@ -7900,8 +7595,7 @@ namespace CruiseDAL.DataObjects
 		}
 		private Double _sumncuft  = 0.0;
 		[XmlElement]
-		[Field (FieldName = "SumNCUFT",
-		 IsPersisted = true)]
+		[Field(FieldName = "SumNCUFT")]
 		public virtual Double SumNCUFT
 		{
 		    get 
@@ -7918,8 +7612,7 @@ namespace CruiseDAL.DataObjects
 		}
 		private Double _sumgbdftremv  = 0.0;
 		[XmlElement]
-		[Field (FieldName = "SumGBDFTremv",
-		 IsPersisted = true)]
+		[Field(FieldName = "SumGBDFTremv")]
 		public virtual Double SumGBDFTremv
 		{
 		    get 
@@ -7936,8 +7629,7 @@ namespace CruiseDAL.DataObjects
 		}
 		private Double _sumgcuftremv  = 0.0;
 		[XmlElement]
-		[Field (FieldName = "SumGCUFTremv",
-		 IsPersisted = true)]
+		[Field(FieldName = "SumGCUFTremv")]
 		public virtual Double SumGCUFTremv
 		{
 		    get 
@@ -7954,8 +7646,7 @@ namespace CruiseDAL.DataObjects
 		}
 		private Double _sumcords  = 0.0;
 		[XmlElement]
-		[Field (FieldName = "SumCords",
-		 IsPersisted = true)]
+		[Field(FieldName = "SumCords")]
 		public virtual Double SumCords
 		{
 		    get 
@@ -7972,8 +7663,7 @@ namespace CruiseDAL.DataObjects
 		}
 		private Double _sumwgtmsp  = 0.0;
 		[XmlElement]
-		[Field (FieldName = "SumWgtMSP",
-		 IsPersisted = true)]
+		[Field(FieldName = "SumWgtMSP")]
 		public virtual Double SumWgtMSP
 		{
 		    get 
@@ -7990,8 +7680,7 @@ namespace CruiseDAL.DataObjects
 		}
 		private Double _sumvalue  = 0.0;
 		[XmlElement]
-		[Field (FieldName = "SumValue",
-		 IsPersisted = true)]
+		[Field(FieldName = "SumValue")]
 		public virtual Double SumValue
 		{
 		    get 
@@ -8008,8 +7697,7 @@ namespace CruiseDAL.DataObjects
 		}
 		private Double _sumgbdfttop  = 0.0;
 		[XmlElement]
-		[Field (FieldName = "SumGBDFTtop",
-		 IsPersisted = true)]
+		[Field(FieldName = "SumGBDFTtop")]
 		public virtual Double SumGBDFTtop
 		{
 		    get 
@@ -8026,8 +7714,7 @@ namespace CruiseDAL.DataObjects
 		}
 		private Double _sumnbdfttop  = 0.0;
 		[XmlElement]
-		[Field (FieldName = "SumNBDFTtop",
-		 IsPersisted = true)]
+		[Field(FieldName = "SumNBDFTtop")]
 		public virtual Double SumNBDFTtop
 		{
 		    get 
@@ -8044,8 +7731,7 @@ namespace CruiseDAL.DataObjects
 		}
 		private Double _sumgcufttop  = 0.0;
 		[XmlElement]
-		[Field (FieldName = "SumGCUFTtop",
-		 IsPersisted = true)]
+		[Field(FieldName = "SumGCUFTtop")]
 		public virtual Double SumGCUFTtop
 		{
 		    get 
@@ -8062,8 +7748,7 @@ namespace CruiseDAL.DataObjects
 		}
 		private Double _sumncufttop  = 0.0;
 		[XmlElement]
-		[Field (FieldName = "SumNCUFTtop",
-		 IsPersisted = true)]
+		[Field(FieldName = "SumNCUFTtop")]
 		public virtual Double SumNCUFTtop
 		{
 		    get 
@@ -8080,8 +7765,7 @@ namespace CruiseDAL.DataObjects
 		}
 		private Double _sumcordstop  = 0.0;
 		[XmlElement]
-		[Field (FieldName = "SumCordsTop",
-		 IsPersisted = true)]
+		[Field(FieldName = "SumCordsTop")]
 		public virtual Double SumCordsTop
 		{
 		    get 
@@ -8098,8 +7782,7 @@ namespace CruiseDAL.DataObjects
 		}
 		private Double _sumwgtmss  = 0.0;
 		[XmlElement]
-		[Field (FieldName = "SumWgtMSS",
-		 IsPersisted = true)]
+		[Field(FieldName = "SumWgtMSS")]
 		public virtual Double SumWgtMSS
 		{
 		    get 
@@ -8116,8 +7799,7 @@ namespace CruiseDAL.DataObjects
 		}
 		private Double _sumtopvalue  = 0.0;
 		[XmlElement]
-		[Field (FieldName = "SumTopValue",
-		 IsPersisted = true)]
+		[Field(FieldName = "SumTopValue")]
 		public virtual Double SumTopValue
 		{
 		    get 
@@ -8134,8 +7816,7 @@ namespace CruiseDAL.DataObjects
 		}
 		private Double _sumlogstop  = 0.0;
 		[XmlElement]
-		[Field (FieldName = "SumLogsTop",
-		 IsPersisted = true)]
+		[Field(FieldName = "SumLogsTop")]
 		public virtual Double SumLogsTop
 		{
 		    get 
@@ -8152,8 +7833,7 @@ namespace CruiseDAL.DataObjects
 		}
 		private Double _sumbdftrecv  = 0.0;
 		[XmlElement]
-		[Field (FieldName = "SumBDFTrecv",
-		 IsPersisted = true)]
+		[Field(FieldName = "SumBDFTrecv")]
 		public virtual Double SumBDFTrecv
 		{
 		    get 
@@ -8170,8 +7850,7 @@ namespace CruiseDAL.DataObjects
 		}
 		private Double _sumcuftrecv  = 0.0;
 		[XmlElement]
-		[Field (FieldName = "SumCUFTrecv",
-		 IsPersisted = true)]
+		[Field(FieldName = "SumCUFTrecv")]
 		public virtual Double SumCUFTrecv
 		{
 		    get 
@@ -8188,8 +7867,7 @@ namespace CruiseDAL.DataObjects
 		}
 		private Double _sumcordsrecv  = 0.0;
 		[XmlElement]
-		[Field (FieldName = "SumCordsRecv",
-		 IsPersisted = true)]
+		[Field(FieldName = "SumCordsRecv")]
 		public virtual Double SumCordsRecv
 		{
 		    get 
@@ -8206,8 +7884,7 @@ namespace CruiseDAL.DataObjects
 		}
 		private Double _sumvaluerecv  = 0.0;
 		[XmlElement]
-		[Field (FieldName = "SumValueRecv",
-		 IsPersisted = true)]
+		[Field(FieldName = "SumValueRecv")]
 		public virtual Double SumValueRecv
 		{
 		    get 
@@ -8224,8 +7901,7 @@ namespace CruiseDAL.DataObjects
 		}
 		private Double _biomassproduct  = 0.0;
 		[XmlElement]
-		[Field (FieldName = "BiomassProduct",
-		 IsPersisted = true)]
+		[Field(FieldName = "BiomassProduct")]
 		public virtual Double BiomassProduct
 		{
 		    get 
@@ -8242,8 +7918,7 @@ namespace CruiseDAL.DataObjects
 		}
 		private Double _sumwgtbat  = 0.0;
 		[XmlElement]
-		[Field (FieldName = "SumWgtBAT",
-		 IsPersisted = true)]
+		[Field(FieldName = "SumWgtBAT")]
 		public virtual Double SumWgtBAT
 		{
 		    get 
@@ -8260,8 +7935,7 @@ namespace CruiseDAL.DataObjects
 		}
 		private Double _sumwgtbbl  = 0.0;
 		[XmlElement]
-		[Field (FieldName = "SumWgtBBL",
-		 IsPersisted = true)]
+		[Field(FieldName = "SumWgtBBL")]
 		public virtual Double SumWgtBBL
 		{
 		    get 
@@ -8278,8 +7952,7 @@ namespace CruiseDAL.DataObjects
 		}
 		private Double _sumwgtbbd  = 0.0;
 		[XmlElement]
-		[Field (FieldName = "SumWgtBBD",
-		 IsPersisted = true)]
+		[Field(FieldName = "SumWgtBBD")]
 		public virtual Double SumWgtBBD
 		{
 		    get 
@@ -8296,8 +7969,7 @@ namespace CruiseDAL.DataObjects
 		}
 		private Double _sumwgtbft  = 0.0;
 		[XmlElement]
-		[Field (FieldName = "SumWgtBFT",
-		 IsPersisted = true)]
+		[Field(FieldName = "SumWgtBFT")]
 		public virtual Double SumWgtBFT
 		{
 		    get 
@@ -8314,8 +7986,7 @@ namespace CruiseDAL.DataObjects
 		}
 		private Double _sumwgttip  = 0.0;
 		[XmlElement]
-		[Field (FieldName = "SumWgtTip",
-		 IsPersisted = true)]
+		[Field(FieldName = "SumWgtTip")]
 		public virtual Double SumWgtTip
 		{
 		    get 
@@ -8481,8 +8152,7 @@ namespace CruiseDAL.DataObjects
 		#region Ctor
 		static POPDO()
 		{    
-		    _validator = new RowValidator();
-		    
+			_validator = new RowValidator();
 			_validator.Add(new NotNullRule("CutLeave", "POP", "CutLeave is Required"));
 			_validator.Add(new NotNullRule("Stratum", "POP", "Stratum is Required"));
 			_validator.Add(new NotNullRule("SampleGroup", "POP", "SampleGroup is Required"));
@@ -8510,8 +8180,7 @@ namespace CruiseDAL.DataObjects
 		}
 		private String _cutleave ;
 		[XmlElement]
-		[Field (FieldName = "CutLeave",
-		 IsPersisted = true)]
+		[Field(FieldName = "CutLeave")]
 		public virtual String CutLeave
 		{
 		    get 
@@ -8528,8 +8197,7 @@ namespace CruiseDAL.DataObjects
 		}
 		private String _stratum ;
 		[XmlElement]
-		[Field (FieldName = "Stratum",
-		 IsPersisted = true)]
+		[Field(FieldName = "Stratum")]
 		public virtual String Stratum
 		{
 		    get 
@@ -8546,8 +8214,7 @@ namespace CruiseDAL.DataObjects
 		}
 		private String _samplegroup ;
 		[XmlElement]
-		[Field (FieldName = "SampleGroup",
-		 IsPersisted = true)]
+		[Field(FieldName = "SampleGroup")]
 		public virtual String SampleGroup
 		{
 		    get 
@@ -8564,8 +8231,7 @@ namespace CruiseDAL.DataObjects
 		}
 		private String _primaryproduct ;
 		[XmlElement]
-		[Field (FieldName = "PrimaryProduct",
-		 IsPersisted = true)]
+		[Field(FieldName = "PrimaryProduct")]
 		public virtual String PrimaryProduct
 		{
 		    get 
@@ -8582,8 +8248,7 @@ namespace CruiseDAL.DataObjects
 		}
 		private String _secondaryproduct ;
 		[XmlElement]
-		[Field (FieldName = "SecondaryProduct",
-		 IsPersisted = true)]
+		[Field(FieldName = "SecondaryProduct")]
 		public virtual String SecondaryProduct
 		{
 		    get 
@@ -8600,8 +8265,7 @@ namespace CruiseDAL.DataObjects
 		}
 		private String _stm ;
 		[XmlElement]
-		[Field (FieldName = "STM",
-		 IsPersisted = true)]
+		[Field(FieldName = "STM")]
 		public virtual String STM
 		{
 		    get 
@@ -8618,8 +8282,7 @@ namespace CruiseDAL.DataObjects
 		}
 		private String _uom ;
 		[XmlElement]
-		[Field (FieldName = "UOM",
-		 IsPersisted = true)]
+		[Field(FieldName = "UOM")]
 		public virtual String UOM
 		{
 		    get 
@@ -8636,8 +8299,7 @@ namespace CruiseDAL.DataObjects
 		}
 		private Double _firststagetrees  = 0.0;
 		[XmlElement]
-		[Field (FieldName = "FirstStageTrees",
-		 IsPersisted = true)]
+		[Field(FieldName = "FirstStageTrees")]
 		public virtual Double FirstStageTrees
 		{
 		    get 
@@ -8654,8 +8316,7 @@ namespace CruiseDAL.DataObjects
 		}
 		private Double _measuredtrees  = 0.0;
 		[XmlElement]
-		[Field (FieldName = "MeasuredTrees",
-		 IsPersisted = true)]
+		[Field(FieldName = "MeasuredTrees")]
 		public virtual Double MeasuredTrees
 		{
 		    get 
@@ -8672,8 +8333,7 @@ namespace CruiseDAL.DataObjects
 		}
 		private Double _talliedtrees  = 0.0;
 		[XmlElement]
-		[Field (FieldName = "TalliedTrees",
-		 IsPersisted = true)]
+		[Field(FieldName = "TalliedTrees")]
 		public virtual Double TalliedTrees
 		{
 		    get 
@@ -8690,8 +8350,7 @@ namespace CruiseDAL.DataObjects
 		}
 		private Double _sumkpi  = 0.0;
 		[XmlElement]
-		[Field (FieldName = "SumKPI",
-		 IsPersisted = true)]
+		[Field(FieldName = "SumKPI")]
 		public virtual Double SumKPI
 		{
 		    get 
@@ -8708,8 +8367,7 @@ namespace CruiseDAL.DataObjects
 		}
 		private Double _summeasuredkpi  = 0.0;
 		[XmlElement]
-		[Field (FieldName = "SumMeasuredKPI",
-		 IsPersisted = true)]
+		[Field(FieldName = "SumMeasuredKPI")]
 		public virtual Double SumMeasuredKPI
 		{
 		    get 
@@ -8726,8 +8384,7 @@ namespace CruiseDAL.DataObjects
 		}
 		private Double _stageonesamples  = 0.0;
 		[XmlElement]
-		[Field (FieldName = "StageOneSamples",
-		 IsPersisted = true)]
+		[Field(FieldName = "StageOneSamples")]
 		public virtual Double StageOneSamples
 		{
 		    get 
@@ -8744,8 +8401,7 @@ namespace CruiseDAL.DataObjects
 		}
 		private Double _stagetwosamples  = 0.0;
 		[XmlElement]
-		[Field (FieldName = "StageTwoSamples",
-		 IsPersisted = true)]
+		[Field(FieldName = "StageTwoSamples")]
 		public virtual Double StageTwoSamples
 		{
 		    get 
@@ -8762,8 +8418,7 @@ namespace CruiseDAL.DataObjects
 		}
 		private Double _stg1grossxpp  = 0.0;
 		[XmlElement]
-		[Field (FieldName = "Stg1GrossXPP",
-		 IsPersisted = true)]
+		[Field(FieldName = "Stg1GrossXPP")]
 		public virtual Double Stg1GrossXPP
 		{
 		    get 
@@ -8780,8 +8435,7 @@ namespace CruiseDAL.DataObjects
 		}
 		private Double _stg1grossxsqrdpp  = 0.0;
 		[XmlElement]
-		[Field (FieldName = "Stg1GrossXsqrdPP",
-		 IsPersisted = true)]
+		[Field(FieldName = "Stg1GrossXsqrdPP")]
 		public virtual Double Stg1GrossXsqrdPP
 		{
 		    get 
@@ -8798,8 +8452,7 @@ namespace CruiseDAL.DataObjects
 		}
 		private Double _stg1netxpp  = 0.0;
 		[XmlElement]
-		[Field (FieldName = "Stg1NetXPP",
-		 IsPersisted = true)]
+		[Field(FieldName = "Stg1NetXPP")]
 		public virtual Double Stg1NetXPP
 		{
 		    get 
@@ -8816,8 +8469,7 @@ namespace CruiseDAL.DataObjects
 		}
 		private Double _stg1netxsqrdpp  = 0.0;
 		[XmlElement]
-		[Field (FieldName = "Stg1NetXsqrdPP",
-		 IsPersisted = true)]
+		[Field(FieldName = "Stg1NetXsqrdPP")]
 		public virtual Double Stg1NetXsqrdPP
 		{
 		    get 
@@ -8834,8 +8486,7 @@ namespace CruiseDAL.DataObjects
 		}
 		private Double _stg1valuexpp  = 0.0;
 		[XmlElement]
-		[Field (FieldName = "Stg1ValueXPP",
-		 IsPersisted = true)]
+		[Field(FieldName = "Stg1ValueXPP")]
 		public virtual Double Stg1ValueXPP
 		{
 		    get 
@@ -8852,8 +8503,7 @@ namespace CruiseDAL.DataObjects
 		}
 		private Double _stg1valuexsqrdpp  = 0.0;
 		[XmlElement]
-		[Field (FieldName = "Stg1ValueXsqrdPP",
-		 IsPersisted = true)]
+		[Field(FieldName = "Stg1ValueXsqrdPP")]
 		public virtual Double Stg1ValueXsqrdPP
 		{
 		    get 
@@ -8870,8 +8520,7 @@ namespace CruiseDAL.DataObjects
 		}
 		private Double _stg2grossxpp  = 0.0;
 		[XmlElement]
-		[Field (FieldName = "Stg2GrossXPP",
-		 IsPersisted = true)]
+		[Field(FieldName = "Stg2GrossXPP")]
 		public virtual Double Stg2GrossXPP
 		{
 		    get 
@@ -8888,8 +8537,7 @@ namespace CruiseDAL.DataObjects
 		}
 		private Double _stg2grossxsqrdpp  = 0.0;
 		[XmlElement]
-		[Field (FieldName = "Stg2GrossXsqrdPP",
-		 IsPersisted = true)]
+		[Field(FieldName = "Stg2GrossXsqrdPP")]
 		public virtual Double Stg2GrossXsqrdPP
 		{
 		    get 
@@ -8906,8 +8554,7 @@ namespace CruiseDAL.DataObjects
 		}
 		private Double _stg2netxpp  = 0.0;
 		[XmlElement]
-		[Field (FieldName = "Stg2NetXPP",
-		 IsPersisted = true)]
+		[Field(FieldName = "Stg2NetXPP")]
 		public virtual Double Stg2NetXPP
 		{
 		    get 
@@ -8924,8 +8571,7 @@ namespace CruiseDAL.DataObjects
 		}
 		private Double _stg2netxsqrdpp  = 0.0;
 		[XmlElement]
-		[Field (FieldName = "Stg2NetXsqrdPP",
-		 IsPersisted = true)]
+		[Field(FieldName = "Stg2NetXsqrdPP")]
 		public virtual Double Stg2NetXsqrdPP
 		{
 		    get 
@@ -8942,8 +8588,7 @@ namespace CruiseDAL.DataObjects
 		}
 		private Double _stg2valuexpp  = 0.0;
 		[XmlElement]
-		[Field (FieldName = "Stg2ValueXPP",
-		 IsPersisted = true)]
+		[Field(FieldName = "Stg2ValueXPP")]
 		public virtual Double Stg2ValueXPP
 		{
 		    get 
@@ -8960,8 +8605,7 @@ namespace CruiseDAL.DataObjects
 		}
 		private Double _stg2valuexsqrdpp  = 0.0;
 		[XmlElement]
-		[Field (FieldName = "Stg2ValueXsqrdPP",
-		 IsPersisted = true)]
+		[Field(FieldName = "Stg2ValueXsqrdPP")]
 		public virtual Double Stg2ValueXsqrdPP
 		{
 		    get 
@@ -8978,8 +8622,7 @@ namespace CruiseDAL.DataObjects
 		}
 		private Double _stg1grossxsp  = 0.0;
 		[XmlElement]
-		[Field (FieldName = "Stg1GrossXSP",
-		 IsPersisted = true)]
+		[Field(FieldName = "Stg1GrossXSP")]
 		public virtual Double Stg1GrossXSP
 		{
 		    get 
@@ -8996,8 +8639,7 @@ namespace CruiseDAL.DataObjects
 		}
 		private Double _stg1grossxsqrdsp  = 0.0;
 		[XmlElement]
-		[Field (FieldName = "Stg1GrossXsqrdSP",
-		 IsPersisted = true)]
+		[Field(FieldName = "Stg1GrossXsqrdSP")]
 		public virtual Double Stg1GrossXsqrdSP
 		{
 		    get 
@@ -9014,8 +8656,7 @@ namespace CruiseDAL.DataObjects
 		}
 		private Double _stg1netxsp  = 0.0;
 		[XmlElement]
-		[Field (FieldName = "Stg1NetXSP",
-		 IsPersisted = true)]
+		[Field(FieldName = "Stg1NetXSP")]
 		public virtual Double Stg1NetXSP
 		{
 		    get 
@@ -9032,8 +8673,7 @@ namespace CruiseDAL.DataObjects
 		}
 		private Double _stg1netxsqrdsp  = 0.0;
 		[XmlElement]
-		[Field (FieldName = "Stg1NetXsqrdSP",
-		 IsPersisted = true)]
+		[Field(FieldName = "Stg1NetXsqrdSP")]
 		public virtual Double Stg1NetXsqrdSP
 		{
 		    get 
@@ -9050,8 +8690,7 @@ namespace CruiseDAL.DataObjects
 		}
 		private Double _stg1valuexsp  = 0.0;
 		[XmlElement]
-		[Field (FieldName = "Stg1ValueXSP",
-		 IsPersisted = true)]
+		[Field(FieldName = "Stg1ValueXSP")]
 		public virtual Double Stg1ValueXSP
 		{
 		    get 
@@ -9068,8 +8707,7 @@ namespace CruiseDAL.DataObjects
 		}
 		private Double _stg1valuexsqrdsp  = 0.0;
 		[XmlElement]
-		[Field (FieldName = "Stg1ValueXsqrdSP",
-		 IsPersisted = true)]
+		[Field(FieldName = "Stg1ValueXsqrdSP")]
 		public virtual Double Stg1ValueXsqrdSP
 		{
 		    get 
@@ -9086,8 +8724,7 @@ namespace CruiseDAL.DataObjects
 		}
 		private Double _stg2grossxsp  = 0.0;
 		[XmlElement]
-		[Field (FieldName = "Stg2GrossXSP",
-		 IsPersisted = true)]
+		[Field(FieldName = "Stg2GrossXSP")]
 		public virtual Double Stg2GrossXSP
 		{
 		    get 
@@ -9104,8 +8741,7 @@ namespace CruiseDAL.DataObjects
 		}
 		private Double _stg2grossxsqrdsp  = 0.0;
 		[XmlElement]
-		[Field (FieldName = "Stg2GrossXsqrdSP",
-		 IsPersisted = true)]
+		[Field(FieldName = "Stg2GrossXsqrdSP")]
 		public virtual Double Stg2GrossXsqrdSP
 		{
 		    get 
@@ -9122,8 +8758,7 @@ namespace CruiseDAL.DataObjects
 		}
 		private Double _stg2netxsp  = 0.0;
 		[XmlElement]
-		[Field (FieldName = "Stg2NetXSP",
-		 IsPersisted = true)]
+		[Field(FieldName = "Stg2NetXSP")]
 		public virtual Double Stg2NetXSP
 		{
 		    get 
@@ -9140,8 +8775,7 @@ namespace CruiseDAL.DataObjects
 		}
 		private Double _stg2netxsqrdsp  = 0.0;
 		[XmlElement]
-		[Field (FieldName = "Stg2NetXsqrdSP",
-		 IsPersisted = true)]
+		[Field(FieldName = "Stg2NetXsqrdSP")]
 		public virtual Double Stg2NetXsqrdSP
 		{
 		    get 
@@ -9158,8 +8792,7 @@ namespace CruiseDAL.DataObjects
 		}
 		private Double _stg2valuexsp  = 0.0;
 		[XmlElement]
-		[Field (FieldName = "Stg2ValueXSP",
-		 IsPersisted = true)]
+		[Field(FieldName = "Stg2ValueXSP")]
 		public virtual Double Stg2ValueXSP
 		{
 		    get 
@@ -9176,8 +8809,7 @@ namespace CruiseDAL.DataObjects
 		}
 		private Double _stg2valuexsqrdsp  = 0.0;
 		[XmlElement]
-		[Field (FieldName = "Stg2ValueXsqrdSP",
-		 IsPersisted = true)]
+		[Field(FieldName = "Stg2ValueXsqrdSP")]
 		public virtual Double Stg2ValueXsqrdSP
 		{
 		    get 
@@ -9194,8 +8826,7 @@ namespace CruiseDAL.DataObjects
 		}
 		private Double _stg1grossxrp  = 0.0;
 		[XmlElement]
-		[Field (FieldName = "Stg1GrossXRP",
-		 IsPersisted = true)]
+		[Field(FieldName = "Stg1GrossXRP")]
 		public virtual Double Stg1GrossXRP
 		{
 		    get 
@@ -9212,8 +8843,7 @@ namespace CruiseDAL.DataObjects
 		}
 		private Double _stg1grossxsqrdrp  = 0.0;
 		[XmlElement]
-		[Field (FieldName = "Stg1GrossXsqrdRP",
-		 IsPersisted = true)]
+		[Field(FieldName = "Stg1GrossXsqrdRP")]
 		public virtual Double Stg1GrossXsqrdRP
 		{
 		    get 
@@ -9230,8 +8860,7 @@ namespace CruiseDAL.DataObjects
 		}
 		private Double _stg1netxrp  = 0.0;
 		[XmlElement]
-		[Field (FieldName = "Stg1NetXRP",
-		 IsPersisted = true)]
+		[Field(FieldName = "Stg1NetXRP")]
 		public virtual Double Stg1NetXRP
 		{
 		    get 
@@ -9248,8 +8877,7 @@ namespace CruiseDAL.DataObjects
 		}
 		private Double _stg1netxrsqrdrp  = 0.0;
 		[XmlElement]
-		[Field (FieldName = "Stg1NetXRsqrdRP",
-		 IsPersisted = true)]
+		[Field(FieldName = "Stg1NetXRsqrdRP")]
 		public virtual Double Stg1NetXRsqrdRP
 		{
 		    get 
@@ -9266,8 +8894,7 @@ namespace CruiseDAL.DataObjects
 		}
 		private Double _stg1valuexrp  = 0.0;
 		[XmlElement]
-		[Field (FieldName = "Stg1ValueXRP",
-		 IsPersisted = true)]
+		[Field(FieldName = "Stg1ValueXRP")]
 		public virtual Double Stg1ValueXRP
 		{
 		    get 
@@ -9284,8 +8911,7 @@ namespace CruiseDAL.DataObjects
 		}
 		private Double _stg1valuexsqrdrp  = 0.0;
 		[XmlElement]
-		[Field (FieldName = "Stg1ValueXsqrdRP",
-		 IsPersisted = true)]
+		[Field(FieldName = "Stg1ValueXsqrdRP")]
 		public virtual Double Stg1ValueXsqrdRP
 		{
 		    get 
@@ -9302,8 +8928,7 @@ namespace CruiseDAL.DataObjects
 		}
 		private Double _stg2grossxrp  = 0.0;
 		[XmlElement]
-		[Field (FieldName = "Stg2GrossXRP",
-		 IsPersisted = true)]
+		[Field(FieldName = "Stg2GrossXRP")]
 		public virtual Double Stg2GrossXRP
 		{
 		    get 
@@ -9320,8 +8945,7 @@ namespace CruiseDAL.DataObjects
 		}
 		private Double _stg2grossxsqrdrp  = 0.0;
 		[XmlElement]
-		[Field (FieldName = "Stg2GrossXsqrdRP",
-		 IsPersisted = true)]
+		[Field(FieldName = "Stg2GrossXsqrdRP")]
 		public virtual Double Stg2GrossXsqrdRP
 		{
 		    get 
@@ -9338,8 +8962,7 @@ namespace CruiseDAL.DataObjects
 		}
 		private Double _stg2netxrp  = 0.0;
 		[XmlElement]
-		[Field (FieldName = "Stg2NetXRP",
-		 IsPersisted = true)]
+		[Field(FieldName = "Stg2NetXRP")]
 		public virtual Double Stg2NetXRP
 		{
 		    get 
@@ -9356,8 +8979,7 @@ namespace CruiseDAL.DataObjects
 		}
 		private Double _stg2netxsqrdrp  = 0.0;
 		[XmlElement]
-		[Field (FieldName = "Stg2NetXsqrdRP",
-		 IsPersisted = true)]
+		[Field(FieldName = "Stg2NetXsqrdRP")]
 		public virtual Double Stg2NetXsqrdRP
 		{
 		    get 
@@ -9374,8 +8996,7 @@ namespace CruiseDAL.DataObjects
 		}
 		private Double _stg2valuexrp  = 0.0;
 		[XmlElement]
-		[Field (FieldName = "Stg2ValueXRP",
-		 IsPersisted = true)]
+		[Field(FieldName = "Stg2ValueXRP")]
 		public virtual Double Stg2ValueXRP
 		{
 		    get 
@@ -9392,8 +9013,7 @@ namespace CruiseDAL.DataObjects
 		}
 		private Double _stg2valuexsqrdrp  = 0.0;
 		[XmlElement]
-		[Field (FieldName = "Stg2ValueXsqrdRP",
-		 IsPersisted = true)]
+		[Field(FieldName = "Stg2ValueXsqrdRP")]
 		public virtual Double Stg2ValueXsqrdRP
 		{
 		    get 
@@ -9553,8 +9173,7 @@ namespace CruiseDAL.DataObjects
 		#region Ctor
 		static PRODO()
 		{    
-		    _validator = new RowValidator();
-		    
+			_validator = new RowValidator();
 			_validator.Add(new NotNullRule("CutLeave", "PRO", "CutLeave is Required"));
 			_validator.Add(new NotNullRule("Stratum", "PRO", "Stratum is Required"));
 			_validator.Add(new NotNullRule("CuttingUnit", "PRO", "CuttingUnit is Required"));
@@ -9583,8 +9202,7 @@ namespace CruiseDAL.DataObjects
 		}
 		private String _cutleave ;
 		[XmlElement]
-		[Field (FieldName = "CutLeave",
-		 IsPersisted = true)]
+		[Field(FieldName = "CutLeave")]
 		public virtual String CutLeave
 		{
 		    get 
@@ -9601,8 +9219,7 @@ namespace CruiseDAL.DataObjects
 		}
 		private String _stratum ;
 		[XmlElement]
-		[Field (FieldName = "Stratum",
-		 IsPersisted = true)]
+		[Field(FieldName = "Stratum")]
 		public virtual String Stratum
 		{
 		    get 
@@ -9619,8 +9236,7 @@ namespace CruiseDAL.DataObjects
 		}
 		private String _cuttingunit ;
 		[XmlElement]
-		[Field (FieldName = "CuttingUnit",
-		 IsPersisted = true)]
+		[Field(FieldName = "CuttingUnit")]
 		public virtual String CuttingUnit
 		{
 		    get 
@@ -9637,8 +9253,7 @@ namespace CruiseDAL.DataObjects
 		}
 		private String _samplegroup ;
 		[XmlElement]
-		[Field (FieldName = "SampleGroup",
-		 IsPersisted = true)]
+		[Field(FieldName = "SampleGroup")]
 		public virtual String SampleGroup
 		{
 		    get 
@@ -9655,8 +9270,7 @@ namespace CruiseDAL.DataObjects
 		}
 		private String _primaryproduct ;
 		[XmlElement]
-		[Field (FieldName = "PrimaryProduct",
-		 IsPersisted = true)]
+		[Field(FieldName = "PrimaryProduct")]
 		public virtual String PrimaryProduct
 		{
 		    get 
@@ -9673,8 +9287,7 @@ namespace CruiseDAL.DataObjects
 		}
 		private String _secondaryproduct ;
 		[XmlElement]
-		[Field (FieldName = "SecondaryProduct",
-		 IsPersisted = true)]
+		[Field(FieldName = "SecondaryProduct")]
 		public virtual String SecondaryProduct
 		{
 		    get 
@@ -9691,8 +9304,7 @@ namespace CruiseDAL.DataObjects
 		}
 		private String _uom ;
 		[XmlElement]
-		[Field (FieldName = "UOM",
-		 IsPersisted = true)]
+		[Field(FieldName = "UOM")]
 		public virtual String UOM
 		{
 		    get 
@@ -9709,8 +9321,7 @@ namespace CruiseDAL.DataObjects
 		}
 		private String _stm ;
 		[XmlElement]
-		[Field (FieldName = "STM",
-		 IsPersisted = true)]
+		[Field(FieldName = "STM")]
 		public virtual String STM
 		{
 		    get 
@@ -9727,8 +9338,7 @@ namespace CruiseDAL.DataObjects
 		}
 		private Double _firststagetrees  = 0.0;
 		[XmlElement]
-		[Field (FieldName = "FirstStageTrees",
-		 IsPersisted = true)]
+		[Field(FieldName = "FirstStageTrees")]
 		public virtual Double FirstStageTrees
 		{
 		    get 
@@ -9745,8 +9355,7 @@ namespace CruiseDAL.DataObjects
 		}
 		private Double _measuredtrees  = 0.0;
 		[XmlElement]
-		[Field (FieldName = "MeasuredTrees",
-		 IsPersisted = true)]
+		[Field(FieldName = "MeasuredTrees")]
 		public virtual Double MeasuredTrees
 		{
 		    get 
@@ -9763,8 +9372,7 @@ namespace CruiseDAL.DataObjects
 		}
 		private Double _talliedtrees  = 0.0;
 		[XmlElement]
-		[Field (FieldName = "TalliedTrees",
-		 IsPersisted = true)]
+		[Field(FieldName = "TalliedTrees")]
 		public virtual Double TalliedTrees
 		{
 		    get 
@@ -9781,8 +9389,7 @@ namespace CruiseDAL.DataObjects
 		}
 		private Double _sumkpi  = 0.0;
 		[XmlElement]
-		[Field (FieldName = "SumKPI",
-		 IsPersisted = true)]
+		[Field(FieldName = "SumKPI")]
 		public virtual Double SumKPI
 		{
 		    get 
@@ -9799,8 +9406,7 @@ namespace CruiseDAL.DataObjects
 		}
 		private Double _summeasuredkpi  = 0.0;
 		[XmlElement]
-		[Field (FieldName = "SumMeasuredKPI",
-		 IsPersisted = true)]
+		[Field(FieldName = "SumMeasuredKPI")]
 		public virtual Double SumMeasuredKPI
 		{
 		    get 
@@ -9817,8 +9423,7 @@ namespace CruiseDAL.DataObjects
 		}
 		private Double _prorationfactor  = 0.0;
 		[XmlElement]
-		[Field (FieldName = "ProrationFactor",
-		 IsPersisted = true)]
+		[Field(FieldName = "ProrationFactor")]
 		public virtual Double ProrationFactor
 		{
 		    get 
@@ -9835,8 +9440,7 @@ namespace CruiseDAL.DataObjects
 		}
 		private Double _proratedestimatedtrees  = 0.0;
 		[XmlElement]
-		[Field (FieldName = "ProratedEstimatedTrees",
-		 IsPersisted = true)]
+		[Field(FieldName = "ProratedEstimatedTrees")]
 		public virtual Double ProratedEstimatedTrees
 		{
 		    get 
@@ -9926,8 +9530,7 @@ namespace CruiseDAL.DataObjects
 		#region Ctor
 		static LogStockDO()
 		{    
-		    _validator = new RowValidator();
-		    
+			_validator = new RowValidator();
 			_validator.Add(new NotNullRule("Tree_CN", "LogStock", "Tree_CN is Required"));
 			_validator.Add(new NotNullRule("LogNumber", "LogStock", "LogNumber is Required"));
 		}
@@ -9951,8 +9554,7 @@ namespace CruiseDAL.DataObjects
 		}
 		private long? _tree_cn ;
 		[XmlIgnore]
-		[Field (FieldName = "Tree_CN",
-		 IsPersisted = true)]
+		[Field(FieldName = "Tree_CN")]
 		public virtual long? Tree_CN
 		{
 		    get 
@@ -10002,8 +9604,7 @@ namespace CruiseDAL.DataObjects
 		}
 		private String _lognumber ;
 		[XmlElement]
-		[Field (FieldName = "LogNumber",
-		 IsPersisted = true)]
+		[Field(FieldName = "LogNumber")]
 		public virtual String LogNumber
 		{
 		    get 
@@ -10020,8 +9621,7 @@ namespace CruiseDAL.DataObjects
 		}
 		private String _grade ;
 		[XmlElement]
-		[Field (FieldName = "Grade",
-		 IsPersisted = true)]
+		[Field(FieldName = "Grade")]
 		public virtual String Grade
 		{
 		    get 
@@ -10038,8 +9638,7 @@ namespace CruiseDAL.DataObjects
 		}
 		private float _seendefect  = 0.0f;
 		[XmlElement]
-		[Field (FieldName = "SeenDefect",
-		 IsPersisted = true)]
+		[Field(FieldName = "SeenDefect")]
 		public virtual float SeenDefect
 		{
 		    get 
@@ -10056,8 +9655,7 @@ namespace CruiseDAL.DataObjects
 		}
 		private float _percentrecoverable  = 0.0f;
 		[XmlElement]
-		[Field (FieldName = "PercentRecoverable",
-		 IsPersisted = true)]
+		[Field(FieldName = "PercentRecoverable")]
 		public virtual float PercentRecoverable
 		{
 		    get 
@@ -10074,8 +9672,7 @@ namespace CruiseDAL.DataObjects
 		}
 		private Int64 _length ;
 		[XmlElement]
-		[Field (FieldName = "Length",
-		 IsPersisted = true)]
+		[Field(FieldName = "Length")]
 		public virtual Int64 Length
 		{
 		    get 
@@ -10092,8 +9689,7 @@ namespace CruiseDAL.DataObjects
 		}
 		private String _exportgrade ;
 		[XmlElement]
-		[Field (FieldName = "ExportGrade",
-		 IsPersisted = true)]
+		[Field(FieldName = "ExportGrade")]
 		public virtual String ExportGrade
 		{
 		    get 
@@ -10110,8 +9706,7 @@ namespace CruiseDAL.DataObjects
 		}
 		private float _smallenddiameter  = 0.0f;
 		[XmlElement]
-		[Field (FieldName = "SmallEndDiameter",
-		 IsPersisted = true)]
+		[Field(FieldName = "SmallEndDiameter")]
 		public virtual float SmallEndDiameter
 		{
 		    get 
@@ -10128,8 +9723,7 @@ namespace CruiseDAL.DataObjects
 		}
 		private float _largeenddiameter  = 0.0f;
 		[XmlElement]
-		[Field (FieldName = "LargeEndDiameter",
-		 IsPersisted = true)]
+		[Field(FieldName = "LargeEndDiameter")]
 		public virtual float LargeEndDiameter
 		{
 		    get 
@@ -10146,8 +9740,7 @@ namespace CruiseDAL.DataObjects
 		}
 		private float _grossboardfoot  = 0.0f;
 		[XmlElement]
-		[Field (FieldName = "GrossBoardFoot",
-		 IsPersisted = true)]
+		[Field(FieldName = "GrossBoardFoot")]
 		public virtual float GrossBoardFoot
 		{
 		    get 
@@ -10164,8 +9757,7 @@ namespace CruiseDAL.DataObjects
 		}
 		private float _netboardfoot  = 0.0f;
 		[XmlElement]
-		[Field (FieldName = "NetBoardFoot",
-		 IsPersisted = true)]
+		[Field(FieldName = "NetBoardFoot")]
 		public virtual float NetBoardFoot
 		{
 		    get 
@@ -10182,8 +9774,7 @@ namespace CruiseDAL.DataObjects
 		}
 		private float _grosscubicfoot  = 0.0f;
 		[XmlElement]
-		[Field (FieldName = "GrossCubicFoot",
-		 IsPersisted = true)]
+		[Field(FieldName = "GrossCubicFoot")]
 		public virtual float GrossCubicFoot
 		{
 		    get 
@@ -10200,8 +9791,7 @@ namespace CruiseDAL.DataObjects
 		}
 		private float _netcubicfoot  = 0.0f;
 		[XmlElement]
-		[Field (FieldName = "NetCubicFoot",
-		 IsPersisted = true)]
+		[Field(FieldName = "NetCubicFoot")]
 		public virtual float NetCubicFoot
 		{
 		    get 
@@ -10218,8 +9808,7 @@ namespace CruiseDAL.DataObjects
 		}
 		private float _boardfootremoved  = 0.0f;
 		[XmlElement]
-		[Field (FieldName = "BoardFootRemoved",
-		 IsPersisted = true)]
+		[Field(FieldName = "BoardFootRemoved")]
 		public virtual float BoardFootRemoved
 		{
 		    get 
@@ -10236,8 +9825,7 @@ namespace CruiseDAL.DataObjects
 		}
 		private float _cubicfootremoved  = 0.0f;
 		[XmlElement]
-		[Field (FieldName = "CubicFootRemoved",
-		 IsPersisted = true)]
+		[Field(FieldName = "CubicFootRemoved")]
 		public virtual float CubicFootRemoved
 		{
 		    get 
@@ -10254,8 +9842,7 @@ namespace CruiseDAL.DataObjects
 		}
 		private float _dibclass  = 0.0f;
 		[XmlElement]
-		[Field (FieldName = "DIBClass",
-		 IsPersisted = true)]
+		[Field(FieldName = "DIBClass")]
 		public virtual float DIBClass
 		{
 		    get 
@@ -10272,8 +9859,7 @@ namespace CruiseDAL.DataObjects
 		}
 		private float _barkthickness  = 0.0f;
 		[XmlElement]
-		[Field (FieldName = "BarkThickness",
-		 IsPersisted = true)]
+		[Field(FieldName = "BarkThickness")]
 		public virtual float BarkThickness
 		{
 		    get 
@@ -10290,8 +9876,7 @@ namespace CruiseDAL.DataObjects
 		}
 		private float _boardutil  = 0.0f;
 		[XmlElement]
-		[Field (FieldName = "BoardUtil",
-		 IsPersisted = true)]
+		[Field(FieldName = "BoardUtil")]
 		public virtual float BoardUtil
 		{
 		    get 
@@ -10308,8 +9893,7 @@ namespace CruiseDAL.DataObjects
 		}
 		private float _cubicutil  = 0.0f;
 		[XmlElement]
-		[Field (FieldName = "CubicUtil",
-		 IsPersisted = true)]
+		[Field(FieldName = "CubicUtil")]
 		public virtual float CubicUtil
 		{
 		    get 
@@ -10424,8 +10008,7 @@ namespace CruiseDAL.DataObjects
 		#region Ctor
 		static SampleGroupStatsDO()
 		{    
-		    _validator = new RowValidator();
-		    
+			_validator = new RowValidator();
 		}
 		
 		public SampleGroupStatsDO() {}
@@ -10447,8 +10030,7 @@ namespace CruiseDAL.DataObjects
 		}
 		private long? _stratumstats_cn ;
 		[XmlIgnore]
-		[Field (FieldName = "StratumStats_CN",
-		 IsPersisted = true)]
+		[Field(FieldName = "StratumStats_CN")]
 		public virtual long? StratumStats_CN
 		{
 		    get 
@@ -10498,8 +10080,7 @@ namespace CruiseDAL.DataObjects
 		}
 		private String _code ;
 		[XmlElement]
-		[Field (FieldName = "Code",
-		 IsPersisted = true)]
+		[Field(FieldName = "Code")]
 		public virtual String Code
 		{
 		    get 
@@ -10516,8 +10097,7 @@ namespace CruiseDAL.DataObjects
 		}
 		private Int64 _sgset ;
 		[XmlElement]
-		[Field (FieldName = "SgSet",
-		 IsPersisted = true)]
+		[Field(FieldName = "SgSet")]
 		public virtual Int64 SgSet
 		{
 		    get 
@@ -10534,8 +10114,7 @@ namespace CruiseDAL.DataObjects
 		}
 		private String _description ;
 		[XmlElement]
-		[Field (FieldName = "Description",
-		 IsPersisted = true)]
+		[Field(FieldName = "Description")]
 		public virtual String Description
 		{
 		    get 
@@ -10552,8 +10131,7 @@ namespace CruiseDAL.DataObjects
 		}
 		private String _cutleave ;
 		[XmlElement]
-		[Field (FieldName = "CutLeave",
-		 IsPersisted = true)]
+		[Field(FieldName = "CutLeave")]
 		public virtual String CutLeave
 		{
 		    get 
@@ -10570,8 +10148,7 @@ namespace CruiseDAL.DataObjects
 		}
 		private String _uom ;
 		[XmlElement]
-		[Field (FieldName = "UOM",
-		 IsPersisted = true)]
+		[Field(FieldName = "UOM")]
 		public virtual String UOM
 		{
 		    get 
@@ -10588,8 +10165,7 @@ namespace CruiseDAL.DataObjects
 		}
 		private String _primaryproduct ;
 		[XmlElement]
-		[Field (FieldName = "PrimaryProduct",
-		 IsPersisted = true)]
+		[Field(FieldName = "PrimaryProduct")]
 		public virtual String PrimaryProduct
 		{
 		    get 
@@ -10606,8 +10182,7 @@ namespace CruiseDAL.DataObjects
 		}
 		private String _secondaryproduct ;
 		[XmlElement]
-		[Field (FieldName = "SecondaryProduct",
-		 IsPersisted = true)]
+		[Field(FieldName = "SecondaryProduct")]
 		public virtual String SecondaryProduct
 		{
 		    get 
@@ -10624,8 +10199,7 @@ namespace CruiseDAL.DataObjects
 		}
 		private String _defaultlivedead ;
 		[XmlElement]
-		[Field (FieldName = "DefaultLiveDead",
-		 IsPersisted = true)]
+		[Field(FieldName = "DefaultLiveDead")]
 		public virtual String DefaultLiveDead
 		{
 		    get 
@@ -10642,8 +10216,7 @@ namespace CruiseDAL.DataObjects
 		}
 		private float _sgerror  = 0.0f;
 		[XmlElement]
-		[Field (FieldName = "SgError",
-		 IsPersisted = true)]
+		[Field(FieldName = "SgError")]
 		public virtual float SgError
 		{
 		    get 
@@ -10660,8 +10233,7 @@ namespace CruiseDAL.DataObjects
 		}
 		private Int64 _samplesize1 ;
 		[XmlElement]
-		[Field (FieldName = "SampleSize1",
-		 IsPersisted = true)]
+		[Field(FieldName = "SampleSize1")]
 		public virtual Int64 SampleSize1
 		{
 		    get 
@@ -10678,8 +10250,7 @@ namespace CruiseDAL.DataObjects
 		}
 		private Int64 _samplesize2 ;
 		[XmlElement]
-		[Field (FieldName = "SampleSize2",
-		 IsPersisted = true)]
+		[Field(FieldName = "SampleSize2")]
 		public virtual Int64 SampleSize2
 		{
 		    get 
@@ -10696,8 +10267,7 @@ namespace CruiseDAL.DataObjects
 		}
 		private float _cv1  = 0.0f;
 		[XmlElement]
-		[Field (FieldName = "CV1",
-		 IsPersisted = true)]
+		[Field(FieldName = "CV1")]
 		public virtual float CV1
 		{
 		    get 
@@ -10714,8 +10284,7 @@ namespace CruiseDAL.DataObjects
 		}
 		private float _cv2  = 0.0f;
 		[XmlElement]
-		[Field (FieldName = "CV2",
-		 IsPersisted = true)]
+		[Field(FieldName = "CV2")]
 		public virtual float CV2
 		{
 		    get 
@@ -10732,8 +10301,7 @@ namespace CruiseDAL.DataObjects
 		}
 		private float _treesperacre  = 0.0f;
 		[XmlElement]
-		[Field (FieldName = "TreesPerAcre",
-		 IsPersisted = true)]
+		[Field(FieldName = "TreesPerAcre")]
 		public virtual float TreesPerAcre
 		{
 		    get 
@@ -10750,8 +10318,7 @@ namespace CruiseDAL.DataObjects
 		}
 		private float _volumeperacre  = 0.0f;
 		[XmlElement]
-		[Field (FieldName = "VolumePerAcre",
-		 IsPersisted = true)]
+		[Field(FieldName = "VolumePerAcre")]
 		public virtual float VolumePerAcre
 		{
 		    get 
@@ -10768,8 +10335,7 @@ namespace CruiseDAL.DataObjects
 		}
 		private float _treesperplot  = 0.0f;
 		[XmlElement]
-		[Field (FieldName = "TreesPerPlot",
-		 IsPersisted = true)]
+		[Field(FieldName = "TreesPerPlot")]
 		public virtual float TreesPerPlot
 		{
 		    get 
@@ -10786,8 +10352,7 @@ namespace CruiseDAL.DataObjects
 		}
 		private float _averageheight  = 0.0f;
 		[XmlElement]
-		[Field (FieldName = "AverageHeight",
-		 IsPersisted = true)]
+		[Field(FieldName = "AverageHeight")]
 		public virtual float AverageHeight
 		{
 		    get 
@@ -10804,8 +10369,7 @@ namespace CruiseDAL.DataObjects
 		}
 		private Int64 _samplingfrequency ;
 		[XmlElement]
-		[Field (FieldName = "SamplingFrequency",
-		 IsPersisted = true)]
+		[Field(FieldName = "SamplingFrequency")]
 		public virtual Int64 SamplingFrequency
 		{
 		    get 
@@ -10822,8 +10386,7 @@ namespace CruiseDAL.DataObjects
 		}
 		private Int64 _insurancefrequency ;
 		[XmlElement]
-		[Field (FieldName = "InsuranceFrequency",
-		 IsPersisted = true)]
+		[Field(FieldName = "InsuranceFrequency")]
 		public virtual Int64 InsuranceFrequency
 		{
 		    get 
@@ -10840,8 +10403,7 @@ namespace CruiseDAL.DataObjects
 		}
 		private Int64 _kz ;
 		[XmlElement]
-		[Field (FieldName = "KZ",
-		 IsPersisted = true)]
+		[Field(FieldName = "KZ")]
 		public virtual Int64 KZ
 		{
 		    get 
@@ -10858,8 +10420,7 @@ namespace CruiseDAL.DataObjects
 		}
 		private float _bigbaf  = 0.0f;
 		[XmlElement]
-		[Field (FieldName = "BigBAF",
-		 IsPersisted = true)]
+		[Field(FieldName = "BigBAF")]
 		public virtual float BigBAF
 		{
 		    get 
@@ -10876,8 +10437,7 @@ namespace CruiseDAL.DataObjects
 		}
 		private Int64 _bigfix ;
 		[XmlElement]
-		[Field (FieldName = "BigFIX",
-		 IsPersisted = true)]
+		[Field(FieldName = "BigFIX")]
 		public virtual Int64 BigFIX
 		{
 		    get 
@@ -10894,8 +10454,7 @@ namespace CruiseDAL.DataObjects
 		}
 		private float _mindbh  = 0.0f;
 		[XmlElement]
-		[Field (FieldName = "MinDbh",
-		 IsPersisted = true)]
+		[Field(FieldName = "MinDbh")]
 		public virtual float MinDbh
 		{
 		    get 
@@ -10912,8 +10471,7 @@ namespace CruiseDAL.DataObjects
 		}
 		private float _maxdbh  = 0.0f;
 		[XmlElement]
-		[Field (FieldName = "MaxDbh",
-		 IsPersisted = true)]
+		[Field(FieldName = "MaxDbh")]
 		public virtual float MaxDbh
 		{
 		    get 
@@ -10930,8 +10488,7 @@ namespace CruiseDAL.DataObjects
 		}
 		private Int64 _cv_def ;
 		[XmlElement]
-		[Field (FieldName = "CV_Def",
-		 IsPersisted = true)]
+		[Field(FieldName = "CV_Def")]
 		public virtual Int64 CV_Def
 		{
 		    get 
@@ -10948,8 +10505,7 @@ namespace CruiseDAL.DataObjects
 		}
 		private Int64 _cv2_def ;
 		[XmlElement]
-		[Field (FieldName = "CV2_Def",
-		 IsPersisted = true)]
+		[Field(FieldName = "CV2_Def")]
 		public virtual Int64 CV2_Def
 		{
 		    get 
@@ -10966,8 +10522,7 @@ namespace CruiseDAL.DataObjects
 		}
 		private Int64 _tpa_def ;
 		[XmlElement]
-		[Field (FieldName = "TPA_Def",
-		 IsPersisted = true)]
+		[Field(FieldName = "TPA_Def")]
 		public virtual Int64 TPA_Def
 		{
 		    get 
@@ -10984,8 +10539,7 @@ namespace CruiseDAL.DataObjects
 		}
 		private Int64 _vpa_def ;
 		[XmlElement]
-		[Field (FieldName = "VPA_Def",
-		 IsPersisted = true)]
+		[Field(FieldName = "VPA_Def")]
 		public virtual Int64 VPA_Def
 		{
 		    get 
@@ -11002,8 +10556,7 @@ namespace CruiseDAL.DataObjects
 		}
 		private Int64 _reconplots ;
 		[XmlElement]
-		[Field (FieldName = "ReconPlots",
-		 IsPersisted = true)]
+		[Field(FieldName = "ReconPlots")]
 		public virtual Int64 ReconPlots
 		{
 		    get 
@@ -11020,8 +10573,7 @@ namespace CruiseDAL.DataObjects
 		}
 		private Int64 _recontrees ;
 		[XmlElement]
-		[Field (FieldName = "ReconTrees",
-		 IsPersisted = true)]
+		[Field(FieldName = "ReconTrees")]
 		public virtual Int64 ReconTrees
 		{
 		    get 
@@ -11142,8 +10694,7 @@ namespace CruiseDAL.DataObjects
 		#region Ctor
 		static SampleGroupStatsTreeDefaultValueDO()
 		{    
-		    _validator = new RowValidator();
-		    
+			_validator = new RowValidator();
 		}
 		
 		public SampleGroupStatsTreeDefaultValueDO() {}
@@ -11158,8 +10709,7 @@ namespace CruiseDAL.DataObjects
 		#endregion
 		private long? _treedefaultvalue_cn ;
 		[XmlIgnore]
-		[Field (FieldName = "TreeDefaultValue_CN",
-		 IsPersisted = true)]
+		[Field(FieldName = "TreeDefaultValue_CN")]
 		public virtual long? TreeDefaultValue_CN
 		{
 		    get 
@@ -11209,8 +10759,7 @@ namespace CruiseDAL.DataObjects
 		}
 		private long? _samplegroupstats_cn ;
 		[XmlIgnore]
-		[Field (FieldName = "SampleGroupStats_CN",
-		 IsPersisted = true)]
+		[Field(FieldName = "SampleGroupStats_CN")]
 		public virtual long? SampleGroupStats_CN
 		{
 		    get 
@@ -11305,8 +10854,7 @@ namespace CruiseDAL.DataObjects
 		#region Ctor
 		static StratumStatsDO()
 		{    
-		    _validator = new RowValidator();
-		    
+			_validator = new RowValidator();
 		}
 		
 		public StratumStatsDO() {}
@@ -11328,8 +10876,7 @@ namespace CruiseDAL.DataObjects
 		}
 		private long? _stratum_cn ;
 		[XmlIgnore]
-		[Field (FieldName = "Stratum_CN",
-		 IsPersisted = true)]
+		[Field(FieldName = "Stratum_CN")]
 		public virtual long? Stratum_CN
 		{
 		    get 
@@ -11379,8 +10926,7 @@ namespace CruiseDAL.DataObjects
 		}
 		private String _code ;
 		[XmlElement]
-		[Field (FieldName = "Code",
-		 IsPersisted = true)]
+		[Field(FieldName = "Code")]
 		public virtual String Code
 		{
 		    get 
@@ -11397,8 +10943,7 @@ namespace CruiseDAL.DataObjects
 		}
 		private String _description ;
 		[XmlElement]
-		[Field (FieldName = "Description",
-		 IsPersisted = true)]
+		[Field(FieldName = "Description")]
 		public virtual String Description
 		{
 		    get 
@@ -11415,8 +10960,7 @@ namespace CruiseDAL.DataObjects
 		}
 		private String _method ;
 		[XmlElement]
-		[Field (FieldName = "Method",
-		 IsPersisted = true)]
+		[Field(FieldName = "Method")]
 		public virtual String Method
 		{
 		    get 
@@ -11433,8 +10977,7 @@ namespace CruiseDAL.DataObjects
 		}
 		private Int64 _sgset ;
 		[XmlElement]
-		[Field (FieldName = "SgSet",
-		 IsPersisted = true)]
+		[Field(FieldName = "SgSet")]
 		public virtual Int64 SgSet
 		{
 		    get 
@@ -11451,8 +10994,7 @@ namespace CruiseDAL.DataObjects
 		}
 		private String _sgsetdescription ;
 		[XmlElement]
-		[Field (FieldName = "SgSetDescription",
-		 IsPersisted = true)]
+		[Field(FieldName = "SgSetDescription")]
 		public virtual String SgSetDescription
 		{
 		    get 
@@ -11469,8 +11011,7 @@ namespace CruiseDAL.DataObjects
 		}
 		private float _basalareafactor  = 0.0f;
 		[XmlElement]
-		[Field (FieldName = "BasalAreaFactor",
-		 IsPersisted = true)]
+		[Field(FieldName = "BasalAreaFactor")]
 		public virtual float BasalAreaFactor
 		{
 		    get 
@@ -11487,8 +11028,7 @@ namespace CruiseDAL.DataObjects
 		}
 		private float _fixedplotsize  = 0.0f;
 		[XmlElement]
-		[Field (FieldName = "FixedPlotSize",
-		 IsPersisted = true)]
+		[Field(FieldName = "FixedPlotSize")]
 		public virtual float FixedPlotSize
 		{
 		    get 
@@ -11505,8 +11045,7 @@ namespace CruiseDAL.DataObjects
 		}
 		private float _strerror  = 0.0f;
 		[XmlElement]
-		[Field (FieldName = "StrError",
-		 IsPersisted = true)]
+		[Field(FieldName = "StrError")]
 		public virtual float StrError
 		{
 		    get 
@@ -11523,8 +11062,7 @@ namespace CruiseDAL.DataObjects
 		}
 		private Int64 _samplesize1 ;
 		[XmlElement]
-		[Field (FieldName = "SampleSize1",
-		 IsPersisted = true)]
+		[Field(FieldName = "SampleSize1")]
 		public virtual Int64 SampleSize1
 		{
 		    get 
@@ -11541,8 +11079,7 @@ namespace CruiseDAL.DataObjects
 		}
 		private Int64 _samplesize2 ;
 		[XmlElement]
-		[Field (FieldName = "SampleSize2",
-		 IsPersisted = true)]
+		[Field(FieldName = "SampleSize2")]
 		public virtual Int64 SampleSize2
 		{
 		    get 
@@ -11559,8 +11096,7 @@ namespace CruiseDAL.DataObjects
 		}
 		private float _weightedcv1  = 0.0f;
 		[XmlElement]
-		[Field (FieldName = "WeightedCV1",
-		 IsPersisted = true)]
+		[Field(FieldName = "WeightedCV1")]
 		public virtual float WeightedCV1
 		{
 		    get 
@@ -11577,8 +11113,7 @@ namespace CruiseDAL.DataObjects
 		}
 		private float _weightedcv2  = 0.0f;
 		[XmlElement]
-		[Field (FieldName = "WeightedCV2",
-		 IsPersisted = true)]
+		[Field(FieldName = "WeightedCV2")]
 		public virtual float WeightedCV2
 		{
 		    get 
@@ -11595,8 +11130,7 @@ namespace CruiseDAL.DataObjects
 		}
 		private float _treesperacre  = 0.0f;
 		[XmlElement]
-		[Field (FieldName = "TreesPerAcre",
-		 IsPersisted = true)]
+		[Field(FieldName = "TreesPerAcre")]
 		public virtual float TreesPerAcre
 		{
 		    get 
@@ -11613,8 +11147,7 @@ namespace CruiseDAL.DataObjects
 		}
 		private float _volumeperacre  = 0.0f;
 		[XmlElement]
-		[Field (FieldName = "VolumePerAcre",
-		 IsPersisted = true)]
+		[Field(FieldName = "VolumePerAcre")]
 		public virtual float VolumePerAcre
 		{
 		    get 
@@ -11631,8 +11164,7 @@ namespace CruiseDAL.DataObjects
 		}
 		private float _totalvolume  = 0.0f;
 		[XmlElement]
-		[Field (FieldName = "TotalVolume",
-		 IsPersisted = true)]
+		[Field(FieldName = "TotalVolume")]
 		public virtual float TotalVolume
 		{
 		    get 
@@ -11649,8 +11181,7 @@ namespace CruiseDAL.DataObjects
 		}
 		private float _totalacres  = 0.0f;
 		[XmlElement]
-		[Field (FieldName = "TotalAcres",
-		 IsPersisted = true)]
+		[Field(FieldName = "TotalAcres")]
 		public virtual float TotalAcres
 		{
 		    get 
@@ -11667,8 +11198,7 @@ namespace CruiseDAL.DataObjects
 		}
 		private Int64 _plotspacing ;
 		[XmlElement]
-		[Field (FieldName = "PlotSpacing",
-		 IsPersisted = true)]
+		[Field(FieldName = "PlotSpacing")]
 		public virtual Int64 PlotSpacing
 		{
 		    get 
@@ -11685,8 +11215,7 @@ namespace CruiseDAL.DataObjects
 		}
 		private Int64 _used ;
 		[XmlElement]
-		[Field (FieldName = "Used",
-		 IsPersisted = true)]
+		[Field(FieldName = "Used")]
 		public virtual Int64 Used
 		{
 		    get 
@@ -11783,8 +11312,7 @@ namespace CruiseDAL.DataObjects
 		#region Ctor
 		static RegressionDO()
 		{    
-		    _validator = new RowValidator();
-		    
+			_validator = new RowValidator();
 		}
 		
 		public RegressionDO() {}
@@ -11806,8 +11334,7 @@ namespace CruiseDAL.DataObjects
 		}
 		private String _rvolume ;
 		[XmlElement]
-		[Field (FieldName = "rVolume",
-		 IsPersisted = true)]
+		[Field(FieldName = "rVolume")]
 		public virtual String rVolume
 		{
 		    get 
@@ -11824,8 +11351,7 @@ namespace CruiseDAL.DataObjects
 		}
 		private String _rvoltype ;
 		[XmlElement]
-		[Field (FieldName = "rVolType",
-		 IsPersisted = true)]
+		[Field(FieldName = "rVolType")]
 		public virtual String rVolType
 		{
 		    get 
@@ -11842,8 +11368,7 @@ namespace CruiseDAL.DataObjects
 		}
 		private String _rspeices ;
 		[XmlElement]
-		[Field (FieldName = "rSpeices",
-		 IsPersisted = true)]
+		[Field(FieldName = "rSpeices")]
 		public virtual String rSpeices
 		{
 		    get 
@@ -11860,8 +11385,7 @@ namespace CruiseDAL.DataObjects
 		}
 		private String _rproduct ;
 		[XmlElement]
-		[Field (FieldName = "rProduct",
-		 IsPersisted = true)]
+		[Field(FieldName = "rProduct")]
 		public virtual String rProduct
 		{
 		    get 
@@ -11878,8 +11402,7 @@ namespace CruiseDAL.DataObjects
 		}
 		private String _rlivedead ;
 		[XmlElement]
-		[Field (FieldName = "rLiveDead",
-		 IsPersisted = true)]
+		[Field(FieldName = "rLiveDead")]
 		public virtual String rLiveDead
 		{
 		    get 
@@ -11896,8 +11419,7 @@ namespace CruiseDAL.DataObjects
 		}
 		private float _coefficienta  = 0.0f;
 		[XmlElement]
-		[Field (FieldName = "CoefficientA",
-		 IsPersisted = true)]
+		[Field(FieldName = "CoefficientA")]
 		public virtual float CoefficientA
 		{
 		    get 
@@ -11914,8 +11436,7 @@ namespace CruiseDAL.DataObjects
 		}
 		private float _coefficientb  = 0.0f;
 		[XmlElement]
-		[Field (FieldName = "CoefficientB",
-		 IsPersisted = true)]
+		[Field(FieldName = "CoefficientB")]
 		public virtual float CoefficientB
 		{
 		    get 
@@ -11932,8 +11453,7 @@ namespace CruiseDAL.DataObjects
 		}
 		private float _coefficientc  = 0.0f;
 		[XmlElement]
-		[Field (FieldName = "CoefficientC",
-		 IsPersisted = true)]
+		[Field(FieldName = "CoefficientC")]
 		public virtual float CoefficientC
 		{
 		    get 
@@ -11950,8 +11470,7 @@ namespace CruiseDAL.DataObjects
 		}
 		private Int64 _totaltrees ;
 		[XmlElement]
-		[Field (FieldName = "TotalTrees",
-		 IsPersisted = true)]
+		[Field(FieldName = "TotalTrees")]
 		public virtual Int64 TotalTrees
 		{
 		    get 
@@ -11968,8 +11487,7 @@ namespace CruiseDAL.DataObjects
 		}
 		private float _meanse  = 0.0f;
 		[XmlElement]
-		[Field (FieldName = "MeanSE",
-		 IsPersisted = true)]
+		[Field(FieldName = "MeanSE")]
 		public virtual float MeanSE
 		{
 		    get 
@@ -11986,8 +11504,7 @@ namespace CruiseDAL.DataObjects
 		}
 		private float _rsquared  = 0.0f;
 		[XmlElement]
-		[Field (FieldName = "Rsquared",
-		 IsPersisted = true)]
+		[Field(FieldName = "Rsquared")]
 		public virtual float Rsquared
 		{
 		    get 
@@ -12004,8 +11521,7 @@ namespace CruiseDAL.DataObjects
 		}
 		private String _regressmodel ;
 		[XmlElement]
-		[Field (FieldName = "RegressModel",
-		 IsPersisted = true)]
+		[Field(FieldName = "RegressModel")]
 		public virtual String RegressModel
 		{
 		    get 
@@ -12022,8 +11538,7 @@ namespace CruiseDAL.DataObjects
 		}
 		private float _rmindbh  = 0.0f;
 		[XmlElement]
-		[Field (FieldName = "rMinDbh",
-		 IsPersisted = true)]
+		[Field(FieldName = "rMinDbh")]
 		public virtual float rMinDbh
 		{
 		    get 
@@ -12040,8 +11555,7 @@ namespace CruiseDAL.DataObjects
 		}
 		private float _rmaxdbh  = 0.0f;
 		[XmlElement]
-		[Field (FieldName = "rMaxDbh",
-		 IsPersisted = true)]
+		[Field(FieldName = "rMaxDbh")]
 		public virtual float rMaxDbh
 		{
 		    get 
@@ -12129,8 +11643,7 @@ namespace CruiseDAL.DataObjects
 		#region Ctor
 		static LogMatrixDO()
 		{    
-		    _validator = new RowValidator();
-		    
+			_validator = new RowValidator();
 		}
 		
 		public LogMatrixDO() {}
@@ -12145,8 +11658,7 @@ namespace CruiseDAL.DataObjects
 		#endregion
 		private String _reportnumber ;
 		[XmlElement]
-		[Field (FieldName = "ReportNumber",
-		 IsPersisted = true)]
+		[Field(FieldName = "ReportNumber")]
 		public virtual String ReportNumber
 		{
 		    get 
@@ -12163,8 +11675,7 @@ namespace CruiseDAL.DataObjects
 		}
 		private String _gradedescription ;
 		[XmlElement]
-		[Field (FieldName = "GradeDescription",
-		 IsPersisted = true)]
+		[Field(FieldName = "GradeDescription")]
 		public virtual String GradeDescription
 		{
 		    get 
@@ -12181,8 +11692,7 @@ namespace CruiseDAL.DataObjects
 		}
 		private String _logsortdescription ;
 		[XmlElement]
-		[Field (FieldName = "LogSortDescription",
-		 IsPersisted = true)]
+		[Field(FieldName = "LogSortDescription")]
 		public virtual String LogSortDescription
 		{
 		    get 
@@ -12199,8 +11709,7 @@ namespace CruiseDAL.DataObjects
 		}
 		private String _species ;
 		[XmlElement]
-		[Field (FieldName = "Species",
-		 IsPersisted = true)]
+		[Field(FieldName = "Species")]
 		public virtual String Species
 		{
 		    get 
@@ -12217,8 +11726,7 @@ namespace CruiseDAL.DataObjects
 		}
 		private String _loggrade1 ;
 		[XmlElement]
-		[Field (FieldName = "LogGrade1",
-		 IsPersisted = true)]
+		[Field(FieldName = "LogGrade1")]
 		public virtual String LogGrade1
 		{
 		    get 
@@ -12235,8 +11743,7 @@ namespace CruiseDAL.DataObjects
 		}
 		private String _loggrade2 ;
 		[XmlElement]
-		[Field (FieldName = "LogGrade2",
-		 IsPersisted = true)]
+		[Field(FieldName = "LogGrade2")]
 		public virtual String LogGrade2
 		{
 		    get 
@@ -12253,8 +11760,7 @@ namespace CruiseDAL.DataObjects
 		}
 		private String _loggrade3 ;
 		[XmlElement]
-		[Field (FieldName = "LogGrade3",
-		 IsPersisted = true)]
+		[Field(FieldName = "LogGrade3")]
 		public virtual String LogGrade3
 		{
 		    get 
@@ -12271,8 +11777,7 @@ namespace CruiseDAL.DataObjects
 		}
 		private String _loggrade4 ;
 		[XmlElement]
-		[Field (FieldName = "LogGrade4",
-		 IsPersisted = true)]
+		[Field(FieldName = "LogGrade4")]
 		public virtual String LogGrade4
 		{
 		    get 
@@ -12289,8 +11794,7 @@ namespace CruiseDAL.DataObjects
 		}
 		private String _loggrade5 ;
 		[XmlElement]
-		[Field (FieldName = "LogGrade5",
-		 IsPersisted = true)]
+		[Field(FieldName = "LogGrade5")]
 		public virtual String LogGrade5
 		{
 		    get 
@@ -12307,8 +11811,7 @@ namespace CruiseDAL.DataObjects
 		}
 		private String _loggrade6 ;
 		[XmlElement]
-		[Field (FieldName = "LogGrade6",
-		 IsPersisted = true)]
+		[Field(FieldName = "LogGrade6")]
 		public virtual String LogGrade6
 		{
 		    get 
@@ -12325,8 +11828,7 @@ namespace CruiseDAL.DataObjects
 		}
 		private String _sedlimit ;
 		[XmlElement]
-		[Field (FieldName = "SEDlimit",
-		 IsPersisted = true)]
+		[Field(FieldName = "SEDlimit")]
 		public virtual String SEDlimit
 		{
 		    get 
@@ -12343,8 +11845,7 @@ namespace CruiseDAL.DataObjects
 		}
 		private Double _sedminimum  = 0.0;
 		[XmlElement]
-		[Field (FieldName = "SEDminimum",
-		 IsPersisted = true)]
+		[Field(FieldName = "SEDminimum")]
 		public virtual Double SEDminimum
 		{
 		    get 
@@ -12361,8 +11862,7 @@ namespace CruiseDAL.DataObjects
 		}
 		private Double _sedmaximum  = 0.0;
 		[XmlElement]
-		[Field (FieldName = "SEDmaximum",
-		 IsPersisted = true)]
+		[Field(FieldName = "SEDmaximum")]
 		public virtual Double SEDmaximum
 		{
 		    get 
@@ -12450,8 +11950,7 @@ namespace CruiseDAL.DataObjects
 		#region Ctor
 		static TreeDefaultValueTreeAuditValueDO()
 		{    
-		    _validator = new RowValidator();
-		    
+			_validator = new RowValidator();
 			_validator.Add(new NotNullRule("TreeAuditValue_CN", "TreeDefaultValueTreeAuditValue", "TreeAuditValue_CN is Required"));
 			_validator.Add(new NotNullRule("TreeDefaultValue_CN", "TreeDefaultValueTreeAuditValue", "TreeDefaultValue_CN is Required"));
 		}
@@ -12468,8 +11967,7 @@ namespace CruiseDAL.DataObjects
 		#endregion
 		private long? _treeauditvalue_cn ;
 		[XmlIgnore]
-		[Field (FieldName = "TreeAuditValue_CN",
-		 IsPersisted = true)]
+		[Field(FieldName = "TreeAuditValue_CN")]
 		public virtual long? TreeAuditValue_CN
 		{
 		    get 
@@ -12519,8 +12017,7 @@ namespace CruiseDAL.DataObjects
 		}
 		private long? _treedefaultvalue_cn ;
 		[XmlIgnore]
-		[Field (FieldName = "TreeDefaultValue_CN",
-		 IsPersisted = true)]
+		[Field(FieldName = "TreeDefaultValue_CN")]
 		public virtual long? TreeDefaultValue_CN
 		{
 		    get 
@@ -12615,8 +12112,7 @@ namespace CruiseDAL.DataObjects
 		#region Ctor
 		static TreeAuditValueDO()
 		{    
-		    _validator = new RowValidator();
-		    
+			_validator = new RowValidator();
 			_validator.Add(new NotNullRule("Field", "TreeAuditValue", "Field is Required"));
 		}
 		
@@ -12639,8 +12135,7 @@ namespace CruiseDAL.DataObjects
 		}
 		private String _field ;
 		[XmlElement]
-		[Field (FieldName = "Field",
-		 IsPersisted = true)]
+		[Field(FieldName = "Field")]
 		public virtual String Field
 		{
 		    get 
@@ -12657,8 +12152,7 @@ namespace CruiseDAL.DataObjects
 		}
 		private float _min  = 0.0f;
 		[XmlElement]
-		[Field (FieldName = "Min",
-		 IsPersisted = true)]
+		[Field(FieldName = "Min")]
 		public virtual float Min
 		{
 		    get 
@@ -12675,8 +12169,7 @@ namespace CruiseDAL.DataObjects
 		}
 		private float _max  = 0.0f;
 		[XmlElement]
-		[Field (FieldName = "Max",
-		 IsPersisted = true)]
+		[Field(FieldName = "Max")]
 		public virtual float Max
 		{
 		    get 
@@ -12693,8 +12186,7 @@ namespace CruiseDAL.DataObjects
 		}
 		private String _valueset ;
 		[XmlElement]
-		[Field (FieldName = "ValueSet",
-		 IsPersisted = true)]
+		[Field(FieldName = "ValueSet")]
 		public virtual String ValueSet
 		{
 		    get 
@@ -12711,8 +12203,7 @@ namespace CruiseDAL.DataObjects
 		}
 		private bool _required  = false;
 		[XmlElement]
-		[Field (FieldName = "Required",
-		 IsPersisted = true)]
+		[Field(FieldName = "Required")]
 		public virtual bool Required
 		{
 		    get 
@@ -12782,8 +12273,7 @@ namespace CruiseDAL.DataObjects
 		#region Ctor
 		static LogFieldSetupDO()
 		{    
-		    _validator = new RowValidator();
-		    
+			_validator = new RowValidator();
 			_validator.Add(new NotNullRule("Stratum_CN", "LogFieldSetup", "Stratum_CN is Required"));
 			_validator.Add(new NotNullRule("Field", "LogFieldSetup", "Field is Required"));
 		}
@@ -12800,8 +12290,7 @@ namespace CruiseDAL.DataObjects
 		#endregion
 		private long? _stratum_cn ;
 		[XmlIgnore]
-		[Field (FieldName = "Stratum_CN",
-		 IsPersisted = true)]
+		[Field(FieldName = "Stratum_CN")]
 		public virtual long? Stratum_CN
 		{
 		    get 
@@ -12851,8 +12340,7 @@ namespace CruiseDAL.DataObjects
 		}
 		private String _field ;
 		[XmlElement]
-		[Field (FieldName = "Field",
-		 IsPersisted = true)]
+		[Field(FieldName = "Field")]
 		public virtual String Field
 		{
 		    get 
@@ -12869,8 +12357,7 @@ namespace CruiseDAL.DataObjects
 		}
 		private Int64 _fieldorder ;
 		[XmlElement]
-		[Field (FieldName = "FieldOrder",
-		 IsPersisted = true)]
+		[Field(FieldName = "FieldOrder")]
 		public virtual Int64 FieldOrder
 		{
 		    get 
@@ -12887,8 +12374,7 @@ namespace CruiseDAL.DataObjects
 		}
 		private String _columntype ;
 		[XmlElement]
-		[Field (FieldName = "ColumnType",
-		 IsPersisted = true)]
+		[Field(FieldName = "ColumnType")]
 		public virtual String ColumnType
 		{
 		    get 
@@ -12905,8 +12391,7 @@ namespace CruiseDAL.DataObjects
 		}
 		private String _heading ;
 		[XmlElement]
-		[Field (FieldName = "Heading",
-		 IsPersisted = true)]
+		[Field(FieldName = "Heading")]
 		public virtual String Heading
 		{
 		    get 
@@ -12923,8 +12408,7 @@ namespace CruiseDAL.DataObjects
 		}
 		private float _width  = 0.0f;
 		[XmlElement]
-		[Field (FieldName = "Width",
-		 IsPersisted = true)]
+		[Field(FieldName = "Width")]
 		public virtual float Width
 		{
 		    get 
@@ -12941,8 +12425,7 @@ namespace CruiseDAL.DataObjects
 		}
 		private String _format ;
 		[XmlElement]
-		[Field (FieldName = "Format",
-		 IsPersisted = true)]
+		[Field(FieldName = "Format")]
 		public virtual String Format
 		{
 		    get 
@@ -12959,8 +12442,7 @@ namespace CruiseDAL.DataObjects
 		}
 		private String _behavior ;
 		[XmlElement]
-		[Field (FieldName = "Behavior",
-		 IsPersisted = true)]
+		[Field(FieldName = "Behavior")]
 		public virtual String Behavior
 		{
 		    get 
@@ -13035,8 +12517,7 @@ namespace CruiseDAL.DataObjects
 		#region Ctor
 		static TreeFieldSetupDO()
 		{    
-		    _validator = new RowValidator();
-		    
+			_validator = new RowValidator();
 			_validator.Add(new NotNullRule("Stratum_CN", "TreeFieldSetup", "Stratum_CN is Required"));
 			_validator.Add(new NotNullRule("Field", "TreeFieldSetup", "Field is Required"));
 		}
@@ -13053,8 +12534,7 @@ namespace CruiseDAL.DataObjects
 		#endregion
 		private long? _stratum_cn ;
 		[XmlIgnore]
-		[Field (FieldName = "Stratum_CN",
-		 IsPersisted = true)]
+		[Field(FieldName = "Stratum_CN")]
 		public virtual long? Stratum_CN
 		{
 		    get 
@@ -13104,8 +12584,7 @@ namespace CruiseDAL.DataObjects
 		}
 		private String _field ;
 		[XmlElement]
-		[Field (FieldName = "Field",
-		 IsPersisted = true)]
+		[Field(FieldName = "Field")]
 		public virtual String Field
 		{
 		    get 
@@ -13122,8 +12601,7 @@ namespace CruiseDAL.DataObjects
 		}
 		private Int64 _fieldorder ;
 		[XmlElement]
-		[Field (FieldName = "FieldOrder",
-		 IsPersisted = true)]
+		[Field(FieldName = "FieldOrder")]
 		public virtual Int64 FieldOrder
 		{
 		    get 
@@ -13140,8 +12618,7 @@ namespace CruiseDAL.DataObjects
 		}
 		private String _columntype ;
 		[XmlElement]
-		[Field (FieldName = "ColumnType",
-		 IsPersisted = true)]
+		[Field(FieldName = "ColumnType")]
 		public virtual String ColumnType
 		{
 		    get 
@@ -13158,8 +12635,7 @@ namespace CruiseDAL.DataObjects
 		}
 		private String _heading ;
 		[XmlElement]
-		[Field (FieldName = "Heading",
-		 IsPersisted = true)]
+		[Field(FieldName = "Heading")]
 		public virtual String Heading
 		{
 		    get 
@@ -13176,8 +12652,7 @@ namespace CruiseDAL.DataObjects
 		}
 		private float _width  = 0.0f;
 		[XmlElement]
-		[Field (FieldName = "Width",
-		 IsPersisted = true)]
+		[Field(FieldName = "Width")]
 		public virtual float Width
 		{
 		    get 
@@ -13194,8 +12669,7 @@ namespace CruiseDAL.DataObjects
 		}
 		private String _format ;
 		[XmlElement]
-		[Field (FieldName = "Format",
-		 IsPersisted = true)]
+		[Field(FieldName = "Format")]
 		public virtual String Format
 		{
 		    get 
@@ -13212,8 +12686,7 @@ namespace CruiseDAL.DataObjects
 		}
 		private String _behavior ;
 		[XmlElement]
-		[Field (FieldName = "Behavior",
-		 IsPersisted = true)]
+		[Field(FieldName = "Behavior")]
 		public virtual String Behavior
 		{
 		    get 
@@ -13288,8 +12761,7 @@ namespace CruiseDAL.DataObjects
 		#region Ctor
 		static LogFieldSetupDefaultDO()
 		{    
-		    _validator = new RowValidator();
-		    
+			_validator = new RowValidator();
 			_validator.Add(new NotNullRule("Field", "LogFieldSetupDefault", "Field is Required"));
 		}
 		
@@ -13312,8 +12784,7 @@ namespace CruiseDAL.DataObjects
 		}
 		private String _field ;
 		[XmlElement]
-		[Field (FieldName = "Field",
-		 IsPersisted = true)]
+		[Field(FieldName = "Field")]
 		public virtual String Field
 		{
 		    get 
@@ -13330,8 +12801,7 @@ namespace CruiseDAL.DataObjects
 		}
 		private String _fieldname ;
 		[XmlElement]
-		[Field (FieldName = "FieldName",
-		 IsPersisted = true)]
+		[Field(FieldName = "FieldName")]
 		public virtual String FieldName
 		{
 		    get 
@@ -13348,8 +12818,7 @@ namespace CruiseDAL.DataObjects
 		}
 		private Int64 _fieldorder ;
 		[XmlElement]
-		[Field (FieldName = "FieldOrder",
-		 IsPersisted = true)]
+		[Field(FieldName = "FieldOrder")]
 		public virtual Int64 FieldOrder
 		{
 		    get 
@@ -13366,8 +12835,7 @@ namespace CruiseDAL.DataObjects
 		}
 		private String _columntype ;
 		[XmlElement]
-		[Field (FieldName = "ColumnType",
-		 IsPersisted = true)]
+		[Field(FieldName = "ColumnType")]
 		public virtual String ColumnType
 		{
 		    get 
@@ -13384,8 +12852,7 @@ namespace CruiseDAL.DataObjects
 		}
 		private String _heading ;
 		[XmlElement]
-		[Field (FieldName = "Heading",
-		 IsPersisted = true)]
+		[Field(FieldName = "Heading")]
 		public virtual String Heading
 		{
 		    get 
@@ -13402,8 +12869,7 @@ namespace CruiseDAL.DataObjects
 		}
 		private float _width  = 0.0f;
 		[XmlElement]
-		[Field (FieldName = "Width",
-		 IsPersisted = true)]
+		[Field(FieldName = "Width")]
 		public virtual float Width
 		{
 		    get 
@@ -13420,8 +12886,7 @@ namespace CruiseDAL.DataObjects
 		}
 		private String _format ;
 		[XmlElement]
-		[Field (FieldName = "Format",
-		 IsPersisted = true)]
+		[Field(FieldName = "Format")]
 		public virtual String Format
 		{
 		    get 
@@ -13438,8 +12903,7 @@ namespace CruiseDAL.DataObjects
 		}
 		private String _behavior ;
 		[XmlElement]
-		[Field (FieldName = "Behavior",
-		 IsPersisted = true)]
+		[Field(FieldName = "Behavior")]
 		public virtual String Behavior
 		{
 		    get 
@@ -13515,8 +12979,7 @@ namespace CruiseDAL.DataObjects
 		#region Ctor
 		static TreeFieldSetupDefaultDO()
 		{    
-		    _validator = new RowValidator();
-		    
+			_validator = new RowValidator();
 			_validator.Add(new NotNullRule("Method", "TreeFieldSetupDefault", "Method is Required"));
 			_validator.Add(new NotNullRule("Field", "TreeFieldSetupDefault", "Field is Required"));
 		}
@@ -13540,8 +13003,7 @@ namespace CruiseDAL.DataObjects
 		}
 		private String _method ;
 		[XmlElement]
-		[Field (FieldName = "Method",
-		 IsPersisted = true)]
+		[Field(FieldName = "Method")]
 		public virtual String Method
 		{
 		    get 
@@ -13558,8 +13020,7 @@ namespace CruiseDAL.DataObjects
 		}
 		private String _field ;
 		[XmlElement]
-		[Field (FieldName = "Field",
-		 IsPersisted = true)]
+		[Field(FieldName = "Field")]
 		public virtual String Field
 		{
 		    get 
@@ -13576,8 +13037,7 @@ namespace CruiseDAL.DataObjects
 		}
 		private String _fieldname ;
 		[XmlElement]
-		[Field (FieldName = "FieldName",
-		 IsPersisted = true)]
+		[Field(FieldName = "FieldName")]
 		public virtual String FieldName
 		{
 		    get 
@@ -13594,8 +13054,7 @@ namespace CruiseDAL.DataObjects
 		}
 		private Int64 _fieldorder ;
 		[XmlElement]
-		[Field (FieldName = "FieldOrder",
-		 IsPersisted = true)]
+		[Field(FieldName = "FieldOrder")]
 		public virtual Int64 FieldOrder
 		{
 		    get 
@@ -13612,8 +13071,7 @@ namespace CruiseDAL.DataObjects
 		}
 		private String _columntype ;
 		[XmlElement]
-		[Field (FieldName = "ColumnType",
-		 IsPersisted = true)]
+		[Field(FieldName = "ColumnType")]
 		public virtual String ColumnType
 		{
 		    get 
@@ -13630,8 +13088,7 @@ namespace CruiseDAL.DataObjects
 		}
 		private String _heading ;
 		[XmlElement]
-		[Field (FieldName = "Heading",
-		 IsPersisted = true)]
+		[Field(FieldName = "Heading")]
 		public virtual String Heading
 		{
 		    get 
@@ -13648,8 +13105,7 @@ namespace CruiseDAL.DataObjects
 		}
 		private float _width  = 0.0f;
 		[XmlElement]
-		[Field (FieldName = "Width",
-		 IsPersisted = true)]
+		[Field(FieldName = "Width")]
 		public virtual float Width
 		{
 		    get 
@@ -13666,8 +13122,7 @@ namespace CruiseDAL.DataObjects
 		}
 		private String _format ;
 		[XmlElement]
-		[Field (FieldName = "Format",
-		 IsPersisted = true)]
+		[Field(FieldName = "Format")]
 		public virtual String Format
 		{
 		    get 
@@ -13684,8 +13139,7 @@ namespace CruiseDAL.DataObjects
 		}
 		private String _behavior ;
 		[XmlElement]
-		[Field (FieldName = "Behavior",
-		 IsPersisted = true)]
+		[Field(FieldName = "Behavior")]
 		public virtual String Behavior
 		{
 		    get 
@@ -13765,8 +13219,7 @@ namespace CruiseDAL.DataObjects
 		#region Ctor
 		static CruiseMethodsDO()
 		{    
-		    _validator = new RowValidator();
-		    
+			_validator = new RowValidator();
 		}
 		
 		public CruiseMethodsDO() {}
@@ -13788,8 +13241,7 @@ namespace CruiseDAL.DataObjects
 		}
 		private String _code ;
 		[XmlElement]
-		[Field (FieldName = "Code",
-		 IsPersisted = true)]
+		[Field(FieldName = "Code")]
 		public virtual String Code
 		{
 		    get 
@@ -13806,8 +13258,7 @@ namespace CruiseDAL.DataObjects
 		}
 		private String _friendlyvalue ;
 		[XmlElement]
-		[Field (FieldName = "FriendlyValue",
-		 IsPersisted = true)]
+		[Field(FieldName = "FriendlyValue")]
 		public virtual String FriendlyValue
 		{
 		    get 
@@ -13871,8 +13322,7 @@ namespace CruiseDAL.DataObjects
 		#region Ctor
 		static LoggingMethodsDO()
 		{    
-		    _validator = new RowValidator();
-		    
+			_validator = new RowValidator();
 		}
 		
 		public LoggingMethodsDO() {}
@@ -13894,8 +13344,7 @@ namespace CruiseDAL.DataObjects
 		}
 		private String _code ;
 		[XmlElement]
-		[Field (FieldName = "Code",
-		 IsPersisted = true)]
+		[Field(FieldName = "Code")]
 		public virtual String Code
 		{
 		    get 
@@ -13912,8 +13361,7 @@ namespace CruiseDAL.DataObjects
 		}
 		private String _friendlyvalue ;
 		[XmlElement]
-		[Field (FieldName = "FriendlyValue",
-		 IsPersisted = true)]
+		[Field(FieldName = "FriendlyValue")]
 		public virtual String FriendlyValue
 		{
 		    get 
@@ -13977,8 +13425,7 @@ namespace CruiseDAL.DataObjects
 		#region Ctor
 		static ProductCodesDO()
 		{    
-		    _validator = new RowValidator();
-		    
+			_validator = new RowValidator();
 		}
 		
 		public ProductCodesDO() {}
@@ -14000,8 +13447,7 @@ namespace CruiseDAL.DataObjects
 		}
 		private String _code ;
 		[XmlElement]
-		[Field (FieldName = "Code",
-		 IsPersisted = true)]
+		[Field(FieldName = "Code")]
 		public virtual String Code
 		{
 		    get 
@@ -14018,8 +13464,7 @@ namespace CruiseDAL.DataObjects
 		}
 		private String _friendlyvalue ;
 		[XmlElement]
-		[Field (FieldName = "FriendlyValue",
-		 IsPersisted = true)]
+		[Field(FieldName = "FriendlyValue")]
 		public virtual String FriendlyValue
 		{
 		    get 
@@ -14083,8 +13528,7 @@ namespace CruiseDAL.DataObjects
 		#region Ctor
 		static UOMCodesDO()
 		{    
-		    _validator = new RowValidator();
-		    
+			_validator = new RowValidator();
 		}
 		
 		public UOMCodesDO() {}
@@ -14106,8 +13550,7 @@ namespace CruiseDAL.DataObjects
 		}
 		private String _code ;
 		[XmlElement]
-		[Field (FieldName = "Code",
-		 IsPersisted = true)]
+		[Field(FieldName = "Code")]
 		public virtual String Code
 		{
 		    get 
@@ -14124,8 +13567,7 @@ namespace CruiseDAL.DataObjects
 		}
 		private String _friendlyvalue ;
 		[XmlElement]
-		[Field (FieldName = "FriendlyValue",
-		 IsPersisted = true)]
+		[Field(FieldName = "FriendlyValue")]
 		public virtual String FriendlyValue
 		{
 		    get 
@@ -14189,8 +13631,7 @@ namespace CruiseDAL.DataObjects
 		#region Ctor
 		static RegionsDO()
 		{    
-		    _validator = new RowValidator();
-		    
+			_validator = new RowValidator();
 		}
 		
 		public RegionsDO() {}
@@ -14212,8 +13653,7 @@ namespace CruiseDAL.DataObjects
 		}
 		private Int64 _number ;
 		[XmlElement]
-		[Field (FieldName = "Number",
-		 IsPersisted = true)]
+		[Field(FieldName = "Number")]
 		public virtual Int64 Number
 		{
 		    get 
@@ -14230,8 +13670,7 @@ namespace CruiseDAL.DataObjects
 		}
 		private String _name ;
 		[XmlElement]
-		[Field (FieldName = "Name",
-		 IsPersisted = true)]
+		[Field(FieldName = "Name")]
 		public virtual String Name
 		{
 		    get 
@@ -14295,8 +13734,7 @@ namespace CruiseDAL.DataObjects
 		#region Ctor
 		static ForestsDO()
 		{    
-		    _validator = new RowValidator();
-		    
+			_validator = new RowValidator();
 		}
 		
 		public ForestsDO() {}
@@ -14318,8 +13756,7 @@ namespace CruiseDAL.DataObjects
 		}
 		private long? _region_cn ;
 		[XmlIgnore]
-		[Field (FieldName = "Region_CN",
-		 IsPersisted = true)]
+		[Field(FieldName = "Region_CN")]
 		public virtual long? Region_CN
 		{
 		    get 
@@ -14369,8 +13806,7 @@ namespace CruiseDAL.DataObjects
 		}
 		private String _state ;
 		[XmlElement]
-		[Field (FieldName = "State",
-		 IsPersisted = true)]
+		[Field(FieldName = "State")]
 		public virtual String State
 		{
 		    get 
@@ -14387,8 +13823,7 @@ namespace CruiseDAL.DataObjects
 		}
 		private String _name ;
 		[XmlElement]
-		[Field (FieldName = "Name",
-		 IsPersisted = true)]
+		[Field(FieldName = "Name")]
 		public virtual String Name
 		{
 		    get 
@@ -14405,8 +13840,7 @@ namespace CruiseDAL.DataObjects
 		}
 		private Int64 _number ;
 		[XmlElement]
-		[Field (FieldName = "Number",
-		 IsPersisted = true)]
+		[Field(FieldName = "Number")]
 		public virtual Int64 Number
 		{
 		    get 
@@ -14475,8 +13909,7 @@ namespace CruiseDAL.DataObjects
 		#region Ctor
 		static ErrorLogDO()
 		{    
-		    _validator = new RowValidator();
-		    
+			_validator = new RowValidator();
 			_validator.Add(new NotNullRule("TableName", "ErrorLog", "TableName is Required"));
 			_validator.Add(new NotNullRule("CN_Number", "ErrorLog", "CN_Number is Required"));
 			_validator.Add(new NotNullRule("ColumnName", "ErrorLog", "ColumnName is Required"));
@@ -14495,8 +13928,7 @@ namespace CruiseDAL.DataObjects
 		#endregion
 		private String _tablename ;
 		[XmlElement]
-		[Field (FieldName = "TableName",
-		 IsPersisted = true)]
+		[Field(FieldName = "TableName")]
 		public virtual String TableName
 		{
 		    get 
@@ -14513,8 +13945,7 @@ namespace CruiseDAL.DataObjects
 		}
 		private Int64 _cn_number ;
 		[XmlElement]
-		[Field (FieldName = "CN_Number",
-		 IsPersisted = true)]
+		[Field(FieldName = "CN_Number")]
 		public virtual Int64 CN_Number
 		{
 		    get 
@@ -14531,8 +13962,7 @@ namespace CruiseDAL.DataObjects
 		}
 		private String _columnname ;
 		[XmlElement]
-		[Field (FieldName = "ColumnName",
-		 IsPersisted = true)]
+		[Field(FieldName = "ColumnName")]
 		public virtual String ColumnName
 		{
 		    get 
@@ -14549,8 +13979,7 @@ namespace CruiseDAL.DataObjects
 		}
 		private String _level ;
 		[XmlElement]
-		[Field (FieldName = "Level",
-		 IsPersisted = true)]
+		[Field(FieldName = "Level")]
 		public virtual String Level
 		{
 		    get 
@@ -14567,8 +13996,7 @@ namespace CruiseDAL.DataObjects
 		}
 		private String _message ;
 		[XmlElement]
-		[Field (FieldName = "Message",
-		 IsPersisted = true)]
+		[Field(FieldName = "Message")]
 		public virtual String Message
 		{
 		    get 
@@ -14585,8 +14013,7 @@ namespace CruiseDAL.DataObjects
 		}
 		private String _program ;
 		[XmlElement]
-		[Field (FieldName = "Program",
-		 IsPersisted = true)]
+		[Field(FieldName = "Program")]
 		public virtual String Program
 		{
 		    get 
@@ -14603,8 +14030,7 @@ namespace CruiseDAL.DataObjects
 		}
 		private bool _suppress  = false;
 		[XmlElement]
-		[Field (FieldName = "Suppress",
-		 IsPersisted = true)]
+		[Field(FieldName = "Suppress")]
 		public virtual bool Suppress
 		{
 		    get 
@@ -14678,8 +14104,7 @@ namespace CruiseDAL.DataObjects
 		#region Ctor
 		static MessageLogDO()
 		{    
-		    _validator = new RowValidator();
-		    
+			_validator = new RowValidator();
 		}
 		
 		public MessageLogDO() {}
@@ -14701,8 +14126,7 @@ namespace CruiseDAL.DataObjects
 		}
 		private String _program ;
 		[XmlElement]
-		[Field (FieldName = "Program",
-		 IsPersisted = true)]
+		[Field(FieldName = "Program")]
 		public virtual String Program
 		{
 		    get 
@@ -14719,8 +14143,7 @@ namespace CruiseDAL.DataObjects
 		}
 		private String _message ;
 		[XmlElement]
-		[Field (FieldName = "Message",
-		 IsPersisted = true)]
+		[Field(FieldName = "Message")]
 		public virtual String Message
 		{
 		    get 
@@ -14737,8 +14160,7 @@ namespace CruiseDAL.DataObjects
 		}
 		private String _date ;
 		[XmlElement]
-		[Field (FieldName = "Date",
-		 IsPersisted = true)]
+		[Field(FieldName = "Date")]
 		public virtual String Date
 		{
 		    get 
@@ -14755,8 +14177,7 @@ namespace CruiseDAL.DataObjects
 		}
 		private String _time ;
 		[XmlElement]
-		[Field (FieldName = "Time",
-		 IsPersisted = true)]
+		[Field(FieldName = "Time")]
 		public virtual String Time
 		{
 		    get 
@@ -14773,8 +14194,7 @@ namespace CruiseDAL.DataObjects
 		}
 		private String _level ;
 		[XmlElement]
-		[Field (FieldName = "Level",
-		 IsPersisted = true)]
+		[Field(FieldName = "Level")]
 		public virtual String Level
 		{
 		    get 
@@ -14844,8 +14264,7 @@ namespace CruiseDAL.DataObjects
 		#region Ctor
 		static GlobalsDO()
 		{    
-		    _validator = new RowValidator();
-		    
+			_validator = new RowValidator();
 		}
 		
 		public GlobalsDO() {}
@@ -14860,8 +14279,7 @@ namespace CruiseDAL.DataObjects
 		#endregion
 		private String _block ;
 		[XmlElement]
-		[Field (FieldName = "Block",
-		 IsPersisted = true)]
+		[Field(FieldName = "Block")]
 		public virtual String Block
 		{
 		    get 
@@ -14878,8 +14296,7 @@ namespace CruiseDAL.DataObjects
 		}
 		private String _key ;
 		[XmlElement]
-		[Field (FieldName = "Key",
-		 IsPersisted = true)]
+		[Field(FieldName = "Key")]
 		public virtual String Key
 		{
 		    get 
@@ -14896,8 +14313,7 @@ namespace CruiseDAL.DataObjects
 		}
 		private String _value ;
 		[XmlElement]
-		[Field (FieldName = "Value",
-		 IsPersisted = true)]
+		[Field(FieldName = "Value")]
 		public virtual String Value
 		{
 		    get 
@@ -14963,8 +14379,7 @@ namespace CruiseDAL.DataObjects
 		#region Ctor
 		static ComponentDO()
 		{    
-		    _validator = new RowValidator();
-		    
+			_validator = new RowValidator();
 		}
 		
 		public ComponentDO() {}
@@ -14986,8 +14401,7 @@ namespace CruiseDAL.DataObjects
 		}
 		private String _guid ;
 		[XmlElement]
-		[Field (FieldName = "GUID",
-		 IsPersisted = true)]
+		[Field(FieldName = "GUID")]
 		public virtual String GUID
 		{
 		    get 
@@ -15004,8 +14418,7 @@ namespace CruiseDAL.DataObjects
 		}
 		private String _lastmerge ;
 		[XmlElement]
-		[Field (FieldName = "LastMerge",
-		 IsPersisted = true)]
+		[Field(FieldName = "LastMerge")]
 		public virtual String LastMerge
 		{
 		    get 
@@ -15022,8 +14435,7 @@ namespace CruiseDAL.DataObjects
 		}
 		private String _filename ;
 		[XmlElement]
-		[Field (FieldName = "FileName",
-		 IsPersisted = true)]
+		[Field(FieldName = "FileName")]
 		public virtual String FileName
 		{
 		    get 

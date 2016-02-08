@@ -10,29 +10,31 @@ namespace FMSC.ORM.Core.EntityAttributes
     public class FieldAttribute : BaseFieldAttribute
     {
         private int _ordinal = -1;
-        private bool _isPersisted = true;
+
         public int Ordinal { get { return _ordinal; } set { _ordinal = value; } }
 
         public string FieldName { get; set; }
         public string SQLExpression { get; set; }
-        public virtual bool IsPersisted
+        public PersistanceFlags PersistanceFlags { get; set; }
+        public virtual object DefaultValue { get; set; }
+        //public bool IsDepreciated { get; set; }
+
+        internal PropertyAccessor Property { get; set; }
+        internal Type RunTimeType { get { return Property.RuntimeType; } }       
+        internal bool IsGuid;
+
+        internal string SQLPramName { get { return "@" + FieldName.ToLower();  } }
+
+
+        public FieldAttribute()
         {
-            get { return _isPersisted; }
-            set { _isPersisted = value; }
+            PersistanceFlags = PersistanceFlags.Always;
         }
 
-        public PropertyAccessor Property { get; set; }
-
-        public Type RunTimeType { get { return Property.RuntimeType; } }
-        //public MethodInfo Getter { get; set; }
-        //public MethodInfo Setter { get; set; }
-       
-        public bool IsGuid;
-
-        public string SQLPramName { get { return "@" + FieldName.ToLower();  } }
-
-        public virtual object DefaultValue { get; set; }
-        //public bool IsDepreciated { get; set; }   
+        public FieldAttribute(string fieldName) : this()
+        {
+            this.FieldName = fieldName;
+        }
 
         public string GetResultColumnExpression(string sourceName)
         {
@@ -46,18 +48,7 @@ namespace FMSC.ORM.Core.EntityAttributes
             }
         }
         
-        public FieldAttribute()
-        {
-            IsPersisted = true; 
-        }
-
-        public FieldAttribute(string fieldName)
-        {
-            this.FieldName = fieldName;
-        }
-
         
-
         public object GetFieldValue(Object obj)
         {
             object value = Property.GetValue(obj);
@@ -74,23 +65,13 @@ namespace FMSC.ORM.Core.EntityAttributes
 
         public object GetFieldValueOrDefault(Object obj)
         {
-            object value = GetFieldValue(obj);
-            if(value == null)
-            {
-                value = DefaultValue;
-            }
-            return value;
+            return GetFieldValue(obj) ?? DefaultValue;
         }
 
         public void SetFieldValue(Object dataObject, object value)
         {
             try
             {
-                ////TODO fix hack
-                //if(RunTimeType == typeof(Nullable<Int64>) && value is Int64)
-                //{
-                //    value = new Nullable<Int64>((long)value);
-                //}
                 Property.SetValue(dataObject, value);
             }
             catch(Exception e)
@@ -100,12 +81,9 @@ namespace FMSC.ORM.Core.EntityAttributes
         }
 
 
-        
-
         public void SetFieldValueOrDefault(Object dataObject, object value)
         {
-            if(value == null) { value = DefaultValue; }
-            SetFieldValue(dataObject, value);
+            SetFieldValue(dataObject, value ?? DefaultValue);
         }
 
         public override string ToString()

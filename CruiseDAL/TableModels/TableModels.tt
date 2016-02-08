@@ -73,39 +73,9 @@ public override RowValidator Validator
 #region Ctor
 static <#=table.Name#>DO()
 {    
-    _validator = new RowValidator();
-    
 <#+
-//bool hasRowValidator= false;
 PushIndent("\t");
-foreach(Field f in table.Fields)
-{             
-    if(f.IsDepreciated) { continue; }                  
-    if (!string.IsNullOrEmpty(f.ErrorMessage))
-    {
-        //if(!hasRowValidator)
-        //{
-            //hasRowValidator = true;
-            //WriteLine("_validator = new RowValidator();");
-         //}
-        WriteLine("_validator.Add(new FieldValidator(\"{0}\", \"{1}\", \"{2}\", {3}, {4}, {5}, {6}));", 
-            f.Name, 
-            table.Name, 
-            f.ErrorMessage, 
-            (f.Min!= null)? f.Min.ToString() : "double.MinValue" , 
-            (f.Max != null)? f.Max.ToString() : "double.MinValue", 
-            (f.IsReq)? "true" : "false", 
-            (string.IsNullOrEmpty(f.Values)) ? "null" : '"' + f.Values + '"');
-    }
-    else if(f.IsReq)
-    {
-        WriteLine("_validator.Add(new NotNullRule(\"{0}\", \"{1}\", \"{2}\"));", 
-            f.Name, 
-            table.Name, 
-            f.Name + " is Required" );
-    }
-    
-}
+MakeInitializeRowValidator(table);
 PopIndent();
 #>
 }
@@ -146,6 +116,37 @@ public <#=table.Name#>DO(DatastoreRedux DAL) : base(DAL)
         WriteLine("}");
  }
  //---------------------------------End Method: MakeClass
+
+
+//MakeInitializeRowValidator
+public void MakeInitializeRowValidator(Table table)
+{
+	WriteLine("_validator = new RowValidator();");
+
+	foreach(Field f in table.Fields)
+	{             
+		if(f.IsDepreciated) { continue; }                  
+		if (!string.IsNullOrEmpty(f.ErrorMessage))
+		{
+			WriteLine("_validator.Add(new FieldValidator(\"{0}\", \"{1}\", \"{2}\", {3}, {4}, {5}, {6}));", 
+				f.Name, 
+				table.Name, 
+				f.ErrorMessage, 
+				(f.Min!= null)? f.Min.ToString() : "double.MinValue" , 
+				(f.Max != null)? f.Max.ToString() : "double.MinValue", 
+				(f.IsReq)? "true" : "false", 
+				(string.IsNullOrEmpty(f.Values)) ? "null" : '"' + f.Values + '"');
+		}
+		else if(f.IsReq)
+		{
+			WriteLine("_validator.Add(new NotNullRule(\"{0}\", \"{1}\", \"{2}\"));", 
+				f.Name, 
+				table.Name, 
+				f.Name + " is Required" );
+		}
+    
+	}
+}
 
 
 //----------------------------------Method: MakePrimaryKeyProperty------------------------------------------------------
@@ -268,14 +269,19 @@ public <#=field.Ref#>DO <#=field.Ref#>
 <#+} 
 //---------------------------------End Method: MakeForeignKey
 
+
 //----------------------------------Method: MakeProperty------------------------------------------------------
 public void MakeProperty(Field field, Table table, bool isSerializable)
 {
-	string compareExpression = "_" + field.Name.ToLower() + " == value";
+	string compareExpression = null;
 
 	if(field.AccessableType.ToLower() == "float" || field.AccessableType.ToLower() == "double")
     {
 		compareExpression = "Math.Abs(_" + field.Name.ToLower() + " - value) < " + field.AccessableType + ".Epsilon";
+    }
+	else
+    {
+		compareExpression = "_" + field.Name.ToLower() + " == value";
     }
 
 	//make private field for storing property value
@@ -297,8 +303,7 @@ public void MakeProperty(Field field, Table table, bool isSerializable)
 		WriteLine("[Obsolete]");
 	}
  #>
-[Field (FieldName = "<#=field.Name#>",
- IsPersisted = <#=(!field.IsPK )? "true" : "false" #>)]
+[Field(FieldName = "<#=field.Name#>")]
 public virtual <#=field.AccessableType#> <#=field.Name#>
 {
     get 
