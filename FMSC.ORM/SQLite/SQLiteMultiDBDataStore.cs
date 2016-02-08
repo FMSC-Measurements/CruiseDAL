@@ -54,7 +54,7 @@ namespace FMSC.ORM.SQLite
                         comm.Parameters.Add(param);
                     }
                 }
-                return ExecuteSQL(comm);
+                return ExecuteSQLMultiDB(comm);
             }
         }
 
@@ -67,7 +67,7 @@ namespace FMSC.ORM.SQLite
                     command.Parameters.Add(Provider.CreateParameter(null, p));
                 }
             }
-            return ExecuteSQL(command);
+            return ExecuteSQLMultiDB(command);
         }
 
         protected int ExecuteSQLMultiDB(DbCommand command)
@@ -86,18 +86,18 @@ namespace FMSC.ORM.SQLite
             }
         }
 
-        protected int ExecuteSQLMultiDB(DbCommand command, DbConnection conn)
-        {
-            try
-            {
-                command.Connection = conn;
-                return command.ExecuteNonQuery();
-            }
-            catch (Exception e)
-            {
-                throw this.ThrowExceptionHelper(conn, command, e);
-            }
-        }
+        //protected int ExecuteSQLMultiDB(DbCommand command, DbConnection conn)
+        //{
+        //    try
+        //    {
+        //        command.Connection = conn;
+        //        return command.ExecuteNonQuery();
+        //    }
+        //    catch (Exception e)
+        //    {
+        //        throw this.ThrowExceptionHelper(conn, command, e);
+        //    }
+        //}
 
         public object ExecuteScalarMultiDB(string query, params object[] parameters)
         {
