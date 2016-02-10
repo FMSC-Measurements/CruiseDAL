@@ -19,7 +19,7 @@ namespace CruiseDAL
 
             if (dal.Exists)
             {
-                MessageLogDO msg = new MessageLogDO(dal);
+                var msg = new MessageLogDO(dal);
                 msg.Program = program;
                 msg.Message = message;
                 msg.Level = level;

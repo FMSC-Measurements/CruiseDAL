@@ -182,7 +182,7 @@ namespace CruiseDAL
         {
             get
             {
-                StringBuilder sb = new StringBuilder();
+                var sb = new StringBuilder();
                 foreach(string s in ErrorCollection.GetErrors(columnName))
                 {
                     sb.Append(s + ";");
