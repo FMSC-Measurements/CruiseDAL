@@ -6,27 +6,46 @@ namespace FMSC.ORM.Core.SQL
 {
     public class JoinClause : SelectSource
     {
-        //public SelectSource Target { get; protected set; }
-
         public TableOrSubQuery Source { get; set; }
-        public string JoinConstraint { get; set; }
 
-        public JoinClause(TableOrSubQuery source, string constraint)
+        public List<JoinComponent> Joins { get; set; }
+
+        public override string SourceName
         {
+            get
+            {
+                return this.Source.SourceName;
+            }
+        }
+
+        public JoinClause(TableOrSubQuery source)
+        {
+            this.Joins = new List<JoinComponent>();
             Source = source;
-            JoinConstraint = constraint;
         }
 
-        public JoinClause(string table, string constraint, string alias)
-            : this(new TableOrSubQuery(table, alias), constraint)
+        public override JoinClause Join(String table, string constraint, string alias)
         {
+            this.Joins.Add(new JoinComponent(table, constraint, alias));
+            return this;
         }
+
+        public override JoinClause Join(TableOrSubQuery source, string constraint)
+        {
+            this.Joins.Add(new JoinComponent(source, constraint));
+            return this;
+        }
+
 
         public override string ToSQL()
         {
-            return ParentElement.ToSQL() + " JOIN " 
-                + Source.ToSQL()
-                + " " + JoinConstraint;
+            var sBuilder = new StringBuilder();
+            sBuilder.AppendLine(Source.ToSQL());
+            foreach(JoinComponent comp in Joins)
+            {
+                sBuilder.AppendLine(" " + comp.ToSQL());
+            }
+            return sBuilder.ToString();
         }
     }
 }

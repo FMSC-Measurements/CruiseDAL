@@ -47,7 +47,7 @@ PopIndent();
 //----------------------------------Method: MakeClass------------------------------------------------------
 public void MakeClass(Table table)
 {#>
-[SQLEntity(SourceName = "<#=table.Name#>")]
+[EntitySource(SourceName = "<#=table.Name#>")]
 public partial class <#=table.Name#>DO : CruiseDALDataObject
 {
 <#+  PushIndent("\t");#>

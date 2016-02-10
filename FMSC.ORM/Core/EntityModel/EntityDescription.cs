@@ -6,6 +6,7 @@ using System.Text;
 using System.Data;
 using System.Diagnostics;
 using FMSC.ORM.Core.EntityAttributes;
+using FMSC.ORM.Core.SQL;
 
 #if ANDROID
 using Mono.Data.Sqlite;
@@ -20,13 +21,15 @@ namespace FMSC.ORM.Core.EntityModel
 {
     public class EntityDescription
     {
-        private SQLEntityAttribute _entityAttr;
+        private EntitySourceAttribute _entityAttr;
 
         public Type EntityType { get; private set; }
         public String SourceName
         {
-            get { return _entityAttr.SourceName; }
+            get { return Source.SourceName; }
         }
+
+        public SelectSource Source { get; set; }
 
         public FieldAttributeCollection Fields { get; set; }
 
@@ -58,8 +61,32 @@ namespace FMSC.ORM.Core.EntityModel
             try
             {
                 //read Entity attribute
-                object[] tAttrs = EntityType.GetCustomAttributes(typeof(SQLEntityAttribute), true);
-                _entityAttr = (SQLEntityAttribute)tAttrs[0];
+                object[] eAttrs = EntityType.GetCustomAttributes(typeof(EntityAttributeBase), true);
+
+                foreach(EntityAttributeBase eAttr in eAttrs)
+                {
+                    if(eAttr is EntitySourceAttribute)
+                    {
+                        this.Source = new TableOrSubQuery(
+                            ((EntitySourceAttribute)eAttr).SourceName
+                            , ((EntitySourceAttribute)eAttr).Alias);
+                        break;
+                    }
+                }
+
+                if (this.Source != null)
+                {
+                    foreach (EntityAttributeBase eAttr in eAttrs)
+                    {
+                        if (eAttr is EntityJoinsAttribute)
+                        {
+                            this.Source = this.Source.Join(
+                                ((EntityJoinsAttribute)eAttr).JoinSouce,
+                                ((EntityJoinsAttribute)eAttr).Constraint,
+                                ((EntityJoinsAttribute)eAttr).Alias);
+                        }
+                    }
+                }
 
                 RegesterFields();
             }

@@ -8,7 +8,7 @@ using FMSC.ORM.Core.EntityModel;
 
 namespace FMSC.ORM.TestSupport.TestModels
 {
-    [SQLEntity(SourceName = "TestRead")]
+    [EntitySource(SourceName = "TestRead")]
     public class TestReadDO : DataObject
     {
         [Field( FieldName="StringTest" )]

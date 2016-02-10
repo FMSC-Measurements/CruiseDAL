@@ -11,7 +11,7 @@ using CruiseDAL.Schema;
 namespace CruiseDAL.DataObjects
 {
 	#region Core Tables
-	[SQLEntity(SourceName = "Sale")]
+	[EntitySource(SourceName = "Sale")]
 	public partial class SaleDO : CruiseDALDataObject
 	{
 		private static RowValidator _validator;
@@ -308,7 +308,7 @@ namespace CruiseDAL.DataObjects
 			DefaultUOM = obj.DefaultUOM;
 		}
 	}
-	[SQLEntity(SourceName = "CuttingUnit")]
+	[EntitySource(SourceName = "CuttingUnit")]
 	public partial class CuttingUnitDO : CruiseDALDataObject
 	{
 		private static RowValidator _validator;
@@ -507,7 +507,7 @@ namespace CruiseDAL.DataObjects
 			TallyHistory = obj.TallyHistory;
 		}
 	}
-	[SQLEntity(SourceName = "Stratum")]
+	[EntitySource(SourceName = "Stratum")]
 	public partial class StratumDO : CruiseDALDataObject
 	{
 		private static RowValidator _validator;
@@ -805,7 +805,7 @@ namespace CruiseDAL.DataObjects
 			Year = obj.Year;
 		}
 	}
-	[SQLEntity(SourceName = "CuttingUnitStratum")]
+	[EntitySource(SourceName = "CuttingUnitStratum")]
 	public partial class CuttingUnitStratumDO : CruiseDALDataObject
 	{
 		private static RowValidator _validator;
@@ -986,7 +986,7 @@ namespace CruiseDAL.DataObjects
 			StratumArea = obj.StratumArea;
 		}
 	}
-	[SQLEntity(SourceName = "SampleGroup")]
+	[EntitySource(SourceName = "SampleGroup")]
 	public partial class SampleGroupDO : CruiseDALDataObject
 	{
 		private static RowValidator _validator;
@@ -1471,7 +1471,7 @@ namespace CruiseDAL.DataObjects
 			MaxKPI = obj.MaxKPI;
 		}
 	}
-	[SQLEntity(SourceName = "TreeDefaultValue")]
+	[EntitySource(SourceName = "TreeDefaultValue")]
 	public partial class TreeDefaultValueDO : CruiseDALDataObject
 	{
 		private static RowValidator _validator;
@@ -1891,7 +1891,7 @@ namespace CruiseDAL.DataObjects
 			ReferenceHeightPercent = obj.ReferenceHeightPercent;
 		}
 	}
-	[SQLEntity(SourceName = "SampleGroupTreeDefaultValue")]
+	[EntitySource(SourceName = "SampleGroupTreeDefaultValue")]
 	public partial class SampleGroupTreeDefaultValueDO : CruiseDALDataObject
 	{
 		private static RowValidator _validator;
@@ -2051,7 +2051,7 @@ namespace CruiseDAL.DataObjects
 			if(obj == null) { return; }
 		}
 	}
-	[SQLEntity(SourceName = "Plot")]
+	[EntitySource(SourceName = "Plot")]
 	public partial class PlotDO : CruiseDALDataObject
 	{
 		private static RowValidator _validator;
@@ -2467,7 +2467,7 @@ namespace CruiseDAL.DataObjects
 			Blob = obj.Blob;
 		}
 	}
-	[SQLEntity(SourceName = "Tree")]
+	[EntitySource(SourceName = "Tree")]
 	public partial class TreeDO : CruiseDALDataObject
 	{
 		private static RowValidator _validator;
@@ -3626,7 +3626,7 @@ namespace CruiseDAL.DataObjects
 			PointFactor = obj.PointFactor;
 		}
 	}
-	[SQLEntity(SourceName = "Log")]
+	[EntitySource(SourceName = "Log")]
 	public partial class LogDO : CruiseDALDataObject
 	{
 		private static RowValidator _validator;
@@ -4085,7 +4085,7 @@ namespace CruiseDAL.DataObjects
 			BarkThickness = obj.BarkThickness;
 		}
 	}
-	[SQLEntity(SourceName = "Stem")]
+	[EntitySource(SourceName = "Stem")]
 	public partial class StemDO : CruiseDALDataObject
 	{
 		private static RowValidator _validator;
@@ -4276,7 +4276,7 @@ namespace CruiseDAL.DataObjects
 			DiameterType = obj.DiameterType;
 		}
 	}
-	[SQLEntity(SourceName = "CountTree")]
+	[EntitySource(SourceName = "CountTree")]
 	public partial class CountTreeDO : CruiseDALDataObject
 	{
 		private static RowValidator _validator;
@@ -4654,7 +4654,7 @@ namespace CruiseDAL.DataObjects
 			SumKPI = obj.SumKPI;
 		}
 	}
-	[SQLEntity(SourceName = "Tally")]
+	[EntitySource(SourceName = "Tally")]
 	public partial class TallyDO : CruiseDALDataObject
 	{
 		private static RowValidator _validator;
@@ -4797,7 +4797,7 @@ namespace CruiseDAL.DataObjects
 			IndicatorType = obj.IndicatorType;
 		}
 	}
-	[SQLEntity(SourceName = "TreeEstimate")]
+	[EntitySource(SourceName = "TreeEstimate")]
 	public partial class TreeEstimateDO : CruiseDALDataObject
 	{
 		private static RowValidator _validator;
@@ -4972,7 +4972,7 @@ namespace CruiseDAL.DataObjects
 	}
 	#endregion
 	#region Processing Tables
-	[SQLEntity(SourceName = "VolumeEquation")]
+	[EntitySource(SourceName = "VolumeEquation")]
 	public partial class VolumeEquationDO : CruiseDALDataObject
 	{
 		private static RowValidator _validator;
@@ -5432,7 +5432,7 @@ namespace CruiseDAL.DataObjects
 			EvenOddSegment = obj.EvenOddSegment;
 		}
 	}
-	[SQLEntity(SourceName = "BiomassEquation")]
+	[EntitySource(SourceName = "BiomassEquation")]
 	public partial class BiomassEquationDO : CruiseDALDataObject
 	{
 		private static RowValidator _validator;
@@ -5704,7 +5704,7 @@ namespace CruiseDAL.DataObjects
 			WeightFactorSecondary = obj.WeightFactorSecondary;
 		}
 	}
-	[SQLEntity(SourceName = "ValueEquation")]
+	[EntitySource(SourceName = "ValueEquation")]
 	public partial class ValueEquationDO : CruiseDALDataObject
 	{
 		private static RowValidator _validator;
@@ -5954,7 +5954,7 @@ namespace CruiseDAL.DataObjects
 			Coefficient6 = obj.Coefficient6;
 		}
 	}
-	[SQLEntity(SourceName = "QualityAdjEquation")]
+	[EntitySource(SourceName = "QualityAdjEquation")]
 	public partial class QualityAdjEquationDO : CruiseDALDataObject
 	{
 		private static RowValidator _validator;
@@ -6203,7 +6203,7 @@ namespace CruiseDAL.DataObjects
 			Coefficient6 = obj.Coefficient6;
 		}
 	}
-	[SQLEntity(SourceName = "Reports")]
+	[EntitySource(SourceName = "Reports")]
 	public partial class ReportsDO : CruiseDALDataObject
 	{
 		private static RowValidator _validator;
@@ -6319,7 +6319,7 @@ namespace CruiseDAL.DataObjects
 			Title = obj.Title;
 		}
 	}
-	[SQLEntity(SourceName = "TreeCalculatedValues")]
+	[EntitySource(SourceName = "TreeCalculatedValues")]
 	public partial class TreeCalculatedValuesDO : CruiseDALDataObject
 	{
 		private static RowValidator _validator;
@@ -7044,7 +7044,7 @@ namespace CruiseDAL.DataObjects
 			BiomassTip = obj.BiomassTip;
 		}
 	}
-	[SQLEntity(SourceName = "LCD")]
+	[EntitySource(SourceName = "LCD")]
 	public partial class LCDDO : CruiseDALDataObject
 	{
 		private static RowValidator _validator;
@@ -8127,7 +8127,7 @@ namespace CruiseDAL.DataObjects
 			SumWgtTip = obj.SumWgtTip;
 		}
 	}
-	[SQLEntity(SourceName = "POP")]
+	[EntitySource(SourceName = "POP")]
 	public partial class POPDO : CruiseDALDataObject
 	{
 		private static RowValidator _validator;
@@ -9148,7 +9148,7 @@ namespace CruiseDAL.DataObjects
 			Stg2ValueXsqrdRP = obj.Stg2ValueXsqrdRP;
 		}
 	}
-	[SQLEntity(SourceName = "PRO")]
+	[EntitySource(SourceName = "PRO")]
 	public partial class PRODO : CruiseDALDataObject
 	{
 		private static RowValidator _validator;
@@ -9505,7 +9505,7 @@ namespace CruiseDAL.DataObjects
 			ProratedEstimatedTrees = obj.ProratedEstimatedTrees;
 		}
 	}
-	[SQLEntity(SourceName = "LogStock")]
+	[EntitySource(SourceName = "LogStock")]
 	public partial class LogStockDO : CruiseDALDataObject
 	{
 		private static RowValidator _validator;
@@ -9983,7 +9983,7 @@ namespace CruiseDAL.DataObjects
 			CubicUtil = obj.CubicUtil;
 		}
 	}
-	[SQLEntity(SourceName = "SampleGroupStats")]
+	[EntitySource(SourceName = "SampleGroupStats")]
 	public partial class SampleGroupStatsDO : CruiseDALDataObject
 	{
 		private static RowValidator _validator;
@@ -10669,7 +10669,7 @@ namespace CruiseDAL.DataObjects
 			ReconTrees = obj.ReconTrees;
 		}
 	}
-	[SQLEntity(SourceName = "SampleGroupStatsTreeDefaultValue")]
+	[EntitySource(SourceName = "SampleGroupStatsTreeDefaultValue")]
 	public partial class SampleGroupStatsTreeDefaultValueDO : CruiseDALDataObject
 	{
 		private static RowValidator _validator;
@@ -10829,7 +10829,7 @@ namespace CruiseDAL.DataObjects
 			if(obj == null) { return; }
 		}
 	}
-	[SQLEntity(SourceName = "StratumStats")]
+	[EntitySource(SourceName = "StratumStats")]
 	public partial class StratumStatsDO : CruiseDALDataObject
 	{
 		private static RowValidator _validator;
@@ -11287,7 +11287,7 @@ namespace CruiseDAL.DataObjects
 			Used = obj.Used;
 		}
 	}
-	[SQLEntity(SourceName = "Regression")]
+	[EntitySource(SourceName = "Regression")]
 	public partial class RegressionDO : CruiseDALDataObject
 	{
 		private static RowValidator _validator;
@@ -11618,7 +11618,7 @@ namespace CruiseDAL.DataObjects
 			rMaxDbh = obj.rMaxDbh;
 		}
 	}
-	[SQLEntity(SourceName = "LogMatrix")]
+	[EntitySource(SourceName = "LogMatrix")]
 	public partial class LogMatrixDO : CruiseDALDataObject
 	{
 		private static RowValidator _validator;
@@ -11925,7 +11925,7 @@ namespace CruiseDAL.DataObjects
 	}
 	#endregion
 	#region Settings Tables
-	[SQLEntity(SourceName = "TreeDefaultValueTreeAuditValue")]
+	[EntitySource(SourceName = "TreeDefaultValueTreeAuditValue")]
 	public partial class TreeDefaultValueTreeAuditValueDO : CruiseDALDataObject
 	{
 		private static RowValidator _validator;
@@ -12087,7 +12087,7 @@ namespace CruiseDAL.DataObjects
 			if(obj == null) { return; }
 		}
 	}
-	[SQLEntity(SourceName = "TreeAuditValue")]
+	[EntitySource(SourceName = "TreeAuditValue")]
 	public partial class TreeAuditValueDO : CruiseDALDataObject
 	{
 		private static RowValidator _validator;
@@ -12248,7 +12248,7 @@ namespace CruiseDAL.DataObjects
 			Required = obj.Required;
 		}
 	}
-	[SQLEntity(SourceName = "LogFieldSetup")]
+	[EntitySource(SourceName = "LogFieldSetup")]
 	public partial class LogFieldSetupDO : CruiseDALDataObject
 	{
 		private static RowValidator _validator;
@@ -12492,7 +12492,7 @@ namespace CruiseDAL.DataObjects
 			Behavior = obj.Behavior;
 		}
 	}
-	[SQLEntity(SourceName = "TreeFieldSetup")]
+	[EntitySource(SourceName = "TreeFieldSetup")]
 	public partial class TreeFieldSetupDO : CruiseDALDataObject
 	{
 		private static RowValidator _validator;
@@ -12736,7 +12736,7 @@ namespace CruiseDAL.DataObjects
 			Behavior = obj.Behavior;
 		}
 	}
-	[SQLEntity(SourceName = "LogFieldSetupDefault")]
+	[EntitySource(SourceName = "LogFieldSetupDefault")]
 	public partial class LogFieldSetupDefaultDO : CruiseDALDataObject
 	{
 		private static RowValidator _validator;
@@ -12954,7 +12954,7 @@ namespace CruiseDAL.DataObjects
 			Behavior = obj.Behavior;
 		}
 	}
-	[SQLEntity(SourceName = "TreeFieldSetupDefault")]
+	[EntitySource(SourceName = "TreeFieldSetupDefault")]
 	public partial class TreeFieldSetupDefaultDO : CruiseDALDataObject
 	{
 		private static RowValidator _validator;
@@ -13194,7 +13194,7 @@ namespace CruiseDAL.DataObjects
 	}
 	#endregion
 	#region Lookup Tables
-	[SQLEntity(SourceName = "CruiseMethods")]
+	[EntitySource(SourceName = "CruiseMethods")]
 	public partial class CruiseMethodsDO : CruiseDALDataObject
 	{
 		private static RowValidator _validator;
@@ -13297,7 +13297,7 @@ namespace CruiseDAL.DataObjects
 			FriendlyValue = obj.FriendlyValue;
 		}
 	}
-	[SQLEntity(SourceName = "LoggingMethods")]
+	[EntitySource(SourceName = "LoggingMethods")]
 	public partial class LoggingMethodsDO : CruiseDALDataObject
 	{
 		private static RowValidator _validator;
@@ -13400,7 +13400,7 @@ namespace CruiseDAL.DataObjects
 			FriendlyValue = obj.FriendlyValue;
 		}
 	}
-	[SQLEntity(SourceName = "ProductCodes")]
+	[EntitySource(SourceName = "ProductCodes")]
 	public partial class ProductCodesDO : CruiseDALDataObject
 	{
 		private static RowValidator _validator;
@@ -13503,7 +13503,7 @@ namespace CruiseDAL.DataObjects
 			FriendlyValue = obj.FriendlyValue;
 		}
 	}
-	[SQLEntity(SourceName = "UOMCodes")]
+	[EntitySource(SourceName = "UOMCodes")]
 	public partial class UOMCodesDO : CruiseDALDataObject
 	{
 		private static RowValidator _validator;
@@ -13606,7 +13606,7 @@ namespace CruiseDAL.DataObjects
 			FriendlyValue = obj.FriendlyValue;
 		}
 	}
-	[SQLEntity(SourceName = "Regions")]
+	[EntitySource(SourceName = "Regions")]
 	public partial class RegionsDO : CruiseDALDataObject
 	{
 		private static RowValidator _validator;
@@ -13709,7 +13709,7 @@ namespace CruiseDAL.DataObjects
 			Name = obj.Name;
 		}
 	}
-	[SQLEntity(SourceName = "Forests")]
+	[EntitySource(SourceName = "Forests")]
 	public partial class ForestsDO : CruiseDALDataObject
 	{
 		private static RowValidator _validator;
@@ -13884,7 +13884,7 @@ namespace CruiseDAL.DataObjects
 	}
 	#endregion
 	#region Utility Tables
-	[SQLEntity(SourceName = "ErrorLog")]
+	[EntitySource(SourceName = "ErrorLog")]
 	public partial class ErrorLogDO : CruiseDALDataObject
 	{
 		private static RowValidator _validator;
@@ -14079,7 +14079,7 @@ namespace CruiseDAL.DataObjects
 			Suppress = obj.Suppress;
 		}
 	}
-	[SQLEntity(SourceName = "MessageLog")]
+	[EntitySource(SourceName = "MessageLog")]
 	public partial class MessageLogDO : CruiseDALDataObject
 	{
 		private static RowValidator _validator;
@@ -14239,7 +14239,7 @@ namespace CruiseDAL.DataObjects
 			Level = obj.Level;
 		}
 	}
-	[SQLEntity(SourceName = "Globals")]
+	[EntitySource(SourceName = "Globals")]
 	public partial class GlobalsDO : CruiseDALDataObject
 	{
 		private static RowValidator _validator;
@@ -14354,7 +14354,7 @@ namespace CruiseDAL.DataObjects
 			Value = obj.Value;
 		}
 	}
-	[SQLEntity(SourceName = "Component")]
+	[EntitySource(SourceName = "Component")]
 	public partial class ComponentDO : CruiseDALDataObject
 	{
 		private static RowValidator _validator;

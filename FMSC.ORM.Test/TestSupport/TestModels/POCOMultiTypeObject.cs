@@ -3,10 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using FMSC.ORM.Core.EntityAttributes;
+using FMSC.ORM.Core.SQL;
 
 namespace FMSC.ORM.TestSupport.TestModels
 {
-    [SQLEntity(SourceName = FMSC.ORM.TestSupport.TestSQLConstants.MULTI_PROP_TABLE_NAME)]
+    [EntitySource(FMSC.ORM.TestSupport.TestSQLConstants.MULTI_PROP_TABLE_NAME)]
     public class POCOMultiTypeObject : IInterface
     {
         [PrimaryKeyField(FieldName = "ID")]

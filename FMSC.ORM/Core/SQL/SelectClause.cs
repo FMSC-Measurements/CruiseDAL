@@ -10,10 +10,6 @@ namespace FMSC.ORM.Core.SQL
 
         public SelectElement ParentElement { get; set; }
 
-        //public SelectClause(SelectClause target)
-        //{
-        //    ParentElement = target;
-        //}
 
         public void Accept(SelectElement node)
         {
@@ -34,14 +30,5 @@ namespace FMSC.ORM.Core.SQL
             return ToSQL();
         }
 
-        //public LimitClause Limit(int limitSize, int offset)
-        //{
-        //    return new LimitClause(this, base.SelectExpression, limitSize, offset);
-        //}
-
-        //protected override void OnBuilderChanged(SQLSelectBuilder builder)
-        //{
-        //    builder.Clause = this;
-        //}
     }
 }

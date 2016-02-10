@@ -69,7 +69,6 @@
     <Compile Include="Core\EntityAttributes\ModifiedByFieldAttribute.cs" />
     <Compile Include="Core\EntityAttributes\PrimaryKeyFieldAttribute.cs" />
     <Compile Include="Core\EntityAttributes\ReferenceAttribute.cs" />
-    <Compile Include="Core\EntityAttributes\SQLEntityAttribute.cs" />
     <Compile Include="Core\EntityCache.cs" />
     <Compile Include="Core\EntityModel\DataObjectExtentions.cs" />
     <Compile Include="Core\EntityModel\DataObjects_Base.cs" />
@@ -128,6 +127,12 @@
     <Compile Include="Core\EntityAttributes\BaseFieldAttribute.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Core\EntityAttributes\EntityAttributeBase.cs" />
+    <Compile Include="Core\EntityAttributes\EntityJoinsAttribute.cs" />
+    <Compile Include="Core\EntityAttributes\EntitySourceAttribute.cs" />
+    <Compile Include="Core\EntityAttributes\PersistanceFlags.cs" />
+    <Compile Include="Core\SQL\JoinComponent.cs" />
+    <Compile Include="NetCF\System\IEnumerableExtensions.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CompactFramework.CSharp.targets" />
   <ProjectExtensions>

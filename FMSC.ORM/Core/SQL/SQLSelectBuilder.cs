@@ -45,13 +45,13 @@ namespace FMSC.ORM.Core.SQL
 
         public IAcceptsJoin Join(TableOrSubQuery source, string constraint)
         {
-            this.Accept(new JoinClause(source, constraint));
+            this.Accept(this.Source.Join(source, constraint));
             return this;
         }
 
         public IAcceptsJoin Join(string table, string constraint, string alias)
         {
-            this.Accept(new JoinClause(table, constraint, alias));
+            this.Accept(this.Source.Join(table, constraint, alias));
             return this;
         }
 
@@ -97,7 +97,6 @@ namespace FMSC.ORM.Core.SQL
 
         public void Accept(JoinClause joinClause)
         {
-            joinClause.Accept(this.Source);
             this.Source = joinClause;
         }
 
