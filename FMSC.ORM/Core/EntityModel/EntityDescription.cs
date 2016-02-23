@@ -7,6 +7,7 @@ using System.Data;
 using System.Diagnostics;
 using FMSC.ORM.Core.EntityAttributes;
 using FMSC.ORM.Core.SQL;
+using System.Linq;
 
 #if ANDROID
 using Mono.Data.Sqlite;
@@ -61,32 +62,21 @@ namespace FMSC.ORM.Core.EntityModel
             try
             {
                 //read Entity attribute
-                object[] eAttrs = EntityType.GetCustomAttributes(typeof(EntityAttributeBase), true);
+                object[] eAttrs = EntityType.GetCustomAttributes(typeof(EntitySourceAttribute), true);
+                var eAttr = eAttrs.FirstOrDefault() as EntitySourceAttribute;
 
-                foreach(EntityAttributeBase eAttr in eAttrs)
+
+                if(eAttr != null)
                 {
-                    if(eAttr is EntitySourceAttribute)
+                    this.Source = new TableOrSubQuery(
+                        eAttr.SourceName
+                        , eAttr.Alias)
                     {
-                        this.Source = new TableOrSubQuery(
-                            ((EntitySourceAttribute)eAttr).SourceName
-                            , ((EntitySourceAttribute)eAttr).Alias);
-                        break;
-                    }
+                        JoinCommands = eAttr.JoinCommands
+                    };
                 }
 
-                if (this.Source != null)
-                {
-                    foreach (EntityAttributeBase eAttr in eAttrs)
-                    {
-                        if (eAttr is EntityJoinsAttribute)
-                        {
-                            this.Source = this.Source.Join(
-                                ((EntityJoinsAttribute)eAttr).JoinSouce,
-                                ((EntityJoinsAttribute)eAttr).Constraint,
-                                ((EntityJoinsAttribute)eAttr).Alias);
-                        }
-                    }
-                }
+                
 
                 RegesterFields();
             }

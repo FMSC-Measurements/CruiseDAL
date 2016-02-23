@@ -52,7 +52,6 @@
   <ItemGroup>
     <Compile Include="Core\EntityAttributes\BaseFieldAttribute.cs" />
     <Compile Include="Core\EntityAttributes\EntityAttributeBase.cs" />
-    <Compile Include="Core\EntityAttributes\EntityJoinsAttribute.cs" />
     <Compile Include="Core\EntityAttributes\FieldAccesabilityException.cs" />
     <Compile Include="Core\EntityAttributes\IgnoreFieldAttribute.cs" />
     <Compile Include="Core\EntityAttributes\PersistanceFlags.cs" />

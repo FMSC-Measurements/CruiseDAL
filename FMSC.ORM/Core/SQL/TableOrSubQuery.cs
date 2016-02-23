@@ -10,6 +10,8 @@ namespace FMSC.ORM.Core.SQL
         public SQLSelectBuilder SubQuery { get; set; }
         public string Alias { get; set; }
 
+        public string JoinCommands { get; set; }
+
         public override string SourceName
         {
             get
@@ -53,9 +55,16 @@ namespace FMSC.ORM.Core.SQL
 
         public override string ToSQL()
         {
-            var source = Table ?? "( " + SubQuery.ToSQL() + " )";
-            var alias = (String.IsNullOrEmpty(Alias)) ? string.Empty : " AS " + Alias;
-            return source + alias;
+            var sb = new StringBuilder();
+            sb.Append(Table ?? "( " + SubQuery.ToSQL() + " )");
+            if(!String.IsNullOrEmpty(Alias))
+            { sb.Append(" AS " + Alias); }
+            if(!String.IsNullOrEmpty(JoinCommands))
+            {
+                sb.Append(" " + JoinCommands);
+            }
+
+            return sb.ToString();
         }
     }
 }

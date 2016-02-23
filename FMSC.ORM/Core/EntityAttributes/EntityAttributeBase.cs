@@ -5,6 +5,7 @@ using System.Text;
 
 namespace FMSC.ORM.Core.EntityAttributes
 {
+    [AttributeUsage(AttributeTargets.Class, Inherited = true)]
     public class EntityAttributeBase : Attribute
     {
     }

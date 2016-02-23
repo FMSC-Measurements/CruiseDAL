@@ -6,7 +6,7 @@ namespace FMSC.ORM.Core.EntityAttributes
 {
     //public enum SQLSourceType { Table, View, Query }
 
-    [AttributeUsage(AttributeTargets.Class, Inherited = true)]
+    
     public class EntitySourceAttribute : EntityAttributeBase
     {
         public EntitySourceAttribute()
@@ -23,6 +23,8 @@ namespace FMSC.ORM.Core.EntityAttributes
             get;
             set;
         }
+
+        public string JoinCommands { get; set; }
 
         public string Alias { get; set; }
 
