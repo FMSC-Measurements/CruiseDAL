@@ -13,9 +13,9 @@ using System.Data.SQLite;
 namespace FMSC.ORM.Core.EntityModel
 {
     public abstract class MappingCollection<MapType, ParentType, ChildType> : IEnumerable<ChildType>, IList<ChildType>, IList
-        where MapType : DataObject
-        where ParentType : DataObject
-        where ChildType : DataObject
+        where MapType : class, IDataObject 
+        where ParentType : class, IDataObject
+        where ChildType : class, IDataObject
     {
 
         #region fields
@@ -268,12 +268,8 @@ namespace FMSC.ORM.Core.EntityModel
 
         int IList.Add(object value)
         {
-            if (value is ChildType)
-            {
-                Add(value as ChildType);
-                return IndexOf(value as ChildType);
-            }
-            return -1;
+            Add((ChildType)value);
+            return IndexOf((ChildType)value);            
         }
 
         //void IList.Clear()
@@ -283,28 +279,17 @@ namespace FMSC.ORM.Core.EntityModel
 
         bool IList.Contains(object value)
         {
-            if (value is ChildType)
-            {
-                return this.Contains(value as ChildType);
-            }
-            return false;
+            return this.Contains((ChildType)value);           
         }
 
         int IList.IndexOf(object value)
         {
-            if (value is ChildType)
-            {
-                return this.IndexOf(value as ChildType);
-            }
-            return -1;
+            return this.IndexOf((ChildType)value);            
         }
 
         void IList.Insert(int index, object value)
         {
-            if (value is ChildType)
-            {
-                Insert(index, value as ChildType);
-            }
+            Insert(index, (ChildType)value);            
         }
 
         bool IList.IsFixedSize
@@ -319,10 +304,7 @@ namespace FMSC.ORM.Core.EntityModel
 
         void IList.Remove(object value)
         {
-            if (value is ChildType)
-            {
-                this.Remove(value as ChildType);
-            }
+            this.Remove((ChildType)value);
         }
 
         //void IList.RemoveAt(int index)
@@ -338,7 +320,7 @@ namespace FMSC.ORM.Core.EntityModel
             }
             set
             {
-                throw new NotImplementedException();
+                throw new NotSupportedException();
             }
         }
 
