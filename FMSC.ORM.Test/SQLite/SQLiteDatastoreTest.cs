@@ -1,5 +1,4 @@
 ﻿using FMSC.ORM.Core.SQL;
-using FMSC.ORM.MyXUnit;
 using FMSC.ORM.TestSupport;
 using FMSC.ORM.TestSupport.TestModels;
 using System;

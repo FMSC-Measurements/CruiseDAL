@@ -1,5 +1,4 @@
-﻿using FMSC.ORM.MyXUnit;
-using FMSC.ORM.SQLite;
+﻿using FMSC.ORM.SQLite;
 using System;
 using System.Collections.Generic;
 using System.IO;

@@ -1,5 +1,4 @@
 ﻿using FMSC.ORM.TestSupport.TestModels;
-using FMSC.ORM.MyXUnit;
 using System;
 using System.Linq;
 using Xunit;
@@ -50,8 +49,7 @@ namespace FMSC.ORM.Core.EntityModel
         {
             Assert.NotNull(doi);
             Assert.Equal(dataType, doi.EntityType);
-
-            Assert.False(String.IsNullOrWhiteSpace(doi.SourceName));
+            AssertEx.NotNullOrWhitespace(doi.SourceName);
 
             VerifyDataObjectInfoFields(doi);
         }
@@ -113,7 +111,6 @@ namespace FMSC.ORM.Core.EntityModel
             VerifyNonvisableField(doi, fieldName, false);
         }
         
-
         void VerifyNonvisableField(EntityDescription doi, string fieldName, bool isPrivate)
         {
             Assert.DoesNotContain(doi.Fields, x => x.FieldName == fieldName);

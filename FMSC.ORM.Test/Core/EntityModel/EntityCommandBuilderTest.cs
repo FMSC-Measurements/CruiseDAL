@@ -3,7 +3,6 @@ using System.Linq;
 using Xunit;
 
 using FMSC.ORM.TestSupport.TestModels;
-using FMSC.ORM.MyXUnit;
 using System.Data.Common;
 using Xunit.Abstractions;
 

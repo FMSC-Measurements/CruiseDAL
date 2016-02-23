@@ -6,7 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Xunit.Abstractions;
 
-namespace FMSC.ORM.MyXUnit
+namespace Xunit
 {
     public class TestClassBase
     {
