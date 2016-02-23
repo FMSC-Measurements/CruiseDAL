@@ -209,6 +209,7 @@ namespace FMSC.ORM.Core.EntityModel
             {
                 _toBeDeleted.Add(child);
             }
+            _persistedChildren.Clear();
             _unpersistedChildren.Clear();
         }
 
