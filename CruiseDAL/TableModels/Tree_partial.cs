@@ -1,9 +1,8 @@
 ﻿using System.Collections.Generic;
 using System;
-using FMSC.ORM.Core.EntityModel;
-using FMSC.ORM.Core;
 using CruiseDAL.Schema;
 using System.Linq;
+using FMSC.ORM.EntityModel;
 
 namespace CruiseDAL.DataObjects
 {

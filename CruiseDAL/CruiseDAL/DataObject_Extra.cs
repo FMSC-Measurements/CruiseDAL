@@ -5,12 +5,12 @@ using System.ComponentModel;
 using System.Text;
 using System.Xml.Serialization;
 
-using FMSC.ORM.Core.EntityModel;
 using CruiseDAL.DataObjects;
 using System.Diagnostics;
 using FMSC.ORM.Core;
 using FMSC.ORM.Core.SQL;
-using FMSC.ORM.Core.EntityAttributes;
+using FMSC.ORM.EntityModel;
+using FMSC.ORM.EntityModel.Attributes;
 
 namespace CruiseDAL
 {
@@ -69,8 +69,8 @@ namespace CruiseDAL
         [IgnoreField]
         public Object Tag { get; set; }
 
+        public abstract void SetValues(DataObject obj);
 
-        
 
         protected override void NotifyPropertyChanged(string name)
         {

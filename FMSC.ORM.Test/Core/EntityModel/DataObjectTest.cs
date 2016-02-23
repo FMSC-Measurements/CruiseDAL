@@ -1,4 +1,5 @@
-﻿using System;
+﻿using FMSC.ORM.EntityModel;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -9,10 +10,7 @@ namespace FMSC.ORM.Core.EntityModel
 {
     public class ConcreateDataObject : DataObject_Base
     {
-        public override void SetValues(DataObject_Base obj)
-        {
-            throw new NotImplementedException();
-        }
+
     }
 
     public class DataObjectTest

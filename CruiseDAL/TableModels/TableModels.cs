@@ -3,8 +3,8 @@
 
 using System;
 using System.Xml.Serialization;
-using FMSC.ORM.Core.EntityAttributes;
-using FMSC.ORM.Core.EntityModel;
+using FMSC.ORM.EntityModel.Attributes;
+using FMSC.ORM.EntityModel;
 using FMSC.ORM.Core;
 using CruiseDAL.Schema;
 
@@ -287,7 +287,7 @@ namespace CruiseDAL.DataObjects
 			isValid = ValidateProperty("DefaultUOM", this.DefaultUOM) && isValid;
 			return isValid;
 		}
-		public override void SetValues(DataObject_Base obj)
+		public override void SetValues(DataObject obj)
 		{
 			this.SetValues(obj as SaleDO);
 		}
@@ -491,7 +491,7 @@ namespace CruiseDAL.DataObjects
 			isValid = ValidateProperty("TallyHistory", this.TallyHistory) && isValid;
 			return isValid;
 		}
-		public override void SetValues(DataObject_Base obj)
+		public override void SetValues(DataObject obj)
 		{
 			this.SetValues(obj as CuttingUnitDO);
 		}
@@ -784,7 +784,7 @@ namespace CruiseDAL.DataObjects
 			isValid = ValidateProperty("Year", this.Year) && isValid;
 			return isValid;
 		}
-		public override void SetValues(DataObject_Base obj)
+		public override void SetValues(DataObject obj)
 		{
 			this.SetValues(obj as StratumDO);
 		}
@@ -975,7 +975,7 @@ namespace CruiseDAL.DataObjects
 			isValid = ValidateProperty("Stratum_CN", this.Stratum_CN) && isValid ;
 			return isValid;
 		}
-		public override void SetValues(DataObject_Base obj)
+		public override void SetValues(DataObject obj)
 		{
 			this.SetValues(obj as CuttingUnitStratumDO);
 		}
@@ -1443,7 +1443,7 @@ namespace CruiseDAL.DataObjects
 			isValid = ValidateProperty("Stratum_CN", this.Stratum_CN) && isValid ;
 			return isValid;
 		}
-		public override void SetValues(DataObject_Base obj)
+		public override void SetValues(DataObject obj)
 		{
 			this.SetValues(obj as SampleGroupDO);
 		}
@@ -1864,7 +1864,7 @@ namespace CruiseDAL.DataObjects
 			isValid = ValidateProperty("ReferenceHeightPercent", this.ReferenceHeightPercent) && isValid;
 			return isValid;
 		}
-		public override void SetValues(DataObject_Base obj)
+		public override void SetValues(DataObject obj)
 		{
 			this.SetValues(obj as TreeDefaultValueDO);
 		}
@@ -2041,7 +2041,7 @@ namespace CruiseDAL.DataObjects
 			isValid = ValidateProperty("SampleGroup_CN", this.SampleGroup_CN) && isValid ;
 			return isValid;
 		}
-		public override void SetValues(DataObject_Base obj)
+		public override void SetValues(DataObject obj)
 		{
 			this.SetValues(obj as SampleGroupTreeDefaultValueDO);
 		}
@@ -2445,7 +2445,7 @@ namespace CruiseDAL.DataObjects
 			isValid = ValidateProperty("CuttingUnit_CN", this.CuttingUnit_CN) && isValid ;
 			return isValid;
 		}
-		public override void SetValues(DataObject_Base obj)
+		public override void SetValues(DataObject obj)
 		{
 			this.SetValues(obj as PlotDO);
 		}
@@ -3573,7 +3573,7 @@ namespace CruiseDAL.DataObjects
 			isValid = ValidateProperty("Plot_CN", this.Plot_CN) && isValid ;
 			return isValid;
 		}
-		public override void SetValues(DataObject_Base obj)
+		public override void SetValues(DataObject obj)
 		{
 			this.SetValues(obj as TreeDO);
 		}
@@ -4058,7 +4058,7 @@ namespace CruiseDAL.DataObjects
 			isValid = ValidateProperty("Tree_CN", this.Tree_CN) && isValid ;
 			return isValid;
 		}
-		public override void SetValues(DataObject_Base obj)
+		public override void SetValues(DataObject obj)
 		{
 			this.SetValues(obj as LogDO);
 		}
@@ -4263,7 +4263,7 @@ namespace CruiseDAL.DataObjects
 			isValid = ValidateProperty("Tree_CN", this.Tree_CN) && isValid ;
 			return isValid;
 		}
-		public override void SetValues(DataObject_Base obj)
+		public override void SetValues(DataObject obj)
 		{
 			this.SetValues(obj as StemDO);
 		}
@@ -4642,7 +4642,7 @@ namespace CruiseDAL.DataObjects
 			isValid = ValidateProperty("Component_CN", this.Component_CN) && isValid ;
 			return isValid;
 		}
-		public override void SetValues(DataObject_Base obj)
+		public override void SetValues(DataObject obj)
 		{
 			this.SetValues(obj as CountTreeDO);
 		}
@@ -4783,7 +4783,7 @@ namespace CruiseDAL.DataObjects
 			isValid = ValidateProperty("IndicatorType", this.IndicatorType) && isValid;
 			return isValid;
 		}
-		public override void SetValues(DataObject_Base obj)
+		public override void SetValues(DataObject obj)
 		{
 			this.SetValues(obj as TallyDO);
 		}
@@ -4958,7 +4958,7 @@ namespace CruiseDAL.DataObjects
 			isValid = ValidateProperty("CountTree_CN", this.CountTree_CN) && isValid ;
 			return isValid;
 		}
-		public override void SetValues(DataObject_Base obj)
+		public override void SetValues(DataObject obj)
 		{
 			this.SetValues(obj as TreeEstimateDO);
 		}
@@ -5401,7 +5401,7 @@ namespace CruiseDAL.DataObjects
 			isValid = ValidateProperty("EvenOddSegment", this.EvenOddSegment) && isValid;
 			return isValid;
 		}
-		public override void SetValues(DataObject_Base obj)
+		public override void SetValues(DataObject obj)
 		{
 			this.SetValues(obj as VolumeEquationDO);
 		}
@@ -5683,7 +5683,7 @@ namespace CruiseDAL.DataObjects
 			isValid = ValidateProperty("WeightFactorSecondary", this.WeightFactorSecondary) && isValid;
 			return isValid;
 		}
-		public override void SetValues(DataObject_Base obj)
+		public override void SetValues(DataObject obj)
 		{
 			this.SetValues(obj as BiomassEquationDO);
 		}
@@ -5934,7 +5934,7 @@ namespace CruiseDAL.DataObjects
 			isValid = ValidateProperty("Coefficient6", this.Coefficient6) && isValid;
 			return isValid;
 		}
-		public override void SetValues(DataObject_Base obj)
+		public override void SetValues(DataObject obj)
 		{
 			this.SetValues(obj as ValueEquationDO);
 		}
@@ -6183,7 +6183,7 @@ namespace CruiseDAL.DataObjects
 			isValid = ValidateProperty("Coefficient6", this.Coefficient6) && isValid;
 			return isValid;
 		}
-		public override void SetValues(DataObject_Base obj)
+		public override void SetValues(DataObject obj)
 		{
 			this.SetValues(obj as QualityAdjEquationDO);
 		}
@@ -6306,7 +6306,7 @@ namespace CruiseDAL.DataObjects
 			isValid = ValidateProperty("Title", this.Title) && isValid;
 			return isValid;
 		}
-		public override void SetValues(DataObject_Base obj)
+		public override void SetValues(DataObject obj)
 		{
 			this.SetValues(obj as ReportsDO);
 		}
@@ -7002,7 +7002,7 @@ namespace CruiseDAL.DataObjects
 			isValid = ValidateProperty("Tree_CN", this.Tree_CN) && isValid ;
 			return isValid;
 		}
-		public override void SetValues(DataObject_Base obj)
+		public override void SetValues(DataObject obj)
 		{
 			this.SetValues(obj as TreeCalculatedValuesDO);
 		}
@@ -8064,7 +8064,7 @@ namespace CruiseDAL.DataObjects
 			isValid = ValidateProperty("SumWgtTip", this.SumWgtTip) && isValid;
 			return isValid;
 		}
-		public override void SetValues(DataObject_Base obj)
+		public override void SetValues(DataObject obj)
 		{
 			this.SetValues(obj as LCDDO);
 		}
@@ -9088,7 +9088,7 @@ namespace CruiseDAL.DataObjects
 			isValid = ValidateProperty("Stg2ValueXsqrdRP", this.Stg2ValueXsqrdRP) && isValid;
 			return isValid;
 		}
-		public override void SetValues(DataObject_Base obj)
+		public override void SetValues(DataObject obj)
 		{
 			this.SetValues(obj as POPDO);
 		}
@@ -9480,7 +9480,7 @@ namespace CruiseDAL.DataObjects
 			isValid = ValidateProperty("ProratedEstimatedTrees", this.ProratedEstimatedTrees) && isValid;
 			return isValid;
 		}
-		public override void SetValues(DataObject_Base obj)
+		public override void SetValues(DataObject obj)
 		{
 			this.SetValues(obj as PRODO);
 		}
@@ -9955,7 +9955,7 @@ namespace CruiseDAL.DataObjects
 			isValid = ValidateProperty("Tree_CN", this.Tree_CN) && isValid ;
 			return isValid;
 		}
-		public override void SetValues(DataObject_Base obj)
+		public override void SetValues(DataObject obj)
 		{
 			this.SetValues(obj as LogStockDO);
 		}
@@ -10629,7 +10629,7 @@ namespace CruiseDAL.DataObjects
 			isValid = ValidateProperty("StratumStats_CN", this.StratumStats_CN) && isValid ;
 			return isValid;
 		}
-		public override void SetValues(DataObject_Base obj)
+		public override void SetValues(DataObject obj)
 		{
 			this.SetValues(obj as SampleGroupStatsDO);
 		}
@@ -10819,7 +10819,7 @@ namespace CruiseDAL.DataObjects
 			isValid = ValidateProperty("SampleGroupStats_CN", this.SampleGroupStats_CN) && isValid ;
 			return isValid;
 		}
-		public override void SetValues(DataObject_Base obj)
+		public override void SetValues(DataObject obj)
 		{
 			this.SetValues(obj as SampleGroupStatsTreeDefaultValueDO);
 		}
@@ -11259,7 +11259,7 @@ namespace CruiseDAL.DataObjects
 			isValid = ValidateProperty("Stratum_CN", this.Stratum_CN) && isValid ;
 			return isValid;
 		}
-		public override void SetValues(DataObject_Base obj)
+		public override void SetValues(DataObject obj)
 		{
 			this.SetValues(obj as StratumStatsDO);
 		}
@@ -11594,7 +11594,7 @@ namespace CruiseDAL.DataObjects
 			isValid = ValidateProperty("rMaxDbh", this.rMaxDbh) && isValid;
 			return isValid;
 		}
-		public override void SetValues(DataObject_Base obj)
+		public override void SetValues(DataObject obj)
 		{
 			this.SetValues(obj as RegressionDO);
 		}
@@ -11900,7 +11900,7 @@ namespace CruiseDAL.DataObjects
 			isValid = ValidateProperty("SEDmaximum", this.SEDmaximum) && isValid;
 			return isValid;
 		}
-		public override void SetValues(DataObject_Base obj)
+		public override void SetValues(DataObject obj)
 		{
 			this.SetValues(obj as LogMatrixDO);
 		}
@@ -12077,7 +12077,7 @@ namespace CruiseDAL.DataObjects
 			isValid = ValidateProperty("TreeDefaultValue_CN", this.TreeDefaultValue_CN) && isValid ;
 			return isValid;
 		}
-		public override void SetValues(DataObject_Base obj)
+		public override void SetValues(DataObject obj)
 		{
 			this.SetValues(obj as TreeDefaultValueTreeAuditValueDO);
 		}
@@ -12233,7 +12233,7 @@ namespace CruiseDAL.DataObjects
 			isValid = ValidateProperty("Required", this.Required) && isValid;
 			return isValid;
 		}
-		public override void SetValues(DataObject_Base obj)
+		public override void SetValues(DataObject obj)
 		{
 			this.SetValues(obj as TreeAuditValueDO);
 		}
@@ -12475,7 +12475,7 @@ namespace CruiseDAL.DataObjects
 			isValid = ValidateProperty("Stratum_CN", this.Stratum_CN) && isValid ;
 			return isValid;
 		}
-		public override void SetValues(DataObject_Base obj)
+		public override void SetValues(DataObject obj)
 		{
 			this.SetValues(obj as LogFieldSetupDO);
 		}
@@ -12719,7 +12719,7 @@ namespace CruiseDAL.DataObjects
 			isValid = ValidateProperty("Stratum_CN", this.Stratum_CN) && isValid ;
 			return isValid;
 		}
-		public override void SetValues(DataObject_Base obj)
+		public override void SetValues(DataObject obj)
 		{
 			this.SetValues(obj as TreeFieldSetupDO);
 		}
@@ -12936,7 +12936,7 @@ namespace CruiseDAL.DataObjects
 			isValid = ValidateProperty("Behavior", this.Behavior) && isValid;
 			return isValid;
 		}
-		public override void SetValues(DataObject_Base obj)
+		public override void SetValues(DataObject obj)
 		{
 			this.SetValues(obj as LogFieldSetupDefaultDO);
 		}
@@ -13173,7 +13173,7 @@ namespace CruiseDAL.DataObjects
 			isValid = ValidateProperty("Behavior", this.Behavior) && isValid;
 			return isValid;
 		}
-		public override void SetValues(DataObject_Base obj)
+		public override void SetValues(DataObject obj)
 		{
 			this.SetValues(obj as TreeFieldSetupDefaultDO);
 		}
@@ -13285,7 +13285,7 @@ namespace CruiseDAL.DataObjects
 			isValid = ValidateProperty("FriendlyValue", this.FriendlyValue) && isValid;
 			return isValid;
 		}
-		public override void SetValues(DataObject_Base obj)
+		public override void SetValues(DataObject obj)
 		{
 			this.SetValues(obj as CruiseMethodsDO);
 		}
@@ -13388,7 +13388,7 @@ namespace CruiseDAL.DataObjects
 			isValid = ValidateProperty("FriendlyValue", this.FriendlyValue) && isValid;
 			return isValid;
 		}
-		public override void SetValues(DataObject_Base obj)
+		public override void SetValues(DataObject obj)
 		{
 			this.SetValues(obj as LoggingMethodsDO);
 		}
@@ -13491,7 +13491,7 @@ namespace CruiseDAL.DataObjects
 			isValid = ValidateProperty("FriendlyValue", this.FriendlyValue) && isValid;
 			return isValid;
 		}
-		public override void SetValues(DataObject_Base obj)
+		public override void SetValues(DataObject obj)
 		{
 			this.SetValues(obj as ProductCodesDO);
 		}
@@ -13594,7 +13594,7 @@ namespace CruiseDAL.DataObjects
 			isValid = ValidateProperty("FriendlyValue", this.FriendlyValue) && isValid;
 			return isValid;
 		}
-		public override void SetValues(DataObject_Base obj)
+		public override void SetValues(DataObject obj)
 		{
 			this.SetValues(obj as UOMCodesDO);
 		}
@@ -13697,7 +13697,7 @@ namespace CruiseDAL.DataObjects
 			isValid = ValidateProperty("Name", this.Name) && isValid;
 			return isValid;
 		}
-		public override void SetValues(DataObject_Base obj)
+		public override void SetValues(DataObject obj)
 		{
 			this.SetValues(obj as RegionsDO);
 		}
@@ -13869,7 +13869,7 @@ namespace CruiseDAL.DataObjects
 			isValid = ValidateProperty("Region_CN", this.Region_CN) && isValid ;
 			return isValid;
 		}
-		public override void SetValues(DataObject_Base obj)
+		public override void SetValues(DataObject obj)
 		{
 			this.SetValues(obj as ForestsDO);
 		}
@@ -14062,7 +14062,7 @@ namespace CruiseDAL.DataObjects
 			isValid = ValidateProperty("Suppress", this.Suppress) && isValid;
 			return isValid;
 		}
-		public override void SetValues(DataObject_Base obj)
+		public override void SetValues(DataObject obj)
 		{
 			this.SetValues(obj as ErrorLogDO);
 		}
@@ -14224,7 +14224,7 @@ namespace CruiseDAL.DataObjects
 			isValid = ValidateProperty("Level", this.Level) && isValid;
 			return isValid;
 		}
-		public override void SetValues(DataObject_Base obj)
+		public override void SetValues(DataObject obj)
 		{
 			this.SetValues(obj as MessageLogDO);
 		}
@@ -14341,7 +14341,7 @@ namespace CruiseDAL.DataObjects
 			isValid = ValidateProperty("Value", this.Value) && isValid;
 			return isValid;
 		}
-		public override void SetValues(DataObject_Base obj)
+		public override void SetValues(DataObject obj)
 		{
 			this.SetValues(obj as GlobalsDO);
 		}
@@ -14463,7 +14463,7 @@ namespace CruiseDAL.DataObjects
 			isValid = ValidateProperty("FileName", this.FileName) && isValid;
 			return isValid;
 		}
-		public override void SetValues(DataObject_Base obj)
+		public override void SetValues(DataObject obj)
 		{
 			this.SetValues(obj as ComponentDO);
 		}

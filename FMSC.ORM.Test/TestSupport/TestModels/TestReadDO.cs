@@ -2,9 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using FMSC.ORM;
-using FMSC.ORM.Core.EntityAttributes;
-using FMSC.ORM.Core.EntityModel;
+using FMSC.ORM.EntityModel.Attributes;
+using FMSC.ORM.EntityModel;
 
 namespace FMSC.ORM.TestSupport.TestModels
 {
@@ -29,9 +28,5 @@ namespace FMSC.ORM.TestSupport.TestModels
         [Field(FieldName = "DateTimeTest")]
         public DateTime DateTimeTest { get; set; }
 
-        public override void SetValues(DataObject_Base obj)
-        {
-            throw new NotImplementedException();
-        }
     }
 }

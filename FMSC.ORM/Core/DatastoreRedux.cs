@@ -5,13 +5,14 @@ using System.Text;
 using System.Collections;
 using System.Data.Common;
 
-using FMSC.ORM.Core.EntityModel;
 using FMSC.ORM.Core.SQL;
-using FMSC.ORM.Core.EntityAttributes;
 using System.Diagnostics;
 using System.Threading;
 using FMSC.ORM.Core.SQL.QueryBuilder;
 using System.Linq;
+using FMSC.ORM.EntityModel;
+using FMSC.ORM.EntityModel.Attributes;
+using FMSC.ORM.EntityModel.Support;
 
 namespace FMSC.ORM.Core
 {

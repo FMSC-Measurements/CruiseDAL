@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 using Xunit;
 using Xunit.Abstractions;
 
-namespace FMSC.ORM.Core.EntityModel
+namespace FMSC.ORM.EntityModel.Support
 {
     public class EntityInflatorTest : TestClassBase
     {

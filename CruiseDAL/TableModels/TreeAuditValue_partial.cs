@@ -1,6 +1,6 @@
-﻿using FMSC.ORM.Core.EntityModel;
-using CruiseDAL.MappingCollections;
+﻿using CruiseDAL.MappingCollections;
 using FMSC.ORM.Core;
+using FMSC.ORM.EntityModel;
 
 namespace CruiseDAL.DataObjects
 {

@@ -1,4 +1,4 @@
-﻿using FMSC.ORM.Core.EntityAttributes;
+﻿using FMSC.ORM.EntityModel.Attributes;
 
 namespace CruiseDAL.DataObjects
 {

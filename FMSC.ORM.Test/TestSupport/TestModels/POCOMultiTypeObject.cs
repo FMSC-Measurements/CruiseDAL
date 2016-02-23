@@ -2,8 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using FMSC.ORM.Core.EntityAttributes;
 using FMSC.ORM.Core.SQL;
+using FMSC.ORM.EntityModel.Attributes;
 
 namespace FMSC.ORM.TestSupport.TestModels
 {

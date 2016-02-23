@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Text;
 
-using FMSC.ORM.Core.EntityModel;
 using CruiseDAL.DataObjects;
 using FMSC.ORM.Core.SQL;
 

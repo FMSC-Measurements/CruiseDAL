@@ -5,8 +5,9 @@ using Xunit;
 using FMSC.ORM.TestSupport.TestModels;
 using System.Data.Common;
 using Xunit.Abstractions;
+using FMSC.ORM.Core;
 
-namespace FMSC.ORM.Core.EntityModel
+namespace FMSC.ORM.EntityModel.Support
 {
     public class EntityCommandBuilderTest : TestClassBase
     {
@@ -40,7 +41,7 @@ namespace FMSC.ORM.Core.EntityModel
             var data = new POCOMultiTypeObject();
 
             var commandBuilder = ed.CommandBuilder;
-            using (var command = commandBuilder.BuildInsertCommand(provider, data, SQL.OnConflictOption.Default))
+            using (var command = commandBuilder.BuildInsertCommand(provider, data, Core.SQL.OnConflictOption.Default))
             {
                 _output.WriteLine(command.CommandText);
 
@@ -60,7 +61,7 @@ namespace FMSC.ORM.Core.EntityModel
             var data = new POCOMultiTypeObject();
 
             var commandBuilder = ed.CommandBuilder;
-            using (var command = commandBuilder.BuildUpdateCommand(provider, data, SQL.OnConflictOption.Default))
+            using (var command = commandBuilder.BuildUpdateCommand(provider, data, Core.SQL.OnConflictOption.Default))
             {
                 _output.WriteLine(command.CommandText);
 

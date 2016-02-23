@@ -3,9 +3,9 @@
 using System.Collections.Generic;
 using System.Text;
 using CruiseDAL.DataObjects;
-using FMSC.ORM.Core.EntityModel;
 using CruiseDAL.Schema;
 using System.Linq;
+using FMSC.ORM.EntityModel;
 
 #if ANDROID
 using Mono.Data.Sqlite;

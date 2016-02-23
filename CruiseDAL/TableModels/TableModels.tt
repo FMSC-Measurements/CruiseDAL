@@ -14,8 +14,8 @@ ICollection<Table> TableList = dr.AllTables.Values;
 
 using System;
 using System.Xml.Serialization;
-using FMSC.ORM.Core.EntityAttributes;
-using FMSC.ORM.Core.EntityModel;
+using FMSC.ORM.EntityModel.Attributes;
+using FMSC.ORM.EntityModel;
 using FMSC.ORM.Core;
 using CruiseDAL.Schema;
 
@@ -48,7 +48,7 @@ PopIndent();
 public void MakeClass(Table table)
 {#>
 [EntitySource(SourceName = "<#=table.Name#>")]
-public partial class <#=table.Name#>DO : CruiseDALDataObject
+public partial class <#=table.Name#>DO : DataObject
 {
 <#+  PushIndent("\t");#>
 private static RowValidator _validator;

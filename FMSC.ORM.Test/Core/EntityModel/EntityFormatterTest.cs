@@ -4,7 +4,7 @@ using Xunit;
 using FMSC.ORM.TestSupport.TestModels;
 using Xunit.Abstractions;
 
-namespace FMSC.ORM.Core.EntityModel
+namespace FMSC.ORM.EntityModel.Support
 {
     public class EntityFormatterTest : TestClassBase
     {

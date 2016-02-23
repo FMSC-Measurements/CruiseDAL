@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Xml.Serialization;
 
-using FMSC.ORM.Core.EntityAttributes;
+using FMSC.ORM.EntityModel.Attributes;
 
 namespace CruiseDAL.DataObjects
 {

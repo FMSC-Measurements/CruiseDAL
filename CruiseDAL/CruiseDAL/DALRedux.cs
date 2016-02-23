@@ -1,7 +1,6 @@
 ﻿
 using FMSC.ORM;
 using FMSC.ORM.Core;
-using FMSC.ORM.Core.EntityModel;
 using FMSC.ORM.Core.SQL;
 using FMSC.ORM.SQLite;
 using System;
@@ -419,7 +418,7 @@ namespace CruiseDAL
 
         #region not implemented 
         [Obsolete]
-        public void ChangeRowID(DataObject_Base data, long newRowID, OnConflictOption option)
+        public void ChangeRowID(DataObject data, long newRowID, OnConflictOption option)
         {
             throw new NotImplementedException();
         }

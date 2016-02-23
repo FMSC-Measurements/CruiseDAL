@@ -5,7 +5,7 @@ using System.Text;
 
 namespace FMSC.ORM.Core
 {
-    public class PlatformHelper
+    public static class PlatformHelper
     {
         static PlatformHelper()
         {

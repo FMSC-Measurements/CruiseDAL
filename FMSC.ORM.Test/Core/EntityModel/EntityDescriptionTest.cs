@@ -1,10 +1,11 @@
-﻿using FMSC.ORM.TestSupport.TestModels;
+﻿using FMSC.ORM.EntityModel.Attributes;
+using FMSC.ORM.TestSupport.TestModels;
 using System;
 using System.Linq;
 using Xunit;
 using Xunit.Abstractions;
 
-namespace FMSC.ORM.Core.EntityModel
+namespace FMSC.ORM.EntityModel.Support
 {
     public class EntityDescriptionTest : TestClassBase 
     {
@@ -100,8 +101,8 @@ namespace FMSC.ORM.Core.EntityModel
             Assert.NotNull(field.Property.Getter);
             Assert.NotNull(field.Property.Setter);
             Assert.NotNull(field.RunTimeType);
-            Assert.True(field.PersistanceFlags.HasFlag(EntityAttributes.PersistanceFlags.OnUpdate));
-            Assert.True(field.PersistanceFlags.HasFlag(EntityAttributes.PersistanceFlags.OnInsert));
+            Assert.True(field.PersistanceFlags.HasFlag(PersistanceFlags.OnUpdate));
+            Assert.True(field.PersistanceFlags.HasFlag(PersistanceFlags.OnInsert));
 
             _output.WriteLine("done");
         }
