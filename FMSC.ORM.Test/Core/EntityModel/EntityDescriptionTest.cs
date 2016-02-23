@@ -32,7 +32,7 @@ namespace FMSC.ORM.Core.EntityModel
 
         public void LoadDataObjects()
         {
-            var types = (from t in System.Reflection.Assembly.GetAssembly(typeof(DataObject)).GetTypes()
+            var types = (from t in System.Reflection.Assembly.GetAssembly(typeof(DataObject_Base)).GetTypes()
                          where t.IsClass && t.Namespace == "CruiseDAL.DataObjects"
                          select t).ToList();
 

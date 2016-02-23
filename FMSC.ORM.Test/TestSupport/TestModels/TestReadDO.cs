@@ -9,7 +9,7 @@ using FMSC.ORM.Core.EntityModel;
 namespace FMSC.ORM.TestSupport.TestModels
 {
     [EntitySource(SourceName = "TestRead")]
-    public class TestReadDO : DataObject
+    public class TestReadDO : DataObject_Base
     {
         [Field( FieldName="StringTest" )]
         public String StringTest { get; set; }
@@ -29,7 +29,7 @@ namespace FMSC.ORM.TestSupport.TestModels
         [Field(FieldName = "DateTimeTest")]
         public DateTime DateTimeTest { get; set; }
 
-        public override void SetValues(DataObject obj)
+        public override void SetValues(DataObject_Base obj)
         {
             throw new NotImplementedException();
         }

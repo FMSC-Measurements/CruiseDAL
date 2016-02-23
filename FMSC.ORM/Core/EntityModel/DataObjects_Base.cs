@@ -19,7 +19,7 @@ namespace FMSC.ORM.Core.EntityModel
     }
 
     [Serializable]
-    public abstract class DataObject : 
+    public abstract class DataObject_Base : 
         INotifyPropertyChanged, 
         ISupportInitialize,  
         IFormattable,
@@ -60,12 +60,12 @@ namespace FMSC.ORM.Core.EntityModel
 
 
         #region ctor
-        public DataObject()
+        public DataObject_Base()
         {
 
         }
 
-        public DataObject(DatastoreRedux ds)
+        public DataObject_Base(DatastoreRedux ds)
         {
             this.DAL = ds;
         }
@@ -102,7 +102,7 @@ namespace FMSC.ORM.Core.EntityModel
             _ds = newDAL;
         }
 
-        public abstract void SetValues(DataObject obj);
+        public abstract void SetValues(DataObject_Base obj);
 
         public void SuspendEvents()
         {

@@ -419,7 +419,7 @@ namespace CruiseDAL
 
         #region not implemented 
         [Obsolete]
-        public void ChangeRowID(DataObject data, long newRowID, OnConflictOption option)
+        public void ChangeRowID(DataObject_Base data, long newRowID, OnConflictOption option)
         {
             throw new NotImplementedException();
         }

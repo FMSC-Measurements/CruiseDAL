@@ -16,11 +16,11 @@ namespace CruiseDAL
 
         String _tableName;
         //EntityDescription _entityDescription;
-        CruiseDALDataObject _dataObject;
+        DataObject _dataObject;
 
         //public event EventHandler<DataErrorsChangedEventArgs> ErrorsChanged;
 
-        public CruiseDALErrorCollection(CruiseDALDataObject dataObject, String tableName)
+        public CruiseDALErrorCollection(DataObject dataObject, String tableName)
         {
             _dataObject = dataObject;
             _tableName = tableName;

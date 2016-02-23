@@ -14,13 +14,13 @@ using FMSC.ORM.Core.EntityAttributes;
 
 namespace CruiseDAL
 {
-    public abstract class CruiseDALDataObject : DataObject, IDataErrorInfo, IValidatable
+    public abstract class DataObject : DataObject_Base, IDataErrorInfo, IValidatable
     {
-        public CruiseDALDataObject() : this(null)
+        public DataObject() : this(null)
         { }
 
 
-        public CruiseDALDataObject(DatastoreRedux ds) : base(ds)
+        public DataObject(DatastoreRedux ds) : base(ds)
         {
             string tableName = DatastoreRedux.LookUpEntityByType(this.GetType()).SourceName;
             ErrorCollection = new CruiseDALErrorCollection(this, tableName);
@@ -53,7 +53,7 @@ namespace CruiseDAL
         /// </summary>
         [XmlIgnore]
         [IgnoreField]
-        public DataObject Self
+        public DataObject_Base Self
         {
             get
             {

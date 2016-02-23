@@ -7,9 +7,9 @@ using Xunit;
 
 namespace FMSC.ORM.Core.EntityModel
 {
-    public class ConcreateDataObject : DataObject
+    public class ConcreateDataObject : DataObject_Base
     {
-        public override void SetValues(DataObject obj)
+        public override void SetValues(DataObject_Base obj)
         {
             throw new NotImplementedException();
         }

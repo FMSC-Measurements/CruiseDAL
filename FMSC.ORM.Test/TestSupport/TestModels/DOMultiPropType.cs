@@ -9,7 +9,7 @@ using FMSC.ORM.Core.EntityModel;
 namespace FMSC.ORM.TestSupport.TestModels
 {
     [EntitySource(SourceName = FMSC.ORM.TestSupport.TestSQLConstants.MULTI_PROP_TABLE_NAME)]
-    public class DOMultiPropType : DataObject, IInterface
+    public class DOMultiPropType : DataObject_Base, IInterface
     {
         int _id;
         [PrimaryKeyField(FieldName = "ID")]
@@ -231,7 +231,7 @@ namespace FMSC.ORM.TestSupport.TestModels
         }
         #endregion
 
-        public override void SetValues(DataObject obj)
+        public override void SetValues(DataObject_Base obj)
         {
             throw new NotImplementedException();
         }

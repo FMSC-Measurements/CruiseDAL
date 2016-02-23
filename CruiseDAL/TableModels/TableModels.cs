@@ -12,7 +12,7 @@ namespace CruiseDAL.DataObjects
 {
 	#region Core Tables
 	[EntitySource(SourceName = "Sale")]
-	public partial class SaleDO : CruiseDALDataObject
+	public partial class SaleDO : DataObject
 	{
 		private static RowValidator _validator;
 		
@@ -287,7 +287,7 @@ namespace CruiseDAL.DataObjects
 			isValid = ValidateProperty("DefaultUOM", this.DefaultUOM) && isValid;
 			return isValid;
 		}
-		public override void SetValues(DataObject obj)
+		public override void SetValues(DataObject_Base obj)
 		{
 			this.SetValues(obj as SaleDO);
 		}
@@ -309,7 +309,7 @@ namespace CruiseDAL.DataObjects
 		}
 	}
 	[EntitySource(SourceName = "CuttingUnit")]
-	public partial class CuttingUnitDO : CruiseDALDataObject
+	public partial class CuttingUnitDO : DataObject
 	{
 		private static RowValidator _validator;
 		
@@ -491,7 +491,7 @@ namespace CruiseDAL.DataObjects
 			isValid = ValidateProperty("TallyHistory", this.TallyHistory) && isValid;
 			return isValid;
 		}
-		public override void SetValues(DataObject obj)
+		public override void SetValues(DataObject_Base obj)
 		{
 			this.SetValues(obj as CuttingUnitDO);
 		}
@@ -508,7 +508,7 @@ namespace CruiseDAL.DataObjects
 		}
 	}
 	[EntitySource(SourceName = "Stratum")]
-	public partial class StratumDO : CruiseDALDataObject
+	public partial class StratumDO : DataObject
 	{
 		private static RowValidator _validator;
 		
@@ -784,7 +784,7 @@ namespace CruiseDAL.DataObjects
 			isValid = ValidateProperty("Year", this.Year) && isValid;
 			return isValid;
 		}
-		public override void SetValues(DataObject obj)
+		public override void SetValues(DataObject_Base obj)
 		{
 			this.SetValues(obj as StratumDO);
 		}
@@ -806,7 +806,7 @@ namespace CruiseDAL.DataObjects
 		}
 	}
 	[EntitySource(SourceName = "CuttingUnitStratum")]
-	public partial class CuttingUnitStratumDO : CruiseDALDataObject
+	public partial class CuttingUnitStratumDO : DataObject
 	{
 		private static RowValidator _validator;
 		
@@ -975,7 +975,7 @@ namespace CruiseDAL.DataObjects
 			isValid = ValidateProperty("Stratum_CN", this.Stratum_CN) && isValid ;
 			return isValid;
 		}
-		public override void SetValues(DataObject obj)
+		public override void SetValues(DataObject_Base obj)
 		{
 			this.SetValues(obj as CuttingUnitStratumDO);
 		}
@@ -987,7 +987,7 @@ namespace CruiseDAL.DataObjects
 		}
 	}
 	[EntitySource(SourceName = "SampleGroup")]
-	public partial class SampleGroupDO : CruiseDALDataObject
+	public partial class SampleGroupDO : DataObject
 	{
 		private static RowValidator _validator;
 		
@@ -1443,7 +1443,7 @@ namespace CruiseDAL.DataObjects
 			isValid = ValidateProperty("Stratum_CN", this.Stratum_CN) && isValid ;
 			return isValid;
 		}
-		public override void SetValues(DataObject obj)
+		public override void SetValues(DataObject_Base obj)
 		{
 			this.SetValues(obj as SampleGroupDO);
 		}
@@ -1472,7 +1472,7 @@ namespace CruiseDAL.DataObjects
 		}
 	}
 	[EntitySource(SourceName = "TreeDefaultValue")]
-	public partial class TreeDefaultValueDO : CruiseDALDataObject
+	public partial class TreeDefaultValueDO : DataObject
 	{
 		private static RowValidator _validator;
 		
@@ -1864,7 +1864,7 @@ namespace CruiseDAL.DataObjects
 			isValid = ValidateProperty("ReferenceHeightPercent", this.ReferenceHeightPercent) && isValid;
 			return isValid;
 		}
-		public override void SetValues(DataObject obj)
+		public override void SetValues(DataObject_Base obj)
 		{
 			this.SetValues(obj as TreeDefaultValueDO);
 		}
@@ -1892,7 +1892,7 @@ namespace CruiseDAL.DataObjects
 		}
 	}
 	[EntitySource(SourceName = "SampleGroupTreeDefaultValue")]
-	public partial class SampleGroupTreeDefaultValueDO : CruiseDALDataObject
+	public partial class SampleGroupTreeDefaultValueDO : DataObject
 	{
 		private static RowValidator _validator;
 		
@@ -2041,7 +2041,7 @@ namespace CruiseDAL.DataObjects
 			isValid = ValidateProperty("SampleGroup_CN", this.SampleGroup_CN) && isValid ;
 			return isValid;
 		}
-		public override void SetValues(DataObject obj)
+		public override void SetValues(DataObject_Base obj)
 		{
 			this.SetValues(obj as SampleGroupTreeDefaultValueDO);
 		}
@@ -2052,7 +2052,7 @@ namespace CruiseDAL.DataObjects
 		}
 	}
 	[EntitySource(SourceName = "Plot")]
-	public partial class PlotDO : CruiseDALDataObject
+	public partial class PlotDO : DataObject
 	{
 		private static RowValidator _validator;
 		
@@ -2445,7 +2445,7 @@ namespace CruiseDAL.DataObjects
 			isValid = ValidateProperty("CuttingUnit_CN", this.CuttingUnit_CN) && isValid ;
 			return isValid;
 		}
-		public override void SetValues(DataObject obj)
+		public override void SetValues(DataObject_Base obj)
 		{
 			this.SetValues(obj as PlotDO);
 		}
@@ -2468,7 +2468,7 @@ namespace CruiseDAL.DataObjects
 		}
 	}
 	[EntitySource(SourceName = "Tree")]
-	public partial class TreeDO : CruiseDALDataObject
+	public partial class TreeDO : DataObject
 	{
 		private static RowValidator _validator;
 		
@@ -3573,7 +3573,7 @@ namespace CruiseDAL.DataObjects
 			isValid = ValidateProperty("Plot_CN", this.Plot_CN) && isValid ;
 			return isValid;
 		}
-		public override void SetValues(DataObject obj)
+		public override void SetValues(DataObject_Base obj)
 		{
 			this.SetValues(obj as TreeDO);
 		}
@@ -3627,7 +3627,7 @@ namespace CruiseDAL.DataObjects
 		}
 	}
 	[EntitySource(SourceName = "Log")]
-	public partial class LogDO : CruiseDALDataObject
+	public partial class LogDO : DataObject
 	{
 		private static RowValidator _validator;
 		
@@ -4058,7 +4058,7 @@ namespace CruiseDAL.DataObjects
 			isValid = ValidateProperty("Tree_CN", this.Tree_CN) && isValid ;
 			return isValid;
 		}
-		public override void SetValues(DataObject obj)
+		public override void SetValues(DataObject_Base obj)
 		{
 			this.SetValues(obj as LogDO);
 		}
@@ -4086,7 +4086,7 @@ namespace CruiseDAL.DataObjects
 		}
 	}
 	[EntitySource(SourceName = "Stem")]
-	public partial class StemDO : CruiseDALDataObject
+	public partial class StemDO : DataObject
 	{
 		private static RowValidator _validator;
 		
@@ -4263,7 +4263,7 @@ namespace CruiseDAL.DataObjects
 			isValid = ValidateProperty("Tree_CN", this.Tree_CN) && isValid ;
 			return isValid;
 		}
-		public override void SetValues(DataObject obj)
+		public override void SetValues(DataObject_Base obj)
 		{
 			this.SetValues(obj as StemDO);
 		}
@@ -4277,7 +4277,7 @@ namespace CruiseDAL.DataObjects
 		}
 	}
 	[EntitySource(SourceName = "CountTree")]
-	public partial class CountTreeDO : CruiseDALDataObject
+	public partial class CountTreeDO : DataObject
 	{
 		private static RowValidator _validator;
 		
@@ -4642,7 +4642,7 @@ namespace CruiseDAL.DataObjects
 			isValid = ValidateProperty("Component_CN", this.Component_CN) && isValid ;
 			return isValid;
 		}
-		public override void SetValues(DataObject obj)
+		public override void SetValues(DataObject_Base obj)
 		{
 			this.SetValues(obj as CountTreeDO);
 		}
@@ -4655,7 +4655,7 @@ namespace CruiseDAL.DataObjects
 		}
 	}
 	[EntitySource(SourceName = "Tally")]
-	public partial class TallyDO : CruiseDALDataObject
+	public partial class TallyDO : DataObject
 	{
 		private static RowValidator _validator;
 		
@@ -4783,7 +4783,7 @@ namespace CruiseDAL.DataObjects
 			isValid = ValidateProperty("IndicatorType", this.IndicatorType) && isValid;
 			return isValid;
 		}
-		public override void SetValues(DataObject obj)
+		public override void SetValues(DataObject_Base obj)
 		{
 			this.SetValues(obj as TallyDO);
 		}
@@ -4798,7 +4798,7 @@ namespace CruiseDAL.DataObjects
 		}
 	}
 	[EntitySource(SourceName = "TreeEstimate")]
-	public partial class TreeEstimateDO : CruiseDALDataObject
+	public partial class TreeEstimateDO : DataObject
 	{
 		private static RowValidator _validator;
 		
@@ -4958,7 +4958,7 @@ namespace CruiseDAL.DataObjects
 			isValid = ValidateProperty("CountTree_CN", this.CountTree_CN) && isValid ;
 			return isValid;
 		}
-		public override void SetValues(DataObject obj)
+		public override void SetValues(DataObject_Base obj)
 		{
 			this.SetValues(obj as TreeEstimateDO);
 		}
@@ -4973,7 +4973,7 @@ namespace CruiseDAL.DataObjects
 	#endregion
 	#region Processing Tables
 	[EntitySource(SourceName = "VolumeEquation")]
-	public partial class VolumeEquationDO : CruiseDALDataObject
+	public partial class VolumeEquationDO : DataObject
 	{
 		private static RowValidator _validator;
 		
@@ -5401,7 +5401,7 @@ namespace CruiseDAL.DataObjects
 			isValid = ValidateProperty("EvenOddSegment", this.EvenOddSegment) && isValid;
 			return isValid;
 		}
-		public override void SetValues(DataObject obj)
+		public override void SetValues(DataObject_Base obj)
 		{
 			this.SetValues(obj as VolumeEquationDO);
 		}
@@ -5433,7 +5433,7 @@ namespace CruiseDAL.DataObjects
 		}
 	}
 	[EntitySource(SourceName = "BiomassEquation")]
-	public partial class BiomassEquationDO : CruiseDALDataObject
+	public partial class BiomassEquationDO : DataObject
 	{
 		private static RowValidator _validator;
 		
@@ -5683,7 +5683,7 @@ namespace CruiseDAL.DataObjects
 			isValid = ValidateProperty("WeightFactorSecondary", this.WeightFactorSecondary) && isValid;
 			return isValid;
 		}
-		public override void SetValues(DataObject obj)
+		public override void SetValues(DataObject_Base obj)
 		{
 			this.SetValues(obj as BiomassEquationDO);
 		}
@@ -5705,7 +5705,7 @@ namespace CruiseDAL.DataObjects
 		}
 	}
 	[EntitySource(SourceName = "ValueEquation")]
-	public partial class ValueEquationDO : CruiseDALDataObject
+	public partial class ValueEquationDO : DataObject
 	{
 		private static RowValidator _validator;
 		
@@ -5934,7 +5934,7 @@ namespace CruiseDAL.DataObjects
 			isValid = ValidateProperty("Coefficient6", this.Coefficient6) && isValid;
 			return isValid;
 		}
-		public override void SetValues(DataObject obj)
+		public override void SetValues(DataObject_Base obj)
 		{
 			this.SetValues(obj as ValueEquationDO);
 		}
@@ -5955,7 +5955,7 @@ namespace CruiseDAL.DataObjects
 		}
 	}
 	[EntitySource(SourceName = "QualityAdjEquation")]
-	public partial class QualityAdjEquationDO : CruiseDALDataObject
+	public partial class QualityAdjEquationDO : DataObject
 	{
 		private static RowValidator _validator;
 		
@@ -6183,7 +6183,7 @@ namespace CruiseDAL.DataObjects
 			isValid = ValidateProperty("Coefficient6", this.Coefficient6) && isValid;
 			return isValid;
 		}
-		public override void SetValues(DataObject obj)
+		public override void SetValues(DataObject_Base obj)
 		{
 			this.SetValues(obj as QualityAdjEquationDO);
 		}
@@ -6204,7 +6204,7 @@ namespace CruiseDAL.DataObjects
 		}
 	}
 	[EntitySource(SourceName = "Reports")]
-	public partial class ReportsDO : CruiseDALDataObject
+	public partial class ReportsDO : DataObject
 	{
 		private static RowValidator _validator;
 		
@@ -6306,7 +6306,7 @@ namespace CruiseDAL.DataObjects
 			isValid = ValidateProperty("Title", this.Title) && isValid;
 			return isValid;
 		}
-		public override void SetValues(DataObject obj)
+		public override void SetValues(DataObject_Base obj)
 		{
 			this.SetValues(obj as ReportsDO);
 		}
@@ -6320,7 +6320,7 @@ namespace CruiseDAL.DataObjects
 		}
 	}
 	[EntitySource(SourceName = "TreeCalculatedValues")]
-	public partial class TreeCalculatedValuesDO : CruiseDALDataObject
+	public partial class TreeCalculatedValuesDO : DataObject
 	{
 		private static RowValidator _validator;
 		
@@ -7002,7 +7002,7 @@ namespace CruiseDAL.DataObjects
 			isValid = ValidateProperty("Tree_CN", this.Tree_CN) && isValid ;
 			return isValid;
 		}
-		public override void SetValues(DataObject obj)
+		public override void SetValues(DataObject_Base obj)
 		{
 			this.SetValues(obj as TreeCalculatedValuesDO);
 		}
@@ -7045,7 +7045,7 @@ namespace CruiseDAL.DataObjects
 		}
 	}
 	[EntitySource(SourceName = "LCD")]
-	public partial class LCDDO : CruiseDALDataObject
+	public partial class LCDDO : DataObject
 	{
 		private static RowValidator _validator;
 		
@@ -8064,7 +8064,7 @@ namespace CruiseDAL.DataObjects
 			isValid = ValidateProperty("SumWgtTip", this.SumWgtTip) && isValid;
 			return isValid;
 		}
-		public override void SetValues(DataObject obj)
+		public override void SetValues(DataObject_Base obj)
 		{
 			this.SetValues(obj as LCDDO);
 		}
@@ -8128,7 +8128,7 @@ namespace CruiseDAL.DataObjects
 		}
 	}
 	[EntitySource(SourceName = "POP")]
-	public partial class POPDO : CruiseDALDataObject
+	public partial class POPDO : DataObject
 	{
 		private static RowValidator _validator;
 		
@@ -9088,7 +9088,7 @@ namespace CruiseDAL.DataObjects
 			isValid = ValidateProperty("Stg2ValueXsqrdRP", this.Stg2ValueXsqrdRP) && isValid;
 			return isValid;
 		}
-		public override void SetValues(DataObject obj)
+		public override void SetValues(DataObject_Base obj)
 		{
 			this.SetValues(obj as POPDO);
 		}
@@ -9149,7 +9149,7 @@ namespace CruiseDAL.DataObjects
 		}
 	}
 	[EntitySource(SourceName = "PRO")]
-	public partial class PRODO : CruiseDALDataObject
+	public partial class PRODO : DataObject
 	{
 		private static RowValidator _validator;
 		
@@ -9480,7 +9480,7 @@ namespace CruiseDAL.DataObjects
 			isValid = ValidateProperty("ProratedEstimatedTrees", this.ProratedEstimatedTrees) && isValid;
 			return isValid;
 		}
-		public override void SetValues(DataObject obj)
+		public override void SetValues(DataObject_Base obj)
 		{
 			this.SetValues(obj as PRODO);
 		}
@@ -9506,7 +9506,7 @@ namespace CruiseDAL.DataObjects
 		}
 	}
 	[EntitySource(SourceName = "LogStock")]
-	public partial class LogStockDO : CruiseDALDataObject
+	public partial class LogStockDO : DataObject
 	{
 		private static RowValidator _validator;
 		
@@ -9955,7 +9955,7 @@ namespace CruiseDAL.DataObjects
 			isValid = ValidateProperty("Tree_CN", this.Tree_CN) && isValid ;
 			return isValid;
 		}
-		public override void SetValues(DataObject obj)
+		public override void SetValues(DataObject_Base obj)
 		{
 			this.SetValues(obj as LogStockDO);
 		}
@@ -9984,7 +9984,7 @@ namespace CruiseDAL.DataObjects
 		}
 	}
 	[EntitySource(SourceName = "SampleGroupStats")]
-	public partial class SampleGroupStatsDO : CruiseDALDataObject
+	public partial class SampleGroupStatsDO : DataObject
 	{
 		private static RowValidator _validator;
 		
@@ -10629,7 +10629,7 @@ namespace CruiseDAL.DataObjects
 			isValid = ValidateProperty("StratumStats_CN", this.StratumStats_CN) && isValid ;
 			return isValid;
 		}
-		public override void SetValues(DataObject obj)
+		public override void SetValues(DataObject_Base obj)
 		{
 			this.SetValues(obj as SampleGroupStatsDO);
 		}
@@ -10670,7 +10670,7 @@ namespace CruiseDAL.DataObjects
 		}
 	}
 	[EntitySource(SourceName = "SampleGroupStatsTreeDefaultValue")]
-	public partial class SampleGroupStatsTreeDefaultValueDO : CruiseDALDataObject
+	public partial class SampleGroupStatsTreeDefaultValueDO : DataObject
 	{
 		private static RowValidator _validator;
 		
@@ -10819,7 +10819,7 @@ namespace CruiseDAL.DataObjects
 			isValid = ValidateProperty("SampleGroupStats_CN", this.SampleGroupStats_CN) && isValid ;
 			return isValid;
 		}
-		public override void SetValues(DataObject obj)
+		public override void SetValues(DataObject_Base obj)
 		{
 			this.SetValues(obj as SampleGroupStatsTreeDefaultValueDO);
 		}
@@ -10830,7 +10830,7 @@ namespace CruiseDAL.DataObjects
 		}
 	}
 	[EntitySource(SourceName = "StratumStats")]
-	public partial class StratumStatsDO : CruiseDALDataObject
+	public partial class StratumStatsDO : DataObject
 	{
 		private static RowValidator _validator;
 		
@@ -11259,7 +11259,7 @@ namespace CruiseDAL.DataObjects
 			isValid = ValidateProperty("Stratum_CN", this.Stratum_CN) && isValid ;
 			return isValid;
 		}
-		public override void SetValues(DataObject obj)
+		public override void SetValues(DataObject_Base obj)
 		{
 			this.SetValues(obj as StratumStatsDO);
 		}
@@ -11288,7 +11288,7 @@ namespace CruiseDAL.DataObjects
 		}
 	}
 	[EntitySource(SourceName = "Regression")]
-	public partial class RegressionDO : CruiseDALDataObject
+	public partial class RegressionDO : DataObject
 	{
 		private static RowValidator _validator;
 		
@@ -11594,7 +11594,7 @@ namespace CruiseDAL.DataObjects
 			isValid = ValidateProperty("rMaxDbh", this.rMaxDbh) && isValid;
 			return isValid;
 		}
-		public override void SetValues(DataObject obj)
+		public override void SetValues(DataObject_Base obj)
 		{
 			this.SetValues(obj as RegressionDO);
 		}
@@ -11619,7 +11619,7 @@ namespace CruiseDAL.DataObjects
 		}
 	}
 	[EntitySource(SourceName = "LogMatrix")]
-	public partial class LogMatrixDO : CruiseDALDataObject
+	public partial class LogMatrixDO : DataObject
 	{
 		private static RowValidator _validator;
 		
@@ -11900,7 +11900,7 @@ namespace CruiseDAL.DataObjects
 			isValid = ValidateProperty("SEDmaximum", this.SEDmaximum) && isValid;
 			return isValid;
 		}
-		public override void SetValues(DataObject obj)
+		public override void SetValues(DataObject_Base obj)
 		{
 			this.SetValues(obj as LogMatrixDO);
 		}
@@ -11926,7 +11926,7 @@ namespace CruiseDAL.DataObjects
 	#endregion
 	#region Settings Tables
 	[EntitySource(SourceName = "TreeDefaultValueTreeAuditValue")]
-	public partial class TreeDefaultValueTreeAuditValueDO : CruiseDALDataObject
+	public partial class TreeDefaultValueTreeAuditValueDO : DataObject
 	{
 		private static RowValidator _validator;
 		
@@ -12077,7 +12077,7 @@ namespace CruiseDAL.DataObjects
 			isValid = ValidateProperty("TreeDefaultValue_CN", this.TreeDefaultValue_CN) && isValid ;
 			return isValid;
 		}
-		public override void SetValues(DataObject obj)
+		public override void SetValues(DataObject_Base obj)
 		{
 			this.SetValues(obj as TreeDefaultValueTreeAuditValueDO);
 		}
@@ -12088,7 +12088,7 @@ namespace CruiseDAL.DataObjects
 		}
 	}
 	[EntitySource(SourceName = "TreeAuditValue")]
-	public partial class TreeAuditValueDO : CruiseDALDataObject
+	public partial class TreeAuditValueDO : DataObject
 	{
 		private static RowValidator _validator;
 		
@@ -12233,7 +12233,7 @@ namespace CruiseDAL.DataObjects
 			isValid = ValidateProperty("Required", this.Required) && isValid;
 			return isValid;
 		}
-		public override void SetValues(DataObject obj)
+		public override void SetValues(DataObject_Base obj)
 		{
 			this.SetValues(obj as TreeAuditValueDO);
 		}
@@ -12249,7 +12249,7 @@ namespace CruiseDAL.DataObjects
 		}
 	}
 	[EntitySource(SourceName = "LogFieldSetup")]
-	public partial class LogFieldSetupDO : CruiseDALDataObject
+	public partial class LogFieldSetupDO : DataObject
 	{
 		private static RowValidator _validator;
 		
@@ -12475,7 +12475,7 @@ namespace CruiseDAL.DataObjects
 			isValid = ValidateProperty("Stratum_CN", this.Stratum_CN) && isValid ;
 			return isValid;
 		}
-		public override void SetValues(DataObject obj)
+		public override void SetValues(DataObject_Base obj)
 		{
 			this.SetValues(obj as LogFieldSetupDO);
 		}
@@ -12493,7 +12493,7 @@ namespace CruiseDAL.DataObjects
 		}
 	}
 	[EntitySource(SourceName = "TreeFieldSetup")]
-	public partial class TreeFieldSetupDO : CruiseDALDataObject
+	public partial class TreeFieldSetupDO : DataObject
 	{
 		private static RowValidator _validator;
 		
@@ -12719,7 +12719,7 @@ namespace CruiseDAL.DataObjects
 			isValid = ValidateProperty("Stratum_CN", this.Stratum_CN) && isValid ;
 			return isValid;
 		}
-		public override void SetValues(DataObject obj)
+		public override void SetValues(DataObject_Base obj)
 		{
 			this.SetValues(obj as TreeFieldSetupDO);
 		}
@@ -12737,7 +12737,7 @@ namespace CruiseDAL.DataObjects
 		}
 	}
 	[EntitySource(SourceName = "LogFieldSetupDefault")]
-	public partial class LogFieldSetupDefaultDO : CruiseDALDataObject
+	public partial class LogFieldSetupDefaultDO : DataObject
 	{
 		private static RowValidator _validator;
 		
@@ -12936,7 +12936,7 @@ namespace CruiseDAL.DataObjects
 			isValid = ValidateProperty("Behavior", this.Behavior) && isValid;
 			return isValid;
 		}
-		public override void SetValues(DataObject obj)
+		public override void SetValues(DataObject_Base obj)
 		{
 			this.SetValues(obj as LogFieldSetupDefaultDO);
 		}
@@ -12955,7 +12955,7 @@ namespace CruiseDAL.DataObjects
 		}
 	}
 	[EntitySource(SourceName = "TreeFieldSetupDefault")]
-	public partial class TreeFieldSetupDefaultDO : CruiseDALDataObject
+	public partial class TreeFieldSetupDefaultDO : DataObject
 	{
 		private static RowValidator _validator;
 		
@@ -13173,7 +13173,7 @@ namespace CruiseDAL.DataObjects
 			isValid = ValidateProperty("Behavior", this.Behavior) && isValid;
 			return isValid;
 		}
-		public override void SetValues(DataObject obj)
+		public override void SetValues(DataObject_Base obj)
 		{
 			this.SetValues(obj as TreeFieldSetupDefaultDO);
 		}
@@ -13195,7 +13195,7 @@ namespace CruiseDAL.DataObjects
 	#endregion
 	#region Lookup Tables
 	[EntitySource(SourceName = "CruiseMethods")]
-	public partial class CruiseMethodsDO : CruiseDALDataObject
+	public partial class CruiseMethodsDO : DataObject
 	{
 		private static RowValidator _validator;
 		
@@ -13285,7 +13285,7 @@ namespace CruiseDAL.DataObjects
 			isValid = ValidateProperty("FriendlyValue", this.FriendlyValue) && isValid;
 			return isValid;
 		}
-		public override void SetValues(DataObject obj)
+		public override void SetValues(DataObject_Base obj)
 		{
 			this.SetValues(obj as CruiseMethodsDO);
 		}
@@ -13298,7 +13298,7 @@ namespace CruiseDAL.DataObjects
 		}
 	}
 	[EntitySource(SourceName = "LoggingMethods")]
-	public partial class LoggingMethodsDO : CruiseDALDataObject
+	public partial class LoggingMethodsDO : DataObject
 	{
 		private static RowValidator _validator;
 		
@@ -13388,7 +13388,7 @@ namespace CruiseDAL.DataObjects
 			isValid = ValidateProperty("FriendlyValue", this.FriendlyValue) && isValid;
 			return isValid;
 		}
-		public override void SetValues(DataObject obj)
+		public override void SetValues(DataObject_Base obj)
 		{
 			this.SetValues(obj as LoggingMethodsDO);
 		}
@@ -13401,7 +13401,7 @@ namespace CruiseDAL.DataObjects
 		}
 	}
 	[EntitySource(SourceName = "ProductCodes")]
-	public partial class ProductCodesDO : CruiseDALDataObject
+	public partial class ProductCodesDO : DataObject
 	{
 		private static RowValidator _validator;
 		
@@ -13491,7 +13491,7 @@ namespace CruiseDAL.DataObjects
 			isValid = ValidateProperty("FriendlyValue", this.FriendlyValue) && isValid;
 			return isValid;
 		}
-		public override void SetValues(DataObject obj)
+		public override void SetValues(DataObject_Base obj)
 		{
 			this.SetValues(obj as ProductCodesDO);
 		}
@@ -13504,7 +13504,7 @@ namespace CruiseDAL.DataObjects
 		}
 	}
 	[EntitySource(SourceName = "UOMCodes")]
-	public partial class UOMCodesDO : CruiseDALDataObject
+	public partial class UOMCodesDO : DataObject
 	{
 		private static RowValidator _validator;
 		
@@ -13594,7 +13594,7 @@ namespace CruiseDAL.DataObjects
 			isValid = ValidateProperty("FriendlyValue", this.FriendlyValue) && isValid;
 			return isValid;
 		}
-		public override void SetValues(DataObject obj)
+		public override void SetValues(DataObject_Base obj)
 		{
 			this.SetValues(obj as UOMCodesDO);
 		}
@@ -13607,7 +13607,7 @@ namespace CruiseDAL.DataObjects
 		}
 	}
 	[EntitySource(SourceName = "Regions")]
-	public partial class RegionsDO : CruiseDALDataObject
+	public partial class RegionsDO : DataObject
 	{
 		private static RowValidator _validator;
 		
@@ -13697,7 +13697,7 @@ namespace CruiseDAL.DataObjects
 			isValid = ValidateProperty("Name", this.Name) && isValid;
 			return isValid;
 		}
-		public override void SetValues(DataObject obj)
+		public override void SetValues(DataObject_Base obj)
 		{
 			this.SetValues(obj as RegionsDO);
 		}
@@ -13710,7 +13710,7 @@ namespace CruiseDAL.DataObjects
 		}
 	}
 	[EntitySource(SourceName = "Forests")]
-	public partial class ForestsDO : CruiseDALDataObject
+	public partial class ForestsDO : DataObject
 	{
 		private static RowValidator _validator;
 		
@@ -13869,7 +13869,7 @@ namespace CruiseDAL.DataObjects
 			isValid = ValidateProperty("Region_CN", this.Region_CN) && isValid ;
 			return isValid;
 		}
-		public override void SetValues(DataObject obj)
+		public override void SetValues(DataObject_Base obj)
 		{
 			this.SetValues(obj as ForestsDO);
 		}
@@ -13885,7 +13885,7 @@ namespace CruiseDAL.DataObjects
 	#endregion
 	#region Utility Tables
 	[EntitySource(SourceName = "ErrorLog")]
-	public partial class ErrorLogDO : CruiseDALDataObject
+	public partial class ErrorLogDO : DataObject
 	{
 		private static RowValidator _validator;
 		
@@ -14062,7 +14062,7 @@ namespace CruiseDAL.DataObjects
 			isValid = ValidateProperty("Suppress", this.Suppress) && isValid;
 			return isValid;
 		}
-		public override void SetValues(DataObject obj)
+		public override void SetValues(DataObject_Base obj)
 		{
 			this.SetValues(obj as ErrorLogDO);
 		}
@@ -14080,7 +14080,7 @@ namespace CruiseDAL.DataObjects
 		}
 	}
 	[EntitySource(SourceName = "MessageLog")]
-	public partial class MessageLogDO : CruiseDALDataObject
+	public partial class MessageLogDO : DataObject
 	{
 		private static RowValidator _validator;
 		
@@ -14224,7 +14224,7 @@ namespace CruiseDAL.DataObjects
 			isValid = ValidateProperty("Level", this.Level) && isValid;
 			return isValid;
 		}
-		public override void SetValues(DataObject obj)
+		public override void SetValues(DataObject_Base obj)
 		{
 			this.SetValues(obj as MessageLogDO);
 		}
@@ -14240,7 +14240,7 @@ namespace CruiseDAL.DataObjects
 		}
 	}
 	[EntitySource(SourceName = "Globals")]
-	public partial class GlobalsDO : CruiseDALDataObject
+	public partial class GlobalsDO : DataObject
 	{
 		private static RowValidator _validator;
 		
@@ -14341,7 +14341,7 @@ namespace CruiseDAL.DataObjects
 			isValid = ValidateProperty("Value", this.Value) && isValid;
 			return isValid;
 		}
-		public override void SetValues(DataObject obj)
+		public override void SetValues(DataObject_Base obj)
 		{
 			this.SetValues(obj as GlobalsDO);
 		}
@@ -14355,7 +14355,7 @@ namespace CruiseDAL.DataObjects
 		}
 	}
 	[EntitySource(SourceName = "Component")]
-	public partial class ComponentDO : CruiseDALDataObject
+	public partial class ComponentDO : DataObject
 	{
 		private static RowValidator _validator;
 		
@@ -14463,7 +14463,7 @@ namespace CruiseDAL.DataObjects
 			isValid = ValidateProperty("FileName", this.FileName) && isValid;
 			return isValid;
 		}
-		public override void SetValues(DataObject obj)
+		public override void SetValues(DataObject_Base obj)
 		{
 			this.SetValues(obj as ComponentDO);
 		}
