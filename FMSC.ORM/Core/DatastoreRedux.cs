@@ -1444,12 +1444,24 @@ namespace FMSC.ORM.Core
 
         protected void ReleaseConnection()
         {
-            lock(_persistentConnectionSyncLock)
+            ReleaseConnection(false);
+        }
+
+        protected void ReleaseConnection(bool force)
+        {
+            lock (_persistentConnectionSyncLock)
             {
-                if(_holdConnection > 0)
+                if (_holdConnection > 0 )
                 {
-                    ExitConnectionHold();
-                    if(_holdConnection == 0)
+                    if (force)
+                    {
+                        _holdConnection = 0;
+                    }
+                    else
+                    {
+                        ExitConnectionHold();
+                    }
+                    if (_holdConnection == 0)
                     {
                         Debug.Assert(PersistentConnection != null);
                         PersistentConnection.Dispose();
