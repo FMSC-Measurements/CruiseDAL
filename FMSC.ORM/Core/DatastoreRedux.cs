@@ -231,7 +231,7 @@ namespace FMSC.ORM.Core
             if(data is System.ComponentModel.IChangeTracking
                 && ((System.ComponentModel.IChangeTracking)data).IsChanged == false)
             {
-                Debug.Write("object not saved because it has no changes");
+                Debug.Write("save skipped because data has no changes");
                 return;
             }
 
@@ -1288,7 +1288,7 @@ namespace FMSC.ORM.Core
             }
         }
 
-       
+
 
         //protected DbConnection OpenReadWriteConnection()
         //{
@@ -1469,8 +1469,8 @@ namespace FMSC.ORM.Core
                     }
                 }
             }
-
         }
+
 
         //protected void ReleaseReadOnlyConnection()
         //{
