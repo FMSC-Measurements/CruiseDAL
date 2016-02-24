@@ -12,7 +12,7 @@ namespace FMSC.ORM.TestSupport.TestModels
     public class DOMultiPropType : DataObject_Base, IInterface
     {
         int _id;
-        [PrimaryKeyField(FieldName = "ID")]
+        [PrimaryKeyField(Name = "ID")]
         public int ID
         {
             get { return _id; }
@@ -24,7 +24,7 @@ namespace FMSC.ORM.TestSupport.TestModels
         }
 
         string _stringField;
-        [Field(FieldName = "StringField")]
+        [Field(Name = "StringField")]
         public string StringField
         {
             get { return _stringField; }
@@ -36,7 +36,7 @@ namespace FMSC.ORM.TestSupport.TestModels
         }
 
         int _intField;
-        [Field(FieldName = "IntField")]
+        [Field(Name = "IntField")]
         public int IntField
         {
             get { return _intField; }
@@ -48,7 +48,7 @@ namespace FMSC.ORM.TestSupport.TestModels
         }
 
         int? _nIntField;
-        [Field(FieldName = "NIntField")]
+        [Field(Name = "NIntField")]
         public int? NIntField
         {
             get { return _nIntField; }
@@ -60,7 +60,7 @@ namespace FMSC.ORM.TestSupport.TestModels
         }
 
         long _longField;
-        [Field(FieldName = "LongField")]
+        [Field(Name = "LongField")]
         public long LongField
         {
             get { return _longField; }
@@ -72,7 +72,7 @@ namespace FMSC.ORM.TestSupport.TestModels
         }
 
         long? _nLongField;
-        [Field(FieldName = "NLongField")]
+        [Field(Name = "NLongField")]
         public long? NLongField
         {
             get { return _nLongField; }
@@ -84,7 +84,7 @@ namespace FMSC.ORM.TestSupport.TestModels
         }
 
         bool _boolField;
-        [Field(FieldName = "BoolField")]
+        [Field(Name = "BoolField")]
         public bool BoolField
         {
             get { return _boolField; }
@@ -96,7 +96,7 @@ namespace FMSC.ORM.TestSupport.TestModels
         }
 
         bool? _nBoolField;
-        [Field(FieldName = "NBoolField")]
+        [Field(Name = "NBoolField")]
         public bool? NBoolField
         {
             get { return _nBoolField; }
@@ -108,7 +108,7 @@ namespace FMSC.ORM.TestSupport.TestModels
         }
 
         float _floatField;
-        [Field(FieldName = "FloatField")]
+        [Field(Name = "FloatField")]
         public float FloatField
         {
             get { return _floatField; }
@@ -120,7 +120,7 @@ namespace FMSC.ORM.TestSupport.TestModels
         }
 
         float? _nFloatField;
-        [Field(FieldName = "NFloatField")]
+        [Field(Name = "NFloatField")]
         public float? NFloatField
         {
             get { return _nFloatField; }
@@ -132,7 +132,7 @@ namespace FMSC.ORM.TestSupport.TestModels
         }
 
         double _doubleField;
-        [Field(FieldName = "DoubleField")]
+        [Field(Name = "DoubleField")]
         public double DoubleField
         {
             get { return _doubleField; }
@@ -144,7 +144,7 @@ namespace FMSC.ORM.TestSupport.TestModels
         }
 
         double? _nDoubleField;
-        [Field(FieldName = "NDoubleField")]
+        [Field(Name = "NDoubleField")]
         public double? NDoubleField
         {
             get { return _nDoubleField; }
@@ -156,7 +156,7 @@ namespace FMSC.ORM.TestSupport.TestModels
         }
 
         Guid _guidField;
-        [Field(FieldName = "GuidField")]
+        [Field(Name = "GuidField")]
         public Guid GuidField
         {
             get { return _guidField; }
@@ -168,7 +168,7 @@ namespace FMSC.ORM.TestSupport.TestModels
         }
 
         DateTime _dateTimeField;
-        [Field(FieldName = "DateTimeField")]
+        [Field(Name = "DateTimeField")]
         public DateTime DateTimeField
         {
             get { return _dateTimeField; }
@@ -179,10 +179,10 @@ namespace FMSC.ORM.TestSupport.TestModels
             }
         }
 
-        [Field(FieldName = "PartialyPublicField")]
+        [Field(Name = "PartialyPublicField")]
         public string PartialyPublicField { get; protected set; }
 
-        [Field(FieldName = "PrivateField")]
+        [Field(Name = "PrivateField")]
         private string PrivateField { get; set; }
 
         string _createdBy;

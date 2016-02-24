@@ -22,8 +22,6 @@ namespace FMSC.ORM.EntityModel.Support
 {
     public class EntityDescription
     {
-        private EntitySourceAttribute _entityAttr;
-
         public Type EntityType { get; private set; }
         public String SourceName
         {
@@ -65,7 +63,6 @@ namespace FMSC.ORM.EntityModel.Support
                 object[] eAttrs = EntityType.GetCustomAttributes(typeof(EntitySourceAttribute), true);
                 var eAttr = eAttrs.FirstOrDefault() as EntitySourceAttribute;
 
-
                 if(eAttr != null)
                 {
                     this.Source = new TableOrSubQuery(
@@ -75,8 +72,6 @@ namespace FMSC.ORM.EntityModel.Support
                         JoinCommands = eAttr.JoinCommands
                     };
                 }
-
-                
 
                 RegesterFields();
             }
@@ -104,47 +99,45 @@ namespace FMSC.ORM.EntityModel.Support
         protected void RegesterProperty(PropertyInfo property, bool isPublic)
         {
             var accessor = new PropertyAccessor(property);
+            AddPropertyAccessor(accessor);
 
-            if (this.Properties.ContainsKey(accessor.Name) == false)
-            {
-                this.Properties.Add(accessor.Name, accessor);
-            }
-            else
-            {
-                Debug.WriteLine("Property hidden:" + property.ToString());
-                //Debug.Fail("property already registered: " + accessor.Name);
-            }
+            BaseFieldAttribute attr = Attribute.GetCustomAttribute(property, typeof(BaseFieldAttribute)) as BaseFieldAttribute;
+            if(attr == null) { return; }
 
-            BaseFieldAttribute fieldAttr = Attribute.GetCustomAttribute(property, typeof(BaseFieldAttribute)) as BaseFieldAttribute;
-            
-            if (fieldAttr == null)
+            attr.Property = accessor;
+
+            var fieldAttr = attr as FieldAttribute;
+            if (fieldAttr != null)
             {
-                if (isPublic)
+                if (string.IsNullOrEmpty(fieldAttr.SourceName) 
+                    && !string.IsNullOrEmpty(fieldAttr.SQLExpression))
                 {
-                    //TODO handle public property without attribute if we want automatic fields
-                    //catch FieldAccesabilityException for automatic fields
-                    return;
+                    fieldAttr.SourceName = this.SourceName; 
                 }
-                else
-                {
-                    return; //don't allow non public properties to be automatic fields
-                }
-            }
-
-
-            if (fieldAttr is IgnoreFieldAttribute) { return; }
-
-            if (fieldAttr is FieldAttribute)
-            {
                 try
                 {
-                    ((FieldAttribute)fieldAttr).Property = accessor;
-                    Fields.AddField((FieldAttribute)fieldAttr);
+                    Fields.AddField(fieldAttr);
                 }
                 catch (Exception e)
                 {
                     throw new ORMException("Unable to register property: " + property.Name, e);
                 }
+            }
+
+
+            
+        }
+
+        protected void AddPropertyAccessor(PropertyAccessor prop)
+        {
+            if (this.Properties.ContainsKey(prop.Name) == false)
+            {
+                this.Properties.Add(prop.Name, prop);
+            }
+            else
+            {
+                Debug.WriteLine("Property hidden:" + prop.ToString());
+                //Debug.Fail("property already registered: " + accessor.Name);
             }
         }
 

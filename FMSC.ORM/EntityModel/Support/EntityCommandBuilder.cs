@@ -53,7 +53,7 @@ namespace FMSC.ORM.EntityModel.Support
 
             foreach(FieldAttribute field in fields)
             {
-                selectBuilder.ResultColumns.Add(field.GetResultColumnExpression(EntityDescription.SourceName));
+                selectBuilder.ResultColumns.Add(field.GetResultColumnExpression());
             }
 
             return selectBuilder;
@@ -83,11 +83,11 @@ namespace FMSC.ORM.EntityModel.Support
 
                     if(string.IsNullOrEmpty(field.SQLExpression))
                     {
-                        colExpr = EntityDescription.SourceName + "." + field.FieldName;
+                        colExpr = EntityDescription.SourceName + "." + field.Name;
                     }
                     else
                     {
-                        colExpr = field.SQLExpression + " AS " + EntityDescription.SourceName + "." + field.FieldName;
+                        colExpr = field.SQLExpression + " AS " + EntityDescription.SourceName + "." + field.Name;
                     }
 
                     if (!first)
@@ -133,7 +133,7 @@ namespace FMSC.ORM.EntityModel.Support
 
                 if (keyValue != null)
                 {
-                    columnNames.Add(keyField.FieldName);
+                    columnNames.Add(keyField.Name);
                     valueExpressions.Add(keyField.SQLPramName);
 
                     var pram = provider.CreateParameter(keyField.SQLPramName, keyValue);
@@ -143,7 +143,7 @@ namespace FMSC.ORM.EntityModel.Support
                  
             foreach (FieldAttribute field in EntityDescription.Fields.GetPersistedFields(false, PersistanceFlags.OnInsert))
             {
-                columnNames.Add(field.FieldName);
+                columnNames.Add(field.Name);
                 valueExpressions.Add(field.SQLPramName);
 
                 object value = field.GetFieldValueOrDefault(data);
@@ -232,7 +232,7 @@ namespace FMSC.ORM.EntityModel.Support
             var columnExpressions = new List<string>();
             foreach (FieldAttribute field in EntityDescription.Fields.GetPersistedFields(true, PersistanceFlags.OnUpdate))
             {
-                columnNames.Add(field.FieldName);
+                columnNames.Add(field.Name);
                 columnExpressions.Add(field.SQLPramName);
 
                 object value = field.GetFieldValueOrDefault(data);
@@ -245,7 +245,7 @@ namespace FMSC.ORM.EntityModel.Support
             DbParameter p = provider.CreateParameter(keyField.SQLPramName, keyValue);
             command.Parameters.Add(p);
 
-            var where = new WhereClause(keyField.FieldName + " = " + keyField.SQLPramName);
+            var where = new WhereClause(keyField.Name + " = " + keyField.SQLPramName);
 
             var expression = new SQLUpdateCommand()
             {
@@ -272,7 +272,7 @@ namespace FMSC.ORM.EntityModel.Support
             if (keyFieldInfo == null) { throw new InvalidOperationException("type doesn't have primary key field"); }
             object keyValue = keyFieldInfo.GetFieldValue(data);
 
-            return this.BuildSQLDeleteCommand(provider, keyFieldInfo.FieldName, keyValue);
+            return this.BuildSQLDeleteCommand(provider, keyFieldInfo.Name, keyValue);
         }
 
         protected DbCommand BuildSQLDeleteCommand(DbProviderFactoryAdapter provider, string keyFieldName, object keyValue)

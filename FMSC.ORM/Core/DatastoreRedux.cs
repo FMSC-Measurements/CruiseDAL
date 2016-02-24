@@ -143,7 +143,7 @@ namespace FMSC.ORM.Core
                     else
                     {
                         primaryKey = GetLastInsertKeyValue(entityDescription.SourceName
-                       , primaryKeyField.FieldName, conn);
+                       , primaryKeyField.Name, conn);
                     }
 
                     primaryKeyField.SetFieldValue(data, primaryKey);

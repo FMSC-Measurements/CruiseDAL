@@ -153,7 +153,7 @@ public void MakeInitializeRowValidator(Table table)
 public void MakePrimaryKeyProperty(Field field)
  {
             WriteLine("[XmlIgnore]");
-			WriteLine("[PrimaryKeyField(FieldName = \"" + field.Name +"\")]");
+			WriteLine("[PrimaryKeyField(Name = \"" + field.Name +"\")]");
             WriteLine("public Int64? {0}", field.Name);
             WriteLine("{");
             PushIndent("\t");
@@ -303,7 +303,7 @@ public void MakeProperty(Field field, Table table, bool isSerializable)
 		WriteLine("[Obsolete]");
 	}
  #>
-[Field(FieldName = "<#=field.Name#>")]
+[Field(Name = "<#=field.Name#>")]
 public virtual <#=field.AccessableType#> <#=field.Name#>
 {
     get 
@@ -349,7 +349,7 @@ public void MakeUtilProperties(bool trackCreated, bool trackModified, bool track
 public string CreatedBy { get;  set; }
 
 [XmlIgnore]
-[InfrastructureFieldAttribute (FieldName = "CreatedDate",
+[InfrastructureFieldAttribute (Name = "CreatedDate",
 PersistMode = PersistMode.Never)]
 public DateTime CreatedDate { get; set; }
 <#+
@@ -364,7 +364,7 @@ public DateTime CreatedDate { get; set; }
 public string ModifiedBy { get; set; }
 
 [XmlIgnore]
-[InfrastructureFieldAttribute (FieldName = "ModifiedDate",
+[InfrastructureFieldAttribute (Name = "ModifiedDate",
 PersistMode = PersistMode.Never)]
 public string ModifiedDate { get; set; }
 

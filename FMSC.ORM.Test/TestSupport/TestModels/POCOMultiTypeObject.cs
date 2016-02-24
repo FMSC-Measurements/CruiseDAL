@@ -10,54 +10,54 @@ namespace FMSC.ORM.TestSupport.TestModels
     [EntitySource(FMSC.ORM.TestSupport.TestSQLConstants.MULTI_PROP_TABLE_NAME)]
     public class POCOMultiTypeObject : IInterface
     {
-        [PrimaryKeyField(FieldName = "ID")]
+        [PrimaryKeyField(Name = "ID")]
         public int ID { get; set; }
 
-        [Field(FieldName = "StringField")]
+        [Field(Name = "StringField")]
         public string StringField { get; set; }
 
-        [Field(FieldName = "IntField")]
+        [Field(Name = "IntField")]
         public int IntField { get; set; }
 
-        [Field(FieldName = "NIntField")]
+        [Field(Name = "NIntField")]
         public int? NIntField { get; set; }
 
-        [Field(FieldName = "LongField")]
+        [Field(Name = "LongField")]
         public long LongField { get; set; }
 
-        [Field(FieldName = "NLongField")]
+        [Field(Name = "NLongField")]
         public long? NLongField { get; set; }
 
-        [Field(FieldName = "BoolField")]
+        [Field(Name = "BoolField")]
         public bool BoolField { get; set; }
 
-        [Field(FieldName = "NBoolField")]
+        [Field(Name = "NBoolField")]
         public bool? NBoolField { get; set; }
 
-        [Field(FieldName = "FloatField")]
+        [Field(Name = "FloatField")]
         public float FloatField { get; set; }
 
-        [Field(FieldName = "NFloatField")]
+        [Field(Name = "NFloatField")]
         public float? NFloatField { get; set; }
 
-        [Field(FieldName = "DoubleField")]
+        [Field(Name = "DoubleField")]
         public double DoubleField { get; set; }
 
-        [Field(FieldName = "NDoubleField")]
+        [Field(Name = "NDoubleField")]
         public double? NDoubleField { get; set; }
 
-        [Field(FieldName = "GuidField")]
+        [Field(Name = "GuidField")]
         public Guid GuidField { get; set; }
 
-        [Field(FieldName = "DateTimeField")]
+        [Field(Name = "DateTimeField")]
         public DateTime DateTimeField { get; set; }
 
         
 
-        [Field(FieldName = "PartialyPublicField")]
+        [Field(Name = "PartialyPublicField")]
         public string PartialyPublicField { get; protected set; }
 
-        [Field(FieldName = "PrivateField")]
+        [Field(Name = "PrivateField")]
         private string PrivateField { get; set; }
 
         [CreatedByField]

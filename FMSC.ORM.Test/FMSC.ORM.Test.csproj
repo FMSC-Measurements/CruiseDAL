@@ -75,6 +75,9 @@
     <Compile Include="TestSupport\TestDBFixture.cs" />
     <Compile Include="TestSupport\TestModels\DOMultiPropType.cs" />
     <Compile Include="TestSupport\TestModels\IInterface.cs" />
+    <Compile Include="TestSupport\TestModels\MappedTableA.cs" />
+    <Compile Include="TestSupport\TestModels\MappedTableB.cs" />
+    <Compile Include="TestSupport\TestModels\MappingAB.cs" />
     <Compile Include="TestSupport\TestModels\POCOMultiTypeObject.cs" />
     <Compile Include="TestSupport\TestModels\TestReadDO.cs" />
     <Compile Include="TestSupport\TestSQLConstants.cs" />

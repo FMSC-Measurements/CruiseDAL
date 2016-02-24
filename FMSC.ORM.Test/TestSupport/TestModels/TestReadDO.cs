@@ -10,22 +10,22 @@ namespace FMSC.ORM.TestSupport.TestModels
     [EntitySource(SourceName = "TestRead")]
     public class TestReadDO : DataObject_Base
     {
-        [Field( FieldName="StringTest" )]
+        [Field( Name="StringTest" )]
         public String StringTest { get; set; }
 
-        [Field( FieldName="Int32Test" )]
+        [Field( Name="Int32Test" )]
         public Int32 Int32Test { get; set; }
 
-        [Field(FieldName = "Int64Test")]
+        [Field(Name = "Int64Test")]
         public Int64 Int64Test { get; set; }
 
-        [Field(FieldName = "FloatTest")]
+        [Field(Name = "FloatTest")]
         public float FloatTest { get; set; }
 
-        [Field(FieldName="DoubleTest")]
+        [Field(Name="DoubleTest")]
         public double DoubleTest { get; set; }
 
-        [Field(FieldName = "DateTimeTest")]
+        [Field(Name = "DateTimeTest")]
         public DateTime DateTimeTest { get; set; }
 
     }

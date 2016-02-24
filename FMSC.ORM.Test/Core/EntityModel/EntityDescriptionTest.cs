@@ -94,7 +94,7 @@ namespace FMSC.ORM.EntityModel.Support
         void VerifyField(EntityDescription doi, string fieldName)
         {
             _output.WriteLine("Verifying " + fieldName);
-            Assert.Contains(doi.Fields, x => x.FieldName == fieldName);
+            Assert.Contains(doi.Fields, x => x.Name == fieldName);
 
             var field = doi.Fields[fieldName];
             Assert.NotNull(field);
@@ -114,7 +114,7 @@ namespace FMSC.ORM.EntityModel.Support
         
         void VerifyNonvisableField(EntityDescription doi, string fieldName, bool isPrivate)
         {
-            Assert.DoesNotContain(doi.Fields, x => x.FieldName == fieldName);
+            Assert.DoesNotContain(doi.Fields, x => x.Name == fieldName);
 
             if (isPrivate)
             {

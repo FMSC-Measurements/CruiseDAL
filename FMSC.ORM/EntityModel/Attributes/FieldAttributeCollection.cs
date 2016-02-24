@@ -20,35 +20,24 @@ namespace FMSC.ORM.EntityModel.Attributes
             }
         }
 
-        public void AddField(PropertyAccessor p)
-        {
-            var field = new FieldAttribute(p.Name);
-            field.Property = p;
-            this.AddField(field);
-        }
-
         public void AddField(FieldAttribute field)
         {
             Debug.Assert(field != null);
             Debug.Assert(field.Property != null);
 
-            
-            
+            if (field.Property.CanRead == false
+                || field.Property.CanWrite == false)
+            {
+                throw new FieldAccesabilityException(field.Name, !field.Property.CanRead, !field.Property.CanWrite);
+            }
+
             if (field is PrimaryKeyFieldAttribute)
             {
                 if(PrimaryKeyField != null) { throw new InvalidOperationException("Primary Key field already set"); }
                 PrimaryKeyField = (PrimaryKeyFieldAttribute)field;
             }
 
-
-            if (field.Property.CanRead == false
-                || field.Property.CanWrite == false)
-            {
-                throw new FieldAccesabilityException(field.FieldName, !field.Property.CanRead, !field.Property.CanWrite);
-            }
-
-            _fields.Add(field.FieldName, field);
-            
+            _fields.Add(field.Name, field);            
         }
 
         public IEnumerable<FieldAttribute> GetPersistedFields(bool includeKeyField, PersistanceFlags filter)
