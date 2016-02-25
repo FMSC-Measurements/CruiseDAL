@@ -906,6 +906,8 @@ namespace FMSC.ORM.Core
         /// <returns></returns>
         public int Execute(String command, params object[] parameters)
         {
+            if (string.IsNullOrEmpty(command)) { throw new ArgumentNullException("command"); }
+
             using (DbCommand com = Provider.CreateCommand(command))
             {
                 return this.Execute(com, parameters);
@@ -930,6 +932,7 @@ namespace FMSC.ORM.Core
 
         protected int Execute(DbCommand command, params object[] parameters)
         {
+            LogCommand(command);
             if (parameters != null)
             {
                 foreach (object p in parameters)
@@ -958,6 +961,7 @@ namespace FMSC.ORM.Core
 
         protected int ExecuteSQL(DbCommand command, DbConnection conn)
         {
+            LogCommand(command);
             try
             {
                 command.Connection = conn;
@@ -1010,6 +1014,7 @@ namespace FMSC.ORM.Core
 
         protected object ExecuteScalar(DbCommand command, DbConnection conn)
         {
+            LogCommand(command);
             try
             {
                 command.Connection = conn;
@@ -1247,6 +1252,7 @@ namespace FMSC.ORM.Core
         /// if _holdConnection creates new connection and return it
         /// increments _holdConnection if connection successfully opened   
         /// </summary>
+        /// <exception cref="ConnectionException"></exception>
         /// <returns></returns>
         protected DbConnection OpenConnection()
         {
@@ -1447,7 +1453,7 @@ namespace FMSC.ORM.Core
             ReleaseConnection(false);
         }
 
-        protected void ReleaseConnection(bool force)
+        protected virtual void ReleaseConnection(bool force)
         {
             lock (_persistentConnectionSyncLock)
             {
@@ -1507,6 +1513,13 @@ namespace FMSC.ORM.Core
         #endregion
 
         #region events and logging
+
+        [Conditional("TRACE")]
+        protected void LogCommand(DbCommand  command)
+        {
+            Trace.WriteLine("Executing Command:" + command.CommandText);
+        }
+
 
         protected virtual void OnDeletingData(object data)
         {
@@ -1595,10 +1608,7 @@ namespace FMSC.ORM.Core
                 //    _cache.Dispose();
                 //}
 
-                Debug.Assert(_holdConnection == 0);
-                _holdConnection = 0;
-
-                ReleaseConnection();
+                ReleaseConnection(true);
 
                 isDisposed = true;
             }
