@@ -242,24 +242,28 @@ namespace CruiseDAL
         #endregion
 
         #region file util
-        public DAL CopyTo(string path)
+        public void CopyTo(string path)
         {
-            return this.CopyTo(path, false);
+            this.CopyTo(path, false);
         }
 
-        public DAL CopyTo(string destPath, bool overwrite)
+        public void CopyTo(string destPath, bool overwrite)
         {
-            ReleaseConnection();
-            //ReleaseMultiDatabaseConnection(true);
+            ReleaseConnection(true);
 
             System.IO.File.Copy(this.Path, destPath, overwrite);
-            //_DBFileInfo.CopyTo(destPath, overwrite);
-            return new DAL(destPath);
+        }
+
+
+        public void CopyAs(string desPath, bool overwrite)
+        {
+            CopyTo(desPath, overwrite);
+            this.Path = desPath;            
         }
         #endregion
 
 
-        
+
 
         ///// <summary>
         ///// Copies selection directly from external Database
