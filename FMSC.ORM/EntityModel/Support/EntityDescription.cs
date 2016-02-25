@@ -109,8 +109,7 @@ namespace FMSC.ORM.EntityModel.Support
             var fieldAttr = attr as FieldAttribute;
             if (fieldAttr != null)
             {
-                if (string.IsNullOrEmpty(fieldAttr.SourceName) 
-                    && !string.IsNullOrEmpty(fieldAttr.SQLExpression))
+                if (string.IsNullOrEmpty(fieldAttr.SourceName))
                 {
                     fieldAttr.SourceName = this.SourceName; 
                 }
