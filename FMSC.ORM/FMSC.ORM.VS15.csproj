@@ -114,7 +114,6 @@
     <Compile Include="SQLite\SQLiteDatabaseBuilder.cs" />
     <Compile Include="SQLite\SQLiteDatastore.cs" />
     <Compile Include="SQLite\SQLiteDataTypes.cs" />
-    <Compile Include="SQLite\SQLiteMultiDBDataStore.cs" />
     <Compile Include="SQLite\SQLiteProviderFactory.cs" />
   </ItemGroup>
   <ItemGroup>
