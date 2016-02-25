@@ -31,7 +31,7 @@ namespace FMSC.ORM.SQLite
 
             using (var ds = new SQLiteDatastore(path))
             {
-                Assert.False(ds.Exists, "Assert file doesn't already exist");
+                Assert.False(ds.Exists, "Pre-condition failed file already created");
 
                 //TODO hide builder inside dataStore
                 dbBuilder.Datastore = ds;
@@ -46,13 +46,17 @@ namespace FMSC.ORM.SQLite
         [Fact]
         public void AddFieldTest()
         {
-            using (var ds = _fixture.WorkingDatastore)
+            using (var ds = new SQLiteDatastore())
             {
-                ds.AddField("MultiPropTable", "newField TEXT");
+                ds.Execute("CREATE TABLE TableA (ID INTEGER PRIMARY KEY);");
+                Assert.True(ds.CheckFieldExists("TableA", "ID"));
+                Assert.False(ds.CheckFieldExists("TABLEA", "Data"));
 
-                Assert.True(ds.CheckFieldExists("MultiPropTable", "newField"));
+                ds.AddField("TableA", new ColumnInfo() { Name = "Data", DBType = "TEXT" });
 
-                Assert.Throws<SQLException>(() => ds.AddField("MultiPropTable", "newField TEXT"));
+                Assert.True(ds.CheckFieldExists("TABLEA", "Data"));
+
+                Assert.Throws<SQLException>(() => ds.AddField("TableA", new ColumnInfo() { Name = "Data", DBType = "TEXT" }));
             }
         }
 
@@ -72,9 +76,28 @@ namespace FMSC.ORM.SQLite
         {
             using (var ds = _fixture.StaticDatastore)
             {
-                Assert.True(ds.CheckFieldExists("MultiPropTable", "StringField"));
+                ds.Execute("CREATE TABLE TableA (ID INTEGER PRIMARY KEY);");
+                Assert.True(ds.CheckFieldExists("TableA", "id"));
+                Assert.True(ds.CheckFieldExists("TableA", "ID"));
+                //Assert.True(ds.CheckFieldExists("TableA", " ID"));
+                Assert.False(ds.CheckFieldExists("TABLEA", "data"));
+            }
+        }
 
-                Assert.False(ds.CheckFieldExists("MultiPropTable", "notAField"));
+        [Fact]
+        public void CreateTableTest()
+        {
+            using (var ds = new SQLiteDatastore())
+            {
+                var cols = new ColumnInfo[]
+                    {
+                        new ColumnInfo("ID", Types.INTEGER, true, false, null),
+                        new ColumnInfo("Field1", Types.TEXT, false, true, null)
+                    };
+
+                ds.CreateTable("TableA", cols, false);
+
+                Assert.True(ds.CheckTableExists("TableA"));
             }
         }
 
@@ -111,11 +134,17 @@ namespace FMSC.ORM.SQLite
         [Fact]
         public void HasForeignKeyErrors()
         {
-            using (var ds = _fixture.WorkingDatastore)
+            using (var ds = new SQLiteDatastore())
             {
-                Assert.False(ds.HasForeignKeyErrors("MultiPropTable"));
+                ds.Execute("PRAGMA foreign_keys = off;");
+                ds.Execute("Create table TableA (ID INTEGER PRIMARY KEY);");
+                ds.Execute("CREATE TABLE TABLEB (ID_B REFERENCES TABLEA (ID));");
 
-                throw new NotImplementedException();
+                ds.Execute("INSERT INTO TABLEA ([ID]) VALUES (1);");
+                ds.Execute("INSERT INTO TABLEB VALUES (1);");
+                Assert.False(ds.HasForeignKeyErrors("TableB"));
+                ds.Execute("INSERT INTO TABLEB VALUES (2);");
+                Assert.True(ds.HasForeignKeyErrors("TableB"));
             }
         }
 
@@ -150,25 +179,38 @@ namespace FMSC.ORM.SQLite
             }
         }
 
-        [Fact]
-        public void GetTableUniquesTest()
-        {
-            using (var ds = _fixture.StaticDatastore)
-            {
-                var tableUniques = ds.GetTableUniques("MultiPropTable");
-                Assert.Empty(tableUniques);
+        //[Fact] // GetTableUniques needs to be scrapped
+        //public void GetTableUniquesTest()
+        //{
+        //    using (var ds = _fixture.StaticDatastore)
+        //    {
+        //        var tableUniques = ds.GetTableUniques("MultiPropTable");
+        //        Assert.Empty(tableUniques);
+        //    }
 
+        //    using (var ds = new SQLiteDatastore())
+        //    {
+        //        ds.BeginTransaction();
+        //        try
+        //        {
+        //            ds.Execute(
+        //                "CREATE TABLE TableA " +
+        //                "( ID INTEGER PRIMARY KEY AUTOINCREMENT, " +
+        //                "FIELD1 TEXT, " +
+        //                "FIELD2 TEXT, " +
+        //                "UNIQUE (FIELD1, FIELD2));");
 
-                throw new NotImplementedException();
-            }
-        }
-
-        [Fact]
-        public void ExecuteScalarTest()
-        {
-
-            throw new NotImplementedException();
-        }
+        //            var uniques = ds.GetTableUniques("TableA").ToArray();
+        //            base._output.WriteLine(string.Join(",", uniques));
+        //            Assert.Contains(uniques, x => string.Equals(x, "FIELD1"));
+        //            Assert.Contains(uniques, x => string.Equals(x, "FIELD2"));
+        //        }
+        //        finally
+        //        {
+        //            ds.CancelTransaction();
+        //        }
+        //    }
+        //}
 
         [Fact]
         public void ExecuteScalarGenericTest()

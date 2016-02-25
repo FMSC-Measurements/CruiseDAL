@@ -98,6 +98,7 @@ namespace FMSC.ORM.TestSupport
 
             var explaneSelectResult = ds.Execute("EXPLAIN SELECT 1;");
             Assert.NotNull(explaneSelectResult);
+            Assert.True(ds.GetRowCount("sqlite_master", null, null) > 0);
 
         }
 
