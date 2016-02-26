@@ -22,9 +22,11 @@ namespace FMSC.ORM.EntityModel.Support
         {
             EntityDescription = entDesc;
 
-            _selectCommand = MakeSelectCommand();
-            InitializeLegacySelectCommand();
-
+            if (EntityDescription.Source != null)
+            {
+                _selectCommand = MakeSelectCommand();
+                InitializeLegacySelectCommand();
+            }
         }
 
 
