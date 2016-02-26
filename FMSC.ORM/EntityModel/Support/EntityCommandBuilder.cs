@@ -25,7 +25,7 @@ namespace FMSC.ORM.EntityModel.Support
             if (EntityDescription.Source != null)
             {
                 _selectCommand = MakeSelectCommand();
-                InitializeLegacySelectCommand();
+                //InitializeLegacySelectCommand();
             }
         }
 
@@ -63,57 +63,46 @@ namespace FMSC.ORM.EntityModel.Support
 
         public DbCommand BuildSelectLegacy(DbProviderFactoryAdapter provider, string selection)
         {
-            Debug.Assert(_selectCommandFormat != null);
+            Debug.Assert(_selectCommand != null);
 
-            string commandText = string.Format(_selectCommandFormat, selection);
+            this._selectCommand.Clause = new LegacySelectPlaceholder() { Index = 0 };
 
-            DbCommand command = provider.CreateCommand(commandText);
+            string query = String.Format(_selectCommand.ToSQL(), selection);
+
+            DbCommand command = provider.CreateCommand(query);
             return command;
         }
 
-        protected void InitializeLegacySelectCommand()
-        {
-            if (_selectCommandFormat == null)
-            {
-                var sb = new StringBuilder();
-                sb.AppendLine("SELECT");
+        //protected void InitializeLegacySelectCommand()
+        //{
+        //    if (_selectCommandFormat == null)
+        //    {
+        //        var sb = new StringBuilder();
+        //        sb.AppendLine("SELECT");
 
-                bool first = true;
-                foreach (FieldAttribute field in EntityDescription.Fields)
-                {
-                    string colExpr; 
+        //        bool first = true;
+        //        foreach (FieldAttribute field in EntityDescription.Fields)
+        //        {
+        //            string colExpr = field.GetResultColumnExpression(); 
 
-                    if(string.IsNullOrEmpty(field.SQLExpression))
-                    {
-                        colExpr = EntityDescription.SourceName + "." + field.Name;
-                    }
-                    else
-                    {
-                        colExpr = field.SQLExpression + " AS " + EntityDescription.SourceName + "." + field.Name;
-                    }
+        //            if (!first)
+        //            {
+        //                sb.AppendLine("," + Environment.NewLine);
+        //            }
+        //            else
+        //            {
+        //                first = false;
+        //            }
+        //            sb.Append(" " + colExpr);
 
-                    if (!first)
-                    {
-#if NetCF
-                        sb.Append(",\r\n");
-#else
-                        sb.Append("," + Environment.NewLine);
-#endif
-                    }
-                    else
-                    {
-                        first = false;
-                    }
-                    sb.Append(" " + colExpr);
+        //        }
 
-                }
+        //        sb.AppendLine(" FROM " + EntityDescription.SourceName);
+        //        sb.AppendLine(" {0};");//insert placeholder and close out command
 
-                sb.AppendLine(" FROM " + EntityDescription.SourceName);
-                sb.AppendLine(" {0};");//insert placeholder and close out command
-
-                _selectCommandFormat = sb.ToString();
-            }
-        }
+        //        _selectCommandFormat = sb.ToString();
+        //    }
+        //}
 
 
         #endregion
