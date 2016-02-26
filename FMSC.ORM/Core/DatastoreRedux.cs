@@ -119,34 +119,47 @@ namespace FMSC.ORM.Core
         public object Insert(object data, SQL.OnConflictOption option)
         {
             EntityDescription entityDescription = LookUpEntityByType(data.GetType());
+            var keyField = entityDescription.Fields.PrimaryKeyField;
+            object keyData = (keyField != null) ? keyField.GetFieldValue(data) : null;
+            return InternalInsert(entityDescription, data, keyData, option);
+        }
+
+        public object Insert(object data, object keyData, SQL.OnConflictOption option)
+        {
+            EntityDescription entityDescription = LookUpEntityByType(data.GetType());
+            var keyField = entityDescription.Fields.PrimaryKeyField;
+            return InternalInsert(entityDescription, data, keyData, option);
+        }
+
+        protected object InternalInsert(EntityDescription entityDescription
+            , object data, object keyData, SQL.OnConflictOption option)
+        {
             EntityCommandBuilder builder = entityDescription.CommandBuilder;
 
-            PrimaryKeyFieldAttribute primaryKeyField = entityDescription.Fields.PrimaryKeyField;
-
-            object primaryKey = null;
             DbConnection conn = OpenConnection();
             try
             {
                 OnInsertingData(data, option);
-                
-                using (DbCommand command = builder.BuildInsertCommand(Provider, data, option))
+
+                using (DbCommand command = builder.BuildInsertCommand(Provider, data, keyData, option))
                 {
                     ExecuteSQL(command);
                 }
 
+                var primaryKeyField = entityDescription.Fields.PrimaryKeyField;
                 if (primaryKeyField != null)
                 {
                     if (primaryKeyField.KeyType == KeyType.RowID)
                     {
-                        primaryKey = GetLastInsertRowID(conn);
+                        keyData = GetLastInsertRowID(conn);
                     }
                     else
                     {
-                        primaryKey = GetLastInsertKeyValue(entityDescription.SourceName
+                        keyData = GetLastInsertKeyValue(entityDescription.SourceName
                        , primaryKeyField.Name, conn);
                     }
 
-                    primaryKeyField.SetFieldValue(data, primaryKey);
+                    primaryKeyField.SetFieldValue(data, keyData);
                 }
             }
             finally
@@ -155,25 +168,34 @@ namespace FMSC.ORM.Core
             }
 
             OnInsertedData(data);
-            
-            return primaryKey;
+
+            return keyData;
         }
-
-
+        
 
         public void Update(object data, SQL.OnConflictOption option)
+        {
+            EntityDescription entityDescription = LookUpEntityByType(data.GetType());
+            EntityCommandBuilder builder = entityDescription.CommandBuilder;
+            var keyField = entityDescription.Fields.PrimaryKeyField;
+            object keyData = keyField.GetFieldValue(data);
+
+            Update(data, keyData, option);
+
+        }
+
+        public void Update(object data, object keyData, SQL.OnConflictOption option)
         {
             OnUpdatingData(data);
             if (data is IPersistanceTracking)
             {
                 ((IPersistanceTracking)data).OnUpdating();
-
             }
 
             EntityDescription entityDescription = LookUpEntityByType(data.GetType());
             EntityCommandBuilder builder = entityDescription.CommandBuilder;
 
-            using (DbCommand command = builder.BuildUpdateCommand(Provider, data, option))
+            using (DbCommand command = builder.BuildUpdateCommand(Provider, data, keyData, option))
             {
                 ExecuteSQL(command);
             }
@@ -182,7 +204,6 @@ namespace FMSC.ORM.Core
             {
                 ((IPersistanceTracking)data).OnUpdated();
             }
-
         }
 
         public void Delete(object data)

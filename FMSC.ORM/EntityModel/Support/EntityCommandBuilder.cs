@@ -117,7 +117,7 @@ namespace FMSC.ORM.EntityModel.Support
         #endregion
 
         #region build insert
-        public DbCommand BuildInsertCommand(DbProviderFactoryAdapter provider, object data, Core.SQL.OnConflictOption option)
+        public DbCommand BuildInsertCommand(DbProviderFactoryAdapter provider, object data, object keyData, Core.SQL.OnConflictOption option)
         {
             Debug.Assert(data != null);
 
@@ -126,21 +126,23 @@ namespace FMSC.ORM.EntityModel.Support
             var columnNames = new List<string>();
             var valueExpressions = new List<string>();
 
-            var keyField = EntityDescription.Fields.PrimaryKeyField;
-            if (keyField != null)
+            if(keyData != null)
             {
-                var keyValue = keyField.GetFieldValueOrDefault(data);
-
-                if (keyValue != null)
+                var keyField = EntityDescription.Fields.PrimaryKeyField;
+                if (keyField != null)
                 {
                     columnNames.Add(keyField.Name);
                     valueExpressions.Add(keyField.SQLPramName);
 
-                    var pram = provider.CreateParameter(keyField.SQLPramName, keyValue);
+                    var pram = provider.CreateParameter(keyField.SQLPramName, keyData);
                     command.Parameters.Add(pram);
                 }
+                else
+                {
+                    throw new InvalidOperationException("keyData provided but type has no key field");
+                }
             }
-                 
+                             
             foreach (FieldAttribute field in EntityDescription.Fields.GetPersistedFields(false, PersistanceFlags.OnInsert))
             {
                 columnNames.Add(field.Name);
@@ -220,7 +222,7 @@ namespace FMSC.ORM.EntityModel.Support
         #endregion
 
         #region build update
-        public DbCommand BuildUpdateCommand(DbProviderFactoryAdapter provider, object data, Core.SQL.OnConflictOption option)
+        public DbCommand BuildUpdateCommand(DbProviderFactoryAdapter provider, object data, object keyData, Core.SQL.OnConflictOption option)
         {
             Debug.Assert(data != null);
             Debug.Assert(EntityDescription.Fields.PrimaryKeyField != null);
@@ -241,8 +243,7 @@ namespace FMSC.ORM.EntityModel.Support
             }
 
             PrimaryKeyFieldAttribute keyField = EntityDescription.Fields.PrimaryKeyField;
-            object keyValue = keyField.GetFieldValueOrDefault(data);
-            DbParameter p = provider.CreateParameter(keyField.SQLPramName, keyValue);
+            DbParameter p = provider.CreateParameter(keyField.SQLPramName, keyData);
             command.Parameters.Add(p);
 
             var where = new WhereClause(keyField.Name + " = " + keyField.SQLPramName);
