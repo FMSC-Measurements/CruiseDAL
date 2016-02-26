@@ -44,6 +44,20 @@ namespace FMSC.ORM.EntityModel.Attributes
                      
         }
 
+        public IEnumerable<FieldAttribute> GetFields()
+        {
+            if(PrimaryKeyField != null)
+            {
+                yield return PrimaryKeyField;
+            }
+
+            foreach(var fa in _fields.Values)
+            {
+                yield return fa;
+            }
+            
+        }
+
         public IEnumerable<FieldAttribute> GetPersistedFields(bool includeKeyField, PersistanceFlags filter)
         {            
             foreach(FieldAttribute fa in _fields.Values)
@@ -88,14 +102,16 @@ namespace FMSC.ORM.EntityModel.Attributes
             }
         }
 
+
+
         public IEnumerator<FieldAttribute> GetEnumerator()
         {
-            return _fields.Values.GetEnumerator();
+            return GetFields().GetEnumerator();
         }
 
         System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator()
         {
-            return _fields.Values.GetEnumerator();
+            return GetFields().GetEnumerator();
         }
 
 
