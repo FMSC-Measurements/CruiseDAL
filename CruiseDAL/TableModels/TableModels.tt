@@ -91,9 +91,16 @@ public <#=table.Name#>DO(DatastoreRedux DAL) : base(DAL)
 {}
 #endregion
 <#+     
-        foreach(Field f in table.PKFields)
+		if(table.PKFields.Count > 0)
         {
-            MakePrimaryKeyProperty(f);
+			foreach(Field f in table.PKFields)
+			{
+				MakePrimaryKeyProperty(f);
+			}
+        }
+		else
+        {
+			MakePrimaryKeyProperty(new Field(){Name = "RowID", IsPK = true, Type = "INTEGER"});
         }
 
         foreach(Field f in table.FKFields)

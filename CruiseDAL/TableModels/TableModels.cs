@@ -845,6 +845,13 @@ namespace CruiseDAL.DataObjects
 		public CuttingUnitStratumDO(DatastoreRedux DAL) : base(DAL)
 		{}
 		#endregion
+		[XmlIgnore]
+		[PrimaryKeyField(Name = "RowID")]
+		public Int64? RowID
+		{
+			get{ return base.rowID; }
+			set{ base.rowID = value; }
+		}
 		private long? _cuttingunit_cn ;
 		[XmlIgnore]
 		[Field(Name = "CuttingUnit_CN")]
@@ -1929,6 +1936,13 @@ namespace CruiseDAL.DataObjects
 		public SampleGroupTreeDefaultValueDO(DatastoreRedux DAL) : base(DAL)
 		{}
 		#endregion
+		[XmlIgnore]
+		[PrimaryKeyField(Name = "RowID")]
+		public Int64? RowID
+		{
+			get{ return base.rowID; }
+			set{ base.rowID = value; }
+		}
 		private long? _treedefaultvalue_cn ;
 		[XmlIgnore]
 		[Field(Name = "TreeDefaultValue_CN")]
@@ -5013,6 +5027,13 @@ namespace CruiseDAL.DataObjects
 		public VolumeEquationDO(DatastoreRedux DAL) : base(DAL)
 		{}
 		#endregion
+		[XmlIgnore]
+		[PrimaryKeyField(Name = "RowID")]
+		public Int64? RowID
+		{
+			get{ return base.rowID; }
+			set{ base.rowID = value; }
+		}
 		private String _species ;
 		[XmlElement]
 		[Field(Name = "Species")]
@@ -5475,6 +5496,13 @@ namespace CruiseDAL.DataObjects
 		public BiomassEquationDO(DatastoreRedux DAL) : base(DAL)
 		{}
 		#endregion
+		[XmlIgnore]
+		[PrimaryKeyField(Name = "RowID")]
+		public Int64? RowID
+		{
+			get{ return base.rowID; }
+			set{ base.rowID = value; }
+		}
 		private String _species ;
 		[XmlElement]
 		[Field(Name = "Species")]
@@ -5744,6 +5772,13 @@ namespace CruiseDAL.DataObjects
 		public ValueEquationDO(DatastoreRedux DAL) : base(DAL)
 		{}
 		#endregion
+		[XmlIgnore]
+		[PrimaryKeyField(Name = "RowID")]
+		public Int64? RowID
+		{
+			get{ return base.rowID; }
+			set{ base.rowID = value; }
+		}
 		private String _species ;
 		[XmlElement]
 		[Field(Name = "Species")]
@@ -5993,6 +6028,13 @@ namespace CruiseDAL.DataObjects
 		public QualityAdjEquationDO(DatastoreRedux DAL) : base(DAL)
 		{}
 		#endregion
+		[XmlIgnore]
+		[PrimaryKeyField(Name = "RowID")]
+		public Int64? RowID
+		{
+			get{ return base.rowID; }
+			set{ base.rowID = value; }
+		}
 		private String _species ;
 		[XmlElement]
 		[Field(Name = "Species")]
@@ -6242,6 +6284,13 @@ namespace CruiseDAL.DataObjects
 		public ReportsDO(DatastoreRedux DAL) : base(DAL)
 		{}
 		#endregion
+		[XmlIgnore]
+		[PrimaryKeyField(Name = "RowID")]
+		public Int64? RowID
+		{
+			get{ return base.rowID; }
+			set{ base.rowID = value; }
+		}
 		private String _reportid ;
 		[XmlElement]
 		[Field(Name = "ReportID")]
@@ -10707,6 +10756,13 @@ namespace CruiseDAL.DataObjects
 		public SampleGroupStatsTreeDefaultValueDO(DatastoreRedux DAL) : base(DAL)
 		{}
 		#endregion
+		[XmlIgnore]
+		[PrimaryKeyField(Name = "RowID")]
+		public Int64? RowID
+		{
+			get{ return base.rowID; }
+			set{ base.rowID = value; }
+		}
 		private long? _treedefaultvalue_cn ;
 		[XmlIgnore]
 		[Field(Name = "TreeDefaultValue_CN")]
@@ -11656,6 +11712,13 @@ namespace CruiseDAL.DataObjects
 		public LogMatrixDO(DatastoreRedux DAL) : base(DAL)
 		{}
 		#endregion
+		[XmlIgnore]
+		[PrimaryKeyField(Name = "RowID")]
+		public Int64? RowID
+		{
+			get{ return base.rowID; }
+			set{ base.rowID = value; }
+		}
 		private String _reportnumber ;
 		[XmlElement]
 		[Field(Name = "ReportNumber")]
@@ -11965,6 +12028,13 @@ namespace CruiseDAL.DataObjects
 		public TreeDefaultValueTreeAuditValueDO(DatastoreRedux DAL) : base(DAL)
 		{}
 		#endregion
+		[XmlIgnore]
+		[PrimaryKeyField(Name = "RowID")]
+		public Int64? RowID
+		{
+			get{ return base.rowID; }
+			set{ base.rowID = value; }
+		}
 		private long? _treeauditvalue_cn ;
 		[XmlIgnore]
 		[Field(Name = "TreeAuditValue_CN")]
@@ -12288,6 +12358,13 @@ namespace CruiseDAL.DataObjects
 		public LogFieldSetupDO(DatastoreRedux DAL) : base(DAL)
 		{}
 		#endregion
+		[XmlIgnore]
+		[PrimaryKeyField(Name = "RowID")]
+		public Int64? RowID
+		{
+			get{ return base.rowID; }
+			set{ base.rowID = value; }
+		}
 		private long? _stratum_cn ;
 		[XmlIgnore]
 		[Field(Name = "Stratum_CN")]
@@ -12532,6 +12609,13 @@ namespace CruiseDAL.DataObjects
 		public TreeFieldSetupDO(DatastoreRedux DAL) : base(DAL)
 		{}
 		#endregion
+		[XmlIgnore]
+		[PrimaryKeyField(Name = "RowID")]
+		public Int64? RowID
+		{
+			get{ return base.rowID; }
+			set{ base.rowID = value; }
+		}
 		private long? _stratum_cn ;
 		[XmlIgnore]
 		[Field(Name = "Stratum_CN")]
@@ -13926,6 +14010,13 @@ namespace CruiseDAL.DataObjects
 		public ErrorLogDO(DatastoreRedux DAL) : base(DAL)
 		{}
 		#endregion
+		[XmlIgnore]
+		[PrimaryKeyField(Name = "RowID")]
+		public Int64? RowID
+		{
+			get{ return base.rowID; }
+			set{ base.rowID = value; }
+		}
 		private String _tablename ;
 		[XmlElement]
 		[Field(Name = "TableName")]
@@ -14277,6 +14368,13 @@ namespace CruiseDAL.DataObjects
 		public GlobalsDO(DatastoreRedux DAL) : base(DAL)
 		{}
 		#endregion
+		[XmlIgnore]
+		[PrimaryKeyField(Name = "RowID")]
+		public Int64? RowID
+		{
+			get{ return base.rowID; }
+			set{ base.rowID = value; }
+		}
 		private String _block ;
 		[XmlElement]
 		[Field(Name = "Block")]
