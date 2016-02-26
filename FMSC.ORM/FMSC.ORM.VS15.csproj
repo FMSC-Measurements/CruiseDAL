@@ -50,6 +50,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Core\SQL\LegacySelectPlaceholder.cs" />
     <Compile Include="EntityModel\Attributes\BaseFieldAttribute.cs" />
     <Compile Include="EntityModel\Attributes\EntityAttributeBase.cs" />
     <Compile Include="EntityModel\Attributes\FieldAccesabilityException.cs" />
