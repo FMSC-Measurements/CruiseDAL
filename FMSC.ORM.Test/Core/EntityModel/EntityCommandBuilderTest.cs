@@ -41,12 +41,26 @@ namespace FMSC.ORM.EntityModel.Support
             var data = new POCOMultiTypeObject();
 
             var commandBuilder = ed.CommandBuilder;
-            using (var command = commandBuilder.BuildInsertCommand(provider, data, Core.SQL.OnConflictOption.Default))
+            using (var command = commandBuilder.BuildInsertCommand(provider, data, null, Core.SQL.OnConflictOption.Default))
             {
                 _output.WriteLine(command.CommandText);
 
                 Assert.NotNull(command);
                 AssertEx.NotNullOrWhitespace(command.CommandText);
+
+                Assert.DoesNotContain("ID", command.CommandText);
+
+                VerifyCommandSyntex(provider, command);
+            }
+
+            using (var command = commandBuilder.BuildInsertCommand(provider, data, 1, Core.SQL.OnConflictOption.Default))
+            {
+                _output.WriteLine(command.CommandText);
+
+                Assert.NotNull(command);
+                AssertEx.NotNullOrWhitespace(command.CommandText);
+
+                Assert.Contains("ID", command.CommandText);
 
                 VerifyCommandSyntex(provider, command);
             }
@@ -61,15 +75,19 @@ namespace FMSC.ORM.EntityModel.Support
             var data = new POCOMultiTypeObject();
 
             var commandBuilder = ed.CommandBuilder;
-            using (var command = commandBuilder.BuildUpdateCommand(provider, data, Core.SQL.OnConflictOption.Default))
+            using (var command = commandBuilder.BuildUpdateCommand(provider, data, 1, Core.SQL.OnConflictOption.Default))
             {
                 _output.WriteLine(command.CommandText);
 
                 Assert.NotNull(command);
                 AssertEx.NotNullOrWhitespace(command.CommandText);
 
+                Assert.Contains("ID", command.CommandText);
+
                 VerifyCommandSyntex(provider, command);
             }
+
+            //Assert.Throws(typeof(InvalidOperationException), () => commandBuilder.BuildUpdateCommand(provider, data, null, Core.SQL.OnConflictOption.Default));
         }
 
         [Fact]
