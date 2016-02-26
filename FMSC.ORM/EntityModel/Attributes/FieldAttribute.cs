@@ -20,6 +20,8 @@ namespace FMSC.ORM.EntityModel.Attributes
 
         internal string SQLPramName { get { return "@" + Name.ToLower();  } }
 
+        public string NameOrAlias { get { return Name ?? Alias; } }
+
 
         public FieldAttribute()
         {

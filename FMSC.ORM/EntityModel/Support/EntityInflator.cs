@@ -34,13 +34,13 @@ namespace FMSC.ORM.EntityModel.Support
         {
             foreach (FieldAttribute field in EntityDescription.Fields)
             {
-                field.Ordinal = reader.GetOrdinal(field.Name);
+                field.Ordinal = reader.GetOrdinal(field.NameOrAlias);
             }
 
             PrimaryKeyFieldAttribute keyField = EntityDescription.Fields.PrimaryKeyField;
             if(keyField != null)
             {
-                keyField.Ordinal = reader.GetOrdinal(keyField.Name);
+                keyField.Ordinal = reader.GetOrdinal(keyField.NameOrAlias);
             }
         }
 

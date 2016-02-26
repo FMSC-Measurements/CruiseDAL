@@ -38,7 +38,7 @@ namespace FMSC.ORM.EntityModel.Attributes
             }
             else
             {
-                _fields.Add(field.Name ?? field.Alias, field);
+                _fields.Add(field.NameOrAlias, field);
             }
 
                      
