@@ -193,7 +193,6 @@
       <DependentUpon>CruiseCreate.tt</DependentUpon>
     </Content>
   </ItemGroup>
-  <ItemGroup />
   <ItemGroup>
     <ProjectReference Include="..\FMSC.ORM\FMSC.ORM.VS15.csproj">
       <Project>{22432d40-9892-40a6-aa0c-cc8c2fa4bb91}</Project>

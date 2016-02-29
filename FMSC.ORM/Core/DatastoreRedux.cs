@@ -264,7 +264,14 @@ namespace FMSC.ORM.Core
                     EntityCache cacheStore = GetEntityCache(data.GetType());
 
                     Debug.Assert(cacheStore.ContainsKey(primaryKey) == false);
-                    cacheStore.Add(primaryKey, data);
+                    if (cacheStore.ContainsKey(primaryKey))
+                    {
+                        cacheStore[primaryKey] = data;
+                    }
+                    else
+                    {
+                        cacheStore.Add(primaryKey, data);
+                    }
                 }
             }
             else
@@ -527,18 +534,15 @@ namespace FMSC.ORM.Core
 
 
         /// <summary>
-        /// Retrieves a single row from the database Note: data object type must match the 
-        /// table. 
+        /// Retrieves a single row from the database 
         /// </summary>
         /// <typeparam name="T">Type of data object to return</typeparam>
-        /// <param name="tableName">Name of table to read from</param>
-        /// <param name="rowID">row id of the row to read</param>
         /// <exception cref="DatabaseExecutionException"></exception>
         /// <returns>a single data object</returns>
         public T ReadSingleRow<T>(object primaryKeyValue)
             where T : new()
         {
-            return From<T>().Where("rowID = ?").Read(primaryKeyValue).FirstOrDefault();
+            return From<T>().Where("RowID = ?").Read(primaryKeyValue).FirstOrDefault();
             //return ReadSingleRow<T>(null, "WHERE rowID = ?", primaryKeyValue);
         }
 
