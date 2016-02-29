@@ -40,9 +40,14 @@ namespace FMSC.ORM.EntityModel.Attributes
                 System.Diagnostics.Debug.Assert(!string.IsNullOrEmpty(Alias));
                 return SQLExpression + " AS " + Alias;
             }
+            else if (Alias != null)
+            {
+                return Alias;
+            }
             else
             {
-                return SourceName + "." + Name;
+                if(string.IsNullOrEmpty(SourceName)) { return Name; }
+                else { return SourceName + "." + Name; }
             }
         }
 
