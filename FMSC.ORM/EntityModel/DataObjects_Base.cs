@@ -241,15 +241,9 @@ namespace FMSC.ORM.EntityModel
         public string ToString(string format, IFormatProvider formatProvider)
         {
             ICustomFormatter formatter;
-            if (formatProvider == null)
-            {
-                var description = DatastoreRedux.LookUpEntityByType(this.GetType());
-                formatter = new EntityFormatter(description);
-            }
-            else
-            {
-                formatter = formatProvider.GetFormat(this.GetType()) as ICustomFormatter;
-            }
+
+            var description = DatastoreRedux.LookUpEntityByType(this.GetType());
+            formatter = new EntityFormatter(description);
 
             if(formatter != null)
             {
