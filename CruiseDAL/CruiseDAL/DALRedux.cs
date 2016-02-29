@@ -36,7 +36,7 @@ namespace CruiseDAL
         public object MultiDBTransactionSyncLock = new object();
         protected DbTransaction _multiDBCurrentTransaction;
 
-        protected ICollection<ExternalDatastore> _attachedDataStores;
+        protected ICollection<ExternalDatastore> _attachedDataStores = new List<ExternalDatastore>();
 
         public IEnumerable<DatastoreRedux> AttachedDataStores { get; set; }
         #endregion
@@ -194,7 +194,7 @@ namespace CruiseDAL
         {
             using (DbCommand com = Provider.CreateCommand(command))
             {
-                return this.Execute(com, parameters);
+                return this.ExecuteMultiDB(com, parameters);
             }
         }
 
@@ -501,7 +501,7 @@ namespace CruiseDAL
 
         private void OnMultiDBConnectionOpened()
         {
-            throw new NotImplementedException();
+            Debug.WriteLine("MultiDB Connection Opened", FMSC.ORM.Core.Constants.Logging.DB_CONTROL);
         }
 
         public void BeginMultiDBTransaction()
