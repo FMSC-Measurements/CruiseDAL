@@ -22,14 +22,14 @@ namespace FMSC.ORM.EntityModel.Support
 
             return rx.Replace(formatString, (Match m) =>
             {
-                return ProcessFormatElementMatch(obj, m);
+                return ProcessFormatElementMatch(obj, m, formatProvider);
             });
         }
 
         /// <summary>
         /// helper method 
         /// </summary>
-        private string ProcessFormatElementMatch(object data, Match m)
+        private string ProcessFormatElementMatch(object data, Match m, IFormatProvider formatProvider)
         {
             string sValue = string.Empty;
             string propName = m.Groups["prop"].Captures[0].Value;
@@ -46,7 +46,7 @@ namespace FMSC.ORM.EntityModel.Support
                 //Object value = _description.Fields[propName].GetFieldValue(data);
                 if (value != null && value is IFormattable)
                 {
-                    sValue = ((IFormattable)value).ToString(null, null);
+                    sValue = ((IFormattable)value).ToString(null, formatProvider);
                 }
                 else
                 {
