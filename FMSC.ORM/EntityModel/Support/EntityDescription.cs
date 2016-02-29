@@ -25,7 +25,7 @@ namespace FMSC.ORM.EntityModel.Support
         public Type EntityType { get; private set; }
         public String SourceName
         {
-            get { return Source.SourceName; }
+            get { return (Source != null)? Source.SourceName : null; }
         }
 
         public SelectSource Source { get; set; }
