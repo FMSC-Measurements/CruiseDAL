@@ -1539,10 +1539,10 @@ namespace FMSC.ORM.Core
 
         #region events and logging
 
-        [Conditional("TRACE")]
+        [Conditional("Debug")]
         protected void LogCommand(DbCommand  command)
         {
-            Trace.WriteLine("Executing Command:" + command.CommandText);
+            Debug.WriteLine("Executing Command:" + command.CommandText);
         }
 
 
