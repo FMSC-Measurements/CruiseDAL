@@ -37,5 +37,16 @@ namespace System.Linq
             }
             return default(TSource);
         }
+
+        public static bool Any<T>(this IEnumerable<T> source, Func<T, bool> predicate)
+        {
+            if (source == null) throw new ArgumentNullException("source");
+            if (predicate == null) throw new ArgumentNullException("predicate");
+            foreach (T element in source)
+            {
+                if (predicate(element)) return true;
+            }
+            return false;
+        }
     }
 }

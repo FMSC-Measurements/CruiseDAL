@@ -130,6 +130,7 @@
     <Compile Include="EntityModel\Validation\IFieldValidator.cs" />
     <Compile Include="EntityModel\Validation\IValidatable.cs" />
     <Compile Include="EntityModel\Validation\Validator.cs" />
+    <Compile Include="NetCF\System\Action.cs" />
     <Compile Include="NetCF\System\IEnumerableExtensions.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CompactFramework.CSharp.targets" />
