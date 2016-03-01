@@ -21,7 +21,6 @@ namespace FMSC.ORM.Core
         //const bool DEFAULT_RETRY_RO_CONNECTION_BEHAVIOR = false;
         //const bool DEFAULT_RETRY_RW_CONNECTION_BEHAVIOR = false;
 
-        int _transactionHold = 0;
         protected int _holdConnection = 0;
         protected int _transactionDepth = 0;
         protected bool _transactionCanceled = false;
