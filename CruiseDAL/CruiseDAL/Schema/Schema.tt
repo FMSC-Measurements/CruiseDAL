@@ -1,4 +1,4 @@
-<#@ template language="C#v3.5"  debug="true" hostSpecific="true" #>
+<#@ template language="C#"  debug="true" hostSpecific="true" #>
 <#@ output extension=".cs" #>
 <#@ Assembly Name="System.Core.dll" #>
 <#@ Assembly Name="System.Windows.Forms.dll" #>
@@ -40,7 +40,7 @@ PopIndent();
 
 	public static class Schema
 	{
-		public static String[] TABLE_NAMES = new String[] { <#=String.Join(",", tableNames.ToArray())#> };
+		public static String[] TABLE_NAMES = { <#=String.Join(",", tableNames.ToArray())#> };
 	}
 }
 
@@ -58,7 +58,7 @@ PopIndent();
             String[] quoteEnclosedFieldNames = (from Field f in table.Fields select "\"" + f.Name + "\"").ToArray();
             String[] fieldNames = (from Field f in table.Fields select  f.Name).ToArray();
             String[] upperFieldNames = (from Field f in table.Fields select  f.Name.ToUpper()).ToArray();
-            WriteLine("public static string[] _ALL = new string []{{ {0} }};", String.Join(", ", upperFieldNames));
+            WriteLine("public static string[] _ALL = {{ {0} }};", String.Join(", ", upperFieldNames));
             
             WriteLine("public enum {0}_FIELDS {{ {1} }};", table.Name.ToUpper(), String.Join(", ", fieldNames)); 
             PopIndent();

@@ -1,16 +1,22 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace FMSC.ORM.Core.SQL
 {
     public class OrderByClause : SelectClause
     {
+
+
         public List<string> OrderingTerms { get; protected set; }
 
+        OrderByClause()
+        {
+            this.OrderingTerms = new List<string>();
+        }
+
         public OrderByClause(IEnumerable<string> orderingTerms)
+            :this()
         {
             AddRange(orderingTerms);
         }
@@ -19,7 +25,7 @@ namespace FMSC.ORM.Core.SQL
         {
             if(string.IsNullOrEmpty(term))
             {
-                throw new ArgumentException("Cant be null or empty", "term", null);
+                throw new ArgumentException("Cant be null or empty", "term");
             }
             OrderingTerms.Add(term);
         }

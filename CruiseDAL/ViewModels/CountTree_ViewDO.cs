@@ -1,46 +1,46 @@
 ﻿using System;
 using System.Xml.Serialization;
 
-using FMSC.ORM.Core.EntityAttributes;
+using FMSC.ORM.EntityModel.Attributes;
 
 namespace CruiseDAL.DataObjects
 {
     public class CountTree_View
     {
-        [Field(FieldName="StratumCode")]
+        [Field(Name="StratumCode")]
         public string StratumCode { get; set; }
 
-        [Field(FieldName = "Method")]
+        [Field(Name = "Method")]
         public string Method { get; set; }
 
-        [Field(FieldName= "SampleGroupCode")]
+        [Field(Name= "SampleGroupCode")]
         public string SampleGroupCode { get; set; }
 
-        [Field(FieldName="PrimaryProduct")]
+        [Field(Name="PrimaryProduct")]
         public string PrimaryProduct { get; set; }
 
         [XmlIgnore]
-        [Field(FieldName = "SampleGroup_CN")]
+        [Field(Name = "SampleGroup_CN")]
         public virtual long? SampleGroup_CN { get; set; }
 
         [XmlIgnore]
-        [Field(FieldName = "CuttingUnit_CN")]
+        [Field(Name = "CuttingUnit_CN")]
         public virtual long? CuttingUnit_CN { get; set; }
        
         [XmlIgnore]
-        [Field(FieldName = "TreeDefaultValue_CN")]
+        [Field(Name = "TreeDefaultValue_CN")]
         public virtual long? TreeDefaultValue_CN { get; set; }
 
         [XmlIgnore]
-        [Field(FieldName = "Component_CN")]
+        [Field(Name = "Component_CN")]
         public virtual long? Component_CN { get; set; }
         
         [XmlElement]
-        [Field(FieldName = "TreeCount")]
+        [Field(Name = "TreeCount")]
         public virtual Int64 TreeCount { get; set; }
        
         [XmlElement]
-        [Field(FieldName = "SumKPI")]
+        [Field(Name = "SumKPI")]
         public virtual Int64 SumKPI { get; set; }
 
     }

@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Text;
 
-using FMSC.ORM.Core.EntityModel;
 using CruiseDAL.DataObjects;
 using FMSC.ORM.Core.SQL;
 
@@ -16,11 +15,11 @@ namespace CruiseDAL
 
         String _tableName;
         //EntityDescription _entityDescription;
-        CruiseDALDataObject _dataObject;
+        DataObject _dataObject;
 
         //public event EventHandler<DataErrorsChangedEventArgs> ErrorsChanged;
 
-        public CruiseDALErrorCollection(CruiseDALDataObject dataObject, String tableName)
+        public CruiseDALErrorCollection(DataObject dataObject, String tableName)
         {
             _dataObject = dataObject;
             _tableName = tableName;
@@ -34,7 +33,7 @@ namespace CruiseDAL
             lock (this._errorsSyncLock)
             {
                 if (this.HasErrors == false) { return String.Empty; }
-                StringBuilder b = new StringBuilder();
+                var b = new StringBuilder();
                 foreach (ErrorLogDO e in errors.Values)
                 {
                     if (e.Suppress == false)
@@ -81,7 +80,7 @@ namespace CruiseDAL
 
         public void AddError(string propName, string error)
         {
-            ErrorLogDO e = new ErrorLogDO();
+            var e = new ErrorLogDO();
             if (error.StartsWith("Warning::"))
             {
                 e.Level = "W";
@@ -144,7 +143,7 @@ namespace CruiseDAL
             lock (this._errorsSyncLock)
             {
                 if (this.HasErrors == false) { return; }
-                List<string> keysToRemove = new List<string>();
+                var keysToRemove = new List<string>();
                 foreach (KeyValuePair<string, ErrorLogDO> kv in this.errors)
                 {
                     ErrorLogDO e = kv.Value;
@@ -172,7 +171,7 @@ namespace CruiseDAL
             lock (this._errorsSyncLock)
             {
                 if (this.HasErrors == false) { return; }
-                List<string> keysToRemove = new List<string>();
+                var keysToRemove = new List<string>();
                 foreach (KeyValuePair<string, ErrorLogDO> kv in this.errors)
                 {
                     ErrorLogDO e = kv.Value;
@@ -222,10 +221,11 @@ namespace CruiseDAL
             if (_dataObject.rowID == null) { return; }
             string tableName = _tableName;
 
-            List<ErrorLogDO> errorList = _dataObject.DAL.Read<ErrorLogDO>( "WHERE TableName = ? AND CN_Number = ?"
-                , (object)tableName, _dataObject.rowID);
+            var errors = _dataObject.DAL.From<ErrorLogDO>()
+                .Where("TableName = ? AND CN_Number = ? ")
+                .Read(tableName, _dataObject.rowID);                
 
-            foreach (ErrorLogDO e in errorList)
+            foreach (ErrorLogDO e in errors)
             {
                 this.AddError(e.ColumnName, e);
             }

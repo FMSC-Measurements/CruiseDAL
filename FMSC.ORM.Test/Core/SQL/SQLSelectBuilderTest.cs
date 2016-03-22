@@ -9,7 +9,7 @@ using Xunit.Abstractions;
 
 namespace FMSC.ORM.Core.SQL
 {
-    public class SQLSelectBuilderTest : MyXUnit.TestClassBase
+    public class SQLSelectBuilderTest : TestClassBase
     {
         public SQLSelectBuilderTest(ITestOutputHelper output)
             : base(output)
@@ -46,6 +46,7 @@ namespace FMSC.ORM.Core.SQL
             builder.ResultColumns.Add("col1");
 
             builder.Join("something2", "Using (FKey)", null)
+                .Join("something3", "Using (FKey2)", null)
                 .Where("x > 1")
                 .GroupBy("col1", "col2")
                 .Limit(1, 0);

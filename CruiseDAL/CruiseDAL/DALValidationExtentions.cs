@@ -12,7 +12,7 @@ namespace CruiseDAL
         public static bool HasCruiseErrors(this DAL dal, out string[] errors)
         {
             bool hasErrors = false;
-            List<string> errorList = new List<string>();
+            var errorList = new List<string>();
 
             if (dal.HasForeignKeyErrors(null))
             {

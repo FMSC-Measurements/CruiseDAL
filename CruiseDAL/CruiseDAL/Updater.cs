@@ -139,7 +139,7 @@ namespace CruiseDAL
                 }
             }
 
-            foreach (ErrorLogDO el in db.Read<ErrorLogDO>("WHERE CN_Number != 0"))
+            foreach (ErrorLogDO el in db.From<ErrorLogDO>().Where("CN_Number != 0").Query())
             {
                 InsureErrorLogEntry(db, el);
             }
@@ -151,7 +151,7 @@ namespace CruiseDAL
         private static String[] ListTriggers(DAL db)
         {
             string result = db.ExecuteScalar("SELECT group_concat(name,',') FROM sqlite_master WHERE type LIKE 'trigger';") as string;
-            if (result == null || result.Length == 0) { return new string[0]; }
+            if (string.IsNullOrEmpty(result)) { return new string[0]; }
             else
             {
                 return result.Split(',');

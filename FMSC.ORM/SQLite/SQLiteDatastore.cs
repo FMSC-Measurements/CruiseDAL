@@ -4,6 +4,8 @@ using System;
 using System.Collections.Generic;
 using System.Data.Common;
 using System.Data.SQLite;
+using System.Linq;
+using System.Text;
 
 namespace FMSC.ORM.SQLite
 {
@@ -18,9 +20,9 @@ namespace FMSC.ORM.SQLite
         {
             get
             {
-                if(Path == IN_MEMORY_DB_PATH)
+                if(IsInMemory)
                 {
-                    throw new NotImplementedException();
+                    return true;
                 }
 
                 return System.IO.File.Exists(this.Path);
@@ -32,7 +34,25 @@ namespace FMSC.ORM.SQLite
         /// </summary>
         public string Extension
         {
-            get { return System.IO.Path.GetExtension(base.Path); }
+            get
+            {
+                if (IsInMemory)
+                {
+                    return string.Empty;
+                }
+                return System.IO.Path.GetExtension(base.Path);
+            }
+        }
+
+        /// <summary>
+        /// Gets a value indicating whether the datastore is in memory.
+        /// </summary>
+        /// <value>
+        /// <c>true</c> if this instance is in memory; otherwise, <c>false</c>.
+        /// </value>
+        public bool IsInMemory
+        {
+            get { return Path == IN_MEMORY_DB_PATH; }
         }
 
 
@@ -40,16 +60,22 @@ namespace FMSC.ORM.SQLite
         /// creates instance representing an in memory database
         /// </summary>
         public SQLiteDatastore() : this(IN_MEMORY_DB_PATH)
-        { }
+        {
+            OpenConnection(); // we will need to open a persistent connection 
+            //TODO find a better way to hold the connection for the life of the DAL
+
+        }
 
         public SQLiteDatastore(string path) : base(new SQLiteProviderFactory())
         {
+            if(path == null) { throw new ArgumentNullException("path"); }
             Path = path;
         }
 
         #region abstract methods
         protected override string BuildConnectionString()
         {
+            System.Diagnostics.Debug.Assert(!string.IsNullOrEmpty(Path));
             return string.Format("Data Source={0};Version=3;", Path);
         }
         #endregion
@@ -94,6 +120,8 @@ namespace FMSC.ORM.SQLite
 
         }
 
+
+        [Obsolete("use AddField(string tableName, ColumnInfo fieldDef)")]
         public void AddField(string tableName, string fieldDef)
         {
             string command = string.Format("ALTER TABLE {0} ADD COLUMN {1};", tableName, fieldDef);
@@ -101,30 +129,81 @@ namespace FMSC.ORM.SQLite
  
         }
 
+        /// <summary>
+        /// Adds field to table.
+        /// </summary>
+        /// <param name="tableName">Name of the table.</param>
+        /// <param name="fieldDef">The field definition.</param>
+        public void AddField(string tableName, ColumnInfo fieldDef)
+        {
+            var command = string.Format("ALTER TABLE {0} ADD COLUMN {1};", tableName, fieldDef.GetColumnDef(true));
+            Execute(command);
+        }
+
+        /// <summary>
+        /// Checks if table exists.
+        /// </summary>
+        /// <param name="tableName">Name of the table.</param>
+        /// <returns></returns>
         public bool CheckTableExists(string tableName)
         {
             return GetRowCount("sqlite_master", "WHERE type = 'table' AND name = ?", tableName) > 0;
         }
 
+        /// <summary>
+        /// Checks if table has a given field
+        /// </summary>
+        /// <param name="tableName">Name of the table.</param>
+        /// <param name="field">field name.</param>
+        /// <returns></returns>
         public bool CheckFieldExists(string tableName, string field)
         {
-            try
+            foreach(var col in GetTableInfo(tableName))
             {
-                this.Execute(String.Format("SELECT {0} FROM {1};", field, tableName));
-                return true;
+                if(field.Equals(col.Name, StringComparison.InvariantCultureIgnoreCase)) { return true; }
             }
-            catch
-            {
-                return false;
-            }
+            return false;
         }
 
+        protected string BuildCreateTable(string tableName, IEnumerable<ColumnInfo> cols, bool temp)
+        {
+            if (string.IsNullOrEmpty(tableName)) { throw new ArgumentNullException("tableName"); }
+            if (cols == null) { throw new ArgumentNullException("cols"); }
+
+            var sb = new StringBuilder();
+            sb.Append("CREATE ");
+            if (temp) { sb.Append("TEMP "); }
+            sb.AppendLine("TABLE " + tableName + PlatformHelper.NewLine);
+            using (var enu = cols.GetEnumerator())
+            {
+                if (!enu.MoveNext()) { throw new ArgumentException("cols can't be empty", "cols"); }
+                sb.Append("( " + enu.Current.GetColumnDef(true));
+
+                while (enu.MoveNext())
+                {
+                    sb.Append("," + PlatformHelper.NewLine + enu.Current.GetColumnDef(true));
+                }
+                sb.Append(")");
+            }
+            sb.Append(";");
+            return sb.ToString();
+        }
+
+        public void CreateTable(string tableName, IEnumerable<ColumnInfo> cols, bool temp)
+        {            
+            Execute(BuildCreateTable(tableName, cols, temp));            
+        }
+
+        /// <summary>
+        /// Gets the table column information.
+        /// </summary>
+        /// <param name="tableName">Name of the table.</param>
+        /// <returns></returns>
         public override List<ColumnInfo> GetTableInfo(string tableName)
         {
-            List<ColumnInfo> colList = new List<ColumnInfo>();
+            var colList = new List<ColumnInfo>();
             lock (_persistentConnectionSyncLock)
             {
-
                 using (DbCommand command = Provider.CreateCommand("PRAGMA table_info(" + tableName + ");"))
                 {
                     DbConnection conn = OpenConnection();
@@ -141,15 +220,14 @@ namespace FMSC.ORM.SQLite
                             int defaultValOrd = reader.GetOrdinal("dflt_value");
                             while (reader.Read())
                             {
-                                ColumnInfo colInfo = new ColumnInfo();
-                                colInfo.Name = reader.GetString(nameOrd);
-                                colInfo.DBType = reader.GetString(dbTypeOrd);
-                                colInfo.IsPK = reader.GetBoolean(pkOrd);
-                                colInfo.IsRequired = reader.GetBoolean(notNullOrd);
-                                if (!reader.IsDBNull(defaultValOrd))
+                                var colInfo = new ColumnInfo()
                                 {
-                                    colInfo.Default = reader.GetString(defaultValOrd);
-                                }
+                                    Name = reader.GetString(nameOrd),
+                                    DBType = reader.GetString(dbTypeOrd),
+                                    IsPK = reader.GetBoolean(pkOrd),
+                                    IsRequired = reader.GetBoolean(notNullOrd),
+                                    Default = (!reader.IsDBNull(defaultValOrd)) ? reader.GetString(defaultValOrd) : null
+                                };
                                 colList.Add(colInfo);
                             }
                         }
@@ -161,13 +239,27 @@ namespace FMSC.ORM.SQLite
                     finally
                     {
                         ReleaseConnection();
-                    }
-                    
+                    }                    
                 }
                 return colList;
             }
         }
 
+        /// <summary>
+        /// Gets the raw SQL that defines a given table.
+        /// </summary>
+        /// <param name="tableName">Name of the table.</param>
+        /// <returns></returns>
+        public string GetTableSQL(String tableName)
+        {
+            return (String)this.ExecuteScalar("SELECT sql FROM Sqlite_master WHERE name = ? COLLATE NOCASE and type = 'table';", tableName);
+        }
+
+        /// <summary>
+        /// Determines whether the specified table has foreign key errors.
+        /// </summary>
+        /// <param name="table_name">The table_name.</param>
+        /// <returns></returns>
         public override bool HasForeignKeyErrors(string table_name)
         {
             bool hasErrors = false;
@@ -207,49 +299,39 @@ namespace FMSC.ORM.SQLite
             }
         }
 
+        /// <summary>
+        /// Gets the number of row that would be returned by a given selection.
+        /// </summary>
+        /// <param name="tableName">Name of the table.</param>
+        /// <param name="selection">The selection.</param>
+        /// <param name="selectionArgs">The selection arguments.</param>
+        /// <returns></returns>
         public override Int64 GetRowCount(string tableName, string selection, params Object[] selectionArgs)
         {
             string query = string.Format("SELECT Count(1) FROM {0} {1};", tableName, selection);
             return ExecuteScalar<Int64>(query, selectionArgs);
         }
 
-        public string GetTableSQL(String tableName)
-        {
-            return (String)this.ExecuteScalar("SELECT sql FROM Sqlite_master WHERE name = ? COLLATE NOCASE and type = 'table';", tableName);
-        }
 
-        public string[] GetTableUniques(String tableName)
+        public IEnumerable<string> GetTableUniques(String tableName)
         {
             String tableSQL = this.GetTableSQL(tableName);
+
             System.Text.RegularExpressions.Match match =
                 System.Text.RegularExpressions.Regex.Match(tableSQL, @"(?<=^\s+UNIQUE\s\()[^\)]+(?=\))", System.Text.RegularExpressions.RegexOptions.Multiline);
             if (match != null && match.Success)
             {
                 String[] a = match.Value.Split(new char[] { ',', ' ', '\r', '\n' });
-                int numNotEmpty = 0;
                 foreach (string s in a)
                 {
                     if (!string.IsNullOrEmpty(s))
                     {
-                        numNotEmpty++;
-                    }
-                }
-                string[] b = new string[numNotEmpty];
-                for (int i = 0, j = 0; i < a.Length; i++)
-                {
-                    if (!string.IsNullOrEmpty(a[i]))
-                    {
-                        b[j] = a[i];
-                        j++;
+                        yield return s;
                     }
                 }
 
-                return b;
                 //return match.Value.Split(new char[]{',',' ','\r','\n'},  StringSplitOptions.RemoveEmptyEntries);
-
             }
-            return new string[0];
-
         }
 
         #region File utility methods
@@ -268,28 +350,7 @@ namespace FMSC.ORM.SQLite
         //    System.IO.File.Copy(this.Path, destPath, overwrite);
         //}
 
-        /// <summary>
-        /// Creates copy at location, and changes database path to new location
-        /// </summary>
-        /// <param name="desPath"></param>
-        public bool CopyAs(string desPath)
-        {
-            System.Diagnostics.Debug.Assert(_holdConnection == 0);
-            try
-            {
-                System.IO.File.Copy(this.Path, desPath);
-                //_DBFileInfo.CopyTo(desPath);
-                this.Path = desPath;
-                //this._DBFileInfo = new FileInfo(desPath);
-                //_ConnectionString = BuildConnectionString(false);
-            }
-            catch (Exception)
-            {
-                return false;
-            }
-
-            return true;
-        }
+        
 
         
 
@@ -312,6 +373,7 @@ namespace FMSC.ORM.SQLite
         }
 
         #endregion
+
 
         protected override Exception ThrowExceptionHelper(DbConnection conn, DbCommand comm, Exception innerException)
         {
@@ -338,7 +400,7 @@ namespace FMSC.ORM.SQLite
                         }
                     case SQLiteErrorCode.Constraint:
                         {
-                            if (innerException.Message.IndexOf("UNIQUE constraint failed") >= 0)
+                            if (innerException.Message.IndexOf("UNIQUE constraint failed", StringComparison.OrdinalIgnoreCase) >= 0)
                             {
                                 sqlEx = new UniqueConstraintException(null, innerException);
                             }

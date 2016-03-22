@@ -1,8 +1,8 @@
 ﻿using System.Collections.Generic;
 using System;
-using FMSC.ORM.Core.EntityModel;
-using FMSC.ORM.Core;
 using CruiseDAL.Schema;
+using System.Linq;
+using FMSC.ORM.EntityModel;
 
 namespace CruiseDAL.DataObjects
 {
@@ -23,9 +23,14 @@ namespace CruiseDAL.DataObjects
                         if (_validatorLookup.ContainsKey(this.TreeDefaultValue_CN.Value) == false)
                         {
                             //this.TreeDefaultValue.TreeAuditValues.Populate();
-                            List<TreeAuditValueDO> tavList = this.DAL.Read<TreeAuditValueDO>(
-                                @"JOIN TreeDefaultValueTreeAuditValue Using (TreeAuditValue_CN) 
-                            WHERE TreeDefaultValue_CN = ?", this.TreeDefaultValue_CN);
+                            List<TreeAuditValueDO> tavList = this.DAL.From<TreeAuditValueDO>()
+                                .Join("TreeDefaultValueTreeAuditValue", "Using (TreeAuditValue_CN)")
+                                .Where("TreeDefaultValue_CN = ?")
+                                .Read(this.TreeDefaultValue_CN).ToList();
+
+                            //    .Read<TreeAuditValueDO>(
+                            //    @"JOIN TreeDefaultValueTreeAuditValue Using (TreeAuditValue_CN) 
+                            //WHERE TreeDefaultValue_CN = ?", this.TreeDefaultValue_CN);
 
 
                             _treeValidator = new RowValidator();
@@ -51,13 +56,13 @@ namespace CruiseDAL.DataObjects
             lock (this)
             {
                 var db = this.DAL;
-                List<LogDO> logs = db.Read<LogDO>("WHERE Tree_CN = ?", this.Tree_CN);
-                List<TreeCalculatedValuesDO> tcvList = db.Read<TreeCalculatedValuesDO>("WHERE Tree_CN = ?", this.Tree_CN);
-                List<LogStockDO> lsList = db.Read<LogStockDO>("WHERE Tree_CN = ?", this.Tree_CN);
+                List<LogDO> logs = db.From<LogDO>().Where("Tree_CN = ?").Read(this.Tree_CN).ToList(); //.Read<LogDO>("WHERE Tree_CN = ?", this.Tree_CN);
+                List<TreeCalculatedValuesDO> tcvList = db.From<TreeCalculatedValuesDO>().Where("Tree_CN = ?").Read(this.Tree_CN).ToList(); //.Read<TreeCalculatedValuesDO>("WHERE Tree_CN = ?", this.Tree_CN);
+                List<LogStockDO> lsList = db.From<LogStockDO>().Where("Tree_CN = ?").Read(this.Tree_CN).ToList(); //.Read<LogStockDO>("WHERE Tree_CN = ?", this.Tree_CN);
 
+                db.BeginTransaction();
                 try
                 {
-                    db.BeginTransaction();
                     foreach (LogDO l in logs)
                     {
                         l.Delete();
@@ -73,10 +78,10 @@ namespace CruiseDAL.DataObjects
                     base.Delete();
                     db.CommitTransaction();
                 }
-                catch (Exception e)
+                catch (Exception)
                 {
                     db.RollbackTransaction();
-                    throw e;
+                    throw;
                 }
             }
         }

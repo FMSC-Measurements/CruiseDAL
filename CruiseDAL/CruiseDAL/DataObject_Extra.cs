@@ -5,22 +5,22 @@ using System.ComponentModel;
 using System.Text;
 using System.Xml.Serialization;
 
-using FMSC.ORM.Core.EntityModel;
 using CruiseDAL.DataObjects;
 using System.Diagnostics;
 using FMSC.ORM.Core;
 using FMSC.ORM.Core.SQL;
-using FMSC.ORM.Core.EntityAttributes;
+using FMSC.ORM.EntityModel;
+using FMSC.ORM.EntityModel.Attributes;
 
 namespace CruiseDAL
 {
-    public abstract class CruiseDALDataObject : DataObject, IDataErrorInfo, IValidatable
+    public abstract class DataObject : DataObject_Base, IDataErrorInfo, IValidatable
     {
-        public CruiseDALDataObject() : this(null)
+        public DataObject() : this(null)
         { }
 
 
-        public CruiseDALDataObject(DatastoreRedux ds) : base(ds)
+        public DataObject(DatastoreRedux ds) : base(ds)
         {
             string tableName = DatastoreRedux.LookUpEntityByType(this.GetType()).SourceName;
             ErrorCollection = new CruiseDALErrorCollection(this, tableName);
@@ -53,7 +53,7 @@ namespace CruiseDAL
         /// </summary>
         [XmlIgnore]
         [IgnoreField]
-        public DataObject Self
+        public DataObject_Base Self
         {
             get
             {
@@ -69,8 +69,8 @@ namespace CruiseDAL
         [IgnoreField]
         public Object Tag { get; set; }
 
+        public abstract void SetValues(DataObject obj);
 
-        
 
         protected override void NotifyPropertyChanged(string name)
         {
@@ -182,7 +182,7 @@ namespace CruiseDAL
         {
             get
             {
-                StringBuilder sb = new StringBuilder();
+                var sb = new StringBuilder();
                 foreach(string s in ErrorCollection.GetErrors(columnName))
                 {
                     sb.Append(s + ";");
@@ -485,7 +485,8 @@ namespace CruiseDAL
             object value = null;
             try
             {
-                value = DatastoreRedux.LookUpEntityByType(this.GetType()).Fields[name].GetFieldValue(this);
+                value = DatastoreRedux.LookUpEntityByType(this.GetType())
+                    .Properties[name].GetValue(this);
                 //PropertyInfo property = this.GetType().GetProperty(name, BindingFlags.Instance | BindingFlags.Public);
                 ////if (property == null) { return true; }
                 //value = property.GetValue(this, null);

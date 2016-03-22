@@ -105,6 +105,7 @@
     <Compile Include="CruiseDAL\DALRedux.cs" />
     <Compile Include="CruiseDAL\DALValidationExtentions.cs" />
     <Compile Include="CruiseDAL\Exceptions.cs" />
+    <Compile Include="CruiseDAL\Schema\CruiseMethods.cs" />
     <Compile Include="TableModels\TableModels.cs">
       <SubType>Code</SubType>
       <AutoGen>True</AutoGen>
@@ -136,7 +137,6 @@
     <Compile Include="TableModels\Tree_partial.cs" />
     <Compile Include="CruiseDAL\Enums.cs" />
     <Compile Include="TableModels\MappingCollections.cs" />
-    <Compile Include="CruiseDAL\Schema\Constants.cs" />
     <Compile Include="CruiseDAL\Updater.cs" />
     <Compile Include="Logger\Logger.cs" />
     <Compile Include="Properties\AssemblyInfo_FF35.cs" />
@@ -171,6 +171,7 @@
       <Generator>TextTemplatingFileGenerator</Generator>
       <LastGenOutput>DAL.AutoGen.cs</LastGenOutput>
     </None>
+    <None Include="packages.config" />
     <None Include="TableModels\TableModels.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
       <LastGenOutput>TableModels.cs</LastGenOutput>
@@ -179,7 +180,6 @@
       <Generator>TextTemplatingFileGenerator</Generator>
       <LastGenOutput>Schema.cs</LastGenOutput>
     </None>
-    <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="AutoGen\CreateTriggers.sql">
@@ -193,7 +193,6 @@
       <DependentUpon>CruiseCreate.tt</DependentUpon>
     </Content>
   </ItemGroup>
-  <ItemGroup />
   <ItemGroup>
     <ProjectReference Include="..\FMSC.ORM\FMSC.ORM.VS15.csproj">
       <Project>{22432d40-9892-40a6-aa0c-cc8c2fa4bb91}</Project>
@@ -207,11 +206,11 @@
     </PropertyGroup>
     <Error Condition="!Exists('$(SolutionDir)packages\System.Data.SQLite.Core.1.0.98.1\build\net45\System.Data.SQLite.Core.targets')" Text="$([System.String]::Format('$(ErrorText)', '$(SolutionDir)packages\System.Data.SQLite.Core.1.0.98.1\build\net45\System.Data.SQLite.Core.targets'))" />
   </Target>
-  <Import Project="$(SolutionDir)packages\System.Data.SQLite.Core.1.0.98.1\build\net45\System.Data.SQLite.Core.targets" Condition="Exists('$(SolutionDir)packages\System.Data.SQLite.Core.1.0.98.1\build\net45\System.Data.SQLite.Core.targets')" />
   <PropertyGroup>
     <PreBuildEvent>
     </PreBuildEvent>
   </PropertyGroup>
+  <Import Project="$(SolutionDir)packages\System.Data.SQLite.Core.1.0.98.1\build\net45\System.Data.SQLite.Core.targets" Condition="Exists('$(SolutionDir)packages\System.Data.SQLite.Core.1.0.98.1\build\net45\System.Data.SQLite.Core.targets')" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">

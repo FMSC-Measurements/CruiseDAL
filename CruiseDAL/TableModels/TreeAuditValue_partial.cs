@@ -1,6 +1,6 @@
-﻿using FMSC.ORM.Core.EntityModel;
-using CruiseDAL.MappingCollections;
+﻿using CruiseDAL.MappingCollections;
 using FMSC.ORM.Core;
+using FMSC.ORM.EntityModel;
 
 namespace CruiseDAL.DataObjects
 {
@@ -94,11 +94,11 @@ namespace CruiseDAL.DataObjects
 
         public bool Validate(object sender, object value)
         {
-            bool isValid = true;//valid until proven unvalid
+            bool isValid = true;//valid until proven invalid
 
             if (this.Required == true && value == null) { isValid = false; }
 
-            if (isValid && this.Min != double.NaN)
+            if (isValid && this.Min != 0)
             {
                 var num = value as float?;
                 if (num != null)
@@ -106,7 +106,7 @@ namespace CruiseDAL.DataObjects
                     if (num < this.Min) { isValid = false; }
                 }
             }
-            if (isValid && this.Max != double.NaN)
+            if (isValid && this.Max != 0)
             {
                 var num = value as float?;
                 if (num != null)

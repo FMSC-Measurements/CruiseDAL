@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using CruiseDAL.MappingCollections;
 using FMSC.ORM.Core;
+using System.Linq;
 
 namespace CruiseDAL.DataObjects
 {
@@ -44,7 +45,13 @@ namespace CruiseDAL.DataObjects
         public static List<CuttingUnitDO> ReadByStratumCode(DatastoreRedux dal, String code)
         {
             if (dal == null) { return null; }
-            return dal.Read<CuttingUnitDO>("JOIN CuttingUnitStratum JOIN Stratum WHERE CuttingUnit.CuttingUnit_CN = CuttingUnitStratum.CuttingUnit_CN AND CuttingUnitStratum.Stratum_CN = Stratum.Stratum_CN AND Stratum.Code = ?;", (object)code);
+            return dal.From<CuttingUnitDO>()
+                .Join("CuttingUnitStratum", "USING (CuttingUnit_CN)")
+                .Join("Stratum", "Using (Stratum_CN)")
+                .Where("Stratum.Code = ?")
+                .Read(code).ToList();
+
+            //.Read<CuttingUnitDO>("JOIN CuttingUnitStratum JOIN Stratum WHERE CuttingUnit.CuttingUnit_CN = CuttingUnitStratum.CuttingUnit_CN AND CuttingUnitStratum.Stratum_CN = Stratum.Stratum_CN AND Stratum.Code = ?;", (object)code);
         }
 
         public List<StratumDO> ReadStrata()
@@ -54,7 +61,12 @@ namespace CruiseDAL.DataObjects
 
         public List<T> ReadStrata<T>() where T : StratumDO, new()
         {
-            return this.DAL.Read<T>("JOIN CuttingUnitStratum USING (Stratum_CN) WHERE CuttingUnit_CN = ?", this.CuttingUnit_CN);
+            return this.DAL.From<T>()
+                .Join("CuttingUnitStratum", "USING (Stratum_CN)")
+                .Where("CuttingUnit_CN = ?")
+                .Read(this.CuttingUnit_CN).ToList(); 
+
+                //.Read<T>("JOIN CuttingUnitStratum USING (Stratum_CN) WHERE CuttingUnit_CN = ?", this.CuttingUnit_CN);
         }
 
         
@@ -71,9 +83,10 @@ DELETE FROM Tree WHERE CuttingUnit_CN = {0};
 DELETE FROM Plot WHERE CuttingUnit_CN = {0};
 DELETE FROM CountTree WHERE CuttingUnit_CN = {0};";
 
+            dal.BeginTransaction();
             try
             {
-                dal.BeginTransaction();
+                
                 dal.Execute(String.Format(commandFormat, unit.CuttingUnit_CN));
                 unit.Delete();
 

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using FMSC.ORM.EntityModel;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -7,12 +8,9 @@ using Xunit;
 
 namespace FMSC.ORM.Core.EntityModel
 {
-    public class ConcreateDataObject : DataObject
+    public class ConcreateDataObject : DataObject_Base
     {
-        public override void SetValues(DataObject obj)
-        {
-            throw new NotImplementedException();
-        }
+
     }
 
     public class DataObjectTest
@@ -21,65 +19,77 @@ namespace FMSC.ORM.Core.EntityModel
         [Fact]
         public void RecordStateTest()
         {
-            var data = new ConcreateDataObject();
-            var pData = data as IPersistanceTracking;
+            //var data = new ConcreateDataObject();
+            //var pData = data as IPersistanceTracking;
 
-            Assert.NotNull(pData);
+            //Assert.NotNull(pData);
 
-            //Assert.True(data.IsDetached);
-            Assert.False(data.IsDeleted);
-            Assert.False(data.IsPersisted);
-            Assert.False(data.HasChanges);
-            
 
-            pData.HasChanges = true;
-            //Assert.True(data.IsDetached);
-            Assert.False(data.IsDeleted);
-            Assert.False(data.IsPersisted);
-            Assert.True(data.HasChanges);
+            //// check base state
+            ////Assert.True(data.IsDetached);
+            //Assert.False(data.IsDeleted);
+            //Assert.False(data.IsPersisted);
+            //Assert.False(data.IsChanged);
 
-            pData.IsPersisted = true;
-            //Assert.True(data.IsDetached);
-            Assert.False(data.IsDeleted);
-            Assert.True(data.IsPersisted);
-            Assert.False(data.HasChanges);
+            //// base state -> has changes
+            //data.IsChanged = true;
+            ////Assert.True(data.IsDetached);
+            //Assert.False(data.IsDeleted);
+            //Assert.False(data.IsPersisted);
+            //Assert.True(data.IsChanged);
 
+            //// has changes -> persisted
+            //pData.IsPersisted = true;
+            ////Assert.True(data.IsDetached);
+            //Assert.False(data.IsDeleted);
+            //Assert.True(data.IsPersisted);
+            //Assert.False(data.HasChanges);
+
+            //// persisted -> deleted
+            //pData.IsDeleted = true;
+            //Assert.True(data.IsDeleted);
+            //Assert.False(data.IsPersisted);
+            //Assert.False(data.HasChanges);
+
+            Assert.True(false, "update test");
         }
 
         [Fact]
         public void IsDeletedTest()
         {
-            var data = new ConcreateDataObject();
-            var pData = data as IPersistanceTracking;
+            //var data = new ConcreateDataObject();
+            //var pData = data as IPersistanceTracking;
 
-            Assert.NotNull(pData);
+            //Assert.NotNull(pData);
 
-            pData.IsDeleted = true;
-            //Assert.True(data.IsDetached);//fails
-            Assert.True(data.IsDeleted);
-            Assert.False(data.IsPersisted);
-            Assert.False(data.HasChanges);
+            //pData.IsDeleted = true;
+            ////Assert.True(data.IsDetached);//fails
+            //Assert.True(data.IsDeleted);
+            //Assert.False(data.IsPersisted);
+            //Assert.False(data.HasChanges);
 
-            data = new ConcreateDataObject();
-            pData = data as IPersistanceTracking;
+            //data = new ConcreateDataObject();
+            //pData = data as IPersistanceTracking;
 
-            pData.IsPersisted = true;
-            pData.IsDeleted = true;
-            //Assert.True(data.IsDetached);
-            Assert.True(data.IsDeleted);
-            Assert.False(data.IsPersisted);
-            Assert.False(data.HasChanges);
+            //pData.IsPersisted = true;
+            //pData.IsDeleted = true;
+            ////Assert.True(data.IsDetached);
+            //Assert.True(data.IsDeleted);
+            //Assert.False(data.IsPersisted);
+            //Assert.False(data.HasChanges);
 
-            data = new ConcreateDataObject();
-            pData = data as IPersistanceTracking;
+            //data = new ConcreateDataObject();
+            //pData = data as IPersistanceTracking;
 
-            pData.IsPersisted = true;
-            pData.HasChanges = true;
-            pData.IsDeleted = true;
-            //Assert.True(data.IsDetached);
-            Assert.True(data.IsDeleted);
-            Assert.False(data.IsPersisted);
-            Assert.True(data.HasChanges);
+            //pData.IsPersisted = true;
+            //pData.HasChanges = true;
+            //pData.IsDeleted = true;
+            ////Assert.True(data.IsDetached);
+            //Assert.True(data.IsDeleted);
+            //Assert.False(data.IsPersisted);
+            //Assert.True(data.HasChanges);
+
+            Assert.True(false, "update test");
         }
 
     }

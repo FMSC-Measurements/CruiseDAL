@@ -3,17 +3,19 @@
 <#@ import namespace="System.Diagnostics" #>
 <#@ import namespace="System.IO" #>
 <#@ import namespace="System.Collections.Generic" #>
-<#@ import namespace="CruiseDAL.CodeGenEngine" #>
+<#@ import namespace="FMSCORM.CodeGenEngine" #>
 
 <#
 DataDictionaryReader dr = new DataDictionaryReader();
 
 ICollection<Table> TableList = dr.AllTables.Values;
 #>
+#pragma warning disable RECS0001 //disable warning that class is partial with only one part
+
 using System;
 using System.Xml.Serialization;
-using FMSC.ORM.Core.EntityAttributes;
-using FMSC.ORM.Core.EntityModel;
+using FMSC.ORM.EntityModel.Attributes;
+using FMSC.ORM.EntityModel;
 using FMSC.ORM.Core;
 using CruiseDAL.Schema;
 
@@ -45,8 +47,8 @@ PopIndent();
 //----------------------------------Method: MakeClass------------------------------------------------------
 public void MakeClass(Table table)
 {#>
-[SQLEntity(SourceName = "<#=table.Name#>")]
-public partial class <#=table.Name#>DO : CruiseDALDataObject
+[EntitySource(SourceName = "<#=table.Name#>")]
+public partial class <#=table.Name#>DO : DataObject
 {
 <#+  PushIndent("\t");#>
 private static RowValidator _validator;
@@ -71,39 +73,9 @@ public override RowValidator Validator
 #region Ctor
 static <#=table.Name#>DO()
 {    
-    _validator = new RowValidator();
-    
 <#+
-//bool hasRowValidator= false;
 PushIndent("\t");
-foreach(Field f in table.Fields)
-{             
-    if(f.IsDepreciated) { continue; }                  
-    if (!string.IsNullOrEmpty(f.ErrorMessage))
-    {
-        //if(!hasRowValidator)
-        //{
-            //hasRowValidator = true;
-            //WriteLine("_validator = new RowValidator();");
-         //}
-        WriteLine("_validator.Add(new FieldValidator(\"{0}\", \"{1}\", \"{2}\", {3}, {4}, {5}, {6}));", 
-            f.Name, 
-            table.Name, 
-            f.ErrorMessage, 
-            (f.Min!= null)? f.Min.ToString() : "double.NaN" , 
-            (f.Max != null)? f.Max.ToString() : "double.NaN", 
-            (f.IsReq)? "true" : "false", 
-            (string.IsNullOrEmpty(f.Values)) ? "null" : '"' + f.Values + '"');
-    }
-    else if(f.IsReq)
-    {
-        WriteLine("_validator.Add(new NotNullRule(\"{0}\", \"{1}\", \"{2}\"));", 
-            f.Name, 
-            table.Name, 
-            f.Name + " is Required" );
-    }
-    
-}
+MakeInitializeRowValidator(table);
 PopIndent();
 #>
 }
@@ -119,9 +91,16 @@ public <#=table.Name#>DO(DatastoreRedux DAL) : base(DAL)
 {}
 #endregion
 <#+     
-        foreach(Field f in table.PKFields)
+		if(table.PKFields.Count > 0)
         {
-            MakePrimaryKeyProperty(f);
+			foreach(Field f in table.PKFields)
+			{
+				MakePrimaryKeyProperty(f);
+			}
+        }
+		else
+        {
+			MakePrimaryKeyProperty(new Field(){Name = "RowID", IsPK = true, Type = "INTEGER"});
         }
 
         foreach(Field f in table.FKFields)
@@ -146,11 +125,42 @@ public <#=table.Name#>DO(DatastoreRedux DAL) : base(DAL)
  //---------------------------------End Method: MakeClass
 
 
+//MakeInitializeRowValidator
+public void MakeInitializeRowValidator(Table table)
+{
+	WriteLine("_validator = new RowValidator();");
+
+	foreach(Field f in table.Fields)
+	{             
+		if(f.IsDepreciated) { continue; }                  
+		if (!string.IsNullOrEmpty(f.ErrorMessage))
+		{
+			WriteLine("_validator.Add(new FieldValidator(\"{0}\", \"{1}\", \"{2}\", {3}, {4}, {5}, {6}));", 
+				f.Name, 
+				table.Name, 
+				f.ErrorMessage, 
+				(f.Min!= null)? f.Min.ToString() : "double.MinValue" , 
+				(f.Max != null)? f.Max.ToString() : "double.MinValue", 
+				(f.IsReq)? "true" : "false", 
+				(string.IsNullOrEmpty(f.Values)) ? "null" : '"' + f.Values + '"');
+		}
+		else if(f.IsReq)
+		{
+			WriteLine("_validator.Add(new NotNullRule(\"{0}\", \"{1}\", \"{2}\"));", 
+				f.Name, 
+				table.Name, 
+				f.Name + " is Required" );
+		}
+    
+	}
+}
+
+
 //----------------------------------Method: MakePrimaryKeyProperty------------------------------------------------------
 public void MakePrimaryKeyProperty(Field field)
  {
             WriteLine("[XmlIgnore]");
-			WriteLine("[PrimaryKeyField(FieldName = \"" + field.Name +"\")]");
+			WriteLine("[PrimaryKeyField(Name = \"" + field.Name +"\")]");
             WriteLine("public Int64? {0}", field.Name);
             WriteLine("{");
             PushIndent("\t");
@@ -266,9 +276,21 @@ public <#=field.Ref#>DO <#=field.Ref#>
 <#+} 
 //---------------------------------End Method: MakeForeignKey
 
+
 //----------------------------------Method: MakeProperty------------------------------------------------------
 public void MakeProperty(Field field, Table table, bool isSerializable)
 {
+	string compareExpression = null;
+
+	if(field.AccessableType.ToLower() == "float" || field.AccessableType.ToLower() == "double")
+    {
+		compareExpression = "Math.Abs(_" + field.Name.ToLower() + " - value) < " + field.AccessableType + ".Epsilon";
+    }
+	else
+    {
+		compareExpression = "_" + field.Name.ToLower() + " == value";
+    }
+
 	//make private field for storing property value
 	WriteLine(String.Format("private {0} _{1} {2};",
 		field.AccessableType,
@@ -288,8 +310,7 @@ public void MakeProperty(Field field, Table table, bool isSerializable)
 		WriteLine("[Obsolete]");
 	}
  #>
-[Field (FieldName = "<#=field.Name#>",
- IsPersisted = <#=(!field.IsPK )? "true" : "false" #>)]
+[Field(Name = "<#=field.Name#>")]
 public virtual <#=field.AccessableType#> <#=field.Name#>
 {
     get 
@@ -305,7 +326,7 @@ public virtual <#=field.AccessableType#> <#=field.Name#>
     }
     set 
     {
-        if(_<#=field.Name.ToLower()#> == value) { return; }
+        if(<#=compareExpression#>) { return; }
 <#+
         if(field.IsFK)
         {
@@ -332,12 +353,12 @@ public void MakeUtilProperties(bool trackCreated, bool trackModified, bool track
 #>
 [XmlIgnore]
 [CreatedByField()]
-public string CreatedBy { get; internal set; }
+public string CreatedBy { get;  set; }
 
 [XmlIgnore]
-[InfrastructureFieldAttribute (FieldName = "CreatedDate",
+[InfrastructureFieldAttribute (Name = "CreatedDate",
 PersistMode = PersistMode.Never)]
-public DateTime CreatedDate { get; internal set; }
+public DateTime CreatedDate { get; set; }
 <#+
 	}
 	
@@ -347,12 +368,12 @@ public DateTime CreatedDate { get; internal set; }
 
 [XmlIgnore]
 [ModifiedByField()]
-public string ModifiedBy { get; internal set; }
+public string ModifiedBy { get; set; }
 
 [XmlIgnore]
-[InfrastructureFieldAttribute (FieldName = "ModifiedDate",
+[InfrastructureFieldAttribute (Name = "ModifiedDate",
 PersistMode = PersistMode.Never)]
-public string ModifiedDate { get; internal set; }
+public string ModifiedDate { get; set; }
 
 <#+
 	}

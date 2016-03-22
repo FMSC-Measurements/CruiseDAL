@@ -11,6 +11,17 @@ namespace FMSC.ORM.Core.SQL
         public bool IsRequired { get; set; }
         public String Default { get; set; }
 
+        public ColumnInfo()
+        { }
+
+        public ColumnInfo(string name, string dbType, bool isPk, bool isRequired, string defaultVal)
+        {
+            Name = name;
+            DBType = dbType;
+            IsPK = isPk;
+            IsRequired = isRequired;
+            Default = defaultVal;
+        }
 
         public string GetColumnDef(bool incluedConstraint)
         {
@@ -23,6 +34,11 @@ namespace FMSC.ORM.Core.SQL
             }
 
             return Name + " " + DBType + " " + columnConstraint;
+        }
+
+        public override string ToString()
+        {
+            return GetColumnDef(true);
         }
 
     }

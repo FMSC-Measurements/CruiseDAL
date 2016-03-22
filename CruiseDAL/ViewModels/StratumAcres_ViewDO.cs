@@ -1,18 +1,18 @@
-﻿using FMSC.ORM.Core.EntityAttributes;
+﻿using FMSC.ORM.EntityModel.Attributes;
 
 namespace CruiseDAL.DataObjects
 {
     public class StratumAcres_View 
     {
-        [Field(FieldName="CuttingUnitCode")]
+        [Field(Name="CuttingUnitCode")]
         public string CuttingUnitCode { get; set; }
-        [Field(FieldName="StratumCode")]
+        [Field(Name="StratumCode")]
         public string StratumCode { get; set; }
-        [Field(FieldName="Area")]
+        [Field(Name="Area")]
         public float Area { get; set; }
-        [Field(FieldName="CuttingUnit_CN")]
+        [Field(Name="CuttingUnit_CN")]
         public long CuttingUnit_CN { get; set; }
-        [Field(FieldName="Stratum_CN")]
+        [Field(Name="Stratum_CN")]
         public long Stratum_CN { get; set; }
     }
 }

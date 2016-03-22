@@ -44,24 +44,32 @@
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Data.SQLite, Version=1.0.98.0, Culture=neutral, PublicKeyToken=db937bc2d44ff139, processorArchitecture=MSIL">
-      <HintPath>$(SolutionDir)packages\System.Data.SQLite.Core.1.0.98.1\lib\net20\System.Data.SQLite.dll</HintPath>
+      <HintPath>$(SolutionDir)packages\System.Data.SQLite.Core.1.0.98.1\lib\net45\System.Data.SQLite.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Core\EntityAttributes\BaseFieldAttribute.cs" />
-    <Compile Include="Core\EntityAttributes\FieldAccesabilityException.cs" />
-    <Compile Include="Core\EntityAttributes\IgnoreFieldAttribute.cs" />
+    <Compile Include="Core\SQL\LegacySelectPlaceholder.cs" />
+    <Compile Include="EntityModel\Attributes\BaseFieldAttribute.cs" />
+    <Compile Include="EntityModel\Attributes\EntityAttributeBase.cs" />
+    <Compile Include="EntityModel\Attributes\FieldAccesabilityException.cs" />
+    <Compile Include="EntityModel\Attributes\IgnoreFieldAttribute.cs" />
+    <Compile Include="EntityModel\Attributes\PersistanceFlags.cs" />
+    <Compile Include="EntityModel\Support\PropertyAccessor.cs" />
+    <Compile Include="Core\PlatformHelper.cs" />
     <Compile Include="Core\SQL\GroupByClause.cs" />
     <Compile Include="Core\SQL\Interfaces\IAcceptsGroupBy.cs" />
     <Compile Include="Core\SQL\Interfaces\IAcceptsJoin.cs" />
     <Compile Include="Core\SQL\Interfaces\IAcceptsLimit.cs" />
+    <Compile Include="Core\SQL\Interfaces\IAcceptsOrderBy.cs" />
     <Compile Include="Core\SQL\Interfaces\IAcceptsWhere.cs" />
     <Compile Include="Core\SQL\ISelectComponent.cs" />
+    <Compile Include="Core\SQL\JoinComponent.cs" />
     <Compile Include="Core\SQL\LimitClause.cs" />
-    <Compile Include="Core\SQL\QueryBuilder.cs" />
+    <Compile Include="Core\SQL\QueryBuilder\QueryBuilder.cs" />
     <Compile Include="Core\SQL\Interfaces\SelectElement.cs" />
+    <Compile Include="Core\SQL\QueryBuilder\QueryInterfaces.cs" />
     <Compile Include="Core\SQL\SelectSource.cs" />
     <Compile Include="Core\SQL\JoinClause.cs" />
     <Compile Include="Core\SQL\OrderByClause.cs" />
@@ -73,30 +81,30 @@
     <Compile Include="Core\DatastoreBuilder.cs" />
     <Compile Include="Core\DatastoreRedux.cs" />
     <Compile Include="Core\DbProviderFactoryAdapter.cs" />
-    <Compile Include="Core\EntityAttributes\CreatedByFieldAttribute.cs" />
-    <Compile Include="Core\EntityAttributes\FieldAttribute.cs" />
-    <Compile Include="Core\EntityAttributes\FieldAttributeCollection.cs" />
-    <Compile Include="Core\EntityAttributes\FieldValidationRuleAttribut.cs" />
-    <Compile Include="Core\EntityAttributes\InfrastructureFieldAttribute.cs" />
-    <Compile Include="Core\EntityAttributes\ModifiedByFieldAttribute.cs" />
-    <Compile Include="Core\EntityAttributes\PrimaryKeyFieldAttribute.cs" />
-    <Compile Include="Core\EntityAttributes\ReferenceAttribute.cs" />
-    <Compile Include="Core\EntityAttributes\SQLEntityAttribute.cs" />
+    <Compile Include="EntityModel\Attributes\CreatedByFieldAttribute.cs" />
+    <Compile Include="EntityModel\Attributes\FieldAttribute.cs" />
+    <Compile Include="EntityModel\Attributes\FieldAttributeCollection.cs" />
+    <Compile Include="EntityModel\Attributes\FieldValidationRuleAttribut.cs" />
+    <Compile Include="EntityModel\Attributes\InfrastructureFieldAttribute.cs" />
+    <Compile Include="EntityModel\Attributes\ModifiedByFieldAttribute.cs" />
+    <Compile Include="EntityModel\Attributes\PrimaryKeyFieldAttribute.cs" />
+    <Compile Include="EntityModel\Attributes\ReferenceAttribute.cs" />
+    <Compile Include="EntityModel\Attributes\EntitySourceAttribute.cs" />
     <Compile Include="Core\EntityCache.cs" />
-    <Compile Include="Core\EntityModel\DataObjectExtentions.cs" />
-    <Compile Include="Core\EntityModel\DataObjects_Base.cs" />
-    <Compile Include="Core\EntityModel\EntityCommandBuilder.cs" />
-    <Compile Include="Core\EntityModel\EntityDescription.cs" />
-    <Compile Include="Core\EntityModel\EntityFormatProvider.cs" />
-    <Compile Include="Core\EntityModel\EntityFormatter.cs" />
-    <Compile Include="Core\EntityModel\EntityInflator.cs" />
-    <Compile Include="Core\EntityModel\IDataObject.cs" />
-    <Compile Include="Core\EntityModel\IPersistanceTracking.cs" />
-    <Compile Include="Core\EntityModel\MappingColliction_Base.cs" />
-    <Compile Include="Core\EntityModel\Validation\FieldValidatorCollection.cs" />
-    <Compile Include="Core\EntityModel\Validation\IFieldValidator.cs" />
-    <Compile Include="Core\EntityModel\Validation\IValidatable.cs" />
-    <Compile Include="Core\EntityModel\Validation\Validator.cs" />
+    <Compile Include="EntityModel\DataObjectExtentions.cs" />
+    <Compile Include="EntityModel\DataObjects_Base.cs" />
+    <Compile Include="EntityModel\Support\EntityCommandBuilder.cs" />
+    <Compile Include="EntityModel\Support\EntityDescription.cs" />
+    <Compile Include="EntityModel\Support\EntityFormatProvider.cs" />
+    <Compile Include="EntityModel\Support\EntityFormatter.cs" />
+    <Compile Include="EntityModel\Support\EntityInflator.cs" />
+    <Compile Include="EntityModel\IDataObject.cs" />
+    <Compile Include="EntityModel\IPersistanceTracking.cs" />
+    <Compile Include="EntityModel\MappingColliction_Base.cs" />
+    <Compile Include="EntityModel\Validation\FieldValidatorCollection.cs" />
+    <Compile Include="EntityModel\Validation\IFieldValidator.cs" />
+    <Compile Include="EntityModel\Validation\IValidatable.cs" />
+    <Compile Include="EntityModel\Validation\Validator.cs" />
     <Compile Include="Core\Exceptions.cs" />
     <Compile Include="Core\SQL\ColumnInfo.cs" />
     <Compile Include="Core\SQL\OnConflictOption.cs" />
@@ -106,19 +114,21 @@
     <Compile Include="Core\SQL\WhereClause.cs" />
     <Compile Include="SQLite\SQLiteDatabaseBuilder.cs" />
     <Compile Include="SQLite\SQLiteDatastore.cs" />
+    <Compile Include="SQLite\SQLiteDataTypes.cs" />
     <Compile Include="SQLite\SQLiteProviderFactory.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <Import Project="$(SolutionDir)packages\System.Data.SQLite.Core.1.0.98.1\build\net20\System.Data.SQLite.Core.targets" Condition="Exists('$(SolutionDir)packages\System.Data.SQLite.Core.1.0.98.1\build\net20\System.Data.SQLite.Core.targets')" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>
       <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
     </PropertyGroup>
-    <Error Condition="!Exists('$(SolutionDir)packages\System.Data.SQLite.Core.1.0.98.1\build\net20\System.Data.SQLite.Core.targets')" Text="$([System.String]::Format('$(ErrorText)', '$(SolutionDir)packages\System.Data.SQLite.Core.1.0.98.1\build\net20\System.Data.SQLite.Core.targets'))" />
+    <Error Condition="!Exists('$(SolutionDir)packages\System.Data.SQLite.Core.1.0.98.1\build\net45\System.Data.SQLite.Core.targets')" Text="$([System.String]::Format('$(ErrorText)', '$(SolutionDir)packages\System.Data.SQLite.Core.1.0.98.1\build\net45\System.Data.SQLite.Core.targets'))" />
   </Target>
+  <Import Project="$(SolutionDir)packages\System.Data.SQLite.Core.1.0.98.1\build\net45\System.Data.SQLite.Core.targets" Condition="Exists('$(SolutionDir)packages\System.Data.SQLite.Core.1.0.98.1\build\net45\System.Data.SQLite.Core.targets')" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">

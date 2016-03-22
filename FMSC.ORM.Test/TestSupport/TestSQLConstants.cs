@@ -9,7 +9,6 @@ namespace FMSC.ORM.TestSupport
     {
         public const string MULTI_PROP_TABLE_NAME = "MultiPropTable";
         public static readonly string[] MULTI_PROP_TABLE_FIELDS =
-            new string[]
             {
                 "ID",
                 "StringField",
@@ -30,5 +29,11 @@ namespace FMSC.ORM.TestSupport
                 "CreatedBy",
                 "ModifiedBy"
             };
+
+        public static readonly string[] NON_REFLECTED_MULTI_PROP_TABLE_FIELDS =
+            {
+                "PrivateField",
+            };
+
     }
 }

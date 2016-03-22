@@ -4,9 +4,6 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Text;
 
-#if NetCF
-using FMSC.ORM.NetCF;
-#endif
 
 namespace FMSC.ORM.Core.SQL
 {
@@ -48,13 +45,13 @@ namespace FMSC.ORM.Core.SQL
 
         public IAcceptsJoin Join(TableOrSubQuery source, string constraint)
         {
-            this.Accept(new JoinClause(source, constraint));
+            this.Accept(this.Source.Join(source, constraint));
             return this;
         }
 
         public IAcceptsJoin Join(string table, string constraint, string alias)
         {
-            this.Accept(new JoinClause(table, constraint, alias));
+            this.Accept(this.Source.Join(table, constraint, alias));
             return this;
         }
 
@@ -64,14 +61,26 @@ namespace FMSC.ORM.Core.SQL
             return this;
         }
 
-        public IAcceptsLimit GroupBy(params string[] termArgs)
+        public IAcceptsOrderBy GroupBy(params string[] termArgs)
         {
             return GroupBy((IEnumerable<string>)termArgs);
         }
 
-        public IAcceptsLimit GroupBy(IEnumerable<string> terms)
+        public IAcceptsOrderBy GroupBy(IEnumerable<string> terms)
         {
             this.Accept( new GroupByClause(terms));
+            return this;
+        }
+
+        public IAcceptsLimit OrderBy(IEnumerable<string> terms)
+        {
+            this.Accept(new OrderByClause(terms));
+            return this;
+        }
+
+        public IAcceptsLimit OrderBy(params string[] termArgs)
+        {
+            this.Accept(new OrderByClause(termArgs));
             return this;
         }
 
@@ -88,25 +97,30 @@ namespace FMSC.ORM.Core.SQL
 
         public void Accept(JoinClause joinClause)
         {
-            joinClause.Accept(this.Source);
             this.Source = joinClause;
         }
 
         public void Accept(WhereClause whereClause)
         {
-            whereClause.Accept(this);
+            whereClause.Accept(null);
             this.Clause = whereClause;
         }
 
         public void Accept(GroupByClause groupByClause)
         {
-            groupByClause.Accept((SelectElement)this.Clause ?? this);
+            groupByClause.Accept((SelectElement)this.Clause);
             this.Clause = groupByClause;
+        }
+
+        public void Accept(OrderByClause orderByClause)
+        {
+            orderByClause.Accept((SelectElement)this.Clause);
+            this.Clause = orderByClause;
         }
 
         public void Accept(LimitClause limitClause)
         {
-            limitClause.Accept((SelectElement)this.Clause ?? this);
+            limitClause.Accept((SelectElement)this.Clause);
             this.Clause = limitClause;
         }
     }

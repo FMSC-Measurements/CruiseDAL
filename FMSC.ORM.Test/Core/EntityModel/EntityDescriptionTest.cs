@@ -1,11 +1,11 @@
-﻿using FMSC.ORM.TestSupport.TestModels;
-using FMSC.ORM.MyXUnit;
+﻿using FMSC.ORM.EntityModel.Attributes;
+using FMSC.ORM.TestSupport.TestModels;
 using System;
 using System.Linq;
 using Xunit;
 using Xunit.Abstractions;
 
-namespace FMSC.ORM.Core.EntityModel
+namespace FMSC.ORM.EntityModel.Support
 {
     public class EntityDescriptionTest : TestClassBase 
     {
@@ -33,7 +33,7 @@ namespace FMSC.ORM.Core.EntityModel
 
         public void LoadDataObjects()
         {
-            var types = (from t in System.Reflection.Assembly.GetAssembly(typeof(DataObject)).GetTypes()
+            var types = (from t in System.Reflection.Assembly.GetAssembly(typeof(DataObject_Base)).GetTypes()
                          where t.IsClass && t.Namespace == "CruiseDAL.DataObjects"
                          select t).ToList();
 
@@ -50,7 +50,7 @@ namespace FMSC.ORM.Core.EntityModel
         {
             Assert.NotNull(doi);
             Assert.Equal(dataType, doi.EntityType);
-            Assert.False(String.IsNullOrWhiteSpace(doi.SourceName));
+            AssertEx.NotNullOrWhitespace(doi.SourceName);
 
             VerifyDataObjectInfoFields(doi);
         }
@@ -58,8 +58,8 @@ namespace FMSC.ORM.Core.EntityModel
         void VerifyDataObjectInfoFields(EntityDescription doi)
         {
             Assert.NotNull(doi.Fields.PrimaryKeyField);
-            Assert.NotNull(doi.Fields.PrimaryKeyField.Getter);
-            Assert.NotNull(doi.Fields.PrimaryKeyField.Setter);
+            Assert.NotNull(doi.Fields.PrimaryKeyField.Property.Getter);
+            Assert.NotNull(doi.Fields.PrimaryKeyField.Property.Setter);
 
             VerifyField(doi, "ID");
             VerifyField(doi, "StringField");
@@ -77,33 +77,53 @@ namespace FMSC.ORM.Core.EntityModel
             VerifyField(doi, "DateTimeField");
 
             VerifyField(doi, "PartialyPublicField");
-            VerifyField(doi, "PrivateField");
+            //VerifyField(doi, "PrivateField");
             VerifyField(doi, "CreatedBy");
             VerifyField(doi, "ModifiedBy");
 
-            //verify 
-            Assert.DoesNotContain(doi.Fields, x => x.FieldName == "IgnoredField");
-            Assert.DoesNotContain(doi.Fields, x => x.FieldName == "PrivateIgnoredField");
-            Assert.DoesNotContain(doi.Fields, x => x.FieldName == "PartialyPublicAutomaticField");
-            Assert.DoesNotContain(doi.Fields, x => x.FieldName == "PrivateAutomaticField");
-            Assert.DoesNotContain(doi.Fields, x => x.FieldName == "IInterface.InterfaceProperty");
-            Assert.DoesNotContain(doi.Fields, x => x.FieldName.Contains("InterfaceProperty"));
+            //verify non visible field
+            VerifyNonvisableField(doi, "IgnoredField");
+            VerifyNonvisableField(doi, "PartialyPublicAutomaticField");
+
+            VerifyNonvisableField(doi, "PrivateIgnoredField", true);            
+            VerifyNonvisableField(doi, "PrivateAutomaticField", true);
+            VerifyNonvisableField(doi, "IInterface.InterfaceProperty", true);
+            VerifyNonvisableField(doi, "InterfaceProperty", true);
         }
 
         void VerifyField(EntityDescription doi, string fieldName)
         {
             _output.WriteLine("Verifying " + fieldName);
-            Assert.Contains(doi.Fields, x => x.FieldName == fieldName);
+            Assert.Contains(doi.Fields, x => x.Name == fieldName);
 
             var field = doi.Fields[fieldName];
             Assert.NotNull(field);
-            Assert.NotNull(field.Getter);
-            Assert.NotNull(field.Setter);
+            Assert.NotNull(field.Property.Getter);
+            Assert.NotNull(field.Property.Setter);
             Assert.NotNull(field.RunTimeType);
-            Assert.True(field.IsPersisted);
+            Assert.True(field.PersistanceFlags.HasFlag(PersistanceFlags.OnUpdate));
+            Assert.True(field.PersistanceFlags.HasFlag(PersistanceFlags.OnInsert));
 
             _output.WriteLine("done");
+        }
 
+        void VerifyNonvisableField(EntityDescription doi, string fieldName)
+        {
+            VerifyNonvisableField(doi, fieldName, false);
+        }
+        
+        void VerifyNonvisableField(EntityDescription doi, string fieldName, bool isPrivate)
+        {
+            Assert.DoesNotContain(doi.Fields, x => x.Name == fieldName);
+
+            if (isPrivate)
+            {
+                Assert.DoesNotContain(doi.Properties, x => x.Key == fieldName);
+            }
+            else
+            {
+                Assert.Contains(doi.Properties, x => x.Key == fieldName);
+            }
         }
     }
 }

@@ -1,5 +1,4 @@
 ﻿using FMSC.ORM.TestSupport.TestModels;
-using FMSC.ORM.MyXUnit;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,7 +7,7 @@ using System.Threading.Tasks;
 using Xunit;
 using Xunit.Abstractions;
 
-namespace FMSC.ORM.Core.EntityModel
+namespace FMSC.ORM.EntityModel.Support
 {
     public class EntityInflatorTest : TestClassBase
     {
@@ -22,6 +21,7 @@ namespace FMSC.ORM.Core.EntityModel
             var ed = new EntityDescription(typeof(POCOMultiTypeObject));
 
             var instance = ed.Inflator.CreateInstanceOfEntity();
+            Assert.True(instance is POCOMultiTypeObject);
             Assert.NotNull(instance);
         }
 
@@ -31,6 +31,7 @@ namespace FMSC.ORM.Core.EntityModel
             var ed = new EntityDescription(typeof(DOMultiPropType));
 
             var instance = ed.Inflator.CreateInstanceOfEntity();
+            Assert.True(instance is DOMultiPropType);
             Assert.NotNull(instance);
         }
 

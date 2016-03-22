@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace FMSC.ORM.Core.SQL
 {
@@ -14,7 +12,7 @@ namespace FMSC.ORM.Core.SQL
         {
             var sBuilder = new StringBuilder();
             if(Distinct)
-            {
+            {                
                 sBuilder.AppendLine("DISTINCT ");
             }
             if(Count == 0)

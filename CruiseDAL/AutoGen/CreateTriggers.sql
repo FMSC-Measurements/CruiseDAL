@@ -2,6 +2,15 @@
 
 --Core Tables--
 --Sale--
+CREATE TRIGGER OnInsertedSale
+AFTER INSERT 
+ON Sale
+BEGIN
+	UPDATE Sale 
+	SET CreatedDate = datetime(current_timestamp, 'localtime') 
+	WHERE rowID = new.rowID; 
+END; 
+ 
 CREATE TRIGGER OnUpdateSale 
 AFTER UPDATE OF Sale_CN, SaleNumber, Name, Purpose, Region, Forest, District, MeasurementYear, CalendarYear, LogGradingEnabled, Remarks, DefaultUOM 
 ON Sale 
@@ -29,6 +38,15 @@ BEGIN
 END;
 			
 --CuttingUnit--
+CREATE TRIGGER OnInsertedCuttingUnit
+AFTER INSERT 
+ON CuttingUnit
+BEGIN
+	UPDATE CuttingUnit 
+	SET CreatedDate = datetime(current_timestamp, 'localtime') 
+	WHERE rowID = new.rowID; 
+END; 
+ 
 CREATE TRIGGER OnUpdateCuttingUnit 
 AFTER UPDATE OF CuttingUnit_CN, Code, Area, Description, LoggingMethod, PaymentUnit, TallyHistory 
 ON CuttingUnit 
@@ -56,6 +74,15 @@ BEGIN
 END;
 			
 --Stratum--
+CREATE TRIGGER OnInsertedStratum
+AFTER INSERT 
+ON Stratum
+BEGIN
+	UPDATE Stratum 
+	SET CreatedDate = datetime(current_timestamp, 'localtime') 
+	WHERE rowID = new.rowID; 
+END; 
+ 
 CREATE TRIGGER OnUpdateStratum 
 AFTER UPDATE OF Stratum_CN, Code, Description, Method, BasalAreaFactor, FixedPlotSize, KZ3PPNT, Hotkey, FBSCode, YieldComponent, Month, Year 
 ON Stratum 
@@ -92,6 +119,15 @@ BEGIN
 END;
 			
 --SampleGroup--
+CREATE TRIGGER OnInsertedSampleGroup
+AFTER INSERT 
+ON SampleGroup
+BEGIN
+	UPDATE SampleGroup 
+	SET CreatedDate = datetime(current_timestamp, 'localtime') 
+	WHERE rowID = new.rowID; 
+END; 
+ 
 CREATE TRIGGER OnUpdateSampleGroup 
 AFTER UPDATE OF SampleGroup_CN, Stratum_CN, Code, CutLeave, UOM, PrimaryProduct, SecondaryProduct, BiomassProduct, DefaultLiveDead, SamplingFrequency, InsuranceFrequency, KZ, BigBAF, SmallFPS, TallyMethod, Description, SampleSelectorType, SampleSelectorState, MinKPI, MaxKPI 
 ON SampleGroup 
@@ -119,6 +155,15 @@ BEGIN
 END;
 			
 --TreeDefaultValue--
+CREATE TRIGGER OnInsertedTreeDefaultValue
+AFTER INSERT 
+ON TreeDefaultValue
+BEGIN
+	UPDATE TreeDefaultValue 
+	SET CreatedDate = datetime(current_timestamp, 'localtime') 
+	WHERE rowID = new.rowID; 
+END; 
+ 
 CREATE TRIGGER OnUpdateTreeDefaultValue 
 AFTER UPDATE OF TreeDefaultValue_CN, PrimaryProduct, Species, LiveDead, FIAcode, CullPrimary, HiddenPrimary, CullSecondary, HiddenSecondary, Recoverable, Chargeable, ContractSpecies, TreeGrade, MerchHeightLogLength, MerchHeightType, FormClass, BarkThicknessRatio, AverageZ, ReferenceHeightPercent 
 ON TreeDefaultValue 
@@ -155,6 +200,15 @@ BEGIN
 END;
 			
 --Plot--
+CREATE TRIGGER OnInsertedPlot
+AFTER INSERT 
+ON Plot
+BEGIN
+	UPDATE Plot 
+	SET CreatedDate = datetime(current_timestamp, 'localtime') 
+	WHERE rowID = new.rowID; 
+END; 
+ 
 CREATE TRIGGER OnUpdatePlot 
 AFTER UPDATE OF Plot_CN, Plot_GUID, Stratum_CN, CuttingUnit_CN, PlotNumber, IsEmpty, Slope, KPI, Aspect, Remarks, XCoordinate, YCoordinate, ZCoordinate, MetaData, Blob 
 ON Plot 
@@ -181,6 +235,15 @@ BEGIN
 	(OLD.rowID, OLD.Plot_GUID, 'Plot', '(Stratum_CN, CuttingUnit_CN, PlotNumber) VALUES (' || quote(OLD.Stratum_CN) || ',' || quote(OLD.CuttingUnit_CN) || ',' || quote(OLD.PlotNumber) ||')', datetime(current_timestamp, 'localtime')); 
 END;
 --Tree--
+CREATE TRIGGER OnInsertedTree
+AFTER INSERT 
+ON Tree
+BEGIN
+	UPDATE Tree 
+	SET CreatedDate = datetime(current_timestamp, 'localtime') 
+	WHERE rowID = new.rowID; 
+END; 
+ 
 CREATE TRIGGER OnUpdateTree 
 AFTER UPDATE OF Tree_CN, Tree_GUID, TreeDefaultValue_CN, Stratum_CN, SampleGroup_CN, CuttingUnit_CN, Plot_CN, TreeNumber, Species, CountOrMeasure, TreeCount, KPI, STM, SeenDefectPrimary, SeenDefectSecondary, RecoverablePrimary, HiddenPrimary, Initials, LiveDead, Grade, HeightToFirstLiveLimb, PoleLength, ClearFace, CrownRatio, DBH, DRC, TotalHeight, MerchHeightPrimary, MerchHeightSecondary, FormClass, UpperStemDOB, UpperStemDiameter, UpperStemHeight, DBHDoubleBarkThickness, TopDIBPrimary, TopDIBSecondary, DefectCode, DiameterAtDefect, VoidPercent, Slope, Aspect, Remarks, XCoordinate, YCoordinate, ZCoordinate, MetaData, IsFallBuckScale 
 ON Tree 
@@ -207,6 +270,15 @@ BEGIN
 	(OLD.rowID, OLD.Tree_GUID, 'Tree', '(TreeDefaultValue_CN, Stratum_CN, SampleGroup_CN, CuttingUnit_CN, Plot_CN, TreeNumber) VALUES (' || quote(OLD.TreeDefaultValue_CN) || ',' || quote(OLD.Stratum_CN) || ',' || quote(OLD.SampleGroup_CN) || ',' || quote(OLD.CuttingUnit_CN) || ',' || quote(OLD.Plot_CN) || ',' || quote(OLD.TreeNumber) ||')', datetime(current_timestamp, 'localtime')); 
 END;
 --Log--
+CREATE TRIGGER OnInsertedLog
+AFTER INSERT 
+ON Log
+BEGIN
+	UPDATE Log 
+	SET CreatedDate = datetime(current_timestamp, 'localtime') 
+	WHERE rowID = new.rowID; 
+END; 
+ 
 CREATE TRIGGER OnUpdateLog 
 AFTER UPDATE OF Log_CN, Log_GUID, Tree_CN, LogNumber, Grade, SeenDefect, PercentRecoverable, Length, ExportGrade, SmallEndDiameter, LargeEndDiameter, GrossBoardFoot, NetBoardFoot, GrossCubicFoot, NetCubicFoot, BoardFootRemoved, CubicFootRemoved, DIBClass, BarkThickness 
 ON Log 
@@ -233,6 +305,15 @@ BEGIN
 	(OLD.rowID, OLD.Log_GUID, 'Log', '(Tree_CN, LogNumber) VALUES (' || quote(OLD.Tree_CN) || ',' || quote(OLD.LogNumber) ||')', datetime(current_timestamp, 'localtime')); 
 END;
 --Stem--
+CREATE TRIGGER OnInsertedStem
+AFTER INSERT 
+ON Stem
+BEGIN
+	UPDATE Stem 
+	SET CreatedDate = datetime(current_timestamp, 'localtime') 
+	WHERE rowID = new.rowID; 
+END; 
+ 
 CREATE TRIGGER OnUpdateStem 
 AFTER UPDATE OF Stem_CN, Stem_GUID, Tree_CN, Diameter, DiameterType 
 ON Stem 
@@ -259,6 +340,15 @@ BEGIN
 	(OLD.rowID, OLD.Stem_GUID, 'Stem', '(Tree_CN) VALUES (' || quote(OLD.Tree_CN) ||')', datetime(current_timestamp, 'localtime')); 
 END;
 --CountTree--
+CREATE TRIGGER OnInsertedCountTree
+AFTER INSERT 
+ON CountTree
+BEGIN
+	UPDATE CountTree 
+	SET CreatedDate = datetime(current_timestamp, 'localtime') 
+	WHERE rowID = new.rowID; 
+END; 
+ 
 CREATE TRIGGER OnUpdateCountTree 
 AFTER UPDATE OF CountTree_CN, SampleGroup_CN, CuttingUnit_CN, Tally_CN, TreeDefaultValue_CN, Component_CN, TreeCount, SumKPI 
 ON CountTree 
@@ -279,6 +369,15 @@ END;
  
 --Tally--
 --TreeEstimate--
+CREATE TRIGGER OnInsertedTreeEstimate
+AFTER INSERT 
+ON TreeEstimate
+BEGIN
+	UPDATE TreeEstimate 
+	SET CreatedDate = datetime(current_timestamp, 'localtime') 
+	WHERE rowID = new.rowID; 
+END; 
+ 
 CREATE TRIGGER OnUpdateTreeEstimate 
 AFTER UPDATE OF TreeEstimate_CN, CountTree_CN, TreeEstimate_GUID, KPI 
 ON TreeEstimate 
@@ -306,6 +405,15 @@ END;
 --POP--
 --PRO--
 --LogStock--
+CREATE TRIGGER OnInsertedLogStock
+AFTER INSERT 
+ON LogStock
+BEGIN
+	UPDATE LogStock 
+	SET CreatedDate = datetime(current_timestamp, 'localtime') 
+	WHERE rowID = new.rowID; 
+END; 
+ 
 CREATE TRIGGER OnUpdateLogStock 
 AFTER UPDATE OF LogStock_CN, Tree_CN, LogNumber, Grade, SeenDefect, PercentRecoverable, Length, ExportGrade, SmallEndDiameter, LargeEndDiameter, GrossBoardFoot, NetBoardFoot, GrossCubicFoot, NetCubicFoot, BoardFootRemoved, CubicFootRemoved, DIBClass, BarkThickness, BoardUtil, CubicUtil 
 ON LogStock 
