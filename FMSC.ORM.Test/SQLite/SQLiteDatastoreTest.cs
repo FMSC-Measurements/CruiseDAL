@@ -159,7 +159,7 @@ namespace FMSC.ORM.SQLite
                 ds.Execute("INSERT INTO MultiPropTable DEFAULT VALUES");
 
                 rowCnt = ds.GetRowCount("MultiPropTable", null);
-                Assert.True(rowCnt == 1);
+                Assert.Equal(1, rowCnt);
             }
         }
 

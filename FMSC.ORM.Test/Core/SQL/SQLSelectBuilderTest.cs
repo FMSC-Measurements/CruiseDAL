@@ -39,8 +39,7 @@ namespace FMSC.ORM.Core.SQL
         [Fact]
         public void FluentInterfaceTest()
         {
-            var provider = new SQLite.SQLiteProviderFactory();
-
+            base.StartTimer();
             SQLSelectBuilder builder = new SQLSelectBuilder();
             builder.Source = new TableOrSubQuery("something", "t1");
             builder.ResultColumns.Add("col1");
@@ -51,6 +50,15 @@ namespace FMSC.ORM.Core.SQL
                 .GroupBy("col1", "col2")
                 .Limit(1, 0);
 
+            var sql = builder.ToSQL();
+
+            Assert.Contains("Join", sql, StringComparison.InvariantCultureIgnoreCase);
+            Assert.Contains("Where", sql, StringComparison.InvariantCultureIgnoreCase);
+            Assert.Contains("Group By", sql, StringComparison.InvariantCultureIgnoreCase);
+            Assert.Contains("Limit", sql, StringComparison.InvariantCultureIgnoreCase);
+            base.EndTimer();
+
+            var provider = new SQLite.SQLiteProviderFactory();
             VerifyCommandSyntex(provider, builder.ToSQL());
         }
 
