@@ -62,7 +62,7 @@ namespace FMSC.ORM.Core
             if (_entityCache == null) { _entityCache = new Dictionary<Type, EntityCache>(); }
             if (_entityCache.ContainsKey(type) == false)
             {
-                EntityCache newCache = new EntityCache();
+                var newCache = new EntityCache();
                 _entityCache.Add(type, newCache);
                 return newCache;
             }
@@ -477,7 +477,7 @@ namespace FMSC.ORM.Core
         protected List<T> Read<T>(DbCommand command, EntityDescription entityDescription)
             where T : new()
         {
-            List<T> doList = new List<T>();
+            var doList = new List<T>();
             EntityCache cache = GetEntityCache(typeof(T));
             EntityInflator inflator = entityDescription.Inflator;
 

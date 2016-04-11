@@ -38,7 +38,11 @@ namespace FMSC.ORM.EntityModel.Support
         [Fact]
         public void ReadDataTest()
         {
-            throw new NotImplementedException();
+            var reader = new TestSupport.MockDataReader();
+
+            reader.Value = "1";
+
+
         }
 
 

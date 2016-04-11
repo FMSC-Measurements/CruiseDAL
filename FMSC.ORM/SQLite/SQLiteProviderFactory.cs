@@ -2,7 +2,15 @@
 
 using FMSC.ORM.Core;
 using System.Data.Common;
+
+#if Mono
+using Mono.Data.Sqlite;
+using SQLiteCommand = Mono.Data.Sqlite.SqliteCommand;
+using SQLiteConnection = Mono.Data.Sqlite.SqliteConnection;
+using SQLiteParameter = Mono.Data.Sqlite.SqliteParameter;
+#else
 using System.Data.SQLite;
+#endif
 
 namespace FMSC.ORM.SQLite
 {
