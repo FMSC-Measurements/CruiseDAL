@@ -3,9 +3,15 @@ using FMSC.ORM.Core.SQL;
 using System;
 using System.Collections.Generic;
 using System.Data.Common;
-using System.Data.SQLite;
 using System.Linq;
 using System.Text;
+
+#if Mono
+using Mono.Data.Sqlite;
+using SQLiteException =  Mono.Data.Sqlite.SqliteException ;
+#else
+using System.Data.SQLite;
+#endif
 
 namespace FMSC.ORM.SQLite
 {
@@ -72,15 +78,15 @@ namespace FMSC.ORM.SQLite
             Path = path;
         }
 
-        #region abstract methods
+#region abstract methods
         protected override string BuildConnectionString()
         {
             System.Diagnostics.Debug.Assert(!string.IsNullOrEmpty(Path));
             return string.Format("Data Source={0};Version=3;", Path);
         }
-        #endregion
+#endregion
 
-        #region SavePoints
+#region SavePoints
         public void StartSavePoint(String name)
         {
             this.Execute("SAVEPOINT " + name + ";");
@@ -95,7 +101,7 @@ namespace FMSC.ORM.SQLite
         {
             this.Execute("ROLLBACK TO SAVEPOINT " + name + ";");
         }
-        #endregion
+#endregion
 
         /// <summary>
         /// Sets the starting value of a AutoIncrement field for a table
@@ -334,7 +340,7 @@ namespace FMSC.ORM.SQLite
             }
         }
 
-        #region File utility methods
+#region File utility methods
         ///// <summary>
         ///// Copies entire file to <paramref name="path"/> Overwriting any existing file
         ///// </summary>
@@ -372,26 +378,41 @@ namespace FMSC.ORM.SQLite
             return true;
         }
 
-        #endregion
+#endregion
 
 
         protected override Exception ThrowExceptionHelper(DbConnection conn, DbCommand comm, Exception innerException)
         {
             if (innerException is SQLiteException)
-            {
+            {                
                 SQLException sqlEx;
-                SQLiteException ex = innerException as SQLiteException;
-                switch (ex.ResultCode)
+
+                var ex = innerException as SQLiteException;
+#if Mono
+                var errorCode = ex.ErrorCode;
+#else
+                var errorCode = ex.ResultCode;
+#endif
+                switch (errorCode)
                 {
+                    
                     case SQLiteErrorCode.Corrupt:
+#if Mono
+                    case SQLiteErrorCode.NotADatabase:
+#else
                     case SQLiteErrorCode.NotADb:
+#endif
                     case SQLiteErrorCode.Perm:
+#if Mono
+                    case SQLiteErrorCode.IOErr:
+#else
                     case SQLiteErrorCode.IoErr:
+#endif
                     case SQLiteErrorCode.CantOpen:
                     case SQLiteErrorCode.Full:
                     case SQLiteErrorCode.Auth:
                         {
-                            return new FileAccessException(ex.ResultCode.ToString(), innerException);
+                            return new FileAccessException(errorCode.ToString(), innerException);
                         }
                     case SQLiteErrorCode.ReadOnly:
                         {

@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
-VisualStudioVersion = 14.0.23107.0
+VisualStudioVersion = 14.0.25123.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{770A329F-9981-40B5-8AD1-85C573421463}"
 	ProjectSection(SolutionItems) = preProject
@@ -19,7 +19,15 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FMSC.ORM.VS15", "FMSC.ORM\F
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FMSC.ORM.Test", "FMSC.ORM.Test\FMSC.ORM.Test.csproj", "{2E3DF5C2-8A38-4A03-86D7-8D463C917E47}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FMSC.ORM.Android", "FMSC.ORM.Android\FMSC.ORM.Android.csproj", "{E9E89FC3-FF59-484B-B897-A640A9A4E31B}"
+EndProject
+Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "FMSC.ORM", "FMSC.ORM\FMSC.ORM.shproj", "{D1C2E32D-5DF9-46BE-9B04-DD2B2C5851D3}"
+EndProject
 Global
+	GlobalSection(SharedMSBuildProjectFiles) = preSolution
+		FMSC.ORM\FMSC.ORM.projitems*{e9e89fc3-ff59-484b-b897-a640a9a4e31b}*SharedItemsImports = 4
+		FMSC.ORM\FMSC.ORM.projitems*{d1c2e32d-5df9-46be-9b04-dd2b2c5851d3}*SharedItemsImports = 13
+	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
 		Release|Any CPU = Release|Any CPU
@@ -43,6 +51,10 @@ Global
 		{2E3DF5C2-8A38-4A03-86D7-8D463C917E47}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2E3DF5C2-8A38-4A03-86D7-8D463C917E47}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{2E3DF5C2-8A38-4A03-86D7-8D463C917E47}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E9E89FC3-FF59-484B-B897-A640A9A4E31B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E9E89FC3-FF59-484B-B897-A640A9A4E31B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E9E89FC3-FF59-484B-B897-A640A9A4E31B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E9E89FC3-FF59-484B-B897-A640A9A4E31B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

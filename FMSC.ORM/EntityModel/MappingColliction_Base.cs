@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Collections;
 using FMSC.ORM.Core;
 
-#if ANDROID
+#if Mono
 using Mono.Data.Sqlite;
 #else
 using System.Data.SQLite;
