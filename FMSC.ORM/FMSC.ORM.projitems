@@ -1,0 +1,78 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <MSBuildAllProjects>$(MSBuildAllProjects);$(MSBuildThisFileFullPath)</MSBuildAllProjects>
+    <HasSharedItems>true</HasSharedItems>
+    <SharedGUID>d1c2e32d-5df9-46be-9b04-dd2b2c5851d3</SharedGUID>
+  </PropertyGroup>
+  <PropertyGroup Label="Configuration">
+    <Import_RootNamespace>FMSC.ORM</Import_RootNamespace>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="$(MSBuildThisFileDirectory)Core\Constants\Logging.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Core\DatastoreBuilder.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Core\DatastoreRedux.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Core\DbProviderFactoryAdapter.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Core\EntityCache.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Core\Exceptions.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Core\PlatformHelper.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Core\SQL\ColumnInfo.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Core\SQL\GroupByClause.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Core\SQL\Interfaces\IAcceptsGroupBy.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Core\SQL\Interfaces\IAcceptsJoin.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Core\SQL\Interfaces\IAcceptsLimit.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Core\SQL\Interfaces\IAcceptsOrderBy.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Core\SQL\Interfaces\IAcceptsWhere.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Core\SQL\Interfaces\SelectElement.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Core\SQL\ISelectComponent.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Core\SQL\JoinClause.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Core\SQL\JoinComponent.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Core\SQL\LegacySelectPlaceholder.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Core\SQL\LimitClause.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Core\SQL\OnConflictOption.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Core\SQL\OrderByClause.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Core\SQL\QueryBuilder\QueryBuilder.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Core\SQL\QueryBuilder\QueryInterfaces.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Core\SQL\ResultColumnCollection.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Core\SQL\SelectClause.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Core\SQL\SelectSource.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Core\SQL\SQLInsertCommand.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Core\SQL\SQLSelectBuilder.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Core\SQL\SQLUpdateCommand.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Core\SQL\TableOrSubQuery.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Core\SQL\WhereClause.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)EntityModel\Attributes\BaseFieldAttribute.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)EntityModel\Attributes\CreatedByFieldAttribute.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)EntityModel\Attributes\EntityAttributeBase.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)EntityModel\Attributes\EntitySourceAttribute.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)EntityModel\Attributes\FieldAccesabilityException.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)EntityModel\Attributes\FieldAttribute.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)EntityModel\Attributes\FieldAttributeCollection.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)EntityModel\Attributes\FieldValidationRuleAttribut.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)EntityModel\Attributes\IgnoreFieldAttribute.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)EntityModel\Attributes\InfrastructureFieldAttribute.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)EntityModel\Attributes\ModifiedByFieldAttribute.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)EntityModel\Attributes\PersistanceFlags.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)EntityModel\Attributes\PrimaryKeyFieldAttribute.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)EntityModel\Attributes\ReferenceAttribute.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)EntityModel\DataObjectExtentions.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)EntityModel\DataObjects_Base.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)EntityModel\IDataObject.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)EntityModel\IPersistanceTracking.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)EntityModel\MappingColliction_Base.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)EntityModel\Support\EntityCommandBuilder.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)EntityModel\Support\EntityDescription.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)EntityModel\Support\EntityFormatProvider.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)EntityModel\Support\EntityFormatter.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)EntityModel\Support\EntityInflator.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)EntityModel\Support\PropertyAccessor.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)EntityModel\Validation\FieldValidatorCollection.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)EntityModel\Validation\IFieldValidator.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)EntityModel\Validation\IValidatable.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)EntityModel\Validation\Validator.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)SQLite\SQLiteDatabaseBuilder.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)SQLite\SQLiteDatastore.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)SQLite\SQLiteDataTypes.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)SQLite\SQLiteProviderFactory.cs" />
+  </ItemGroup>
+</Project>

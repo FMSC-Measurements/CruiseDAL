@@ -9,7 +9,7 @@ using FMSC.ORM.Core.SQL;
 using System.Linq;
 using FMSC.ORM.EntityModel.Attributes;
 
-#if ANDROID
+#if Mono
 using Mono.Data.Sqlite;
 using SQLiteCommand = Mono.Data.Sqlite.SqliteCommand;
 using SQLiteParameter = Mono.Data.Sqlite.SqliteParameter;

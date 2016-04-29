@@ -1,8 +1,14 @@
 ﻿using FMSC.ORM.Core;
 using System;
 using System.Collections.Generic;
-using System.Data.SQLite;
 using System.Text;
+
+#if Mono
+using Mono.Data.Sqlite;
+using SQLiteConnection = Mono.Data.Sqlite.SqliteConnection;
+#else
+using System.Data.SQLite;
+#endif
 
 namespace FMSC.ORM.SQLite
 {
@@ -29,6 +35,7 @@ namespace FMSC.ORM.SQLite
 
             try
             {
+                
                 SQLiteConnection.CreateFile(Datastore.Path);
                 Datastore.BeginTransaction();
                 try

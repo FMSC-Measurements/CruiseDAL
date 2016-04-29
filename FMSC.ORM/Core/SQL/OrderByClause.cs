@@ -46,7 +46,7 @@ namespace FMSC.ORM.Core.SQL
             {
                 sBuilder.Append(ParentElement.ToSQL());
             }
-            if (OrderingTerms.Count == 0)
+            if (OrderingTerms.Count > 0)
             {
                 sBuilder.Append(" ORDER BY ");
                 bool first = true;
