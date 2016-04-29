@@ -396,8 +396,8 @@ namespace CruiseDAL
         {
             if (conn != null)
             {
-                this.ExecuteMultiDB("ATTACH DATABASE \"" + externalDB.DS.Path
-                    + "\" AS " + externalDB.Alias + ";");
+                this.ExecuteSQL("ATTACH DATABASE \"" + externalDB.DS.Path
+                    + "\" AS " + externalDB.Alias + ";", conn);
             }
         }
 
@@ -479,7 +479,7 @@ namespace CruiseDAL
             {
                 if (_multiDBholdConnection > 0)
                 {
-                    ExitConnectionHold();
+                    ExitMultiDBConnectionHold();
                     if (_multiDBholdConnection == 0)
                     {
                         Debug.Assert(MultiDBPersistentConnection != null);
@@ -497,7 +497,7 @@ namespace CruiseDAL
 
         protected void ExitMultiDBConnectionHold()
         {
-            Debug.Assert(_holdConnection > 0);
+            Debug.Assert(_multiDBholdConnection > 0);
             System.Threading.Interlocked.Decrement(ref this._multiDBholdConnection);
         }
 
