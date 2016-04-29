@@ -457,17 +457,20 @@ namespace CruiseDAL
                     {
                         conn.Open();
                     }
+
+                    MultiDBPersistentConnection = conn;
+                    EnterMultiDBConnectionHold();
+
                     OnMultiDBConnectionOpened();
+
+                    return conn;                    
                 }
                 catch (Exception e)
                 {
                     throw new ConnectionException("failed to open connection", e);
                 }
 
-                MultiDBPersistentConnection = conn;
-                EnterMultiDBConnectionHold();
-
-                return conn;
+                
             }
         }
 
@@ -497,6 +500,15 @@ namespace CruiseDAL
         {
             Debug.Assert(_holdConnection > 0);
             System.Threading.Interlocked.Decrement(ref this._multiDBholdConnection);
+        }
+
+        protected void InitializeMutiDBConnection()
+        {
+            foreach(var ds in _attachedDataStores)
+            {
+                AttachDBInternal(ds);
+            }
+
         }
 
         private void OnMultiDBConnectionOpened()
