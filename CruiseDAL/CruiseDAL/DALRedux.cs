@@ -26,15 +26,17 @@ namespace CruiseDAL
         protected int _multiDBholdConnection = 0;
         protected int _multiDBtransactionDepth = 0;
         protected bool _multiDBtransactionCanceled = false;
+        object _multiDBTransactionSyncLock = new object();
 
         protected Object _multiDBpersistentConnectionSyncLock = new object();
-        protected DbConnection MultiDBPersistentConnection { get; set; }
 
-        public object MultiDBTransactionSyncLock = new object();
+        
         protected DbTransaction _multiDBCurrentTransaction;
 
         protected ICollection<ExternalDatastore> _attachedDataStores = new List<ExternalDatastore>();
+        protected DbConnection MultiDBPersistentConnection { get; set; }
 
+        public object MultiDBTransactionSyncLock { get { return _multiDBTransactionSyncLock; } }
         public IEnumerable<DatastoreRedux> AttachedDataStores { get; set; }
 
         #endregion multiDB Fields
