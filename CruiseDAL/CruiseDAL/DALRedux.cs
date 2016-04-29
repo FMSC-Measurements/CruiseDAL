@@ -8,6 +8,9 @@ using System.Diagnostics;
 using System.IO;
 using System.Threading;
 
+#pragma warning disable RECS0122 // Initializing field with default value is redundant
+#pragma warning disable RECS0104 // When object creation uses object or collection initializer, empty argument list is redundant
+
 namespace CruiseDAL
 {
     public enum CruiseFileType { Unknown, Cruise, Template, Design, Master, Component, Backup }
@@ -22,15 +25,15 @@ namespace CruiseDAL
 
         #region multiDB Fields
 
-        private int _multiDBtransactionHold = 0;
+        int _multiDBtransactionHold = 0;
+
         protected int _multiDBholdConnection = 0;
         protected int _multiDBtransactionDepth = 0;
         protected bool _multiDBtransactionCanceled = false;
-        object _multiDBTransactionSyncLock = new object();
+        private object _multiDBTransactionSyncLock = new object();
 
         protected Object _multiDBpersistentConnectionSyncLock = new object();
 
-        
         protected DbTransaction _multiDBCurrentTransaction;
 
         protected ICollection<ExternalDatastore> _attachedDataStores = new List<ExternalDatastore>();
@@ -379,19 +382,21 @@ namespace CruiseDAL
             if (String.IsNullOrEmpty(alias)) { throw new ArgumentException("alias can't be null or empty", "alias"); }
             Debug.Assert(_attachedDataStores != null);
 
+
             var externalDS = new ExternalDatastore()
+
             {
                 DS = dataStore,
                 Alias = alias
             };
 
             _attachedDataStores.Add(externalDS);
-            AttachDBInternal(externalDS);
+            AttachDBInternal(externalDS, this.MultiDBPersistentConnection);
         }
 
-        protected void AttachDBInternal(ExternalDatastore externalDB)
+        protected void AttachDBInternal(ExternalDatastore externalDB, DbConnection conn)
         {
-            if (this.MultiDBPersistentConnection != null)
+            if (conn != null)
             {
                 this.ExecuteMultiDB("ATTACH DATABASE \"" + externalDB.DS.Path
                     + "\" AS " + externalDB.Alias + ";");
@@ -454,13 +459,12 @@ namespace CruiseDAL
                     if (conn.State == System.Data.ConnectionState.Closed)
                     {
                         conn.Open();
+                        OnMultiDBConnectionOpened();
+                        MultiDBPersistentConnection = conn;
+                        InitializeMultiDBConnection(conn);
                     }
 
-                    MultiDBPersistentConnection = conn;
                     EnterMultiDBConnectionHold();
-                    InitializeMultiDBConnection();
-
-                    OnMultiDBConnectionOpened();
 
                     return conn;
                 }
@@ -499,11 +503,11 @@ namespace CruiseDAL
             System.Threading.Interlocked.Decrement(ref this._multiDBholdConnection);
         }
 
-        protected void InitializeMultiDBConnection()
+        protected void InitializeMultiDBConnection(DbConnection conn)
         {
             foreach (var ds in _attachedDataStores)
             {
-                AttachDBInternal(ds);
+                AttachDBInternal(ds, conn);
             }
         }
 
@@ -601,8 +605,6 @@ namespace CruiseDAL
 
         #endregion multiDB methods
 
-
-
         #region cruise/cut specific stuff
 
         public static CruiseFileType ExtrapolateCruiseFileType(String path)
@@ -673,7 +675,7 @@ namespace CruiseDAL
 
         #endregion cruise/cut specific stuff
 
-        #region file util
+        #region file utility
 
         public void CopyTo(string path)
         {
