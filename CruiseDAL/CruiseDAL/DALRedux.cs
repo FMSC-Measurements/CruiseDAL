@@ -1,20 +1,16 @@
-﻿
-using FMSC.ORM;
+﻿using FMSC.ORM;
 using FMSC.ORM.Core;
-using FMSC.ORM.Core.SQL;
 using FMSC.ORM.SQLite;
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Data.Common;
-using System.Data.SQLite;
 using System.Diagnostics;
 using System.IO;
 using System.Threading;
 
 namespace CruiseDAL
 {
-    public enum CruiseFileType { Unknown, Cruise, Template, Design, Master, Component, Backup}
+    public enum CruiseFileType { Unknown, Cruise, Template, Design, Master, Component, Backup }
 
     public partial class DAL : SQLiteDatastore
     {
@@ -25,7 +21,8 @@ namespace CruiseDAL
         }
 
         #region multiDB Fields
-        int _multiDBtransactionHold = 0;
+
+        private int _multiDBtransactionHold = 0;
         protected int _multiDBholdConnection = 0;
         protected int _multiDBtransactionDepth = 0;
         protected bool _multiDBtransactionCanceled = false;
@@ -39,15 +36,15 @@ namespace CruiseDAL
         protected ICollection<ExternalDatastore> _attachedDataStores = new List<ExternalDatastore>();
 
         public IEnumerable<DatastoreRedux> AttachedDataStores { get; set; }
-        #endregion
 
+        #endregion multiDB Fields
 
         private string _userInfo;
         private string _databaseVersion = "Unknown";
         private CruiseFileType _cruiseFileType;
 
         /// <summary>
-        /// represents value returned by PRAGMA user_version;  
+        /// represents value returned by PRAGMA user_version;
         /// </summary>
         internal long SchemaVersion { get; set; }
 
@@ -64,10 +61,8 @@ namespace CruiseDAL
             {
                 this._databaseVersion = value;
             }
-
         }
 
-        
         /// <summary>
         /// Gets the string used to identify the user, for the purpose of CreatedBy and ModifiedBy values
         /// </summary>
@@ -107,7 +102,7 @@ namespace CruiseDAL
         }
 
         /// <summary>
-        /// Creates a DAL instance for a database @ path. 
+        /// Creates a DAL instance for a database @ path.
         /// </summary>
         /// <exception cref="ArgumentNullException">path can not be null or an empty string</exception>
         /// <exception cref="IOException">problem working with file. wrong extension</exception>
@@ -120,11 +115,10 @@ namespace CruiseDAL
         public DAL(string path, bool makeNew)
             : this(path, makeNew, new CruiseDALDatastoreBuilder())
         {
-
         }
 
         /// <summary>
-        /// Creates a DAL instance for a database @ path. 
+        /// Creates a DAL instance for a database @ path.
         /// </summary>
         /// <exception cref="ArgumentNullException">path can not be null or an empty string</exception>
         /// <exception cref="System.IO.IOException">File extension is not valid <see cref="VALID_EXTENSIONS"/></exception>
@@ -137,7 +131,7 @@ namespace CruiseDAL
             builder.Datastore = this;
 
             Path = path;
-            
+
             this.Initialize(makeNew, builder);
             Logger.Log.V(String.Format("Created DAL instance. Path = {0}\r\n", Path));
         }
@@ -158,7 +152,6 @@ namespace CruiseDAL
             {
                 DatabaseVersion = dbVersion;
             }
-
 
             this.SchemaVersion = this.ExecuteScalar<long>("PRAGMA user_version;");
             builder.UpdateDatastore();
@@ -182,14 +175,16 @@ namespace CruiseDAL
 
 #elif ANDROID
 			return "AndroidUser";
-#else 
+#else
             return Environment.UserName + " on " + System.Environment.MachineName;
 #endif
             //return Environment.UserName + " on " + System.Windows.Forms.SystemInformation.ComputerName;
         }
 
         #region multiDB methods
+
         #region multiDB execute commands
+
         public int ExecuteMultiDB(String command, params object[] parameters)
         {
             using (DbCommand com = Provider.CreateCommand(command))
@@ -373,7 +368,8 @@ namespace CruiseDAL
                 //return (T)Convert.ChangeType(result, typeof(T));
             }
         }
-        #endregion
+
+        #endregion multiDB execute commands
 
         public void AttachDB(DatastoreRedux dataStore, string alias)
         {
@@ -460,17 +456,16 @@ namespace CruiseDAL
 
                     MultiDBPersistentConnection = conn;
                     EnterMultiDBConnectionHold();
+                    InitializeMultiDBConnection();
 
                     OnMultiDBConnectionOpened();
 
-                    return conn;                    
+                    return conn;
                 }
                 catch (Exception e)
                 {
                     throw new ConnectionException("failed to open connection", e);
                 }
-
-                
             }
         }
 
@@ -502,13 +497,12 @@ namespace CruiseDAL
             System.Threading.Interlocked.Decrement(ref this._multiDBholdConnection);
         }
 
-        protected void InitializeMutiDBConnection()
+        protected void InitializeMultiDBConnection()
         {
-            foreach(var ds in _attachedDataStores)
+            foreach (var ds in _attachedDataStores)
             {
                 AttachDBInternal(ds);
             }
-
         }
 
         private void OnMultiDBConnectionOpened()
@@ -603,9 +597,12 @@ namespace CruiseDAL
             Debug.WriteLine("MultiDB Transaction Releasing", FMSC.ORM.Core.Constants.Logging.DB_CONTROL);
         }
 
-        #endregion        
+        #endregion multiDB methods
+
+
 
         #region cruise/cut specific stuff
+
         public static CruiseFileType ExtrapolateCruiseFileType(String path)
         {
             String normPath = path.ToLower().TrimEnd();
@@ -613,7 +610,6 @@ namespace CruiseDAL
             {
                 return CruiseFileType.Unknown;
             }
-
             else if (System.Text.RegularExpressions.Regex.IsMatch(normPath, @".+\.m\.cruise\s*$", System.Text.RegularExpressions.RegexOptions.IgnoreCase))
             {
                 return CruiseFileType.Master;
@@ -653,14 +649,12 @@ namespace CruiseDAL
             {
                 return CruiseFileType.Unknown;
             }
-
         }
 
         protected void WriteCruiseFileType(CruiseFileType cType)
         {
             this.WriteGlobalValue("Database", "CruiseFileType", cType.ToString());
         }
-
 
         public string ReadGlobalValue(String block, String key)
         {
@@ -674,9 +668,11 @@ namespace CruiseDAL
             this.Execute("INSERT OR REPLACE INTO Globals (Block, Key, Value) " +
                 "Values (?, ?, ?);", block, key, value);
         }
-        #endregion
+
+        #endregion cruise/cut specific stuff
 
         #region file util
+
         public void CopyTo(string path)
         {
             this.CopyTo(path, false);
@@ -689,14 +685,13 @@ namespace CruiseDAL
             System.IO.File.Copy(this.Path, destPath, overwrite);
         }
 
-
         public void CopyAs(string desPath, bool overwrite)
         {
             CopyTo(desPath, overwrite);
-            this.Path = desPath;            
+            this.Path = desPath;
         }
-        #endregion
 
+        #endregion file util
 
         ///// <summary>
         ///// Copies selection directly from external Database
@@ -733,8 +728,6 @@ namespace CruiseDAL
         //{
         //    if (dataBase.Exists == false) { return; }
 
-
-
         //    string cOpt = option.ToString().ToUpper();
         //    string copy = String.Format("INSERT OR {2} INTO {0} SELECT * FROM destDB.{0} {1};", table, selection, cOpt);
 
@@ -750,8 +743,8 @@ namespace CruiseDAL
 
         //}
 
+        #region not implemented
 
-        #region not implemented 
         //[Obsolete]
         //public void ChangeRowID(DataObject data, long newRowID, OnConflictOption option)
         //{
@@ -769,10 +762,13 @@ namespace CruiseDAL
         //{
         //    throw new NotImplementedException();
         //}
-        #endregion
+
+        #endregion not implemented
 
         #region accessControl
-        Mutex _accessControl;
+
+        private Mutex _accessControl;
+
         private void releaseAccessControl()
         {
 #if !Mobile
@@ -805,8 +801,6 @@ namespace CruiseDAL
             }
             catch
             {
-
-
             }
             if (_accessControl == null)
             {
@@ -822,9 +816,11 @@ namespace CruiseDAL
             }
 #endif
         }
-        #endregion
+
+        #endregion accessControl
 
         #region IDisposable Members
+
         private bool _disposed = false;
 
         protected override void Dispose(bool disposing)
@@ -835,9 +831,8 @@ namespace CruiseDAL
                 return;
             }
 
-            if(disposing)
+            if (disposing)
             {
-
             }
 
             //ReleaseMultiDatabaseConnection(true);
@@ -851,6 +846,6 @@ namespace CruiseDAL
             this.Dispose(false);
         }
 
-        #endregion
+        #endregion IDisposable Members
     }
 }
