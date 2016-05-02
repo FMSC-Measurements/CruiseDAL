@@ -46,7 +46,7 @@ namespace FMSC.ORM.SQLite
                 {
                     return string.Empty;
                 }
-                return System.IO.Path.GetExtension(base.Path);
+                return System.IO.Path.GetExtension(Path);
             }
         }
 

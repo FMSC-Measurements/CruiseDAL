@@ -15,7 +15,7 @@ namespace FMSC.ORM.Core.SQL
 
         public override string ToString()
         {
-            StringBuilder sb = new StringBuilder();
+            var sb = new StringBuilder();
             
             sb.AppendLine("INSERT");
             if (ConflictOption != OnConflictOption.Default)

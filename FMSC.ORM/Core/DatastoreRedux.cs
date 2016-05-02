@@ -9,45 +9,36 @@ using System.Data.Common;
 using System.Diagnostics;
 using System.Linq;
 
+#pragma warning disable RECS0122 // Initializing field with default value is redundant
+
 namespace FMSC.ORM.Core
 {
     public abstract class DatastoreRedux : IDisposable
     {
-        //const bool DEFAULT_RETRY_RO_CONNECTION_BEHAVIOR = false;
-        //const bool DEFAULT_RETRY_RW_CONNECTION_BEHAVIOR = false;
+        protected static Dictionary<string, EntityDescription> _globalEntityDescriptionLookup = new Dictionary<string, EntityDescription>();
 
         protected int _holdConnection = 0;
         protected int _transactionDepth = 0;
         protected bool _transactionCanceled = false;
-        protected object _transactionSyncLock = new object();
+        protected readonly object _transactionSyncLock = new object();
+        protected readonly object _persistentConnectionSyncLock = new object();
 
-        //protected Object _readOnlyConnectionSyncLock = new object();
-        //protected Object _readWriteConnectionSyncLock = new object();
-        protected Object _persistentConnectionSyncLock = new object();
-
-        protected DbConnection PersistentConnection { get; set; }
-
-        //protected DbConnection _ReadWriteConnection;
-        //protected DbConnection _ReadOnlyConnection;
-
-        public object TransactionSyncLock { get { return _transactionSyncLock; } }
         protected DbTransaction _CurrentTransaction;
-
         protected Dictionary<Type, EntityCache> _entityCache;
-
-        protected static Dictionary<string, EntityDescription> _globalEntityDescriptionLookup = new Dictionary<string, EntityDescription>();
-
+        
+        protected DbConnection PersistentConnection { get; set; }
         protected DbProviderFactoryAdapter Provider { get; set; }
 
         public DatabaseBuilder DatabaseBuilder { get; set; }
         public string Path { get; protected set; }
+        public object TransactionSyncLock { get { return _transactionSyncLock; } }
 
         protected DatastoreRedux(DbProviderFactoryAdapter provider)
         {
             this.Provider = provider;
         }
 
-        #region sugar
+        #region Entity Info
 
         protected EntityCache GetEntityCache(Type type)
         {
@@ -82,7 +73,7 @@ namespace FMSC.ORM.Core
 
         #endregion sugar
 
-        #region abstract members
+        #region Abstract Members
 
         protected abstract string BuildConnectionString();
 
@@ -313,7 +304,9 @@ namespace FMSC.ORM.Core
         #region read methods
 
         [Obsolete("use From<T>().Read() style instead")]
+#pragma warning disable RECS0154 // Parameter tableName is never used
         public List<T> Read<T>(string tableName, string selection, params Object[] selectionArgs) where T : new()
+#pragma warning restore RECS0154 // Parameter is never used
         {
             EntityDescription entityDescription = LookUpEntityByType(typeof(T));
             EntityCommandBuilder commandBuilder = entityDescription.CommandBuilder;
@@ -561,7 +554,7 @@ namespace FMSC.ORM.Core
         /// Retrieves a single row from the database
         /// </summary>
         /// <typeparam name="T">Type of data object to return</typeparam>
-        /// <exception cref="DatabaseExecutionException"></exception>
+        /// <exception cref="SQLException"></exception>
         /// <returns>a single data object</returns>
         public T ReadSingleRow<T>(object primaryKeyValue)
             where T : new()
@@ -571,7 +564,9 @@ namespace FMSC.ORM.Core
         }
 
         [Obsolete("use From<T>().Read().FirstOrDefault() style instead")]
+#pragma warning disable RECS0154 // Parameter is never used
         public T ReadSingleRow<T>(string tableName, string selection, params Object[] selectionArgs) where T : new()
+#pragma warning restore RECS0154 // Parameter is never used
         {
             EntityDescription entityDescription = LookUpEntityByType(typeof(T));
             EntityCommandBuilder commandBuilder = entityDescription.CommandBuilder;
@@ -642,7 +637,9 @@ namespace FMSC.ORM.Core
         }
 
         [Obsolete("use ReadSingleRow<T>(object primaryKey) instead")]
+#pragma warning disable RECS0154 // Parameter is never used
         public T ReadSingleRow<T>(string tableName, long? rowID) where T : new()
+#pragma warning restore RECS0154 // Parameter is never used
         {
             return ReadSingleRow<T>(rowID);
         }
@@ -785,12 +782,12 @@ namespace FMSC.ORM.Core
         protected List<T> Query<T>(DbCommand command, EntityDescription entityDescription)
             where T : new()
         {
-            EntityInflator inflator = entityDescription.Inflator;
-            List<T> dataList = new List<T>();
+            var inflator = entityDescription.Inflator;
+            var dataList = new List<T>();
             DbDataReader reader = null;
             lock (_persistentConnectionSyncLock)
             {
-                DbConnection conn = OpenConnection();
+                var conn = OpenConnection();
                 try
                 {
                     command.Connection = conn;
@@ -1265,7 +1262,7 @@ namespace FMSC.ORM.Core
         /// </summary>
         /// <exception cref="ConnectionException"></exception>
         /// <returns></returns>
-        protected DbConnection OpenConnection()
+        protected virtual DbConnection OpenConnection()
         {
             lock (_persistentConnectionSyncLock)
             {
@@ -1291,17 +1288,17 @@ namespace FMSC.ORM.Core
                     {
                         conn.Open();
                     }
+
+                    EnterConnectionHold();
+                    PersistentConnection = conn;                    
                     OnConnectionOpened();
+
+                    return conn;
                 }
                 catch (Exception e)
                 {
                     throw new ConnectionException("failed to open connection", e);
                 }
-
-                PersistentConnection = conn;
-                EnterConnectionHold();
-
-                return conn;
             }
         }
 
@@ -1481,38 +1478,6 @@ namespace FMSC.ORM.Core
                 }
             }
         }
-
-        //protected void ReleaseReadOnlyConnection()
-        //{
-        //    lock (_readOnlyConnectionSyncLock)
-        //    {
-        //        Debug.Assert(_ReadOnlyConnection != null);
-        //        if (_ReadOnlyConnection == null) { return; }
-        //        ReleaseConnection(_ReadOnlyConnection);
-        //        _ReadOnlyConnection = null;
-        //        Debug.WriteLine("Read Only Connection Released", Constants.Logging.DB_CONTROL_VERBOSE);
-        //    }
-        //}
-
-        //protected void ReleaseReadWriteConnection(bool force)
-        //{
-        //    lock (_readWriteConnectionSyncLock)
-        //    {
-        //        Debug.Assert(_ReadWriteConnection != null);
-        //        if (_ReadWriteConnection == null) { return; }
-        //        //ExitConnectionHold();
-        //        if (_holdConnection == 0 || force)
-        //        {
-        //            ReleaseConnection(_ReadWriteConnection);
-        //            _ReadWriteConnection = null;
-        //            Debug.WriteLine("Read-Write Connection Released", Constants.Logging.DB_CONTROL_VERBOSE);
-        //        }
-        //        else
-        //        {
-        //            Debug.WriteLine("Read-Write Connection Survived", Constants.Logging.DB_CONTROL_VERBOSE);
-        //        }
-        //    }
-        //}
 
         #endregion Connection Management
 

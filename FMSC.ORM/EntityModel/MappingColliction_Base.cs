@@ -70,12 +70,11 @@ namespace FMSC.ORM.EntityModel
         #endregion
 
         #region ctor
-        public MappingCollection(ParentType parent)
+        protected MappingCollection(ParentType parent)
         {
             Parent = parent;
             _DAL = parent.DAL;
-            //_children = new List<ChildWraper>();
-            //_toBeDeleted = new List<ChildWraper>();
+
             IsPopulated = false;
         }
         #endregion

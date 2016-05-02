@@ -18,7 +18,7 @@ namespace FMSC.ORM.EntityModel
         {
             foreach (PropertyInfo p in entityType.GetProperties(BindingFlags.Public | BindingFlags.Instance))
             {
-                FieldValidationRuleAttribut attr = (FieldValidationRuleAttribut)Attribute.GetCustomAttribute(p, typeof(FieldValidationRuleAttribut));
+                var attr = (FieldValidationRuleAttribut)Attribute.GetCustomAttribute(p, typeof(FieldValidationRuleAttribut));
                 if (attr != null)
                 {
                     this.Constraints.Add(attr);
@@ -28,7 +28,7 @@ namespace FMSC.ORM.EntityModel
             //find private properties
             foreach (PropertyInfo p in entityType.GetProperties(BindingFlags.NonPublic | BindingFlags.Instance))
             {
-                FieldValidationRuleAttribut attr = (FieldValidationRuleAttribut)Attribute.GetCustomAttribute(p, typeof(FieldValidationRuleAttribut));
+                var attr = (FieldValidationRuleAttribut)Attribute.GetCustomAttribute(p, typeof(FieldValidationRuleAttribut));
                 if (attr != null)
                 {
                     this.Constraints.Add(attr);
@@ -155,7 +155,7 @@ namespace FMSC.ORM.EntityModel
         {
             bool isValid = true;//valid until proven unvalid
 
-            if (this.Required == true && value == null) { isValid = false; }
+            isValid = !(Required && value == null);
 
             if (isValid && this.Min != double.MinValue)
             {

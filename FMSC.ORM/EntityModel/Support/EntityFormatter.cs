@@ -18,7 +18,7 @@ namespace FMSC.ORM.EntityModel.Support
             { return obj.ToString(); }
 
             //get a list of all properties place holders in format
-            System.Text.RegularExpressions.Regex rx = new System.Text.RegularExpressions.Regex(@"\[(?<prop>[a-zA-Z]\w+)(?:(?::)(?<ifnull>\w+)?)?(?:(?::)(?<pad>(?:[-]?\d+)?[ULC]?))?\]", RegexOptions.Compiled);
+            var rx = new Regex(@"\[(?<prop>[a-zA-Z]\w+)(?:(?::)(?<ifnull>\w+)?)?(?:(?::)(?<pad>(?:[-]?\d+)?[ULC]?))?\]", RegexOptions.Compiled);
 
             return rx.Replace(formatString, (Match m) =>
             {

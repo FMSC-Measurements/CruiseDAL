@@ -25,18 +25,16 @@ namespace CruiseDAL
 
         #region multiDB Fields
 
-
-        object _multiDBTransactionSyncLock = new object();
-        int _multiDBtransactionHold = 0;
-
-        protected bool _multiDBtransactionCanceled = false;
-        protected DbTransaction _multiDBCurrentTransaction;
-        protected ICollection<ExternalDatastore> _attachedDataStores = new List<ExternalDatastore>();
         protected int _multiDBholdConnection = 0;
         protected int _multiDBtransactionDepth = 0;
+        private object _multiDBTransactionSyncLock = new object();
+        protected bool _multiDBtransactionCanceled = false;
+        protected DbTransaction _multiDBCurrentTransaction;
         protected Object _multiDBpersistentConnectionSyncLock = new object();
+        protected ICollection<ExternalDatastore> _attachedDataStores = new List<ExternalDatastore>();
 
         protected DbConnection MultiDBPersistentConnection { get; set; }
+
         //public IEnumerable<DatastoreRedux> AttachedDataStores { get; set; }
         public object MultiDBTransactionSyncLock { get { return _multiDBTransactionSyncLock; } }
 
@@ -109,7 +107,7 @@ namespace CruiseDAL
         /// </summary>
         /// <exception cref="ArgumentNullException">path can not be null or an empty string</exception>
         /// <exception cref="IOException">problem working with file. wrong extension</exception>
-        /// <exception cref="FileNotFoundException"
+        /// <exception cref="FileNotFoundException">file doesn't exist</exception>
         /// <param name="path"></param>
         public DAL(string path) : this(path, false)
         {
@@ -124,8 +122,8 @@ namespace CruiseDAL
         /// Creates a DAL instance for a database @ path.
         /// </summary>
         /// <exception cref="ArgumentNullException">path can not be null or an empty string</exception>
-        /// <exception cref="System.IO.IOException">File extension is not valid <see cref="VALID_EXTENSIONS"/></exception>
-        /// <exception cref="System.UnauthorizedAccessException">File open in another application or thread</exception>
+        /// <exception cref="IOException">File extension is not valid <see cref="VALID_EXTENSIONS"/></exception>
+        /// <exception cref="UnauthorizedAccessException">File open in another application or thread</exception>
         public DAL(string path, bool makeNew, DatabaseBuilder builder) : base(path)
         {
             Debug.Assert(builder != null);
@@ -184,7 +182,7 @@ namespace CruiseDAL
             //return Environment.UserName + " on " + System.Windows.Forms.SystemInformation.ComputerName;
         }
 
-        #region multiDB methods
+        #region MultiDB methods
 
         #region multiDB execute commands
 
@@ -374,12 +372,13 @@ namespace CruiseDAL
 
         #endregion multiDB execute commands
 
+        #region Attach/Detach
+
         public void AttachDB(DatastoreRedux dataStore, string alias)
         {
             if (dataStore == null) { throw new ArgumentNullException("dataStore"); }
             if (String.IsNullOrEmpty(alias)) { throw new ArgumentException("alias can't be null or empty", "alias"); }
             Debug.Assert(_attachedDataStores != null);
-
 
             var externalDS = new ExternalDatastore()
 
@@ -431,6 +430,10 @@ namespace CruiseDAL
                     + externalDB.Alias + "\";");
             }
         }
+
+        #endregion Attach/Detach
+
+        #region Connection Mgmt
 
         protected DbConnection OpenMultiDBConnection()
         {
@@ -509,10 +512,9 @@ namespace CruiseDAL
             }
         }
 
-        private void OnMultiDBConnectionOpened()
-        {
-            Debug.WriteLine("MultiDB Connection Opened", FMSC.ORM.Core.Constants.Logging.DB_CONTROL);
-        }
+        #endregion Connection Mgmt
+
+        #region Transaction Methods
 
         public void BeginMultiDBTransaction()
         {
@@ -581,6 +583,15 @@ namespace CruiseDAL
             ReleaseMultiDBConnection();
         }
 
+        #endregion Transaction Methods
+
+        #region Logging Methods
+
+        private void OnMultiDBConnectionOpened()
+        {
+            Debug.WriteLine("MultiDB Connection Opened", FMSC.ORM.Core.Constants.Logging.DB_CONTROL);
+        }
+
         protected virtual void OnMultiDBTransactionStarted()
         {
             Debug.WriteLine("MultiDB Transaction Started", FMSC.ORM.Core.Constants.Logging.DB_CONTROL);
@@ -601,7 +612,9 @@ namespace CruiseDAL
             Debug.WriteLine("MultiDB Transaction Releasing", FMSC.ORM.Core.Constants.Logging.DB_CONTROL);
         }
 
-        #endregion multiDB methods
+        #endregion Logging Methods
+
+        #endregion MultiDB methods
 
         #region cruise/cut specific stuff
 
@@ -693,7 +706,7 @@ namespace CruiseDAL
             this.Path = desPath;
         }
 
-        #endregion file util
+        #endregion file utility
 
         ///// <summary>
         ///// Copies selection directly from external Database

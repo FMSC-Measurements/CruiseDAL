@@ -26,7 +26,7 @@ namespace FMSC.ORM.EntityModel
         IFormattable,
         IDataObject
     {
-        protected DatastoreRedux _ds = null;
+        protected DatastoreRedux _ds;
         protected RecordState _recordState = RecordState.Detached;
 
         bool _isDeleted;
