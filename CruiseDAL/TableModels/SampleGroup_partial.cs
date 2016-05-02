@@ -123,87 +123,86 @@ namespace CruiseDAL.DataObjects
            isValid = base.ValidateProperty(name, value);
            if (name == "CutLeave")
            {
-               string cl = value as string;
+               var cl = value as string;
                if (string.IsNullOrEmpty(cl))
                {
-                   base.AddError(name, "Cut/Leave can't be empty");
+                   AddError(name, "Cut/Leave can't be empty");
                    isValid = false;
                }
                else
                {
-                   base.RemoveError(name, "Cut/Leave can't be empty");
-                   
+                   RemoveError(name, "Cut/Leave can't be empty");
                }
            }
            else if (name == "UOM")
            {
-               string uom = value as string;
+               var uom = value as string;
                if (string.IsNullOrEmpty(uom))
                {
-                   base.AddError(name, "UOM can't be empty");
+                   AddError(name, "UOM can't be empty");
                    isValid = false;
                }
                else
                {
-                   base.RemoveError(name, "UOM can't be empty");
+                   RemoveError(name, "UOM can't be empty");
                    
                }
            }
            else if (name == "PrimaryProduct")
            {
-               string pp = value as string;
+               var pp = value as string;
                if (string.IsNullOrEmpty(pp))
                {
-                   base.AddError(name, "PrimaryProduct can't be empty");
+                   AddError(name, "PrimaryProduct can't be empty");
                    isValid = false;
                }
                else
                {
-                   base.RemoveError(name, "PrimaryProduct can't be empty");
+                   RemoveError(name, "PrimaryProduct can't be empty");
                }
            }
            else if (name == "SamplingFrequency")
            {
-               if (this.Stratum == null || this.Stratum.Method == "FCM" || this.Stratum.Method == "PCM")
+               if (Stratum == null || Stratum.Method == "FCM" || Stratum.Method == "PCM")
                {
                    //allow sampling frequency to be 0 for FCM and PCM
-                   base.RemoveError(name, "Frequency can't be 0");
+                   RemoveError(name, "Frequency can't be 0");
                }
-               else if (CanEnableFrequency(this.Stratum))
+               else if (CanEnableFrequency(Stratum))
                {
-                   if (this.SamplingFrequency == 0)
+                   if (SamplingFrequency == 0)
                    {
-                       this.AddError(name, "Frequency can't be 0");
+                        AddError(name, "Frequency can't be 0");
                        isValid = false;
                    }
                    else
                    {
-                       this.RemoveError(name, "Frequency can't be 0");
+                        RemoveError(name, "Frequency can't be 0");
                    }
                }
            }
            else if (name == "KZ")
            {
-               if (CanEnableKZ(this.Stratum) && this.KZ <= 0)
+               if (CanEnableKZ(Stratum) && KZ <= 0)
                {
-                   this.AddError(name, "KZ can't be 0");
+                    AddError(name, "KZ can't be 0");
                    isValid = false;
                }
                else
                {
-                   this.RemoveError(name, "KZ can't be 0");
+                    RemoveError(name, "KZ can't be 0");
                }
            }
            else if (name == "BigBAF")
            {
-               if (CanEnableBigBAF(this.Stratum) && (this.SamplingFrequency > 0 && this.BigBAF > 0))
+               if (CanEnableBigBAF(Stratum) && (SamplingFrequency > 0 && BigBAF > 0))
                {
-                   this.AddError(name, "Sampling Frequency and BigBAF, only one can be greater than 0");
+                    AddError(name, "Sampling Frequency and BigBAF, only one can be greater than 0");
                    isValid = false;
                }
                else
                {
-                   this.RemoveError(name, "Sampling Frequency and BigBAF, only one can be greater than 0");
+                    RemoveError(name, "Sampling Frequency and BigBAF, only one can be greater than 0");
                }
            }
 
@@ -213,14 +212,14 @@ namespace CruiseDAL.DataObjects
        public TallyMode GetSampleGroupTallyMode()
        {
            TallyMode mode = TallyMode.Unknown;
-           if (base.DAL.GetRowCount("CountTree", "WHERE SampleGroup_CN = ?", this.SampleGroup_CN) == 0)
+           if (base.DAL.GetRowCount("CountTree", "WHERE SampleGroup_CN = ?", SampleGroup_CN) == 0)
            {
                return TallyMode.None;
            }
 
            if (base.DAL.GetRowCount("CountTree",
                "WHERE SampleGroup_CN = ? AND ifnull(TreeDefaultValue_CN, 0) == 0",
-               this.SampleGroup_CN) > 0)
+               SampleGroup_CN) > 0)
            {
                mode = mode | TallyMode.BySampleGroup;
            }

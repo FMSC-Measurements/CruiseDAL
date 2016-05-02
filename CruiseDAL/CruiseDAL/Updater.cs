@@ -1,8 +1,8 @@
-﻿using System;
-using CruiseDAL.DataObjects;
-using FMSC.ORM.Core.SQL;
+﻿using CruiseDAL.DataObjects;
 using CruiseDAL.Schema;
 using FMSC.ORM;
+using FMSC.ORM.Core.SQL;
+using System;
 
 namespace CruiseDAL
 {
@@ -103,7 +103,6 @@ namespace CruiseDAL
                 UpdateToVersion2015_04_28(db);
             }
 
-            
             if (db.DatabaseVersion == "2015.04.28")
             {
                 UpdateToVersion2015_08_03(db);
@@ -123,7 +122,6 @@ namespace CruiseDAL
                 UpdateToVersion2015_09_01(db);
             }
 
-
             if (db.HasForeignKeyErrors(TREEDEFAULTVALUETREEAUDITVALUE._NAME))
             {
                 try
@@ -133,7 +131,7 @@ namespace CruiseDAL
                     db.Execute("DELETE FROM TreeDefaultValueTreeAuditValue WHERE TreeAuditValue_CN NOT IN (SELECT TreeAuditValue_CN FROM TreeAuditValue);");
                     db.CommitTransaction();
                 }
-                catch 
+                catch
                 {
                     db.RollbackTransaction();
                 }
@@ -143,32 +141,30 @@ namespace CruiseDAL
             {
                 InsureErrorLogEntry(db, el);
             }
-
         }
 
-        
+        #region Utility Methods
 
         private static String[] ListTriggers(DAL db)
         {
-            string result = db.ExecuteScalar("SELECT group_concat(name,',') FROM sqlite_master WHERE type LIKE 'trigger';") as string;
+            var result = db.ExecuteScalar("SELECT group_concat(name,',') FROM sqlite_master WHERE type LIKE 'trigger';") as string;
             if (string.IsNullOrEmpty(result)) { return new string[0]; }
             else
             {
                 return result.Split(',');
             }
-
         }
 
         private static void RebuildTable(DAL db, String tableName, String newTableDef, String columnList)
         {
-            //get all triggers accocated with table so we can recreate them later
-            string getTriggers = String.Format("SELECT group_concat(sql,';\r\n') FROM sqlite_master WHERE tbl_name LIKE '{0}' and type LIKE 'trigger';", tableName);
-            string triggers = db.ExecuteScalar(getTriggers) as string;
+            //get all triggers associated with table so we can recreate them later
+            var getTriggers = String.Format("SELECT group_concat(sql,';\r\n') FROM sqlite_master WHERE tbl_name LIKE '{0}' and type LIKE 'trigger';", tableName);
+            var triggers = db.ExecuteScalar(getTriggers) as string;
             db.BeginTransaction();
             try
             {
                 db.Execute("PRAGMA foreign_keys = off;");
-                db.Execute("ALTER TABLE " + tableName + " RENAME TO " + tableName + "temp;");                    
+                db.Execute("ALTER TABLE " + tableName + " RENAME TO " + tableName + "temp;");
 
                 //create rebuilt table
                 db.Execute(newTableDef + ";");
@@ -181,7 +177,7 @@ namespace CruiseDAL
 
                 db.Execute("DROP TABLE " + tableName + "temp;");
 
-                //recreate treggers
+                //recreate triggers
                 if (triggers != null)
                 {
                     db.Execute(triggers);
@@ -195,8 +191,6 @@ namespace CruiseDAL
                 db.RollbackTransaction();
                 throw;
             }
-
-               
         }
 
         private static void SetDatabaseVersion(DAL db, string newVersion)
@@ -209,7 +203,6 @@ namespace CruiseDAL
 
         private static void InsureErrorLogEntry(DAL db, ErrorLogDO el)
         {
-
             if (db.GetRowCount(el.TableName, "WHERE rowID = ?", el.CN_Number) == 0)
             {
                 el.Delete();
@@ -223,11 +216,7 @@ namespace CruiseDAL
             db.Execute(command);
         }
 
-       
-
-
-
-        
+        #endregion Utility Methods
 
         private static void UpdateToVersion2013_05_30(DAL db)
         {
@@ -259,7 +248,6 @@ namespace CruiseDAL
                     "PlotNumber, IsEmpty, Slope, KPI, Aspect, Remarks, XCoordinate, YCoordinate," +
                     "ZCoordinate, MetaData, Blob, Stratum_CN, CuttingUnit_CN, CreatedBy, " +
                     "CreatedDate, ModifiedBy, ModifiedDate");
-                    
 
                 db.AddField("CuttingUnit", "TallyHistory TEXT");
 
@@ -271,7 +259,6 @@ namespace CruiseDAL
                 db.RollbackTransaction();
                 throw new SchemaUpdateException(db.DatabaseVersion, "2013.05.30", e);
             }
-
         }
 
         private static void UpdateToVersion2013_08_02(DAL db)
@@ -305,13 +292,10 @@ namespace CruiseDAL
                 db.RollbackTransaction();
                 throw new SchemaUpdateException(db.DatabaseVersion, "2013.08.02", e);
             }
-
-
         }
 
         private static void UpdateToVersion2013_08_29(DAL db)
         {
-
             try
             {
                 db.BeginTransaction();
@@ -342,8 +326,6 @@ namespace CruiseDAL
                 db.RollbackTransaction();
                 throw new SchemaUpdateException(db.DatabaseVersion, "2013.10.29", e);
             }
-
-
         }
 
         private static void UpdateToVersion2013_11_01(DAL db)
@@ -376,7 +358,6 @@ namespace CruiseDAL
                 throw new SchemaUpdateException(db.DatabaseVersion, "2013.11.01", e);
             }
         }
-
 
         private static void UpdateToVersion2013_06_12(DAL db)
         {
@@ -416,7 +397,6 @@ namespace CruiseDAL
                 db.RollbackTransaction();
                 throw new SchemaUpdateException(db.DatabaseVersion, "2013.06.12", e);
             }
-
         }
 
         private static void UpdateToVersion2013_06_17(DAL db)
@@ -424,7 +404,7 @@ namespace CruiseDAL
             try
             {
                 db.BeginTransaction();
-                RebuildTable(db, "Tree",                                     
+                RebuildTable(db, "Tree",
                     @"CREATE TABLE Tree (
                         Tree_CN INTEGER PRIMARY KEY AUTOINCREMENT,
                         TreeDefaultValue_CN INTEGER REFERENCES TreeDefaultValue,
@@ -478,16 +458,15 @@ namespace CruiseDAL
                         TreeFactor REAL Default 0.0,
                         PointFactor REAL Default 0.0,
                         UNIQUE (TreeDefaultValue_CN, Stratum_CN, SampleGroup_CN, CuttingUnit_CN, Plot_CN, TreeNumber))",
-                        "TreeNumber, Species, CountOrMeasure, TreeCount, KPI, STM, SeenDefectPrimary, " + 
-                        "SeenDefectSecondary, RecoverablePrimary, Initials, LiveDead, Grade, " + 
-                        "HeightToFirstLiveLimb, PoleLength, ClearFace, CrownRatio, DBH, DRC, TotalHeight, " + 
-                        "MerchHeightPrimary, MerchHeightSecondary, FormClass, UpperStemDOB, UpperStemHeight, " + 
-                        "DBHDoubleBarkThickness, TopDIBPrimary, TopDIBSecondary, DefectCode, DiameterAtDefect, " + 
-                        "VoidPercent, Remarks, XCoordinate, YCoordinate, ZCoordinate, MetaData, " + 
-                        "IsFallBuckScale, ExpansionFactor, TreeFactor, PointFactor, TreeDefaultValue_CN, " + 
-                        "Stratum_CN, SampleGroup_CN, CuttingUnit_CN, Plot_CN, CreatedBy, CreatedDate, " + 
+                        "TreeNumber, Species, CountOrMeasure, TreeCount, KPI, STM, SeenDefectPrimary, " +
+                        "SeenDefectSecondary, RecoverablePrimary, Initials, LiveDead, Grade, " +
+                        "HeightToFirstLiveLimb, PoleLength, ClearFace, CrownRatio, DBH, DRC, TotalHeight, " +
+                        "MerchHeightPrimary, MerchHeightSecondary, FormClass, UpperStemDOB, UpperStemHeight, " +
+                        "DBHDoubleBarkThickness, TopDIBPrimary, TopDIBSecondary, DefectCode, DiameterAtDefect, " +
+                        "VoidPercent, Remarks, XCoordinate, YCoordinate, ZCoordinate, MetaData, " +
+                        "IsFallBuckScale, ExpansionFactor, TreeFactor, PointFactor, TreeDefaultValue_CN, " +
+                        "Stratum_CN, SampleGroup_CN, CuttingUnit_CN, Plot_CN, CreatedBy, CreatedDate, " +
                         "ModifiedBy, ModifiedDate");
-                                       
 
                 //command = "ALTER TABLE ErrorLog ADD COLUMN Suppress BOOLEAN;";
                 //db.Execute(command);
@@ -500,7 +479,6 @@ namespace CruiseDAL
                 db.RollbackTransaction();
                 throw new SchemaUpdateException(db.DatabaseVersion, "2013.06.17", e);
             }
-
         }
 
         public static void UpdateToVersion2013_06_19(DAL db)
@@ -523,21 +501,19 @@ namespace CruiseDAL
 				    UNIQUE (TableName, CN_Number, ColumnName, Level));";
                 db.Execute(command);
 
-                ////////////////////////////////////////////////////////////////////////Clean up 
+                ////////////////////////////////////////////////////////////////////////Clean up
                 command = "DROP TABLE IF EXISTS TempGlobals;";
                 db.Execute(command);
                 ////////////////////////////////////////////////////////////////////////
 
                 SetDatabaseVersion(db, "2013.06.19");
                 db.CommitTransaction();
-
             }
             catch (Exception e)
             {
                 db.RollbackTransaction();
                 throw new SchemaUpdateException(db.DatabaseVersion, "2013.06.19", e);
             }
-
         }
 
         //fixes bug in database version 2013_06_19, doesn't alter schema
@@ -549,7 +525,6 @@ namespace CruiseDAL
                 string command = "DELETE FROM ErrorLog WHERE Message LIKE 'Total Height, Merch Height Primary,%';";
                 db.Execute(command);
                 command = "DELETE FROM ErrorLog WHERE rowid IN (SELECT ErrorLog.rowid FROM ErrorLog JOIN Tree WHERE Tree.Tree_CN = ErrorLog.CN_Number AND ErrorLog.TableName = 'Tree');";
-
 
                 db.Execute(command);
                 command = "UPDATE TreeFieldSetup set ColumnType = 'Combo' WHERE Field = 'CountOrMeasure' OR Field = 'LiveDead';";
@@ -568,8 +543,6 @@ namespace CruiseDAL
             try
             {
                 db.BeginTransaction();
-
-
 
                 string command = @"CREATE TABLE TempCountTree (
 				CountTree_CN INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -590,7 +563,7 @@ namespace CruiseDAL
 
                 db.Execute(command);
 
-                command = @"INSERT INTO TempCountTree 
+                command = @"INSERT INTO TempCountTree
                     (CountTree_CN,
                     SampleGroup_CN,
                     CuttingUnit_CN,
@@ -627,7 +600,7 @@ namespace CruiseDAL
                 db.Execute(command);
 
                 command = @"
-                CREATE TRIGGER OnNewCountTree AFTER INSERT ON CountTree BEGIN 
+                CREATE TRIGGER OnNewCountTree AFTER INSERT ON CountTree BEGIN
 			    UPDATE CountTree SET CreatedDate = datetime(current_timestamp, 'localtime') WHERE rowID = new.rowID; END;
 
 	            CREATE TRIGGER OnUpdateCountTree UPDATE ON CountTree BEGIN
@@ -650,7 +623,6 @@ namespace CruiseDAL
                 db.RollbackTransaction();
                 throw new SchemaUpdateException(db.DatabaseVersion, "2013.11.22", e);
             }
-
         }
 
         private static void UpdateToVersion2014_01_21(DAL db)
@@ -668,7 +640,6 @@ namespace CruiseDAL
                 db.RollbackTransaction();
                 throw new SchemaUpdateException(db.DatabaseVersion, "2014.01.21", e);
             }
-
         }
 
         private static void UpdateToVersion2014_03_12(DAL db)
@@ -723,6 +694,7 @@ namespace CruiseDAL
                 throw new SchemaUpdateException(db.DatabaseVersion, "2014.06.04", e);
             }
         }
+
         private static void UpdateToVersion2014_07_02(DAL db)
         {
             try
@@ -733,7 +705,7 @@ namespace CruiseDAL
                 SetDatabaseVersion(db, "2014.07.02");
                 db.CommitTransaction();
             }
-            catch (Exception e) 
+            catch (Exception e)
             {
                 db.RollbackTransaction();
                 throw new SchemaUpdateException(db.DatabaseVersion, "2014.07.02", e);
@@ -763,84 +735,82 @@ namespace CruiseDAL
             {
                 db.BeginTransaction();
                 //rebuild Volume Equation table (remove MinLogLengthSecondary, MaxLogLengthSecondary; Add int MerchModFlag)
-//                RebuildTable(db, "VolumeEquation", 
-//                    @"
-//CREATE TABLE VolumeEquation (
-//				Species TEXT NOT NULL,
-//				PrimaryProduct TEXT NOT NULL,
-//				VolumeEquationNumber TEXT NOT NULL,
-//				StumpHeight REAL Default 0.0,
-//				TopDIBPrimary REAL Default 0.0,
-//				TopDIBSecondary REAL Default 0.0,
-//				CalcTotal INTEGER Default 0,
-//				CalcBoard INTEGER Default 0,
-//				CalcCubic INTEGER Default 0,
-//				CalcCord INTEGER Default 0,
-//				CalcTopwood INTEGER Default 0,
-//				CalcBiomass INTEGER Default 0,
-//				Trim REAL Default 0.0,
-//				SegmentationLogic INTEGER Default 0,
-//				MinLogLengthPrimary REAL Default 0.0,
-//				MaxLogLengthPrimary REAL Default 0.0,
-//				MinMerchLength REAL Default 0.0,
-//				Model TEXT,
-//				CommonSpeciesName TEXT,
-//				MerchModFlag INTEGER Default 0,
-//				UNIQUE (Species, PrimaryProduct, VolumeEquationNumber));
-//",
-// @"
-//                Species,
-//                PrimaryProduct,
-//                VolumeEquationNumber,
-//                StumpHeight,
-//                TopDIBPrimary,
-//                TopDIBSecondary,
-//                CalcTotal,
-//                CalcBoard,
-//                CalcCubic,
-//                CalcCord,
-//                CalcTopWood,
-//                CalcBiomass,
-//                Trim,
-//                SegmentationLogic,
-//                MinLogLengthPrimary,
-//                MaxLogLengthPrimary,
-//                MinMerchLength,
-//                Model,
-//                CommonSpeciesName");
+                //                RebuildTable(db, "VolumeEquation",
+                //                    @"
+                //CREATE TABLE VolumeEquation (
+                //				Species TEXT NOT NULL,
+                //				PrimaryProduct TEXT NOT NULL,
+                //				VolumeEquationNumber TEXT NOT NULL,
+                //				StumpHeight REAL Default 0.0,
+                //				TopDIBPrimary REAL Default 0.0,
+                //				TopDIBSecondary REAL Default 0.0,
+                //				CalcTotal INTEGER Default 0,
+                //				CalcBoard INTEGER Default 0,
+                //				CalcCubic INTEGER Default 0,
+                //				CalcCord INTEGER Default 0,
+                //				CalcTopwood INTEGER Default 0,
+                //				CalcBiomass INTEGER Default 0,
+                //				Trim REAL Default 0.0,
+                //				SegmentationLogic INTEGER Default 0,
+                //				MinLogLengthPrimary REAL Default 0.0,
+                //				MaxLogLengthPrimary REAL Default 0.0,
+                //				MinMerchLength REAL Default 0.0,
+                //				Model TEXT,
+                //				CommonSpeciesName TEXT,
+                //				MerchModFlag INTEGER Default 0,
+                //				UNIQUE (Species, PrimaryProduct, VolumeEquationNumber));
+                //",
+                // @"
+                //                Species,
+                //                PrimaryProduct,
+                //                VolumeEquationNumber,
+                //                StumpHeight,
+                //                TopDIBPrimary,
+                //                TopDIBSecondary,
+                //                CalcTotal,
+                //                CalcBoard,
+                //                CalcCubic,
+                //                CalcCord,
+                //                CalcTopWood,
+                //                CalcBiomass,
+                //                Trim,
+                //                SegmentationLogic,
+                //                MinLogLengthPrimary,
+                //                MaxLogLengthPrimary,
+                //                MinMerchLength,
+                //                Model,
+                //                CommonSpeciesName");
                 db.AddField("VolumeEquation", "MerchModFlag INTEGER Default 0");
 
                 //rebuild TreeAuditValue Table ( remove error message field)
-//                RebuildTable(db, "TreeAuditValue",
-//                    @"
-//CREATE TABLE TreeAuditValue (
-//				TreeAuditValue_CN INTEGER PRIMARY KEY AUTOINCREMENT,
-//				Field TEXT NOT NULL,
-//				Min REAL Default 0.0,
-//				Max REAL Default 0.0,
-//				ValueSet TEXT,
-//				Required BOOLEAN Default 0);
-//",
-// @"
-//Field, 
-//Min, 
-//Max, 
-//ValueSet,
-//Required");
+                //                RebuildTable(db, "TreeAuditValue",
+                //                    @"
+                //CREATE TABLE TreeAuditValue (
+                //				TreeAuditValue_CN INTEGER PRIMARY KEY AUTOINCREMENT,
+                //				Field TEXT NOT NULL,
+                //				Min REAL Default 0.0,
+                //				Max REAL Default 0.0,
+                //				ValueSet TEXT,
+                //				Required BOOLEAN Default 0);
+                //",
+                // @"
+                //Field,
+                //Min,
+                //Max,
+                //ValueSet,
+                //Required");
                 //Add ReconPlots
                 db.AddField("SampleGroupStats", "ReconPlots INTEGER Default 0");
                 //Add ReconTrees
                 db.AddField("SampleGroupStats", "ReconTrees INTEGER Default 0");
                 SetDatabaseVersion(db, "2014.07.17");
                 db.CommitTransaction();
-
             }
             catch (Exception e)
             {
                 db.RollbackTransaction();
                 throw new SchemaUpdateException(db.DatabaseVersion, "2014.07.17", e);
             }
-
         }
 
         private static void UpdateToVersion2014_07_24(DAL db)
@@ -850,16 +820,16 @@ namespace CruiseDAL
                 db.BeginTransaction();
                 db.Execute(@"
 DROP TRIGGER IF EXISTS OnDeleteTree;
-CREATE TRIGGER OnDeleteTree AFTER DELETE ON Tree BEGIN 
+CREATE TRIGGER OnDeleteTree AFTER DELETE ON Tree BEGIN
 			INSERT INTO MessageLog (Message, Date, Time) VALUES (('Tree (' || OLD.Tree_CN || ') Deleted CU_cn:' || OLD.CuttingUnit_CN || ' St_cn:' || OLD.Stratum_CN || ' Plt_CN:' || ifnull(OLD.Plot_CN,'-') || ' T#:' || OLD.TreeNumber), date('now'), time('now')); END;
 DROP TRIGGER IF EXISTS OnDeletePlot;
-CREATE TRIGGER OnDeletePlot AFTER DELETE ON Plot BEGIN 
+CREATE TRIGGER OnDeletePlot AFTER DELETE ON Plot BEGIN
 			INSERT INTO MessageLog (Message, Date, Time) VALUES (('Plot (' || OLD.Plot_CN || ') Deleted CU_cn:' || OLD.CuttingUnit_CN  || ' St_cn:' || OLD.Stratum_CN || ' Plt#:' || OLD.PlotNumber), date('now'), time('now')); END;
 ");
                 SetDatabaseVersion(db, "2014.07.24");
                 db.CommitTransaction();
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 db.RollbackTransaction();
                 throw new SchemaUpdateException(db.DatabaseVersion, "2014.07.24", e);
@@ -924,12 +894,11 @@ CREATE TRIGGER OnDeletePlot AFTER DELETE ON Plot BEGIN
                 SetDatabaseVersion(db, "2014.10.01");
                 db.CommitTransaction();
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 db.RollbackTransaction();
                 throw new SchemaUpdateException(db.DatabaseVersion, "2014.10.01", e);
             }
-
         }
 
         public static void UpdateToVersion2015_04_28(DAL db)
@@ -939,21 +908,19 @@ CREATE TRIGGER OnDeletePlot AFTER DELETE ON Plot BEGIN
                 db.BeginTransaction();
                 db.Execute(@"CREATE TABLE Util_Tombstone (
                     RecordID INTEGER ,
-                    RecordGUID TEXT, 
+                    RecordGUID TEXT,
                     TableName TEXT NOT NULL COLLATE NOCASE,
-                    Data TEXT, 
+                    Data TEXT,
                     DeletedDate DATETIME NON NULL);");
 
-//                db.Execute(@"
-//                CREATE VIEW CountTree_View AS 
-//SELECT Stratum.Code as StratumCode,
-//Stratum.Method as Method, 
-//SampleGroup.Code as SampleGroupCode,
-//SampleGroup.PrimaryProduct as PrimaryProduct, 
-//CountTree.* 
-//FROM CountTree JOIN SampleGroup USING (SampleGroup_CN) JOIN Stratum USING (Stratum_CN);");
-
-
+                //                db.Execute(@"
+                //                CREATE VIEW CountTree_View AS
+                //SELECT Stratum.Code as StratumCode,
+                //Stratum.Method as Method,
+                //SampleGroup.Code as SampleGroupCode,
+                //SampleGroup.PrimaryProduct as PrimaryProduct,
+                //CountTree.*
+                //FROM CountTree JOIN SampleGroup USING (SampleGroup_CN) JOIN Stratum USING (Stratum_CN);");
 
                 db.Execute(@"ALTER TABLE Sale ADD COLUMN RowVersion INTEGER DEFAULT 0;
                     ALTER TABLE CuttingUnit ADD COLUMN RowVersion INTEGER DEFAULT 0;
@@ -968,20 +935,19 @@ CREATE TRIGGER OnDeletePlot AFTER DELETE ON Plot BEGIN
 
                 db.Execute(@"ALTER TABLE Stem ADD COLUMN CreatedBy TEXT;
                     ALTER TABLE Stem ADD COLUMN CreatedDate DATETIME;
-                    ALTER TABLE Stem ADD COLUMN ModifiedBy TEXT; 
-                    ALTER TABLE Stem ADD COLUMN ModifiedDate DATETIME; 
+                    ALTER TABLE Stem ADD COLUMN ModifiedBy TEXT;
+                    ALTER TABLE Stem ADD COLUMN ModifiedDate DATETIME;
                     ALTER TABLE TreeEstimate ADD COLUMN CreatedBy TEXT;
                     ALTER TABLE TreeEstimate ADD COLUMN CreatedDate DATETIME;
-                    ALTER TABLE TreeEstimate ADD COLUMN ModifiedBy TEXT; 
+                    ALTER TABLE TreeEstimate ADD COLUMN ModifiedBy TEXT;
                     ALTER TABLE TreeEstimate ADD COLUMN ModifiedDate DATETIME;
                     ALTER TABLE TreeDefaultValue ADD COLUMN CreatedBy TEXT;
                     ALTER TABLE TreeDefaultValue ADD COLUMN CreatedDate DATETIME;
-                    ALTER TABLE TreeDefaultValue ADD COLUMN ModifiedBy TEXT; 
+                    ALTER TABLE TreeDefaultValue ADD COLUMN ModifiedBy TEXT;
                     ALTER TABLE TreeDefaultValue ADD COLUMN ModifiedDate DATETIME;");
 
                 db.Execute("ALTER TABLE SampleGroup ADD COLUMN SmallFPS REAL DEFAULT 0.0;");
 
-                
                 db.Execute("ALTER TABLE Tree ADD COLUMN UpperStemDiameter REAL DEFAULT 0.0;");
                 db.Execute("UPDATE Tree SET UpperStemDiameter = UpperstemDOB;");
                 db.Execute("UPDATE TreeFieldSetup SET Field = 'UpperStemDiameter' WHERE Field = 'UpperStemDiameter';");
@@ -991,32 +957,24 @@ CREATE TRIGGER OnDeletePlot AFTER DELETE ON Plot BEGIN
                 db.Execute("UPDATE TreeDefaultValue SET Chargeable = null;");
 
                 db.Execute("ALTER TABLE CuttingUnitStratum ADD COLUMN StratumArea REAL;");
-                
 
-                db.Execute(@"CREATE VIEW StratumAcres_View AS 
-SELECT CuttingUnit.Code as CuttingUnitCode, 
-Stratum.Code as StratumCode, 
-ifnull(Area, CuttingUnit.Area) as Area, 
-CuttingUnitStratum.* 
-FROM CuttingUnitStratum 
-JOIN CuttingUnit USING (CuttingUnit_CN) 
+                db.Execute(@"CREATE VIEW StratumAcres_View AS
+SELECT CuttingUnit.Code as CuttingUnitCode,
+Stratum.Code as StratumCode,
+ifnull(Area, CuttingUnit.Area) as Area,
+CuttingUnitStratum.*
+FROM CuttingUnitStratum
+JOIN CuttingUnit USING (CuttingUnit_CN)
 JOIN Stratum USING (Stratum_CN);");
-
-
-                               
 
                 db.Execute("PRAGMA user_version = 1");
                 SetDatabaseVersion(db, "2015.04.28");
                 db.CommitTransaction();
-
-
             }
             catch (Exception e)
             {
                 db.RollbackTransaction();
                 throw new SchemaUpdateException(db.DatabaseVersion, "2015.04.28", e);
-
-
             }
         }
 
@@ -1040,28 +998,27 @@ JOIN Stratum USING (Stratum_CN);");
                 db.RollbackTransaction();
                 throw new SchemaUpdateException(db.DatabaseVersion, "2015.08.03", e);
             }
-
         }
 
         private static void UpdateToVersion2015_08_19(DAL db)
         {
             System.Collections.Generic.List<ColumnInfo> tavCols = db.GetTableInfo("TreeAuditValue");
             bool hasErrorMessageCol = false;
-            foreach(ColumnInfo col in tavCols)
+            foreach (ColumnInfo col in tavCols)
             {
-                if(col.Name == "ErrorMessage")
+                if (col.Name == "ErrorMessage")
                 {
                     hasErrorMessageCol = true; break;
                 }
             }
-            
+
             try
             {
                 db.BeginTransaction();
                 if (!hasErrorMessageCol)
-                {                        
-                    db.AddField("TreeAuditValue", "ErrorMessage TEXT");                        
-                }                               
+                {
+                    db.AddField("TreeAuditValue", "ErrorMessage TEXT");
+                }
 
                 SetDatabaseVersion(db, "2015.08.19");
                 db.CommitTransaction();
@@ -1070,7 +1027,7 @@ JOIN Stratum USING (Stratum_CN);");
             {
                 db.RollbackTransaction();
                 throw new SchemaUpdateException(db.DatabaseVersion, "2015.08.19", e);
-            }                        
+            }
         }
 
         //patch for some a version that got out in the wild with bad triggers
@@ -1079,8 +1036,7 @@ JOIN Stratum USING (Stratum_CN);");
             db.BeginTransaction();
             try
             {
-                
-                //because there are a lot of changes with triggers 
+                //because there are a lot of changes with triggers
                 //lets just recreate all triggers
                 foreach (string trigName in ListTriggers(db))
                 {
@@ -1090,7 +1046,6 @@ JOIN Stratum USING (Stratum_CN);");
                 string createTriggers = CruiseDALDatastoreBuilder.GetCreateTriggers();
                 db.Execute(createTriggers);
 
-
                 SetDatabaseVersion(db, "2015.09.01");
                 db.CommitTransaction();
             }
@@ -1098,10 +1053,7 @@ JOIN Stratum USING (Stratum_CN);");
             {
                 db.RollbackTransaction();
                 throw new SchemaUpdateException(db.DatabaseVersion, "2015.09.01", e);
-            } 
-
+            }
         }
-
-
     }
 }

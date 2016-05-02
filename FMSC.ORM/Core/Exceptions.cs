@@ -29,6 +29,7 @@ namespace FMSC.ORM
         { }
 
         public SQLException(DbConnection connection, DbCommand command, Exception innerException)
+            : base(null, innerException)
         {
             AddConnectionInfo(connection);
             AddCommandInfo(command);        

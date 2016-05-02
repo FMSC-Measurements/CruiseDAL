@@ -101,7 +101,7 @@ namespace FMSC.ORM.EntityModel.Support
             var accessor = new PropertyAccessor(property);
             AddPropertyAccessor(accessor);
 
-            BaseFieldAttribute attr = Attribute.GetCustomAttribute(property, typeof(BaseFieldAttribute)) as BaseFieldAttribute;
+            var attr = Attribute.GetCustomAttribute(property, typeof(BaseFieldAttribute)) as BaseFieldAttribute;
             if(attr == null) { return; }
 
             attr.Property = accessor;

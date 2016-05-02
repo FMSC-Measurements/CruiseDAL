@@ -39,7 +39,7 @@ namespace FMSC.ORM.EntityModel.Support
 
         public void SetValue(object target, object value)
         {
-            Setter.Invoke(target, new Object[] { value, });
+            Setter.Invoke(target, new object[] { value });
         }
 
     }

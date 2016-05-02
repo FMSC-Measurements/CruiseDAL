@@ -23,9 +23,9 @@ namespace CruiseDAL.MappingCollections
         protected override void addMap(CuttingUnitDO child)
         {
 
-            CuttingUnitStratumDO newMap = new CuttingUnitStratumDO(DAL);
+            var newMap = new CuttingUnitStratumDO(DAL);
             newMap.CuttingUnit = child;
-            newMap.Stratum = base.Parent;
+            newMap.Stratum = Parent;
             newMap.Save();
         }
 
@@ -59,8 +59,8 @@ namespace CruiseDAL.MappingCollections
 
         protected override void  addMap(StratumDO child)
         {
-            CuttingUnitStratumDO newMap = new CuttingUnitStratumDO(DAL);
-            newMap.CuttingUnit = base.Parent;
+            var newMap = new CuttingUnitStratumDO(DAL);
+            newMap.CuttingUnit = Parent;
             newMap.Stratum = child;
             newMap.Save();
         }
@@ -97,8 +97,8 @@ namespace CruiseDAL.MappingCollections
 
         protected override void addMap(TreeDefaultValueDO child)
         {
-            SampleGroupTreeDefaultValueDO newMap = new SampleGroupTreeDefaultValueDO(DAL);
-            newMap.SampleGroup = base.Parent;
+            var newMap = new SampleGroupTreeDefaultValueDO(DAL);
+            newMap.SampleGroup = Parent;
             newMap.TreeDefaultValue = child;
             newMap.Save();
         }
@@ -134,8 +134,8 @@ namespace CruiseDAL.MappingCollections
 
         protected override void addMap(TreeAuditValueDO child)
         {
-            TreeDefaultValueTreeAuditValueDO newMap = new TreeDefaultValueTreeAuditValueDO(DAL);
-            newMap.TreeDefaultValue = base.Parent;
+            var newMap = new TreeDefaultValueTreeAuditValueDO(DAL);
+            newMap.TreeDefaultValue = Parent;
             newMap.TreeAuditValue = child;
             newMap.Save();
         }
@@ -170,8 +170,8 @@ namespace CruiseDAL.MappingCollections
 
         protected override void addMap(TreeDefaultValueDO child)
         {
-            TreeDefaultValueTreeAuditValueDO newMap = new TreeDefaultValueTreeAuditValueDO(DAL);
-            newMap.TreeAuditValue = base.Parent;
+            var newMap = new TreeDefaultValueTreeAuditValueDO(DAL);
+            newMap.TreeAuditValue = Parent;
             newMap.TreeDefaultValue = child;
             newMap.Save();
         }
@@ -191,7 +191,7 @@ namespace CruiseDAL.MappingCollections
             return DAL.From<TreeDefaultValueDO>()
                 .Join("TreeDefaultValueTreeAuditValue", "USING(TreeDefaultValue_CN)")
                 .Where("TreeAuditValue_CN = ?")
-                .Read(base.Parent.TreeAuditValue_CN).ToList();
+                .Read(Parent.TreeAuditValue_CN).ToList();
 
                 //.Read<TreeDefaultValueDO>(
                 //"JOIN TreeDefaultValueTreeAuditValue USING (TreeDefaultValue_CN) WHERE TreeAuditValue_CN = ?", base.Parent.TreeAuditValue_CN);
@@ -206,8 +206,8 @@ namespace CruiseDAL.MappingCollections
 
         protected override void addMap(TreeDefaultValueDO child)
         {
-            SampleGroupStatsTreeDefaultValueDO newMap = new SampleGroupStatsTreeDefaultValueDO(DAL);
-            newMap.SampleGroupStats = base.Parent;
+            var newMap = new SampleGroupStatsTreeDefaultValueDO(DAL);
+            newMap.SampleGroupStats = Parent;
             newMap.TreeDefaultValue = child;
             newMap.Save();
         }
@@ -216,7 +216,7 @@ namespace CruiseDAL.MappingCollections
         {
             return DAL.From<SampleGroupStatsTreeDefaultValueDO>()
                 .Where("TreeDefaultValue_CN = ? AND SampleGroupStats_CN = ?")
-                .Read(child.TreeDefaultValue_CN, base.Parent.SampleGroupStats_CN)
+                .Read(child.TreeDefaultValue_CN, Parent.SampleGroupStats_CN)
                 .FirstOrDefault();
                 
                 //.ReadSingleRow<SampleGroupStatsTreeDefaultValueDO>(

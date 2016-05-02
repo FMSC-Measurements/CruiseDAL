@@ -10,8 +10,8 @@ namespace CruiseDAL
 {
     public class CruiseDALErrorCollection
     {
-        Dictionary<String, ErrorLogDO> errors;
-        object _errorsSyncLock = new object();
+        Dictionary<String, ErrorLogDO> _errors;
+        readonly object _errorsSyncLock = new object();
 
         String _tableName;
         //EntityDescription _entityDescription;
@@ -28,13 +28,22 @@ namespace CruiseDAL
         public bool ErrorsLoaded { get; set; }
 
 
+        public bool HasErrors
+        {
+            get
+            {
+                if (this._errors == null) { return false; }
+                return _errors.Count > 0;
+            }
+        }
+
         public String GetErrors()
         {
             lock (this._errorsSyncLock)
             {
                 if (this.HasErrors == false) { return String.Empty; }
                 var b = new StringBuilder();
-                foreach (ErrorLogDO e in errors.Values)
+                foreach (ErrorLogDO e in _errors.Values)
                 {
                     if (e.Suppress == false)
                     {
@@ -50,11 +59,11 @@ namespace CruiseDAL
             lock (this._errorsSyncLock)
             {
                 if (this.HasError(fieldName) == false) { return new string[0]; }
-                if (!errors.ContainsKey(fieldName)) { return new string[0]; }
-                ErrorLogDO e = errors[fieldName];
+                if (!_errors.ContainsKey(fieldName)) { return new string[0]; }
+                ErrorLogDO e = _errors[fieldName];
                 if (e.Suppress == false)
                 {
-                    return new string[] { errors[fieldName].Message };
+                    return new string[] { _errors[fieldName].Message };
                 }
                 else
                 {
@@ -62,20 +71,10 @@ namespace CruiseDAL
                 }
             }
         }
-
-        public bool HasErrors
-        {
-            get
-            {
-                if (this.errors == null) { return false; }
-                return errors.Count > 0;
-            }
-        }
-
         public bool HasError(string propName)
         {
             if (HasErrors == false) { return false; }
-            return this.errors.ContainsKey(propName) && this.errors[propName].Suppress == false;
+            return this._errors.ContainsKey(propName) && this._errors[propName].Suppress == false;
         }
 
         public void AddError(string propName, string error)
@@ -101,17 +100,17 @@ namespace CruiseDAL
         {
             lock (this._errorsSyncLock)
             {
-                if (this.errors == null)
+                if (this._errors == null)
                 {
-                    this.errors = new Dictionary<string, ErrorLogDO>();
+                    this._errors = new Dictionary<string, ErrorLogDO>();
                 }
 
-                if (errors.ContainsKey(propName) == true)
+                if (_errors.ContainsKey(propName) == true)
                 {
-                    ErrorLogDO e1 = errors[propName];
+                    ErrorLogDO e1 = _errors[propName];
                     if (e1.Level[0] != e.Level[0] && e1.Suppress == true)
                     {
-                        errors[propName] = e;
+                        _errors[propName] = e;
                         //OnErrorsChanged(new DataErrorsChangedEventArgs(propName));
                     }
                     else if (e1.Message == e.Message && (e.Suppress == true && e1.Suppress == false))
@@ -120,20 +119,48 @@ namespace CruiseDAL
                         {
                             e1.Delete();
                         }
-                        errors[propName] = e;
+                        _errors[propName] = e;
                         //OnErrorsChanged(new DataErrorsChangedEventArgs(propName));
                     }
                     else if (e1.Level.StartsWith("W") && e.Level.StartsWith("E"))
                     {
-                        errors[propName] = e;
+                        _errors[propName] = e;
                         //OnErrorsChanged(new DataErrorsChangedEventArgs(propName));
                     }
 
                 }
                 else
                 {
-                    errors[propName] = e;
+                    _errors[propName] = e;
                     //OnErrorsChanged(new DataErrorsChangedEventArgs(propName));
+                }
+            }
+        }
+
+        public void RemoveError(string propName, string error)
+        {
+            lock (this._errorsSyncLock)
+            {
+                if (_errors == null) { return; }
+                if (_errors.ContainsKey(propName) == true)
+                {
+                    //if (errors[propName] != error) { throw new InvalidOperationException(); }
+                    ErrorLogDO e = _errors[propName];
+                    if (e.Message == error)
+                    {
+                        if (e.Suppress == true) { return; }
+
+                        this._errors.Remove(propName);
+                        if (e.IsPersisted)
+                        {
+                            e.Delete();
+                        }
+                        //OnErrorsChanged(new DataErrorsChangedEventArgs(propName));
+                    }
+                }
+                if (this._errors.Count == 0)
+                {
+                    this._errors = null;
                 }
             }
         }
@@ -144,7 +171,7 @@ namespace CruiseDAL
             {
                 if (this.HasErrors == false) { return; }
                 var keysToRemove = new List<string>();
-                foreach (KeyValuePair<string, ErrorLogDO> kv in this.errors)
+                foreach (KeyValuePair<string, ErrorLogDO> kv in this._errors)
                 {
                     ErrorLogDO e = kv.Value;
                     if (e != null)
@@ -161,7 +188,7 @@ namespace CruiseDAL
 
                 foreach (string k in keysToRemove)
                 {
-                    this.errors.Remove(k);
+                    this._errors.Remove(k);
                 }
             }
         }
@@ -172,7 +199,7 @@ namespace CruiseDAL
             {
                 if (this.HasErrors == false) { return; }
                 var keysToRemove = new List<string>();
-                foreach (KeyValuePair<string, ErrorLogDO> kv in this.errors)
+                foreach (KeyValuePair<string, ErrorLogDO> kv in this._errors)
                 {
                     ErrorLogDO e = kv.Value;
                     if (e != null)
@@ -190,7 +217,7 @@ namespace CruiseDAL
 
                 foreach (string k in keysToRemove)
                 {
-                    this.errors.Remove(k);
+                    this._errors.Remove(k);
                 }
             }
         }
@@ -207,9 +234,9 @@ namespace CruiseDAL
         {
             lock (_errorsSyncLock)
             {
-                if (this.errors != null)
+                if (this._errors != null)
                 {
-                    this.errors.Clear();
+                    this._errors.Clear();
                 }
                 _dataObject.IsValidated = false;
                 this.ErrorsLoaded = false;
@@ -241,8 +268,8 @@ namespace CruiseDAL
             
             lock (this._errorsSyncLock)
             {
-                if (this.errors == null) { return; } //no errors to save
-                foreach (ErrorLogDO e in errors.Values)
+                if (this._errors == null) { return; } //no errors to save
+                foreach (ErrorLogDO e in _errors.Values)
                 {
                     if (e.DAL == null || e.DAL != _dataObject.DAL)
                     {
@@ -254,34 +281,6 @@ namespace CruiseDAL
                 }
             }
 
-        }
-
-        public void RemoveError(string propName, string error)
-        {
-            lock (this._errorsSyncLock)
-            {
-                if (errors == null) { return; }
-                if (errors.ContainsKey(propName) == true)
-                {
-                    //if (errors[propName] != error) { throw new InvalidOperationException(); }
-                    ErrorLogDO e = errors[propName];
-                    if (e.Message == error)
-                    {
-                        if (e.Suppress == true) { return; }
-
-                        this.errors.Remove(propName);
-                        if (e.IsPersisted)
-                        {
-                            e.Delete();
-                        }
-                        //OnErrorsChanged(new DataErrorsChangedEventArgs(propName));
-                    }
-                }
-                if (this.errors.Count == 0)
-                {
-                    this.errors = null;
-                }
-            }
         }
     }
 }

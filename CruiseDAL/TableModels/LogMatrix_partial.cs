@@ -11,8 +11,8 @@ namespace CruiseDAL.DataObjects
 
         public static Dictionary<String, List<LogMatrixDO>> GetByRowNumberGroupBySpecies(DAL cruiseDAL, string reportNum)
         {
-            Dictionary<string, List<LogMatrixDO>> dict = new Dictionary<string, List<LogMatrixDO>>();
-            List<LogMatrixDO> list = cruiseDAL.From<LogMatrixDO>()
+            var dict = new Dictionary<string, List<LogMatrixDO>>();
+            var list = cruiseDAL.From<LogMatrixDO>()
                 .Where("ReportNumber = ?")
                 .Read(reportNum).ToList();
 
@@ -26,7 +26,7 @@ namespace CruiseDAL.DataObjects
                 }
                 else
                 {
-                    List<LogMatrixDO> l = new List<LogMatrixDO>();
+                    var l = new List<LogMatrixDO>();
                     l.Add(lm);
                     dict.Add(lm.Species, l);
                 }

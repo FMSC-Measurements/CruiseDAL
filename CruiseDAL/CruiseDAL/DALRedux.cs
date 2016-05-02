@@ -1,20 +1,19 @@
-﻿
-using FMSC.ORM;
+﻿using FMSC.ORM;
 using FMSC.ORM.Core;
-using FMSC.ORM.Core.SQL;
 using FMSC.ORM.SQLite;
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Data.Common;
-using System.Data.SQLite;
 using System.Diagnostics;
 using System.IO;
 using System.Threading;
 
+#pragma warning disable RECS0122 // Initializing field with default value is redundant
+#pragma warning disable RECS0104 // When object creation uses object or collection initializer, empty argument list is redundant
+
 namespace CruiseDAL
 {
-    public enum CruiseFileType { Unknown, Cruise, Template, Design, Master, Component, Backup}
+    public enum CruiseFileType { Unknown, Cruise, Template, Design, Master, Component, Backup }
 
     public partial class DAL : SQLiteDatastore
     {
@@ -23,31 +22,12 @@ namespace CruiseDAL
             public DatastoreRedux DS;
             public string Alias;
         }
-
-        #region multiDB Fields
-        int _multiDBtransactionHold = 0;
-        protected int _multiDBholdConnection = 0;
-        protected int _multiDBtransactionDepth = 0;
-        protected bool _multiDBtransactionCanceled = false;
-
-        protected Object _multiDBpersistentConnectionSyncLock = new object();
-        protected DbConnection MultiDBPersistentConnection { get; set; }
-
-        public object MultiDBTransactionSyncLock = new object();
-        protected DbTransaction _multiDBCurrentTransaction;
-
-        protected ICollection<ExternalDatastore> _attachedDataStores = new List<ExternalDatastore>();
-
-        public IEnumerable<DatastoreRedux> AttachedDataStores { get; set; }
-        #endregion
-
-
         private string _userInfo;
         private string _databaseVersion = "Unknown";
         private CruiseFileType _cruiseFileType;
 
         /// <summary>
-        /// represents value returned by PRAGMA user_version;  
+        /// represents value returned by PRAGMA user_version;
         /// </summary>
         internal long SchemaVersion { get; set; }
 
@@ -64,10 +44,8 @@ namespace CruiseDAL
             {
                 this._databaseVersion = value;
             }
-
         }
 
-        
         /// <summary>
         /// Gets the string used to identify the user, for the purpose of CreatedBy and ModifiedBy values
         /// </summary>
@@ -106,12 +84,28 @@ namespace CruiseDAL
             }
         }
 
+        #region multiDB Fields
+        protected ICollection<ExternalDatastore> _attachedDataStores = new List<ExternalDatastore>();
+
+        //protected int _multiDBholdConnection = 0;
+        //protected int _multiDBtransactionDepth = 0;        
+        //protected bool _multiDBtransactionCanceled = false;
+        //protected DbTransaction _multiDBCurrentTransaction;
+        //protected readonly object _multiDBTransactionSyncLock = new object();
+        //protected readonly object _multiDBpersistentConnectionSyncLock = new object();
+        
+        //protected DbConnection MultiDBPersistentConnection { get; set; }
+
+        //public object MultiDBTransactionSyncLock { get { return _multiDBTransactionSyncLock; } }
+
+        #endregion multiDB Fields
+
         /// <summary>
-        /// Creates a DAL instance for a database @ path. 
+        /// Creates a DAL instance for a database @ path.
         /// </summary>
         /// <exception cref="ArgumentNullException">path can not be null or an empty string</exception>
         /// <exception cref="IOException">problem working with file. wrong extension</exception>
-        /// <exception cref="FileNotFoundException"
+        /// <exception cref="FileNotFoundException">file doesn't exist</exception>
         /// <param name="path"></param>
         public DAL(string path) : this(path, false)
         {
@@ -120,15 +114,14 @@ namespace CruiseDAL
         public DAL(string path, bool makeNew)
             : this(path, makeNew, new CruiseDALDatastoreBuilder())
         {
-
         }
 
         /// <summary>
-        /// Creates a DAL instance for a database @ path. 
+        /// Creates a DAL instance for a database @ path.
         /// </summary>
         /// <exception cref="ArgumentNullException">path can not be null or an empty string</exception>
-        /// <exception cref="System.IO.IOException">File extension is not valid <see cref="VALID_EXTENSIONS"/></exception>
-        /// <exception cref="System.UnauthorizedAccessException">File open in another application or thread</exception>
+        /// <exception cref="IOException">File extension is not valid <see cref="VALID_EXTENSIONS"/></exception>
+        /// <exception cref="UnauthorizedAccessException">File open in another application or thread</exception>
         public DAL(string path, bool makeNew, DatabaseBuilder builder) : base(path)
         {
             Debug.Assert(builder != null);
@@ -137,7 +130,7 @@ namespace CruiseDAL
             builder.Datastore = this;
 
             Path = path;
-            
+
             this.Initialize(makeNew, builder);
             Logger.Log.V(String.Format("Created DAL instance. Path = {0}\r\n", Path));
         }
@@ -158,7 +151,6 @@ namespace CruiseDAL
             {
                 DatabaseVersion = dbVersion;
             }
-
 
             this.SchemaVersion = this.ExecuteScalar<long>("PRAGMA user_version;");
             builder.UpdateDatastore();
@@ -182,72 +174,120 @@ namespace CruiseDAL
 
 #elif ANDROID
 			return "AndroidUser";
-#else 
+#else
             return Environment.UserName + " on " + System.Environment.MachineName;
 #endif
             //return Environment.UserName + " on " + System.Windows.Forms.SystemInformation.ComputerName;
         }
 
-        #region multiDB methods
+        #region Overridden Methods
+        protected override void OnConnectionOpened()
+        {
+            base.OnConnectionOpened();
+
+            foreach (var ds in _attachedDataStores)
+            {
+                AttachDBInternal(ds);
+            }
+        }
+
+        #endregion
+
+        #region MultiDB methods
+
         #region multiDB execute commands
-        public int ExecuteMultiDB(String command, params object[] parameters)
-        {
-            using (DbCommand com = Provider.CreateCommand(command))
-            {
-                return this.ExecuteMultiDB(com, parameters);
-            }
-        }
 
-        public int ExecuteMultiDB(String command, IEnumerable<KeyValuePair<String, object>> parameters)
-        {
-            using (DbCommand comm = Provider.CreateCommand(command))
-            {
-                if (parameters != null)
-                {
-                    foreach (var pair in parameters)
-                    {
-                        var param = Provider.CreateParameter(pair.Key, pair.Value);
-                        comm.Parameters.Add(param);
-                    }
-                }
-                return ExecuteSQLMultiDB(comm);
-            }
-        }
+        //public int ExecuteMultiDB(String command, params object[] parameters)
+        //{
+        //    using (DbCommand com = Provider.CreateCommand(command))
+        //    {
+        //        return this.ExecuteMultiDB(com, parameters);
+        //    }
+        //}
 
-        protected int ExecuteMultiDB(DbCommand command, params object[] parameters)
-        {
-            if (parameters != null)
-            {
-                foreach (object p in parameters)
-                {
-                    command.Parameters.Add(Provider.CreateParameter(null, p));
-                }
-            }
-            return ExecuteSQLMultiDB(command);
-        }
+        //public int ExecuteMultiDB(String command, IEnumerable<KeyValuePair<String, object>> parameters)
+        //{
+        //    using (DbCommand comm = Provider.CreateCommand(command))
+        //    {
+        //        if (parameters != null)
+        //        {
+        //            foreach (var pair in parameters)
+        //            {
+        //                var param = Provider.CreateParameter(pair.Key, pair.Value);
+        //                comm.Parameters.Add(param);
+        //            }
+        //        }
+        //        return ExecuteSQLMultiDB(comm);
+        //    }
+        //}
 
-        protected int ExecuteSQLMultiDB(DbCommand command)
-        {
-            lock (_persistentConnectionSyncLock)
-            {
-                DbConnection conn = OpenMultiDBConnection();
-                try
-                {
-                    return ExecuteSQL(command, conn);
-                }
-                finally
-                {
-                    ReleaseMultiDBConnection();
-                }
-            }
-        }
+        //protected int ExecuteMultiDB(DbCommand command, params object[] parameters)
+        //{
+        //    if (parameters != null)
+        //    {
+        //        foreach (object p in parameters)
+        //        {
+        //            command.Parameters.Add(Provider.CreateParameter(null, p));
+        //        }
+        //    }
+        //    return ExecuteSQLMultiDB(command);
+        //}
 
-        //protected int ExecuteSQLMultiDB(DbCommand command, DbConnection conn)
+        //protected int ExecuteSQLMultiDB(DbCommand command)
+        //{
+        //    lock (_persistentConnectionSyncLock)
+        //    {
+        //        DbConnection conn = OpenMultiDBConnection();
+        //        try
+        //        {
+        //            return ExecuteSQL(command, conn);
+        //        }
+        //        finally
+        //        {
+        //            ReleaseMultiDBConnection();
+        //        }
+        //    }
+        //}
+
+
+        //public object ExecuteScalarMultiDB(string query, params object[] parameters)
+        //{
+        //    using (DbCommand comm = Provider.CreateCommand(query))
+        //    {
+        //        if (parameters != null)
+        //        {
+        //            foreach (object val in parameters)
+        //            {
+        //                comm.Parameters.Add(Provider.CreateParameter(null, val));
+        //            }
+        //        }
+        //        object value = ExecuteScalarMultiDB(comm);
+        //        return (value is DBNull) ? null : value;
+        //    }
+        //}
+
+        //protected object ExecuteScalarMultiDB(DbCommand command)
+        //{
+        //    lock (_multiDBpersistentConnectionSyncLock)
+        //    {
+        //        DbConnection conn = OpenMultiDBConnection();
+        //        try
+        //        {
+        //            return ExecuteScalarMultiDB(command, conn);
+        //        }
+        //        finally
+        //        {
+        //            ReleaseMultiDBConnection();
+        //        }
+        //    }
+        //}
+
+        //protected object ExecuteScalarMultiDB(DbCommand command, DbConnection conn)
         //{
         //    try
         //    {
         //        command.Connection = conn;
-        //        return command.ExecuteNonQuery();
+        //        return command.ExecuteScalar();
         //    }
         //    catch (Exception e)
         //    {
@@ -255,125 +295,83 @@ namespace CruiseDAL
         //    }
         //}
 
-        public object ExecuteScalarMultiDB(string query, params object[] parameters)
-        {
-            using (DbCommand comm = Provider.CreateCommand(query))
-            {
-                if (parameters != null)
-                {
-                    foreach (object val in parameters)
-                    {
-                        comm.Parameters.Add(Provider.CreateParameter(null, val));
-                    }
-                }
-                object value = ExecuteScalarMultiDB(comm);
-                return (value is DBNull) ? null : value;
-            }
-        }
+        //public T ExecuteScalarMultiDB<T>(String query)
+        //{
+        //    return ExecuteScalar<T>(query, (object[])null);
+        //}
 
-        protected object ExecuteScalarMultiDB(DbCommand command)
-        {
-            lock (_multiDBpersistentConnectionSyncLock)
-            {
-                DbConnection conn = OpenMultiDBConnection();
-                try
-                {
-                    return ExecuteScalarMultiDB(command, conn);
-                }
-                finally
-                {
-                    ReleaseMultiDBConnection();
-                }
-            }
-        }
+        //public T ExecuteScalarMultiDB<T>(String query, params object[] parameters)
+        //{
+        //    using (DbCommand comm = Provider.CreateCommand(query))
+        //    {
+        //        if (parameters != null)
+        //        {
+        //            foreach (object val in parameters)
+        //            {
+        //                comm.Parameters.Add(Provider.CreateParameter(null, val));
+        //            }
+        //        }
+        //        return ExecuteScalarMultiDB<T>(comm);
+        //    }
+        //}
 
-        protected object ExecuteScalarMultiDB(DbCommand command, DbConnection conn)
-        {
-            try
-            {
-                command.Connection = conn;
-                return command.ExecuteScalar();
-            }
-            catch (Exception e)
-            {
-                throw this.ThrowExceptionHelper(conn, command, e);
-            }
-        }
+        //public T ExecuteScalarMultiDB<T>(String query, IEnumerable<KeyValuePair<String, object>> parameters)
+        //{
+        //    using (DbCommand comm = Provider.CreateCommand(query))
+        //    {
+        //        if (parameters != null)
+        //        {
+        //            foreach (var pair in parameters)
+        //            {
+        //                var param = Provider.CreateParameter(pair.Key, pair.Value);
+        //                comm.Parameters.Add(param);
+        //            }
+        //        }
+        //        return ExecuteScalarMultiDB<T>(comm);
+        //    }
+        //}
 
-        public T ExecuteScalarMultiDB<T>(String query)
-        {
-            return ExecuteScalar<T>(query, (object[])null);
-        }
+        //protected T ExecuteScalarMultiDB<T>(DbCommand command)
+        //{
+        //    DbConnection conn = OpenMultiDBConnection();
+        //    try
+        //    {
+        //        return this.ExecuteScalarMultiDB<T>(command, conn);
+        //    }
+        //    finally
+        //    {
+        //        ReleaseMultiDBConnection();
+        //    }
+        //}
 
-        public T ExecuteScalarMultiDB<T>(String query, params object[] parameters)
-        {
-            using (DbCommand comm = Provider.CreateCommand(query))
-            {
-                if (parameters != null)
-                {
-                    foreach (object val in parameters)
-                    {
-                        comm.Parameters.Add(Provider.CreateParameter(null, val));
-                    }
-                }
-                return ExecuteScalarMultiDB<T>(comm);
-            }
-        }
+        //protected T ExecuteScalarMultiDB<T>(DbCommand command, DbConnection conn)
+        //{
+        //    object result = ExecuteScalarMultiDB(command, conn);
+        //    if (result is DBNull)
+        //    {
+        //        return default(T);
+        //    }
+        //    else if (result is T)
+        //    {
+        //        return (T)result;
+        //    }
+        //    else
+        //    {
+        //        Type t = typeof(T);
+        //        if (t.IsGenericType && t.GetGenericTypeDefinition() == typeof(Nullable<>))
+        //        {
+        //            t = Nullable.GetUnderlyingType(t);
+        //        }
 
-        public T ExecuteScalarMultiDB<T>(String query, IEnumerable<KeyValuePair<String, object>> parameters)
-        {
-            using (DbCommand comm = Provider.CreateCommand(query))
-            {
-                if (parameters != null)
-                {
-                    foreach (var pair in parameters)
-                    {
-                        var param = Provider.CreateParameter(pair.Key, pair.Value);
-                        comm.Parameters.Add(param);
-                    }
-                }
-                return ExecuteScalarMultiDB<T>(comm);
-            }
-        }
+        //        return (T)Convert.ChangeType(result, t
+        //            , System.Globalization.CultureInfo.CurrentCulture);
+        //        //return (T)Convert.ChangeType(result, typeof(T));
+        //    }
+        //}
 
-        protected T ExecuteScalarMultiDB<T>(DbCommand command)
-        {
-            DbConnection conn = OpenMultiDBConnection();
-            try
-            {
-                return this.ExecuteScalarMultiDB<T>(command, conn);
-            }
-            finally
-            {
-                ReleaseMultiDBConnection();
-            }
-        }
+        #endregion multiDB execute commands
 
-        protected T ExecuteScalarMultiDB<T>(DbCommand command, DbConnection conn)
-        {
-            object result = ExecuteScalarMultiDB(command, conn);
-            if (result is DBNull)
-            {
-                return default(T);
-            }
-            else if (result is T)
-            {
-                return (T)result;
-            }
-            else
-            {
-                Type t = typeof(T);
-                if (t.IsGenericType && t.GetGenericTypeDefinition() == typeof(Nullable<>))
-                {
-                    t = Nullable.GetUnderlyingType(t);
-                }
-
-                return (T)Convert.ChangeType(result, t
-                    , System.Globalization.CultureInfo.CurrentCulture);
-                //return (T)Convert.ChangeType(result, typeof(T));
-            }
-        }
-        #endregion
+        #region Attach/Detach
 
         public void AttachDB(DatastoreRedux dataStore, string alias)
         {
@@ -382,6 +380,7 @@ namespace CruiseDAL
             Debug.Assert(_attachedDataStores != null);
 
             var externalDS = new ExternalDatastore()
+
             {
                 DS = dataStore,
                 Alias = alias
@@ -393,10 +392,14 @@ namespace CruiseDAL
 
         protected void AttachDBInternal(ExternalDatastore externalDB)
         {
-            if (this.MultiDBPersistentConnection != null)
-            {
-                this.ExecuteMultiDB("ATTACH DATABASE \"" + externalDB.DS.Path
-                    + "\" AS " + externalDB.Alias + ";");
+            lock (_persistentConnectionSyncLock)
+            { 
+                var conn = PersistentConnection;
+                if (conn != null)
+                {
+                    this.ExecuteSQL("ATTACH DATABASE \"" + externalDB.DS.Path
+                        + "\" AS " + externalDB.Alias + ";", conn);
+                }
             }
         }
 
@@ -424,176 +427,205 @@ namespace CruiseDAL
 
         protected void DetachDBInternal(ExternalDatastore externalDB)
         {
-            if (this.MultiDBPersistentConnection != null)
+            lock (_persistentConnectionSyncLock)
             {
-                this.ExecuteMultiDB("DETACH DATABASE \""
-                    + externalDB.Alias + "\";");
-            }
-        }
-
-        protected DbConnection OpenMultiDBConnection()
-        {
-            lock (_multiDBpersistentConnectionSyncLock)
-            {
-                DbConnection conn;
-                if (_multiDBholdConnection == 0)
+                var conn = PersistentConnection;
+                if (conn != null)
                 {
-                    conn = CreateConnection();
-                }
-                else
-                {
-                    Debug.Assert(MultiDBPersistentConnection != null);
-                    conn = MultiDBPersistentConnection;
-                }
-
-                try
-                {
-                    if (conn.State == System.Data.ConnectionState.Broken)
-                    {
-                        conn.Close();
-                    }
-
-                    if (conn.State == System.Data.ConnectionState.Closed)
-                    {
-                        conn.Open();
-                    }
-                    OnMultiDBConnectionOpened();
-                }
-                catch (Exception e)
-                {
-                    throw new ConnectionException("failed to open connection", e);
-                }
-
-                MultiDBPersistentConnection = conn;
-                EnterMultiDBConnectionHold();
-
-                return conn;
-            }
-        }
-
-        protected void ReleaseMultiDBConnection()
-        {
-            lock (_multiDBpersistentConnectionSyncLock)
-            {
-                if (_multiDBholdConnection > 0)
-                {
-                    ExitConnectionHold();
-                    if (_multiDBholdConnection == 0)
-                    {
-                        Debug.Assert(MultiDBPersistentConnection != null);
-                        MultiDBPersistentConnection.Dispose();
-                        MultiDBPersistentConnection = null;
-                    }
+                    this.ExecuteSQL("DETACH DATABASE \""
+                        + externalDB.Alias + "\";", conn);
                 }
             }
+            
         }
 
-        protected void EnterMultiDBConnectionHold()
-        {
-            System.Threading.Interlocked.Increment(ref this._multiDBholdConnection);
-        }
+        #endregion Attach/Detach
 
-        protected void ExitMultiDBConnectionHold()
-        {
-            Debug.Assert(_holdConnection > 0);
-            System.Threading.Interlocked.Decrement(ref this._multiDBholdConnection);
-        }
+        #region Connection Mgmt
 
-        private void OnMultiDBConnectionOpened()
-        {
-            Debug.WriteLine("MultiDB Connection Opened", FMSC.ORM.Core.Constants.Logging.DB_CONTROL);
-        }
+        //protected DbConnection OpenMultiDBConnection()
+        //{
+        //    lock (_multiDBpersistentConnectionSyncLock)
+        //    {
+        //        DbConnection conn;
+        //        if (_multiDBholdConnection == 0)
+        //        {
+        //            conn = CreateConnection();
+        //        }
+        //        else
+        //        {
+        //            Debug.Assert(MultiDBPersistentConnection != null);
+        //            conn = MultiDBPersistentConnection;
+        //        }
 
-        public void BeginMultiDBTransaction()
-        {
-            lock (MultiDBTransactionSyncLock)
-            {
-                _multiDBtransactionDepth++;
-                if (_multiDBtransactionDepth == 1)
-                {
-                    Debug.Assert(_multiDBCurrentTransaction == null);
+        //        try
+        //        {
+        //            if (conn.State == System.Data.ConnectionState.Broken)
+        //            {
+        //                conn.Close();
+        //            }
 
-                    DbConnection connection = OpenMultiDBConnection();
-                    _multiDBCurrentTransaction = connection.BeginTransaction();
+        //            if (conn.State == System.Data.ConnectionState.Closed)
+        //            {
+        //                conn.Open();
+        //                OnMultiDBConnectionOpened();
+        //                MultiDBPersistentConnection = conn;
+        //                InitializeMultiDBConnection(conn);
+        //            }
 
-                    _multiDBtransactionCanceled = false;
+        //            EnterMultiDBConnectionHold();
 
-                    this.EnterMultiDBConnectionHold();
-                    OnMultiDBTransactionStarted();
-                }
-            }
-        }
+        //            return conn;
+        //        }
+        //        catch (Exception e)
+        //        {
+        //            throw new ConnectionException("failed to open connection", e);
+        //        }
+        //    }
+        //}
 
-        public void CommitMultiDBTransaction()
-        {
-            lock (MultiDBTransactionSyncLock)
-            {
-                OnMultiDBTransactionEnding();
+        //protected void ReleaseMultiDBConnection()
+        //{
+        //    lock (_multiDBpersistentConnectionSyncLock)
+        //    {
+        //        if (_multiDBholdConnection > 0)
+        //        {
+        //            ExitMultiDBConnectionHold();
+        //            if (_multiDBholdConnection == 0)
+        //            {
+        //                Debug.Assert(MultiDBPersistentConnection != null);
+        //                MultiDBPersistentConnection.Dispose();
+        //                MultiDBPersistentConnection = null;
+        //            }
+        //        }
+        //    }
+        //}
 
-                _multiDBtransactionDepth--;
-                if (_multiDBtransactionDepth == 0)
-                {
-                    ReleaseMultiDBTransaction();
-                }
-            }
-        }
+        //protected void EnterMultiDBConnectionHold()
+        //{
+        //    System.Threading.Interlocked.Increment(ref this._multiDBholdConnection);
+        //}
 
-        public void RollbackMultiDBTransaction()
-        {
-            lock (MultiDBTransactionSyncLock)
-            {
-                OnMultiDBTransactionCanceling();
-                _multiDBtransactionCanceled = true;
-                _multiDBtransactionDepth--;
-                if (_multiDBtransactionDepth == 0)
-                {
-                    ReleaseMultiDBTransaction();
-                }
-            }
-        }
+        //protected void ExitMultiDBConnectionHold()
+        //{
+        //    Debug.Assert(_multiDBholdConnection > 0);
+        //    System.Threading.Interlocked.Decrement(ref this._multiDBholdConnection);
+        //}
 
-        private void ReleaseMultiDBTransaction()
-        {
-            OnMultiDBTransactionReleasing();
+        //protected void InitializeMultiDBConnection(DbConnection conn)
+        //{
+        //    foreach (var ds in _attachedDataStores)
+        //    {
+        //        AttachDBInternal(ds, conn);
+        //    }
+        //}
 
-            if (_multiDBtransactionCanceled)
-            {
-                _multiDBCurrentTransaction.Rollback();
-            }
-            else
-            {
-                _multiDBCurrentTransaction.Commit();
-            }
+        #endregion Connection Mgmt
 
-            _multiDBCurrentTransaction.Dispose();
-            _multiDBCurrentTransaction = null;
-            ExitMultiDBConnectionHold();
-            ReleaseMultiDBConnection();
-        }
+        #region Transaction Methods
 
-        protected virtual void OnMultiDBTransactionStarted()
-        {
-            Debug.WriteLine("MultiDB Transaction Started", FMSC.ORM.Core.Constants.Logging.DB_CONTROL);
-        }
+        //public void BeginMultiDBTransaction()
+        //{
+        //    lock (MultiDBTransactionSyncLock)
+        //    {
+        //        _multiDBtransactionDepth++;
+        //        if (_multiDBtransactionDepth == 1)
+        //        {
+        //            Debug.Assert(_multiDBCurrentTransaction == null);
 
-        protected virtual void OnMultiDBTransactionEnding()
-        {
-            Debug.WriteLine("MultiDB Transaction Ending", FMSC.ORM.Core.Constants.Logging.DB_CONTROL);
-        }
+        //            DbConnection connection = OpenMultiDBConnection();
+        //            _multiDBCurrentTransaction = connection.BeginTransaction();
 
-        protected virtual void OnMultiDBTransactionCanceling()
-        {
-            Debug.WriteLine("MultiDB Transaction Canceling", FMSC.ORM.Core.Constants.Logging.DB_CONTROL);
-        }
+        //            _multiDBtransactionCanceled = false;
 
-        protected virtual void OnMultiDBTransactionReleasing()
-        {
-            Debug.WriteLine("MultiDB Transaction Releasing", FMSC.ORM.Core.Constants.Logging.DB_CONTROL);
-        }
+        //            this.EnterMultiDBConnectionHold();
+        //            OnMultiDBTransactionStarted();
+        //        }
+        //    }
+        //}
 
-        #endregion        
+        //public void CommitMultiDBTransaction()
+        //{
+        //    lock (MultiDBTransactionSyncLock)
+        //    {
+        //        OnMultiDBTransactionEnding();
+
+        //        _multiDBtransactionDepth--;
+        //        if (_multiDBtransactionDepth == 0)
+        //        {
+        //            ReleaseMultiDBTransaction();
+        //        }
+        //    }
+        //}
+
+        //public void RollbackMultiDBTransaction()
+        //{
+        //    lock (MultiDBTransactionSyncLock)
+        //    {
+        //        OnMultiDBTransactionCanceling();
+        //        _multiDBtransactionCanceled = true;
+        //        _multiDBtransactionDepth--;
+        //        if (_multiDBtransactionDepth == 0)
+        //        {
+        //            ReleaseMultiDBTransaction();
+        //        }
+        //    }
+        //}
+
+        //private void ReleaseMultiDBTransaction()
+        //{
+        //    OnMultiDBTransactionReleasing();
+
+        //    if (_multiDBtransactionCanceled)
+        //    {
+        //        _multiDBCurrentTransaction.Rollback();
+        //    }
+        //    else
+        //    {
+        //        _multiDBCurrentTransaction.Commit();
+        //    }
+
+        //    _multiDBCurrentTransaction.Dispose();
+        //    _multiDBCurrentTransaction = null;
+        //    ExitMultiDBConnectionHold();
+        //    ReleaseMultiDBConnection();
+        //}
+
+        #endregion Transaction Methods
+
+        #region Logging Methods
+
+        //private void OnMultiDBConnectionOpened()
+        //{
+        //    Debug.WriteLine("MultiDB Connection Opened", FMSC.ORM.Core.Constants.Logging.DB_CONTROL);
+        //}
+
+        //protected virtual void OnMultiDBTransactionStarted()
+        //{
+        //    Debug.WriteLine("MultiDB Transaction Started", FMSC.ORM.Core.Constants.Logging.DB_CONTROL);
+        //}
+
+        //protected virtual void OnMultiDBTransactionEnding()
+        //{
+        //    Debug.WriteLine("MultiDB Transaction Ending", FMSC.ORM.Core.Constants.Logging.DB_CONTROL);
+        //}
+
+        //protected virtual void OnMultiDBTransactionCanceling()
+        //{
+        //    Debug.WriteLine("MultiDB Transaction Canceling", FMSC.ORM.Core.Constants.Logging.DB_CONTROL);
+        //}
+
+        //protected virtual void OnMultiDBTransactionReleasing()
+        //{
+        //    Debug.WriteLine("MultiDB Transaction Releasing", FMSC.ORM.Core.Constants.Logging.DB_CONTROL);
+        //}
+
+        #endregion Logging Methods
+
+        #endregion MultiDB methods
 
         #region cruise/cut specific stuff
+
         public static CruiseFileType ExtrapolateCruiseFileType(String path)
         {
             String normPath = path.ToLower().TrimEnd();
@@ -601,7 +633,6 @@ namespace CruiseDAL
             {
                 return CruiseFileType.Unknown;
             }
-
             else if (System.Text.RegularExpressions.Regex.IsMatch(normPath, @".+\.m\.cruise\s*$", System.Text.RegularExpressions.RegexOptions.IgnoreCase))
             {
                 return CruiseFileType.Master;
@@ -641,14 +672,12 @@ namespace CruiseDAL
             {
                 return CruiseFileType.Unknown;
             }
-
         }
 
         protected void WriteCruiseFileType(CruiseFileType cType)
         {
             this.WriteGlobalValue("Database", "CruiseFileType", cType.ToString());
         }
-
 
         public string ReadGlobalValue(String block, String key)
         {
@@ -662,9 +691,11 @@ namespace CruiseDAL
             this.Execute("INSERT OR REPLACE INTO Globals (Block, Key, Value) " +
                 "Values (?, ?, ?);", block, key, value);
         }
-        #endregion
 
-        #region file util
+        #endregion cruise/cut specific stuff
+
+        #region file utility
+
         public void CopyTo(string path)
         {
             this.CopyTo(path, false);
@@ -677,14 +708,13 @@ namespace CruiseDAL
             System.IO.File.Copy(this.Path, destPath, overwrite);
         }
 
-
         public void CopyAs(string desPath, bool overwrite)
         {
             CopyTo(desPath, overwrite);
-            this.Path = desPath;            
+            this.Path = desPath;
         }
-        #endregion
 
+        #endregion file utility
 
         ///// <summary>
         ///// Copies selection directly from external Database
@@ -721,8 +751,6 @@ namespace CruiseDAL
         //{
         //    if (dataBase.Exists == false) { return; }
 
-
-
         //    string cOpt = option.ToString().ToUpper();
         //    string copy = String.Format("INSERT OR {2} INTO {0} SELECT * FROM destDB.{0} {1};", table, selection, cOpt);
 
@@ -738,8 +766,8 @@ namespace CruiseDAL
 
         //}
 
+        #region not implemented
 
-        #region not implemented 
         //[Obsolete]
         //public void ChangeRowID(DataObject data, long newRowID, OnConflictOption option)
         //{
@@ -757,10 +785,13 @@ namespace CruiseDAL
         //{
         //    throw new NotImplementedException();
         //}
-        #endregion
+
+        #endregion not implemented
 
         #region accessControl
-        Mutex _accessControl;
+
+        private Mutex _accessControl;
+
         private void releaseAccessControl()
         {
 #if !Mobile
@@ -793,8 +824,6 @@ namespace CruiseDAL
             }
             catch
             {
-
-
             }
             if (_accessControl == null)
             {
@@ -810,9 +839,11 @@ namespace CruiseDAL
             }
 #endif
         }
-        #endregion
+
+        #endregion accessControl
 
         #region IDisposable Members
+
         private bool _disposed = false;
 
         protected override void Dispose(bool disposing)
@@ -823,9 +854,8 @@ namespace CruiseDAL
                 return;
             }
 
-            if(disposing)
+            if (disposing)
             {
-
             }
 
             //ReleaseMultiDatabaseConnection(true);
@@ -839,6 +869,6 @@ namespace CruiseDAL
             this.Dispose(false);
         }
 
-        #endregion
+        #endregion IDisposable Members
     }
 }
