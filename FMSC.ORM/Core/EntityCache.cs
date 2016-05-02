@@ -1,13 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
 
+#pragma warning disable RECS0122 // Initializing field with default value is redundant
+
 namespace FMSC.ORM.Core
 {
     public class EntityCache : Dictionary<object, object> ,  IDisposable
     {
-        
+
         #region IDisposable Support
-        private bool disposedValue = false; // To detect redundant calls
+        bool disposedValue = false; // To detect redundant calls
+
 
         protected virtual void Dispose(bool disposing)
         {

@@ -17,7 +17,7 @@ namespace FMSC.ORM.Core.SQL
 
         public override string ToString()
         {
-            StringBuilder sb = new StringBuilder();
+            var sb = new StringBuilder();
             sb.AppendLine("UPDATE");
             if (ConflictOption != OnConflictOption.Default)
             { sb.AppendLine("OR " + ConflictOption.ToString()); }//enum.GetName not avalible in NetCF

@@ -16,11 +16,11 @@ namespace CruiseDAL
 {
     public abstract class DataObject : DataObject_Base, IDataErrorInfo, IValidatable
     {
-        public DataObject() : this(null)
+        protected DataObject() : this(null)
         { }
 
 
-        public DataObject(DatastoreRedux ds) : base(ds)
+        protected DataObject(DatastoreRedux ds) : base(ds)
         {
             string tableName = DatastoreRedux.LookUpEntityByType(this.GetType()).SourceName;
             ErrorCollection = new CruiseDALErrorCollection(this, tableName);

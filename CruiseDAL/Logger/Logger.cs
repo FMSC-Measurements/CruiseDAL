@@ -26,7 +26,6 @@ namespace Logger
         /// Log
         /// </summary>
         /// <param name="message"></param>
-        /// <param name="app"></param>
         public static void L(string message)
         {
             System.Diagnostics.Debug.WriteLine(message, "Info");
@@ -36,7 +35,6 @@ namespace Logger
         /// Verbose
         /// </summary>
         /// <param name="message"></param>
-        /// <param name="app"></param>
         public static void V(string message)
         {
             if (_verbose)
@@ -50,7 +48,6 @@ namespace Logger
         /// Error
         /// </summary>
         /// <param name="message"></param>
-        /// <param name="app"></param>
         public static void E(string message)
         {
             System.Diagnostics.Debug.WriteLine(message, "Error");

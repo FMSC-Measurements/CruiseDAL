@@ -22,7 +22,7 @@ namespace FMSC.ORM.Core.SQL
 
         public string ToSQL()
         {
-            StringBuilder builder = new StringBuilder();
+            var builder = new StringBuilder();
             builder.Append("SELECT ");
             builder.AppendLine(ResultColumns.ToSQL());
 

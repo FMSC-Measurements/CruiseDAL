@@ -64,7 +64,7 @@ namespace CruiseDAL.DataObjects
 
         private string BuildErrorMessage()
         {
-            System.Text.StringBuilder sb = new System.Text.StringBuilder();
+            var sb = new System.Text.StringBuilder();
             if (this.Min > 0)
             {
                 sb.AppendFormat(null, "{0} should be greater than {1}", this.Field, this.Min);
