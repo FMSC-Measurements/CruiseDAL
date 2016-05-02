@@ -1287,12 +1287,12 @@ namespace FMSC.ORM.Core
                     if (conn.State == System.Data.ConnectionState.Closed)
                     {
                         conn.Open();
+                        PersistentConnection = conn;
+                        OnConnectionOpened();
                     }
 
                     EnterConnectionHold();
-                    PersistentConnection = conn;                    
-                    OnConnectionOpened();
-
+                    
                     return conn;
                 }
                 catch (Exception e)
