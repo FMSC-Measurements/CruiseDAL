@@ -22,24 +22,6 @@ namespace CruiseDAL
             public DatastoreRedux DS;
             public string Alias;
         }
-
-        #region multiDB Fields
-
-        protected int _multiDBholdConnection = 0;
-        protected int _multiDBtransactionDepth = 0;
-        private object _multiDBTransactionSyncLock = new object();
-        protected bool _multiDBtransactionCanceled = false;
-        protected DbTransaction _multiDBCurrentTransaction;
-        protected Object _multiDBpersistentConnectionSyncLock = new object();
-        protected ICollection<ExternalDatastore> _attachedDataStores = new List<ExternalDatastore>();
-
-        protected DbConnection MultiDBPersistentConnection { get; set; }
-
-        //public IEnumerable<DatastoreRedux> AttachedDataStores { get; set; }
-        public object MultiDBTransactionSyncLock { get { return _multiDBTransactionSyncLock; } }
-
-        #endregion multiDB Fields
-
         private string _userInfo;
         private string _databaseVersion = "Unknown";
         private CruiseFileType _cruiseFileType;
@@ -101,6 +83,22 @@ namespace CruiseDAL
                 WriteCruiseFileType(value);
             }
         }
+
+        #region multiDB Fields
+        protected ICollection<ExternalDatastore> _attachedDataStores = new List<ExternalDatastore>();
+
+        protected int _multiDBholdConnection = 0;
+        protected int _multiDBtransactionDepth = 0;        
+        protected bool _multiDBtransactionCanceled = false;
+        protected DbTransaction _multiDBCurrentTransaction;
+        protected readonly object _multiDBTransactionSyncLock = new object();
+        protected readonly object _multiDBpersistentConnectionSyncLock = new object();
+        
+        protected DbConnection MultiDBPersistentConnection { get; set; }
+
+        public object MultiDBTransactionSyncLock { get { return _multiDBTransactionSyncLock; } }
+
+        #endregion multiDB Fields
 
         /// <summary>
         /// Creates a DAL instance for a database @ path.
