@@ -80,28 +80,9 @@ namespace CruiseDAL.DataObjects
                 .Join("CuttingUnit", "USING (CuttingUnit_CN)")
                 .Where("CuttingUnit.Code = ?")
                 .Read(code).ToList();
-
-            //.Read<StratumDO>("JOIN CuttingUnitStratum JOIN CuttingUnit WHERE Stratum.Stratum_CN = CuttingUnitStratum.Stratum_CN AND CuttingUnitStratum.CuttingUnit_CN = CuttingUnit.CuttingUnit_CN AND CuttingUnit.Code = ?;", (object)code);
         }
 
-        //public static void MirgeStratum(DatastoreRedux dal, CuttingUnitDO unit, StratumDO fromStratum, StratumDO toStratum)
-        //{
-        //    if (unit.DAL != fromStratum.DAL || unit.DAL != toStratum.DAL)
-        //    {
-        //        throw new InvalidOperationException("can only mirge statum within the same file");
-        //    }
 
-        //    List<TreeDO> allTreesInUnit = dal.Read<TreeDO>(
-        //        "WHERE CuttingUnit_CN = ? AND Stratum_CN = ?",
-        //        unit.CuttingUnit_CN,
-        //        fromStratum.Stratum_CN);
-
-        //    foreach (TreeDO tree in allTreesInUnit)
-        //    {
-        //        tree.Stratum = toStratum;
-        //        tree.Save();
-        //    }
-        //}
 
         public static bool CanDefineTallys(StratumDO stratum)
         {
