@@ -127,15 +127,7 @@ namespace CruiseDAL
             }
             if (db.DatabaseVersion == "2.0.0")
             {
-                SetDatabaseVersion(db, "2.1.0");
-            }
-            if (db.DatabaseVersion == "2.1.0")
-            {
-                SetDatabaseVersion(db, "2.2.0");
-            }
-            if (db.DatabaseVersion == "2.2.0")
-            {
-                SetDatabaseVersion(db, "2.3.0");
+                UpdateTo_2_1_0(db);
             }
 
             if (db.HasForeignKeyErrors(TREEDEFAULTVALUETREEAUDITVALUE._NAME))
@@ -1072,7 +1064,7 @@ JOIN Stratum USING (Stratum_CN);");
             }
         }
 
-        private static void UpdateTo_2_3_0(DAL db)
+        private static void UpdateTo_2_1_0(DAL db)
         {
             db.BeginTransaction();
             try
@@ -1092,7 +1084,9 @@ JOIN Stratum USING (Stratum_CN);");
 				Min INTEGER Default 0,
 				Max INTEGER Default 0);");
 
+                SetDatabaseVersion(db, "2.1.0");
                 db.CommitTransaction();
+
             }
             catch (Exception e)
             {
