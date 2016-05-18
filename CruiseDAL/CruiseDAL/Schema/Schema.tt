@@ -1,4 +1,4 @@
-<#@ template language="C#"  debug="true" hostSpecific="true" #>
+<#@ template language="C#v3.5"  debug="true" hostSpecific="true" #>
 <#@ output extension=".cs" #>
 <#@ Assembly Name="System.Core.dll" #>
 <#@ Assembly Name="System.Windows.Forms.dll" #>
@@ -9,11 +9,12 @@
 <#@ import namespace="System.Linq" #>
 <#@ import namespace="System.Collections" #>
 <#@ import namespace="System.Collections.Generic" #>
-<#@ import namespace="CruiseDAL.CodeGenEngine" #>
+<#@ import namespace="FMSCORM.CodeGenEngine" #> 
 <#
 DataDictionaryReader dr = new DataDictionaryReader();
 
 #>
+
 using System;
 using CruiseDAL;
 
