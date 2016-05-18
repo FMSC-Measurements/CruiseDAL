@@ -394,6 +394,8 @@ BEGIN
 	VALUES 
 	(OLD.rowID, OLD.TreeEstimate_GUID, 'TreeEstimate', '', datetime(current_timestamp, 'localtime')); 
 END;
+--FixCNTTallyClass--
+--FixCNTTallyPopulation--
 --Processing Tables--
 --VolumeEquation--
 --BiomassEquation--

@@ -1,7 +1,7 @@
 Table Name, Deletion Method,Track Creation (Created Date), Track Modification (Modified Date),,TrackRowVersion
 $MinimumCompatibleVersion=0,,,,,
 $DBVersion=2.1.0,,,,,
-$SchemaVersion=2,,,,,
+$SchemaVersion=3,,,,,
 !Core Tables,,,,,TRUE
 "Sale			",Tombstone,TRUE,TRUE,,
 "CuttingUnit			",Tombstone,TRUE,TRUE,,
@@ -17,6 +17,8 @@ $SchemaVersion=2,,,,,
 "CountTree			",None,TRUE,TRUE,,
 "Tally			",None,FALSE,FALSE,,FALSE
 TreeEstimate,TombstoneGUID,TRUE,TRUE,,FALSE
+FixCNTTallyClass,None,FALSE,FALSE,,FALSE
+FixCNTTallyPopulation,None,FALSE,FALSE,,FALSE
 ,,,,,
 !Processing Tables,None,FALSE,FALSE,,
 "VolumeEquation			",,,,,

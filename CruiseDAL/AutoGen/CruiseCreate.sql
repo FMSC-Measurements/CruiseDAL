@@ -279,6 +279,20 @@ PRAGMA foreign_keys = ON;--is the nessicary? no data is being inserted yet.
 				ModifiedBy TEXT ,
 				ModifiedDate DateTime );
 
+    CREATE TABLE FixCNTTallyClass (
+				FixCNTTallyClass_CN INTEGER PRIMARY KEY AUTOINCREMENT,
+				Stratum_CN INTEGER REFERENCES Stratum NOT NULL,
+				FieldName INTEGER Default 0);
+
+    CREATE TABLE FixCNTTallyPopulation (
+				FixCNTTallyPopulation_CN INTEGER PRIMARY KEY AUTOINCREMENT,
+				FixCNTTallyClass_CN INTEGER REFERENCES FixCNTTallyClass NOT NULL,
+				SampleGroup_CN INTEGER REFERENCES SampleGroup NOT NULL,
+				TreeDefaultValue_CN INTEGER REFERENCES TreeDefaultValue NOT NULL,
+				IntervalSize INTEGER Default 0,
+				Min INTEGER Default 0,
+				Max INTEGER Default 0);
+
 --Processing Tables--
     CREATE TABLE VolumeEquation (
 				Species TEXT NOT NULL,
@@ -795,6 +809,6 @@ JOIN Stratum USING (Stratum_CN);
 
 
 INSERT INTO Globals (Block, Key, Value) VALUES ("Database", "Version", "2.1.0"); 
-PRAGMA user_version = 2;
+PRAGMA user_version = 3;
 
 
