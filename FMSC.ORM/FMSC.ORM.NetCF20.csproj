@@ -2,7 +2,7 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProductVersion>9.0.21022</ProductVersion>
+    <ProductVersion>9.0.30729</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{D346BFEA-85A0-4A5D-BD89-D07E073B065E}</ProjectGuid>
     <OutputType>Library</OutputType>
@@ -45,6 +45,10 @@
     <GenerateSerializationAssemblies>Off</GenerateSerializationAssemblies>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="FMSC.Core_CF20, Version=1.0.0.26521, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\FMSC.Core\NetCF20\FMSC.Core_CF20.dll</HintPath>
+    </Reference>
     <Reference Include="mscorlib" />
     <Reference Include="System" />
     <Reference Include="System.Data" />
@@ -127,12 +131,6 @@
     <Compile Include="EntityModel\Validation\IFieldValidator.cs" />
     <Compile Include="EntityModel\Validation\IValidatable.cs" />
     <Compile Include="EntityModel\Validation\Validator.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\FMSC.Core\FMSC.Core\FMSC.Core_CF20.csproj">
-      <Project>{05982179-854B-4C5D-85B9-215F7C9A578A}</Project>
-      <Name>FMSC.Core_CF20</Name>
-    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CompactFramework.CSharp.targets" />
   <ProjectExtensions>
