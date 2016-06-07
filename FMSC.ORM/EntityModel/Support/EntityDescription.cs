@@ -1,12 +1,11 @@
 using System;
 using System.Reflection;
 using System.Collections.Generic;
-
+using System.Linq;
 using System.Text;
 using System.Data;
 using System.Diagnostics;
 using FMSC.ORM.Core.SQL;
-using System.Linq;
 using FMSC.ORM.EntityModel.Attributes;
 
 #if Mono

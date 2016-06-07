@@ -3,7 +3,7 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProductVersion>9.0.30729</ProductVersion>
+    <ProductVersion>9.0.21022</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{0452719F-1CAA-4959-B00C-AB8B1C438571}</ProjectGuid>
     <OutputType>Library</OutputType>
@@ -108,6 +108,12 @@
     <Compile Include="SQLite\SQLiteDatabaseBuilder.cs" />
     <Compile Include="SQLite\SQLiteDatastore.cs" />
     <Compile Include="SQLite\SQLiteProviderFactory.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\FMSC.Core\FMSC.Core\FMSC.Core.csproj">
+      <Project>{C87F7C8E-5C15-4EF0-990C-DA8ED23E0A99}</Project>
+      <Name>FMSC.Core</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

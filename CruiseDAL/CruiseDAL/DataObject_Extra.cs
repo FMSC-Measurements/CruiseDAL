@@ -14,7 +14,7 @@ using FMSC.ORM.EntityModel.Attributes;
 
 namespace CruiseDAL
 {
-    public abstract class DataObject : DataObject_Base, IDataErrorInfo, IValidatable
+    public abstract class DataObject : DataObject_Base, IDataErrorInfo, IValidatable, INotifyDataErrorInfo
     {
         protected DataObject() : this(null)
         { }
@@ -460,6 +460,12 @@ namespace CruiseDAL
             {
                 bool isValid = DoValidate();
                 this.IsValidated = true;
+
+                if (!isValid && ErrorsChanged != null)
+                {
+                    ErrorsChanged(this, new DataErrorsChangedEventArgs(this.ErrorCollection.GetErrors()));
+                }
+
                 return isValid;
             }
             else
@@ -508,5 +514,13 @@ namespace CruiseDAL
         #endregion
 
 
+        bool INotifyDataErrorInfo.HasErrors { get { return this.ErrorCollection.HasErrors; } }
+
+        public IEnumerable<string> GetErrors(String propertyName)
+        {
+            yield return String.Concat(this.ErrorCollection.GetErrors(propertyName));
+        }
+
+        public event EventHandler<DataErrorsChangedEventArgs> ErrorsChanged;
     }
 }
