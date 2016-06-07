@@ -4984,6 +4984,420 @@ namespace CruiseDAL.DataObjects
 			KPI = obj.KPI;
 		}
 	}
+	[EntitySource(SourceName = "FixCNTTallyClass")]
+	public partial class FixCNTTallyClassDO : DataObject
+	{
+		private static RowValidator _validator;
+		
+		[XmlIgnore]
+		public new DAL DAL
+		{
+			get { return (DAL)base.DAL; }
+			set { base.DAL = value; }
+		}
+		
+		[XmlIgnore]
+		public override RowValidator Validator
+		{
+		    get
+		    {
+		        return _validator;
+		    }
+		}
+		
+		
+		#region Ctor
+		static FixCNTTallyClassDO()
+		{    
+			_validator = new RowValidator();
+			_validator.Add(new NotNullRule("Stratum_CN", "FixCNTTallyClass", "Stratum_CN is Required"));
+		}
+		
+		public FixCNTTallyClassDO() {}
+		
+		public FixCNTTallyClassDO(FixCNTTallyClassDO obj) : this()
+		{
+		    SetValues(obj);
+		}
+		
+		public FixCNTTallyClassDO(DatastoreRedux DAL) : base(DAL)
+		{}
+		#endregion
+		[XmlIgnore]
+		[PrimaryKeyField(Name = "FixCNTTallyClass_CN")]
+		public Int64? FixCNTTallyClass_CN
+		{
+			get{ return base.rowID; }
+			set{ base.rowID = value; }
+		}
+		private long? _stratum_cn ;
+		[XmlIgnore]
+		[Field(Name = "Stratum_CN")]
+		public virtual long? Stratum_CN
+		{
+		    get 
+		    { 
+		         
+		        if(_stratum != null)
+		        {
+		            return _stratum.Stratum_CN;
+		        }
+		                return _stratum_cn; 
+		    }
+		    set 
+		    {
+		        if(_stratum_cn == value) { return; }
+		        if(value == null || value.Value == 0) { _stratum = null;  }
+		        _stratum_cn = value;
+		        this.ValidateProperty(FIXCNTTALLYCLASS.STRATUM_CN, _stratum_cn);
+		        this.NotifyPropertyChanged(FIXCNTTALLYCLASS.STRATUM_CN);
+		    }
+		}
+		public virtual StratumDO GetStratum()
+		{
+		    if(DAL == null) { return null; }
+			if(this.Stratum_CN == null) { return null; }//  don't bother reading if identity is null
+			return DAL.ReadSingleRow<StratumDO>( this.Stratum_CN);
+		    //return DAL.ReadSingleRow<StratumDO>(STRATUM._NAME, this.Stratum_CN);
+		}
+		 
+		private StratumDO _stratum = null;
+		[XmlIgnore]
+		public StratumDO Stratum
+		{
+		    get
+		    {
+		        if(_stratum == null)
+		        {
+		            _stratum = GetStratum();
+		        }
+		        return _stratum;
+		    }
+		    set
+		    {
+		        if(_stratum == value) { return; }
+		        _stratum = value;
+		        Stratum_CN = (value != null) ? value.Stratum_CN : null;
+		    }
+		}
+		private Int64 _fieldname ;
+		[XmlElement]
+		[Field(Name = "FieldName")]
+		public virtual Int64 FieldName
+		{
+		    get 
+		    { 
+		                return _fieldname; 
+		    }
+		    set 
+		    {
+		        if(_fieldname == value) { return; }
+		        _fieldname = value;
+		        this.ValidateProperty(FIXCNTTALLYCLASS.FIELDNAME, _fieldname);
+		        this.NotifyPropertyChanged(FIXCNTTALLYCLASS.FIELDNAME);
+		    }
+		}
+
+		protected override bool DoValidate()
+		{
+			if(ErrorCollection.ErrorsLoaded == false)
+			{
+				this.ErrorCollection.PopulateErrorList();
+			}
+			bool isValid = true;
+			isValid = ValidateProperty("FieldName", this.FieldName) && isValid;
+			isValid = ValidateProperty("Stratum_CN", this.Stratum_CN) && isValid ;
+			return isValid;
+		}
+		public override void SetValues(DataObject obj)
+		{
+			this.SetValues(obj as FixCNTTallyClassDO);
+		}
+
+		public void SetValues(FixCNTTallyClassDO obj)
+		{
+			if(obj == null) { return; }
+			FieldName = obj.FieldName;
+		}
+	}
+	[EntitySource(SourceName = "FixCNTTallyPopulation")]
+	public partial class FixCNTTallyPopulationDO : DataObject
+	{
+		private static RowValidator _validator;
+		
+		[XmlIgnore]
+		public new DAL DAL
+		{
+			get { return (DAL)base.DAL; }
+			set { base.DAL = value; }
+		}
+		
+		[XmlIgnore]
+		public override RowValidator Validator
+		{
+		    get
+		    {
+		        return _validator;
+		    }
+		}
+		
+		
+		#region Ctor
+		static FixCNTTallyPopulationDO()
+		{    
+			_validator = new RowValidator();
+			_validator.Add(new NotNullRule("FixCNTTallyClass_CN", "FixCNTTallyPopulation", "FixCNTTallyClass_CN is Required"));
+			_validator.Add(new NotNullRule("SampleGroup_CN", "FixCNTTallyPopulation", "SampleGroup_CN is Required"));
+			_validator.Add(new NotNullRule("TreeDefaultValue_CN", "FixCNTTallyPopulation", "TreeDefaultValue_CN is Required"));
+		}
+		
+		public FixCNTTallyPopulationDO() {}
+		
+		public FixCNTTallyPopulationDO(FixCNTTallyPopulationDO obj) : this()
+		{
+		    SetValues(obj);
+		}
+		
+		public FixCNTTallyPopulationDO(DatastoreRedux DAL) : base(DAL)
+		{}
+		#endregion
+		[XmlIgnore]
+		[PrimaryKeyField(Name = "FixCNTTallyPopulation_CN")]
+		public Int64? FixCNTTallyPopulation_CN
+		{
+			get{ return base.rowID; }
+			set{ base.rowID = value; }
+		}
+		private long? _fixcnttallyclass_cn ;
+		[XmlIgnore]
+		[Field(Name = "FixCNTTallyClass_CN")]
+		public virtual long? FixCNTTallyClass_CN
+		{
+		    get 
+		    { 
+		         
+		        if(_fixcnttallyclass != null)
+		        {
+		            return _fixcnttallyclass.FixCNTTallyClass_CN;
+		        }
+		                return _fixcnttallyclass_cn; 
+		    }
+		    set 
+		    {
+		        if(_fixcnttallyclass_cn == value) { return; }
+		        if(value == null || value.Value == 0) { _fixcnttallyclass = null;  }
+		        _fixcnttallyclass_cn = value;
+		        this.ValidateProperty(FIXCNTTALLYPOPULATION.FIXCNTTALLYCLASS_CN, _fixcnttallyclass_cn);
+		        this.NotifyPropertyChanged(FIXCNTTALLYPOPULATION.FIXCNTTALLYCLASS_CN);
+		    }
+		}
+		public virtual FixCNTTallyClassDO GetFixCNTTallyClass()
+		{
+		    if(DAL == null) { return null; }
+			if(this.FixCNTTallyClass_CN == null) { return null; }//  don't bother reading if identity is null
+			return DAL.ReadSingleRow<FixCNTTallyClassDO>( this.FixCNTTallyClass_CN);
+		    //return DAL.ReadSingleRow<FixCNTTallyClassDO>(FIXCNTTALLYCLASS._NAME, this.FixCNTTallyClass_CN);
+		}
+		 
+		private FixCNTTallyClassDO _fixcnttallyclass = null;
+		[XmlIgnore]
+		public FixCNTTallyClassDO FixCNTTallyClass
+		{
+		    get
+		    {
+		        if(_fixcnttallyclass == null)
+		        {
+		            _fixcnttallyclass = GetFixCNTTallyClass();
+		        }
+		        return _fixcnttallyclass;
+		    }
+		    set
+		    {
+		        if(_fixcnttallyclass == value) { return; }
+		        _fixcnttallyclass = value;
+		        FixCNTTallyClass_CN = (value != null) ? value.FixCNTTallyClass_CN : null;
+		    }
+		}
+		private long? _samplegroup_cn ;
+		[XmlIgnore]
+		[Field(Name = "SampleGroup_CN")]
+		public virtual long? SampleGroup_CN
+		{
+		    get 
+		    { 
+		         
+		        if(_samplegroup != null)
+		        {
+		            return _samplegroup.SampleGroup_CN;
+		        }
+		                return _samplegroup_cn; 
+		    }
+		    set 
+		    {
+		        if(_samplegroup_cn == value) { return; }
+		        if(value == null || value.Value == 0) { _samplegroup = null;  }
+		        _samplegroup_cn = value;
+		        this.ValidateProperty(FIXCNTTALLYPOPULATION.SAMPLEGROUP_CN, _samplegroup_cn);
+		        this.NotifyPropertyChanged(FIXCNTTALLYPOPULATION.SAMPLEGROUP_CN);
+		    }
+		}
+		public virtual SampleGroupDO GetSampleGroup()
+		{
+		    if(DAL == null) { return null; }
+			if(this.SampleGroup_CN == null) { return null; }//  don't bother reading if identity is null
+			return DAL.ReadSingleRow<SampleGroupDO>( this.SampleGroup_CN);
+		    //return DAL.ReadSingleRow<SampleGroupDO>(SAMPLEGROUP._NAME, this.SampleGroup_CN);
+		}
+		 
+		private SampleGroupDO _samplegroup = null;
+		[XmlIgnore]
+		public SampleGroupDO SampleGroup
+		{
+		    get
+		    {
+		        if(_samplegroup == null)
+		        {
+		            _samplegroup = GetSampleGroup();
+		        }
+		        return _samplegroup;
+		    }
+		    set
+		    {
+		        if(_samplegroup == value) { return; }
+		        _samplegroup = value;
+		        SampleGroup_CN = (value != null) ? value.SampleGroup_CN : null;
+		    }
+		}
+		private long? _treedefaultvalue_cn ;
+		[XmlIgnore]
+		[Field(Name = "TreeDefaultValue_CN")]
+		public virtual long? TreeDefaultValue_CN
+		{
+		    get 
+		    { 
+		         
+		        if(_treedefaultvalue != null)
+		        {
+		            return _treedefaultvalue.TreeDefaultValue_CN;
+		        }
+		                return _treedefaultvalue_cn; 
+		    }
+		    set 
+		    {
+		        if(_treedefaultvalue_cn == value) { return; }
+		        if(value == null || value.Value == 0) { _treedefaultvalue = null;  }
+		        _treedefaultvalue_cn = value;
+		        this.ValidateProperty(FIXCNTTALLYPOPULATION.TREEDEFAULTVALUE_CN, _treedefaultvalue_cn);
+		        this.NotifyPropertyChanged(FIXCNTTALLYPOPULATION.TREEDEFAULTVALUE_CN);
+		    }
+		}
+		public virtual TreeDefaultValueDO GetTreeDefaultValue()
+		{
+		    if(DAL == null) { return null; }
+			if(this.TreeDefaultValue_CN == null) { return null; }//  don't bother reading if identity is null
+			return DAL.ReadSingleRow<TreeDefaultValueDO>( this.TreeDefaultValue_CN);
+		    //return DAL.ReadSingleRow<TreeDefaultValueDO>(TREEDEFAULTVALUE._NAME, this.TreeDefaultValue_CN);
+		}
+		 
+		private TreeDefaultValueDO _treedefaultvalue = null;
+		[XmlIgnore]
+		public TreeDefaultValueDO TreeDefaultValue
+		{
+		    get
+		    {
+		        if(_treedefaultvalue == null)
+		        {
+		            _treedefaultvalue = GetTreeDefaultValue();
+		        }
+		        return _treedefaultvalue;
+		    }
+		    set
+		    {
+		        if(_treedefaultvalue == value) { return; }
+		        _treedefaultvalue = value;
+		        TreeDefaultValue_CN = (value != null) ? value.TreeDefaultValue_CN : null;
+		    }
+		}
+		private Int64 _intervalsize ;
+		[XmlElement]
+		[Field(Name = "IntervalSize")]
+		public virtual Int64 IntervalSize
+		{
+		    get 
+		    { 
+		                return _intervalsize; 
+		    }
+		    set 
+		    {
+		        if(_intervalsize == value) { return; }
+		        _intervalsize = value;
+		        this.ValidateProperty(FIXCNTTALLYPOPULATION.INTERVALSIZE, _intervalsize);
+		        this.NotifyPropertyChanged(FIXCNTTALLYPOPULATION.INTERVALSIZE);
+		    }
+		}
+		private Int64 _min ;
+		[XmlElement]
+		[Field(Name = "Min")]
+		public virtual Int64 Min
+		{
+		    get 
+		    { 
+		                return _min; 
+		    }
+		    set 
+		    {
+		        if(_min == value) { return; }
+		        _min = value;
+		        this.ValidateProperty(FIXCNTTALLYPOPULATION.MIN, _min);
+		        this.NotifyPropertyChanged(FIXCNTTALLYPOPULATION.MIN);
+		    }
+		}
+		private Int64 _max ;
+		[XmlElement]
+		[Field(Name = "Max")]
+		public virtual Int64 Max
+		{
+		    get 
+		    { 
+		                return _max; 
+		    }
+		    set 
+		    {
+		        if(_max == value) { return; }
+		        _max = value;
+		        this.ValidateProperty(FIXCNTTALLYPOPULATION.MAX, _max);
+		        this.NotifyPropertyChanged(FIXCNTTALLYPOPULATION.MAX);
+		    }
+		}
+
+		protected override bool DoValidate()
+		{
+			if(ErrorCollection.ErrorsLoaded == false)
+			{
+				this.ErrorCollection.PopulateErrorList();
+			}
+			bool isValid = true;
+			isValid = ValidateProperty("IntervalSize", this.IntervalSize) && isValid;
+			isValid = ValidateProperty("Min", this.Min) && isValid;
+			isValid = ValidateProperty("Max", this.Max) && isValid;
+			isValid = ValidateProperty("FixCNTTallyClass_CN", this.FixCNTTallyClass_CN) && isValid ;
+			isValid = ValidateProperty("SampleGroup_CN", this.SampleGroup_CN) && isValid ;
+			isValid = ValidateProperty("TreeDefaultValue_CN", this.TreeDefaultValue_CN) && isValid ;
+			return isValid;
+		}
+		public override void SetValues(DataObject obj)
+		{
+			this.SetValues(obj as FixCNTTallyPopulationDO);
+		}
+
+		public void SetValues(FixCNTTallyPopulationDO obj)
+		{
+			if(obj == null) { return; }
+			IntervalSize = obj.IntervalSize;
+			Min = obj.Min;
+			Max = obj.Max;
+		}
+	}
 	#endregion
 	#region Processing Tables
 	[EntitySource(SourceName = "VolumeEquation")]

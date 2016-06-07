@@ -5,6 +5,7 @@ using CruiseDAL.MappingCollections;
 using FMSC.ORM.Core;
 using CruiseDAL.Enums;
 using System.Linq;
+using CruiseDAL.Schema;
 
 namespace CruiseDAL.DataObjects
 {
@@ -302,8 +303,10 @@ namespace CruiseDAL.DataObjects
            {
                return false;
            }
-           if (stratum.Method == "PNT" || stratum.Method == "FIX" ||
-               stratum.Method == "100")
+           if (stratum.Method == CruiseMethods.PNT 
+                || stratum.Method == CruiseMethods.FIX 
+                || stratum.Method == CruiseMethods.H_PCT 
+                || stratum.Method == CruiseMethods.FIXCNT)
            {
                return false;
            }

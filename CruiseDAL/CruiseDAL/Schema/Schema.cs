@@ -1,3 +1,5 @@
+ 
+
 using System;
 using CruiseDAL;
 
@@ -281,6 +283,30 @@ namespace CruiseDAL.Schema
 		public const string KPI = "KPI";
 		public static string[] _ALL = { TREEESTIMATE_CN, COUNTTREE_CN, TREEESTIMATE_GUID, KPI };
 		public enum TREEESTIMATE_FIELDS { TreeEstimate_CN, CountTree_CN, TreeEstimate_GUID, KPI };
+	}
+
+	public static class FIXCNTTALLYCLASS
+	{
+		public const string _NAME = "FixCNTTallyClass";
+		public const string FIXCNTTALLYCLASS_CN = "FixCNTTallyClass_CN";
+		public const string STRATUM_CN = "Stratum_CN";
+		public const string FIELDNAME = "FieldName";
+		public static string[] _ALL = { FIXCNTTALLYCLASS_CN, STRATUM_CN, FIELDNAME };
+		public enum FIXCNTTALLYCLASS_FIELDS { FixCNTTallyClass_CN, Stratum_CN, FieldName };
+	}
+
+	public static class FIXCNTTALLYPOPULATION
+	{
+		public const string _NAME = "FixCNTTallyPopulation";
+		public const string FIXCNTTALLYPOPULATION_CN = "FixCNTTallyPopulation_CN";
+		public const string FIXCNTTALLYCLASS_CN = "FixCNTTallyClass_CN";
+		public const string SAMPLEGROUP_CN = "SampleGroup_CN";
+		public const string TREEDEFAULTVALUE_CN = "TreeDefaultValue_CN";
+		public const string INTERVALSIZE = "IntervalSize";
+		public const string MIN = "Min";
+		public const string MAX = "Max";
+		public static string[] _ALL = { FIXCNTTALLYPOPULATION_CN, FIXCNTTALLYCLASS_CN, SAMPLEGROUP_CN, TREEDEFAULTVALUE_CN, INTERVALSIZE, MIN, MAX };
+		public enum FIXCNTTALLYPOPULATION_FIELDS { FixCNTTallyPopulation_CN, FixCNTTallyClass_CN, SampleGroup_CN, TreeDefaultValue_CN, IntervalSize, Min, Max };
 	}
 
 	#endregion
@@ -910,7 +936,7 @@ namespace CruiseDAL.Schema
 
 	public static class Schema
 	{
-		public static String[] TABLE_NAMES = { "Sale","CuttingUnit","Stratum","CuttingUnitStratum","SampleGroup","TreeDefaultValue","SampleGroupTreeDefaultValue","Plot","Tree","Log","Stem","CountTree","Tally","TreeEstimate","VolumeEquation","BiomassEquation","ValueEquation","QualityAdjEquation","Reports","TreeCalculatedValues","LCD","POP","PRO","LogStock","SampleGroupStats","SampleGroupStatsTreeDefaultValue","StratumStats","Regression","LogMatrix","TreeDefaultValueTreeAuditValue","TreeAuditValue","LogFieldSetup","TreeFieldSetup","LogFieldSetupDefault","TreeFieldSetupDefault","CruiseMethods","LoggingMethods","ProductCodes","UOMCodes","Regions","Forests","ErrorLog","MessageLog","Globals","Component" };
+		public static String[] TABLE_NAMES = { "Sale","CuttingUnit","Stratum","CuttingUnitStratum","SampleGroup","TreeDefaultValue","SampleGroupTreeDefaultValue","Plot","Tree","Log","Stem","CountTree","Tally","TreeEstimate","FixCNTTallyClass","FixCNTTallyPopulation","VolumeEquation","BiomassEquation","ValueEquation","QualityAdjEquation","Reports","TreeCalculatedValues","LCD","POP","PRO","LogStock","SampleGroupStats","SampleGroupStatsTreeDefaultValue","StratumStats","Regression","LogMatrix","TreeDefaultValueTreeAuditValue","TreeAuditValue","LogFieldSetup","TreeFieldSetup","LogFieldSetupDefault","TreeFieldSetupDefault","CruiseMethods","LoggingMethods","ProductCodes","UOMCodes","Regions","Forests","ErrorLog","MessageLog","Globals","Component" };
 	}
 }
 
