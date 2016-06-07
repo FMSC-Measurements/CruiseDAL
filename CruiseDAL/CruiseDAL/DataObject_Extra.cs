@@ -521,6 +521,23 @@ namespace CruiseDAL
             yield return String.Concat(this.ErrorCollection.GetErrors(propertyName));
         }
 
-        public event EventHandler<DataErrorsChangedEventArgs> ErrorsChanged;
+        public event EventHandler<DataErrorsChangedEventArgs> ErrorsChanged
+        {
+            add
+            {
+                lock (this.ErrorCollection.ErrorsChanged)
+                {
+                    this.ErrorCollection.ErrorsChanged += value; 
+                }
+            }
+
+            remove
+            {
+                lock (this.ErrorCollection.ErrorsChanged)
+                {
+                    ErrorCollection.ErrorsChanged -= value; 
+                }
+            }
+        }
     }
 }

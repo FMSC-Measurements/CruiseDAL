@@ -13,6 +13,8 @@ namespace CruiseDAL
         Dictionary<String, ErrorLogDO> _errors;
         readonly object _errorsSyncLock = new object();
 
+        public event EventHandler<DataErrorsChangedEventArgs> ErrorsChanged;
+
         String _tableName;
         //EntityDescription _entityDescription;
         DataObject _dataObject;
@@ -134,6 +136,9 @@ namespace CruiseDAL
                     _errors[propName] = e;
                     //OnErrorsChanged(new DataErrorsChangedEventArgs(propName));
                 }
+
+                if (ErrorsChanged != null)
+                    ErrorsChanged(_dataObject, new DataErrorsChangedEventArgs(propName));
             }
         }
 
@@ -162,6 +167,9 @@ namespace CruiseDAL
                 {
                     this._errors = null;
                 }
+
+                if (ErrorsChanged != null)
+                    ErrorsChanged(_dataObject, new DataErrorsChangedEventArgs(propName));
             }
         }
 
