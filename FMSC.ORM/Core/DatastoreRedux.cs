@@ -25,7 +25,7 @@ namespace FMSC.ORM.Core
 
         protected DbTransaction _CurrentTransaction;
         protected Dictionary<Type, EntityCache> _entityCache;
-        
+
         protected DbConnection PersistentConnection { get; set; }
         protected DbProviderFactoryAdapter Provider { get; set; }
 
@@ -71,7 +71,7 @@ namespace FMSC.ORM.Core
             return _globalEntityDescriptionLookup[t.Name];
         }
 
-        #endregion sugar
+        #endregion Entity Info
 
         #region Abstract Members
 
@@ -85,7 +85,7 @@ namespace FMSC.ORM.Core
 
         protected abstract Exception ThrowExceptionHelper(DbConnection conn, DbCommand comm, Exception innerException);
 
-        #endregion abstract members
+        #endregion Abstract Members
 
         #region fluent interface
 
@@ -165,7 +165,11 @@ namespace FMSC.ORM.Core
 
                 using (DbCommand command = builder.BuildInsertCommand(Provider, data, keyData, option))
                 {
-                    ExecuteSQL(command);
+                    var changes = ExecuteSQL(command);
+                    if (changes == 0)   //command did not result in any changes to the database
+                    {
+                        return null;    //so do not try to get the rowid or call OnInsertedData
+                    }
                 }
 
                 var primaryKeyField = entityDescription.Fields.PrimaryKeyField;
@@ -1292,7 +1296,7 @@ namespace FMSC.ORM.Core
                     }
 
                     EnterConnectionHold();
-                    
+
                     return conn;
                 }
                 catch (Exception e)
