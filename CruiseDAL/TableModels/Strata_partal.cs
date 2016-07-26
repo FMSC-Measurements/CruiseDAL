@@ -1,16 +1,17 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using CruiseDAL.MappingCollections;
-using FMSC.ORM.Core;
+﻿using CruiseDAL.MappingCollections;
 using CruiseDAL.Schema;
+using FMSC.ORM.Core;
+using System;
+using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 
 namespace CruiseDAL.DataObjects
 {
     public partial class StratumDO
     {
         protected CuttingUnitCollection _CuttingUnits = null;
+
         public CuttingUnitCollection CuttingUnits
         {
             get
@@ -43,7 +44,7 @@ namespace CruiseDAL.DataObjects
         protected override bool ValidateProperty(string name, object value)
         {
             bool isValid = true;
-            if (name == STRATUM.KZ3PPNT) 
+            if (name == STRATUM.KZ3PPNT)
             {
                 if (this.Method == "3PPNT" && this.KZ3PPNT <= 0)
                 {
@@ -67,7 +68,7 @@ namespace CruiseDAL.DataObjects
                     this.RemoveError(name, "Cruise Method Not Supported");
                 }
             }
-        
+
             isValid = base.ValidateProperty(name, value) && isValid;
             return isValid;
         }
@@ -81,8 +82,6 @@ namespace CruiseDAL.DataObjects
                 .Where("CuttingUnit.Code = ?")
                 .Read(code).ToList();
         }
-
-
 
         public static bool CanDefineTallys(StratumDO stratum)
         {
@@ -98,21 +97,21 @@ namespace CruiseDAL.DataObjects
 
         public static int DeleteStratum(DatastoreRedux dal, StratumDO stratum)
         {
-           // check tree table for data
+            // check tree table for data
             if (dal.GetRowCount("Tree", "WHERE Stratum_CN = ?", stratum.Stratum_CN) > 0) { return (-1); }
-           // check plot table for data
+            // check plot table for data
             if (dal.GetRowCount("Plot", "WHERE Stratum_CN = ?", stratum.Stratum_CN) > 0) { return (-1); }
-           // Check Count table for each sample group
-           if (dal.GetRowCount("CountTree", "JOIN SampleGroup ON CountTree.SampleGroup_CN = SampleGroup.SampleGroup_CN WHERE SampleGroup.Stratum_CN = ? AND CountTree.TreeCount > 0", stratum.Stratum_CN) > 0) return (-1);
+            // Check Count table for each sample group
+            if (dal.GetRowCount("CountTree", "JOIN SampleGroup ON CountTree.SampleGroup_CN = SampleGroup.SampleGroup_CN WHERE SampleGroup.Stratum_CN = ? AND CountTree.TreeCount > 0", stratum.Stratum_CN) > 0) return (-1);
 
             //Delete sample groups for stratum
             List<SampleGroupDO> allSGInStratum = dal.From<SampleGroupDO>()
                  .Where("Stratum_CN = ?")
                  .Read(stratum.Stratum_CN).ToList();
-            
+
             //.Read<SampleGroupDO>("WHERE Stratum_CN = ?", stratum.Stratum_CN);
-           foreach (SampleGroupDO Sg in allSGInStratum)
-           {
+            foreach (SampleGroupDO Sg in allSGInStratum)
+            {
                 //Delete Count Records for stratum
                 List<CountTreeDO> allCountInSG = dal.From<CountTreeDO>()
                       .Where("SampleGroup_CN = ?")
@@ -124,7 +123,7 @@ namespace CruiseDAL.DataObjects
                     Cnt.Delete();
                 }
                 Sg.Delete();
-           }
+            }
 
             //Delete stratum stats for stratum
             List<StratumStatsDO> allStratumStatsInStratum = dal.From<StratumStatsDO>()
@@ -138,9 +137,9 @@ namespace CruiseDAL.DataObjects
                 StratumStats.DeleteStratumStats(dal, StratumStats.StratumStats_CN);
             }
 
-           stratum.Delete();
-           
-           return (0);
+            stratum.Delete();
+
+            return (0);
         }
 
         public static void RecursiveDeleteStratum(StratumDO stratum)
@@ -150,12 +149,11 @@ namespace CruiseDAL.DataObjects
             db.BeginTransaction();
             try
             {
-                
                 string command =
             String.Format(@"DELETE From CuttingUnitStratum WHERE Stratum_CN = {0};
 DELETE FROM Log WHERE Tree_CN IN (SELECT Tree_CN FROM Tree WHERE Tree.Stratum_CN = {0});
 DELETE FROM LogStock WHERE Tree_CN IN (SELECT Tree_CN FROM Tree WHERE Tree.Stratum_CN = {0});
-DELETE FROM TreeCalculatedValues WHERE Tree_CN IN (SELECT 1 FROM Tree WHERE Tree.Stratum_CN = {0});
+DELETE FROM TreeCalculatedValues WHERE Tree_CN IN (SELECT Tree_CN FROM Tree WHERE Tree.Stratum_CN = {0});
 DELETE FROM Tree WHERE Stratum_CN = {0};
 DELETE FROM Plot WHERE Stratum_CN = {0};
 DELETE FROM TreeEstimate WHERE CountTree_CN IN (SELECT CountTree_CN FROM CountTree JOIN SampleGroup USING (SampleGroup_CN) WHERE Stratum_CN = {0});
@@ -174,8 +172,6 @@ DELETE FROM LogFieldSetup WHERE Stratum_CN = {0};",
                 db.RollbackTransaction();
                 throw e;
             }
-
-
         }
 
         public List<T> ReadSampleGroups<T>() where T : SampleGroupDO, new()
