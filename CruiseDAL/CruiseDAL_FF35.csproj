@@ -54,6 +54,10 @@
       <HintPath>..\..\Logger\Logger\bin\Release\Logger.dll</HintPath>
     </Reference>
 	-->
+    <Reference Include="FMSC.Core, Version=1.0.0.26522, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\FMSC.Core\Net35\FMSC.Core.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>

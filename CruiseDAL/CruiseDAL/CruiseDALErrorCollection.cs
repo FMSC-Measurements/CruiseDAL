@@ -13,7 +13,10 @@ namespace CruiseDAL
         Dictionary<String, ErrorLogDO> _errors;
         readonly object _errorsSyncLock = new object();
 
+        public event EventHandler<DataErrorsChangedEventArgs> ErrorsChanged;
+
         String _tableName;
+
         //EntityDescription _entityDescription;
         DataObject _dataObject;
 
@@ -26,7 +29,6 @@ namespace CruiseDAL
         }
 
         public bool ErrorsLoaded { get; set; }
-
 
         public bool HasErrors
         {
@@ -71,6 +73,7 @@ namespace CruiseDAL
                 }
             }
         }
+
         public bool HasError(string propName)
         {
             if (HasErrors == false) { return false; }
@@ -127,13 +130,14 @@ namespace CruiseDAL
                         _errors[propName] = e;
                         //OnErrorsChanged(new DataErrorsChangedEventArgs(propName));
                     }
-
                 }
                 else
                 {
                     _errors[propName] = e;
                     //OnErrorsChanged(new DataErrorsChangedEventArgs(propName));
                 }
+
+                OnDataErrorsChanged(new DataErrorsChangedEventArgs(propName));
             }
         }
 
@@ -158,11 +162,20 @@ namespace CruiseDAL
                         //OnErrorsChanged(new DataErrorsChangedEventArgs(propName));
                     }
                 }
+
                 if (this._errors.Count == 0)
                 {
                     this._errors = null;
                 }
+
+                OnDataErrorsChanged(new DataErrorsChangedEventArgs(propName));
             }
+        }
+
+        protected void OnDataErrorsChanged(DataErrorsChangedEventArgs e)
+        {
+            if (ErrorsChanged != null)
+            { ErrorsChanged(_dataObject, e); }
         }
 
         internal void ClearErrors()
@@ -183,7 +196,6 @@ namespace CruiseDAL
                         }
                     }
                     keysToRemove.Add(kv.Key);
-
                 }
 
                 foreach (string k in keysToRemove)
@@ -212,7 +224,6 @@ namespace CruiseDAL
                         }
                     }
                     keysToRemove.Add(kv.Key);
-
                 }
 
                 foreach (string k in keysToRemove)
@@ -250,7 +261,7 @@ namespace CruiseDAL
 
             var errors = _dataObject.DAL.From<ErrorLogDO>()
                 .Where("TableName = ? AND CN_Number = ? ")
-                .Read(tableName, _dataObject.rowID);                
+                .Read(tableName, _dataObject.rowID);
 
             foreach (ErrorLogDO e in errors)
             {
@@ -265,7 +276,7 @@ namespace CruiseDAL
                 , "data object must be persisted before you can save errors");
 
             if (_dataObject.IsPersisted == false) { return; }
-            
+
             lock (this._errorsSyncLock)
             {
                 if (this._errors == null) { return; } //no errors to save
@@ -280,7 +291,6 @@ namespace CruiseDAL
                     e.Save(OnConflictOption.Replace);
                 }
             }
-
         }
     }
 }

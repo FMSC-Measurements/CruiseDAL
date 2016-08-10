@@ -45,6 +45,10 @@
     <GenerateSerializationAssemblies>Off</GenerateSerializationAssemblies>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="FMSC.Core_CF20, Version=1.0.0.26521, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\FMSC.Core\NetCF20\FMSC.Core_CF20.dll</HintPath>
+    </Reference>
     <Reference Include="mscorlib" />
     <Reference Include="System" />
     <Reference Include="System.Data" />
@@ -85,9 +89,6 @@
     <Compile Include="Core\SQL\SQLUpdateCommand.cs" />
     <Compile Include="Core\SQL\TableOrSubQuery.cs" />
     <Compile Include="Core\SQL\WhereClause.cs" />
-    <Compile Include="NetCF\DeviceInfo.cs" />
-    <Compile Include="NetCF\System\ExtensionAttribute.cs" />
-    <Compile Include="NetCF\System\StringBuilderExtensions.cs" />
     <Compile Include="Properties\AssemblyInfo.NetCF20.cs" />
     <Compile Include="SQLite\SQLiteDatabaseBuilder.cs" />
     <Compile Include="SQLite\SQLiteDatastore.cs" />
@@ -130,8 +131,6 @@
     <Compile Include="EntityModel\Validation\IFieldValidator.cs" />
     <Compile Include="EntityModel\Validation\IValidatable.cs" />
     <Compile Include="EntityModel\Validation\Validator.cs" />
-    <Compile Include="NetCF\System\Action.cs" />
-    <Compile Include="NetCF\System\IEnumerableExtensions.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CompactFramework.CSharp.targets" />
   <ProjectExtensions>

@@ -4,23 +4,20 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Text;
 using System.Xml.Serialization;
-
-using CruiseDAL.DataObjects;
-using System.Diagnostics;
 using FMSC.ORM.Core;
-using FMSC.ORM.Core.SQL;
 using FMSC.ORM.EntityModel;
 using FMSC.ORM.EntityModel.Attributes;
 
 namespace CruiseDAL
 {
-    public abstract class DataObject : DataObject_Base, IDataErrorInfo, IValidatable
+    public abstract class DataObject : DataObject_Base, IDataErrorInfo, IValidatable, INotifyDataErrorInfo
     {
-        protected DataObject() : this(null)
+        protected DataObject()
+            : this(null)
         { }
 
-
-        protected DataObject(DatastoreRedux ds) : base(ds)
+        protected DataObject(DatastoreRedux ds)
+            : base(ds)
         {
             string tableName = DatastoreRedux.LookUpEntityByType(this.GetType()).SourceName;
             ErrorCollection = new CruiseDALErrorCollection(this, tableName);
@@ -31,7 +28,6 @@ namespace CruiseDAL
         //protected Dictionary<String, ErrorLogDO> errors;
         //protected object _errorsSyncLock = new object();
         //protected bool _errorsLoaded = false;
-
 
         [XmlIgnore]
         [IgnoreField]
@@ -49,7 +45,7 @@ namespace CruiseDAL
         //}
 
         /// <summary>
-        /// Property returns an instance of its self. Useful when using data binding 
+        /// Property returns an instance of its self. Useful when using data binding
         /// </summary>
         [XmlIgnore]
         [IgnoreField]
@@ -62,15 +58,14 @@ namespace CruiseDAL
         }
 
         /// <summary>
-        /// Tag allows any supplemental object to 
-        /// be attached to a data object. 
+        /// Tag allows any supplemental object to
+        /// be attached to a data object.
         /// </summary>
         [XmlIgnore]
         [IgnoreField]
         public Object Tag { get; set; }
 
         public abstract void SetValues(DataObject obj);
-
 
         protected override void NotifyPropertyChanged(string name)
         {
@@ -82,6 +77,7 @@ namespace CruiseDAL
         }
 
         #region validation
+
         //requires Net45 or higher
         //event EventHandler<DataErrorsChangedEventArgs> INotifyDataErrorInfo.ErrorsChanged
         //{
@@ -132,14 +128,7 @@ namespace CruiseDAL
             }
         }
 
-        
-
-        
-
         #region IDataErrorInfo Members
-
-
-        
 
         string IDataErrorInfo.Error
         {
@@ -168,7 +157,6 @@ namespace CruiseDAL
                 //    }
                 //    return b.ToString();
                 //}
-
             }
         }
 
@@ -183,7 +171,7 @@ namespace CruiseDAL
             get
             {
                 var sb = new StringBuilder();
-                foreach(string s in ErrorCollection.GetErrors(columnName))
+                foreach (string s in ErrorCollection.GetErrors(columnName))
                 {
                     sb.Append(s + ";");
                 }
@@ -207,7 +195,7 @@ namespace CruiseDAL
             }
         }
 
-        #endregion
+        #endregion IDataErrorInfo Members
 
         public void SaveErrors()
         {
@@ -409,7 +397,6 @@ namespace CruiseDAL
             //return this.errors.ContainsKey(propName) && this.errors[propName].Suppress == false;
         }
 
-
         public bool HasErrors()
         {
             return this.ErrorCollection.HasErrors;
@@ -460,6 +447,7 @@ namespace CruiseDAL
             {
                 bool isValid = DoValidate();
                 this.IsValidated = true;
+
                 return isValid;
             }
             else
@@ -477,7 +465,6 @@ namespace CruiseDAL
             }
             return isValid;
         }
-
 
         public virtual bool ValidateProperty(string name)
         {
@@ -505,8 +492,32 @@ namespace CruiseDAL
             else { return true; }
         }
 
-        #endregion
+        #endregion validation
 
+        bool INotifyDataErrorInfo.HasErrors { get { return this.ErrorCollection.HasErrors; } }
 
+        public IEnumerable GetErrors(String propertyName)
+        {
+            yield return String.Concat(this.ErrorCollection.GetErrors(propertyName));
+        }
+
+        public event EventHandler<DataErrorsChangedEventArgs> ErrorsChanged
+        {
+            add
+            {
+                lock (ErrorCollection)
+                {
+                    ErrorCollection.ErrorsChanged += value;
+                }
+            }
+
+            remove
+            {
+                lock (ErrorCollection)
+                {
+                    ErrorCollection.ErrorsChanged -= value;
+                }
+            }
+        }
     }
 }
