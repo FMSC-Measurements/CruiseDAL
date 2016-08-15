@@ -14,7 +14,7 @@ namespace FMSC.ORM.SQLite
 {
     public class SQLiteDatastoreTest : TestClassBase, IClassFixture<TestDBFixture>
     {
-        TestDBFixture _fixture; 
+        TestDBFixture _fixture;
 
         public SQLiteDatastoreTest(ITestOutputHelper output, TestDBFixture fixture) : base(output)
         {
@@ -39,9 +39,7 @@ namespace FMSC.ORM.SQLite
 
                 _fixture.VerifySQLiteDatastore(ds);
             }
-            
         }
-
 
         [Fact]
         public void AddFieldTest()
@@ -122,14 +120,11 @@ namespace FMSC.ORM.SQLite
                 }
                 finally
                 {
-                    _output.WriteLine( string.Join(",", (from colInfo in ti
-                                      select colInfo.Name).OrderBy(x => x)));
+                    _output.WriteLine(string.Join(",", (from colInfo in ti
+                                                        select colInfo.Name).OrderBy(x => x)));
                 }
-
             }
         }
-
-
 
         [Fact]
         public void HasForeignKeyErrors()
@@ -172,10 +167,47 @@ namespace FMSC.ORM.SQLite
                 AssertEx.NotNullOrWhitespace(tableSQL);
                 _output.WriteLine(tableSQL);
 
-                Assert.Equal(tableSQL, TestDBBuilder.CREATE_MULTIPROPTABLE, 
-                    ignoreCase: true, 
-                    ignoreLineEndingDifferences: true, 
+                Assert.Equal(tableSQL, TestDBBuilder.CREATE_MULTIPROPTABLE,
+                    ignoreCase: true,
+                    ignoreLineEndingDifferences: true,
                     ignoreWhiteSpaceDifferences: true);
+            }
+        }
+
+        [Fact]
+        public void SetTableAutoIncrementStartTest()
+        {
+            using (var ds = _fixture.StaticDatastore)
+            {
+                var seq = ds.From<SQLiteSequenceModel>()
+                    .Where("name = 'AutoIncrementTable'").Query().FirstOrDefault();
+
+                Assert.Null(seq);
+
+                ds.Insert(new AutoIncrementTable() { Data = "something" }, OnConflictOption.Fail);
+
+                seq = ds.From<SQLiteSequenceModel>()
+                    .Where("name = 'AutoIncrementTable'").Query().FirstOrDefault();
+
+                Assert.NotNull(seq);
+                Assert.Equal(1, seq.Seq);
+
+                var incVal = 200;
+                ds.SetTableAutoIncrementStart("AutoIncrementTable", incVal);
+
+                seq = ds.From<SQLiteSequenceModel>()
+                    .Where("name = 'AutoIncrementTable'").Query().FirstOrDefault();
+
+                Assert.NotNull(seq);
+                Assert.Equal(incVal, seq.Seq);
+
+                ds.Insert(new AutoIncrementTable() { Data = "something" }, OnConflictOption.Fail);
+
+                seq = ds.From<SQLiteSequenceModel>()
+                    .Where("name = 'AutoIncrementTable'").Query().FirstOrDefault();
+
+                Assert.NotNull(seq);
+                Assert.Equal(incVal + 1, seq.Seq);
             }
         }
 
@@ -233,13 +265,12 @@ namespace FMSC.ORM.SQLite
 
                 VerifyExecuteScalarWithType<decimal>(1, ds);
 
-                VerifyExecuteScalarWithType<DateTime>(DateTime.Today,  ds);
-
+                VerifyExecuteScalarWithType<DateTime>(DateTime.Today, ds);
             }
         }
 
         void VerifyExecuteScalarWithType<T>(T expected, SQLiteDatastore ds)
-            where T :struct
+            where T : struct
         {
             _output.WriteLine("testing value {0} : {1}", expected, typeof(T).Name);
 
@@ -279,7 +310,6 @@ namespace FMSC.ORM.SQLite
                 var result1 = ds.QuerySingleRecord<POCOMultiTypeObject>(new WhereClause("IntField = 1"));
                 Assert.NotSame(result, result1);
                 Assert.Equal(1, result1.IntField);
-
             }
         }
 
@@ -289,7 +319,6 @@ namespace FMSC.ORM.SQLite
             int recordsToCreate = 1000;
             using (var ds = _fixture.WorkingDatastore)
             {
-                
                 ds.Execute("DELETE FROM MultiPropTable;\r\n");
                 ds.BeginTransaction();
                 for (int i = 1; i <= recordsToCreate; i++)
@@ -330,17 +359,16 @@ namespace FMSC.ORM.SQLite
                 var result = ds.From<POCOMultiTypeObject>().Limit(5000, 0).Query().ToList();
                 EndTimer();
 
-                foreach(DOMultiPropType item in 
+                foreach (DOMultiPropType item in
                     ds.From<DOMultiPropType>().Read())
                 {
                     item.FloatField = 1.0F;
-                    item.Save();                    
+                    item.Save();
                 }
 
                 Assert.NotEmpty(result);
                 Assert.Equal(recordsToCreate, result.Count);
             }
         }
-
     }
 }
