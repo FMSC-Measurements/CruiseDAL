@@ -126,7 +126,7 @@ namespace FMSC.ORM.SQLite
                 commandText = "INSERT INTO sqlite_sequence  (seq, name) VALUES (?, ?);";
             }
 
-            this.Execute(commandText, tableName, start);
+            this.Execute(commandText, start, tableName);
         }
 
         [Obsolete("use AddField(string tableName, ColumnInfo fieldDef)")]
