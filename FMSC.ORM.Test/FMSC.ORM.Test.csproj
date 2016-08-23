@@ -74,7 +74,6 @@
     <Compile Include="SQLite\SQLiteDatastoreTest.cs" />
     <Compile Include="TestSupport\ObjectDataReader.cs" />
     <Compile Include="SQLite\SQLiteSequenceModel.cs" />
-    <Compile Include="TestSupport\SingleValueDataReader.cs" />
     <Compile Include="TestSupport\TestDBBuilder.cs" />
     <Compile Include="TestSupport\TestDBFixture.cs" />
     <Compile Include="TestSupport\TestModels\AutoIncrementTable.cs" />
