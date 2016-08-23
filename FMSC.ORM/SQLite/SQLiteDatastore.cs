@@ -10,7 +10,9 @@ using System.Text;
 using Mono.Data.Sqlite;
 using SQLiteException =  Mono.Data.Sqlite.SqliteException ;
 #else
+
 using System.Data.SQLite;
+
 #endif
 
 namespace FMSC.ORM.SQLite
@@ -26,7 +28,7 @@ namespace FMSC.ORM.SQLite
         {
             get
             {
-                if(IsInMemory)
+                if (IsInMemory)
                 {
                     return true;
                 }
@@ -61,32 +63,33 @@ namespace FMSC.ORM.SQLite
             get { return Path == IN_MEMORY_DB_PATH; }
         }
 
-
         /// <summary>
         /// creates instance representing an in memory database
         /// </summary>
         public SQLiteDatastore() : this(IN_MEMORY_DB_PATH)
         {
-            OpenConnection(); // we will need to open a persistent connection 
+            OpenConnection(); // we will need to open a persistent connection
             //TODO find a better way to hold the connection for the life of the DAL
-
         }
 
         public SQLiteDatastore(string path) : base(new SQLiteProviderFactory())
         {
-            if(path == null) { throw new ArgumentNullException("path"); }
+            if (path == null) { throw new ArgumentNullException("path"); }
             Path = path;
         }
 
-#region abstract methods
+        #region abstract methods
+
         protected override string BuildConnectionString()
         {
             System.Diagnostics.Debug.Assert(!string.IsNullOrEmpty(Path));
             return string.Format("Data Source={0};Version=3;", Path);
         }
-#endregion
 
-#region SavePoints
+        #endregion abstract methods
+
+        #region SavePoints
+
         public void StartSavePoint(String name)
         {
             this.Execute("SAVEPOINT " + name + ";");
@@ -101,7 +104,8 @@ namespace FMSC.ORM.SQLite
         {
             this.Execute("ROLLBACK TO SAVEPOINT " + name + ";");
         }
-#endregion
+
+        #endregion SavePoints
 
         /// <summary>
         /// Sets the starting value of a AutoIncrement field for a table
@@ -115,24 +119,21 @@ namespace FMSC.ORM.SQLite
             //check sqlite_sequence to see if we need to perform update or insert
             if (this.GetRowCount("sqlite_sequence", "WHERE name = ?", tableName) >= 1)
             {
-                commandText = "UPDATE sqlite_sequence SET seq = @start WHERE name = @tableName";
+                commandText = "UPDATE sqlite_sequence SET seq = ? WHERE name = ?";
             }
             else
             {
-                commandText = "INSERT INTO sqlite_sequence  (seq, name) VALUES (@start, @tableName);";
+                commandText = "INSERT INTO sqlite_sequence  (seq, name) VALUES (?, ?);";
             }
 
-            this.Execute(commandText, tableName, start);
-
+            this.Execute(commandText, start, tableName);
         }
-
 
         [Obsolete("use AddField(string tableName, ColumnInfo fieldDef)")]
         public void AddField(string tableName, string fieldDef)
         {
             string command = string.Format("ALTER TABLE {0} ADD COLUMN {1};", tableName, fieldDef);
             this.Execute(command);
- 
         }
 
         /// <summary>
@@ -164,9 +165,9 @@ namespace FMSC.ORM.SQLite
         /// <returns></returns>
         public bool CheckFieldExists(string tableName, string field)
         {
-            foreach(var col in GetTableInfo(tableName))
+            foreach (var col in GetTableInfo(tableName))
             {
-                if(field.Equals(col.Name, StringComparison.InvariantCultureIgnoreCase)) { return true; }
+                if (field.Equals(col.Name, StringComparison.InvariantCultureIgnoreCase)) { return true; }
             }
             return false;
         }
@@ -196,8 +197,8 @@ namespace FMSC.ORM.SQLite
         }
 
         public void CreateTable(string tableName, IEnumerable<ColumnInfo> cols, bool temp)
-        {            
-            Execute(BuildCreateTable(tableName, cols, temp));            
+        {
+            Execute(BuildCreateTable(tableName, cols, temp));
         }
 
         /// <summary>
@@ -245,7 +246,7 @@ namespace FMSC.ORM.SQLite
                     finally
                     {
                         ReleaseConnection();
-                    }                    
+                    }
                 }
                 return colList;
             }
@@ -299,7 +300,6 @@ namespace FMSC.ORM.SQLite
                     {
                         ReleaseConnection();
                     }
-                    
                 }
                 return hasErrors;
             }
@@ -317,7 +317,6 @@ namespace FMSC.ORM.SQLite
             string query = string.Format("SELECT Count(1) FROM {0} {1};", tableName, selection);
             return ExecuteScalar<Int64>(query, selectionArgs);
         }
-
 
         public IEnumerable<string> GetTableUniques(String tableName)
         {
@@ -340,7 +339,8 @@ namespace FMSC.ORM.SQLite
             }
         }
 
-#region File utility methods
+        #region File utility methods
+
         ///// <summary>
         ///// Copies entire file to <paramref name="path"/> Overwriting any existing file
         ///// </summary>
@@ -355,10 +355,6 @@ namespace FMSC.ORM.SQLite
         //    Context.ReleaseAllConnections(true);
         //    System.IO.File.Copy(this.Path, destPath, overwrite);
         //}
-
-        
-
-        
 
         public bool MoveTo(string path)
         {
@@ -378,13 +374,12 @@ namespace FMSC.ORM.SQLite
             return true;
         }
 
-#endregion
-
+        #endregion File utility methods
 
         protected override Exception ThrowExceptionHelper(DbConnection conn, DbCommand comm, Exception innerException)
         {
             if (innerException is SQLiteException)
-            {                
+            {
                 SQLException sqlEx;
 
                 var ex = innerException as SQLiteException;
@@ -395,7 +390,6 @@ namespace FMSC.ORM.SQLite
 #endif
                 switch (errorCode)
                 {
-                    
                     case SQLiteErrorCode.Corrupt:
 #if Mono
                     case SQLiteErrorCode.NotADatabase:
@@ -462,6 +456,5 @@ namespace FMSC.ORM.SQLite
                 return new ORMException(null, innerException);
             }
         }
-
     }
 }

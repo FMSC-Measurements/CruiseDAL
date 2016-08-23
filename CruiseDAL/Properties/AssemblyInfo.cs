@@ -30,3 +30,4 @@ using System.Runtime.InteropServices;
 //      Revision
 //
 [assembly: AssemblyVersion(CruiseDAL.DAL.CURENT_DBVERSION + ".*")]
+

@@ -13,40 +13,44 @@ namespace FMSC.ORM.TestSupport
 @"CREATE TABLE MultiPropTable
 (
 	ID INTEGER Primary Key AUTOINCREMENT,
-	StringField TEXT, 
-	IntField INTEGER, 
-	NIntField INTEGER, 
-	LongField INTEGER, 
-	NLongField INTEGER, 
-	FloatField REAL, 
-	NFloatField REAL, 
-	DoubleField REAL, 
+	StringField TEXT,
+	IntField INTEGER,
+	NIntField INTEGER,
+	LongField INTEGER,
+	NLongField INTEGER,
+	FloatField REAL,
+	NFloatField REAL,
+	DoubleField REAL,
 	NDoubleField REAL,
-	BoolField BOOLEAN, 
-	NBoolField BOOLEAN, 
+	BoolField BOOLEAN,
+	NBoolField BOOLEAN,
 	GuidField TEXT,
 	DateTimeField DATETIME,
 	PartialyPublicField TEXT,
 	PrivateField TEXT,
 	CreatedBy TEXT,
 	ModifiedBy TEXT
-)";
+);";
 
+        public const string CREATE_AUTOINCREMENT_TABLE =
+@"CREATE TABLE AutoIncrementTable
+(
+    ID INTEGER Primary Key AUTOINCREMENT,
+    Data TEXT
+);";
 
         public override void CreateTables()
         {
             this.Datastore.Execute(CREATE_MULTIPROPTABLE);
-                
+            this.Datastore.Execute(CREATE_AUTOINCREMENT_TABLE);
         }
 
         public override void CreateTriggers()
         {
-            
         }
 
         public override void UpdateDatastore()
         {
-            
         }
     }
 }
