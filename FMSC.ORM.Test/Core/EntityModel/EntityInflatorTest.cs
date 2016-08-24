@@ -38,23 +38,43 @@ namespace FMSC.ORM.EntityModel.Support
         [Fact]
         public void ReadDataTest()
         {
-            var reader = new TestSupport.MockDataReader();
+            var poco = new POCOMultiTypeObject()
+            {
+                ID = 1,
+                StringField = "1",
+                IntField = 1
+            };
 
-            reader.Value = "1";
+            var reader = new TestSupport.ObjectDataReader<POCOMultiTypeObject>(new POCOMultiTypeObject[] { poco });
+            Assert.True(reader.Read());
 
+            var ed = new EntityDescription(typeof(POCOMultiTypeObject));
 
+            var data = new POCOMultiTypeObject();
+            ed.Inflator.CheckOrdinals(reader);
+            ed.Inflator.ReadData(reader, data);
+
+            Assert.Equal(data.StringField, "1");
+            Assert.Equal(data.ID, 1);
         }
-
 
         [Fact]
         public void ReadPrimaryKeyTest()
         {
-            throw new NotImplementedException();
+            var poco = new POCOMultiTypeObject()
+            {
+                ID = 1
+            };
+
+            var reader = new TestSupport.ObjectDataReader<POCOMultiTypeObject>(new POCOMultiTypeObject[] { poco });
+            Assert.True(reader.Read());
+
+            var ed = new EntityDescription(typeof(POCOMultiTypeObject));
+
+            ed.Inflator.CheckOrdinals(reader);
+            var id = ed.Inflator.ReadPrimaryKey(reader);
+
+            Assert.Equal(id, 1);
         }
-
-
-
-
-
     }
 }

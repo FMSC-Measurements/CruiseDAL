@@ -40,6 +40,7 @@
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
     <Reference Include="xunit.abstractions, Version=2.0.0.0, Culture=neutral, PublicKeyToken=8d05b1bb7a6fdb6c, processorArchitecture=MSIL">
       <HintPath>..\packages\xunit.abstractions.2.0.0\lib\net35\xunit.abstractions.dll</HintPath>
       <Private>True</Private>
@@ -71,8 +72,8 @@
     <Compile Include="Core\EntityModel\MappingCollectionTest.cs" />
     <Compile Include="Core\SQL\SQLSelectBuilderTest.cs" />
     <Compile Include="SQLite\SQLiteDatastoreTest.cs" />
+    <Compile Include="TestSupport\ObjectDataReader.cs" />
     <Compile Include="SQLite\SQLiteSequenceModel.cs" />
-    <Compile Include="TestSupport\SingleValueDataReader.cs" />
     <Compile Include="TestSupport\TestDBBuilder.cs" />
     <Compile Include="TestSupport\TestDBFixture.cs" />
     <Compile Include="TestSupport\TestModels\AutoIncrementTable.cs" />

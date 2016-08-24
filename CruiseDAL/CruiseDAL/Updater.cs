@@ -121,13 +121,11 @@ namespace CruiseDAL
             {
                 UpdateToVersion2015_09_01(db);
             }
-            if (db.DatabaseVersion == "2015.09.01")
+            if (db.DatabaseVersion == "2015.09.01"
+                || db.DatabaseVersion == "2.0.0"
+                || db.DatabaseVersion == "2.1.0")
             {
-                SetDatabaseVersion(db, "2.0.0");
-            }
-            if (db.DatabaseVersion == "2.0.0")
-            {
-                UpdateTo_2_1_0(db);
+                UpdateTo_2_1_1(db);
             }
 
             if (db.HasForeignKeyErrors(TREEDEFAULTVALUETREEAUDITVALUE._NAME))
@@ -1064,18 +1062,18 @@ JOIN Stratum USING (Stratum_CN);");
             }
         }
 
-        private static void UpdateTo_2_1_0(DAL db)
+        private static void UpdateTo_2_1_1(DAL db)
         {
             db.BeginTransaction();
             try
             {
                 db.Execute(
-        @"    CREATE TABLE FixCNTTallyClass (
+        @"    CREATE TABLE IF NOT EXISTS FixCNTTallyClass (
 				FixCNTTallyClass_CN INTEGER PRIMARY KEY AUTOINCREMENT,
 				Stratum_CN INTEGER REFERENCES Stratum NOT NULL,
 				FieldName INTEGER Default 0);
 
-    CREATE TABLE FixCNTTallyPopulation (
+    CREATE TABLE TABLE IF NOT EXISTS FixCNTTallyPopulation (
 				FixCNTTallyPopulation_CN INTEGER PRIMARY KEY AUTOINCREMENT,
 				FixCNTTallyClass_CN INTEGER REFERENCES FixCNTTallyClass NOT NULL,
 				SampleGroup_CN INTEGER REFERENCES SampleGroup NOT NULL,
@@ -1084,14 +1082,13 @@ JOIN Stratum USING (Stratum_CN);");
 				Min INTEGER Default 0,
 				Max INTEGER Default 0);");
 
-                SetDatabaseVersion(db, "2.1.0");
+                SetDatabaseVersion(db, "2.1.1");
                 db.CommitTransaction();
-
             }
             catch (Exception e)
             {
                 db.RollbackTransaction();
-                throw new SchemaUpdateException(db.DatabaseVersion, "2.3.0", e);
+                throw new SchemaUpdateException(db.DatabaseVersion, "2.1.1", e);
             }
         }
     }

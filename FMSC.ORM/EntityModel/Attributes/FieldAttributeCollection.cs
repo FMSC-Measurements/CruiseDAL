@@ -8,7 +8,7 @@ namespace FMSC.ORM.EntityModel.Attributes
 {
     public class FieldAttributeCollection : IEnumerable<FieldAttribute>
     {
-        public Dictionary<String, FieldAttribute> _fields = new Dictionary<string,FieldAttribute>();
+        public Dictionary<String, FieldAttribute> _fields = new Dictionary<string, FieldAttribute>();
 
         public PrimaryKeyFieldAttribute PrimaryKeyField { get; set; }
 
@@ -33,42 +33,39 @@ namespace FMSC.ORM.EntityModel.Attributes
 
             if (field is PrimaryKeyFieldAttribute)
             {
-                if(PrimaryKeyField != null) { throw new InvalidOperationException("Primary Key field already set"); }
+                if (PrimaryKeyField != null) { throw new InvalidOperationException("Primary Key field already set"); }
                 PrimaryKeyField = (PrimaryKeyFieldAttribute)field;
             }
             else
             {
                 _fields.Add(field.NameOrAlias, field);
             }
-
-                     
         }
 
         public IEnumerable<FieldAttribute> GetFields()
         {
-            if(PrimaryKeyField != null)
+            if (PrimaryKeyField != null)
             {
                 yield return PrimaryKeyField;
             }
 
-            foreach(var fa in _fields.Values)
+            foreach (var fa in _fields.Values)
             {
                 yield return fa;
             }
-            
         }
 
         public IEnumerable<FieldAttribute> GetPersistedFields(bool includeKeyField, PersistanceFlags filter)
-        {            
-            foreach(FieldAttribute fa in _fields.Values)
+        {
+            foreach (FieldAttribute fa in _fields.Values)
             {
-                if((fa.PersistanceFlags & filter) == filter)
+                if ((fa.PersistanceFlags & filter) == filter)
                 {
                     yield return fa;
                 }
             }
-            
-            if(includeKeyField && this.PrimaryKeyField != null)
+
+            if (includeKeyField && this.PrimaryKeyField != null)
             {
                 yield return this.PrimaryKeyField;
             }
@@ -92,6 +89,11 @@ namespace FMSC.ORM.EntityModel.Attributes
             if (string.IsNullOrEmpty(fieldName))
             { throw new ArgumentException("fieldName"); }
 
+            if (PrimaryKeyField != null && PrimaryKeyField.Name == fieldName)
+            {
+                return PrimaryKeyField;
+            }
+
             if (_fields.ContainsKey(fieldName))
             {
                 return _fields[fieldName];
@@ -102,8 +104,6 @@ namespace FMSC.ORM.EntityModel.Attributes
             }
         }
 
-
-
         public IEnumerator<FieldAttribute> GetEnumerator()
         {
             return GetFields().GetEnumerator();
@@ -113,8 +113,5 @@ namespace FMSC.ORM.EntityModel.Attributes
         {
             return GetFields().GetEnumerator();
         }
-
-
-
     }
 }
