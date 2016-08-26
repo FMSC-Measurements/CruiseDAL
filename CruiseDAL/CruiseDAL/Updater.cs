@@ -1067,13 +1067,12 @@ JOIN Stratum USING (Stratum_CN);");
             db.BeginTransaction();
             try
             {
-                db.Execute(
-        @"    CREATE TABLE IF NOT EXISTS FixCNTTallyClass (
+                db.Execute(@"CREATE TABLE IF NOT EXISTS FixCNTTallyClass (
 				FixCNTTallyClass_CN INTEGER PRIMARY KEY AUTOINCREMENT,
 				Stratum_CN INTEGER REFERENCES Stratum NOT NULL,
-				FieldName INTEGER Default 0);
+				FieldName INTEGER Default 0);");
 
-    CREATE TABLE TABLE IF NOT EXISTS FixCNTTallyPopulation (
+                db.Execute(@"CREATE TABLE IF NOT EXISTS FixCNTTallyPopulation (
 				FixCNTTallyPopulation_CN INTEGER PRIMARY KEY AUTOINCREMENT,
 				FixCNTTallyClass_CN INTEGER REFERENCES FixCNTTallyClass NOT NULL,
 				SampleGroup_CN INTEGER REFERENCES SampleGroup NOT NULL,
