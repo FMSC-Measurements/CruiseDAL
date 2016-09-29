@@ -421,9 +421,9 @@ namespace FMSC.ORM.Core
                                         {
                                             ((IDataObject)entity).DAL = this;
                                         }
-                                    }
 
-                                    inflator.ReadData(reader, entity);
+                                        inflator.ReadData(reader, entity);
+                                    }
                                 }
                                 catch (Exception e)
                                 {
@@ -534,10 +534,8 @@ namespace FMSC.ORM.Core
                                 {
                                     ((IDataObject)entity).DAL = this;
                                 }
+                                inflator.ReadData(reader, entity);
                             }
-
-                            inflator.ReadData(reader, entity);
-
                             doList.Add((T)entity);
                         }
                     }
@@ -622,9 +620,8 @@ namespace FMSC.ORM.Core
                             {
                                 ((IDataObject)entity).DAL = this;
                             }
+                            inflator.ReadData(reader, entity);
                         }
-
-                        inflator.ReadData(reader, entity);
                     }
                 }
                 catch (Exception e)

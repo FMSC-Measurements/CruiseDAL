@@ -1,12 +1,10 @@
-﻿
+﻿using FMSC.ORM.EntityModel;
+using FMSC.ORM.EntityModel.Attributes;
 using System;
 using System.ComponentModel;
 using System.Data;
 using System.Diagnostics;
 using System.Reflection;
-
-using FMSC.ORM.EntityModel;
-using FMSC.ORM.EntityModel.Attributes;
 
 namespace FMSC.ORM.EntityModel.Support
 {
@@ -24,7 +22,6 @@ namespace FMSC.ORM.EntityModel.Support
 
             _constructor = EntityDescription.EntityType.GetConstructor(new Type[] { });
         }
-        
 
         /// <summary>
         /// Prepares the DataObjectDiscription instance to read data from <paramref name="reader"/>
@@ -39,7 +36,7 @@ namespace FMSC.ORM.EntityModel.Support
             }
 
             PrimaryKeyFieldAttribute keyField = EntityDescription.Fields.PrimaryKeyField;
-            if(keyField != null)
+            if (keyField != null)
             {
                 keyField.Ordinal = reader.GetOrdinal(keyField.NameOrAlias);
             }
@@ -52,17 +49,12 @@ namespace FMSC.ORM.EntityModel.Support
 
         public void ReadData(System.Data.IDataReader reader, Object obj)
         {
-            if (obj is ISupportInitialize)
-            {
-                ((ISupportInitialize)obj).BeginInit();
-            }
-
             foreach (FieldAttribute field in EntityDescription.Fields)
             {
                 try
                 {
                     if (field.Ordinal < 0) { continue; }
-                    
+
                     object value = GetValueByType(field.RunTimeType, reader, field.Ordinal);
                     field.SetFieldValue(obj, value);
                 }
@@ -77,11 +69,6 @@ namespace FMSC.ORM.EntityModel.Support
             {
                 object value = GetValueByType(keyField.RunTimeType, reader, keyField.Ordinal);
                 keyField.SetFieldValue(obj, value);
-            }
-
-            if (obj is ISupportInitialize)
-            {
-                ((ISupportInitialize)obj).EndInit();
             }
 
             if (obj is IPersistanceTracking)
@@ -116,10 +103,10 @@ namespace FMSC.ORM.EntityModel.Support
             }
             else if (reader.IsDBNull(ord))
             {
-                if (type.IsValueType) {return Activator.CreateInstance(type); }
+                if (type.IsValueType) { return Activator.CreateInstance(type); }
                 else { return null; }
             }
-            
+
             TypeCode tc = Type.GetTypeCode(type);
             try
             {
@@ -145,7 +132,7 @@ namespace FMSC.ORM.EntityModel.Support
                     return Convert.ChangeType(value, tc
                         , System.Globalization.CultureInfo.CurrentCulture);
                 }
-                catch(Exception)
+                catch (Exception)
                 {
                     Debug.Fail("Unable to read value");
                     if (type.IsValueType)
@@ -195,7 +182,6 @@ namespace FMSC.ORM.EntityModel.Support
                 Debug.Write(String.Format("GetEnum failed to parse value ({0}) to {1}", s, eType.Name));
                 return Enum.Parse(eType, "0", true);
             }
-
         }
 
         string GetString(IDataReader reader, int ord)

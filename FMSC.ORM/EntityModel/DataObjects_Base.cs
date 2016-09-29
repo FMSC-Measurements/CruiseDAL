@@ -1,11 +1,11 @@
-﻿using System;
-using System.ComponentModel;
-using System.Xml.Serialization;
-using FMSC.ORM.Core;
+﻿using FMSC.ORM.Core;
 using FMSC.ORM.Core.SQL;
-using System.Diagnostics;
 using FMSC.ORM.EntityModel.Attributes;
 using FMSC.ORM.EntityModel.Support;
+using System;
+using System.ComponentModel;
+using System.Diagnostics;
+using System.Xml.Serialization;
 
 namespace FMSC.ORM.EntityModel
 {
@@ -20,9 +20,8 @@ namespace FMSC.ORM.EntityModel
     }
 
     [Serializable]
-    public abstract class DataObject_Base : 
-        INotifyPropertyChanged, 
-        ISupportInitialize,  
+    public abstract class DataObject_Base :
+        INotifyPropertyChanged,
         IFormattable,
         IDataObject
     {
@@ -55,14 +54,12 @@ namespace FMSC.ORM.EntityModel
             }
         }
 
-        
-        #endregion
-
+        #endregion Properties
 
         #region ctor
+
         protected DataObject_Base()
         {
-
         }
 
         protected DataObject_Base(DatastoreRedux ds)
@@ -70,8 +67,7 @@ namespace FMSC.ORM.EntityModel
             this.DAL = ds;
         }
 
-        #endregion
-
+        #endregion ctor
 
         public virtual void Save()
         {
@@ -90,7 +86,6 @@ namespace FMSC.ORM.EntityModel
             DAL.Delete(this);
         }
 
-
         protected virtual void OnDALChanged(DatastoreRedux newDAL)
         {
             IsPersisted = false;
@@ -102,8 +97,6 @@ namespace FMSC.ORM.EntityModel
             _ds = newDAL;
         }
 
-        
-
         public void SuspendEvents()
         {
             PropertyChangedEventsDisabled = true;
@@ -114,8 +107,8 @@ namespace FMSC.ORM.EntityModel
             PropertyChangedEventsDisabled = false;
         }
 
-
         #region INotifyPropertyChanged
+
         [XmlIgnore]
         [IgnoreField]
         public bool PropertyChangedEventsDisabled { get; protected set; }
@@ -133,9 +126,11 @@ namespace FMSC.ORM.EntityModel
                 }
             }
         }
-        #endregion
+
+        #endregion INotifyPropertyChanged
 
         #region IPersistanceTracking Members
+
         [XmlIgnore]
         [IgnoreField]
         public bool IsPersisted
@@ -190,9 +185,11 @@ namespace FMSC.ORM.EntityModel
         {
             _isPersisted = false;
         }
-        #endregion
 
-        #region IChangeTracking 
+        #endregion IPersistanceTracking Members
+
+        #region IChangeTracking
+
         [XmlIgnore]
         [IgnoreField]
         [Obsolete("use IsChanged")]
@@ -213,14 +210,15 @@ namespace FMSC.ORM.EntityModel
             }
         }
 
-
         public virtual void AcceptChanges()
         {
             this._isChanged = false;
         }
-        #endregion
+
+        #endregion IChangeTracking
 
         #region ISupportInitialize Members
+
         public void BeginInit()
         {
             this.SuspendEvents();
@@ -230,12 +228,14 @@ namespace FMSC.ORM.EntityModel
         {
             this.ResumeEvents();
         }
-        #endregion
+
+        #endregion ISupportInitialize Members
 
         #region IFormattable Members
+
         /// <summary>
-        /// replaces placeholders with property values in format string. 
-        /// [propertyName], [propertyName:nullValue], [propertyName:nullValue:pad], [propertyName::pad] 
+        /// replaces placeholders with property values in format string.
+        /// [propertyName], [propertyName:nullValue], [propertyName:nullValue:pad], [propertyName::pad]
         /// pad option can include prefix U | L | C . for Uppercase, lowercase, capitalize
         /// </summary>
         public string ToString(string format, IFormatProvider formatProvider)
@@ -245,7 +245,7 @@ namespace FMSC.ORM.EntityModel
             var description = DatastoreRedux.LookUpEntityByType(this.GetType());
             formatter = new EntityFormatter(description);
 
-            if(formatter != null)
+            if (formatter != null)
             {
                 return formatter.Format(format, this, formatProvider);
             }
@@ -255,11 +255,6 @@ namespace FMSC.ORM.EntityModel
             }
         }
 
-        
-
-
-
-        #endregion
+        #endregion IFormattable Members
     }
 }
-        
