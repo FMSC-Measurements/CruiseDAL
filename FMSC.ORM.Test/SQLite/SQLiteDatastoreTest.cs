@@ -211,6 +211,31 @@ namespace FMSC.ORM.SQLite
             }
         }
 
+        [Fact]
+        public void TestReadOnly()
+        {
+            var path = System.IO.Path.GetFullPath("readOnly.db");
+
+            _output.WriteLine(path);
+
+            if (System.IO.File.Exists(path))
+            {
+                System.IO.File.SetAttributes(path, System.IO.FileAttributes.Normal);
+                System.IO.File.Delete(path);
+            }
+
+            using (var ds = new SQLiteDatastore("readOnly.db"))
+            {
+                ds.Execute(TestDBBuilder.CREATE_AUTOINCREMENT_TABLE);
+                ds.CreateTable("Tbl", new ColumnInfo[] { new ColumnInfo() { Name = "Data", DBType = "TEXT" } }, false);
+
+                System.IO.File.SetAttributes(path, System.IO.FileAttributes.ReadOnly);
+
+                Assert.Throws<ReadOnlyException>(() => ds.BeginTransaction());
+                Assert.Throws<ReadOnlyException>(() => ds.Execute("INSERT INTO Tbl (Data) VALUES ('something');"));
+            }
+        }
+
         //[Fact] // GetTableUniques needs to be scrapped
         //public void GetTableUniquesTest()
         //{
