@@ -42,8 +42,9 @@ namespace CruiseDAL.DataObjects
         {
             DatastoreRedux dal = plot.DAL;
             string command = string.Format(@"
+DELETE FROM LogStock;
+DELETE FROM TreeCalculatedValues;
 DELETE FROM Log WHERE EXISTS (SELECT 1 FROM Tree WHERE Tree.Tree_CN = Log.Tree_CN AND Tree.Plot_CN = {0});
-DELETE FROM TreeCalculatedValues WHERE EXISTS (SELECT 1 FROM Tree WHERE Tree.Tree_CN = TreeCalculatedValues.Tree_CN AND Tree.Plot_CN = {0});
 DELETE FROM Tree WHERE Plot_CN = {0};", plot.Plot_CN);
             dal.Execute(command);
             plot.Delete();
