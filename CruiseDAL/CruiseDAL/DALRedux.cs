@@ -22,6 +22,7 @@ namespace CruiseDAL
             public DatastoreRedux DS;
             public string Alias;
         }
+
         private string _userInfo;
         private string _databaseVersion = "Unknown";
         private CruiseFileType _cruiseFileType;
@@ -85,15 +86,16 @@ namespace CruiseDAL
         }
 
         #region multiDB Fields
+
         protected ICollection<ExternalDatastore> _attachedDataStores = new List<ExternalDatastore>();
 
         //protected int _multiDBholdConnection = 0;
-        //protected int _multiDBtransactionDepth = 0;        
+        //protected int _multiDBtransactionDepth = 0;
         //protected bool _multiDBtransactionCanceled = false;
         //protected DbTransaction _multiDBCurrentTransaction;
         //protected readonly object _multiDBTransactionSyncLock = new object();
         //protected readonly object _multiDBpersistentConnectionSyncLock = new object();
-        
+
         //protected DbConnection MultiDBPersistentConnection { get; set; }
 
         //public object MultiDBTransactionSyncLock { get { return _multiDBTransactionSyncLock; } }
@@ -181,6 +183,7 @@ namespace CruiseDAL
         }
 
         #region Overridden Methods
+
         protected override void OnConnectionOpened()
         {
             base.OnConnectionOpened();
@@ -191,7 +194,7 @@ namespace CruiseDAL
             }
         }
 
-        #endregion
+        #endregion Overridden Methods
 
         #region MultiDB methods
 
@@ -248,7 +251,6 @@ namespace CruiseDAL
         //        }
         //    }
         //}
-
 
         //public object ExecuteScalarMultiDB(string query, params object[] parameters)
         //{
@@ -393,7 +395,7 @@ namespace CruiseDAL
         protected void AttachDBInternal(ExternalDatastore externalDB)
         {
             lock (_persistentConnectionSyncLock)
-            { 
+            {
                 var conn = PersistentConnection;
                 if (conn != null)
                 {
@@ -436,7 +438,6 @@ namespace CruiseDAL
                         + externalDB.Alias + "\";", conn);
                 }
             }
-            
         }
 
         #endregion Attach/Detach
@@ -704,6 +705,10 @@ namespace CruiseDAL
         public void CopyTo(string destPath, bool overwrite)
         {
             ReleaseConnection(true);
+
+            System.Data.SQLite.SQLiteConnection.ClearAllPools();
+            GC.Collect();
+            GC.WaitForPendingFinalizers();
 
             System.IO.File.Copy(this.Path, destPath, overwrite);
         }
