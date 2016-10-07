@@ -402,6 +402,7 @@ namespace FMSC.ORM.SQLite
 #else
                     case SQLiteErrorCode.IoErr:
 #endif
+
                     case SQLiteErrorCode.CantOpen:
                     case SQLiteErrorCode.Full:
                     case SQLiteErrorCode.Auth:
@@ -411,6 +412,11 @@ namespace FMSC.ORM.SQLite
                     case SQLiteErrorCode.ReadOnly:
                         {
                             sqlEx = new ReadOnlyException(null, innerException);
+                            break;
+                        }
+                    case SQLiteErrorCode.Locked:
+                        {
+                            sqlEx = new ConnectionException("file is locked", ex);
                             break;
                         }
                     case SQLiteErrorCode.Constraint:

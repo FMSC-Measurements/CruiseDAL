@@ -1126,7 +1126,15 @@ namespace FMSC.ORM.Core
                     Debug.Assert(_CurrentTransaction == null);
 
                     DbConnection connection = OpenConnection();
-                    _CurrentTransaction = connection.BeginTransaction();
+
+                    try
+                    {
+                        _CurrentTransaction = connection.BeginTransaction();
+                    }
+                    catch (Exception ex)
+                    {
+                        throw ThrowExceptionHelper(connection, null, ex);
+                    }
 
                     _transactionCanceled = false;
 
@@ -1146,6 +1154,8 @@ namespace FMSC.ORM.Core
         {
             lock (TransactionSyncLock)
             {
+                if (_transactionDepth == 0) { throw new InvalidOperationException("transaction depth is zero"); }
+
                 OnTransactionEnding();
 
                 _transactionDepth--;
@@ -1177,6 +1187,8 @@ namespace FMSC.ORM.Core
         {
             lock (TransactionSyncLock)
             {
+                if (_transactionDepth == 0) { throw new InvalidOperationException("transaction depth is zero"); }
+
                 OnTransactionCanceling();
                 _transactionCanceled = true;
                 _transactionDepth--;
@@ -1200,15 +1212,25 @@ namespace FMSC.ORM.Core
 
         private void ReleaseTransaction()
         {
+            if (_CurrentTransaction == null)
+            { throw new ORMException("No open transaction"); }
+
             OnTransactionReleasing();
 
-            if (_transactionCanceled)
+            try
             {
-                _CurrentTransaction.Rollback();
+                if (_transactionCanceled)
+                {
+                    _CurrentTransaction.Rollback();
+                }
+                else
+                {
+                    _CurrentTransaction.Commit();
+                }
             }
-            else
+            catch (Exception ex)
             {
-                _CurrentTransaction.Commit();
+                throw ThrowExceptionHelper(PersistentConnection, null, ex);
             }
 
             _CurrentTransaction.Dispose();

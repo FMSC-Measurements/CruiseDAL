@@ -17,7 +17,7 @@ namespace CruiseDAL.DataObjects
                     .Join("Stratum", "USING (Stratum_CN)")
                     .Where("Stratum.Code = ?")
                     .Read(stratum).ToList();
-                
+
                 //.Read<PlotDO>("JOIN Stratum WHERE Plot.Stratum_CN = Stratum.Stratum_CN AND Stratum.Code = ?;", (object)stratum);
             }
             else if (String.IsNullOrEmpty(stratum))
@@ -34,7 +34,7 @@ namespace CruiseDAL.DataObjects
                 .Join("Stratum", "USING (Stratum_CN)")
                 .Where("CuttingUnit.Code = ? AND Stratum.Code = ?")
                 .Read(unit, stratum).ToList();
-                
+
             //.Read<PlotDO>("JOIN CuttingUnit JOIN Stratum WHERE Plot.CuttingUnit_CN = CuttingUnit.CuttingUnit_CN AND CuttingUnit.Code = ? AND Plot.Stratum_CN = Stratum.Stratum_CN AND Stratum.Code = ?;", (object)unit, stratum);
         }
 
@@ -42,15 +42,13 @@ namespace CruiseDAL.DataObjects
         {
             DatastoreRedux dal = plot.DAL;
             string command = string.Format(@"
+DELETE FROM LogStock;
+DELETE FROM TreeCalculatedValues;
 DELETE FROM Log WHERE EXISTS (SELECT 1 FROM Tree WHERE Tree.Tree_CN = Log.Tree_CN AND Tree.Plot_CN = {0});
-DELETE FROM TreeCalculatedValues WHERE EXISTS (SELECT 1 FROM Tree WHERE Tree.Tree_CN = TreeCalculatedValues.Tree_CN AND Tree.Plot_CN = {0};
 DELETE FROM Tree WHERE Plot_CN = {0};", plot.Plot_CN);
             dal.Execute(command);
             plot.Delete();
             return true;
         }
-
-
-
     }
 }
