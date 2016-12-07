@@ -267,7 +267,7 @@ BEGIN
 	INSERT INTO Util_Tombstone 
 	(RecordID, RecordGUID, TableName, Data, DeletedDate) 
 	VALUES 
-	(OLD.rowID, OLD.Tree_GUID, 'Tree', '(TreeDefaultValue_CN, Stratum_CN, SampleGroup_CN, CuttingUnit_CN, Plot_CN, TreeNumber) VALUES (' || quote(OLD.TreeDefaultValue_CN) || ',' || quote(OLD.Stratum_CN) || ',' || quote(OLD.SampleGroup_CN) || ',' || quote(OLD.CuttingUnit_CN) || ',' || quote(OLD.Plot_CN) || ',' || quote(OLD.TreeNumber) ||')', datetime(current_timestamp, 'localtime')); 
+	(OLD.rowID, OLD.Tree_GUID, 'Tree', '', datetime(current_timestamp, 'localtime')); 
 END;
 --Log--
 CREATE TRIGGER OnInsertedLog

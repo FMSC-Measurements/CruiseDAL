@@ -203,8 +203,7 @@ PRAGMA foreign_keys = ON;--is the nessicary? no data is being inserted yet.
 				CreatedDate DateTime DEFAULT (datetime('now')) ,
 				ModifiedBy TEXT ,
 				ModifiedDate DateTime ,
-				RowVersion INTEGER DEFAULT 0,
-				UNIQUE (TreeDefaultValue_CN, Stratum_CN, SampleGroup_CN, CuttingUnit_CN, Plot_CN, TreeNumber));
+				RowVersion INTEGER DEFAULT 0);
 
     CREATE TABLE Log (
 				Log_CN INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -808,7 +807,7 @@ JOIN CuttingUnit USING (CuttingUnit_CN)
 JOIN Stratum USING (Stratum_CN);
 
 
-INSERT INTO Globals (Block, Key, Value) VALUES ("Database", "Version", "2.1.1"); 
+INSERT INTO Globals (Block, Key, Value) VALUES ("Database", "Version", "2.1.2"); 
 PRAGMA user_version = 3;
 
 
