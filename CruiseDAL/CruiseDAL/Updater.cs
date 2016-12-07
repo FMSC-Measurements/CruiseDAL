@@ -127,6 +127,10 @@ namespace CruiseDAL
             {
                 UpdateTo_2_1_1(db);
             }
+            if (db.DatabaseVersion == "2.1.1")
+            {
+                UpdateTo_2_1_2(db);
+            }
 
             if (db.HasForeignKeyErrors(TREEDEFAULTVALUETREEAUDITVALUE._NAME))
             {
@@ -1088,6 +1092,133 @@ JOIN Stratum USING (Stratum_CN);");
             {
                 db.RollbackTransaction();
                 throw new SchemaUpdateException(db.DatabaseVersion, "2.1.1", e);
+            }
+        }
+
+        private static void UpdateTo_2_1_2(DAL db)
+        {
+            db.BeginTransaction();
+            try
+            {
+                RebuildTable(db, "Tree",
+@"CREATE TABLE Tree (
+    Tree_CN INTEGER PRIMARY KEY AUTOINCREMENT,
+    Tree_GUID TEXT,
+    TreeDefaultValue_CN INTEGER REFERENCES TreeDefaultValue,
+    Stratum_CN INTEGER REFERENCES Stratum NOT NULL,
+    SampleGroup_CN INTEGER REFERENCES SampleGroup,
+    CuttingUnit_CN INTEGER REFERENCES CuttingUnit NOT NULL,
+    Plot_CN INTEGER REFERENCES Plot,
+    TreeNumber INTEGER NOT NULL,
+    Species TEXT,
+    CountOrMeasure TEXT,
+    TreeCount REAL Default 0.0,
+    KPI REAL Default 0.0,
+    STM TEXT Default 'N',
+    SeenDefectPrimary REAL Default 0.0,
+    SeenDefectSecondary REAL Default 0.0,
+    RecoverablePrimary REAL Default 0.0,
+    HiddenPrimary REAL Default 0.0,
+    Initials TEXT,
+    LiveDead TEXT,
+    Grade TEXT,
+    HeightToFirstLiveLimb REAL Default 0.0,
+    PoleLength REAL Default 0.0,
+    ClearFace TEXT,
+    CrownRatio REAL Default 0.0,
+    DBH REAL Default 0.0,
+    DRC REAL Default 0.0,
+    TotalHeight REAL Default 0.0,
+    MerchHeightPrimary REAL Default 0.0,
+    MerchHeightSecondary REAL Default 0.0,
+    FormClass REAL Default 0.0,
+    UpperStemDOB REAL Default 0.0,
+    UpperStemDiameter REAL Default 0.0,
+    UpperStemHeight REAL Default 0.0,
+    DBHDoubleBarkThickness REAL Default 0.0,
+    TopDIBPrimary REAL Default 0.0,
+    TopDIBSecondary REAL Default 0.0,
+    DefectCode TEXT,
+    DiameterAtDefect REAL Default 0.0,
+    VoidPercent REAL Default 0.0,
+    Slope REAL Default 0.0,
+    Aspect REAL Default 0.0,
+    Remarks TEXT,
+    XCoordinate DOUBLE Default 0.0,
+    YCoordinate DOUBLE Default 0.0,
+    ZCoordinate DOUBLE Default 0.0,
+    MetaData TEXT,
+    IsFallBuckScale INTEGER Default 0,
+    ExpansionFactor REAL Default 0.0,
+    TreeFactor REAL Default 0.0,
+    PointFactor REAL Default 0.0,
+    CreatedBy TEXT DEFAULT 'none',
+    CreatedDate DateTime DEFAULT(datetime('now')),
+    ModifiedBy TEXT,
+    ModifiedDate DateTime,
+    RowVersion INTEGER DEFAULT 0);",
+@"Tree_CN,
+Tree_GUID,
+TreeDefaultValue_CN,
+Stratum_CN,
+SampleGroup_CN,
+CuttingUnit_CN,
+Plot_CN,
+TreeNumber,
+Species,
+CountOrMeasure,
+TreeCount,
+KPI,
+STM,
+SeenDefectPrimary,
+SeenDefectSecondary,
+RecoverablePrimary,
+HiddenPrimary,
+Initials,
+LiveDead,
+Grade,
+HeightToFirstLiveLimb,
+PoleLength,
+ClearFace,
+CrownRatio,
+DBH,
+DRC,
+TotalHeight,
+MerchHeightPrimary,
+MerchHeightSecondary,
+FormClass,
+UpperStemDOB,
+UpperStemDiameter,
+UpperStemHeight,
+DBHDoubleBarkThickness,
+TopDIBPrimary,
+TopDIBSecondary,
+DefectCode,
+DiameterAtDefect,
+VoidPercent,
+Slope,
+Aspect,
+Remarks,
+XCoordinate,
+YCoordinate,
+ZCoordinate,
+MetaData,
+IsFallBuckScale,
+ExpansionFactor,
+TreeFactor,
+PointFactor,
+CreatedBy,
+CreatedDate,
+ModifiedBy,
+ModifiedDate,
+RowVersion");
+                SetDatabaseVersion(db, "2.1.2");
+                db.CommitTransaction();
+            }
+            catch (Exception e)
+            {
+                db.RollbackTransaction();
+                throw new SchemaUpdateException(db.DatabaseVersion, "2.1.2", e);
             }
         }
     }
