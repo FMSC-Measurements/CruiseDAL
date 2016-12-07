@@ -1130,16 +1130,15 @@ namespace FMSC.ORM.Core
                     try
                     {
                         _CurrentTransaction = connection.BeginTransaction();
+                        _transactionCanceled = false;
+
+                        this.EnterConnectionHold();
+                        OnTransactionStarted();
                     }
                     catch (Exception ex)
                     {
                         throw ThrowExceptionHelper(connection, null, ex);
                     }
-
-                    _transactionCanceled = false;
-
-                    this.EnterConnectionHold();
-                    OnTransactionStarted();
                 }
             }
         }
@@ -1152,28 +1151,36 @@ namespace FMSC.ORM.Core
 
         public void CommitTransaction()
         {
+            //lock (TransactionSyncLock)
+            //{
+            //    if (_transactionDepth == 0) { throw new InvalidOperationException("transaction depth is zero"); }
+
+            //    OnTransactionEnding();
+
+            //    _transactionDepth--;
+            //    if (_transactionDepth == 0)
+            //    {
+            //        ReleaseTransaction();
+            //    }
+
+            //}
             lock (TransactionSyncLock)
             {
-                if (_transactionDepth == 0) { throw new InvalidOperationException("transaction depth is zero"); }
-
                 OnTransactionEnding();
 
-                _transactionDepth--;
-                if (_transactionDepth == 0)
+                if (_transactionDepth == 1)
                 {
+                    _transactionDepth--;
                     ReleaseTransaction();
                 }
-
-                //if (_CurrentTransaction == null)
-                //{
-                //    throw new InvalidOperationException("no active transaction");
-                //}
-
-                //_CurrentTransaction.Commit();
-                //_CurrentTransaction.Dispose();
-                //_CurrentTransaction = null;
-                //ExitConnectionHold();
-                //ReleaseConnection();
+                else if (_transactionDepth > 1)
+                {
+                    _transactionDepth--;
+                }
+                else// transactionDepth > 1
+                {
+                    Debug.Fail("no transaction");
+                }
             }
         }
 
@@ -1187,56 +1194,57 @@ namespace FMSC.ORM.Core
         {
             lock (TransactionSyncLock)
             {
-                if (_transactionDepth == 0) { throw new InvalidOperationException("transaction depth is zero"); }
-
                 OnTransactionCanceling();
                 _transactionCanceled = true;
-                _transactionDepth--;
-                if (_transactionDepth == 0)
+
+                if (_transactionDepth == 1)
                 {
+                    _transactionDepth--;
                     ReleaseTransaction();
                 }
-
-                //if (_CurrentTransaction == null)
-                //{
-                //    throw new InvalidOperationException("no active transaction");
-                //}
-
-                //_CurrentTransaction.Rollback();
-                //_CurrentTransaction.Dispose();
-                //_CurrentTransaction = null;
-                //ExitConnectionHold();
-                //ReleaseConnection();
+                else if (_transactionDepth > 1)
+                {
+                    _transactionDepth--;
+                }
+                else
+                {
+                    Debug.Fail("no transaction");
+                }
             }
         }
 
         private void ReleaseTransaction()
         {
-            if (_CurrentTransaction == null)
-            { throw new ORMException("No open transaction"); }
-
             OnTransactionReleasing();
 
             try
             {
-                if (_transactionCanceled)
+                if (_CurrentTransaction != null)
                 {
-                    _CurrentTransaction.Rollback();
+                    if (_transactionCanceled)
+                    {
+                        _CurrentTransaction.Rollback();
+                    }
+                    else
+                    {
+                        _CurrentTransaction.Commit();
+                    }
                 }
                 else
-                {
-                    _CurrentTransaction.Commit();
-                }
+                { Debug.Fail("_currentTransaction is null"); }
             }
             catch (Exception ex)
             {
                 throw ThrowExceptionHelper(PersistentConnection, null, ex);
             }
-
-            _CurrentTransaction.Dispose();
-            _CurrentTransaction = null;
-            ExitConnectionHold();
-            ReleaseConnection();
+            finally
+            {
+                if (_CurrentTransaction != null)
+                { _CurrentTransaction.Dispose(); }
+                _CurrentTransaction = null;
+                ExitConnectionHold();
+                ReleaseConnection();
+            }
         }
 
         #endregion transaction management
