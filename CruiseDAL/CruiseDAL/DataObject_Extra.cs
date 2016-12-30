@@ -10,7 +10,7 @@ using FMSC.ORM.EntityModel.Attributes;
 
 namespace CruiseDAL
 {
-    public abstract class DataObject : DataObject_Base, IDataErrorInfo, IValidatable, INotifyDataErrorInfo
+    public abstract class DataObject : DataObject_Base, IDataErrorInfo, IValidatable
     {
         protected DataObject()
             : this(null)
@@ -494,30 +494,10 @@ namespace CruiseDAL
 
         #endregion validation
 
-        bool INotifyDataErrorInfo.HasErrors { get { return this.ErrorCollection.HasErrors; } }
-
         public IEnumerable GetErrors(String propertyName)
         {
             yield return String.Concat(this.ErrorCollection.GetErrors(propertyName));
         }
 
-        public event EventHandler<DataErrorsChangedEventArgs> ErrorsChanged
-        {
-            add
-            {
-                lock (ErrorCollection)
-                {
-                    ErrorCollection.ErrorsChanged += value;
-                }
-            }
-
-            remove
-            {
-                lock (ErrorCollection)
-                {
-                    ErrorCollection.ErrorsChanged -= value;
-                }
-            }
-        }
     }
 }
