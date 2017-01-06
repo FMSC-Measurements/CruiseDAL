@@ -40,6 +40,15 @@ namespace FMSC.ORM.Core
 
         #region Entity Info
 
+        public void ClearCache(Type type)
+        {
+            if (_entityCache != null && _entityCache.ContainsKey(type))
+            {
+                var cache = _entityCache[type];
+                cache.Clear();
+            }
+        }
+
         protected EntityCache GetEntityCache(Type type)
         {
             if (_entityCache == null) { _entityCache = new Dictionary<Type, EntityCache>(); }
@@ -288,7 +297,7 @@ namespace FMSC.ORM.Core
                 {
                     EntityCache cacheStore = GetEntityCache(data.GetType());
 
-                    Debug.Assert(cacheStore.ContainsKey(primaryKey) == false);
+                    Debug.Assert(cacheStore.ContainsKey(primaryKey) == false, "Cache already contains entity, existing entity will be replaced");
                     if (cacheStore.ContainsKey(primaryKey))
                     {
                         cacheStore[primaryKey] = data;
