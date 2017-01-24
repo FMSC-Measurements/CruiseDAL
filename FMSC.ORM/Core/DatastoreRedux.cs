@@ -276,12 +276,22 @@ namespace FMSC.ORM.Core
             }
         }
 
+#if NetCF
+        public void Save(IPersistanceTracking data)
+        {
+            Save(data, OnConflictOption.Fail, true);
+        }
+
         public void Save(IPersistanceTracking data, SQL.OnConflictOption option)
         {
             Save(data, option, true);
         }
 
         public void Save(IPersistanceTracking data, SQL.OnConflictOption option, bool cache)
+#else
+
+        public void Save(IPersistanceTracking data, SQL.OnConflictOption option = OnConflictOption.Fail, bool cache = true)
+#endif
         {
             if (data is System.ComponentModel.IChangeTracking
                 && ((System.ComponentModel.IChangeTracking)data).IsChanged == false)
