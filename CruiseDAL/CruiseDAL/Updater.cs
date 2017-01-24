@@ -12,6 +12,14 @@ namespace CruiseDAL
         {
             //PatchSureToMeasure(db);
 
+            //killswitch 
+            //if the version is not 2.* or not using date versioning
+            if (!db.DatabaseVersion.StartsWith("2")) 
+            {
+                throw new IncompatibleSchemaException("The version of this cruise file is not compatable with the version of the software you are using." +
+                    "Go to github.com/FMSC-Measurements to get the latest version of our software.", null);
+            }
+
             if (db.DatabaseVersion == "2013.05.28" || db.DatabaseVersion == "Unknown")
             {
                 UpdateToVersion2013_05_30(db);
@@ -1095,6 +1103,15 @@ JOIN Stratum USING (Stratum_CN);");
             }
         }
 
+
+        //remove unique constraint from tree.treeNumber 
+        //when users were trying to renumber trees in a 
+        //transaction it would fail. Even though at the end
+        //of the transaction the constraint would not be in
+        //violation. Because there is no way to fix this bug 
+        //in software with previous versions, aswell, the unique 
+        // constraint was only working properly when Plot_CN was
+        // not null I'm deciding to remove it alltogether. RIP
         private static void UpdateTo_2_1_2(DAL db)
         {
             db.BeginTransaction();
