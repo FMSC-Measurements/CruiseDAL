@@ -9,7 +9,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		LocalTestRun.testrunconfig = LocalTestRun.testrunconfig
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CruiseDAL_FF35.VS15", "CruiseDAL\CruiseDAL_FF35.VS15.csproj", "{BAF1842E-F8C5-47A5-94C6-ADABA8A4B3AF}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CruiseDAL_FF35.VS15", "CruiseDAL\CruiseDAL.VS15.csproj", "{BAF1842E-F8C5-47A5-94C6-ADABA8A4B3AF}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CruiseDAL.Tests.VS15", "CruiseDALTest\CruiseDAL.Tests.VS15.csproj", "{218BDBE5-66B4-45D8-B428-1DAC786B974C}"
 EndProject
