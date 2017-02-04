@@ -14,7 +14,11 @@ namespace FMSC.ORM.Core.SQL
         public ColumnInfo()
         { }
 
+#if !NetCF
+        public ColumnInfo(string name, string dbType = "TEXT", bool isPk = false, bool isRequired = false, string defaultVal = null)
+#else
         public ColumnInfo(string name, string dbType, bool isPk, bool isRequired, string defaultVal)
+#endif
         {
             Name = name;
             DBType = dbType;
