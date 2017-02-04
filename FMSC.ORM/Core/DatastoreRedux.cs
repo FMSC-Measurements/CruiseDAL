@@ -86,7 +86,7 @@ namespace FMSC.ORM.Core
 
         protected abstract string BuildConnectionString();
 
-        public abstract List<ColumnInfo> GetTableInfo(string tableName);
+        public abstract IEnumerable<ColumnInfo> GetTableInfo(string tableName);
 
         public abstract Int64 GetRowCount(string tableName, string selection, params Object[] selectionArgs);
 
@@ -348,48 +348,6 @@ namespace FMSC.ORM.Core
                 return Read<T>(command, entityDescription);
             }
         }
-
-        //public List<T> Read<T>(string selection, params object[] selectionArgs)
-        //    where T : new()
-        //{
-        //    EntityDescription entityDescription = LookUpEntityByType(typeof(T));
-        //    EntityCommandBuilder commandBuilder = entityDescription.CommandBuilder;
-
-        //    using (DbCommand command = commandBuilder.BuildSelectLegacy(Provider, selection))
-        //    {
-        //        //Add selection Arguments to command parameter list
-        //        if (selectionArgs != null)
-        //        {
-        //            foreach (object obj in selectionArgs)
-        //            {
-        //                command.Parameters.Add(Provider.CreateParameter(null, obj));
-        //            }
-        //        }
-
-        //        return Read<T>(command, entityDescription);
-        //    }
-        //}
-
-        //public List<T> Read<T>(WhereClause where, params Object[] selectionArgs)
-        //    where T : new()
-        //{
-        //    EntityDescription entityDescription = LookUpEntityByType(typeof(T));
-        //    EntityCommandBuilder commandBuilder = entityDescription.CommandBuilder;
-
-        //    using (DbCommand command = commandBuilder.BuildSelectCommand(Provider, where))
-        //    {
-        //        //Add selection Arguments to command parameter list
-        //        if (selectionArgs != null)
-        //        {
-        //            foreach (object obj in selectionArgs)
-        //            {
-        //                command.Parameters.Add(Provider.CreateParameter(null, obj));
-        //            }
-        //        }
-
-        //        return Read<T>(command, entityDescription);
-        //    }
-        //}
 
         internal IEnumerable<TResult> Read<TResult>(SQLSelectBuilder selectBuilder, params Object[] selectionArgs)
         {
