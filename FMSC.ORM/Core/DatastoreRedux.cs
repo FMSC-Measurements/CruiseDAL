@@ -112,6 +112,8 @@ namespace FMSC.ORM.Core
 
         public void Delete(object data)
         {
+            if (data == null) { throw new ArgumentNullException("data"); }
+
             OnDeletingData(data);
             if (data is IPersistanceTracking)
             {
@@ -145,22 +147,34 @@ namespace FMSC.ORM.Core
             }
         }
 
+#if NetCF
         public object Insert(object data, SQL.OnConflictOption option)
+#else
+        public object Insert(object data, SQL.OnConflictOption option = OnConflictOption.Default)
+#endif
         {
+            if (data == null) { throw new ArgumentNullException("data"); }
+
             EntityDescription entityDescription = LookUpEntityByType(data.GetType());
             var keyField = entityDescription.Fields.PrimaryKeyField;
             object keyData = (keyField != null) ? keyField.GetFieldValue(data) : null;
             return InternalInsert(entityDescription, data, keyData, option);
         }
 
+#if NetCF
         public object Insert(object data, object keyData, SQL.OnConflictOption option)
+#else
+        public object Insert(object data, object keyData, SQL.OnConflictOption option = OnConflictOption.Default)
+#endif
         {
+            if (data == null) { throw new ArgumentNullException("data"); }
+
             EntityDescription entityDescription = LookUpEntityByType(data.GetType());
             var keyField = entityDescription.Fields.PrimaryKeyField;
             return InternalInsert(entityDescription, data, keyData, option);
         }
 
-        #region Insert Helper Methods
+#region Insert Helper Methods
 
         protected object InternalInsert(EntityDescription entityDescription
             , object data, object keyData, SQL.OnConflictOption option)
@@ -244,8 +258,14 @@ namespace FMSC.ORM.Core
 
         #endregion Insert Helper Methods
 
+#if NetCF
         public void Update(object data, SQL.OnConflictOption option)
+#else
+        public void Update(object data, SQL.OnConflictOption option = OnConflictOption.Default)
+#endif
         {
+            if (data == null) { throw new ArgumentNullException("data"); }
+
             EntityDescription entityDescription = LookUpEntityByType(data.GetType());
             EntityCommandBuilder builder = entityDescription.CommandBuilder;
             var keyField = entityDescription.Fields.PrimaryKeyField;
@@ -256,6 +276,8 @@ namespace FMSC.ORM.Core
 
         public void Update(object data, object keyData, SQL.OnConflictOption option)
         {
+            if (data == null) { throw new ArgumentNullException("data"); }
+
             OnUpdatingData(data);
             if (data is IPersistanceTracking)
             {
@@ -267,7 +289,11 @@ namespace FMSC.ORM.Core
 
             using (DbCommand command = builder.BuildUpdateCommand(Provider, data, keyData, option))
             {
-                ExecuteSQL(command);
+               var changes = ExecuteSQL(command);
+                if (option != OnConflictOption.Ignore)
+                {
+                    Debug.Assert(changes > 0, "update command resulted in no changes");
+                }
             }
 
             if (data is IPersistanceTracking)
@@ -293,6 +319,8 @@ namespace FMSC.ORM.Core
         public void Save(IPersistanceTracking data, SQL.OnConflictOption option = OnConflictOption.Fail, bool cache = true)
 #endif
         {
+            if (data == null) { throw new ArgumentNullException("data"); }
+
             if (data is System.ComponentModel.IChangeTracking
                 && ((System.ComponentModel.IChangeTracking)data).IsChanged == false)
             {
@@ -324,7 +352,7 @@ namespace FMSC.ORM.Core
             }
         }
 
-        #region read methods
+#region read methods
 
         [Obsolete("use From<T>().Read() style instead")]
 #pragma warning disable RECS0154 // Parameter tableName is never used
@@ -622,9 +650,9 @@ namespace FMSC.ORM.Core
             return ReadSingleRow<T>(rowID);
         }
 
-        #endregion read methods
+#endregion read methods
 
-        #region query methods
+#region query methods
 
         public List<T> Query<T>(string selectCommand, params Object[] selectionArgs) where T : new()
         {
@@ -873,11 +901,11 @@ namespace FMSC.ORM.Core
             }
         }
 
-        #endregion query methods
+#endregion query methods
 
-        #endregion CRUD
+#endregion CRUD
 
-        #region general purpose command execution
+#region general purpose command execution
 
         /// <summary>
         /// Executes SQL command returning number of rows affected
@@ -1089,9 +1117,9 @@ namespace FMSC.ORM.Core
             }
         }
 
-        #endregion general purpose command execution
+#endregion general purpose command execution
 
-        #region transaction management
+#region transaction management
 
         public void BeginTransaction()
         {
@@ -1224,9 +1252,9 @@ namespace FMSC.ORM.Core
             }
         }
 
-        #endregion transaction management
+#endregion transaction management
 
-        #region Connection Management
+#region Connection Management
 
         protected void EnterConnectionHold()
         {
@@ -1487,9 +1515,9 @@ namespace FMSC.ORM.Core
             }
         }
 
-        #endregion Connection Management
+#endregion Connection Management
 
-        #region events and logging
+#region events and logging
 
         [Conditional("Debug")]
         protected void LogCommand(DbCommand command)
@@ -1559,9 +1587,9 @@ namespace FMSC.ORM.Core
             Debug.WriteLine("Transaction Releasing", Constants.Logging.DB_CONTROL);
         }
 
-        #endregion events and logging
+#endregion events and logging
 
-        #region IDisposable Support
+#region IDisposable Support
 
         private bool isDisposed = false; // To detect redundant calls
 
@@ -1600,6 +1628,6 @@ namespace FMSC.ORM.Core
             GC.SuppressFinalize(this);
         }
 
-        #endregion IDisposable Support
+#endregion IDisposable Support
     }
 }
