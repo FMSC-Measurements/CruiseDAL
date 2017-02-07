@@ -682,26 +682,26 @@ namespace FMSC.ORM.Core
             return Query<T>(command, entityType);
         }
 
-        public List<T> Query<T>(WhereClause where, params Object[] selectionArgs)
-            where T : new()
-        {
-            EntityDescription entityDescription = LookUpEntityByType(typeof(T));
-            EntityCommandBuilder commandBuilder = entityDescription.CommandBuilder;
+        //public List<T> Query<T>(WhereClause where, params Object[] selectionArgs)
+        //    where T : new()
+        //{
+        //    EntityDescription entityDescription = LookUpEntityByType(typeof(T));
+        //    EntityCommandBuilder commandBuilder = entityDescription.CommandBuilder;
 
-            using (DbCommand command = commandBuilder.BuildSelectCommand(Provider, where))
-            {
-                //Add selection Arguments to command parameter list
-                if (selectionArgs != null)
-                {
-                    foreach (object obj in selectionArgs)
-                    {
-                        command.Parameters.Add(Provider.CreateParameter(null, obj));
-                    }
-                }
+        //    using (DbCommand command = commandBuilder.BuildSelectCommand(Provider, where))
+        //    {
+        //        //Add selection Arguments to command parameter list
+        //        if (selectionArgs != null)
+        //        {
+        //            foreach (object obj in selectionArgs)
+        //            {
+        //                command.Parameters.Add(Provider.CreateParameter(null, obj));
+        //            }
+        //        }
 
-                return Query<T>(command, entityDescription);
-            }
-        }
+        //        return Query<T>(command, entityDescription);
+        //    }
+        //}
 
         internal IEnumerable<TResult> Query<TResult>(SQLSelectBuilder selectBuilder, params Object[] selectionArgs)
         {
@@ -852,26 +852,26 @@ namespace FMSC.ORM.Core
             return QuerySingleRecord<T>(command, entityType);
         }
 
-        public T QuerySingleRecord<T>(WhereClause where, params Object[] selectionArgs)
-            where T : new()
-        {
-            EntityDescription entityDescription = LookUpEntityByType(typeof(T));
-            EntityCommandBuilder commandBuilder = entityDescription.CommandBuilder;
+        //public T QuerySingleRecord<T>(WhereClause where, params Object[] selectionArgs)
+        //    where T : new()
+        //{
+        //    EntityDescription entityDescription = LookUpEntityByType(typeof(T));
+        //    EntityCommandBuilder commandBuilder = entityDescription.CommandBuilder;
 
-            using (DbCommand command = commandBuilder.BuildSelectCommand(Provider, where))
-            {
-                //Add selection Arguments to command parameter list
-                if (selectionArgs != null)
-                {
-                    foreach (object obj in selectionArgs)
-                    {
-                        command.Parameters.Add(Provider.CreateParameter(null, obj));
-                    }
-                }
+        //    using (DbCommand command = commandBuilder.BuildSelectCommand(Provider, where))
+        //    {
+        //        //Add selection Arguments to command parameter list
+        //        if (selectionArgs != null)
+        //        {
+        //            foreach (object obj in selectionArgs)
+        //            {
+        //                command.Parameters.Add(Provider.CreateParameter(null, obj));
+        //            }
+        //        }
 
-                return QuerySingleRecord<T>(command, entityDescription);
-            }
-        }
+        //        return QuerySingleRecord<T>(command, entityDescription);
+        //    }
+        //}
 
         protected T QuerySingleRecord<T>(DbCommand command, EntityDescription entityDescription)
             where T : new()
