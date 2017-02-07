@@ -44,10 +44,11 @@ namespace FMSC.ORM.EntityModel.Support
 
         }
 
-        public SQLSelectBuilder MakeSelectCommand()
+        public SQLSelectBuilder MakeSelectCommand(SelectSource source)
         {
             var selectBuilder = new SQLSelectBuilder();
-            selectBuilder.Source = EntityDescription.Source;
+            selectBuilder.Source = source ?? EntityDescription.Source;
+
 
             //order fields by ordinal
             var fields = new List<FieldAttribute>(EntityDescription.Fields);

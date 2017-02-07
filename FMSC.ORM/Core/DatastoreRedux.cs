@@ -100,8 +100,19 @@ namespace FMSC.ORM.Core
 
         public QueryBuilder<T> From<T>()
         {
+            return From<T>((SelectSource)null);
+        }
+
+        public QueryBuilder<T> From<T>(SQLSelectBuilder selectCMD)
+        {
+            var source = new TableOrSubQuery(selectCMD, null);
+            return From<T>(source);
+        }
+
+        public QueryBuilder<T> From<T>(SelectSource source)
+        {
             EntityDescription entityDescription = LookUpEntityByType(typeof(T));
-            SQLSelectBuilder builder = entityDescription.CommandBuilder.MakeSelectCommand();
+            SQLSelectBuilder builder = entityDescription.CommandBuilder.MakeSelectCommand(source);
 
             return new QueryBuilder<T>(this, builder);
         }
