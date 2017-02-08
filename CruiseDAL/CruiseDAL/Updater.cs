@@ -1020,7 +1020,7 @@ JOIN Stratum USING (Stratum_CN);");
 
         private static void UpdateToVersion2015_08_19(DAL db)
         {
-            System.Collections.Generic.List<ColumnInfo> tavCols = db.GetTableInfo("TreeAuditValue");
+            var tavCols = db.GetTableInfo("TreeAuditValue");
             bool hasErrorMessageCol = false;
             foreach (ColumnInfo col in tavCols)
             {
