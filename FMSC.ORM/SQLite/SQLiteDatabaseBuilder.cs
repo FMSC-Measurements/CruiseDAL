@@ -28,15 +28,17 @@ namespace FMSC.ORM.SQLite
 
         public override void CreateDatastore()
         {
-            if (Datastore.Exists)
+            if (Datastore.Exists && !Datastore.IsInMemory)
             {
                 System.IO.File.Delete(Datastore.Path);
             }
 
             try
             {
-                
-                SQLiteConnection.CreateFile(Datastore.Path);
+                if (!Datastore.IsInMemory)
+                {
+                    SQLiteConnection.CreateFile(Datastore.Path);
+                }
                 Datastore.BeginTransaction();
                 try
                 {

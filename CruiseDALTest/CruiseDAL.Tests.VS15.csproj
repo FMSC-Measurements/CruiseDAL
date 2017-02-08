@@ -156,7 +156,7 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\CruiseDAL\CruiseDAL_FF35.VS15.csproj">
+    <ProjectReference Include="..\CruiseDAL\CruiseDAL.VS15.csproj">
       <Project>{baf1842e-f8c5-47a5-94c6-adaba8a4b3af}</Project>
       <Name>CruiseDAL_FF35.VS15</Name>
     </ProjectReference>

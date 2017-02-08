@@ -12,9 +12,7 @@ namespace FMSC.ORM.EntityModel.Support
 {
     public class EntityCommandBuilder
     {
-        SQLSelectBuilder _selectCommand;
-        string _selectCommandFormat;
-
+        SQLSelectBuilder _legacySelectBuilder;   
 
         public EntityDescription EntityDescription { get; set; }
 
@@ -24,30 +22,31 @@ namespace FMSC.ORM.EntityModel.Support
 
             if (EntityDescription.Source != null)
             {
-                _selectCommand = MakeSelectCommand();
+                _legacySelectBuilder = MakeSelectCommand(null);
                 //InitializeLegacySelectCommand();
             }
         }
 
 
         #region build select 
-        public DbCommand BuildSelectCommand(DbProviderFactoryAdapter provider, SelectClause clause)
-        {
-            Debug.Assert(_selectCommand != null);
+        //public DbCommand BuildSelectCommand(DbProviderFactoryAdapter provider, SelectClause clause)
+        //{
+        //    Debug.Assert(_selectCommand != null);
 
-            this._selectCommand.Clause = clause;
+        //    this._selectCommand.Clause = clause;
 
-            string query = _selectCommand.ToSQL();
+        //    string query = _selectCommand.ToSQL();
 
-            DbCommand command = provider.CreateCommand(query);
-            return command;
+        //    DbCommand command = provider.CreateCommand(query);
+        //    return command;
 
-        }
+        //}
 
-        public SQLSelectBuilder MakeSelectCommand()
+        public SQLSelectBuilder MakeSelectCommand(SelectSource source)
         {
             var selectBuilder = new SQLSelectBuilder();
-            selectBuilder.Source = EntityDescription.Source;
+            selectBuilder.Source = source ?? EntityDescription.Source;
+
 
             //order fields by ordinal
             var fields = new List<FieldAttribute>(EntityDescription.Fields);
@@ -63,11 +62,11 @@ namespace FMSC.ORM.EntityModel.Support
 
         public DbCommand BuildSelectLegacy(DbProviderFactoryAdapter provider, string selection)
         {
-            Debug.Assert(_selectCommand != null);
+            Debug.Assert(_legacySelectBuilder != null);
 
-            this._selectCommand.Clause = new LegacySelectPlaceholder() { Index = 0 };
+            this._legacySelectBuilder.Clause = new LegacySelectPlaceholder() { Index = 0 };
 
-            string query = String.Format(_selectCommand.ToSQL(), selection);
+            string query = String.Format(_legacySelectBuilder.ToSQL(), selection);
 
             DbCommand command = provider.CreateCommand(query);
             return command;
