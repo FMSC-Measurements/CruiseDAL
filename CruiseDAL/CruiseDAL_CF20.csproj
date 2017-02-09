@@ -23,7 +23,7 @@
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
-    <OutputPath>bin\Debug\CF20\</OutputPath>
+    <OutputPath>bin\CF20\Debug\</OutputPath>
     <DefineConstants>TRACE;DEBUG;WindowsCE NetCF NetCF2</DefineConstants>
     <NoStdLib>true</NoStdLib>
     <NoConfig>true</NoConfig>
@@ -35,7 +35,7 @@
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
-    <OutputPath>bin\Release\CF20\</OutputPath>
+    <OutputPath>bin\CF20\Release\</OutputPath>
     <DefineConstants>TRACE;WindowsCE NetCF NetCF2</DefineConstants>
     <NoStdLib>true</NoStdLib>
     <NoConfig>true</NoConfig>
@@ -43,17 +43,6 @@
     <FileAlignment>512</FileAlignment>
     <WarningLevel>4</WarningLevel>
     <GenerateSerializationAssemblies>Off</GenerateSerializationAssemblies>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release PC|AnyCPU' ">
-    <NoStdLib>true</NoStdLib>
-    <NoConfig>true</NoConfig>
-    <GenerateSerializationAssemblies>Off</GenerateSerializationAssemblies>
-    <OutputPath>bin\Release PC\</OutputPath>
-    <DefineConstants>TRACE;WindowsCE NetCF NetCF2</DefineConstants>
-    <Optimize>true</Optimize>
-    <DebugType>pdbonly</DebugType>
-    <PlatformTarget>AnyCPU</PlatformTarget>
-    <ErrorReport>prompt</ErrorReport>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="FMSC.Core_CF20, Version=1.0.0.26521, Culture=neutral, processorArchitecture=MSIL">
