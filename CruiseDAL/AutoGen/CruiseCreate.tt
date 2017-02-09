@@ -103,7 +103,7 @@ PRAGMA user_version = <#=dr.SchemaVersion#>;
         if(table.TrackCreated)
         {
 			cols.Add("\t\t\t\tCreatedBy TEXT DEFAULT 'none'");
-			cols.Add("\t\t\t\tCreatedDate DateTime DEFAULT (datetime('now')) ");
+			cols.Add("\t\t\t\tCreatedDate DateTime DEFAULT (datetime(current_timestamp, 'localtime')) ");
 		}
 		if(table.TrackModified)
 		{
