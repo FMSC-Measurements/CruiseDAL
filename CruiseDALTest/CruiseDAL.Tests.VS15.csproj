@@ -80,6 +80,14 @@
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="FluentAssertions, Version=4.19.0.0, Culture=neutral, PublicKeyToken=33f2691a05b67b6a, processorArchitecture=MSIL">
+      <HintPath>..\packages\FluentAssertions.4.19.0\lib\net45\FluentAssertions.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="FluentAssertions.Core, Version=4.19.0.0, Culture=neutral, PublicKeyToken=33f2691a05b67b6a, processorArchitecture=MSIL">
+      <HintPath>..\packages\FluentAssertions.4.19.0\lib\net45\FluentAssertions.Core.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
@@ -112,31 +120,23 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="CommonMethods.cs" />
-    <Compile Include="Core.Tests\EntityCommandBuilder.Tests.cs" />
-    <Compile Include="Core.Tests\EntityDescriptionTest.cs" />
-    <None Include="CruiseDAL.DataObjects.Tests\CuttingUnitDOTest.cs" />
-    <None Include="CruiseDAL.DataObjects.Tests\CuttingUnitStratumDOTest.cs" />
     <Compile Include="DALTest.cs" />
-    <None Include="CruiseDAL.DataObjects.Tests\LogMatrixDOTest.cs" />
+    <Compile Include="CruiseDAL.DataObjects.Tests\LogMatrixDOTest.cs" />
     <Compile Include="MappingCollectionTest.cs" />
-    <Compile Include="CruiseDAL.BaseDAL.Tests\ObjectCacheTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="SQL\TestSQLConstants.cs" />
-    <Compile Include="TestTypes\TestReadDO.cs" />
-    <Compile Include="TestTypes\DOMultiPropType.cs" />
-    <Compile Include="TestTypes\POCOMultiTypeObject.cs" />
-    <None Include="CruiseDAL.DataObjects.Tests\TreeDOTest.cs" />
+    <Compile Include="CruiseDAL.DataObjects.Tests\TreeDOTest.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="AuthoringTests.txt" />
-    <Content Include="SQL\CruiseCreate05_30_2013.txt" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
-    <None Include="SQL\CreateTestDB.sql" />
-    <None Include="TestResources\Test.cruise" />
-    <None Include="TestResources\TestCruiseDAL.db" />
+    <Content Include="TestResources\Test.cruise">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="TestResources\TestCruiseDAL.db">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include=".NETFramework,Version=v4.0">
@@ -156,9 +156,13 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\CruiseDAL\CruiseDAL_FF35.VS15.csproj">
+    <ProjectReference Include="..\CruiseDAL\CruiseDAL.VS15.csproj">
       <Project>{baf1842e-f8c5-47a5-94c6-adaba8a4b3af}</Project>
-      <Name>CruiseDAL_FF35.VS15</Name>
+      <Name>CruiseDAL.VS15</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\FMSC.ORM\FMSC.ORM.VS15.csproj">
+      <Project>{22432d40-9892-40a6-aa0c-cc8c2fa4bb91}</Project>
+      <Name>FMSC.ORM.VS15</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />

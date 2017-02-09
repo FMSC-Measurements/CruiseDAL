@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
-VisualStudioVersion = 14.0.25123.0
+VisualStudioVersion = 14.0.25420.1
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{770A329F-9981-40B5-8AD1-85C573421463}"
 	ProjectSection(SolutionItems) = preProject
@@ -9,7 +9,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		LocalTestRun.testrunconfig = LocalTestRun.testrunconfig
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CruiseDAL_FF35.VS15", "CruiseDAL\CruiseDAL.VS15.csproj", "{BAF1842E-F8C5-47A5-94C6-ADABA8A4B3AF}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CruiseDAL.VS15", "CruiseDAL\CruiseDAL.VS15.csproj", "{BAF1842E-F8C5-47A5-94C6-ADABA8A4B3AF}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CruiseDAL.Tests.VS15", "CruiseDALTest\CruiseDAL.Tests.VS15.csproj", "{218BDBE5-66B4-45D8-B428-1DAC786B974C}"
 EndProject
@@ -25,8 +25,8 @@ Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "FMSC.ORM", "FMSC.ORM\FMSC.O
 EndProject
 Global
 	GlobalSection(SharedMSBuildProjectFiles) = preSolution
-		FMSC.ORM\FMSC.ORM.projitems*{e9e89fc3-ff59-484b-b897-a640a9a4e31b}*SharedItemsImports = 4
 		FMSC.ORM\FMSC.ORM.projitems*{d1c2e32d-5df9-46be-9b04-dd2b2c5851d3}*SharedItemsImports = 13
+		FMSC.ORM\FMSC.ORM.projitems*{e9e89fc3-ff59-484b-b897-a640a9a4e31b}*SharedItemsImports = 4
 	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU

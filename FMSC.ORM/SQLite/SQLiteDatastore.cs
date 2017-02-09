@@ -165,6 +165,7 @@ namespace FMSC.ORM.SQLite
         /// <returns></returns>
         public bool CheckFieldExists(string tableName, string field)
         {
+            field = field.Trim();
             foreach (var col in GetTableInfo(tableName))
             {
                 if (field.Equals(col.Name, StringComparison.InvariantCultureIgnoreCase)) { return true; }
@@ -196,7 +197,12 @@ namespace FMSC.ORM.SQLite
             return sb.ToString();
         }
 
+
+#if !NetCF
+        public void CreateTable(string tableName, IEnumerable<ColumnInfo> cols, bool temp = false)
+#else
         public void CreateTable(string tableName, IEnumerable<ColumnInfo> cols, bool temp)
+#endif
         {
             Execute(BuildCreateTable(tableName, cols, temp));
         }
@@ -206,7 +212,7 @@ namespace FMSC.ORM.SQLite
         /// </summary>
         /// <param name="tableName">Name of the table.</param>
         /// <returns></returns>
-        public override List<ColumnInfo> GetTableInfo(string tableName)
+        public override IEnumerable<ColumnInfo> GetTableInfo(string tableName)
         {
             var colList = new List<ColumnInfo>();
             lock (_persistentConnectionSyncLock)
@@ -318,6 +324,7 @@ namespace FMSC.ORM.SQLite
             return ExecuteScalar<Int64>(query, selectionArgs);
         }
 
+        [Obsolete]
         public IEnumerable<string> GetTableUniques(String tableName)
         {
             String tableSQL = this.GetTableSQL(tableName);
@@ -339,7 +346,7 @@ namespace FMSC.ORM.SQLite
             }
         }
 
-        #region File utility methods
+#region File utility methods
 
         ///// <summary>
         ///// Copies entire file to <paramref name="path"/> Overwriting any existing file
@@ -374,7 +381,7 @@ namespace FMSC.ORM.SQLite
             return true;
         }
 
-        #endregion File utility methods
+#endregion File utility methods
 
         protected override Exception ThrowExceptionHelper(DbConnection conn, DbCommand comm, Exception innerException)
         {

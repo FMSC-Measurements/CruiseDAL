@@ -1,9 +1,0 @@
-Added fluent API that replaces Read and Query methods 
-
-Moved UniqueConstraintException from CruiseDAL to FMSC.ORM
-Moved ConstraintException from CruiseDAL to FMSC.ORM
-
-EndTransaction made obsoliete by CommitTransaction
-CancelTransaction made obsolete by RollbackTransaction
-
-Added method ReadGlobalValue

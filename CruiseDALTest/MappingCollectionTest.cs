@@ -2,9 +2,9 @@
 using System.Text;
 using System.Collections.Generic;
 using System.Linq;
-using FMSCORM;
-using FMSCORM.DataObjects;
+using CruiseDAL.DataObjects;
 using Xunit;
+using CruiseDAL;
 
 namespace FMSCORM.Tests
 {
@@ -47,7 +47,7 @@ namespace FMSCORM.Tests
                 }
             }
 
-            testDB.FlushCache();
+            //testDB.FlushCache();
         }
 
         private DAL testDB;
