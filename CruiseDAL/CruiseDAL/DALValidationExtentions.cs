@@ -8,7 +8,6 @@ namespace CruiseDAL
 {
     public static class DALValidationExtentions
     {
-
         public static bool HasCruiseErrors(this DAL dal, out string[] errors)
         {
             bool hasErrors = false;
@@ -50,12 +49,12 @@ namespace CruiseDAL
             if (dal.HasBlankSpeciesCodes())
             {
                 dal.Execute(
-                @"Update Tree 
-                SET Species = 
-                    (Select Species FROM TreeDefaultValue 
-                        WHERE TreeDefaultValue.TreeDefaultValue_CN = Tree.TreeDefaultValue_CN) 
-                WHERE ifnull(Tree.Species, '') = '' 
-                AND ifnull(Tree.TreeDefaultValue_CN, 0) = 0;");
+                @"Update Tree
+                SET Species =
+                    (Select Species FROM TreeDefaultValue
+                        WHERE TreeDefaultValue.TreeDefaultValue_CN = Tree.TreeDefaultValue_CN)
+                WHERE ifnull(Tree.Species, '') = ''
+                AND ifnull(Tree.TreeDefaultValue_CN, 0) != 0;");
                 if (dal.HasBlankSpeciesCodes())
                 {
                     errorList.Add("Tree table has record(s) with blank species or no tree default");
@@ -124,7 +123,5 @@ namespace CruiseDAL
         {
             return dal.GetRowCount(STRATUM._NAME, "LEFT JOIN SampleGroup USING (Stratum_CN) WHERE SampleGroup.Stratum_CN IS NULL") > 0;
         }
-
-        
     }
 }

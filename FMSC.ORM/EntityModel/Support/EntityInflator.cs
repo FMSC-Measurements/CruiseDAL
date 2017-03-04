@@ -159,7 +159,7 @@ namespace FMSC.ORM.EntityModel.Support
                 {
                     return reader.GetGuid(ord);
                 }
-                catch (InvalidCastException)
+                catch (Exception)
                 {
                     return Guid.Empty;
                 }

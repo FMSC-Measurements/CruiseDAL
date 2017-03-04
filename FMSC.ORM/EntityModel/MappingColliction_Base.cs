@@ -12,7 +12,10 @@ using System.Data.SQLite;
 
 namespace FMSC.ORM.EntityModel
 {
-    public abstract class MappingCollection<MapType, ParentType, ChildType> : IEnumerable<ChildType>, IList<ChildType>, IList
+    public abstract class MappingCollection<MapType, ParentType, ChildType> 
+        : IEnumerable<ChildType>
+        , ICollection<ChildType>
+        , ICollection
         where MapType : class, IDataObject 
         where ParentType : class, IDataObject
         where ChildType : class, IDataObject
@@ -26,28 +29,6 @@ namespace FMSC.ORM.EntityModel
 
         #region indexer & properties 
         public bool IsPopulated { get; protected set; }
-
-        //read only
-        public ChildType this[int index]
-        {
-            get 
-            { 
-                int pCount = _persistedChildren.Count;
-                if (index >= pCount)
-                {
-                    return _unpersistedChildren[index - pCount];
-                }
-                else
-                {
-                    return _persistedChildren[index];
-                }
-            }
-            set
-            {
-                throw new NotImplementedException();
-            }
-            
-        }
 
         public ParentType Parent
         {
@@ -167,10 +148,8 @@ namespace FMSC.ORM.EntityModel
 
         public void Add(ChildType child)
         {
-            if (child == null)
-            {
-                throw new ArgumentNullException("child");
-            }
+            if (child == null) { throw new ArgumentNullException("child"); }
+
             if (_unpersistedChildren.Contains(child)) { return; }
             if (_persistedChildren.Contains(child)) { return; }
 
@@ -214,131 +193,24 @@ namespace FMSC.ORM.EntityModel
 
         public void CopyTo(ChildType[] array, int arrayIndex)
         {
-            ////array = new ChildType[_children.Count - arrayIndex];
-            //for (int i = arrayIndex, j = 0; i < this.Count; j++, i++)
-            //{
-            //    array.SetValue(this[i], j);
-            //}
             ((ICollection)this).CopyTo(array, arrayIndex);
-        }
-
-        #endregion
-
-
-        //TODO remove support for IList?
-        #region IList<ChildType> Members
-
-        public int IndexOf(ChildType item)
-        {
-            int indexOf = _persistedChildren.IndexOf(item);
-            if (indexOf != -1)
-            {
-                return indexOf;
-            }
-            indexOf = _unpersistedChildren.IndexOf(item);
-            if (indexOf != -1)
-            {
-                return indexOf + _persistedChildren.Count;
-            }
-            return -1;
-        }
-
-
-        /// <summary>
-        /// not supported
-        /// </summary>
-        /// <param name="index"></param>
-        /// <param name="item"></param>
-        public void Insert(int index, ChildType item)
-        {
-            throw new NotSupportedException();
-            //throw new NotImplementedException();
-        }
-
-        public void RemoveAt(int index)
-        {
-            Remove(this[index]);
-        }
-
-        #endregion
-
-        //TODO do we need support for IList?
-        #region IList Members
-
-        int IList.Add(object value)
-        {
-            Add((ChildType)value);
-            return IndexOf((ChildType)value);            
-        }
-
-        //void IList.Clear()
-        //{
-        //    this.Clear();
-        //}
-
-        bool IList.Contains(object value)
-        {
-            return this.Contains((ChildType)value);           
-        }
-
-        int IList.IndexOf(object value)
-        {
-            return this.IndexOf((ChildType)value);            
-        }
-
-        void IList.Insert(int index, object value)
-        {
-            Insert(index, (ChildType)value);            
-        }
-
-        bool IList.IsFixedSize
-        {
-            get { return false; }
-        }
-
-        //bool IList.IsReadOnly
-        //{
-        //    get { return this.IsReadOnly; }
-        //}
-
-        void IList.Remove(object value)
-        {
-            this.Remove((ChildType)value);
-        }
-
-        //void IList.RemoveAt(int index)
-        //{
-        //    this.RemoveAt(index);
-        //}
-
-        object IList.this[int index]
-        {
-            get
-            {
-                return this[index];
-            }
-            set
-            {
-                throw new NotSupportedException();
-            }
         }
 
         #endregion
 
         #region ICollection Members
 
-        void ICollection.CopyTo(Array array, int index)
+        void ICollection.CopyTo(Array array, int arrayIndex)
         {
-            for (int i = index, j = 0; j < this.Count && j < array.Length; j++, i++)
+            if (array == null) { throw new ArgumentNullException("array"); }
+            if (arrayIndex < 0) { throw new ArgumentOutOfRangeException("arrayIndex"); }
+            if (this.Count > array.Length - arrayIndex) { throw new ArithmeticException("The number of elements in the source ICollection<T> is greater than the available space from arrayIndex to the end of the destination array."); }
+
+            foreach (var c in this)
             {
-                array.SetValue(this[i], j);
+                array.SetValue(c, arrayIndex++);
             }
         }
-
-        //int ICollection.Count
-        //{
-        //    get { return this.Count; }
-        //}
 
         bool ICollection.IsSynchronized
         {
@@ -358,13 +230,15 @@ namespace FMSC.ORM.EntityModel
 
         public IEnumerator<ChildType> GetEnumerator()
         {
-            int size = this.Count;
-            for(int i = 0; i < size; i++)
+            foreach (var c in _persistedChildren)
             {
-                yield return this[i];
+                yield return c;
             }
 
-            //return new ChildEnum(this);
+            foreach (var c in _unpersistedChildren)
+            {
+                yield return c;
+            }
         }
 
         #endregion
@@ -377,86 +251,5 @@ namespace FMSC.ORM.EntityModel
         }
 
         #endregion
-
-        //protected internal class ChildEnum : IEnumerator<ChildType>
-        //{
-        //    private MappingCollection<MapType, ParentType, ChildType> _mc;
-        //    private int _size = -1;
-        //    private int _currentIndex = -1;
-        //    private ChildType _current;
-
-        //    public ChildEnum(MappingCollection<MapType, ParentType, ChildType> collection)
-        //    {
-        //        _mc = collection;
-        //        _size = _mc.Count;
-        //    }
-
-        //    #region IEnumerator<ChildType> Members
-
-        //    public ChildType Current
-        //    {
-        //        get { return _current; }
-        //    }
-
-        //    #endregion
-
-        //    #region IDisposable Members
-            
-        //    public void Dispose() 
-        //    {
-        //        _mc = null;
-        //        _current = null;
-        //    }
-
-        //    #endregion
-
-        //    #region IEnumerator Members
-
-        //    object System.Collections.IEnumerator.Current
-        //    {
-        //        get { return _current; }
-        //    }
-
-        //    public bool MoveNext()
-        //    {
-        //        if (++_currentIndex < _size)
-        //        {
-        //            _current = _mc[_currentIndex];
-        //            return true;
-        //        }
-        //        else
-        //        {
-        //            return false;
-        //        }
-        //    }
-
-        //    public void Reset()
-        //    {
-        //        _currentIndex = -1;
-        //        _current = null;
-        //    }
-
-        //    #endregion
-        //}
-
-        //protected internal enum ChildState {NotPersisted = 0, Persisted, Deleted};
-
-        //protected internal class ChildWraper
-        //{
-        //    public ChildType Value { get; set; } 
-        //    public ChildState State { get; set; }
-
-        //    public ChildWraper(ChildType value)
-        //    {
-        //        this.Value = value;
-        //        this.State = ChildState.NotPersisted;
-        //    }
-
-        //    public ChildWraper(ChildType value, ChildState state)
-        //    {
-        //        this.Value = value;
-        //        this.State = state;
-        //    }
-        //}
     }
 }
