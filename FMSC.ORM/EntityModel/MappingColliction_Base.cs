@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 
 using System.Collections.Generic;
 using System.Collections;
@@ -7,27 +8,32 @@ using FMSC.ORM.Core;
 #if Mono
 using Mono.Data.Sqlite;
 #else
+
 using System.Data.SQLite;
+
 #endif
 
 namespace FMSC.ORM.EntityModel
 {
-    public abstract class MappingCollection<MapType, ParentType, ChildType> 
+    public abstract class MappingCollection<MapType, ParentType, ChildType>
         : IEnumerable<ChildType>
         , ICollection<ChildType>
         , ICollection
-        where MapType : class, IDataObject 
+        , IList
+        where MapType : class, IDataObject
         where ParentType : class, IDataObject
         where ChildType : class, IDataObject
     {
-
         #region fields
-        private List<ChildType> _unpersistedChildren = new List<ChildType>();
-        private List<ChildType> _persistedChildren = new List<ChildType>(0); 
-        private List<ChildType> _toBeDeleted = new List<ChildType>(); 
-        #endregion 
 
-        #region indexer & properties 
+        private List<ChildType> _unpersistedChildren = new List<ChildType>();
+        private List<ChildType> _persistedChildren = new List<ChildType>(0);
+        private List<ChildType> _toBeDeleted = new List<ChildType>();
+
+        #endregion fields
+
+        #region indexer & properties
+
         public bool IsPopulated { get; protected set; }
 
         public ParentType Parent
@@ -37,6 +43,7 @@ namespace FMSC.ORM.EntityModel
         }
 
         private DatastoreRedux _DAL;
+
         public DatastoreRedux DAL
         {
             get { return _DAL; }
@@ -47,10 +54,10 @@ namespace FMSC.ORM.EntityModel
             }
         }
 
-
-        #endregion
+        #endregion indexer & properties
 
         #region ctor
+
         protected MappingCollection(ParentType parent)
         {
             Parent = parent;
@@ -58,9 +65,11 @@ namespace FMSC.ORM.EntityModel
 
             IsPopulated = false;
         }
-        #endregion
+
+        #endregion ctor
 
         #region abstract methods
+
         protected abstract void addMap(ChildType child);
 
         protected abstract MapType retrieveMapObject(ChildType child);
@@ -68,7 +77,8 @@ namespace FMSC.ORM.EntityModel
         protected abstract List<ChildType> retrieveChildList();
 
         //protected abstract SQLiteCommand createJoinChildCommand();
-        #endregion
+
+        #endregion abstract methods
 
         #region Members
 
@@ -107,7 +117,7 @@ namespace FMSC.ORM.EntityModel
             this._persistedChildren = retrieveChildList();
             foreach (ChildType c in _toBeDeleted)
             {
-                    _persistedChildren.Remove(c);
+                _persistedChildren.Remove(c);
             }
 
             IsPopulated = true;
@@ -123,7 +133,7 @@ namespace FMSC.ORM.EntityModel
             foreach (ChildType c in _unpersistedChildren)
             {
                 addMap(c);
-                _persistedChildren.Add(c);   
+                _persistedChildren.Add(c);
             }
             _unpersistedChildren.Clear();
 
@@ -132,10 +142,10 @@ namespace FMSC.ORM.EntityModel
                 DeleteMap(c);
             }
             _toBeDeleted.Clear();
-
         }
 
         #region ICollection<ChildType> Members
+
         public int Count
         {
             get { return _persistedChildren.Count + _unpersistedChildren.Count; }
@@ -196,7 +206,7 @@ namespace FMSC.ORM.EntityModel
             ((ICollection)this).CopyTo(array, arrayIndex);
         }
 
-        #endregion
+        #endregion ICollection<ChildType> Members
 
         #region ICollection Members
 
@@ -222,9 +232,9 @@ namespace FMSC.ORM.EntityModel
             get { return this; }
         }
 
-        #endregion
+        #endregion ICollection Members
 
-        #endregion
+        #endregion Members
 
         #region IEnumerable<ChildType> Members
 
@@ -241,7 +251,7 @@ namespace FMSC.ORM.EntityModel
             }
         }
 
-        #endregion
+        #endregion IEnumerable<ChildType> Members
 
         #region IEnumerable Members
 
@@ -250,6 +260,72 @@ namespace FMSC.ORM.EntityModel
             return this.GetEnumerator();
         }
 
-        #endregion
+        #endregion IEnumerable Members
+
+        #region IList members
+
+        bool IList.IsFixedSize
+        {
+            get
+            {
+                return false;
+            }
+        }
+
+        object IList.this[int index]
+        {
+            get
+            {
+                return this.ElementAt(index);
+            }
+
+            set
+            {
+                throw new NotSupportedException();
+            }
+        }
+
+        void IList.Insert(int index, object value)
+        {
+            throw new NotSupportedException();
+        }
+
+        int IList.Add(object obj)
+        {
+            var value = obj as ChildType;
+            if (value == null) { return -1; }
+            Add(value);
+            return ((IList)this).IndexOf(obj);
+        }
+
+        bool IList.Contains(object value)
+        {
+            return Contains(value as ChildType);
+        }
+
+        void IList.Remove(object value)
+        {
+            Remove(value as ChildType);
+        }
+
+        int IList.IndexOf(object value)
+        {
+            var i = -1;
+            foreach (var item in this)
+            {
+                i++;
+                if (item == value)
+                { break; }
+            }
+            return i;
+        }
+
+        void IList.RemoveAt(int index)
+        {
+            var itemAt = this.ElementAt(index);
+            Remove(itemAt);
+        }
+
+        #endregion IList members
     }
 }
