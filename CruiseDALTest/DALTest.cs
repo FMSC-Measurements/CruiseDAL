@@ -10,12 +10,8 @@ using CruiseDAL.Schema;
 
 namespace FMSCORM.Tests
 {
-
     public class DALTest
     {
-        public static string TEST_COPY_FILE_NAME = "\\TestCopy.cruise";
-        public static string TESTCRUISEDAL_PATH = "TestCruiseDAL.db";
-
         private readonly ITestOutputHelper _output;
 
         public static DAL _testDALInstance;
@@ -24,17 +20,17 @@ namespace FMSCORM.Tests
         {
             _output = output;
 
-            _testDALInstance = new DAL("Test.cruise");
+            _testDALInstance = new DAL(".\\TestResources\\Test.cruise");
             Assert.True(_testDALInstance.Exists);
         }
 
-
+        [Fact]
         public void TestAllowMultDALOnSameThread()
         {
             try
             {
-                var dal1 = new DAL("FileAccessTest.cruise");
-                var dal2 = new DAL("FileAccessTest.cruise");
+                var dal1 = new DAL(".\\TestResources\\Test.cruise");
+                var dal2 = new DAL(".\\TestResources\\Test.cruise");
             }
             catch
             {
@@ -44,42 +40,33 @@ namespace FMSCORM.Tests
 
         void DoWorkBlockMultiThreadDALFileAcess()
         {
-            DAL newDAL = new DAL("FileAccessTest.cruise");
+            DAL newDAL = new DAL(".\\TestResources\\Test.cruise");
             _output.WriteLine("waiting");
             Thread.Sleep(2000);
         }
 
-
+        [Fact]
         public void BlockMultiThreadDALFileAcess()
         {
-
             Thread thread = new Thread(DoWorkBlockMultiThreadDALFileAcess);
             thread.Start();
             _output.WriteLine("start");
             try
             {
-                var dal = new DAL("FileAccessTest.cruise");
+                var dal = new DAL(".\\TestResources\\Test.cruise");
                 Assert.True(false);
             }
-            catch( Exception e)
+            catch (Exception e)
             {
-
                 _output.WriteLine(e.ToString());
                 return;
             }
-
-            
-            
         }
-
 
         public void DatabaseUpdateTest()
         {
             throw new NotImplementedException();
-
         }
-
-
 
         public void TestCopyTo()
         {
