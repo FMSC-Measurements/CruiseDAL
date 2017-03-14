@@ -103,6 +103,12 @@ namespace CruiseDAL
         #endregion multiDB Fields
 
         /// <summary>
+        /// Initializes a new in memory instance of the <see cref="DAL"/> class.
+        /// </summary>
+        public DAL() : this(IN_MEMORY_DB_PATH, true)
+        { }
+
+        /// <summary>
         /// Creates a DAL instance for a database @ path.
         /// </summary>
         /// <exception cref="ArgumentNullException">path can not be null or an empty string</exception>
@@ -139,6 +145,10 @@ namespace CruiseDAL
 
         protected void Initialize(bool makeNew, DatabaseBuilder builder)
         {
+            if (IsInMemory)
+            {
+                CreateConnection();
+            }
             if (makeNew)
             {
                 builder.CreateDatastore();

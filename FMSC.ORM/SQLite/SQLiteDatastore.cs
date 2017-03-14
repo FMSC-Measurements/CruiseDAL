@@ -8,7 +8,7 @@ using System.Text;
 
 #if Mono
 using Mono.Data.Sqlite;
-using SQLiteException =  Mono.Data.Sqlite.SqliteException ;
+using SQLiteException = Mono.Data.Sqlite.SqliteException;
 #else
 
 using System.Data.SQLite;
@@ -19,7 +19,7 @@ namespace FMSC.ORM.SQLite
 {
     public class SQLiteDatastore : DatastoreRedux
     {
-        const string IN_MEMORY_DB_PATH = ":memory:";
+        protected const string IN_MEMORY_DB_PATH = ":memory:";
 
         /// <summary>
         /// Gets value indicating if database file exists
@@ -197,8 +197,8 @@ namespace FMSC.ORM.SQLite
             return sb.ToString();
         }
 
-
 #if !NetCF
+
         public void CreateTable(string tableName, IEnumerable<ColumnInfo> cols, bool temp = false)
 #else
         public void CreateTable(string tableName, IEnumerable<ColumnInfo> cols, bool temp)
@@ -346,7 +346,7 @@ namespace FMSC.ORM.SQLite
             }
         }
 
-#region File utility methods
+        #region File utility methods
 
         ///// <summary>
         ///// Copies entire file to <paramref name="path"/> Overwriting any existing file
@@ -381,7 +381,7 @@ namespace FMSC.ORM.SQLite
             return true;
         }
 
-#endregion File utility methods
+        #endregion File utility methods
 
         protected override Exception ThrowExceptionHelper(DbConnection conn, DbCommand comm, Exception innerException)
         {
