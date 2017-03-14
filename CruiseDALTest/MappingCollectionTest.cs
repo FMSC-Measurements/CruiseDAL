@@ -5,15 +5,15 @@ using System.Linq;
 using CruiseDAL.DataObjects;
 using Xunit;
 using CruiseDAL;
+using FluentAssertions;
 
 namespace FMSCORM.Tests
 {
-
     public class MappingCollectionTest
     {
-        public MappingCollectionTest()
+        DAL MakeTestDB()
         {
-            testDB = new DAL("MappingCollectionTest" + ".cruise", true);
+            var testDB = new DAL();
             Random rand = new Random(0);
 
             List<CuttingUnitDO> units = new List<CuttingUnitDO>();
@@ -47,76 +47,80 @@ namespace FMSCORM.Tests
                 }
             }
 
-            //testDB.FlushCache();
+            return testDB;
         }
 
-        private DAL testDB;
-
-
-
-
+        [Fact]
         public void MappingCollectionReadTest()
         {
-            List<CuttingUnitDO> units = testDB.Read<CuttingUnitDO>(null, null);
-            foreach (CuttingUnitDO u in units)
+            using (var testDB = MakeTestDB())
             {
-                u.Strata.Populate();
-                Assert.True(u.Strata.Count == (int)u.Area);
+                var units = testDB.From<CuttingUnitDO>().Read();
+                foreach (CuttingUnitDO u in units)
+                {
+                    u.Strata.Populate();
+
+                    u.Strata.Count.ShouldBeEquivalentTo((int)u.Area);
+                }
             }
         }
 
-         public void MappingCollectionIndexTest()
-         {             
+        //public void MappingCollectionIndexTest()
+        //{
+        //   using (var testDB = MakeTestDB())
+        //   {
+        //       var units = testDB.From<CuttingUnitDO>().Read();
+        //       foreach (CuttingUnitDO u in units)
+        //       {
+        //           u.Strata.Populate();
+        //           for (int i = 0; i < u.Strata.Count; i++)
+        //           {
+        //               Assert.True(u.Strata[i] != null);
+        //           }
+        //       }
 
-             List<CuttingUnitDO> units = testDB.Read<CuttingUnitDO>(null, null);
-             foreach (CuttingUnitDO u in units)
-             {
-                 u.Strata.Populate();
-                 for (int i = 0; i < u.Strata.Count; i++)
-                 {
-                     Assert.True(u.Strata[i] != null);
-                 }
-             }
+        //       int expectedCount = units[0].Strata.Count + 10;
+        //       for (int i = 0; i < 10; i++)
+        //       {
+        //           units[0].Strata.Add(new StratumDO());
+        //       }
+        //       Assert.True(units[0].Strata.Count == expectedCount);
+        //   }
+        //}
 
-             int expectedCount = units[0].Strata.Count + 10;
-             for (int i = 0; i < 10; i++)
-             {
-                 units[0].Strata.Add(new StratumDO());
-             }
-             Assert.True(units[0].Strata.Count == expectedCount);
-         }
+        [Fact]
+        public void MappingCollectionPopulateTest()
+        {
+            using (var testDB = MakeTestDB())
+            {
+                var units = testDB.From<CuttingUnitDO>().Read();
+                var strata = testDB.From<StratumDO>().Read();
 
+                foreach (CuttingUnitDO c in units)
+                {
+                    c.Strata.Populate();
+                    foreach (StratumDO s in c.Strata)
+                    {
+                        Assert.True(strata.Contains(s));
+                    }
+                }
 
-         public void MappingCollectionPopulateTest()
-         {
-             List<CuttingUnitDO> units = testDB.Read<CuttingUnitDO>(null, null);
-             List<StratumDO> strata = testDB.Read<StratumDO>(null, null);
+                foreach (StratumDO s in strata)
+                {
+                    s.CuttingUnits.Populate();
+                    foreach (CuttingUnitDO c in s.CuttingUnits)
+                    {
+                        Assert.True(units.Contains(c));
+                    }
+                }
 
-             foreach (CuttingUnitDO c in units)
-             {
-                 c.Strata.Populate();
-                 foreach (StratumDO s in c.Strata)
-                 {
-                     Assert.True(strata.Contains(s));
-                 }
-             }
-
-             foreach (StratumDO s in strata)
-             {
-                 s.CuttingUnits.Populate();
-                 foreach (CuttingUnitDO c in s.CuttingUnits)
-                 {
-                     Assert.True(units.Contains(c));
-                 }
-             }
-
-             CuttingUnitDO cu = units[0];
-             StratumDO st = strata[0];
-             cu.Strata.Populate();
-             cu.Strata.Add(st);
-             cu.Strata.Populate();
-             Assert.True(cu.Strata.Contains(st));
-
-         }
+                CuttingUnitDO cu = units.First();
+                StratumDO st = strata.First();
+                cu.Strata.Populate();
+                cu.Strata.Add(st);
+                cu.Strata.Populate();
+                Assert.True(cu.Strata.Contains(st));
+            }
+        }
     }
 }

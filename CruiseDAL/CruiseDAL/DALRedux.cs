@@ -147,7 +147,7 @@ namespace CruiseDAL
         {
             if (IsInMemory)
             {
-                CreateConnection();
+                OpenConnection();
             }
             if (makeNew)
             {
