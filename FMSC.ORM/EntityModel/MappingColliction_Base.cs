@@ -262,6 +262,18 @@ namespace FMSC.ORM.EntityModel
 
         #endregion IEnumerable Members
 
+        protected ChildType ItemAt(int index)
+        {
+            if (index < 0) throw new IndexOutOfRangeException();
+            int i = -1;
+            foreach (var item in this)
+            {
+                i++;
+                if (i == index) { return item; }
+            }
+            throw new IndexOutOfRangeException();
+        }
+
         #region IList members
 
         bool IList.IsFixedSize
@@ -276,7 +288,7 @@ namespace FMSC.ORM.EntityModel
         {
             get
             {
-                return this.ElementAt(index);
+                return ItemAt(index);
             }
 
             set
@@ -322,7 +334,7 @@ namespace FMSC.ORM.EntityModel
 
         void IList.RemoveAt(int index)
         {
-            var itemAt = this.ElementAt(index);
+            var itemAt = ItemAt(index);
             Remove(itemAt);
         }
 
