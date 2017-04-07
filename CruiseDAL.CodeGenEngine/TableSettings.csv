@@ -1,7 +1,7 @@
 Table Name, Deletion Method,Track Creation (Created Date), Track Modification (Modified Date),,TrackRowVersion
 $MinimumCompatibleVersion=0,,,,,
-$DBVersion=2.1.2,,,,,
-$SchemaVersion=3,,,,,
+$DBVersion=2.2.0,,,,,
+$SchemaVersion=4,,,,,
 !Core Tables,,,,,TRUE
 "Sale			",Tombstone,TRUE,TRUE,,
 "CuttingUnit			",Tombstone,TRUE,TRUE,,
@@ -40,6 +40,7 @@ FixCNTTallyPopulation,None,FALSE,FALSE,,FALSE
 !Settings Tables,None,,,,
 "TreeDefaultValueTreeAuditValue			",,,,,
 "TreeAuditValue			",,,,,
+LogAuditRule,,,,,
 "LogFieldSetup			",,,,,
 "TreeFieldSetup			",,,,,
 "LogFieldSetupDefault			",,,,,
