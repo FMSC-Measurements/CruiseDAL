@@ -755,6 +755,19 @@ namespace CruiseDAL.Schema
 		public enum TREEAUDITVALUE_FIELDS { TreeAuditValue_CN, Field, Min, Max, ValueSet, Required, ErrorMessage };
 	}
 
+	public static class LOGAUDITRULE
+	{
+		public const string _NAME = "LogAuditRule";
+		public const string SPECIES = "Species";
+		public const string DEFECTMAX = "DefectMax";
+		public const string FIELDNAME = "FieldName";
+		public const string MIN = "Min";
+		public const string MAX = "Max";
+		public const string VALUES = "Values";
+		public static string[] _ALL = { SPECIES, DEFECTMAX, FIELDNAME, MIN, MAX, VALUES };
+		public enum LOGAUDITRULE_FIELDS { Species, DefectMax, FieldName, Min, Max, Values };
+	}
+
 	public static class LOGFIELDSETUP
 	{
 		public const string _NAME = "LogFieldSetup";
@@ -936,7 +949,7 @@ namespace CruiseDAL.Schema
 
 	public static class Schema
 	{
-		public static String[] TABLE_NAMES = { "Sale","CuttingUnit","Stratum","CuttingUnitStratum","SampleGroup","TreeDefaultValue","SampleGroupTreeDefaultValue","Plot","Tree","Log","Stem","CountTree","Tally","TreeEstimate","FixCNTTallyClass","FixCNTTallyPopulation","VolumeEquation","BiomassEquation","ValueEquation","QualityAdjEquation","Reports","TreeCalculatedValues","LCD","POP","PRO","LogStock","SampleGroupStats","SampleGroupStatsTreeDefaultValue","StratumStats","Regression","LogMatrix","TreeDefaultValueTreeAuditValue","TreeAuditValue","LogFieldSetup","TreeFieldSetup","LogFieldSetupDefault","TreeFieldSetupDefault","CruiseMethods","LoggingMethods","ProductCodes","UOMCodes","Regions","Forests","ErrorLog","MessageLog","Globals","Component" };
+		public static String[] TABLE_NAMES = { "Sale","CuttingUnit","Stratum","CuttingUnitStratum","SampleGroup","TreeDefaultValue","SampleGroupTreeDefaultValue","Plot","Tree","Log","Stem","CountTree","Tally","TreeEstimate","FixCNTTallyClass","FixCNTTallyPopulation","VolumeEquation","BiomassEquation","ValueEquation","QualityAdjEquation","Reports","TreeCalculatedValues","LCD","POP","PRO","LogStock","SampleGroupStats","SampleGroupStatsTreeDefaultValue","StratumStats","Regression","LogMatrix","TreeDefaultValueTreeAuditValue","TreeAuditValue","LogAuditRule","LogFieldSetup","TreeFieldSetup","LogFieldSetupDefault","TreeFieldSetupDefault","CruiseMethods","LoggingMethods","ProductCodes","UOMCodes","Regions","Forests","ErrorLog","MessageLog","Globals","Component" };
 	}
 }
 
