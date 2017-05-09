@@ -433,7 +433,7 @@ END;
 --Settings Tables--
 --TreeDefaultValueTreeAuditValue--
 --TreeAuditValue--
---LogAuditRule--
+--LogGradeAuditRule--
 --LogFieldSetup--
 --TreeFieldSetup--
 --LogFieldSetupDefault--

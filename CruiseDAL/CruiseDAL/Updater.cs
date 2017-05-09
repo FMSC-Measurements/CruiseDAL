@@ -1248,18 +1248,16 @@ RowVersion");
             {
                 db.BeginTransaction();
                 db.Execute(
-    @"CREATE TABLE LogAuditRule (
+@"CREATE TABLE LogGradeAuditRule (
 Species TEXT,
 DefectMax REAL Default 0.0,
-FieldName TEXT,
-Min REAL Default 0.0,
-Max REAL Default 0.0,
-Values TEXT);");
+ValidGrades TEXT);");
                 SetDatabaseVersion(db, "2.2.0");
             }
             catch (Exception e)
             {
                 db.RollbackTransaction();
+                throw new SchemaUpdateException(db.DatabaseVersion, "2.2.0", e);
             }
         }
     }

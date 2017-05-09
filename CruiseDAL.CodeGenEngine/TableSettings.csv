@@ -40,7 +40,7 @@ FixCNTTallyPopulation,None,FALSE,FALSE,,FALSE
 !Settings Tables,None,,,,
 "TreeDefaultValueTreeAuditValue			",,,,,
 "TreeAuditValue			",,,,,
-LogAuditRule,,,,,
+LogGradeAuditRule,,,,,
 "LogFieldSetup			",,,,,
 "TreeFieldSetup			",,,,,
 "LogFieldSetupDefault			",,,,,

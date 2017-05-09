@@ -12732,8 +12732,8 @@ namespace CruiseDAL.DataObjects
 			Required = obj.Required;
 		}
 	}
-	[EntitySource(SourceName = "LogAuditRule")]
-	public partial class LogAuditRuleDO : DataObject
+	[EntitySource(SourceName = "LogGradeAuditRule")]
+	public partial class LogGradeAuditRuleDO : DataObject
 	{
 		private static RowValidator _validator;
 		
@@ -12755,19 +12755,19 @@ namespace CruiseDAL.DataObjects
 		
 		
 		#region Ctor
-		static LogAuditRuleDO()
+		static LogGradeAuditRuleDO()
 		{    
 			_validator = new RowValidator();
 		}
 		
-		public LogAuditRuleDO() {}
+		public LogGradeAuditRuleDO() {}
 		
-		public LogAuditRuleDO(LogAuditRuleDO obj) : this()
+		public LogGradeAuditRuleDO(LogGradeAuditRuleDO obj) : this()
 		{
 		    SetValues(obj);
 		}
 		
-		public LogAuditRuleDO(DatastoreRedux DAL) : base(DAL)
+		public LogGradeAuditRuleDO(DatastoreRedux DAL) : base(DAL)
 		{}
 		#endregion
 		[XmlIgnore]
@@ -12790,8 +12790,8 @@ namespace CruiseDAL.DataObjects
 		    {
 		        if(_species == value) { return; }
 		        _species = value;
-		        this.ValidateProperty(LOGAUDITRULE.SPECIES, _species);
-		        this.NotifyPropertyChanged(LOGAUDITRULE.SPECIES);
+		        this.ValidateProperty(LOGGRADEAUDITRULE.SPECIES, _species);
+		        this.NotifyPropertyChanged(LOGGRADEAUDITRULE.SPECIES);
 		    }
 		}
 		private float _defectmax  = 0.0f;
@@ -12807,76 +12807,25 @@ namespace CruiseDAL.DataObjects
 		    {
 		        if(Math.Abs(_defectmax - value) < float.Epsilon) { return; }
 		        _defectmax = value;
-		        this.ValidateProperty(LOGAUDITRULE.DEFECTMAX, _defectmax);
-		        this.NotifyPropertyChanged(LOGAUDITRULE.DEFECTMAX);
+		        this.ValidateProperty(LOGGRADEAUDITRULE.DEFECTMAX, _defectmax);
+		        this.NotifyPropertyChanged(LOGGRADEAUDITRULE.DEFECTMAX);
 		    }
 		}
-		private String _fieldname ;
+		private String _validgrades ;
 		[XmlElement]
-		[Field(Name = "FieldName")]
-		public virtual String FieldName
+		[Field(Name = "ValidGrades")]
+		public virtual String ValidGrades
 		{
 		    get 
 		    { 
-		                return _fieldname; 
+		                return _validgrades; 
 		    }
 		    set 
 		    {
-		        if(_fieldname == value) { return; }
-		        _fieldname = value;
-		        this.ValidateProperty(LOGAUDITRULE.FIELDNAME, _fieldname);
-		        this.NotifyPropertyChanged(LOGAUDITRULE.FIELDNAME);
-		    }
-		}
-		private float _min  = 0.0f;
-		[XmlElement]
-		[Field(Name = "Min")]
-		public virtual float Min
-		{
-		    get 
-		    { 
-		                return _min; 
-		    }
-		    set 
-		    {
-		        if(Math.Abs(_min - value) < float.Epsilon) { return; }
-		        _min = value;
-		        this.ValidateProperty(LOGAUDITRULE.MIN, _min);
-		        this.NotifyPropertyChanged(LOGAUDITRULE.MIN);
-		    }
-		}
-		private float _max  = 0.0f;
-		[XmlElement]
-		[Field(Name = "Max")]
-		public virtual float Max
-		{
-		    get 
-		    { 
-		                return _max; 
-		    }
-		    set 
-		    {
-		        if(Math.Abs(_max - value) < float.Epsilon) { return; }
-		        _max = value;
-		        this.ValidateProperty(LOGAUDITRULE.MAX, _max);
-		        this.NotifyPropertyChanged(LOGAUDITRULE.MAX);
-		    }
-		}
-		private String _values ;
-		[XmlElement]
-		[Field(Name = "Values")]
-		public virtual String Values
-		{
-		    get 
-		    { 
-		                return _values; 
-		    }
-		    set 
-		    {
-		        if(_values == value) { return; }
-		        _values = value;
-		        this.ValidateProperty(LOGAUDITRULE.VALUES, _values);
-		        this.NotifyPropertyChanged(LOGAUDITRULE.VALUES);
+		        if(_validgrades == value) { return; }
+		        _validgrades = value;
+		        this.ValidateProperty(LOGGRADEAUDITRULE.VALIDGRADES, _validgrades);
+		        this.NotifyPropertyChanged(LOGGRADEAUDITRULE.VALIDGRADES);
 		    }
 		}
 
@@ -12889,26 +12838,20 @@ namespace CruiseDAL.DataObjects
 			bool isValid = true;
 			isValid = ValidateProperty("Species", this.Species) && isValid;
 			isValid = ValidateProperty("DefectMax", this.DefectMax) && isValid;
-			isValid = ValidateProperty("FieldName", this.FieldName) && isValid;
-			isValid = ValidateProperty("Min", this.Min) && isValid;
-			isValid = ValidateProperty("Max", this.Max) && isValid;
-			isValid = ValidateProperty("Values", this.Values) && isValid;
+			isValid = ValidateProperty("ValidGrades", this.ValidGrades) && isValid;
 			return isValid;
 		}
 		public override void SetValues(DataObject obj)
 		{
-			this.SetValues(obj as LogAuditRuleDO);
+			this.SetValues(obj as LogGradeAuditRuleDO);
 		}
 
-		public void SetValues(LogAuditRuleDO obj)
+		public void SetValues(LogGradeAuditRuleDO obj)
 		{
 			if(obj == null) { return; }
 			Species = obj.Species;
 			DefectMax = obj.DefectMax;
-			FieldName = obj.FieldName;
-			Min = obj.Min;
-			Max = obj.Max;
-			Values = obj.Values;
+			ValidGrades = obj.ValidGrades;
 		}
 	}
 	[EntitySource(SourceName = "LogFieldSetup")]

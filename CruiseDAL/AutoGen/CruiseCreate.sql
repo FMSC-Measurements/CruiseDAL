@@ -665,13 +665,10 @@ PRAGMA foreign_keys = ON;--is the nessicary? no data is being inserted yet.
 				Required BOOLEAN Default 0,
 				ErrorMessage TEXT);
 
-    CREATE TABLE LogAuditRule (
+    CREATE TABLE LogGradeAuditRule (
 				Species TEXT,
 				DefectMax REAL Default 0.0,
-				FieldName TEXT,
-				Min REAL Default 0.0,
-				Max REAL Default 0.0,
-				Values TEXT);
+				ValidGrades TEXT);
 
     CREATE TABLE LogFieldSetup (
 				Stratum_CN INTEGER REFERENCES Stratum NOT NULL,
