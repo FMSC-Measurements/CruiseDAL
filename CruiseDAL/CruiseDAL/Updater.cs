@@ -1253,6 +1253,7 @@ Species TEXT,
 DefectMax REAL Default 0.0,
 ValidGrades TEXT);");
                 SetDatabaseVersion(db, "2.2.0");
+                db.CommitTransaction();
             }
             catch (Exception e)
             {
