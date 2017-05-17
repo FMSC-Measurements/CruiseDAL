@@ -16,20 +16,20 @@ namespace FMSC.ORM.EntityModel.Support
         { }
 
         [Fact]
-        public void BuildSelectTest()
+        public void MakeSelectCommandTest()
         {
             var ed = new EntityDescription(typeof(POCOMultiTypeObject));
             var provider = new SQLite.SQLiteProviderFactory();
 
             var commandBuilder = ed.CommandBuilder;
-            using (var command = commandBuilder.BuildSelectCommand(provider, null))
+            var selectBuilder = commandBuilder.MakeSelectCommand(null);
+            using (var command = provider.CreateCommand(selectBuilder.ToSQL()))
             {
                 _output.WriteLine(command.CommandText);
                 Assert.NotNull(command);
                 AssertEx.NotNullOrWhitespace(command.CommandText);
                 VerifyCommandSyntex(provider, command);
             }
-
         }
 
         [Fact]
@@ -112,8 +112,7 @@ namespace FMSC.ORM.EntityModel.Support
 
         public void VerifyCommandSyntex(DbProviderFactoryAdapter provider, DbCommand command)
         {
-            command.CommandText = "EXPLAIN " + command.CommandText; 
-
+            command.CommandText = "EXPLAIN " + command.CommandText;
 
             using (DbConnection conn = provider.CreateConnection())
             {
@@ -126,11 +125,10 @@ namespace FMSC.ORM.EntityModel.Support
                 {
                     command.ExecuteNonQuery();
                 }
-                catch(DbException ex)
+                catch (DbException ex)
                 {
                     Assert.DoesNotContain("syntax ", ex.Message, StringComparison.InvariantCultureIgnoreCase);
                 }
-
             }
         }
     }

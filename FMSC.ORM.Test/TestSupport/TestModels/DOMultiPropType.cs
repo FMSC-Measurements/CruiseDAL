@@ -12,6 +12,7 @@ namespace FMSC.ORM.TestSupport.TestModels
     public class DOMultiPropType : DataObject_Base, IInterface
     {
         int _id;
+
         [PrimaryKeyField(Name = "ID")]
         public int ID
         {
@@ -24,6 +25,7 @@ namespace FMSC.ORM.TestSupport.TestModels
         }
 
         string _stringField;
+
         [Field(Name = "StringField")]
         public string StringField
         {
@@ -36,6 +38,7 @@ namespace FMSC.ORM.TestSupport.TestModels
         }
 
         int _intField;
+
         [Field(Name = "IntField")]
         public int IntField
         {
@@ -48,6 +51,7 @@ namespace FMSC.ORM.TestSupport.TestModels
         }
 
         int? _nIntField;
+
         [Field(Name = "NIntField")]
         public int? NIntField
         {
@@ -60,6 +64,7 @@ namespace FMSC.ORM.TestSupport.TestModels
         }
 
         long _longField;
+
         [Field(Name = "LongField")]
         public long LongField
         {
@@ -72,6 +77,7 @@ namespace FMSC.ORM.TestSupport.TestModels
         }
 
         long? _nLongField;
+
         [Field(Name = "NLongField")]
         public long? NLongField
         {
@@ -84,6 +90,7 @@ namespace FMSC.ORM.TestSupport.TestModels
         }
 
         bool _boolField;
+
         [Field(Name = "BoolField")]
         public bool BoolField
         {
@@ -96,6 +103,7 @@ namespace FMSC.ORM.TestSupport.TestModels
         }
 
         bool? _nBoolField;
+
         [Field(Name = "NBoolField")]
         public bool? NBoolField
         {
@@ -108,6 +116,7 @@ namespace FMSC.ORM.TestSupport.TestModels
         }
 
         float _floatField;
+
         [Field(Name = "FloatField")]
         public float FloatField
         {
@@ -120,6 +129,7 @@ namespace FMSC.ORM.TestSupport.TestModels
         }
 
         float? _nFloatField;
+
         [Field(Name = "NFloatField")]
         public float? NFloatField
         {
@@ -132,6 +142,7 @@ namespace FMSC.ORM.TestSupport.TestModels
         }
 
         double _doubleField;
+
         [Field(Name = "DoubleField")]
         public double DoubleField
         {
@@ -144,6 +155,7 @@ namespace FMSC.ORM.TestSupport.TestModels
         }
 
         double? _nDoubleField;
+
         [Field(Name = "NDoubleField")]
         public double? NDoubleField
         {
@@ -156,6 +168,7 @@ namespace FMSC.ORM.TestSupport.TestModels
         }
 
         Guid _guidField;
+
         [Field(Name = "GuidField")]
         public Guid GuidField
         {
@@ -168,6 +181,7 @@ namespace FMSC.ORM.TestSupport.TestModels
         }
 
         DateTime _dateTimeField;
+
         [Field(Name = "DateTimeField")]
         public DateTime DateTimeField
         {
@@ -185,36 +199,14 @@ namespace FMSC.ORM.TestSupport.TestModels
         [Field(Name = "PrivateField")]
         private string PrivateField { get; set; }
 
-        string _createdBy;
-        [CreatedByField]
-        public string CreatedBy
-        {
-            get { return _createdBy; }
-            set
-            {
-                _createdBy = value;
-                NotifyPropertyChanged(nameof(CreatedBy));
-            }
-        }
-
-        string _modifiedBy;
-        [ModifiedByField]
-        public string ModifiedBy
-        {
-            get { return _modifiedBy; }
-            set
-            {
-                _modifiedBy = value;
-                NotifyPropertyChanged(nameof(ModifiedBy));
-            }
-        }
-
         #region automatic fields
-        //TODO test automatic fields
-        #endregion
 
+        //TODO test automatic fields
+
+        #endregion automatic fields
 
         #region non visible fields
+
         [IgnoreField]
         public string IgnoredField { get; set; }
 
@@ -229,7 +221,7 @@ namespace FMSC.ORM.TestSupport.TestModels
         {
             get; set;
         }
-        #endregion
 
+        #endregion non visible fields
     }
 }

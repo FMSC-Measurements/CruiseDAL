@@ -7,9 +7,8 @@ using Xunit.Abstractions;
 
 namespace FMSC.ORM.EntityModel.Support
 {
-    public class EntityDescriptionTest : TestClassBase 
+    public class EntityDescriptionTest : TestClassBase
     {
-
         public EntityDescriptionTest(ITestOutputHelper output)
             : base(output)
         { }
@@ -21,7 +20,6 @@ namespace FMSC.ORM.EntityModel.Support
             var doi = new EntityDescription(t);
             VerifyDataObjectInfo(t, doi);
         }
-
 
         [Fact]
         public void Test_DOMultiPropType()
@@ -78,14 +76,12 @@ namespace FMSC.ORM.EntityModel.Support
 
             VerifyField(doi, "PartialyPublicField");
             //VerifyField(doi, "PrivateField");
-            VerifyField(doi, "CreatedBy");
-            VerifyField(doi, "ModifiedBy");
 
             //verify non visible field
             VerifyNonvisableField(doi, "IgnoredField");
             VerifyNonvisableField(doi, "PartialyPublicAutomaticField");
 
-            VerifyNonvisableField(doi, "PrivateIgnoredField", true);            
+            VerifyNonvisableField(doi, "PrivateIgnoredField", true);
             VerifyNonvisableField(doi, "PrivateAutomaticField", true);
             VerifyNonvisableField(doi, "IInterface.InterfaceProperty", true);
             VerifyNonvisableField(doi, "InterfaceProperty", true);
@@ -111,7 +107,7 @@ namespace FMSC.ORM.EntityModel.Support
         {
             VerifyNonvisableField(doi, fieldName, false);
         }
-        
+
         void VerifyNonvisableField(EntityDescription doi, string fieldName, bool isPrivate)
         {
             Assert.DoesNotContain(doi.Fields, x => x.Name == fieldName);
