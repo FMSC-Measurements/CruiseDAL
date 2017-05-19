@@ -62,7 +62,6 @@
     <Compile Include="AutoGen\DAL.AutoGen.cs" />
     <Compile Include="EntityAttributes\CreatedByFieldAttribute.cs" />
     <Compile Include="EntityAttributes\ModifiedByFieldAttribute.cs" />
-    <Compile Include="NetCF\DeviceInfo.cs" />
     <Compile Include="CruiseDAL\CruiseDALDatastoreBuilder.cs" />
     <Compile Include="CruiseDAL\CruiseDALErrorCollection.cs" />
     <Compile Include="CruiseDAL\DALExtentions.cs" />
