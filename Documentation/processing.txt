@@ -1,0 +1,123 @@
+--LCD:::
+
+SELECT 
+sg.CutLeave, 
+st.Code as Stratum,
+sg.Code as SampleGroup,
+sg.PrimaryProduct,
+sg.SecondaryProduct,
+sg.UOM,
+tdv.Species,
+ifNull(t.LiveDead, tdv.LiveDead) AS LiveDead,
+ifNull(t.Grade, tdv.TreeGrade) AS TreeGrade,
+t.STM,
+tdv.ContractSpecies,
+st.YieldComponent as Yield
+  FROM Tree AS t
+JOIN SampleGroup AS sg USING (SampleGroup_CN)
+JOIN TreeDefaultValue AS tdv USING (TreeDefaultValue_CN)
+JOIN Stratum AS st USING (Stratum_CN)
+GROUP BY
+sg.Code,
+st.Code,
+tdv.Species,
+ifNull(t.LiveDead, tdv.LiveDead),
+ifNull(t.Grade, tdv.TreeGrade),
+t.STM;
+
+
+(SELECT count(1) FROM Tree 
+WHERE SampleGroup_CN = st.Stratum_CN
+AND ifNull(t.LiveDead, tdv.LiveDead) = LiveDead
+AND t.Species == Species
+AND ifNull(t.Grade, tdv.TreeGrade) = TreeGrade
+AND CountOrMeasure = 'M') AS MeasuredTrees
+
+--POP:::
+
+
+SELECT * FROM
+(SELECT sg.CutLeave,
+st.Code AS Stratum,
+sg.Code AS SampleGroup,
+sg.PrimaryProduct,
+sg.SecondaryProduct,
+sg.UOM,
+ifNull(t.STM, 'N') AS STM
+ FROM SampleGroup as sg
+JOIN Stratum AS st USING (Stratum_CN)
+LEFT JOIN Tree AS t USING (SampleGroup_CN))
+GROUP BY
+SampleGroup,
+Stratum,
+STM
+
+
+
+SELECT CutLeave,
+Stratum,
+SampleGroup,
+PrimaryProduct,
+SecondaryProduct,
+UOM,
+STM
+ FROM POP
+
+--PRO:::
+
+SELECT 
+sg.CutLeave,
+st.Code AS Stratum,
+u.Code AS CuttingUnit,
+sg.Code AS SampleGroup,
+sg.PrimaryProduct,
+sg.SecondaryProduct,
+sg.UOM,
+t.STM as STM
+FROM SampleGroup as sg
+JOIN Stratum AS st USING (Stratum_CN)
+JOIN CuttingUnitStratum USING (Stratum_CN)
+JOIN CuttingUnit AS u USING (CuttingUnit_CN)
+JOIN Tree AS t USING (Stratum_CN, SampleGroup_CN, CuttingUnit_CN)
+GROUP BY t.STM,
+st.Code,
+sg.Code,
+u.Code
+
+
+SELECT 
+sg.CutLeave,
+st.Code AS Stratum,
+u.Code AS CuttingUnit,
+sg.Code AS SampleGroup,
+sg.PrimaryProduct,
+sg.SecondaryProduct,
+sg.UOM,
+'N' as STM
+FROM SampleGroup as sg
+JOIN Stratum AS st USING (Stratum_CN)
+JOIN CuttingUnitStratum USING (Stratum_CN)
+JOIN CuttingUnit AS u USING (CuttingUnit_CN)
+Group By
+st.Code,
+sg.Code,
+u.Code
+UNION
+SELECT 
+sg.CutLeave,
+st.Code AS Stratum,
+u.Code AS CuttingUnit,
+sg.Code AS SampleGroup,
+sg.PrimaryProduct,
+sg.SecondaryProduct,
+sg.UOM,
+t.STM as STM
+FROM SampleGroup as sg
+JOIN Stratum AS st USING (Stratum_CN)
+JOIN CuttingUnitStratum USING (Stratum_CN)
+JOIN CuttingUnit AS u USING (CuttingUnit_CN)
+JOIN Tree AS t USING (Stratum_CN, SampleGroup_CN, CuttingUnit_CN)
+GROUP BY t.STM,
+st.Code,
+sg.Code,
+u.Code

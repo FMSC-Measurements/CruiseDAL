@@ -81,12 +81,10 @@
     <Compile Include="Core\DatastoreBuilder.cs" />
     <Compile Include="Core\DatastoreRedux.cs" />
     <Compile Include="Core\DbProviderFactoryAdapter.cs" />
-    <Compile Include="EntityModel\Attributes\CreatedByFieldAttribute.cs" />
     <Compile Include="EntityModel\Attributes\FieldAttribute.cs" />
     <Compile Include="EntityModel\Attributes\FieldAttributeCollection.cs" />
     <Compile Include="EntityModel\Attributes\FieldValidationRuleAttribut.cs" />
     <Compile Include="EntityModel\Attributes\InfrastructureFieldAttribute.cs" />
-    <Compile Include="EntityModel\Attributes\ModifiedByFieldAttribute.cs" />
     <Compile Include="EntityModel\Attributes\PrimaryKeyFieldAttribute.cs" />
     <Compile Include="EntityModel\Attributes\ReferenceAttribute.cs" />
     <Compile Include="EntityModel\Attributes\EntitySourceAttribute.cs" />

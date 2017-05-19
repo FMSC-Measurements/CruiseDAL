@@ -64,7 +64,6 @@ namespace FMSC.ORM.SQLite
         public void VerifySQLiteDatastore(SQLiteDatastore ds)
         {
             Assert.True(ds.Exists, "Assert file exists");
-            
 
             Assert.NotNull(ds);
             //AssertEx.NotNullOrWhitespace(ds.Extension, "Assert file has extension");
@@ -73,7 +72,6 @@ namespace FMSC.ORM.SQLite
             var explaneSelectResult = ds.Execute("EXPLAIN SELECT 1;");
             Assert.NotNull(explaneSelectResult);
             Assert.True(ds.GetRowCount("sqlite_master", null, null) > 0);
-
         }
 
         [Fact]
@@ -189,7 +187,7 @@ namespace FMSC.ORM.SQLite
         {
             using (var ds = new SQLiteDatastore())
             {
-                ds.CreateTable("something", new ColumnInfo[]{ new ColumnInfo("data") });
+                ds.CreateTable("something", new ColumnInfo[] { new ColumnInfo("data") });
 
                 var rowCnt = ds.GetRowCount("something", null);
                 Assert.True(rowCnt == 0);
@@ -211,7 +209,6 @@ namespace FMSC.ORM.SQLite
                 var tableSQL = ds.GetTableSQL("something");
                 AssertEx.NotNullOrWhitespace(tableSQL);
                 _output.WriteLine(tableSQL);
-
             }
         }
 
@@ -365,52 +362,52 @@ namespace FMSC.ORM.SQLite
             Assert.False(nResult.HasValue);
         }
 
-        [Fact]
-        public void QuerySingleRecordTest()
-        {
-            using (var ds = new SQLiteDatastore())
-            {
-                ds.Execute(TestDBBuilder.CREATE_MULTIPROPTABLE);
+        //[Fact]
+        //public void QuerySingleRecordTest()
+        //{
+        //    using (var ds = new SQLiteDatastore())
+        //    {
+        //        ds.Execute(TestDBBuilder.CREATE_MULTIPROPTABLE);
 
-                var setup = "INSERT INTO MultiPropTable (IntField) VALUES (1);";
-                ds.Execute(setup);
+        //        var setup = "INSERT INTO MultiPropTable (IntField) VALUES (1);";
+        //        ds.Execute(setup);
 
-                Assert.Equal(1, ds.GetRowCount("MultiPropTable", "WHERE IntField = 1"));
+        //        Assert.Equal(1, ds.GetRowCount("MultiPropTable", "WHERE IntField = 1"));
 
-                var result = ds.QuerySingleRecord<POCOMultiTypeObject>(new WhereClause("IntField = 1"));
-                Assert.NotNull(result);
-                Assert.Equal(1, result.IntField);
+        //        var result = ds.QuerySingleRecord<POCOMultiTypeObject>(new WhereClause("IntField = 1"));
+        //        Assert.NotNull(result);
+        //        Assert.Equal(1, result.IntField);
 
-                var result1 = ds.QuerySingleRecord<POCOMultiTypeObject>(new WhereClause("IntField = 1"));
-                Assert.NotSame(result, result1);
-                Assert.Equal(1, result1.IntField);
-            }
-        }
+        //        var result1 = ds.QuerySingleRecord<POCOMultiTypeObject>(new WhereClause("IntField = 1"));
+        //        Assert.NotSame(result, result1);
+        //        Assert.Equal(1, result1.IntField);
+        //    }
+        //}
 
-        [Fact]
-        public void QueryTest()
-        {
-            int recordsToCreate = 1000;
-            using (var ds = new SQLiteDatastore())
-            {
-                ds.Execute(TestDBBuilder.CREATE_MULTIPROPTABLE);
-                ds.BeginTransaction();
-                for (int i = 1; i <= recordsToCreate; i++)
-                {
-                    ds.Execute(string.Format(" INSERT INTO MultiPropTable (IntField) VALUES ({0});\r\n", i));
-                }
-                ds.CommitTransaction();
+        //[Fact]
+        //public void QueryTest()
+        //{
+        //    int recordsToCreate = 1000;
+        //    using (var ds = new SQLiteDatastore())
+        //    {
+        //        ds.Execute(TestDBBuilder.CREATE_MULTIPROPTABLE);
+        //        ds.BeginTransaction();
+        //        for (int i = 1; i <= recordsToCreate; i++)
+        //        {
+        //            ds.Execute(string.Format(" INSERT INTO MultiPropTable (IntField) VALUES ({0});\r\n", i));
+        //        }
+        //        ds.CommitTransaction();
 
-                //ds.Execute(setup.ToString());
+        //        //ds.Execute(setup.ToString());
 
-                Assert.Equal(recordsToCreate, ds.GetRowCount("MultiPropTable", null));
+        //        Assert.Equal(recordsToCreate, ds.GetRowCount("MultiPropTable", null));
 
-                StartTimer();
-                var result = ds.Query<POCOMultiTypeObject>((WhereClause)null);
-                EndTimer();
-                Assert.Equal(recordsToCreate, result.Count);
-            }
-        }
+        //        StartTimer();
+        //        var result = ds.Query<POCOMultiTypeObject>((WhereClause)null);
+        //        EndTimer();
+        //        Assert.Equal(recordsToCreate, result.Count);
+        //    }
+        //}
 
         [Fact]
         public void FluentInterfaceTest()

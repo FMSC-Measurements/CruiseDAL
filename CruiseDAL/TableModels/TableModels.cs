@@ -12732,6 +12732,128 @@ namespace CruiseDAL.DataObjects
 			Required = obj.Required;
 		}
 	}
+	[EntitySource(SourceName = "LogGradeAuditRule")]
+	public partial class LogGradeAuditRuleDO : DataObject
+	{
+		private static RowValidator _validator;
+		
+		[XmlIgnore]
+		public new DAL DAL
+		{
+			get { return (DAL)base.DAL; }
+			set { base.DAL = value; }
+		}
+		
+		[XmlIgnore]
+		public override RowValidator Validator
+		{
+		    get
+		    {
+		        return _validator;
+		    }
+		}
+		
+		
+		#region Ctor
+		static LogGradeAuditRuleDO()
+		{    
+			_validator = new RowValidator();
+		}
+		
+		public LogGradeAuditRuleDO() {}
+		
+		public LogGradeAuditRuleDO(LogGradeAuditRuleDO obj) : this()
+		{
+		    SetValues(obj);
+		}
+		
+		public LogGradeAuditRuleDO(DatastoreRedux DAL) : base(DAL)
+		{}
+		#endregion
+		[XmlIgnore]
+		[PrimaryKeyField(Name = "RowID")]
+		public Int64? RowID
+		{
+			get{ return base.rowID; }
+			set{ base.rowID = value; }
+		}
+		private String _species ;
+		[XmlElement]
+		[Field(Name = "Species")]
+		public virtual String Species
+		{
+		    get 
+		    { 
+		                return _species; 
+		    }
+		    set 
+		    {
+		        if(_species == value) { return; }
+		        _species = value;
+		        this.ValidateProperty(LOGGRADEAUDITRULE.SPECIES, _species);
+		        this.NotifyPropertyChanged(LOGGRADEAUDITRULE.SPECIES);
+		    }
+		}
+		private float _defectmax  = 0.0f;
+		[XmlElement]
+		[Field(Name = "DefectMax")]
+		public virtual float DefectMax
+		{
+		    get 
+		    { 
+		                return _defectmax; 
+		    }
+		    set 
+		    {
+		        if(Math.Abs(_defectmax - value) < float.Epsilon) { return; }
+		        _defectmax = value;
+		        this.ValidateProperty(LOGGRADEAUDITRULE.DEFECTMAX, _defectmax);
+		        this.NotifyPropertyChanged(LOGGRADEAUDITRULE.DEFECTMAX);
+		    }
+		}
+		private String _validgrades ;
+		[XmlElement]
+		[Field(Name = "ValidGrades")]
+		public virtual String ValidGrades
+		{
+		    get 
+		    { 
+		                return _validgrades; 
+		    }
+		    set 
+		    {
+		        if(_validgrades == value) { return; }
+		        _validgrades = value;
+		        this.ValidateProperty(LOGGRADEAUDITRULE.VALIDGRADES, _validgrades);
+		        this.NotifyPropertyChanged(LOGGRADEAUDITRULE.VALIDGRADES);
+		    }
+		}
+
+		protected override bool DoValidate()
+		{
+			if(ErrorCollection.ErrorsLoaded == false)
+			{
+				this.ErrorCollection.PopulateErrorList();
+			}
+			bool isValid = true;
+			isValid = ValidateProperty("Species", this.Species) && isValid;
+			isValid = ValidateProperty("DefectMax", this.DefectMax) && isValid;
+			isValid = ValidateProperty("ValidGrades", this.ValidGrades) && isValid;
+			return isValid;
+		}
+		public override void SetValues(DataObject obj)
+		{
+			this.SetValues(obj as LogGradeAuditRuleDO);
+		}
+
+		public void SetValues(LogGradeAuditRuleDO obj)
+		{
+			if(obj == null) { return; }
+			Species = obj.Species;
+			DefectMax = obj.DefectMax;
+			ValidGrades = obj.ValidGrades;
+		}
+	}
 	[EntitySource(SourceName = "LogFieldSetup")]
 	public partial class LogFieldSetupDO : DataObject
 	{

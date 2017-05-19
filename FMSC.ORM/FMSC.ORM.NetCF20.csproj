@@ -45,16 +45,16 @@
     <GenerateSerializationAssemblies>Off</GenerateSerializationAssemblies>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="FMSC.Core_CF20, Version=1.0.0.26521, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="FMSC.Core_CF20, Version=1.3.0.26641, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\FMSC.Core\NetCF20\FMSC.Core_CF20.dll</HintPath>
+      <HintPath>..\libs\FMSC.Core\NetCF20\FMSC.Core_CF20.dll</HintPath>
     </Reference>
     <Reference Include="mscorlib" />
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Data.SQLite, Version=1.0.94.0, Culture=neutral, PublicKeyToken=1fdb50b1b62b4c84, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\SQLite\Mobile_CF20\System.Data.SQLite.dll</HintPath>
+      <HintPath>..\libs\SQLite\Mobile_CF20\System.Data.SQLite.dll</HintPath>
     </Reference>
     <Reference Include="System.Xml" />
   </ItemGroup>
@@ -95,15 +95,9 @@
     <Compile Include="SQLite\SQLiteProviderFactory.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="..\SQLite\Mobile_CF20\SQLite.Interop.094.dll">
-      <Link>SQLite.Interop.094.dll</Link>
-    </Content>
-  </ItemGroup>
-  <ItemGroup>
     <Compile Include="Core\SQL\JoinComponent.cs" />
     <Compile Include="Core\SQL\LegacySelectPlaceholder.cs" />
     <Compile Include="EntityModel\Attributes\BaseFieldAttribute.cs" />
-    <Compile Include="EntityModel\Attributes\CreatedByFieldAttribute.cs" />
     <Compile Include="EntityModel\Attributes\EntityAttributeBase.cs" />
     <Compile Include="EntityModel\Attributes\EntitySourceAttribute.cs" />
     <Compile Include="EntityModel\Attributes\FieldAccesabilityException.cs" />
@@ -112,7 +106,6 @@
     <Compile Include="EntityModel\Attributes\FieldValidationRuleAttribut.cs" />
     <Compile Include="EntityModel\Attributes\IgnoreFieldAttribute.cs" />
     <Compile Include="EntityModel\Attributes\InfrastructureFieldAttribute.cs" />
-    <Compile Include="EntityModel\Attributes\ModifiedByFieldAttribute.cs" />
     <Compile Include="EntityModel\Attributes\PersistanceFlags.cs" />
     <Compile Include="EntityModel\Attributes\PrimaryKeyFieldAttribute.cs" />
     <Compile Include="EntityModel\Attributes\ReferenceAttribute.cs" />
@@ -131,6 +124,12 @@
     <Compile Include="EntityModel\Validation\IFieldValidator.cs" />
     <Compile Include="EntityModel\Validation\IValidatable.cs" />
     <Compile Include="EntityModel\Validation\Validator.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="..\libs\SQLite\Mobile_CF20\SQLite.Interop.094.dll">
+      <Link>SQLite.Interop.094.dll</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CompactFramework.CSharp.targets" />
   <ProjectExtensions>

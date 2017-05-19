@@ -1,3 +1,5 @@
+
+--Table initialization for testing 
 CREATE TABLE CuttingUnit (
 				CuttingUnit_CN INTEGER PRIMARY KEY AUTOINCREMENT,
 				Code TEXT NOT NULL,
@@ -74,6 +76,8 @@ CREATE TABLE Component (
 				LastMerge DATETIME,
 				FileName TEXT);
 
+--New SQL code                
+                
 CREATE TABLE TallyPopulation (
 TallyPopulation_CN INTEGER PRIMARY KEY AUTOINCREMENT,
 SampleGroup_CN INTEGER REFERENCES SampleGroup NOT NULL,
