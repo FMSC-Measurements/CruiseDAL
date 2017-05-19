@@ -755,6 +755,16 @@ namespace CruiseDAL.Schema
 		public enum TREEAUDITVALUE_FIELDS { TreeAuditValue_CN, Field, Min, Max, ValueSet, Required, ErrorMessage };
 	}
 
+	public static class LOGGRADEAUDITRULE
+	{
+		public const string _NAME = "LogGradeAuditRule";
+		public const string SPECIES = "Species";
+		public const string DEFECTMAX = "DefectMax";
+		public const string VALIDGRADES = "ValidGrades";
+		public static string[] _ALL = { SPECIES, DEFECTMAX, VALIDGRADES };
+		public enum LOGGRADEAUDITRULE_FIELDS { Species, DefectMax, ValidGrades };
+	}
+
 	public static class LOGFIELDSETUP
 	{
 		public const string _NAME = "LogFieldSetup";
@@ -936,7 +946,7 @@ namespace CruiseDAL.Schema
 
 	public static class Schema
 	{
-		public static String[] TABLE_NAMES = { "Sale","CuttingUnit","Stratum","CuttingUnitStratum","SampleGroup","TreeDefaultValue","SampleGroupTreeDefaultValue","Plot","Tree","Log","Stem","CountTree","Tally","TreeEstimate","FixCNTTallyClass","FixCNTTallyPopulation","VolumeEquation","BiomassEquation","ValueEquation","QualityAdjEquation","Reports","TreeCalculatedValues","LCD","POP","PRO","LogStock","SampleGroupStats","SampleGroupStatsTreeDefaultValue","StratumStats","Regression","LogMatrix","TreeDefaultValueTreeAuditValue","TreeAuditValue","LogFieldSetup","TreeFieldSetup","LogFieldSetupDefault","TreeFieldSetupDefault","CruiseMethods","LoggingMethods","ProductCodes","UOMCodes","Regions","Forests","ErrorLog","MessageLog","Globals","Component" };
+		public static String[] TABLE_NAMES = { "Sale","CuttingUnit","Stratum","CuttingUnitStratum","SampleGroup","TreeDefaultValue","SampleGroupTreeDefaultValue","Plot","Tree","Log","Stem","CountTree","Tally","TreeEstimate","FixCNTTallyClass","FixCNTTallyPopulation","VolumeEquation","BiomassEquation","ValueEquation","QualityAdjEquation","Reports","TreeCalculatedValues","LCD","POP","PRO","LogStock","SampleGroupStats","SampleGroupStatsTreeDefaultValue","StratumStats","Regression","LogMatrix","TreeDefaultValueTreeAuditValue","TreeAuditValue","LogGradeAuditRule","LogFieldSetup","TreeFieldSetup","LogFieldSetupDefault","TreeFieldSetupDefault","CruiseMethods","LoggingMethods","ProductCodes","UOMCodes","Regions","Forests","ErrorLog","MessageLog","Globals","Component" };
 	}
 }
 

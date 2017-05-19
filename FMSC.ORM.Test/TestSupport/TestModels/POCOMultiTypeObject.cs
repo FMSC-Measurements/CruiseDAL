@@ -52,22 +52,14 @@ namespace FMSC.ORM.TestSupport.TestModels
         [Field(Name = "DateTimeField")]
         public DateTime DateTimeField { get; set; }
 
-        
-
         [Field(Name = "PartialyPublicField")]
         public string PartialyPublicField { get; protected set; }
 
         [Field(Name = "PrivateField")]
         private string PrivateField { get; set; }
 
-        [CreatedByField]
-        public string CreatedBy { get; set; }
-
-        [ModifiedByField]
-        public string ModifiedBy { get; set; }
-
-
         #region non visible fields
+
         [IgnoreField]
         public string IgnoredField { get; set; }
 
@@ -83,7 +75,6 @@ namespace FMSC.ORM.TestSupport.TestModels
             get; set;
         }
 
-
-        #endregion
+        #endregion non visible fields
     }
 }

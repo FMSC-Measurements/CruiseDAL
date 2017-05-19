@@ -9,44 +9,43 @@ namespace FMSC.ORM.Core.EntityModel
 {
     public class MappingCollectionTest
     {
-
-        [Fact]
+        [Fact(Skip = " ")]
         public void CopyToTest()
         {
             throw new NotImplementedException();
         }
 
-        [Fact]
+        [Fact(Skip = " ")]
         public void CoutTest()
         {
             throw new NotImplementedException();
         }
 
-        [Fact]
+        [Fact(Skip = " ")]
         public void AddTest()
         {
             throw new NotImplementedException();
         }
 
-        [Fact]
+        [Fact(Skip = " ")]
         public void RemoveTest()
         {
             throw new NotImplementedException();
         }
 
-        [Fact]
+        [Fact(Skip = " ")]
         public void ContainsTest()
         {
             throw new NotImplementedException();
         }
 
-        [Fact]
+        [Fact(Skip = " ")]
         public void ClearTest()
         {
             throw new NotImplementedException();
         }
 
-        [Fact]
+        [Fact(Skip = " ")]
         public void GetEnumeratorTest()
         {
             throw new NotImplementedException();

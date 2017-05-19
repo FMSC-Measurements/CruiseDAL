@@ -665,6 +665,11 @@ PRAGMA foreign_keys = ON;--is the nessicary? no data is being inserted yet.
 				Required BOOLEAN Default 0,
 				ErrorMessage TEXT);
 
+    CREATE TABLE LogGradeAuditRule (
+				Species TEXT,
+				DefectMax REAL Default 0.0,
+				ValidGrades TEXT);
+
     CREATE TABLE LogFieldSetup (
 				Stratum_CN INTEGER REFERENCES Stratum NOT NULL,
 				Field TEXT NOT NULL,
@@ -807,7 +812,7 @@ JOIN CuttingUnit USING (CuttingUnit_CN)
 JOIN Stratum USING (Stratum_CN);
 
 
-INSERT INTO Globals (Block, Key, Value) VALUES ("Database", "Version", "2.1.2"); 
-PRAGMA user_version = 3;
+INSERT INTO Globals (Block, Key, Value) VALUES ("Database", "Version", "2.2.0"); 
+PRAGMA user_version = 4;
 
 

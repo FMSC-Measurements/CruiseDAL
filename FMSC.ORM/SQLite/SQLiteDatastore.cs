@@ -129,7 +129,6 @@ namespace FMSC.ORM.SQLite
             this.Execute(commandText, start, tableName);
         }
 
-        [Obsolete("use AddField(string tableName, ColumnInfo fieldDef)")]
         public void AddField(string tableName, string fieldDef)
         {
             string command = string.Format("ALTER TABLE {0} ADD COLUMN {1};", tableName, fieldDef);
