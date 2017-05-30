@@ -161,6 +161,7 @@ namespace FMSC.ORM.Core
 #if NetCF
         public object Insert(object data, SQL.OnConflictOption option)
 #else
+
         public object Insert(object data, SQL.OnConflictOption option = OnConflictOption.Default)
 #endif
         {
@@ -175,6 +176,7 @@ namespace FMSC.ORM.Core
 #if NetCF
         public object Insert(object data, object keyData, SQL.OnConflictOption option)
 #else
+
         public object Insert(object data, object keyData, SQL.OnConflictOption option = OnConflictOption.Default)
 #endif
         {
@@ -185,7 +187,7 @@ namespace FMSC.ORM.Core
             return InternalInsert(entityDescription, data, keyData, option);
         }
 
-#region Insert Helper Methods
+        #region Insert Helper Methods
 
         protected object InternalInsert(EntityDescription entityDescription
             , object data, object keyData, SQL.OnConflictOption option)
@@ -272,6 +274,7 @@ namespace FMSC.ORM.Core
 #if NetCF
         public void Update(object data, SQL.OnConflictOption option)
 #else
+
         public void Update(object data, SQL.OnConflictOption option = OnConflictOption.Default)
 #endif
         {
@@ -300,7 +303,7 @@ namespace FMSC.ORM.Core
 
             using (DbCommand command = builder.BuildUpdateCommand(Provider, data, keyData, option))
             {
-               var changes = ExecuteSQL(command);
+                var changes = ExecuteSQL(command);
                 if (option != OnConflictOption.Ignore)
                 {
                     Debug.Assert(changes > 0, "update command resulted in no changes");
@@ -363,7 +366,7 @@ namespace FMSC.ORM.Core
             }
         }
 
-#region read methods
+        #region read methods
 
         [Obsolete("use From<T>().Read() style instead")]
 #pragma warning disable RECS0154 // Parameter tableName is never used
@@ -653,17 +656,17 @@ namespace FMSC.ORM.Core
             }
         }
 
-        [Obsolete("use ReadSingleRow<T>(object primaryKey) instead")]
-#pragma warning disable RECS0154 // Parameter is never used
-        public T ReadSingleRow<T>(string tableName, long? rowID) where T : new()
-#pragma warning restore RECS0154 // Parameter is never used
-        {
-            return ReadSingleRow<T>(rowID);
-        }
+        //        [Obsolete("use ReadSingleRow<T>(object primaryKey) instead")]
+        //#pragma warning disable RECS0154 // Parameter is never used
+        //        public T ReadSingleRow<T>(string tableName, long? rowID) where T : new()
+        //#pragma warning restore RECS0154 // Parameter is never used
+        //        {
+        //            return ReadSingleRow<T>(rowID);
+        //        }
 
-#endregion read methods
+        #endregion read methods
 
-#region query methods
+        #region query methods
 
         public List<T> Query<T>(string selectCommand, params Object[] selectionArgs) where T : new()
         {
@@ -681,27 +684,6 @@ namespace FMSC.ORM.Core
             EntityDescription entityType = LookUpEntityByType(typeof(T));
             return Query<T>(command, entityType);
         }
-
-        //public List<T> Query<T>(WhereClause where, params Object[] selectionArgs)
-        //    where T : new()
-        //{
-        //    EntityDescription entityDescription = LookUpEntityByType(typeof(T));
-        //    EntityCommandBuilder commandBuilder = entityDescription.CommandBuilder;
-
-        //    using (DbCommand command = commandBuilder.BuildSelectCommand(Provider, where))
-        //    {
-        //        //Add selection Arguments to command parameter list
-        //        if (selectionArgs != null)
-        //        {
-        //            foreach (object obj in selectionArgs)
-        //            {
-        //                command.Parameters.Add(Provider.CreateParameter(null, obj));
-        //            }
-        //        }
-
-        //        return Query<T>(command, entityDescription);
-        //    }
-        //}
 
         internal IEnumerable<TResult> Query<TResult>(SQLSelectBuilder selectBuilder, params Object[] selectionArgs)
         {
@@ -852,27 +834,6 @@ namespace FMSC.ORM.Core
             return QuerySingleRecord<T>(command, entityType);
         }
 
-        //public T QuerySingleRecord<T>(WhereClause where, params Object[] selectionArgs)
-        //    where T : new()
-        //{
-        //    EntityDescription entityDescription = LookUpEntityByType(typeof(T));
-        //    EntityCommandBuilder commandBuilder = entityDescription.CommandBuilder;
-
-        //    using (DbCommand command = commandBuilder.BuildSelectCommand(Provider, where))
-        //    {
-        //        //Add selection Arguments to command parameter list
-        //        if (selectionArgs != null)
-        //        {
-        //            foreach (object obj in selectionArgs)
-        //            {
-        //                command.Parameters.Add(Provider.CreateParameter(null, obj));
-        //            }
-        //        }
-
-        //        return QuerySingleRecord<T>(command, entityDescription);
-        //    }
-        //}
-
         protected T QuerySingleRecord<T>(DbCommand command, EntityDescription entityDescription)
             where T : new()
         {
@@ -912,11 +873,11 @@ namespace FMSC.ORM.Core
             }
         }
 
-#endregion query methods
+        #endregion query methods
 
-#endregion CRUD
+        #endregion CRUD
 
-#region general purpose command execution
+        #region general purpose command execution
 
         /// <summary>
         /// Executes SQL command returning number of rows affected
@@ -1128,16 +1089,15 @@ namespace FMSC.ORM.Core
             }
         }
 
-#endregion general purpose command execution
+        #endregion general purpose command execution
 
-#region transaction management
+        #region transaction management
 
         public void BeginTransaction()
         {
             lock (TransactionSyncLock)
             {
-                _transactionDepth++;
-                if (_transactionDepth == 1)
+                if (_transactionDepth == 0)
                 {
                     Debug.Assert(_CurrentTransaction == null);
 
@@ -1153,78 +1113,59 @@ namespace FMSC.ORM.Core
                     }
                     catch (Exception ex)
                     {
+                        ReleaseConnection();
                         throw ThrowExceptionHelper(connection, null, ex);
                     }
                 }
+                _transactionDepth++;
             }
-        }
-
-        [Obsolete("use CommitTransaction")]
-        public void EndTransaction()
-        {
-            this.CommitTransaction();
         }
 
         public void CommitTransaction()
         {
-            //lock (TransactionSyncLock)
-            //{
-            //    if (_transactionDepth == 0) { throw new InvalidOperationException("transaction depth is zero"); }
-
-            //    OnTransactionEnding();
-
-            //    _transactionDepth--;
-            //    if (_transactionDepth == 0)
-            //    {
-            //        ReleaseTransaction();
-            //    }
-
-            //}
             lock (TransactionSyncLock)
             {
+                var transactionDepth = _transactionDepth;
+
                 OnTransactionEnding();
 
-                if (_transactionDepth == 1)
+                if (transactionDepth > 0)
                 {
-                    _transactionDepth--;
-                    ReleaseTransaction();
+                    transactionDepth--;
+                    if (transactionDepth == 0)//transaction depth was 1
+                    {
+                        ReleaseTransaction();
+                    }
+                    _transactionDepth = transactionDepth;
                 }
-                else if (_transactionDepth > 1)
+                else// transactionDepth <= 0
                 {
-                    _transactionDepth--;
-                }
-                else// transactionDepth > 1
-                {
-                    Debug.Fail("no transaction");
+                    Debug.Fail("Transaction depth is " + transactionDepth.ToString());
                 }
             }
-        }
-
-        [Obsolete("use RollbackTransaction instead")]
-        public void CancelTransaction()
-        {
-            this.RollbackTransaction();
         }
 
         public void RollbackTransaction()
         {
             lock (TransactionSyncLock)
             {
+                var transactionDepth = _transactionDepth;
+
                 OnTransactionCanceling();
                 _transactionCanceled = true;
 
-                if (_transactionDepth == 1)
+                if (transactionDepth > 0)
                 {
-                    _transactionDepth--;
-                    ReleaseTransaction();
-                }
-                else if (_transactionDepth > 1)
-                {
-                    _transactionDepth--;
+                    transactionDepth--;
+                    if (transactionDepth == 0)
+                    {
+                        ReleaseTransaction();
+                    }
+                    _transactionDepth = transactionDepth;
                 }
                 else
                 {
-                    Debug.Fail("no transaction");
+                    Debug.Fail("Transaction depth is " + transactionDepth.ToString());
                 }
             }
         }
@@ -1263,9 +1204,9 @@ namespace FMSC.ORM.Core
             }
         }
 
-#endregion transaction management
+        #endregion transaction management
 
-#region Connection Management
+        #region Connection Management
 
         protected void EnterConnectionHold()
         {
@@ -1285,22 +1226,6 @@ namespace FMSC.ORM.Core
             conn.StateChange += _Connection_StateChange;
             return conn;
         }
-
-        //protected DbConnection CreateReadWriteConnection()
-        //{
-        //    DbConnection conn = Provider.CreateConnection();
-        //    conn.ConnectionString = BuildConnectionString(false);
-        //    conn.StateChange += _Connection_StateChange;
-        //    return conn;
-        //}
-
-        //protected DbConnection CreateReadOnlyConnection()
-        //{
-        //    DbConnection conn = Provider.CreateConnection();
-        //    conn.ConnectionString = BuildConnectionString(true);
-        //    conn.StateChange += _Connection_StateChange;
-        //    return conn;
-        //}
 
         /// <summary>
         /// if _holdConnection > 0 returns PersistentConnection
@@ -1349,102 +1274,6 @@ namespace FMSC.ORM.Core
             }
         }
 
-        //protected DbConnection OpenReadWriteConnection()
-        //{
-        //    return OpenReadWriteConnection(DEFAULT_RETRY_RW_CONNECTION_BEHAVIOR);
-        //}
-
-        //protected virtual DbConnection OpenReadWriteConnection(bool retry)
-        //{
-        //    lock (this._readWriteConnectionSyncLock)
-        //    {
-        //        DbConnection conn;
-
-        //        if (_ReadWriteConnection == null)
-        //        {
-        //            _ReadWriteConnection = CreateReadWriteConnection();
-        //        }
-        //        conn = _ReadWriteConnection;
-
-        //        if (conn.State != System.Data.ConnectionState.Open)
-        //        {
-        //            try
-        //            {
-        //                conn.Open();
-        //                //EnterConnectionHold();
-        //            }
-        //            catch (Exception e)
-        //            {
-        //                if (!retry)
-        //                {
-        //                    var newEx = new ConnectionException(null, e);
-        //                    newEx.AddConnectionInfo(conn);
-        //                    throw newEx;
-        //                }
-        //                else
-        //                {
-        //                    conn.Dispose();
-        //                    _ReadWriteConnection = null;
-        //                    Thread.Sleep(100);
-        //                    conn = OpenReadWriteConnection(false);
-        //                }
-        //            }
-        //        }
-
-        //        Debug.WriteLine("Read Write Connection Opened", Constants.Logging.DB_CONTROL_VERBOSE);
-        //        return conn;
-        //    }
-        //}
-
-        //protected DbConnection OpenReadOnlyConnection()
-        //{
-        //    return OpenReadOnlyConnection(DEFAULT_RETRY_RO_CONNECTION_BEHAVIOR);
-        //}
-
-        //protected virtual DbConnection OpenReadOnlyConnection(bool retry)
-        //{
-        //    lock (this._readOnlyConnectionSyncLock)
-        //    {
-        //        DbConnection conn;
-
-        //        if (_ReadOnlyConnection == null)
-        //        {
-        //            _ReadOnlyConnection = CreateReadOnlyConnection();
-
-        //        }
-        //        else
-        //        {
-        //            Debug.WriteLine("Existing Connection used");
-        //        }
-        //        conn = _ReadOnlyConnection;
-
-        //        if (conn.State != System.Data.ConnectionState.Open)
-        //        {
-        //            try
-        //            {
-        //                conn.Open();
-        //            }
-        //            catch
-        //            {
-        //                if (!retry)
-        //                {
-        //                    throw;
-        //                }
-        //                else
-        //                {
-        //                    conn.Dispose();
-        //                    _ReadOnlyConnection = null;
-        //                    Thread.Sleep(100);
-        //                    conn = OpenReadOnlyConnection(false);
-        //                }
-        //            }
-        //        }
-
-        //        Debug.WriteLine("Read Only Connection Opened", Constants.Logging.DB_CONTROL_VERBOSE);
-        //        return conn;
-        //    }
-        //}
-
         //protected virtual DbConnection OpenConnection()
         //{
         //    this.EnterConnectionHold();
@@ -1490,13 +1319,6 @@ namespace FMSC.ORM.Core
         //    }
         //}
 
-        //TODO make protected
-        //public virtual void ReleaseAllConnections(bool force)
-        //{
-        //    ReleaseReadOnlyConnection();
-        //    ReleaseReadWriteConnection(force);
-        //}
-
         protected void ReleaseConnection()
         {
             ReleaseConnection(false);
@@ -1526,9 +1348,9 @@ namespace FMSC.ORM.Core
             }
         }
 
-#endregion Connection Management
+        #endregion Connection Management
 
-#region events and logging
+        #region events and logging
 
         [Conditional("Debug")]
         protected void LogCommand(DbCommand command)
@@ -1598,9 +1420,9 @@ namespace FMSC.ORM.Core
             Debug.WriteLine("Transaction Releasing", Constants.Logging.DB_CONTROL);
         }
 
-#endregion events and logging
+        #endregion events and logging
 
-#region IDisposable Support
+        #region IDisposable Support
 
         private bool isDisposed = false; // To detect redundant calls
 
@@ -1639,6 +1461,6 @@ namespace FMSC.ORM.Core
             GC.SuppressFinalize(this);
         }
 
-#endregion IDisposable Support
+        #endregion IDisposable Support
     }
 }
