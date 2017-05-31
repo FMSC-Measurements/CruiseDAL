@@ -27,6 +27,8 @@ namespace CruiseDAL
         private string _databaseVersion = "Unknown";
         private CruiseFileType _cruiseFileType;
 
+        protected ICollection<ExternalDatastore> _attachedDataStores = new List<ExternalDatastore>();
+
         /// <summary>
         /// represents value returned by PRAGMA user_version;
         /// </summary>
@@ -50,7 +52,6 @@ namespace CruiseDAL
         /// <summary>
         /// Gets the string used to identify the user, for the purpose of CreatedBy and ModifiedBy values
         /// </summary>
-        [Obsolete]
         public string User
         {
             get
@@ -84,23 +85,6 @@ namespace CruiseDAL
                 WriteCruiseFileType(value);
             }
         }
-
-        #region multiDB Fields
-
-        protected ICollection<ExternalDatastore> _attachedDataStores = new List<ExternalDatastore>();
-
-        //protected int _multiDBholdConnection = 0;
-        //protected int _multiDBtransactionDepth = 0;
-        //protected bool _multiDBtransactionCanceled = false;
-        //protected DbTransaction _multiDBCurrentTransaction;
-        //protected readonly object _multiDBTransactionSyncLock = new object();
-        //protected readonly object _multiDBpersistentConnectionSyncLock = new object();
-
-        //protected DbConnection MultiDBPersistentConnection { get; set; }
-
-        //public object MultiDBTransactionSyncLock { get { return _multiDBTransactionSyncLock; } }
-
-        #endregion multiDB Fields
 
         /// <summary>
         /// Initializes a new in memory instance of the <see cref="DAL"/> class.
@@ -389,7 +373,6 @@ namespace CruiseDAL
         {
             if (dataStore == null) { throw new ArgumentNullException("dataStore"); }
             if (String.IsNullOrEmpty(alias)) { throw new ArgumentException("alias can't be null or empty", "alias"); }
-            Debug.Assert(_attachedDataStores != null);
 
             var externalDS = new ExternalDatastore()
 

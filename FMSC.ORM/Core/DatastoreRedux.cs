@@ -125,12 +125,6 @@ namespace FMSC.ORM.Core
         {
             if (data == null) { throw new ArgumentNullException("data"); }
 
-            OnDeletingData(data);
-            if (data is IPersistanceTracking)
-            {
-                ((IPersistanceTracking)data).OnDeleting();
-            }
-
             EntityDescription entityDescription = LookUpEntityByType(data.GetType());
             PrimaryKeyFieldAttribute keyFieldInfo = entityDescription.Fields.PrimaryKeyField;
 
@@ -140,11 +134,7 @@ namespace FMSC.ORM.Core
 
             lock (data)
             {
-                if (data is IPersistanceTracking)
-                {
-                    Debug.Assert(((IPersistanceTracking)data).IsPersisted == true);
-                    ((IPersistanceTracking)data).OnDeleting();
-                }
+                OnDeletingData(data);
 
                 using (DbCommand command = builder.BuildSQLDeleteCommand(Provider, data))
                 {
@@ -183,7 +173,6 @@ namespace FMSC.ORM.Core
             if (data == null) { throw new ArgumentNullException("data"); }
 
             EntityDescription entityDescription = LookUpEntityByType(data.GetType());
-            var keyField = entityDescription.Fields.PrimaryKeyField;
             return InternalInsert(entityDescription, data, keyData, option);
         }
 
@@ -206,22 +195,24 @@ namespace FMSC.ORM.Core
                     {
                         return null;    //so do not try to get the rowid or call OnInsertedData
                     }
-                }
-
-                var primaryKeyField = entityDescription.Fields.PrimaryKeyField;
-                if (primaryKeyField != null)
-                {
-                    if (primaryKeyField.KeyType == KeyType.RowID)
-                    {
-                        keyData = GetLastInsertRowID(conn);
-                    }
                     else
                     {
-                        keyData = GetLastInsertKeyValue(entityDescription.SourceName
-                       , primaryKeyField.Name, conn);
-                    }
+                        var primaryKeyField = entityDescription.Fields.PrimaryKeyField;
+                        if (primaryKeyField != null)
+                        {
+                            if (primaryKeyField.KeyType == KeyType.RowID)
+                            {
+                                keyData = GetLastInsertRowID(conn);
+                            }
+                            else
+                            {
+                                keyData = GetLastInsertKeyValue(entityDescription.SourceName
+                               , primaryKeyField.Name, conn);
+                            }
 
-                    primaryKeyField.SetFieldValue(data, keyData);
+                            primaryKeyField.SetFieldValue(data, keyData);
+                        }
+                    }
                 }
             }
             finally
@@ -292,14 +283,10 @@ namespace FMSC.ORM.Core
         {
             if (data == null) { throw new ArgumentNullException("data"); }
 
-            OnUpdatingData(data);
-            if (data is IPersistanceTracking)
-            {
-                ((IPersistanceTracking)data).OnUpdating();
-            }
-
             EntityDescription entityDescription = LookUpEntityByType(data.GetType());
             EntityCommandBuilder builder = entityDescription.CommandBuilder;
+
+            OnUpdatingData(data);
 
             using (DbCommand command = builder.BuildUpdateCommand(Provider, data, keyData, option))
             {
@@ -319,7 +306,7 @@ namespace FMSC.ORM.Core
 #if NetCF
         public void Save(IPersistanceTracking data)
         {
-            Save(data, OnConflictOption.Fail, true);
+            Save(data, OnConflictOption.Default, true);
         }
 
         public void Save(IPersistanceTracking data, SQL.OnConflictOption option)
@@ -330,7 +317,7 @@ namespace FMSC.ORM.Core
         public void Save(IPersistanceTracking data, SQL.OnConflictOption option, bool cache)
 #else
 
-        public void Save(IPersistanceTracking data, SQL.OnConflictOption option = OnConflictOption.Fail, bool cache = true)
+        public void Save(IPersistanceTracking data, SQL.OnConflictOption option = OnConflictOption.Default, bool cache = true)
 #endif
         {
             if (data == null) { throw new ArgumentNullException("data"); }
@@ -416,7 +403,7 @@ namespace FMSC.ORM.Core
                     try
                     {
                         command.Connection = conn;
-                        using (DbDataReader reader = command.ExecuteReader())
+                        using (DbDataReader reader = ExecuteReader(command))
                         {
                             inflator.CheckOrdinals(reader);
                             while (reader.Read())
@@ -460,63 +447,6 @@ namespace FMSC.ORM.Core
                 }
             }
         }
-
-        //protected IEnumerable<TResult> Read<TResult>(DbCommand command)
-        //{
-        //    EntityDescription entityDescription = LookUpEntityByType(typeof(TResult));
-        //    EntityCache cache = GetEntityCache(typeof(TResult));
-        //    EntityInflator inflator = entityDescription.Inflator;
-
-        //    lock (_persistentConnectionSyncLock)
-        //    {
-        //        DbConnection conn = OpenConnection();
-        //        try
-        //        {
-        //            command.Connection = conn;
-        //            using (DbDataReader reader = command.ExecuteReader())
-        //            {
-        //                inflator.CheckOrdinals(reader);
-        //                while (reader.Read())
-        //                {
-        //                    Object entity = null;
-        //                    try
-        //                    {
-        //                        object key = inflator.ReadPrimaryKey(reader);
-        //                        if (key != null && cache.ContainsKey(key))
-        //                        {
-        //                            entity = cache[key];
-        //                        }
-        //                        else
-        //                        {
-        //                            entity = inflator.CreateInstanceOfEntity();
-        //                            if (key != null)
-        //                            {
-        //                                cache.Add(key, entity);
-        //                            }
-        //                            if (entity is IDataObject)
-        //                            {
-        //                                ((IDataObject)entity).DAL = this;
-        //                            }
-        //                        }
-
-        //                        inflator.ReadData(reader, entity);
-        //                    }
-        //                    catch (Exception e)
-        //                    {
-        //                        throw this.ThrowExceptionHelper(conn, command, e);
-        //                    }
-
-        //                    yield return (TResult)entity;
-        //                }
-        //            }
-        //        }
-        //        finally
-        //        {
-        //            ReleaseConnection();
-        //        }
-        //    }
-
-        //}
 
         protected List<T> Read<T>(DbCommand command, EntityDescription entityDescription)
             where T : new()
@@ -580,7 +510,10 @@ namespace FMSC.ORM.Core
         public T ReadSingleRow<T>(object primaryKeyValue)
             where T : new()
         {
-            return From<T>().Where("RowID = ?").Read(primaryKeyValue).FirstOrDefault();
+            var entityDiscription = LookUpEntityByType(typeof(T));
+            var keyField = entityDiscription.Fields.PrimaryKeyField;
+
+            return From<T>().Where(keyField.Name + " = ?").Read(primaryKeyValue).FirstOrDefault();
             //return ReadSingleRow<T>(null, "WHERE rowID = ?", primaryKeyValue);
         }
 
@@ -709,7 +642,7 @@ namespace FMSC.ORM.Core
                     try
                     {
                         command.Connection = conn;
-                        using (DbDataReader reader = command.ExecuteReader())
+                        using (DbDataReader reader = ExecuteReader(command))
                         {
                             inflator.CheckOrdinals(reader);
 
@@ -921,6 +854,18 @@ namespace FMSC.ORM.Core
                 }
             }
             return ExecuteSQL(command);
+        }
+
+        protected DbDataReader ExecuteReader(DbCommand command)
+        {
+            try
+            {
+                return command.ExecuteReader();
+            }
+            catch (Exception e)
+            {
+                throw ThrowExceptionHelper(command.Connection, command, e);
+            }
         }
 
         protected int ExecuteSQL(DbCommand command)
@@ -1360,6 +1305,10 @@ namespace FMSC.ORM.Core
 
         protected virtual void OnDeletingData(object data)
         {
+            if (data is IPersistanceTracking)
+            {
+                ((IPersistanceTracking)data).OnDeleting();
+            }
         }
 
         protected virtual void OnInsertingData(object data, SQL.OnConflictOption option)
@@ -1384,6 +1333,10 @@ namespace FMSC.ORM.Core
 
         protected virtual void OnUpdatingData(object data)
         {
+            if (data is IPersistanceTracking)
+            {
+                ((IPersistanceTracking)data).OnUpdating();
+            }
         }
 
         /// <summary>

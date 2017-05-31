@@ -16,7 +16,7 @@ namespace CruiseDAL
             //if the version is not 2.* or not using date versioning
             if (!db.DatabaseVersion.StartsWith("2"))
             {
-                throw new IncompatibleSchemaException("The version of this cruise file is not compatable with the version of the software you are using." +
+                throw new IncompatibleSchemaException("The version of this cruise file is not compatible with the version of the software you are using." +
                     "Go to github.com/FMSC-Measurements to get the latest version of our software.", null);
             }
 
