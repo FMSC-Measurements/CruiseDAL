@@ -19,11 +19,15 @@ namespace CruiseDAL
                 hasErrors = true;
             }
 
-            //if (HasMismatchSpecies())
-            //{
-            //    errorList.Add("Tree table has mismatch species codes");
-            //    hasErrors = true;
-            //}
+            if (HasMismatchSpecies(dal))
+            {
+                FixMismatchSpecies(dal);
+                if (HasMismatchSpecies(dal))
+                {
+                    errorList.Add("Tree table has mismatch species codes");
+                    hasErrors = true;
+                }
+            }
 
             if (dal.HasSampleGroupUOMErrors())
             {
@@ -103,10 +107,24 @@ namespace CruiseDAL
             return dal.GetRowCount(SAMPLEGROUP._NAME, "WHERE ifnull(DefaultLiveDead, '') = ''") > 0;
         }
 
-        //private bool HasMismatchSpecies()
-        //{
-        //    return this.GetRowCount("Tree", "JOIN TreeDefaultValue USING (TreeDefaultValue_CN) WHERE Tree.Species != TreeDefaultValue.Species") > 0;
-        //}
+        private static bool HasMismatchSpecies(DAL dal)
+        {
+            return dal.GetRowCount("Tree", "JOIN TreeDefaultValue USING (TreeDefaultValue_CN) WHERE Tree.Species != TreeDefaultValue.Species") > 0;
+        }
+
+        private static void FixMismatchSpecies(DAL dal)
+        {
+            dal.Execute(
+@"UPDATE Tree
+SET [Species] =
+(SELECT [Species]
+FROM TreeDefaultValue AS tdv
+WHERE tdv.TreeDefaultValue_CN = Tree.TreeDefaultValue_CN)
+WHERE Tree_CN IN
+(SELECT Tree_CN from Tree
+JOIN TreeDefaultValue as tdv using (TreeDefaultVAlue_CN)
+WHERE tree.[Species] != tdv.[Species]);");
+        }
 
         private static bool HasSampleGroupUOMErrors(this DAL dal)
         {

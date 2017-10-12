@@ -273,6 +273,7 @@ namespace FMSC.ORM.SQLite
 
                 //ds.BeginTransaction();
                 Assert.Throws<ReadOnlyException>(() => ds.BeginTransaction());
+                //TODO assert that connection is not open and transaction depth is 0
                 Assert.Throws<ReadOnlyException>(() => ds.Execute("INSERT INTO Tbl (Data) VALUES ('something');"));
             }
         }

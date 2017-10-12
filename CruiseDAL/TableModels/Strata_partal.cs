@@ -161,7 +161,9 @@ DELETE FROM CountTree WHERE SampleGroup_CN IN (SELECT SampleGroup_CN FROM Sample
 DELETE FROM SampleGroupTreeDefaultValue WHERE SampleGroup_CN IN (SELECT SampleGroup_CN FROM SampleGroup WHERE SampleGroup.Stratum_CN = {0});
 DELETE FROM SampleGroup WHERE Stratum_CN = {0};
 DELETE FROM TreeFieldSetup WHERE Stratum_CN = {0};
-DELETE FROM LogFieldSetup WHERE Stratum_CN = {0};",
+DELETE FROM LogFieldSetup WHERE Stratum_CN = {0};
+DELETE FROM FixCNTTallyPopulation WHERE FixCNTTallyClass_CN IN (SELECT FixCNTtallyClass_CN FROM FixCNTTallyClass WHERE Stratum_CN = {0});
+DELETE FROM FixCNTTallyClass WHERE Stratum_CN = {0};",
                 stratum.Stratum_CN);
                 db.Execute(command);
                 stratum.Delete();
