@@ -1164,7 +1164,7 @@ namespace FMSC.ORM.Core
             System.Threading.Interlocked.Decrement(ref this._holdConnection);
         }
 
-        protected DbConnection CreateConnection()
+        public DbConnection CreateConnection()
         {
             DbConnection conn = Provider.CreateConnection();
             conn.ConnectionString = BuildConnectionString();
