@@ -5,6 +5,7 @@ using FMSC.ORM.EntityModel.Attributes;
 using FMSC.ORM.EntityModel.Support;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Data.Common;
 using System.Diagnostics;
 using System.Linq;
@@ -13,7 +14,7 @@ using System.Linq;
 
 namespace FMSC.ORM.Core
 {
-    public abstract class DatastoreRedux : IDisposable
+    public abstract partial class DatastoreRedux : IDisposable
     {
         protected static Dictionary<string, EntityDescription> _globalEntityDescriptionLookup = new Dictionary<string, EntityDescription>();
 
@@ -355,29 +356,6 @@ namespace FMSC.ORM.Core
 
         #region read methods
 
-        [Obsolete("use From<T>().Read() style instead")]
-#pragma warning disable RECS0154 // Parameter tableName is never used
-        public List<T> Read<T>(string tableName, string selection, params Object[] selectionArgs) where T : new()
-#pragma warning restore RECS0154 // Parameter is never used
-        {
-            EntityDescription entityDescription = LookUpEntityByType(typeof(T));
-            EntityCommandBuilder commandBuilder = entityDescription.CommandBuilder;
-
-            using (DbCommand command = commandBuilder.BuildSelectLegacy(Provider, selection))
-            {
-                //Add selection Arguments to command parameter list
-                if (selectionArgs != null)
-                {
-                    foreach (object obj in selectionArgs)
-                    {
-                        command.Parameters.Add(Provider.CreateParameter(null, obj));
-                    }
-                }
-
-                return Read<T>(command, entityDescription);
-            }
-        }
-
         internal IEnumerable<TResult> Read<TResult>(SQLSelectBuilder selectBuilder, params Object[] selectionArgs)
         {
             using (DbCommand command = Provider.CreateCommand())
@@ -517,29 +495,6 @@ namespace FMSC.ORM.Core
             //return ReadSingleRow<T>(null, "WHERE rowID = ?", primaryKeyValue);
         }
 
-        [Obsolete("use From<T>().Read().FirstOrDefault() style instead")]
-#pragma warning disable RECS0154 // Parameter is never used
-        public T ReadSingleRow<T>(string tableName, string selection, params Object[] selectionArgs) where T : new()
-#pragma warning restore RECS0154 // Parameter is never used
-        {
-            EntityDescription entityDescription = LookUpEntityByType(typeof(T));
-            EntityCommandBuilder commandBuilder = entityDescription.CommandBuilder;
-
-            using (DbCommand command = commandBuilder.BuildSelectLegacy(Provider, selection))
-            {
-                //Add selection Arguments to command parameter list
-                if (selectionArgs != null)
-                {
-                    foreach (object obj in selectionArgs)
-                    {
-                        command.Parameters.Add(Provider.CreateParameter(null, obj));
-                    }
-                }
-
-                return ReadSingleRow<T>(command, entityDescription);
-            }
-        }
-
         internal T ReadSingleRow<T>(DbCommand command, EntityDescription entityDescription)
             where T : new()
         {
@@ -589,13 +544,6 @@ namespace FMSC.ORM.Core
             }
         }
 
-        //        [Obsolete("use ReadSingleRow<T>(object primaryKey) instead")]
-        //#pragma warning disable RECS0154 // Parameter is never used
-        //        public T ReadSingleRow<T>(string tableName, long? rowID) where T : new()
-        //#pragma warning restore RECS0154 // Parameter is never used
-        //        {
-        //            return ReadSingleRow<T>(rowID);
-        //        }
 
         #endregion read methods
 
@@ -672,44 +620,6 @@ namespace FMSC.ORM.Core
                 }
             }
         }
-
-        //protected IEnumerable<TResult> Query<TResult>(DbCommand command)
-        //{
-        //    EntityDescription entityDescription = LookUpEntityByType(typeof(TResult));
-        //    EntityInflator inflator = entityDescription.Inflator;
-
-        //    lock (_persistentConnectionSyncLock)
-        //    {
-        //        DbConnection conn = OpenConnection();
-        //        try
-        //        {
-        //            command.Connection = conn;
-        //            using (DbDataReader reader = command.ExecuteReader())
-        //            {
-        //                inflator.CheckOrdinals(reader);
-
-        //                while (reader.Read())
-        //                {
-        //                    Object newDO = inflator.CreateInstanceOfEntity();
-        //                    try
-        //                    {
-        //                        inflator.ReadData(reader, newDO);
-        //                    }
-        //                    catch (Exception e)
-        //                    {
-        //                        throw this.ThrowExceptionHelper(conn, command, e);
-        //                    }
-        //                    yield return (TResult)newDO;
-        //                }
-        //            }
-
-        //        }
-        //        finally
-        //        {
-        //            ReleaseConnection();
-        //        }
-        //    }
-        //}
 
         protected List<T> Query<T>(DbCommand command, EntityDescription entityDescription)
             where T : new()
@@ -824,22 +734,6 @@ namespace FMSC.ORM.Core
             using (DbCommand com = Provider.CreateCommand(command))
             {
                 return this.Execute(com, parameters);
-            }
-        }
-
-        public int Execute(String command, IEnumerable<KeyValuePair<String, object>> parameters)
-        {
-            using (DbCommand comm = Provider.CreateCommand(command))
-            {
-                if (parameters != null)
-                {
-                    foreach (var pair in parameters)
-                    {
-                        var param = Provider.CreateParameter(pair.Key, pair.Value);
-                        comm.Parameters.Add(param);
-                    }
-                }
-                return ExecuteSQL(comm);
             }
         }
 
@@ -974,22 +868,6 @@ namespace FMSC.ORM.Core
                     foreach (object val in parameters)
                     {
                         comm.Parameters.Add(Provider.CreateParameter(null, val));
-                    }
-                }
-                return ExecuteScalar<T>(comm);
-            }
-        }
-
-        public T ExecuteScalar<T>(String query, IEnumerable<KeyValuePair<String, object>> parameters)
-        {
-            using (DbCommand comm = Provider.CreateCommand(query))
-            {
-                if (parameters != null)
-                {
-                    foreach (var pair in parameters)
-                    {
-                        var param = Provider.CreateParameter(pair.Key, pair.Value);
-                        comm.Parameters.Add(param);
                     }
                 }
                 return ExecuteScalar<T>(comm);
@@ -1219,51 +1097,6 @@ namespace FMSC.ORM.Core
             }
         }
 
-        //protected virtual DbConnection OpenConnection()
-        //{
-        //    this.EnterConnectionHold();
-        //    try
-        //    {
-        //        lock (this._connectionSyncLock)
-        //        {
-        //            Debug.WriteLine("Connection In Use", Logging.DB_CONTROL_VERBOSE);
-        //            if (this._Connection != null)
-        //            {
-        //                return this._Connection;
-        //            }
-        //            else
-        //            {
-        //                System.Diagnostics.Debug.WriteLine("Connection created, threadID: " + System.Threading.Thread.CurrentThread.ManagedThreadId.ToString(), LOG_LEV_DS_EVENT);
-        //                this._Connection = CreateConnection(this._ConnectionString);
-        //                this._Connection.StateChange += new System.Data.StateChangeEventHandler(_Connection_StateChange);
-        //                this._Connection.Open();
-
-        //                return this._Connection;
-        //            }
-        //        }
-        //    }
-        //    catch (Exception e)
-        //    {
-        //        throw this.ThrowDatastoreExceptionHelper(this._Connection, null, e);
-        //    }
-        //}
-
-        //internal void ReleaseConnection()
-        //{
-        //    lock (this._connectionSyncLock)
-        //    {
-        //        Debug.WriteLine("Connection Released", Logging.DB_CONTROL_VERBOSE);
-        //        if (this._holdConnection == 1)
-        //        {
-        //            Debug.Assert(_Connection != null);
-        //            _Connection.Dispose();
-        //            _Connection = null;
-        //            Debug.WriteLine("Connection Closed", Logging.DS_EVENT);
-        //        }
-        //        this.ExitConnectionHold();
-        //    }
-        //}
-
         protected void ReleaseConnection()
         {
             ReleaseConnection(false);
@@ -1350,6 +1183,10 @@ namespace FMSC.ORM.Core
         //for logging connection state changes
         private void _Connection_StateChange(object sender, System.Data.StateChangeEventArgs e)
         {
+            if (e.CurrentState == System.Data.ConnectionState.Closed)
+            {
+                Debug.Assert(_CurrentTransaction == null);
+            }
             Debug.WriteLine("Connection state changed From " + e.OriginalState.ToString() + " to " + e.CurrentState.ToString(), Constants.Logging.DS_EVENT);
         }
 
