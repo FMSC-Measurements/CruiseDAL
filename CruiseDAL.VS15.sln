@@ -4,10 +4,6 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 VisualStudioVersion = 14.0.25420.1
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{770A329F-9981-40B5-8AD1-85C573421463}"
-	ProjectSection(SolutionItems) = preProject
-		CruiseDAL1.vsmdi = CruiseDAL1.vsmdi
-		LocalTestRun.testrunconfig = LocalTestRun.testrunconfig
-	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CruiseDAL.VS15", "CruiseDAL\CruiseDAL.VS15.csproj", "{BAF1842E-F8C5-47A5-94C6-ADABA8A4B3AF}"
 EndProject
