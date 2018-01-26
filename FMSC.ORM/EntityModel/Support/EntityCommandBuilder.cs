@@ -222,7 +222,7 @@ namespace FMSC.ORM.EntityModel.Support
 
             var columnNames = new List<string>();
             var columnExpressions = new List<string>();
-            foreach (FieldAttribute field in EntityDescription.Fields.GetPersistedFields(true, PersistanceFlags.OnUpdate))
+            foreach (FieldAttribute field in EntityDescription.Fields.GetPersistedFields(false, PersistanceFlags.OnUpdate))
             {
                 columnNames.Add(field.Name);
                 columnExpressions.Add(field.SQLPramName);
