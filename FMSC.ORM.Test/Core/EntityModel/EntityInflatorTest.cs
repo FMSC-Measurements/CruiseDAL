@@ -26,7 +26,7 @@ namespace FMSC.ORM.EntityModel.Support
         }
 
         [Fact]
-        public void CreateInstanceOfEntityTest_WithOataObject()
+        public void CreateInstanceOfEntityTest_WithDataObject()
         {
             var ed = new EntityDescription(typeof(DOMultiPropType));
 

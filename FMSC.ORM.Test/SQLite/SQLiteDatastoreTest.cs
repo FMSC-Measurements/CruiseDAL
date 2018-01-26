@@ -1,4 +1,5 @@
-﻿using FMSC.ORM.Core.SQL;
+﻿using FluentAssertions;
+using FMSC.ORM.Core.SQL;
 using FMSC.ORM.TestSupport;
 using FMSC.ORM.TestSupport.TestModels;
 using System;
@@ -457,14 +458,14 @@ namespace FMSC.ORM.SQLite
                 ds.Execute("INSERT INTO TableA VALUES ('something');");
 
                 ds.RollbackTransaction();
-                Assert.Equal(0, ds.GetRowCount("TableA", null));
+                ds.GetRowCount("TableA", null).ShouldBeEquivalentTo(0);
 
                 ds.BeginTransaction();
 
                 ds.Execute("INSERT INTO TableA VALUES ('something');");
 
                 ds.CommitTransaction();
-                Assert.Equal(1, ds.GetRowCount("TableA", null));
+                ds.GetRowCount("TableA", null).ShouldBeEquivalentTo(1);
             }
 
             using (var ds = new SQLiteDatastore())
@@ -478,14 +479,14 @@ namespace FMSC.ORM.SQLite
                 ds.Execute("INSERT INTO TableA VALUES ('something');");
 
                 ds.RollbackTransaction();
-                Assert.Equal(0, ds.GetRowCount("TableA", null));
+                ds.GetRowCount("TableA", null).ShouldBeEquivalentTo(0);
 
                 ds.BeginTransaction();
 
                 ds.Execute("INSERT INTO TableA VALUES ('something');");
 
                 ds.CommitTransaction();
-                Assert.Equal(1, ds.GetRowCount("TableA", null));
+                ds.GetRowCount("TableA", null).ShouldBeEquivalentTo(1);
             }
         }
 

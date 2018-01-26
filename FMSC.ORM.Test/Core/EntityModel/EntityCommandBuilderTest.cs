@@ -6,6 +6,7 @@ using FMSC.ORM.TestSupport.TestModels;
 using System.Data.Common;
 using Xunit.Abstractions;
 using FMSC.ORM.Core;
+using FluentAssertions;
 
 namespace FMSC.ORM.EntityModel.Support
 {
@@ -26,8 +27,10 @@ namespace FMSC.ORM.EntityModel.Support
             using (var command = provider.CreateCommand(selectBuilder.ToSQL()))
             {
                 _output.WriteLine(command.CommandText);
-                Assert.NotNull(command);
-                AssertEx.NotNullOrWhitespace(command.CommandText);
+
+                command.Should().NotBeNull();
+                command.CommandText.Should().NotBeNullOrWhiteSpace();
+
                 VerifyCommandSyntex(provider, command);
             }
         }
@@ -45,8 +48,8 @@ namespace FMSC.ORM.EntityModel.Support
             {
                 _output.WriteLine(command.CommandText);
 
-                Assert.NotNull(command);
-                AssertEx.NotNullOrWhitespace(command.CommandText);
+                command.Should().NotBeNull();
+                command.CommandText.Should().NotBeNullOrWhiteSpace();
 
                 Assert.DoesNotContain("ID", command.CommandText);
 
@@ -57,8 +60,8 @@ namespace FMSC.ORM.EntityModel.Support
             {
                 _output.WriteLine(command.CommandText);
 
-                Assert.NotNull(command);
-                AssertEx.NotNullOrWhitespace(command.CommandText);
+                command.Should().NotBeNull();
+                command.CommandText.Should().NotBeNullOrWhiteSpace();
 
                 Assert.Contains("ID", command.CommandText);
 
@@ -76,15 +79,20 @@ namespace FMSC.ORM.EntityModel.Support
 
             var commandBuilder = ed.CommandBuilder;
             using (var command = commandBuilder.BuildUpdateCommand(provider, data, 1, Core.SQL.OnConflictOption.Default))
-            {
-                _output.WriteLine(command.CommandText);
-
-                Assert.NotNull(command);
-                AssertEx.NotNullOrWhitespace(command.CommandText);
+            {                
+                command.Should().NotBeNull();
+                command.CommandText.Should().NotBeNullOrWhiteSpace();
 
                 Assert.Contains("ID", command.CommandText);
 
+                command.Parameters.OfType<DbParameter>().Where(x => x.ParameterName == "@id")
+                    .Should().HaveCount(1);
+
+                command.Parameters.OfType<DbParameter>().Select(x => x.ParameterName).Should().OnlyHaveUniqueItems();
+
                 VerifyCommandSyntex(provider, command);
+
+                _output.WriteLine(command.CommandText);
             }
 
             //Assert.Throws(typeof(InvalidOperationException), () => commandBuilder.BuildUpdateCommand(provider, data, null, Core.SQL.OnConflictOption.Default));
@@ -101,12 +109,15 @@ namespace FMSC.ORM.EntityModel.Support
             var commandBuilder = ed.CommandBuilder;
             using (var command = commandBuilder.BuildSQLDeleteCommand(provider, data))
             {
-                _output.WriteLine(command.CommandText);
+                command.Should().NotBeNull();
+                command.CommandText.Should().NotBeNullOrWhiteSpace();
 
-                Assert.NotNull(command);
-                AssertEx.NotNullOrWhitespace(command.CommandText);
+                command.Parameters.Should().HaveCount(1);
+                command.Parameters.OfType<DbParameter>().Where(x => x.ParameterName == "@keyValue")
+                    .Should().HaveCount(1);
 
                 VerifyCommandSyntex(provider, command);
+                _output.WriteLine(command.CommandText);
             }
         }
 
