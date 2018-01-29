@@ -7,6 +7,7 @@ using FMSC.ORM.Core.SQL;
 using System.Text;
 using FMSC.ORM.EntityModel.Attributes;
 using FMSC.ORM.Core;
+using System.Data;
 
 namespace FMSC.ORM.EntityModel.Support
 {
@@ -60,16 +61,13 @@ namespace FMSC.ORM.EntityModel.Support
             return selectBuilder;
         }
 
-        public DbCommand BuildSelectLegacy(DbProviderFactoryAdapter provider, string selection)
+        public string BuildSelectLegacy(string selection)
         {
             Debug.Assert(_legacySelectBuilder != null);
 
             this._legacySelectBuilder.Clause = new LegacySelectPlaceholder() { Index = 0 };
 
-            string query = String.Format(_legacySelectBuilder.ToSQL(), selection);
-
-            DbCommand command = provider.CreateCommand(query);
-            return command;
+            return String.Format(_legacySelectBuilder.ToSQL(), selection);
         }
 
         //protected void InitializeLegacySelectCommand()
@@ -107,11 +105,10 @@ namespace FMSC.ORM.EntityModel.Support
         #endregion
 
         #region build insert
-        public DbCommand BuildInsertCommand(DbProviderFactoryAdapter provider, object data, object keyData, Core.SQL.OnConflictOption option)
+
+        public void BuildInsertCommand(IDbCommand command, object data, object keyData, Core.SQL.OnConflictOption option)
         {
             Debug.Assert(data != null);
-
-            DbCommand command = provider.CreateCommand();
 
             var columnNames = new List<string>();
             var valueExpressions = new List<string>();
@@ -124,7 +121,9 @@ namespace FMSC.ORM.EntityModel.Support
                     columnNames.Add(keyField.Name);
                     valueExpressions.Add(keyField.SQLPramName);
 
-                    var pram = provider.CreateParameter(keyField.SQLPramName, keyData);
+                    var pram = command.CreateParameter();
+                    pram.ParameterName = keyField.SQLPramName;
+                    pram.Value = keyData;
                     command.Parameters.Add(pram);
                 }
                 else
@@ -139,7 +138,10 @@ namespace FMSC.ORM.EntityModel.Support
                 valueExpressions.Add(field.SQLPramName);
 
                 object value = field.GetFieldValueOrDefault(data);
-                DbParameter pram = provider.CreateParameter(field.SQLPramName, value);
+
+                var pram = command.CreateParameter();
+                pram.ParameterName = field.SQLPramName;
+                pram.Value = value;
                 command.Parameters.Add(pram);
             }
             
@@ -152,73 +154,15 @@ namespace FMSC.ORM.EntityModel.Support
             };
 
             command.CommandText = builder.ToString();
-
-            return command;
         }
 
-
-        //private string GetInsertCommandFormatString()
-        //{
-        //    //check if we already have a cached insert command
-        //    if (_insertCommandFormatString == null)
-        //    {
-        //        StringBuilder sb = new StringBuilder();
-        //        //create first part of insert command, leaving placeholder for onConflect option
-        //        sb.AppendFormat(null, "INSERT OR {{0}} INTO {0}( ", EntityDescription.SourceName);
-        //        //build the column names section of the insert command 
-        //        bool first = true;
-        //        foreach (EntityFieldInfo fi in EntityDescription.Fields.Values)
-        //        {
-        //            if (fi._fieldAttr == null) { continue; }
-        //            if (fi._fieldAttr.IsPersisted || fi._fieldAttr.SpecialFieldType == SepcialFieldType.CreatedBy)
-        //            {
-        //                if (!first) //if not first entry in list add comma befor entry
-        //                { sb.Append(','); }
-        //                else
-        //                { first = false; }
-        //                sb.AppendFormat(null, " {0}", fi._fieldAttr.FieldName);
-        //            }
-        //        }
-
-        //        sb.Append("{1}");//insert place holder so we can add rowID
-
-        //        //build the values section of the insert command 
-        //        sb.Append(" ) VALUES (");
-        //        first = true;
-        //        foreach (EntityFieldInfo fi in EntityDescription.Fields.Values)
-        //        {
-        //            if (fi._fieldAttr == null) { continue; }
-        //            if (fi._fieldAttr.IsPersisted || fi._fieldAttr.SpecialFieldType == SepcialFieldType.CreatedBy)
-        //            {
-        //                if (!first) //if not first entry in list add comma befor entry
-        //                { sb.Append(','); }
-        //                else
-        //                { first = false; }
-        //                sb.AppendFormat(null, " @{0}", fi._fieldAttr.FieldName);
-        //            }
-        //        }
-
-        //        sb.Append(" {2}");//insert place holder for value of rowID
-        //        sb.Append(");");
-
-        //        //add command that will return the rowID of the row we just inserted 
-        //        sb.Append("\r\nSELECT last_insert_rowid() AS id;");
-
-
-        //        _insertCommandFormatString = sb.ToString();//cache the insert command 
-        //    }
-        //    return _insertCommandFormatString;
-        //}
         #endregion
 
         #region build update
-        public DbCommand BuildUpdateCommand(DbProviderFactoryAdapter provider, object data, object keyData, Core.SQL.OnConflictOption option)
+        public void BuildUpdateCommand(IDbCommand command, object data, object keyData, Core.SQL.OnConflictOption option)
         {
             Debug.Assert(data != null);
             Debug.Assert(EntityDescription.Fields.PrimaryKeyField != null);
-
-            DbCommand command = provider.CreateCommand();
-
 
             var columnNames = new List<string>();
             var columnExpressions = new List<string>();
@@ -228,12 +172,18 @@ namespace FMSC.ORM.EntityModel.Support
                 columnExpressions.Add(field.SQLPramName);
 
                 object value = field.GetFieldValueOrDefault(data);
-                DbParameter pram = provider.CreateParameter(field.SQLPramName, value);
+
+                var pram = command.CreateParameter();
+                pram.ParameterName = field.SQLPramName;
+                pram.Value = value;
                 command.Parameters.Add(pram);
             }
 
             PrimaryKeyFieldAttribute keyField = EntityDescription.Fields.PrimaryKeyField;
-            DbParameter p = provider.CreateParameter(keyField.SQLPramName, keyData);
+
+            var p = command.CreateParameter();
+            p.ParameterName = keyField.SQLPramName;
+            p.Value = keyData;
             command.Parameters.Add(p);
 
             var where = new WhereClause(keyField.Name + " = " + keyField.SQLPramName);
@@ -248,36 +198,34 @@ namespace FMSC.ORM.EntityModel.Support
             };
 
             command.CommandText = expression.ToString();
-
-            return command;
         }
 
         #endregion
 
         #region build delete
 
-        public DbCommand BuildSQLDeleteCommand(DbProviderFactoryAdapter provider, object data)
+        public void BuildSQLDeleteCommand(IDbCommand command, object data)
         {
             PrimaryKeyFieldAttribute keyFieldInfo = EntityDescription.Fields.PrimaryKeyField;
 
             if (keyFieldInfo == null) { throw new InvalidOperationException("type doesn't have primary key field"); }
             object keyValue = keyFieldInfo.GetFieldValue(data);
 
-            return this.BuildSQLDeleteCommand(provider, keyFieldInfo.Name, keyValue);
+            BuildSQLDeleteCommand(command, keyFieldInfo.Name, keyValue);
         }
 
-        protected DbCommand BuildSQLDeleteCommand(DbProviderFactoryAdapter provider, string keyFieldName, object keyValue)
+        protected void BuildSQLDeleteCommand(IDbCommand command, string keyFieldName, object keyValue)
         {
             Debug.Assert(keyValue != null);
             Debug.Assert(!string.IsNullOrEmpty(keyFieldName));
 
             string query = string.Format(@"DELETE FROM {0} WHERE {1} = @keyValue;", EntityDescription.SourceName, keyFieldName);
+            command.CommandText = query;
 
-            var command = provider.CreateCommand(query);
-
-            command.Parameters.Clear();
-            command.Parameters.Add(provider.CreateParameter("@keyValue", keyValue));
-            return command;
+            var param = command.CreateParameter();
+            param.ParameterName = "@keyValue";
+            param.Value = keyValue;
+            command.Parameters.Add(param);
         }
         #endregion
 

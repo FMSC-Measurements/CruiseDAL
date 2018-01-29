@@ -21,12 +21,6 @@ namespace FMSC.ORM.Core
             return cmd;
         }
 
-        //public virtual DbCommand CreateCommand(DbConnection connection, String commandText)
-        //{
-        //    DbCommand cmd = connection.CreateCommand();
-        //    cmd.CommandText = commandText;
-        //    return cmd;
-        //}
 
         public abstract DbConnection CreateConnection();
     }

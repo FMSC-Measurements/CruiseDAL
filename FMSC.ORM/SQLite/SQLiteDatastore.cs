@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Data.Common;
 using System.Linq;
 using System.Text;
+using System.Data;
 
 #if Mono
 using Mono.Data.Sqlite;
@@ -216,43 +217,49 @@ namespace FMSC.ORM.SQLite
             var colList = new List<ColumnInfo>();
             lock (_persistentConnectionSyncLock)
             {
-                using (DbCommand command = Provider.CreateCommand("PRAGMA table_info(" + tableName + ");"))
-                {
-                    DbConnection conn = OpenConnection();
-                    command.Connection = conn;
+                IDbConnection conn = OpenConnection();
 
-                    try
+                try
+                {
+                    using (var command = conn.CreateCommand())
                     {
-                        using (var reader = command.ExecuteReader())
+                        command.CommandText = "PRAGMA table_info(" + tableName + ");";
+
+                        using (var reader = ExecuteReader(conn, command, _CurrentTransaction))
                         {
                             int nameOrd = reader.GetOrdinal("name");
                             int dbTypeOrd = reader.GetOrdinal("type");
                             int pkOrd = reader.GetOrdinal("pk");
                             int notNullOrd = reader.GetOrdinal("notnull");
                             int defaultValOrd = reader.GetOrdinal("dflt_value");
-                            while (reader.Read())
+
+                            try
                             {
-                                var colInfo = new ColumnInfo()
+                                while (reader.Read())
                                 {
-                                    Name = reader.GetString(nameOrd),
-                                    DBType = reader.GetString(dbTypeOrd),
-                                    IsPK = reader.GetBoolean(pkOrd),
-                                    IsRequired = reader.GetBoolean(notNullOrd),
-                                    Default = (!reader.IsDBNull(defaultValOrd)) ? reader.GetString(defaultValOrd) : null
-                                };
-                                colList.Add(colInfo);
+                                    var colInfo = new ColumnInfo()
+                                    {
+                                        Name = reader.GetString(nameOrd),
+                                        DBType = reader.GetString(dbTypeOrd),
+                                        IsPK = reader.GetBoolean(pkOrd),
+                                        IsRequired = reader.GetBoolean(notNullOrd),
+                                        Default = (!reader.IsDBNull(defaultValOrd)) ? reader.GetString(defaultValOrd) : null
+                                    };
+                                    colList.Add(colInfo);
+                                }
+                            }
+                            catch (Exception e)
+                            {
+                                throw this.ThrowExceptionHelper(conn, command, e);
                             }
                         }
                     }
-                    catch (Exception e)
-                    {
-                        throw this.ThrowExceptionHelper(conn, command, e);
-                    }
-                    finally
-                    {
-                        ReleaseConnection();
-                    }
                 }
+                finally
+                {
+                    ReleaseConnection();
+                }
+
                 return colList;
             }
         }
@@ -286,26 +293,23 @@ namespace FMSC.ORM.SQLite
             }
             lock (_persistentConnectionSyncLock)
             {
-                using (DbCommand command = Provider.CreateCommand(comStr))
+                var connection = OpenConnection();
+                try
                 {
-                    DbConnection conn = OpenConnection();
-                    command.Connection = conn;
-                    try
+                    using (var command = connection.CreateCommand())
                     {
-                        using (var reader = command.ExecuteReader())
+                        command.CommandText = comStr;
+                        using (var reader = ExecuteReader(connection, command, _CurrentTransaction))
                         {
                             hasErrors = reader.Read();
                         }
                     }
-                    catch (Exception e)
-                    {
-                        throw this.ThrowExceptionHelper(conn, command, e);
-                    }
-                    finally
-                    {
-                        ReleaseConnection();
-                    }
                 }
+                finally
+                {
+                    ReleaseConnection();
+                }
+
                 return hasErrors;
             }
         }
@@ -382,7 +386,7 @@ namespace FMSC.ORM.SQLite
 
         #endregion File utility methods
 
-        protected override Exception ThrowExceptionHelper(DbConnection conn, DbCommand comm, Exception innerException)
+        protected override Exception ThrowExceptionHelper(IDbConnection conn, IDbCommand comm, Exception innerException)
         {
             if (innerException is SQLiteException)
             {

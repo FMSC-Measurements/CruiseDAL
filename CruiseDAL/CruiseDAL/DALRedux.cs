@@ -385,6 +385,7 @@ namespace CruiseDAL
             AttachDBInternal(externalDS);
         }
 
+        //TODO test
         protected void AttachDBInternal(ExternalDatastore externalDB)
         {
             lock (_persistentConnectionSyncLock)
@@ -392,8 +393,8 @@ namespace CruiseDAL
                 var conn = PersistentConnection;
                 if (conn != null)
                 {
-                    this.ExecuteSQL("ATTACH DATABASE \"" + externalDB.DS.Path
-                        + "\" AS " + externalDB.Alias + ";", conn);
+                    this.ExecuteNonQuery(conn, "ATTACH DATABASE \"" + externalDB.DS.Path
+                        + "\" AS " + externalDB.Alias + ";", (object[])null, _CurrentTransaction);
                 }
             }
         }
@@ -420,6 +421,7 @@ namespace CruiseDAL
             }
         }
 
+        //TODO test
         protected void DetachDBInternal(ExternalDatastore externalDB)
         {
             lock (_persistentConnectionSyncLock)
@@ -427,8 +429,8 @@ namespace CruiseDAL
                 var conn = PersistentConnection;
                 if (conn != null)
                 {
-                    this.ExecuteSQL("DETACH DATABASE \""
-                        + externalDB.Alias + "\";", conn);
+                    this.ExecuteNonQuery(conn, "DETACH DATABASE \""
+                        + externalDB.Alias + "\";", (object[])null, _CurrentTransaction);
                 }
             }
         }

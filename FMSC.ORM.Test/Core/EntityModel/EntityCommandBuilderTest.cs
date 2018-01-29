@@ -44,8 +44,10 @@ namespace FMSC.ORM.EntityModel.Support
             var data = new POCOMultiTypeObject();
 
             var commandBuilder = ed.CommandBuilder;
-            using (var command = commandBuilder.BuildInsertCommand(provider, data, null, Core.SQL.OnConflictOption.Default))
+            using (var command = provider.CreateCommand())
             {
+                commandBuilder.BuildInsertCommand(command, data, null, Core.SQL.OnConflictOption.Default);
+
                 _output.WriteLine(command.CommandText);
 
                 command.Should().NotBeNull();
@@ -56,8 +58,10 @@ namespace FMSC.ORM.EntityModel.Support
                 VerifyCommandSyntex(provider, command);
             }
 
-            using (var command = commandBuilder.BuildInsertCommand(provider, data, 1, Core.SQL.OnConflictOption.Default))
+            using (var command = provider.CreateCommand())
             {
+                commandBuilder.BuildInsertCommand(command, data, 1, Core.SQL.OnConflictOption.Default);
+
                 _output.WriteLine(command.CommandText);
 
                 command.Should().NotBeNull();
@@ -78,8 +82,12 @@ namespace FMSC.ORM.EntityModel.Support
             var data = new POCOMultiTypeObject();
 
             var commandBuilder = ed.CommandBuilder;
-            using (var command = commandBuilder.BuildUpdateCommand(provider, data, 1, Core.SQL.OnConflictOption.Default))
-            {                
+            using (var command = provider.CreateCommand())
+            {
+
+                commandBuilder.BuildUpdateCommand(command, data, 1, Core.SQL.OnConflictOption.Default);
+
+
                 command.Should().NotBeNull();
                 command.CommandText.Should().NotBeNullOrWhiteSpace();
 
@@ -107,8 +115,10 @@ namespace FMSC.ORM.EntityModel.Support
             var data = new POCOMultiTypeObject();
 
             var commandBuilder = ed.CommandBuilder;
-            using (var command = commandBuilder.BuildSQLDeleteCommand(provider, data))
+            using (var command = provider.CreateCommand())
             {
+                commandBuilder.BuildSQLDeleteCommand(command, data);
+
                 command.Should().NotBeNull();
                 command.CommandText.Should().NotBeNullOrWhiteSpace();
 
