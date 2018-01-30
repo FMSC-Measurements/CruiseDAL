@@ -15,7 +15,6 @@
     <Compile Include="$(MSBuildThisFileDirectory)Core\DbProviderFactoryAdapter.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Core\EntityCache.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Core\Exceptions.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Core\PlatformHelper.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Core\SQL\ColumnInfo.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Core\SQL\GroupByClause.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Core\SQL\Interfaces\IAcceptsGroupBy.cs" />

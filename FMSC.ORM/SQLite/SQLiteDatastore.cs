@@ -181,7 +181,7 @@ namespace FMSC.ORM.SQLite
             var sb = new StringBuilder();
             sb.Append("CREATE ");
             if (temp) { sb.Append("TEMP "); }
-            sb.AppendLine("TABLE " + tableName + PlatformHelper.NewLine);
+            sb.AppendLine("TABLE " + tableName + "\r\n");
             using (var enu = cols.GetEnumerator())
             {
                 if (!enu.MoveNext()) { throw new ArgumentException("cols can't be empty", "cols"); }
@@ -189,7 +189,7 @@ namespace FMSC.ORM.SQLite
 
                 while (enu.MoveNext())
                 {
-                    sb.Append("," + PlatformHelper.NewLine + enu.Current.GetColumnDef(true));
+                    sb.Append("," + "\r\n" + enu.Current.GetColumnDef(true));
                 }
                 sb.Append(")");
             }
