@@ -2,15 +2,17 @@
 {
     public static class StringBuilderExtentions
     {
-        public static void AppendLine(this StringBuilder @this)
+        public static StringBuilder AppendLine(this StringBuilder @this)
         {
             @this.Append("\r\n");
+            return @this;
         }
 
-        public static void AppendLine<TValue>(this StringBuilder @this, TValue value)
+        public static StringBuilder AppendLine<TValue>(this StringBuilder @this, TValue value)
         {
             @this.Append(value);
             @this.Append("\r\n");
+            return @this;
         }
     }
 }

@@ -2,7 +2,7 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProductVersion>9.0.30729</ProductVersion>
+    <ProductVersion>9.0.21022</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{D346BFEA-85A0-4A5D-BD89-D07E073B065E}</ProjectGuid>
     <OutputType>Library</OutputType>
@@ -24,7 +24,7 @@
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
     <OutputPath>bin\CF20\Debug\</OutputPath>
-    <DefineConstants>TRACE;DEBUG;NetCF NetCF_20</DefineConstants>
+    <DefineConstants>TRACE;DEBUG;NetCF NetCF_20 SYSTEM_DATA_SQLITE</DefineConstants>
     <NoStdLib>true</NoStdLib>
     <NoConfig>true</NoConfig>
     <ErrorReport>prompt</ErrorReport>
@@ -36,7 +36,7 @@
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>bin\CF20\Release\</OutputPath>
-    <DefineConstants>TRACE;NetCF NetCF_20</DefineConstants>
+    <DefineConstants>TRACE;NetCF NetCF_20 SYSTEM_DATA_SQLITE</DefineConstants>
     <NoStdLib>true</NoStdLib>
     <NoConfig>true</NoConfig>
     <ErrorReport>prompt</ErrorReport>
@@ -59,13 +59,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Core\Constants\Logging.cs" />
     <Compile Include="Core\DatastoreBuilder.cs" />
     <Compile Include="Core\DatastoreRedux.cs" />
-    <Compile Include="Core\DbProviderFactoryAdapter.cs" />
     <Compile Include="Core\EntityCache.cs" />
     <Compile Include="Core\Exceptions.cs" />
-    <Compile Include="Core\PlatformHelper.cs" />
     <Compile Include="Core\SQL\ColumnInfo.cs" />
     <Compile Include="Core\SQL\GroupByClause.cs" />
     <Compile Include="Core\SQL\Interfaces\IAcceptsGroupBy.cs" />
@@ -73,8 +70,6 @@
     <Compile Include="Core\SQL\Interfaces\IAcceptsLimit.cs" />
     <Compile Include="Core\SQL\Interfaces\IAcceptsOrderBy.cs" />
     <Compile Include="Core\SQL\Interfaces\IAcceptsWhere.cs" />
-    <Compile Include="Core\SQL\Interfaces\SelectElement.cs" />
-    <Compile Include="Core\SQL\ISelectComponent.cs" />
     <Compile Include="Core\SQL\JoinClause.cs" />
     <Compile Include="Core\SQL\LimitClause.cs" />
     <Compile Include="Core\SQL\OnConflictOption.cs" />
@@ -92,9 +87,17 @@
     <Compile Include="Properties\AssemblyInfo.NetCF20.cs" />
     <Compile Include="SQLite\SQLiteDatabaseBuilder.cs" />
     <Compile Include="SQLite\SQLiteDatastore.cs" />
-    <Compile Include="SQLite\SQLiteProviderFactory.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Core\CommandExtentions.cs" />
+    <Compile Include="Core\ConnectionManager.cs" />
+    <Compile Include="Core\Datastore.Legacy.cs" />
+    <Compile Include="Core\Datastore.overloads.cs" />
+    <Compile Include="Core\IConnectionManager.cs" />
+    <Compile Include="Core\IExceptionProcessor.cs" />
+    <Compile Include="Core\ISqlDialect.cs" />
+    <Compile Include="Core\Logger.cs" />
+    <Compile Include="Core\SQL\Interfaces\ISelectElement.cs" />
     <Compile Include="Core\SQL\JoinComponent.cs" />
     <Compile Include="Core\SQL\LegacySelectPlaceholder.cs" />
     <Compile Include="EntityModel\Attributes\BaseFieldAttribute.cs" />
@@ -126,6 +129,11 @@
     <Compile Include="EntityModel\Validation\Validator.cs" />
     <Compile Include="NetCF\ExtensionAttribute.cs" />
     <Compile Include="NetCF\StringBuilderExtentions.cs" />
+    <Compile Include="SQLite\SQLiteDataTypes.cs" />
+    <Compile Include="SQLite\SqliteDialect.cs" />
+    <Compile Include="SQLite\SqliteExceptionProcessor.cs" />
+    <Compile Include="Util\EnumerableExtentions.cs" />
+    <Compile Include="Util\StringBuilderExtentions.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="..\libs\SQLite\Mobile_CF20\SQLite.Interop.094.dll">
