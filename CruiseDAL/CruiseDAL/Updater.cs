@@ -271,7 +271,7 @@ namespace CruiseDAL
                     "ZCoordinate, MetaData, Blob, Stratum_CN, CuttingUnit_CN, CreatedBy, " +
                     "CreatedDate, ModifiedBy, ModifiedDate");
 
-                db.AddField("CuttingUnit", "TallyHistory TEXT");
+                db.AddField("CuttingUnit", new ColumnInfo("TallyHistory", "TEXT"));
 
                 SetDatabaseVersion(db, "2013.05.30");
                 db.CommitTransaction();
@@ -289,7 +289,7 @@ namespace CruiseDAL
             {
                 db.BeginTransaction();
 
-                db.AddField("Sale", "DefaultUOM TEXT");
+                db.AddField("Sale", new ColumnInfo("DefaultUOM", "TEXT"));
 
                 string command = "DROP TABLE LogFieldSetupDefault;";
                 db.Execute(command);
@@ -321,7 +321,7 @@ namespace CruiseDAL
             try
             {
                 db.BeginTransaction();
-                db.AddField("Stratum", "KZ3PPNT INTEGER Default 0");
+                db.AddField("Stratum", new ColumnInfo("KZ3PPNT", "INTEGER") { Default = "0" });
 
                 SetDatabaseVersion(db, "2013.08.29");
                 db.CommitTransaction();
@@ -339,7 +339,7 @@ namespace CruiseDAL
             {
                 db.BeginTransaction();
 
-                db.AddField("Tree", "HiddenPrimary REAL Default 0.0");
+                db.AddField("Tree", new ColumnInfo("HiddenPrimary", "REAL") { Default = "0.0" });
                 SetDatabaseVersion(db, "2013.10.29");
                 db.CommitTransaction();
             }
@@ -387,7 +387,7 @@ namespace CruiseDAL
             {
                 db.BeginTransaction();
 
-                db.AddField("ErrorLog", "Program TEXT");
+                db.AddField("ErrorLog", new ColumnInfo("Program", "TEXT"));
 
                 //modify globals table, making Block & Key Unique
                 string command = @"CREATE TABLE TempGlobals (
@@ -652,7 +652,7 @@ namespace CruiseDAL
             try
             {
                 db.BeginTransaction();
-                db.AddField("SampleGroup", "BigBAF INTEGER Default 0");
+                db.AddField("SampleGroup", new ColumnInfo("BigBAF", "INTEGER") { Default = "0" });
 
                 SetDatabaseVersion(db, "2014.01.21");
                 db.CommitTransaction();
@@ -669,8 +669,8 @@ namespace CruiseDAL
             try
             {
                 db.BeginTransaction();
-                db.AddField("SampleGroup", "SampleSelectorType TEXT");
-                db.AddField("SampleGroup", "SampleSelectorState TEXT");
+                db.AddField("SampleGroup", new ColumnInfo ("SampleSelectorType", "TEXT"));
+                db.AddField("SampleGroup", new ColumnInfo("SampleSelectorState", "TEXT"));
 
                 RebuildTable(db, "CountTree",
                 @"CREATE TABLE CountTree (
@@ -705,7 +705,7 @@ namespace CruiseDAL
             try
             {
                 db.BeginTransaction();
-                db.AddField("Sale", "LogGradingEnabled BOOLEAN Default 0");
+                db.AddField("Sale", new ColumnInfo("LogGradingEnabled", "BOOLEAN") { Default = "0" });
 
                 SetDatabaseVersion(db, "2014.06.04");
                 db.CommitTransaction();
@@ -722,8 +722,8 @@ namespace CruiseDAL
             try
             {
                 db.BeginTransaction();
-                db.AddField("LogStock", "BoardUtil REAL Default 0.0");
-                db.AddField("LogStock", "CubicUtil REAL Default 0.0");
+                db.AddField("LogStock", new ColumnInfo("BoardUtil", "REAL") { Default = "0.0" });
+                db.AddField("LogStock", new ColumnInfo("CubicUtil", "REAL") { Default = "0.0" });
                 SetDatabaseVersion(db, "2014.07.02");
                 db.CommitTransaction();
             }
@@ -739,8 +739,8 @@ namespace CruiseDAL
             try
             {
                 db.BeginTransaction();
-                db.AddField("SampleGroup", "MinKPI INTEGER Default 0");
-                db.AddField("SampleGroup", "MaxKPI INTEGER Default 0");
+                db.AddField("SampleGroup", new ColumnInfo("MinKPI", "INTEGER") { Default = "0" });
+                db.AddField("SampleGroup", new ColumnInfo("MaxKPI", "INTEGER") { Default = "0" });
                 SetDatabaseVersion(db, "2014.07.07");
                 db.CommitTransaction();
             }
@@ -802,7 +802,7 @@ namespace CruiseDAL
                 //                MinMerchLength,
                 //                Model,
                 //                CommonSpeciesName");
-                db.AddField("VolumeEquation", "MerchModFlag INTEGER Default 0");
+                db.AddField("VolumeEquation", new ColumnInfo("MerchModFlag", "INTEGER") { Default = "0" });
 
                 //rebuild TreeAuditValue Table ( remove error message field)
                 //                RebuildTable(db, "TreeAuditValue",
@@ -821,10 +821,10 @@ namespace CruiseDAL
                 //Max,
                 //ValueSet,
                 //Required");
-                //Add ReconPlots
-                db.AddField("SampleGroupStats", "ReconPlots INTEGER Default 0");
-                //Add ReconTrees
-                db.AddField("SampleGroupStats", "ReconTrees INTEGER Default 0");
+
+                db.AddField("SampleGroupStats", new ColumnInfo("ReconPlots", "INTEGER") { Default = "0" });
+                db.AddField("SampleGroupStats", new ColumnInfo("ReconTrees", "INTEGER") { Default = "0" });
+
                 SetDatabaseVersion(db, "2014.07.17");
                 db.CommitTransaction();
             }
@@ -863,7 +863,7 @@ CREATE TRIGGER OnDeletePlot AFTER DELETE ON Plot BEGIN
             try
             {
                 db.BeginTransaction();
-                db.AddField(Schema.VOLUMEEQUATION._NAME, "EvenOddSegment INTEGER Default 0");
+                db.AddField(Schema.VOLUMEEQUATION._NAME, new ColumnInfo("EvenOddSegment", "INTEGER") { Default = "0" });
                 SetDatabaseVersion(db, "2014.08.20");
                 db.CommitTransaction();
             }
@@ -879,7 +879,7 @@ CREATE TRIGGER OnDeletePlot AFTER DELETE ON Plot BEGIN
             try
             {
                 db.BeginTransaction();
-                db.AddField(Schema.SAMPLEGROUP._NAME, "TallyMethod TEXT");
+                db.AddField(Schema.SAMPLEGROUP._NAME, new ColumnInfo("TallyMethod", "TEXT"));
                 SetDatabaseVersion(db, "2014.09.02");
                 db.CommitTransaction();
             }
@@ -1005,11 +1005,11 @@ JOIN Stratum USING (Stratum_CN);");
             try
             {
                 db.BeginTransaction();
-                db.AddField("Plot", "Plot_GUID TEXT");
-                db.AddField("Tree", "Tree_GUID TEXT");
-                db.AddField("Log", "Log_GUID TEXT");
-                db.AddField("Stem", "Stem_GUID TEXT");
-                db.AddField("TreeEstimate", "TreeEstimate_GUID");
+                db.AddField("Plot", new ColumnInfo("Plot_GUID", "TEXT"));
+                db.AddField("Tree", new ColumnInfo("Tree_GUID", "TEXT"));
+                db.AddField("Log", new ColumnInfo("Log_GUID", "TEXT"));
+                db.AddField("Stem", new ColumnInfo("Stem_GUID", "TEXT"));
+                db.AddField("TreeEstimate", new ColumnInfo("TreeEstimate_GUID", "TEXT"));
 
                 SetDatabaseVersion(db, "2015.08.03");
 
@@ -1039,7 +1039,7 @@ JOIN Stratum USING (Stratum_CN);");
                 db.BeginTransaction();
                 if (!hasErrorMessageCol)
                 {
-                    db.AddField("TreeAuditValue", "ErrorMessage TEXT");
+                    db.AddField("TreeAuditValue", new ColumnInfo("ErrorMessage", "TEXT"));
                 }
 
                 SetDatabaseVersion(db, "2015.08.19");

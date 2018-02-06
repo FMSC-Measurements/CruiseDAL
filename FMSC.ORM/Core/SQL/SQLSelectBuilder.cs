@@ -1,19 +1,16 @@
 ﻿using FMSC.ORM.Core.SQL.Interfaces;
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Text;
 
-
 namespace FMSC.ORM.Core.SQL
 {
-
     public class SQLSelectBuilder : IAcceptsJoin
     {
         public SelectSource Source { get; set; }
         public ResultColumnCollection ResultColumns { get; set; }
         public SelectClause Clause { get; set; }
-        public SelectElement ParentElement { get; set; }
+        public ISelectElement ParentElement { get; set; }
 
         public SQLSelectBuilder()
         {
@@ -28,7 +25,7 @@ namespace FMSC.ORM.Core.SQL
 
             builder.AppendLine("FROM " + Source.ToSQL());
 
-            if(Clause != null)
+            if (Clause != null)
             {
                 builder.Append(Clause.ToSQL());
             }
@@ -68,7 +65,7 @@ namespace FMSC.ORM.Core.SQL
 
         public IAcceptsOrderBy GroupBy(IEnumerable<string> terms)
         {
-            this.Accept( new GroupByClause(terms));
+            this.Accept(new GroupByClause(terms));
             return this;
         }
 
@@ -84,13 +81,13 @@ namespace FMSC.ORM.Core.SQL
             return this;
         }
 
-        public SelectElement Limit(int limit, int offset)
+        public ISelectElement Limit(int limit, int offset)
         {
-            this.Accept( new LimitClause(limit, offset));
+            this.Accept(new LimitClause(limit, offset));
             return this;
         }
 
-        public void Accept(SelectElement parent)
+        public void Accept(ISelectElement parent)
         {
             throw new NotSupportedException("select can't have parent");
         }
@@ -108,19 +105,19 @@ namespace FMSC.ORM.Core.SQL
 
         public void Accept(GroupByClause groupByClause)
         {
-            groupByClause.Accept((SelectElement)this.Clause);
+            groupByClause.Accept((ISelectElement)this.Clause);
             this.Clause = groupByClause;
         }
 
         public void Accept(OrderByClause orderByClause)
         {
-            orderByClause.Accept((SelectElement)this.Clause);
+            orderByClause.Accept((ISelectElement)this.Clause);
             this.Clause = orderByClause;
         }
 
         public void Accept(LimitClause limitClause)
         {
-            limitClause.Accept((SelectElement)this.Clause);
+            limitClause.Accept((ISelectElement)this.Clause);
             this.Clause = limitClause;
         }
     }

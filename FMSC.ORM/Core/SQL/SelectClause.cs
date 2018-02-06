@@ -1,17 +1,13 @@
 ﻿using FMSC.ORM.Core.SQL.Interfaces;
 using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace FMSC.ORM.Core.SQL
 {
-    public abstract class SelectClause : SelectElement
+    public abstract class SelectClause : ISelectElement
     {
+        public ISelectElement ParentElement { get; set; }
 
-        public SelectElement ParentElement { get; set; }
-
-
-        public void Accept(SelectElement node)
+        public void Accept(ISelectElement node)
         {
             if (this.ParentElement != null)
             {
@@ -29,6 +25,5 @@ namespace FMSC.ORM.Core.SQL
         {
             return ToSQL();
         }
-
     }
 }

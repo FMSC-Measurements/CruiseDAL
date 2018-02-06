@@ -15,6 +15,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Core\DbProviderFactoryAdapter.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Core\EntityCache.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Core\Exceptions.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Core\ISqlDialect.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Core\SQL\ColumnInfo.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Core\SQL\GroupByClause.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Core\SQL\Interfaces\IAcceptsGroupBy.cs" />
@@ -72,6 +73,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)SQLite\SQLiteDatabaseBuilder.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)SQLite\SQLiteDatastore.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)SQLite\SQLiteDataTypes.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)SQLite\SqliteDialect.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)SQLite\SQLiteProviderFactory.cs" />
   </ItemGroup>
 </Project>

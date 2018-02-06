@@ -1,19 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Data.Common;
-using System.Diagnostics;
-
-using FMSC.ORM.Core.SQL;
-using System.Text;
+﻿using FMSC.ORM.Core.SQL;
 using FMSC.ORM.EntityModel.Attributes;
-using FMSC.ORM.Core;
+using System;
+using System.Collections.Generic;
 using System.Data;
+using System.Diagnostics;
 
 namespace FMSC.ORM.EntityModel.Support
 {
     public class EntityCommandBuilder
     {
-        SQLSelectBuilder _legacySelectBuilder;   
+        private SQLSelectBuilder _legacySelectBuilder;
 
         public EntityDescription EntityDescription { get; set; }
 
@@ -28,8 +24,8 @@ namespace FMSC.ORM.EntityModel.Support
             }
         }
 
+        #region build select
 
-        #region build select 
         //public DbCommand BuildSelectCommand(DbProviderFactoryAdapter provider, SelectClause clause)
         //{
         //    Debug.Assert(_selectCommand != null);
@@ -48,12 +44,11 @@ namespace FMSC.ORM.EntityModel.Support
             var selectBuilder = new SQLSelectBuilder();
             selectBuilder.Source = source ?? EntityDescription.Source;
 
-
             //order fields by ordinal
             var fields = new List<FieldAttribute>(EntityDescription.Fields);
             fields.Sort(CompareFieldsByOrdinal);
 
-            foreach(FieldAttribute field in fields)
+            foreach (FieldAttribute field in fields)
             {
                 selectBuilder.ResultColumns.Add(field.GetResultColumnExpression());
             }
@@ -80,7 +75,7 @@ namespace FMSC.ORM.EntityModel.Support
         //        bool first = true;
         //        foreach (FieldAttribute field in EntityDescription.Fields)
         //        {
-        //            string colExpr = field.GetResultColumnExpression(); 
+        //            string colExpr = field.GetResultColumnExpression();
 
         //            if (!first)
         //            {
@@ -101,8 +96,7 @@ namespace FMSC.ORM.EntityModel.Support
         //    }
         //}
 
-
-        #endregion
+        #endregion build select
 
         #region build insert
 
@@ -113,7 +107,7 @@ namespace FMSC.ORM.EntityModel.Support
             var columnNames = new List<string>();
             var valueExpressions = new List<string>();
 
-            if(keyData != null)
+            if (keyData != null)
             {
                 var keyField = EntityDescription.Fields.PrimaryKeyField;
                 if (keyField != null)
@@ -131,7 +125,7 @@ namespace FMSC.ORM.EntityModel.Support
                     throw new InvalidOperationException("keyData provided but type has no key field");
                 }
             }
-                             
+
             foreach (FieldAttribute field in EntityDescription.Fields.GetPersistedFields(false, PersistanceFlags.OnInsert))
             {
                 columnNames.Add(field.Name);
@@ -144,7 +138,7 @@ namespace FMSC.ORM.EntityModel.Support
                 pram.Value = value;
                 command.Parameters.Add(pram);
             }
-            
+
             var builder = new SQLInsertCommand
             {
                 TableName = EntityDescription.SourceName,
@@ -156,9 +150,10 @@ namespace FMSC.ORM.EntityModel.Support
             command.CommandText = builder.ToString();
         }
 
-        #endregion
+        #endregion build insert
 
         #region build update
+
         public void BuildUpdateCommand(IDbCommand command, object data, object keyData, Core.SQL.OnConflictOption option)
         {
             Debug.Assert(data != null);
@@ -200,7 +195,7 @@ namespace FMSC.ORM.EntityModel.Support
             command.CommandText = expression.ToString();
         }
 
-        #endregion
+        #endregion build update
 
         #region build delete
 
@@ -227,7 +222,8 @@ namespace FMSC.ORM.EntityModel.Support
             param.Value = keyValue;
             command.Parameters.Add(param);
         }
-        #endregion
+
+        #endregion build delete
 
         /// <summary>
         /// compares fields by ordinal where -1 is always high
@@ -243,6 +239,5 @@ namespace FMSC.ORM.EntityModel.Support
             if (x.Ordinal > y.Ordinal) { return 1; }
             else { return -1; }
         }
-
     }
 }

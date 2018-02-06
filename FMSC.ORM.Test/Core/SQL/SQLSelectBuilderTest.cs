@@ -1,9 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Data.Common;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Xunit;
 using Xunit.Abstractions;
 
@@ -11,29 +7,28 @@ namespace FMSC.ORM.Core.SQL
 {
     public class SQLSelectBuilderTest : TestClassBase
     {
+        private ISqlDialect dialect;
+
         public SQLSelectBuilderTest(ITestOutputHelper output)
             : base(output)
         {
-
+            dialect = new SQLite.SqliteDialect();
         }
 
         [Fact]
         public void NestedSourcesTest()
         {
-            var provider = new SQLite.SQLiteProviderFactory();
-
             SQLSelectBuilder builder = new SQLSelectBuilder();
             builder.Source = new TableOrSubQuery("something", "t1");
             builder.ResultColumns.Add("col1");
 
-            VerifyCommandSyntex(provider, builder.ToSQL());
+            VerifyCommandSyntex(builder.ToSQL());
 
             var builder2 = new SQLSelectBuilder();
             builder2.Source = new TableOrSubQuery(builder, "t2");
             builder2.ResultColumns.Add("col2");
 
-            VerifyCommandSyntex(provider, builder2.ToSQL());
-
+            VerifyCommandSyntex(builder2.ToSQL());
         }
 
         [Fact]
@@ -58,19 +53,17 @@ namespace FMSC.ORM.Core.SQL
             Assert.Contains("Limit", sql, StringComparison.InvariantCultureIgnoreCase);
             base.EndTimer();
 
-            var provider = new SQLite.SQLiteProviderFactory();
-            VerifyCommandSyntex(provider, builder.ToSQL());
+            VerifyCommandSyntex(builder.ToSQL());
         }
 
-        public void VerifyCommandSyntex(DbProviderFactoryAdapter provider, string commandText)
+        public void VerifyCommandSyntex(string commandText)
         {
-            var command = provider.CreateCommand();
-            _output.WriteLine("testing:\r\n" + commandText);
-            command.CommandText = "EXPLAIN " + commandText;
-
-
-            using (DbConnection conn = provider.CreateConnection())
+            using (var conn = dialect.CreateConnection())
             {
+                var command = conn.CreateCommand();
+                _output.WriteLine("testing:\r\n" + commandText);
+                command.CommandText = "EXPLAIN " + commandText;
+
                 conn.ConnectionString = "Data Source =:memory:; Version = 3; New = True;";
                 conn.Open();
 
@@ -84,9 +77,7 @@ namespace FMSC.ORM.Core.SQL
                 {
                     Assert.DoesNotContain("syntax ", ex.Message, StringComparison.InvariantCultureIgnoreCase);
                 }
-
             }
         }
-
     }
 }

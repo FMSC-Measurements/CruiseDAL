@@ -3,11 +3,7 @@ using FMSC.ORM.Core.SQL;
 using FMSC.ORM.TestSupport;
 using FMSC.ORM.TestSupport.TestModels;
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Timers;
 using Xunit;
 using Xunit.Abstractions;
 
@@ -15,12 +11,17 @@ namespace FMSC.ORM.SQLite
 {
     public class SQLiteDatastoreTest : TestClassBase, IClassFixture<TestDBFixture>
     {
-        TestDBFixture _fixture;
+        private TestDBFixture _fixture;
+        string _emptyDatastorePath;
+        SQLiteDatastore _emptyDataStore;
 
         public SQLiteDatastoreTest(ITestOutputHelper output, TestDBFixture fixture) : base(output)
         {
             _fixture = fixture;
         }
+
+
+
 
         [Fact]
         public void CreateSQLiteDatastoreTest()
@@ -70,8 +71,8 @@ namespace FMSC.ORM.SQLite
             //AssertEx.NotNullOrWhitespace(ds.Extension, "Assert file has extension");
             //AssertEx.NotNullOrWhitespace(ds.Path);
 
-            var explaneSelectResult = ds.Execute("EXPLAIN SELECT 1;");
-            Assert.NotNull(explaneSelectResult);
+            ds.Invoking(x => x.Execute("EXPLAIN SELECT 1;")).ShouldNotThrow();
+
             Assert.True(ds.GetRowCount("sqlite_master", null, null) > 0);
         }
 
@@ -127,8 +128,8 @@ namespace FMSC.ORM.SQLite
             {
                 var cols = new ColumnInfo[]
                     {
-                        new ColumnInfo("ID", Types.INTEGER, true, false, null),
-                        new ColumnInfo("Field1", Types.TEXT, false, true, null)
+                        new ColumnInfo("ID", Types.INTEGER) {AutoIncrement = true },
+                        new ColumnInfo("Field1", Types.TEXT)
                     };
 
                 ds.CreateTable("TableA", cols, false);
@@ -341,7 +342,7 @@ namespace FMSC.ORM.SQLite
             }
         }
 
-        void VerifyExecuteScalarWithType<T>(T expected, SQLiteDatastore ds)
+        private void VerifyExecuteScalarWithType<T>(T expected, SQLiteDatastore ds)
             where T : struct
         {
             _output.WriteLine("testing value {0} : {1}", expected, typeof(T).Name);
@@ -429,8 +430,11 @@ namespace FMSC.ORM.SQLite
                 Assert.Equal(recordsToCreate, ds.GetRowCount("MultiPropTable", null));
 
                 StartTimer();
-                var result = ds.From<POCOMultiTypeObject>().Limit(5000, 0).Query().ToList();
+                var result = ds.From<POCOMultiTypeObject>().Limit(5000, 0).Query();
                 EndTimer();
+
+                result.Should().NotBeEmpty();
+                result.Should().HaveCount(recordsToCreate);
 
                 foreach (DOMultiPropType item in
                     ds.From<DOMultiPropType>().Read())
@@ -438,94 +442,166 @@ namespace FMSC.ORM.SQLite
                     item.FloatField = 1.0F;
                     item.Save();
                 }
-
-                Assert.NotEmpty(result);
-                Assert.Equal(recordsToCreate, result.Count);
             }
         }
 
         [Fact]
-        public void BadTransactionMGMTDoesntFuckShitUp()
+        public void CommitTransaction_WtihNoTransaction()
         {
             using (var ds = new SQLiteDatastore())
             {
                 ds.Execute("CREATE TABLE TableA (Data TEXT);");
 
+                ds.CurrentTransaction.Should().BeNull();
                 ds.CommitTransaction();//extra commit should not throw exception, but will fail Debug.Assert
 
-                ds.BeginTransaction();
-
-                ds.Execute("INSERT INTO TableA VALUES ('something');");
-
-                ds.RollbackTransaction();
-                ds.GetRowCount("TableA", null).ShouldBeEquivalentTo(0);
-
-                ds.BeginTransaction();
-
-                ds.Execute("INSERT INTO TableA VALUES ('something');");
-
-                ds.CommitTransaction();
-                ds.GetRowCount("TableA", null).ShouldBeEquivalentTo(1);
-            }
-
-            using (var ds = new SQLiteDatastore())
-            {
-                ds.Execute("CREATE TABLE TableA (Data TEXT);");
-
-                ds.RollbackTransaction();//extra rollback should not throw exception, but will fail Debug.Assert
-
-                ds.BeginTransaction();
-
-                ds.Execute("INSERT INTO TableA VALUES ('something');");
-
-                ds.RollbackTransaction();
-                ds.GetRowCount("TableA", null).ShouldBeEquivalentTo(0);
-
-                ds.BeginTransaction();
-
-                ds.Execute("INSERT INTO TableA VALUES ('something');");
-
-                ds.CommitTransaction();
-                ds.GetRowCount("TableA", null).ShouldBeEquivalentTo(1);
+                ds.CheckTableExists("TableA").Should().BeTrue();
             }
         }
 
         [Fact]
-        public void NestedTransactionTest()
+        public void CommitTransaction_WtihTransaction()
+        {
+            using (var ds = new SQLiteDatastore())
+            {
+                ds.CurrentTransaction.Should().BeNull();
+
+                ds.BeginTransaction();
+
+                ds.CurrentTransaction.Should().NotBeNull();
+
+                ds.Execute("CREATE TABLE TableA (Data TEXT);");
+
+                ds.CommitTransaction();
+
+                ds.CurrentTransaction.Should().BeNull();
+                ds.TransactionDepth.ShouldBeEquivalentTo(0);
+
+                ds.CheckTableExists("TableA").Should().BeTrue();
+            }
+        }
+
+        [Fact]
+        public void RollBackTransaction_WtihNoTransaction()
         {
             using (var ds = new SQLiteDatastore())
             {
                 ds.Execute("CREATE TABLE TableA (Data TEXT);");
 
+                ds.CurrentTransaction.Should().BeNull();
+                ds.RollbackTransaction();//extra rollback should not throw exception, but will fail Debug.Assert
+                ds.TransactionDepth.ShouldBeEquivalentTo(0);
+
+                ds.CheckTableExists("TableA").Should().BeTrue();
+            }
+        }
+
+        [Fact]
+        public void RollBackTransaction_WtihTransaction()
+        {
+            using (var ds = new SQLiteDatastore())
+            {
                 ds.BeginTransaction();
+
+                ds.Execute("CREATE TABLE TableA (Data TEXT);");
+
+                ds.RollbackTransaction();
+
+                ds.CheckTableExists("TableA").Should().BeFalse();
+            }
+        }
+
+        [Fact]
+        public void NestedTransactionTest_RollbackThenCommit()
+        {
+            using (var ds = new SQLiteDatastore())
+            {
+                ds.CurrentTransaction.Should().BeNull();
+                ds.TransactionDepth.ShouldBeEquivalentTo(0);
+
+                ds.Execute("CREATE TABLE TableA (Data TEXT);");
+
                 ds.BeginTransaction();
+
+                ds.CurrentTransaction.Should().NotBeNull();
+                ds.TransactionDepth.ShouldBeEquivalentTo(1);
+
+                ds.BeginTransaction();
+
+                ds.CurrentTransaction.Should().NotBeNull();
+                ds.TransactionDepth.ShouldBeEquivalentTo(2);
 
                 ds.Execute("INSERT INTO TableA VALUES ('something');");
 
                 ds.RollbackTransaction();
-                Assert.Equal(1, ds.GetRowCount("TableA", null));
+                ds.GetRowCount("TableA", null).ShouldBeEquivalentTo(1);
                 ds.CommitTransaction();
-                Assert.Equal(0, ds.GetRowCount("TableA", null));
+                ds.GetRowCount("TableA", null).ShouldBeEquivalentTo(0);
+            }
+        }
+
+        [Fact]
+        public void NestedTransactionTest_CommitThenRollback()
+        {
+            using (var ds = new SQLiteDatastore())
+            {
+                ds.CurrentTransaction.Should().BeNull();
+                ds.TransactionDepth.ShouldBeEquivalentTo(0);
+
+                ds.Execute("CREATE TABLE TableA (Data TEXT);");
 
                 ds.BeginTransaction();
+
+                ds.CurrentTransaction.Should().NotBeNull();
+                ds.TransactionDepth.ShouldBeEquivalentTo(1);
+
                 ds.BeginTransaction();
+
+                ds.CurrentTransaction.Should().NotBeNull();
+                ds.TransactionDepth.ShouldBeEquivalentTo(2);
 
                 ds.Execute("INSERT INTO TableA VALUES ('something');");
 
                 ds.CommitTransaction();
-                Assert.Equal(1, ds.GetRowCount("TableA", null));
+                ds.GetRowCount("TableA", null).ShouldBeEquivalentTo(1);
                 ds.RollbackTransaction();
-                Assert.Equal(0, ds.GetRowCount("TableA", null));
+                ds.GetRowCount("TableA", null).ShouldBeEquivalentTo(0);
+            }
+        }
+
+        [Fact]
+        public void NestedTransactionTest_FullCommit()
+        {
+            using (var ds = new SQLiteDatastore())
+            {
+                ds.CurrentTransaction.Should().BeNull();
+                ds.TransactionDepth.ShouldBeEquivalentTo(0);
+
+                ds.Execute("CREATE TABLE TableA (Data TEXT);");
 
                 ds.BeginTransaction();
+
+                ds.CurrentTransaction.Should().NotBeNull();
+                ds.TransactionDepth.ShouldBeEquivalentTo(1);
+
                 ds.BeginTransaction();
+
+                ds.CurrentTransaction.Should().NotBeNull();
+                ds.TransactionDepth.ShouldBeEquivalentTo(2);
 
                 ds.Execute("INSERT INTO TableA VALUES ('something');");
 
                 ds.CommitTransaction();
-                Assert.Equal(1, ds.GetRowCount("TableA", null));
+                ds.GetRowCount("TableA", null).ShouldBeEquivalentTo(1);
+
+                ds.CurrentTransaction.Should().NotBeNull();
+                ds.TransactionDepth.ShouldBeEquivalentTo(1);
+
                 ds.CommitTransaction();
-                Assert.Equal(1, ds.GetRowCount("TableA", null));
+                ds.GetRowCount("TableA", null).ShouldBeEquivalentTo(1);
+
+                ds.CurrentTransaction.Should().BeNull();
+                ds.TransactionDepth.ShouldBeEquivalentTo(0);
             }
         }
     }

@@ -20,7 +20,7 @@
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
     <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DefineConstants>TRACE;DEBUG;SYSTEM_DATA_SQLITE </DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <Prefer32Bit>false</Prefer32Bit>
@@ -29,7 +29,7 @@
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>bin\Release\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
+    <DefineConstants>TRACE;SYSTEM_DATA_SQLITE </DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <Prefer32Bit>false</Prefer32Bit>
@@ -51,6 +51,11 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Core\CommandExtentions.cs" />
+    <Compile Include="Core\ConnectionManager.cs" />
+    <Compile Include="Core\Datastore.overloads.cs" />
+    <Compile Include="Core\IConnectionManager.cs" />
+    <Compile Include="Core\IExceptionProcessor.cs" />
+    <Compile Include="Core\ISqlDialect.cs" />
     <Compile Include="Core\SQL\LegacySelectPlaceholder.cs" />
     <Compile Include="Core\Datastore.Legacy.cs" />
     <Compile Include="EntityModel\Attributes\BaseFieldAttribute.cs" />
@@ -59,7 +64,6 @@
     <Compile Include="EntityModel\Attributes\IgnoreFieldAttribute.cs" />
     <Compile Include="EntityModel\Attributes\PersistanceFlags.cs" />
     <Compile Include="EntityModel\Support\PropertyAccessor.cs" />
-    <Compile Include="Core\PlatformHelper.cs" />
     <Compile Include="Core\SQL\GroupByClause.cs" />
     <Compile Include="Core\SQL\Interfaces\IAcceptsGroupBy.cs" />
     <Compile Include="Core\SQL\Interfaces\IAcceptsJoin.cs" />
@@ -78,11 +82,10 @@
     <Compile Include="Core\SQL\ResultColumnCollection.cs" />
     <Compile Include="Core\SQL\SelectClause.cs" />
     <Compile Include="Core\SQL\TableOrSubQuery.cs" />
+    <Compile Include="Core\Logger.cs" />
     <Compile Include="Properties\AssemblyInfo.Net45.cs" />
-    <Compile Include="Core\Constants\Logging.cs" />
     <Compile Include="Core\DatastoreBuilder.cs" />
     <Compile Include="Core\DatastoreRedux.cs" />
-    <Compile Include="Core\DbProviderFactoryAdapter.cs" />
     <Compile Include="EntityModel\Attributes\FieldAttribute.cs" />
     <Compile Include="EntityModel\Attributes\FieldAttributeCollection.cs" />
     <Compile Include="EntityModel\Attributes\FieldValidationRuleAttribut.cs" />
@@ -115,7 +118,10 @@
     <Compile Include="SQLite\SQLiteDatabaseBuilder.cs" />
     <Compile Include="SQLite\SQLiteDatastore.cs" />
     <Compile Include="SQLite\SQLiteDataTypes.cs" />
-    <Compile Include="SQLite\SQLiteProviderFactory.cs" />
+    <Compile Include="SQLite\SqliteDialect.cs" />
+    <Compile Include="SQLite\SqliteExceptionProcessor.cs" />
+    <Compile Include="Util\EnumerableExtentions.cs" />
+    <Compile Include="Util\StringBuilderExtentions.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config">

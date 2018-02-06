@@ -2,19 +2,8 @@
 using FMSC.ORM.Core.SQL;
 using System;
 using System.Collections.Generic;
-using System.Data.Common;
-using System.Linq;
-using System.Text;
 using System.Data;
-
-#if Mono
-using Mono.Data.Sqlite;
-using SQLiteException = Mono.Data.Sqlite.SqliteException;
-#else
-
-using System.Data.SQLite;
-
-#endif
+using System.Text;
 
 namespace FMSC.ORM.SQLite
 {
@@ -73,21 +62,11 @@ namespace FMSC.ORM.SQLite
             //TODO find a better way to hold the connection for the life of the DAL
         }
 
-        public SQLiteDatastore(string path) : base(new SQLiteProviderFactory())
+        public SQLiteDatastore(string path) : base(new SqliteDialect(), new SqliteExceptionProcessor())
         {
             if (path == null) { throw new ArgumentNullException("path"); }
             Path = path;
         }
-
-        #region abstract methods
-
-        protected override string BuildConnectionString()
-        {
-            System.Diagnostics.Debug.Assert(!string.IsNullOrEmpty(Path));
-            return string.Format("Data Source={0};Version=3;", Path);
-        }
-
-        #endregion abstract methods
 
         #region SavePoints
 
@@ -130,23 +109,6 @@ namespace FMSC.ORM.SQLite
             this.Execute(commandText, start, tableName);
         }
 
-        public void AddField(string tableName, string fieldDef)
-        {
-            string command = string.Format("ALTER TABLE {0} ADD COLUMN {1};", tableName, fieldDef);
-            this.Execute(command);
-        }
-
-        /// <summary>
-        /// Adds field to table.
-        /// </summary>
-        /// <param name="tableName">Name of the table.</param>
-        /// <param name="fieldDef">The field definition.</param>
-        public void AddField(string tableName, ColumnInfo fieldDef)
-        {
-            var command = string.Format("ALTER TABLE {0} ADD COLUMN {1};", tableName, fieldDef.GetColumnDef(true));
-            Execute(command);
-        }
-
         /// <summary>
         /// Checks if table exists.
         /// </summary>
@@ -185,26 +147,16 @@ namespace FMSC.ORM.SQLite
             using (var enu = cols.GetEnumerator())
             {
                 if (!enu.MoveNext()) { throw new ArgumentException("cols can't be empty", "cols"); }
-                sb.Append("( " + enu.Current.GetColumnDef(true));
+                sb.Append("( " + enu.Current.ToString());
 
                 while (enu.MoveNext())
                 {
-                    sb.Append("," + "\r\n" + enu.Current.GetColumnDef(true));
+                    sb.Append("," + "\r\n" + enu.Current.ToString());
                 }
                 sb.Append(")");
             }
             sb.Append(";");
             return sb.ToString();
-        }
-
-#if !NetCF
-
-        public void CreateTable(string tableName, IEnumerable<ColumnInfo> cols, bool temp = false)
-#else
-        public void CreateTable(string tableName, IEnumerable<ColumnInfo> cols, bool temp)
-#endif
-        {
-            Execute(BuildCreateTable(tableName, cols, temp));
         }
 
         /// <summary>
@@ -221,37 +173,34 @@ namespace FMSC.ORM.SQLite
 
                 try
                 {
-                    using (var command = conn.CreateCommand())
+                    var commandText = "PRAGMA table_info(" + tableName + ");";
+
+                    using (var reader = ExecuteReader(conn, commandText, (object[])null, CurrentTransaction))
                     {
-                        command.CommandText = "PRAGMA table_info(" + tableName + ");";
+                        int nameOrd = reader.GetOrdinal("name");
+                        int dbTypeOrd = reader.GetOrdinal("type");
+                        int pkOrd = reader.GetOrdinal("pk");
+                        int notNullOrd = reader.GetOrdinal("notnull");
+                        int defaultValOrd = reader.GetOrdinal("dflt_value");
 
-                        using (var reader = ExecuteReader(conn, command, _CurrentTransaction))
+                        try
                         {
-                            int nameOrd = reader.GetOrdinal("name");
-                            int dbTypeOrd = reader.GetOrdinal("type");
-                            int pkOrd = reader.GetOrdinal("pk");
-                            int notNullOrd = reader.GetOrdinal("notnull");
-                            int defaultValOrd = reader.GetOrdinal("dflt_value");
-
-                            try
+                            while (reader.Read())
                             {
-                                while (reader.Read())
+                                var colInfo = new ColumnInfo()
                                 {
-                                    var colInfo = new ColumnInfo()
-                                    {
-                                        Name = reader.GetString(nameOrd),
-                                        DBType = reader.GetString(dbTypeOrd),
-                                        IsPK = reader.GetBoolean(pkOrd),
-                                        IsRequired = reader.GetBoolean(notNullOrd),
-                                        Default = (!reader.IsDBNull(defaultValOrd)) ? reader.GetString(defaultValOrd) : null
-                                    };
-                                    colList.Add(colInfo);
-                                }
+                                    Name = reader.GetString(nameOrd),
+                                    DBType = reader.GetString(dbTypeOrd),
+                                    IsPK = reader.GetBoolean(pkOrd),
+                                    IsRequired = reader.GetBoolean(notNullOrd),
+                                    Default = (!reader.IsDBNull(defaultValOrd)) ? reader.GetString(defaultValOrd) : null
+                                };
+                                colList.Add(colInfo);
                             }
-                            catch (Exception e)
-                            {
-                                throw this.ThrowExceptionHelper(conn, command, e);
-                            }
+                        }
+                        catch (Exception e)
+                        {
+                            throw ExceptionProcessor.ProcessException(e, conn, commandText, (IDbTransaction)null);
                         }
                     }
                 }
@@ -262,6 +211,22 @@ namespace FMSC.ORM.SQLite
 
                 return colList;
             }
+        }
+
+        public override long GetLastInsertRowID(IDbConnection connection, IDbTransaction transaction)
+        {
+            return ExecuteScalar<long>(connection, "SELECT last_insert_rowid()", (object[])null, transaction);
+        }
+
+        public override object GetLastInsertKeyValue(IDbConnection connection, String tableName, String fieldName, IDbTransaction transaction)
+        {
+            var ident = GetLastInsertRowID(connection, transaction);
+
+            var query = "SELECT " + fieldName + " FROM " + tableName + " WHERE rowid = ?;";
+
+            return ExecuteScalar(connection, query, new object[] { ident }, transaction);
+
+            //String query = "Select " + fieldName + " FROM " + tableName + " WHERE rowid = last_insert_rowid();";
         }
 
         /// <summary>
@@ -282,27 +247,23 @@ namespace FMSC.ORM.SQLite
         public override bool HasForeignKeyErrors(string table_name)
         {
             bool hasErrors = false;
-            string comStr;
+            string commandText;
             if (string.IsNullOrEmpty(table_name))
             {
-                comStr = "PRAGMA foreign_key_check;";
+                commandText = "PRAGMA foreign_key_check;";
             }
             else
             {
-                comStr = "PRAGMA foreign_key_check(" + table_name + ");";
+                commandText = "PRAGMA foreign_key_check(" + table_name + ");";
             }
             lock (_persistentConnectionSyncLock)
             {
                 var connection = OpenConnection();
                 try
                 {
-                    using (var command = connection.CreateCommand())
+                    using (var reader = ExecuteReader(connection, commandText, (object[])null, CurrentTransaction))
                     {
-                        command.CommandText = comStr;
-                        using (var reader = ExecuteReader(connection, command, _CurrentTransaction))
-                        {
-                            hasErrors = reader.Read();
-                        }
+                        hasErrors = reader.Read();
                     }
                 }
                 finally
@@ -385,92 +346,5 @@ namespace FMSC.ORM.SQLite
         }
 
         #endregion File utility methods
-
-        protected override Exception ThrowExceptionHelper(IDbConnection conn, IDbCommand comm, Exception innerException)
-        {
-            if (innerException is SQLiteException)
-            {
-                SQLException sqlEx;
-
-                var ex = innerException as SQLiteException;
-#if Mono
-                var errorCode = ex.ErrorCode;
-#else
-                var errorCode = ex.ResultCode;
-#endif
-                switch (errorCode)
-                {
-                    case SQLiteErrorCode.Corrupt:
-#if Mono
-                    case SQLiteErrorCode.NotADatabase:
-#else
-                    case SQLiteErrorCode.NotADb:
-#endif
-                    case SQLiteErrorCode.Perm:
-#if Mono
-                    case SQLiteErrorCode.IOErr:
-#else
-                    case SQLiteErrorCode.IoErr:
-#endif
-
-                    case SQLiteErrorCode.CantOpen:
-                    case SQLiteErrorCode.Full:
-                    case SQLiteErrorCode.Auth:
-                        {
-                            return new FileAccessException(errorCode.ToString(), innerException);
-                        }
-                    case SQLiteErrorCode.ReadOnly:
-                        {
-                            sqlEx = new ReadOnlyException(null, innerException);
-                            break;
-                        }
-                    case SQLiteErrorCode.Locked:
-                        {
-                            sqlEx = new ConnectionException("file is locked", ex);
-                            break;
-                        }
-                    case SQLiteErrorCode.Constraint:
-                        {
-                            if (innerException.Message.IndexOf("UNIQUE constraint failed", StringComparison.OrdinalIgnoreCase) >= 0)
-                            {
-                                sqlEx = new UniqueConstraintException(null, innerException);
-                            }
-                            else
-                            {
-                                sqlEx = new ConstraintException(null, innerException);
-                            }
-                            break;
-                        }
-                    default:
-                        {
-                            sqlEx = new SQLException(null, innerException);
-                            break;
-                        }
-                }
-                if (conn != null)
-                {
-                    try
-                    {
-                        sqlEx.ConnectionString = conn.ConnectionString;
-                        sqlEx.ConnectionState = conn.State.ToString();
-                    }
-                    catch (ObjectDisposedException)
-                    {
-                        sqlEx.ConnectionState = "Disposed";
-                    }
-                }
-                if (comm != null)
-                {
-                    sqlEx.CommandText = comm.CommandText;
-                    //newEx.Data.Add("CommandText", comm.CommandText);
-                }
-
-                return sqlEx;
-            }
-            else
-            {
-                return new ORMException(null, innerException);
-            }
-        }
     }
 }

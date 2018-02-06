@@ -1,18 +1,15 @@
-﻿using FMSC.ORM.EntityModel;
-using FMSC.ORM.EntityModel.Attributes;
+﻿using FMSC.ORM.EntityModel.Attributes;
 using System;
-using System.ComponentModel;
 using System.Data;
 using System.Diagnostics;
-using System.Reflection;
 
 namespace FMSC.ORM.EntityModel.Support
 {
     public class EntityInflator
     {
-        const int BYTE_READ_LENGTH = 1024;//TODO once we start reading byte data figure out our byte read length... should this be done at runtime?
+        private const int BYTE_READ_LENGTH = 1024;//TODO once we start reading byte data figure out our byte read length... should this be done at runtime?
 
-        ConstructorInfo _constructor;
+        //ConstructorInfo _constructor;
 
         protected EntityDescription EntityDescription { get; set; }
 
@@ -20,7 +17,7 @@ namespace FMSC.ORM.EntityModel.Support
         {
             EntityDescription = entity;
 
-            _constructor = EntityDescription.EntityType.GetConstructor(new Type[] { });
+            //_constructor = EntityDescription.EntityType.GetConstructor(new Type[] { });
         }
 
         /// <summary>
@@ -42,10 +39,10 @@ namespace FMSC.ORM.EntityModel.Support
             }
         }
 
-        public object CreateInstanceOfEntity()
-        {
-            return Activator.CreateInstance(EntityDescription.EntityType);
-        }
+        //public object CreateInstanceOfEntity()
+        //{
+        //    return Activator.CreateInstance(EntityDescription.EntityType);
+        //}
 
         public void ReadData(System.Data.IDataReader reader, Object obj)
         {
@@ -91,7 +88,7 @@ namespace FMSC.ORM.EntityModel.Support
             }
         }
 
-        object GetValueByType(Type type, IDataReader reader, int ord)
+        private object GetValueByType(Type type, IDataReader reader, int ord)
         {
             if (type.IsEnum)
             {
@@ -147,7 +144,7 @@ namespace FMSC.ORM.EntityModel.Support
             }
         }
 
-        Guid GetGuid(IDataReader reader, int ord)
+        public static Guid GetGuid(IDataReader reader, int ord)
         {
             if (reader.IsDBNull(ord))
             {
@@ -159,14 +156,14 @@ namespace FMSC.ORM.EntityModel.Support
                 {
                     return reader.GetGuid(ord);
                 }
-                catch (Exception)
+                catch (Exception ex)
                 {
                     return Guid.Empty;
                 }
             }
         }
 
-        object GetEnum(IDataReader reader, int ord, Type eType)
+        public static object GetEnum(IDataReader reader, int ord, Type eType)
         {
             String s = GetString(reader, ord);
             try
@@ -184,7 +181,7 @@ namespace FMSC.ORM.EntityModel.Support
             }
         }
 
-        string GetString(IDataReader reader, int ord)
+        public static string GetString(IDataReader reader, int ord)
         {
             if (reader.IsDBNull(ord)) { return null; }
             else
@@ -202,12 +199,12 @@ namespace FMSC.ORM.EntityModel.Support
             }
         }
 
-        byte[] GetByte(IDataReader reader, int ord)
+        private byte[] GetByte(IDataReader reader, int ord)
         {
             throw new NotImplementedException();
         }
 
-        object GetValueByTypeCode(TypeCode tc, IDataReader reader, int ord)
+        private object GetValueByTypeCode(TypeCode tc, IDataReader reader, int ord)
         {
             switch (tc)
             {

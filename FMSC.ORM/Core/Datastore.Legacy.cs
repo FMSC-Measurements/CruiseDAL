@@ -1,9 +1,6 @@
-﻿using FMSC.ORM.EntityModel;
-using FMSC.ORM.EntityModel.Support;
+﻿using FMSC.ORM.EntityModel.Support;
 using System;
 using System.Collections.Generic;
-using System.Data;
-using System.Data.Common;
 using System.Linq;
 
 namespace FMSC.ORM.Core
@@ -101,9 +98,5 @@ namespace FMSC.ORM.Core
         //}
 
         #endregion query methods
-
-        #region general purpose command execution
-
-        #endregion general purpose command execution
     }
 }
