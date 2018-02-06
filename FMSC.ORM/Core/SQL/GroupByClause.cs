@@ -8,10 +8,10 @@ namespace FMSC.ORM.Core.SQL
     {
         public List<String> Expressions { get; protected set; }
 
-        public GroupByClause(IEnumerable<string> groupByExprs) 
-            :this()
+        public GroupByClause(IEnumerable<string> groupByExprs)
+            : this()
         {
-            if(groupByExprs != null)
+            if (groupByExprs != null)
             {
                 AddRange(groupByExprs);
             }
@@ -29,12 +29,11 @@ namespace FMSC.ORM.Core.SQL
 
         public void AddRange(IEnumerable<string> expressions)
         {
-            foreach(string expr in expressions)
+            foreach (string expr in expressions)
             {
                 Add(expr);
             }
         }
-
 
         public override string ToSQL()
         {
@@ -44,13 +43,13 @@ namespace FMSC.ORM.Core.SQL
                 sBuilder.Append(ParentElement.ToSQL());
             }
 
-            if(Expressions.Count != 0)
+            if (Expressions.Count != 0)
             {
                 sBuilder.AppendLine(" Group BY ");
                 bool first = true;
-                foreach(string expr in Expressions)
+                foreach (string expr in Expressions)
                 {
-                    if(!first)
+                    if (!first)
                     {
                         sBuilder.AppendLine(", ");
                     }

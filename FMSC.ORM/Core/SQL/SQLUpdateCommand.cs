@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Text;
 
-
 namespace FMSC.ORM.Core.SQL
 {
     public class SQLUpdateCommand
@@ -23,10 +22,9 @@ namespace FMSC.ORM.Core.SQL
             { sb.AppendLine("OR " + ConflictOption.ToString()); }//enum.GetName not avalible in NetCF
             sb.AppendLine(TableName);
 
-
-            for(int i = 0; i < ColumnNames.Count; i++)
+            for (int i = 0; i < ColumnNames.Count; i++)
             {
-                if(i == 0) { sb.AppendLine("SET"); }
+                if (i == 0) { sb.AppendLine("SET"); }
                 else { sb.Append(", "); }
                 sb.AppendLine(ColumnNames[i] + " = " + ValueExpressions[i]);
             }
@@ -34,6 +32,5 @@ namespace FMSC.ORM.Core.SQL
             sb.Append(";");
             return sb.ToString();
         }
-
     }
 }

@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Text;
 
-
 namespace FMSC.ORM.Core.SQL
 {
     public class SQLInsertCommand
@@ -16,23 +15,23 @@ namespace FMSC.ORM.Core.SQL
         public override string ToString()
         {
             var sb = new StringBuilder();
-            
+
             sb.AppendLine("INSERT");
             if (ConflictOption != OnConflictOption.Default)
             { sb.AppendLine("OR " + ConflictOption.ToString()); }
             sb.AppendLine("INTO " + TableName);
             sb.Append("(");
             bool first = true;
-            foreach(string colName in ColumnNames)
+            foreach (string colName in ColumnNames)
             {
-                if(first)
+                if (first)
                 {
                     sb.Append(" " + colName);
                     first = false;
                 }
                 else
                 {
-                    sb.Append(", " + colName );
+                    sb.Append(", " + colName);
                 }
             }
             sb.AppendLine(")");
@@ -41,9 +40,9 @@ namespace FMSC.ORM.Core.SQL
             sb.Append("(");
 
             first = true;
-            foreach(string valExpr in ValueExpressions)
+            foreach (string valExpr in ValueExpressions)
             {
-                if(first)
+                if (first)
                 {
                     sb.Append(valExpr);
                     first = false;
@@ -57,6 +56,4 @@ namespace FMSC.ORM.Core.SQL
             return sb.ToString();
         }
     }
-            
 }
-

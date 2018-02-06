@@ -7,6 +7,5 @@ namespace FMSC.ORM.EntityModel.Attributes
         public Type EntityType { get; set; }
         public String ReferenceSourceName { get; set; }
         public String ForeignKeyFieldName { get; set; }
-
     }
 }

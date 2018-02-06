@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
 
 namespace FMSC.ORM.Core.SQL.QueryBuilder
 {
@@ -19,12 +18,14 @@ namespace FMSC.ORM.Core.SQL.QueryBuilder
     public interface IQuerryAcceptsOrderBy<T> : IQuerryAcceptsLimit<T> where T : new()
     {
         IQuerryAcceptsLimit<T> OrderBy(IEnumerable<string> terms);
+
         IQuerryAcceptsLimit<T> OrderBy(params String[] termsArgs);
     }
 
     public interface IQuerryAcceptsGroupBy<T> : IQuerryAcceptsOrderBy<T> where T : new()
     {
         IQuerryAcceptsOrderBy<T> GroupBy(IEnumerable<string> terms);
+
         IQuerryAcceptsOrderBy<T> GroupBy(params String[] termsArgs);
     }
 
@@ -36,6 +37,7 @@ namespace FMSC.ORM.Core.SQL.QueryBuilder
     public interface IQuerryAcceptsJoin<T> : IQuerryAcceptsWhere<T> where T : new()
     {
         IQuerryAcceptsJoin<T> Join(string table, string joinContraint);
+
         IQuerryAcceptsJoin<T> Join(string table, string joinContraint, string alias);
     }
 }

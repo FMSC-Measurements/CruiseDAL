@@ -1,17 +1,7 @@
-﻿using System;
-using System.Linq;
-
-using System.Collections.Generic;
+﻿using FMSC.ORM.Core;
+using System;
 using System.Collections;
-using FMSC.ORM.Core;
-
-#if Mono
-using Mono.Data.Sqlite;
-#else
-
-using System.Data.SQLite;
-
-#endif
+using System.Collections.Generic;
 
 namespace FMSC.ORM.EntityModel
 {

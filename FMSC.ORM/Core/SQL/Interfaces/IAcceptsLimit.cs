@@ -1,12 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace FMSC.ORM.Core.SQL.Interfaces
+﻿namespace FMSC.ORM.Core.SQL.Interfaces
 {
-    public interface IAcceptsLimit : SelectElement
+    public interface IAcceptsLimit : ISelectElement
     {
         void Accept(LimitClause limitClause);
-        SelectElement Limit(int limit, int offset);
+
+        ISelectElement Limit(int limit, int offset);
     }
 }

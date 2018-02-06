@@ -1,30 +1,20 @@
-using System;
-using System.Reflection;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Data;
-using System.Diagnostics;
 using FMSC.ORM.Core.SQL;
 using FMSC.ORM.EntityModel.Attributes;
-
-#if Mono
-using Mono.Data.Sqlite;
-using SQLiteCommand = Mono.Data.Sqlite.SqliteCommand;
-using SQLiteParameter = Mono.Data.Sqlite.SqliteParameter;
-#else
-using System.Data.SQLite;
-#endif
-
+using System;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.Linq;
+using System.Reflection;
 
 namespace FMSC.ORM.EntityModel.Support
 {
     public class EntityDescription
     {
         public Type EntityType { get; private set; }
+
         public String SourceName
         {
-            get { return (Source != null)? Source.SourceName : null; }
+            get { return (Source != null) ? Source.SourceName : null; }
         }
 
         public SelectSource Source { get; set; }
@@ -44,7 +34,6 @@ namespace FMSC.ORM.EntityModel.Support
             Properties = new Dictionary<string, PropertyAccessor>();
         }
 
-
         public EntityDescription(Type type) : this()
         {
             EntityType = type;
@@ -62,7 +51,7 @@ namespace FMSC.ORM.EntityModel.Support
                 object[] eAttrs = EntityType.GetCustomAttributes(typeof(EntitySourceAttribute), true);
                 var eAttr = eAttrs.FirstOrDefault() as EntitySourceAttribute;
 
-                if(eAttr != null)
+                if (eAttr != null)
                 {
                     this.Source = new TableOrSubQuery(
                         eAttr.SourceName
@@ -101,7 +90,7 @@ namespace FMSC.ORM.EntityModel.Support
             AddPropertyAccessor(accessor);
 
             var attr = Attribute.GetCustomAttribute(property, typeof(BaseFieldAttribute)) as BaseFieldAttribute;
-            if(attr == null) { return; }
+            if (attr == null) { return; }
 
             attr.Property = accessor;
 
@@ -110,7 +99,7 @@ namespace FMSC.ORM.EntityModel.Support
             {
                 if (string.IsNullOrEmpty(fieldAttr.SourceName))
                 {
-                    fieldAttr.SourceName = this.SourceName; 
+                    fieldAttr.SourceName = this.SourceName;
                 }
                 try
                 {
@@ -121,9 +110,6 @@ namespace FMSC.ORM.EntityModel.Support
                     throw new ORMException("Unable to register property: " + property.Name, e);
                 }
             }
-
-
-            
         }
 
         protected void AddPropertyAccessor(PropertyAccessor prop)

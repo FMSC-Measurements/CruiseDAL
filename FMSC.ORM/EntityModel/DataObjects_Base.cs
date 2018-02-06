@@ -28,9 +28,9 @@ namespace FMSC.ORM.EntityModel
         protected DatastoreRedux _ds;
         protected RecordState _recordState = RecordState.Detached;
 
-        bool _isDeleted;
-        bool _isPersisted;
-        bool _isChanged;
+        private bool _isDeleted;
+        private bool _isPersisted;
+        private bool _isChanged;
 
         #region Properties
 

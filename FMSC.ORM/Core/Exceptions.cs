@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Data.Common;
-using System.Text;
 
 namespace FMSC.ORM
 {
@@ -11,13 +9,15 @@ namespace FMSC.ORM
             : base(message + innerException.Message, innerException)
         { }
 
-        public FileAccessException(string message) : base(message) { }
-
+        public FileAccessException(string message) : base(message)
+        {
+        }
     }
 
 #if NetCF
     public class SQLException : Exception
 #else
+
     public class SQLException : DbException
 #endif
     {
@@ -32,7 +32,7 @@ namespace FMSC.ORM
             : base(null, innerException)
         {
             AddConnectionInfo(connection);
-            AddCommandInfo(command);        
+            AddCommandInfo(command);
         }
 
         public void AddConnectionInfo(DbConnection connection)
@@ -64,70 +64,19 @@ namespace FMSC.ORM
             get
             {
                 return String.Format("{0}\r\n: ConnectionString={1}, ConnectionState={2}, CommandText={3}"
-                    ,base.Message , ConnectionString, ConnectionState, CommandText);
+                    , base.Message, ConnectionString, ConnectionState, CommandText);
             }
         }
 
-#if NetCF
         public string ConnectionString { get; set; }
         public string ConnectionState { get; set; }
         public string CommandText { get; set; }
-#else
-        public string ConnectionString 
-        { 
-            get { return Data.Contains("ConnectionString") ? Data["ConnectionString"].ToString() : string.Empty; }
-            set 
-            { 
-                if( Data.Contains("ConnectionString"))
-                {
-                    Data["ConnectionString"] = value;
-                }
-                else
-                {
-                    Data.Add("ConnectionString", value);
-                }
-            }
-        }
-        public string ConnectionState 
-        { 
-            get { return Data.Contains("ConnectionState") ? Data["ConnectionState"].ToString() : string.Empty; }
-            set 
-            { 
-                if( Data.Contains("ConnectionState"))
-                {
-                    Data["ConnectionState"] = value;
-                }
-                else
-                {
-                    Data.Add("ConnectionState", value);
-                }
-            }
-        }
-        public string CommandText 
-        { 
-            get { return Data.Contains("CommandText") ? Data["CommandText"].ToString() : string.Empty; }
-            set 
-            { 
-                if( Data.Contains("CommandText"))
-                {
-                    Data["CommandText"] = value;
-                }
-                else
-                {
-                    Data.Add("CommandText", value);
-                }
-            }
-        }
-#endif
-
     }
 
     public class ConnectionException : SQLException
     {
         public ConnectionException(string message, Exception innerException) : base(message, innerException)
         { }
-
-
     }
 
     public class ReadOnlyException : ConnectionException
@@ -178,7 +127,6 @@ namespace FMSC.ORM
         public IncompatibleSchemaException(String message, System.Exception innerEx)
             : base(message, innerEx)
         { }
-
     }
 
     public class SchemaUpdateException : SchemaException
@@ -191,9 +139,8 @@ namespace FMSC.ORM
             this.TargetVersion = targetVersion;
         }
 
-        string CurrentVersion { get; set; }
-        string TargetVersion { get; set; }
-
+        private string CurrentVersion { get; set; }
+        private string TargetVersion { get; set; }
     }
 
     /// <summary>
@@ -205,6 +152,8 @@ namespace FMSC.ORM
             : base(message, innerException)
         { }
 
-        public ORMException(string message) : base(message) { }
-    }       
+        public ORMException(string message) : base(message)
+        {
+        }
+    }
 }

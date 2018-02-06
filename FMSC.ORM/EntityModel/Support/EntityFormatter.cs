@@ -5,7 +5,7 @@ namespace FMSC.ORM.EntityModel.Support
 {
     public class EntityFormatter : ICustomFormatter
     {
-        EntityDescription _description;
+        private EntityDescription _description;
 
         public EntityFormatter(EntityDescription description)
         {
@@ -14,7 +14,7 @@ namespace FMSC.ORM.EntityModel.Support
 
         public string Format(string formatString, object obj, IFormatProvider formatProvider)
         {
-            if(string.IsNullOrEmpty(formatString))
+            if (string.IsNullOrEmpty(formatString))
             { return obj.ToString(); }
 
             //get a list of all properties place holders in format
@@ -27,7 +27,7 @@ namespace FMSC.ORM.EntityModel.Support
         }
 
         /// <summary>
-        /// helper method 
+        /// helper method
         /// </summary>
         private string ProcessFormatElementMatch(object data, Match m, IFormatProvider formatProvider)
         {
@@ -58,14 +58,12 @@ namespace FMSC.ORM.EntityModel.Support
                 throw new FormatException("unable to resolve value for " + propName);
             }
 
-
             short pad;
             char padOpt;
             if (m.Groups["pad"].Captures.Count == 1)
             {
                 try
                 {
-
                     String sPad = m.Groups["pad"].Captures[0].Value;
                     try
                     {
@@ -127,6 +125,5 @@ namespace FMSC.ORM.EntityModel.Support
             }
             return new String(cArray);
         }
-
     }
 }

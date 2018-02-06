@@ -21,7 +21,6 @@ namespace FMSC.ORM.EntityModel
             lookup[fieldName] = fv;
         }
 
-
         public IFieldValidator this[string fieldName]
         {
             get
@@ -39,7 +38,5 @@ namespace FMSC.ORM.EntityModel
         {
             return lookup.ContainsKey(fieldName);
         }
-
-
     }
 }

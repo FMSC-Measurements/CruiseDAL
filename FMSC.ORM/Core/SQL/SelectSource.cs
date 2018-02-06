@@ -1,7 +1,4 @@
-﻿using FMSC.ORM.Core.SQL.Interfaces;
-using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System;
 
 namespace FMSC.ORM.Core.SQL
 {
@@ -31,6 +28,5 @@ namespace FMSC.ORM.Core.SQL
         {
             return ToSQL();
         }
-
     }
 }

@@ -1,8 +1,6 @@
-﻿using FMSC.ORM.EntityModel.Support;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Reflection;
 
 namespace FMSC.ORM.EntityModel.Attributes
 {

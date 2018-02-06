@@ -2,8 +2,6 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace FMSC.ORM.Core
 {
@@ -11,9 +9,9 @@ namespace FMSC.ORM.Core
     {
         public static void SetParams(this IDbCommand command, object[] paramArgs)
         {
-            if(paramArgs != null)
+            if (paramArgs != null)
             {
-                foreach(var value in paramArgs)
+                foreach (var value in paramArgs)
                 {
                     var param = command.CreateParameter();
                     param.ParameterName = null;

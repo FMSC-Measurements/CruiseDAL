@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Text;
 
 namespace FMSC.ORM.Core.SQL
@@ -37,8 +36,6 @@ namespace FMSC.ORM.Core.SQL
         public TableOrSubQuery()
         { }
 
-        
-
         public override JoinClause Join(string table, string constraint, string alias)
         {
             var joinClause = new JoinClause(this);
@@ -57,9 +54,9 @@ namespace FMSC.ORM.Core.SQL
         {
             var sb = new StringBuilder();
             sb.Append(Table ?? "( " + SubQuery.ToSQL() + " )");
-            if(!String.IsNullOrEmpty(Alias))
+            if (!String.IsNullOrEmpty(Alias))
             { sb.Append(" AS " + Alias); }
-            if(!String.IsNullOrEmpty(JoinCommands))
+            if (!String.IsNullOrEmpty(JoinCommands))
             {
                 sb.Append(" " + JoinCommands);
             }

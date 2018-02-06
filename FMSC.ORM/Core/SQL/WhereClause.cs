@@ -1,11 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-
-namespace FMSC.ORM.Core.SQL
+﻿namespace FMSC.ORM.Core.SQL
 {
     public class WhereClause : SelectClause
     {
-        public WhereClause(string expression) 
+        public WhereClause(string expression)
         {
             Expression = expression;
         }

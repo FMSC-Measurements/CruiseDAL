@@ -1,7 +1,4 @@
-﻿using FMSC.ORM.Core.SQL;
-using System.Diagnostics;
-
-namespace FMSC.ORM.EntityModel
+﻿namespace FMSC.ORM.EntityModel
 {
     public static class DataObjectExtentions
     {
@@ -22,6 +19,5 @@ namespace FMSC.ORM.EntityModel
         //    Debug.Assert(data.DAL != null);
         //    data.DAL.Delete(data);
         //}
-
     }
 }

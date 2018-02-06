@@ -36,12 +36,11 @@ namespace FMSC.ORM.Core.SQL
             return this;
         }
 
-
         public override string ToSQL()
         {
             var sBuilder = new StringBuilder();
             sBuilder.AppendLine(Source.ToSQL());
-            foreach(JoinComponent comp in Joins)
+            foreach (JoinComponent comp in Joins)
             {
                 sBuilder.AppendLine(" " + comp.ToSQL());
             }

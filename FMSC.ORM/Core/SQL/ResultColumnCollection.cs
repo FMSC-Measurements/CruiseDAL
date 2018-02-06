@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Text;
 
 namespace FMSC.ORM.Core.SQL
@@ -11,18 +10,18 @@ namespace FMSC.ORM.Core.SQL
         public string ToSQL()
         {
             var sBuilder = new StringBuilder();
-            if(Distinct)
-            {                
+            if (Distinct)
+            {
                 sBuilder.AppendLine("DISTINCT ");
             }
-            if(Count == 0)
+            if (Count == 0)
             {
                 sBuilder.AppendLine("*");
             }
             else
             {
                 bool first = true;
-                foreach(string colExpr in this)
+                foreach (string colExpr in this)
                 {
                     if (!first)
                     {
@@ -36,8 +35,6 @@ namespace FMSC.ORM.Core.SQL
                 }
             }
             return sBuilder.ToString();
-
         }
-
     }
 }

@@ -1,11 +1,11 @@
-using System.Collections.Generic;
-using System;
-using System.Reflection;
 using FMSC.ORM.EntityModel.Attributes;
+using System;
+using System.Collections.Generic;
+using System.Reflection;
 
 namespace FMSC.ORM.EntityModel
 {
-    public enum ErrorLevel { Warning, Error }; 
+    public enum ErrorLevel { Warning, Error };
 
     public class RowValidator
     {
@@ -36,7 +36,6 @@ namespace FMSC.ORM.EntityModel
             }
         }
 
-
         public FieldValidatorCollection Constraints { get; protected set; }
 
         public bool Validate(IValidatable sender, string fieldName, object value)
@@ -58,7 +57,6 @@ namespace FMSC.ORM.EntityModel
             }
             if (constraint.Validate(sender, value) == false)//fail validation
             {
-
                 sender.AddError(fieldName, message);
                 return false;
             }
@@ -71,7 +69,7 @@ namespace FMSC.ORM.EntityModel
 
         public void Add(IFieldValidator fv)
         {
-            this.Constraints.Add( fv);
+            this.Constraints.Add(fv);
         }
 
         public void AddRange(IEnumerable<IFieldValidator> collection)
@@ -81,19 +79,18 @@ namespace FMSC.ORM.EntityModel
                 this.Add(fv);
             }
         }
-
-
     }
-
 
     public class FieldValidator : IFieldValidator
     {
-        double _min = double.MinValue;
-        double _max = double.MinValue;
+        private double _min = double.MinValue;
+        private double _max = double.MinValue;
 
-        public FieldValidator() { }
+        public FieldValidator()
+        {
+        }
 
-        public FieldValidator(string Field, string TableName, string ErrorMessage, 
+        public FieldValidator(string Field, string TableName, string ErrorMessage,
             double Min, double Max, bool Required, string Values)
             : this()
         {
@@ -107,7 +104,6 @@ namespace FMSC.ORM.EntityModel
         }
 
         public ErrorLevel Level { get { return ErrorLevel.Error; } }
-        
 
         public string Field
         {
@@ -132,6 +128,7 @@ namespace FMSC.ORM.EntityModel
             get { return _min; }
             set { _min = value; }
         }
+
         public double Max
         {
             get { return _max; }
@@ -140,13 +137,13 @@ namespace FMSC.ORM.EntityModel
 
         public bool Required { get; set; }
 
-        public string Values 
+        public string Values
         {
-            set 
-            { 
-                if(string.IsNullOrEmpty(value)) { return; }
-                this.ValueSet = new List<string>(value.Split(' ')); 
-            }            
+            set
+            {
+                if (string.IsNullOrEmpty(value)) { return; }
+                this.ValueSet = new List<string>(value.Split(' '));
+            }
         }
 
         public List<String> ValueSet { get; set; }
@@ -182,12 +179,11 @@ namespace FMSC.ORM.EntityModel
         }
     }
 
-
     public class NotNullRule : IFieldValidator
     {
-
-        public NotNullRule(String Field, string ErrorString) : this(Field, "", ErrorString) { }
-
+        public NotNullRule(String Field, string ErrorString) : this(Field, "", ErrorString)
+        {
+        }
 
         public NotNullRule(string Field, string TableName, string ErrorString)
         {
@@ -199,26 +195,28 @@ namespace FMSC.ORM.EntityModel
         #region IFieldValidator Members
 
         public ErrorLevel Level { get { return ErrorLevel.Error; } }
- 
+
         private string _field;
+
         public string Field
         {
             get { return _field; }
             internal set
             {
-                if(_field != null && _field.GetHashCode() != value.GetHashCode())
+                if (_field != null && _field.GetHashCode() != value.GetHashCode())
                 { throw new InvalidOperationException("Field can not be modified"); }
                 _field = value;
             }
         }
 
         private string _tableName;
+
         public string TableName
         {
             get { return _tableName; }
             internal set
             {
-                if (_tableName != null && _tableName.GetHashCode() != value.GetHashCode()) 
+                if (_tableName != null && _tableName.GetHashCode() != value.GetHashCode())
                 { throw new InvalidOperationException("Table Name can't be modified"); }
                 _tableName = value;
             }
@@ -248,6 +246,6 @@ namespace FMSC.ORM.EntityModel
             return value != null;
         }
 
-        #endregion
+        #endregion IFieldValidator Members
     }
 }

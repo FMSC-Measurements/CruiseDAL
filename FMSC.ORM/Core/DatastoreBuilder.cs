@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace FMSC.ORM.Core
+﻿namespace FMSC.ORM.Core
 {
     public abstract class DatabaseBuilder
     {
@@ -9,7 +7,6 @@ namespace FMSC.ORM.Core
         public abstract void CreateDatastore();
 
         public abstract void CreateTables();
-
 
         public abstract void CreateTriggers();
 

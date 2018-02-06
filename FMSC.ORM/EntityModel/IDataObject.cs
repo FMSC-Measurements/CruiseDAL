@@ -9,7 +9,9 @@ namespace FMSC.ORM.EntityModel
         DatastoreRedux DAL { get; set; }
 
         void Save();
+
         void Save(OnConflictOption option);
+
         void Delete();
     }
 }

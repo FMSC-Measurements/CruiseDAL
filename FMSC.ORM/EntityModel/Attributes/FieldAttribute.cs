@@ -1,7 +1,4 @@
-﻿using FMSC.ORM.EntityModel.Support;
-using System;
-using System.Reflection;
-
+﻿using System;
 
 namespace FMSC.ORM.EntityModel.Attributes
 {
@@ -9,7 +6,7 @@ namespace FMSC.ORM.EntityModel.Attributes
 
     [AttributeUsage(AttributeTargets.Property, Inherited = true)]
     public class FieldAttribute : BaseFieldAttribute
-    {       
+    {
         public string SourceName { get; set; }
         public string Alias { get; set; }
         public string SQLExpression { get; set; }
@@ -18,10 +15,9 @@ namespace FMSC.ORM.EntityModel.Attributes
 
         internal bool IsGuid;
 
-        internal string SQLPramName { get { return "@" + Name.ToLower();  } }
+        internal string SQLPramName { get { return "@" + Name.ToLower(); } }
 
         public string NameOrAlias { get { return Name ?? Alias; } }
-
 
         public FieldAttribute()
         {
@@ -46,7 +42,7 @@ namespace FMSC.ORM.EntityModel.Attributes
             }
             else
             {
-                if(string.IsNullOrEmpty(SourceName)) { return Name; }
+                if (string.IsNullOrEmpty(SourceName)) { return Name; }
                 else { return SourceName + "." + Name; }
             }
         }
@@ -65,7 +61,6 @@ namespace FMSC.ORM.EntityModel.Attributes
         //    return value;
         //}
 
-
         public object GetFieldValueOrDefault(Object obj)
         {
             return GetFieldValue(obj) ?? DefaultValue;
@@ -82,7 +77,6 @@ namespace FMSC.ORM.EntityModel.Attributes
         //        throw new ORMException(String.Format("unable to set value; Value = {0}; FieldInfo = {1}", value, this), e);
         //    }
         //}
-
 
         public void SetFieldValueOrDefault(Object dataObject, object value)
         {

@@ -6,24 +6,22 @@ namespace FMSC.ORM.Core.SQL
 {
     public class OrderByClause : SelectClause
     {
-
-
         public List<string> OrderingTerms { get; protected set; }
 
-        OrderByClause()
+        private OrderByClause()
         {
             this.OrderingTerms = new List<string>();
         }
 
         public OrderByClause(IEnumerable<string> orderingTerms)
-            :this()
+            : this()
         {
             AddRange(orderingTerms);
         }
 
         public void Add(string term)
         {
-            if(string.IsNullOrEmpty(term))
+            if (string.IsNullOrEmpty(term))
             {
                 throw new ArgumentException("Cant be null or empty", "term");
             }
@@ -32,8 +30,8 @@ namespace FMSC.ORM.Core.SQL
 
         public void AddRange(IEnumerable<string> terms)
         {
-            if(terms == null) { return;  }
-            foreach(string term in terms)
+            if (terms == null) { return; }
+            foreach (string term in terms)
             {
                 Add(term);
             }
@@ -42,7 +40,7 @@ namespace FMSC.ORM.Core.SQL
         public override string ToSQL()
         {
             var sBuilder = new StringBuilder();
-            if(ParentElement != null)
+            if (ParentElement != null)
             {
                 sBuilder.Append(ParentElement.ToSQL());
             }
@@ -66,8 +64,6 @@ namespace FMSC.ORM.Core.SQL
             sBuilder.AppendLine();
 
             return sBuilder.ToString();
-
         }
-
     }
 }

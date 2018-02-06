@@ -1,22 +1,19 @@
 ﻿using System;
-
-using System.Collections.Generic;
-using System.Text;
 using System.Reflection;
 
 namespace FMSC.ORM.EntityModel.Support
 {
     public class PropertyAccessor
     {
-        public string Name      { get; protected set; }
+        public string Name { get; protected set; }
 
         public Type RuntimeType { get; protected set; }
 
         public MethodInfo Getter { get; protected set; }
         public MethodInfo Setter { get; protected set; }
 
-        public bool CanRead     { get { return Getter != null; } }
-        public bool CanWrite    { get { return Setter != null; } }
+        public bool CanRead { get { return Getter != null; } }
+        public bool CanWrite { get { return Setter != null; } }
 
         public PropertyAccessor(PropertyInfo prop)
         {
@@ -41,6 +38,5 @@ namespace FMSC.ORM.EntityModel.Support
         {
             Setter.Invoke(target, new object[] { value });
         }
-
     }
 }

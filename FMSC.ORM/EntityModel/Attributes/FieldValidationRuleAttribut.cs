@@ -5,8 +5,8 @@ namespace FMSC.ORM.EntityModel.Attributes
     [AttributeUsage(AttributeTargets.Property, Inherited = true)]
     public class FieldValidationRuleAttribut : Attribute, ORM.EntityModel.IFieldValidator
     {
-        int _min = int.MinValue;
-        int _max = int.MinValue;
+        private int _min = int.MinValue;
+        private int _max = int.MinValue;
 
         public string Field { get; set; }
         public string TableName { get; set; }
@@ -18,15 +18,15 @@ namespace FMSC.ORM.EntityModel.Attributes
             get { return _min; }
             set { _min = value; }
         }
+
         public int Max
         {
             get { return _max; }
             set { _max = value; }
         }
+
         public string[] Values { get; set; }
         public bool NotNull { get; set; }
-
-        
 
         public bool Validate(object sender, object value)
         {
@@ -54,7 +54,7 @@ namespace FMSC.ORM.EntityModel.Attributes
             if (isValid && value != null && Values != null)
             {
                 //values doesn't contain value
-                if (Array.IndexOf(Values, value.ToString()) < 0 ) { isValid = false; }
+                if (Array.IndexOf(Values, value.ToString()) < 0) { isValid = false; }
             }
             return isValid;
         }
