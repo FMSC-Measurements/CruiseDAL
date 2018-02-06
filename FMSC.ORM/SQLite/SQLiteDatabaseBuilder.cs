@@ -1,14 +1,5 @@
 ﻿using FMSC.ORM.Core;
-using System;
-using System.Collections.Generic;
-using System.Text;
-
-#if Mono
-using Mono.Data.Sqlite;
-using SQLiteConnection = Mono.Data.Sqlite.SqliteConnection;
-#else
-using System.Data.SQLite;
-#endif
+using System.IO;
 
 namespace FMSC.ORM.SQLite
 {
@@ -37,7 +28,12 @@ namespace FMSC.ORM.SQLite
             {
                 if (!Datastore.IsInMemory)
                 {
-                    SQLiteConnection.CreateFile(Datastore.Path);
+                    //This just creates a zero - byte file which SQLite
+                    // will turn into a database when the file is opened properly.
+                    using (FileStream fs = File.Create(Datastore.Path))
+                    {
+                        fs.Close();
+                    }
                 }
                 Datastore.BeginTransaction();
                 try
@@ -58,6 +54,5 @@ namespace FMSC.ORM.SQLite
                 throw;
             }
         }
-
     }
 }
