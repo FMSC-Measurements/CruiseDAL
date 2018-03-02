@@ -1,17 +1,17 @@
 ﻿
-Microsoft Visual Studio Solution File, Format Version 10.00
-# Visual Studio 2008
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CruiseDAL_CF20", "CruiseDAL\CruiseDAL_CF20.csproj", "{DC8A4894-F4A8-4554-B475-2EBAD49AF148}"
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.27130.2036
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CruiseDAL", "CruiseDAL\CruiseDAL.csproj", "{18E03183-FD2C-4676-B40C-ABCB5FC65E90}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{770A329F-9981-40B5-8AD1-85C573421463}"
-	ProjectSection(SolutionItems) = preProject
-		CruiseDAL2.vsmdi = CruiseDAL2.vsmdi
-		LocalTestRun.testrunconfig = LocalTestRun.testrunconfig
-	EndProjectSection
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FMSC.ORM", "FMSC.ORM\FMSC.ORM.csproj", "{05B23426-797F-46B5-B376-5111BFD779DC}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FMSC.ORM.NetCF20", "FMSC.ORM\FMSC.ORM.NetCF20.csproj", "{D346BFEA-85A0-4A5D-BD89-D07E073B065E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FMSC.ORM.Test", "FMSC.ORM.Test\FMSC.ORM.Test.csproj", "{BE45AC61-FA51-431A-AC8A-C1B16D73F276}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FMSC.ORM.Test.NetCF", "FMSC.ORM.Test.NetCF\FMSC.ORM.Test.NetCF.csproj", "{34C83D8F-D1D7-4B53-AA9F-5C2CF809CEBA}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CruiseDAL.Tests", "CruiseDAL.Test\CruiseDAL.Tests.csproj", "{886A3CDF-FD6E-4D0E-8D05-8884DC11D877}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CruiseDAL.CodeGenEngine", "CruiseDAL.CodeGenEngine\CruiseDAL.CodeGenEngine.csproj", "{FAFF3BAF-E84F-4CBE-AB52-6CEBEC124127}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -19,26 +19,31 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{DC8A4894-F4A8-4554-B475-2EBAD49AF148}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{DC8A4894-F4A8-4554-B475-2EBAD49AF148}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{DC8A4894-F4A8-4554-B475-2EBAD49AF148}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{DC8A4894-F4A8-4554-B475-2EBAD49AF148}.Release|Any CPU.Build.0 = Release|Any CPU
-		{D346BFEA-85A0-4A5D-BD89-D07E073B065E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{D346BFEA-85A0-4A5D-BD89-D07E073B065E}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{D346BFEA-85A0-4A5D-BD89-D07E073B065E}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{D346BFEA-85A0-4A5D-BD89-D07E073B065E}.Release|Any CPU.Build.0 = Release|Any CPU
-		{34C83D8F-D1D7-4B53-AA9F-5C2CF809CEBA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{34C83D8F-D1D7-4B53-AA9F-5C2CF809CEBA}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{34C83D8F-D1D7-4B53-AA9F-5C2CF809CEBA}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
-		{34C83D8F-D1D7-4B53-AA9F-5C2CF809CEBA}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{34C83D8F-D1D7-4B53-AA9F-5C2CF809CEBA}.Release|Any CPU.Build.0 = Release|Any CPU
-		{34C83D8F-D1D7-4B53-AA9F-5C2CF809CEBA}.Release|Any CPU.Deploy.0 = Release|Any CPU
+		{18E03183-FD2C-4676-B40C-ABCB5FC65E90}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{18E03183-FD2C-4676-B40C-ABCB5FC65E90}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{18E03183-FD2C-4676-B40C-ABCB5FC65E90}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{18E03183-FD2C-4676-B40C-ABCB5FC65E90}.Release|Any CPU.Build.0 = Release|Any CPU
+		{05B23426-797F-46B5-B376-5111BFD779DC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{05B23426-797F-46B5-B376-5111BFD779DC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{05B23426-797F-46B5-B376-5111BFD779DC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{05B23426-797F-46B5-B376-5111BFD779DC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BE45AC61-FA51-431A-AC8A-C1B16D73F276}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BE45AC61-FA51-431A-AC8A-C1B16D73F276}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BE45AC61-FA51-431A-AC8A-C1B16D73F276}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BE45AC61-FA51-431A-AC8A-C1B16D73F276}.Release|Any CPU.Build.0 = Release|Any CPU
+		{886A3CDF-FD6E-4D0E-8D05-8884DC11D877}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{886A3CDF-FD6E-4D0E-8D05-8884DC11D877}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{886A3CDF-FD6E-4D0E-8D05-8884DC11D877}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{886A3CDF-FD6E-4D0E-8D05-8884DC11D877}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FAFF3BAF-E84F-4CBE-AB52-6CEBEC124127}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FAFF3BAF-E84F-4CBE-AB52-6CEBEC124127}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FAFF3BAF-E84F-4CBE-AB52-6CEBEC124127}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FAFF3BAF-E84F-4CBE-AB52-6CEBEC124127}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
-	GlobalSection(SubversionScc) = preSolution
-		Svn-Managed = True
-		Manager = AnkhSVN - Subversion Support for Visual Studio
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {8C6EAB8C-1186-4EFB-BEC1-3597B32E3F4C}
 	EndGlobalSection
 EndGlobal
