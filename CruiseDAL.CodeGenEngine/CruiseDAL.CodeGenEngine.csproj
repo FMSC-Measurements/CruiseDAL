@@ -1,98 +1,43 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="3.5" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
   <PropertyGroup>
-    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProductVersion>9.0.30729</ProductVersion>
-    <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{0262A884-E5B3-4BFF-8C63-79EFC742151F}</ProjectGuid>
-    <OutputType>WinExe</OutputType>
-    <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>CruiseDAL.CodeGenEngine</RootNamespace>
-    <AssemblyName>CruiseDAL.CodeGenEngine</AssemblyName>
-    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
-    <FileAlignment>512</FileAlignment>
-    <StartupObject>
-    </StartupObject>
-    <RunPostBuildEvent>OnBuildSuccess</RunPostBuildEvent>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <DebugSymbols>true</DebugSymbols>
-    <DebugType>full</DebugType>
-    <Optimize>false</Optimize>
-    <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <DebugType>pdbonly</DebugType>
-    <Optimize>true</Optimize>
-    <OutputPath>bin\Release\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-  </PropertyGroup>
-  <ItemGroup>
-    <Reference Include="System" />
-    <Reference Include="System.Core">
-      <RequiredTargetFramework>3.5</RequiredTargetFramework>
-    </Reference>
-    <Reference Include="System.Drawing" />
-    <Reference Include="System.Windows.Forms" />
-    <Reference Include="System.Xml.Linq">
-      <RequiredTargetFramework>3.5</RequiredTargetFramework>
-    </Reference>
-    <Reference Include="System.Data.DataSetExtensions">
-      <RequiredTargetFramework>3.5</RequiredTargetFramework>
-    </Reference>
-    <Reference Include="System.Data" />
-    <Reference Include="System.Xml" />
-  </ItemGroup>
-  <ItemGroup>
-    <Compile Include="Constants.cs" />
-    <Compile Include="DataDefReader.cs" />
-    <Compile Include="Field.cs" />
-    <Compile Include="Program.cs">
-    </Compile>
-    <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Table.cs" />
-    <Compile Include="TableCollection.cs" />
-    <Compile Include="Test.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Test.Designer.cs">
-      <DependentUpon>Test.cs</DependentUpon>
-    </Compile>
-  </ItemGroup>
-  <ItemGroup>
-    <Service Include="{B4F97281-0DBD-4835-9ED8-7DFB966E87FF}" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="Test.resx">
-      <DependentUpon>Test.cs</DependentUpon>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="README.txt" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="DataDictionary.csv" />
-    <EmbeddedResource Include="TableSettings.csv" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="ViewSettings.csv" />
-  </ItemGroup>
-  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
-       Other similar extension points exist, see Microsoft.Common.targets.
-  <Target Name="BeforeBuild">
-  </Target>
-  <Target Name="AfterBuild">
-  </Target>
-  -->
-  <PropertyGroup>
+    <TargetFramework>net35</TargetFramework>
+    <!--<GenerateAssemblyInfo>false</GenerateAssemblyInfo>-->
+	
+	<RunPostBuildEvent>OnBuildSuccess</RunPostBuildEvent>
+  </PropertyGroup> 
+
+<PropertyGroup>
     <PostBuildEvent>COPY "$(TargetPath)" "C:\tmp\$(TargetFileName)"</PostBuildEvent>
-  </PropertyGroup>
-</Project>
+    <ApplicationIcon />
+    <OutputType>WinExe</OutputType>
+    <StartupObject>FMSCORM.CodeGenEngine.Program</StartupObject>
+  </PropertyGroup> 
+
+<ItemGroup>
+  <None Remove="DataDictionary.csv" />
+  <None Remove="TableSettings.csv" />
+  <None Remove="ViewSettings.csv" />
+</ItemGroup> 
+
+<ItemGroup>
+  <EmbeddedResource Include="DataDictionary.csv">
+    <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+  </EmbeddedResource>
+  <EmbeddedResource Include="TableSettings.csv">
+    <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+  </EmbeddedResource>
+  <EmbeddedResource Include="ViewSettings.csv">
+    <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+  </EmbeddedResource>
+</ItemGroup> 
+
+<ItemGroup>
+  <Folder Include="Properties\" />
+</ItemGroup> 
+
+<ItemGroup>
+  <Reference Include="System.Windows.Forms" />
+</ItemGroup>  
+  
+</Project> 
