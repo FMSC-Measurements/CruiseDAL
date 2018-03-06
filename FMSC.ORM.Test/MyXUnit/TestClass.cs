@@ -16,6 +16,7 @@ namespace Xunit
         public TestClassBase(ITestOutputHelper output)
         {
             _output = output;
+            _output.WriteLine($"CodeBase: {System.Reflection.Assembly.GetExecutingAssembly().CodeBase}");
         }
 
         public void StartTimer()

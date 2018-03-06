@@ -64,7 +64,12 @@ namespace FMSC.ORM.Core.SQL
                 _output.WriteLine("testing:\r\n" + commandText);
                 command.CommandText = "EXPLAIN " + commandText;
 
-                conn.ConnectionString = "Data Source =:memory:; Version = 3; New = True;";
+#if MICROSOFT_DATA_SQLITE
+                var connectionString = "Data Source =:memory:;";
+#elif SYSTEM_DATA_SQLITE
+                var connectionString = "Data Source =:memory:; Version = 3; New = True;";
+#endif
+                conn.ConnectionString = connectionString;
                 conn.Open();
 
                 command.Connection = conn;

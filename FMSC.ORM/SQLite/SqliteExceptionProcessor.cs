@@ -1,7 +1,15 @@
 ﻿using FMSC.ORM.Core;
 using System;
 using System.Data;
-using System.Data.SQLite;
+
+
+#if SYSTEM_DATA_SQLITE
+using SqliteException = System.Data.SQLite.SQLiteException;
+#elif MICROSOFT_DATA_SQLITE
+using Microsoft.Data.Sqlite;
+#else
+#warning " " 
+#endif
 
 namespace FMSC.ORM.SQLite
 {
@@ -9,48 +17,41 @@ namespace FMSC.ORM.SQLite
     {
         public Exception ProcessException(Exception innerException, IDbConnection connection, string commandText, IDbTransaction transaction)
         {
-            if (innerException is SQLiteException)
+            if (innerException is SqliteException)
             {
                 SQLException sqlEx;
 
-                var ex = innerException as SQLiteException;
-#if Mono
-                var errorCode = ex.ErrorCode;
-#else
-                var errorCode = ex.ResultCode;
-#endif
-                switch (errorCode)
-                {
-                    case SQLiteErrorCode.Corrupt:
-#if Mono
-                    case SQLiteErrorCode.NotADatabase:
-#else
-                    case SQLiteErrorCode.NotADb:
-#endif
-                    case SQLiteErrorCode.Perm:
-#if Mono
-                    case SQLiteErrorCode.IOErr:
-#else
-                    case SQLiteErrorCode.IoErr:
+                var ex = innerException as SqliteException;
+
+#if MICROSOFT_DATA_SQLITE
+                var errorCode = (SqliteResultCode)ex.SqliteErrorCode;
+#elif SYSTEM_DATA_SQLITE
+                var errorCode = (SqliteResultCode)ex.ErrorCode;
 #endif
 
-                    case SQLiteErrorCode.CantOpen:
-                    case SQLiteErrorCode.Full:
-                    case SQLiteErrorCode.Auth:
+                switch (errorCode)
+                {
+                    case SqliteResultCode.Corrupt:
+                    case SqliteResultCode.NotADb:
+                    case SqliteResultCode.Perm:
+                    case SqliteResultCode.IoErr:
+                    case SqliteResultCode.CantOpen:
+                    case SqliteResultCode.Full:
+                    case SqliteResultCode.Auth:
                         {
                             return new FileAccessException(errorCode.ToString(), innerException);
                         }
-                    case SQLiteErrorCode.ReadOnly:
+                    case SqliteResultCode.ReadOnly:
                         {
                             sqlEx = new ReadOnlyException(null, innerException);
                             break;
                         }
-                    case SQLiteErrorCode.Locked:
+                    case SqliteResultCode.Locked:
                         {
                             sqlEx = new ConnectionException("file is locked", ex);
                             break;
                         }
-                    case SQLiteErrorCode.Constraint:
+                    case SqliteResultCode.Constraint:
                         {
                             if (innerException.Message.IndexOf("UNIQUE constraint failed", StringComparison.OrdinalIgnoreCase) >= 0)
                             {

@@ -254,7 +254,7 @@ namespace FMSC.ORM.SQLite
         }
 
         [Fact]
-        public void TestReadOnly()
+        public void TestReadOnly_Insert()
         {
             var path = System.IO.Path.GetFullPath("readOnly.db");
 
@@ -266,17 +266,42 @@ namespace FMSC.ORM.SQLite
                 System.IO.File.Delete(path);
             }
 
-            using (var ds = new SQLiteDatastore("readOnly.db"))
+            using (var ds = new SQLiteDatastore(path))
             {
                 ds.Execute(TestDBBuilder.CREATE_AUTOINCREMENT_TABLE);
                 ds.CreateTable("Tbl", new ColumnInfo[] { new ColumnInfo() { Name = "Data", DBType = "TEXT" } }, false);
 
+
+                System.IO.File.Exists(path).Should().BeTrue();
                 System.IO.File.SetAttributes(path, System.IO.FileAttributes.ReadOnly);
 
-                //ds.BeginTransaction();
-                Assert.Throws<ReadOnlyException>(() => ds.BeginTransaction());
                 //TODO assert that connection is not open and transaction depth is 0
                 Assert.Throws<ReadOnlyException>(() => ds.Execute("INSERT INTO Tbl (Data) VALUES ('something');"));
+            }
+        }
+
+        [Fact]
+        public void TestReadOnly_BeginTransaction()
+        {
+            var path = System.IO.Path.GetFullPath("readOnly.db");
+
+            _output.WriteLine(path);
+
+            if (System.IO.File.Exists(path))
+            {
+                System.IO.File.SetAttributes(path, System.IO.FileAttributes.Normal);
+                System.IO.File.Delete(path);
+            }
+
+            using (var ds = new SQLiteDatastore(path))
+            {
+                ds.Execute(TestDBBuilder.CREATE_AUTOINCREMENT_TABLE);
+                ds.CreateTable("Tbl", new ColumnInfo[] { new ColumnInfo() { Name = "Data", DBType = "TEXT" } }, false);
+
+                System.IO.File.Exists(path).Should().BeTrue();
+                System.IO.File.SetAttributes(path, System.IO.FileAttributes.ReadOnly);
+
+                ds.Invoking(x => x.BeginTransaction()).ShouldThrow<ReadOnlyException>();
             }
         }
 

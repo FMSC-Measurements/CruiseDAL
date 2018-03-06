@@ -397,7 +397,7 @@ namespace CruiseDAL
 
         private void releaseAccessControl()
         {
-#if !Mobile
+#if !NetCF
             if (_accessControl != null)
             {
                 try

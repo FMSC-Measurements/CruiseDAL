@@ -4,9 +4,19 @@ using FMSC.ORM.Util;
 using System;
 using System.Collections.Generic;
 using System.Data;
-using System.Data.SQLite;
+
 using System.Linq;
 using System.Text;
+
+#if SYSTEM_DATA_SQLITE
+using SqliteConnection = System.Data.SQLite.SQLiteConnection;
+using SqliteParameter = System.Data.SQLite.SQLiteParameter;
+using SqliteCommand = System.Data.SQLite.SQLiteCommand;
+#elif MICROSOFT_DATA_SQLITE
+using Microsoft.Data.Sqlite;
+#else
+#warning " " 
+#endif
 
 namespace FMSC.ORM.SQLite
 {
@@ -29,25 +39,25 @@ namespace FMSC.ORM.SQLite
 #if SYSTEM_DATA_SQLITE
             return string.Format("Data Source={0};Version=3;", datastore.Path);
 #else
-            return string.Format("Data Source={0};", ds.Path);
+            return string.Format("Data Source={0};", datastore.Path);
 #endif
         }
 
         public IDbConnection CreateConnection()
         {
-            var connection = new SQLiteConnection();
+            var connection = new SqliteConnection();
             connection.StateChange += _Connection_StateChange;
             return connection;
         }
 
         public IDbDataParameter CreateParameter(string name, object value)
         {
-            return new SQLiteParameter(name, value);
+            return new SqliteParameter(name, value);
         }
 
         public IDbCommand CreateCommand()
         {
-            return new SQLiteCommand();
+            return new SqliteCommand();
         }
 
         public string GetColumnDef(ColumnInfo col, bool includeConstraint)
