@@ -97,13 +97,13 @@ namespace FMSC.ORM.SQLite
         {
             string commandText = null;
             //check sqlite_sequence to see if we need to perform update or insert
-            if (this.GetRowCount("sqlite_sequence", "WHERE name = ?", tableName) >= 1)
+            if (this.GetRowCount("sqlite_sequence", "WHERE name = ?1", tableName) >= 1)
             {
-                commandText = "UPDATE sqlite_sequence SET seq = ? WHERE name = ?";
+                commandText = "UPDATE sqlite_sequence SET seq = ?1 WHERE name = ?2";
             }
             else
             {
-                commandText = "INSERT INTO sqlite_sequence  (seq, name) VALUES (?, ?);";
+                commandText = "INSERT INTO sqlite_sequence  (seq, name) VALUES (?1, ?2);";
             }
 
             this.Execute(commandText, start, tableName);
@@ -116,7 +116,7 @@ namespace FMSC.ORM.SQLite
         /// <returns></returns>
         public bool CheckTableExists(string tableName)
         {
-            return GetRowCount("sqlite_master", "WHERE type = 'table' AND name = ?", tableName) > 0;
+            return GetRowCount("sqlite_master", "WHERE type = 'table' AND name = ?1", tableName) > 0;
         }
 
         /// <summary>
@@ -222,7 +222,7 @@ namespace FMSC.ORM.SQLite
         {
             var ident = GetLastInsertRowID(connection, transaction);
 
-            var query = "SELECT " + fieldName + " FROM " + tableName + " WHERE rowid = ?;";
+            var query = "SELECT " + fieldName + " FROM " + tableName + " WHERE rowid = ?1;";
 
             return ExecuteScalar(connection, query, new object[] { ident }, transaction);
 
@@ -236,7 +236,7 @@ namespace FMSC.ORM.SQLite
         /// <returns></returns>
         public string GetTableSQL(String tableName)
         {
-            return (String)this.ExecuteScalar("SELECT sql FROM Sqlite_master WHERE name = ? COLLATE NOCASE and type = 'table';", tableName);
+            return (String)this.ExecuteScalar("SELECT sql FROM Sqlite_master WHERE name = ?1 COLLATE NOCASE and type = 'table';", tableName);
         }
 
         /// <summary>

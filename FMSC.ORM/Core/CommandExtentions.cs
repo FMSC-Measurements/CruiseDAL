@@ -11,11 +11,13 @@ namespace FMSC.ORM.Core
         {
             if (paramArgs != null)
             {
+                int counter = 1; 
                 foreach (var value in paramArgs)
                 {
                     var param = command.CreateParameter();
-                    param.ParameterName = null;
-                    param.Value = value;
+                    param.ParameterName = "?" + counter++.ToString();
+
+                    param.Value = value ?? DBNull.Value;
 
                     command.Parameters.Add(param);
                 }

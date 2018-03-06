@@ -372,7 +372,7 @@ namespace FMSC.ORM.SQLite
         {
             _output.WriteLine("testing value {0} : {1}", expected, typeof(T).Name);
 
-            T result = ds.ExecuteScalar<T>("SELECT ?;", expected);
+            T result = ds.ExecuteScalar<T>("SELECT ?1;", expected);
             _output.WriteLine("     as {0} gives {1}", typeof(T).Name, result.ToString());
             Assert.Equal(expected, result);
 
@@ -380,7 +380,7 @@ namespace FMSC.ORM.SQLite
             _output.WriteLine("     NULL as {0} gives {1}", typeof(T).Name, result.ToString());
             Assert.Equal(default(T), result);
 
-            T? nResult = ds.ExecuteScalar<T?>("SELECT ?;", expected);
+            T? nResult = ds.ExecuteScalar<T?>("SELECT ?1;", expected);
             _output.WriteLine("     as {0} gives {1}", typeof(T?).Name, nResult.ToString());
             Assert.True(nResult.HasValue);
             Assert.Equal(expected, nResult.Value);
