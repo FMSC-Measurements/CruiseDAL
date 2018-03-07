@@ -9,15 +9,20 @@ using Xunit.Abstractions;
 
 namespace FMSC.ORM.SQLite
 {
-    public class SQLiteDatastoreTest : TestClassBase, IClassFixture<TestDBFixture>
+    public class SQLiteDatastoreTest : TestClassBase , IDisposable
     {
-        private TestDBFixture _fixture;
+        private readonly string _tempDir;
+        private readonly string _testCreatePath;
+        private readonly string _testReadOnlyPath;
         string _emptyDatastorePath;
         SQLiteDatastore _emptyDataStore;
 
-        public SQLiteDatastoreTest(ITestOutputHelper output, TestDBFixture fixture) : base(output)
+        public SQLiteDatastoreTest(ITestOutputHelper output) : base(output)
         {
-            _fixture = fixture;
+            _tempDir = System.IO.Path.GetTempPath();
+            _testCreatePath = System.IO.Path.Combine(_tempDir, "testCreate.db");
+
+            _testReadOnlyPath = System.IO.Path.Combine(_tempDir, "testReadOnly.db");
         }
 
 
@@ -26,12 +31,10 @@ namespace FMSC.ORM.SQLite
         [Fact]
         public void CreateSQLiteDatastoreTest()
         {
-            var path = _fixture.CreatedDBPath;
-            path = System.IO.Path.GetFullPath(path);
-            _output.WriteLine("Path: " + path);
+            _output.WriteLine("Path: " + _testCreatePath);
             var dbBuilder = new TestDBBuilder();
 
-            using (var ds = new SQLiteDatastore(path))
+            using (var ds = new SQLiteDatastore(_testCreatePath))
             {
                 Assert.False(ds.Exists, "Pre-condition failed file already created");
 
@@ -256,7 +259,7 @@ namespace FMSC.ORM.SQLite
         [Fact]
         public void TestReadOnly_Insert()
         {
-            var path = System.IO.Path.GetFullPath("readOnly.db");
+            var path = _testReadOnlyPath;
 
             _output.WriteLine(path);
 
@@ -283,7 +286,7 @@ namespace FMSC.ORM.SQLite
         [Fact]
         public void TestReadOnly_BeginTransaction()
         {
-            var path = System.IO.Path.GetFullPath("readOnly.db");
+            var path = _testReadOnlyPath;
 
             _output.WriteLine(path);
 
@@ -627,6 +630,14 @@ namespace FMSC.ORM.SQLite
 
                 ds.CurrentTransaction.Should().BeNull();
                 ds.TransactionDepth.ShouldBeEquivalentTo(0);
+            }
+        }
+
+        public void Dispose()
+        {
+            if(System.IO.File.Exists(_testCreatePath))
+            {
+                System.IO.File.Delete(_testCreatePath);
             }
         }
     }
