@@ -9,15 +9,20 @@ using Xunit.Abstractions;
 
 namespace FMSC.ORM.SQLite
 {
-    public class SQLiteDatastoreTest : TestClassBase, IClassFixture<TestDBFixture>
+    public class SQLiteDatastoreTest : TestClassBase , IDisposable
     {
-        private TestDBFixture _fixture;
+        private readonly string _tempDir;
+        private readonly string _testCreatePath;
+        private readonly string _testReadOnlyPath;
         string _emptyDatastorePath;
         SQLiteDatastore _emptyDataStore;
 
-        public SQLiteDatastoreTest(ITestOutputHelper output, TestDBFixture fixture) : base(output)
+        public SQLiteDatastoreTest(ITestOutputHelper output) : base(output)
         {
-            _fixture = fixture;
+            _tempDir = System.IO.Path.GetTempPath();
+            _testCreatePath = System.IO.Path.Combine(_tempDir, "testCreate.db");
+
+            _testReadOnlyPath = System.IO.Path.Combine(_tempDir, "testReadOnly.db");
         }
 
 
@@ -26,12 +31,10 @@ namespace FMSC.ORM.SQLite
         [Fact]
         public void CreateSQLiteDatastoreTest()
         {
-            var path = _fixture.CreatedDBPath;
-            path = System.IO.Path.GetFullPath(path);
-            _output.WriteLine("Path: " + path);
+            _output.WriteLine("Path: " + _testCreatePath);
             var dbBuilder = new TestDBBuilder();
 
-            using (var ds = new SQLiteDatastore(path))
+            using (var ds = new SQLiteDatastore(_testCreatePath))
             {
                 Assert.False(ds.Exists, "Pre-condition failed file already created");
 
@@ -254,9 +257,9 @@ namespace FMSC.ORM.SQLite
         }
 
         [Fact]
-        public void TestReadOnly()
+        public void TestReadOnly_Insert()
         {
-            var path = System.IO.Path.GetFullPath("readOnly.db");
+            var path = _testReadOnlyPath;
 
             _output.WriteLine(path);
 
@@ -266,17 +269,42 @@ namespace FMSC.ORM.SQLite
                 System.IO.File.Delete(path);
             }
 
-            using (var ds = new SQLiteDatastore("readOnly.db"))
+            using (var ds = new SQLiteDatastore(path))
             {
                 ds.Execute(TestDBBuilder.CREATE_AUTOINCREMENT_TABLE);
                 ds.CreateTable("Tbl", new ColumnInfo[] { new ColumnInfo() { Name = "Data", DBType = "TEXT" } }, false);
 
+
+                System.IO.File.Exists(path).Should().BeTrue();
                 System.IO.File.SetAttributes(path, System.IO.FileAttributes.ReadOnly);
 
-                //ds.BeginTransaction();
-                Assert.Throws<ReadOnlyException>(() => ds.BeginTransaction());
                 //TODO assert that connection is not open and transaction depth is 0
                 Assert.Throws<ReadOnlyException>(() => ds.Execute("INSERT INTO Tbl (Data) VALUES ('something');"));
+            }
+        }
+
+        [Fact]
+        public void TestReadOnly_BeginTransaction()
+        {
+            var path = _testReadOnlyPath;
+
+            _output.WriteLine(path);
+
+            if (System.IO.File.Exists(path))
+            {
+                System.IO.File.SetAttributes(path, System.IO.FileAttributes.Normal);
+                System.IO.File.Delete(path);
+            }
+
+            using (var ds = new SQLiteDatastore(path))
+            {
+                ds.Execute(TestDBBuilder.CREATE_AUTOINCREMENT_TABLE);
+                ds.CreateTable("Tbl", new ColumnInfo[] { new ColumnInfo() { Name = "Data", DBType = "TEXT" } }, false);
+
+                System.IO.File.Exists(path).Should().BeTrue();
+                System.IO.File.SetAttributes(path, System.IO.FileAttributes.ReadOnly);
+
+                ds.Invoking(x => x.BeginTransaction()).ShouldThrow<ReadOnlyException>();
             }
         }
 
@@ -347,7 +375,7 @@ namespace FMSC.ORM.SQLite
         {
             _output.WriteLine("testing value {0} : {1}", expected, typeof(T).Name);
 
-            T result = ds.ExecuteScalar<T>("SELECT ?;", expected);
+            T result = ds.ExecuteScalar<T>("SELECT ?1;", expected);
             _output.WriteLine("     as {0} gives {1}", typeof(T).Name, result.ToString());
             Assert.Equal(expected, result);
 
@@ -355,7 +383,7 @@ namespace FMSC.ORM.SQLite
             _output.WriteLine("     NULL as {0} gives {1}", typeof(T).Name, result.ToString());
             Assert.Equal(default(T), result);
 
-            T? nResult = ds.ExecuteScalar<T?>("SELECT ?;", expected);
+            T? nResult = ds.ExecuteScalar<T?>("SELECT ?1;", expected);
             _output.WriteLine("     as {0} gives {1}", typeof(T?).Name, nResult.ToString());
             Assert.True(nResult.HasValue);
             Assert.Equal(expected, nResult.Value);
@@ -602,6 +630,14 @@ namespace FMSC.ORM.SQLite
 
                 ds.CurrentTransaction.Should().BeNull();
                 ds.TransactionDepth.ShouldBeEquivalentTo(0);
+            }
+        }
+
+        public void Dispose()
+        {
+            if(System.IO.File.Exists(_testCreatePath))
+            {
+                System.IO.File.Delete(_testCreatePath);
             }
         }
     }

@@ -170,7 +170,7 @@ namespace FMSC.ORM.EntityModel.Support
 
                 var pram = command.CreateParameter();
                 pram.ParameterName = field.SQLPramName;
-                pram.Value = value;
+                pram.Value = value ?? DBNull.Value;
                 command.Parameters.Add(pram);
             }
 

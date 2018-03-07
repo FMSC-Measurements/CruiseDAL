@@ -145,7 +145,12 @@ namespace FMSC.ORM.EntityModel.Support
 
             using (var connection = dialect.CreateConnection())
             {
-                connection.ConnectionString = "Data Source =:memory:; Version = 3; New = True;";
+#if MICROSOFT_DATA_SQLITE
+                var connectionString = "Data Source =:memory:;";
+#elif SYSTEM_DATA_SQLITE
+                var connectionString = "Data Source =:memory:; Version = 3; New = True;";
+#endif
+                connection.ConnectionString = connectionString;
                 connection.Open();
 
                 using (var command = connection.CreateCommand())
