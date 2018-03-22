@@ -106,7 +106,7 @@ namespace CruiseDAL.DataObjects
 
             //Delete Count Records for stratum
             var allCountInSg = dal.From<CountTreeDO>()
-                    .Where("SampleGroup_CN = ?")
+                    .Where("SampleGroup_CN = @p1")
                     .Read(SampleGroup_CN).ToList();
                                 
             foreach (CountTreeDO Cnt in allCountInSg)

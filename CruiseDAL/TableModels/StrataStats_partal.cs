@@ -19,7 +19,7 @@ namespace CruiseDAL.DataObjects
         {
             //Delete sample group stats for stratum
             var allSGStatsInStratumStats = dal.From<SampleGroupStatsDO>()
-                 .Where("StratumStats_CN = ?")
+                 .Where("StratumStats_CN = @p1")
                  .Read(StratumStats_CN).ToList();
                                 
            foreach (SampleGroupStatsDO SgStats in allSGStatsInStratumStats)

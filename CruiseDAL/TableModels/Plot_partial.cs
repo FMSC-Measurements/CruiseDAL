@@ -15,7 +15,7 @@ namespace CruiseDAL.DataObjects
             {
                 return dal.From<PlotDO>()
                     .Join("Stratum", "USING (Stratum_CN)")
-                    .Where("Stratum.Code = ?")
+                    .Where("Stratum.Code = @p1")
                     .Read(stratum).ToList();
 
                 //.Read<PlotDO>("JOIN Stratum WHERE Plot.Stratum_CN = Stratum.Stratum_CN AND Stratum.Code = ?;", (object)stratum);
@@ -24,7 +24,7 @@ namespace CruiseDAL.DataObjects
             {
                 return dal.From<PlotDO>()
                     .Join("CuttingUnit", "USING (CuttingUnit_CN)")
-                    .Where("CuttingUnit.Code = ?")
+                    .Where("CuttingUnit.Code = @p1")
                     .Read(unit).ToList();
 
                 //.Read<PlotDO>("JOIN CuttingUnit WHERE Plot.CuttingUnit_CN = CuttingUnit.CuttingUnit_CN AND CuttingUnit.Code = ?;", (object)unit);
@@ -32,7 +32,7 @@ namespace CruiseDAL.DataObjects
             return dal.From<PlotDO>()
                 .Join("CuttingUnit", "USING (CuttingUnit_CN)")
                 .Join("Stratum", "USING (Stratum_CN)")
-                .Where("CuttingUnit.Code = ? AND Stratum.Code = ?")
+                .Where("CuttingUnit.Code = @p1 AND Stratum.Code = @p2")
                 .Read(unit, stratum).ToList();
 
             //.Read<PlotDO>("JOIN CuttingUnit JOIN Stratum WHERE Plot.CuttingUnit_CN = CuttingUnit.CuttingUnit_CN AND CuttingUnit.Code = ? AND Plot.Stratum_CN = Stratum.Stratum_CN AND Stratum.Code = ?;", (object)unit, stratum);

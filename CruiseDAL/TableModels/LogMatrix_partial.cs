@@ -13,7 +13,7 @@ namespace CruiseDAL.DataObjects
         {
             var dict = new Dictionary<string, List<LogMatrixDO>>();
             var list = cruiseDAL.From<LogMatrixDO>()
-                .Where("ReportNumber = ?")
+                .Where("ReportNumber = @p1")
                 .Read(reportNum).ToList();
 
                 //.Read<LogMatrixDO>("WHERE ReportNumber = ?", (object)reportNum);

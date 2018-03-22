@@ -1,19 +1,7 @@
-﻿using System;
-
-using System.Collections.Generic;
-using System.Text;
-using CruiseDAL.DataObjects;
-using CruiseDAL.Schema;
-using System.Linq;
+﻿using CruiseDAL.DataObjects;
 using FMSC.ORM.EntityModel;
-
-#if ANDROID
-using Mono.Data.Sqlite;
-#else
-
-using System.Data.SQLite;
-
-#endif
+using System.Collections.Generic;
+using System.Linq;
 
 namespace CruiseDAL.MappingCollections
 {
@@ -32,7 +20,7 @@ namespace CruiseDAL.MappingCollections
 
         protected override CuttingUnitStratumDO retrieveMapObject(CuttingUnitDO child)
         {
-            return DAL.From<CuttingUnitStratumDO>().Where("CuttingUnit_CN = ? AND Stratum_CN = ?")
+            return DAL.From<CuttingUnitStratumDO>().Where("CuttingUnit_CN = @p1 AND Stratum_CN = @p2")
                 .Read(child.CuttingUnit_CN, Parent.Stratum_CN).FirstOrDefault();
 
             //.ReadSingleRow<CuttingUnitStratumDO>(
@@ -43,7 +31,7 @@ namespace CruiseDAL.MappingCollections
         {
             return DAL.From<CuttingUnitDO>()
                 .Join("CuttingUnitStratum", "USING (CuttingUnit_CN)")
-                .Where("Stratum_CN = ?")
+                .Where("Stratum_CN = @p1")
                 .Read(Parent.Stratum_CN).ToList();
 
             //.Read<CuttingUnitDO>(
@@ -69,7 +57,7 @@ namespace CruiseDAL.MappingCollections
         protected override CuttingUnitStratumDO retrieveMapObject(StratumDO child)
         {
             return DAL.From<CuttingUnitStratumDO>()
-                .Where("Stratum_CN = ? AND CuttingUnit_CN = ?")
+                .Where("Stratum_CN = @p1 AND CuttingUnit_CN = @p2")
                 .Read(child.Stratum_CN, Parent.CuttingUnit_CN)
                 .FirstOrDefault();
 
@@ -81,7 +69,7 @@ namespace CruiseDAL.MappingCollections
         {
             return DAL.From<StratumDO>()
                 .Join("CuttingUnitStratum", "USING (Stratum_CN)")
-                .Where("CuttingUnit_CN = ?")
+                .Where("CuttingUnit_CN = @p1")
                 .Read(Parent.CuttingUnit_CN).ToList();
 
             //.Read<StratumDO>(
@@ -107,7 +95,7 @@ namespace CruiseDAL.MappingCollections
         protected override SampleGroupTreeDefaultValueDO retrieveMapObject(TreeDefaultValueDO child)
         {
             return DAL.From<SampleGroupTreeDefaultValueDO>()
-                .Where("TreeDefaultValue_CN = ? AND SampleGroup_CN = ?")
+                .Where("TreeDefaultValue_CN = @p1 AND SampleGroup_CN = @p2")
                 .Read(child.TreeDefaultValue_CN, Parent.SampleGroup_CN)
                 .FirstOrDefault();
 
@@ -119,7 +107,7 @@ namespace CruiseDAL.MappingCollections
         {
             return DAL.From<TreeDefaultValueDO>()
                 .Join("SampleGroupTreeDefaultValue", "Using(TreeDefaultValue_CN)")
-                .Where("SampleGroup_CN = ?")
+                .Where("SampleGroup_CN = @p1")
                 .Read(Parent.SampleGroup_CN).ToList();
 
             //.Read<TreeDefaultValueDO>(
@@ -145,7 +133,7 @@ namespace CruiseDAL.MappingCollections
         protected override TreeDefaultValueTreeAuditValueDO retrieveMapObject(TreeAuditValueDO child)
         {
             return DAL.From<TreeDefaultValueTreeAuditValueDO>()
-                .Where("TreeAuditValue_CN = ? AND TreeDefaultValue_CN = ?")
+                .Where("TreeAuditValue_CN = @p1 AND TreeDefaultValue_CN = @p2")
                 .Read(child.TreeAuditValue_CN, Parent.TreeDefaultValue_CN)
                 .FirstOrDefault();
 
@@ -157,7 +145,7 @@ namespace CruiseDAL.MappingCollections
         {
             return DAL.From<TreeAuditValueDO>()
                 .Join("TreeDefaultValueTreeAuditValue", "Using(TreeAuditValue_CN)")
-                .Where("TreeDefaultValue_CN = ?")
+                .Where("TreeDefaultValue_CN = @p1")
                 .Read(Parent.TreeDefaultValue_CN).ToList();
 
             //.Read<TreeAuditValueDO>(
@@ -182,7 +170,7 @@ namespace CruiseDAL.MappingCollections
         protected override TreeDefaultValueTreeAuditValueDO retrieveMapObject(TreeDefaultValueDO child)
         {
             return DAL.From<TreeDefaultValueTreeAuditValueDO>()
-                .Where("TreeDefaultValue_CN = ? AND TreeAuditValue_CN = ?")
+                .Where("TreeDefaultValue_CN = @p1 AND TreeAuditValue_CN = @p2")
                 .Read(child.TreeDefaultValue_CN, Parent.TreeAuditValue_CN).FirstOrDefault();
 
             //.ReadSingleRow<TreeDefaultValueTreeAuditValueDO>(
@@ -193,7 +181,7 @@ namespace CruiseDAL.MappingCollections
         {
             return DAL.From<TreeDefaultValueDO>()
                 .Join("TreeDefaultValueTreeAuditValue", "USING(TreeDefaultValue_CN)")
-                .Where("TreeAuditValue_CN = ?")
+                .Where("TreeAuditValue_CN = @p1")
                 .Read(Parent.TreeAuditValue_CN).ToList();
 
             //.Read<TreeDefaultValueDO>(
@@ -218,7 +206,7 @@ namespace CruiseDAL.MappingCollections
         protected override SampleGroupStatsTreeDefaultValueDO retrieveMapObject(TreeDefaultValueDO child)
         {
             return DAL.From<SampleGroupStatsTreeDefaultValueDO>()
-                .Where("TreeDefaultValue_CN = ? AND SampleGroupStats_CN = ?")
+                .Where("TreeDefaultValue_CN = @p1 AND SampleGroupStats_CN = @p2")
                 .Read(child.TreeDefaultValue_CN, Parent.SampleGroupStats_CN)
                 .FirstOrDefault();
 
@@ -230,7 +218,7 @@ namespace CruiseDAL.MappingCollections
         {
             return DAL.From<TreeDefaultValueDO>()
                 .Join("SampleGroupStatsTreeDefaultValue", "Using(TreeDefaultValue_CN)")
-                .Where("SampleGroupStats_CN = ?")
+                .Where("SampleGroupStats_CN = @p1")
                 .Read(Parent.SampleGroupStats_CN).ToList();
 
             //.Read<TreeDefaultValueDO>(

@@ -247,7 +247,7 @@ namespace CruiseDAL
             string tableName = _tableName;
 
             var errors = _dataObject.DAL.From<ErrorLogDO>()
-                .Where("TableName = ? AND CN_Number = ? ")
+                .Where("TableName = @p1 AND CN_Number = @p2 ")
                 .Read(tableName, _dataObject.rowID);
 
             foreach (ErrorLogDO e in errors)

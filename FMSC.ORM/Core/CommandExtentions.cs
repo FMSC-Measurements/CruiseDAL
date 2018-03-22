@@ -15,7 +15,7 @@ namespace FMSC.ORM.Core
                 foreach (var value in paramArgs)
                 {
                     var param = command.CreateParameter();
-                    param.ParameterName = "?" + counter++.ToString();
+                    param.ParameterName = "@p" + counter++.ToString();
 
                     param.Value = value ?? DBNull.Value;
 
@@ -43,8 +43,6 @@ namespace FMSC.ORM.Core
 
         public static IEnumerable<string> GetPropNames(object obj)
         {
-            //TODO use entityDescription instead?
-
             return obj.GetType().GetProperties(System.Reflection.BindingFlags.GetProperty | System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.Public)
                 .Select(p => p.Name);
         }

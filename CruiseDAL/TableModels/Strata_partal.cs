@@ -79,7 +79,7 @@ namespace CruiseDAL.DataObjects
             return dal.From<StratumDO>()
                 .Join("CuttingUnitStratum", "USING (Stratum_CN)")
                 .Join("CuttingUnit", "USING (CuttingUnit_CN)")
-                .Where("CuttingUnit.Code = ?")
+                .Where("CuttingUnit.Code = @p1")
                 .Read(code).ToList();
         }
 
@@ -98,15 +98,15 @@ namespace CruiseDAL.DataObjects
         public static int DeleteStratum(DatastoreRedux dal, StratumDO stratum)
         {
             // check tree table for data
-            if (dal.GetRowCount("Tree", "WHERE Stratum_CN = ?", stratum.Stratum_CN) > 0) { return (-1); }
+            if (dal.GetRowCount("Tree", "WHERE Stratum_CN = @p1", stratum.Stratum_CN) > 0) { return (-1); }
             // check plot table for data
-            if (dal.GetRowCount("Plot", "WHERE Stratum_CN = ?", stratum.Stratum_CN) > 0) { return (-1); }
+            if (dal.GetRowCount("Plot", "WHERE Stratum_CN = @p1", stratum.Stratum_CN) > 0) { return (-1); }
             // Check Count table for each sample group
-            if (dal.GetRowCount("CountTree", "JOIN SampleGroup ON CountTree.SampleGroup_CN = SampleGroup.SampleGroup_CN WHERE SampleGroup.Stratum_CN = ? AND CountTree.TreeCount > 0", stratum.Stratum_CN) > 0) return (-1);
+            if (dal.GetRowCount("CountTree", "JOIN SampleGroup ON CountTree.SampleGroup_CN = SampleGroup.SampleGroup_CN WHERE SampleGroup.Stratum_CN = @p1 AND CountTree.TreeCount > 0", stratum.Stratum_CN) > 0) return (-1);
 
             //Delete sample groups for stratum
             List<SampleGroupDO> allSGInStratum = dal.From<SampleGroupDO>()
-                 .Where("Stratum_CN = ?")
+                 .Where("Stratum_CN = @p1")
                  .Read(stratum.Stratum_CN).ToList();
 
             //.Read<SampleGroupDO>("WHERE Stratum_CN = ?", stratum.Stratum_CN);
@@ -114,7 +114,7 @@ namespace CruiseDAL.DataObjects
             {
                 //Delete Count Records for stratum
                 List<CountTreeDO> allCountInSG = dal.From<CountTreeDO>()
-                      .Where("SampleGroup_CN = ?")
+                      .Where("SampleGroup_CN = @p1")
                       .Read(Sg.SampleGroup_CN).ToList();
 
                 //.Read<CountTreeDO>("WHERE SampleGroup_CN = ?", Sg.SampleGroup_CN);
@@ -127,7 +127,7 @@ namespace CruiseDAL.DataObjects
 
             //Delete stratum stats for stratum
             List<StratumStatsDO> allStratumStatsInStratum = dal.From<StratumStatsDO>()
-                 .Where("Stratum_CN = ?")
+                 .Where("Stratum_CN = @p1")
                  .Read(stratum.Stratum_CN)
                  .ToList();
             //.Read<StratumStatsDO>(
@@ -179,7 +179,7 @@ DELETE FROM FixCNTTallyClass WHERE Stratum_CN = {0};",
         public List<T> ReadSampleGroups<T>() where T : SampleGroupDO, new()
         {
             return this.DAL.From<T>()
-                .Where("Stratum_CN = ?")
+                .Where("Stratum_CN = @p")
                 .Read(this.Stratum_CN).ToList();
 
             //.Read<T>("WHERE Stratum_CN = ?", this.Stratum_CN);

@@ -329,14 +329,14 @@ namespace CruiseDAL
         public string ReadGlobalValue(String block, String key)
         {
             return this.ExecuteScalar("SELECT Value FROM GLOBALS WHERE " +
-            "ifnull(Block, '') = ifnull(?, '') " +
-            "AND ifnull(Key, '') = ifnull(?, '');", block, key) as string;
+            "ifnull(Block, '') = ifnull(@p1, '') " +
+            "AND ifnull(Key, '') = ifnull(@p2, '');", block, key) as string;
         }
 
         public void WriteGlobalValue(String block, String key, String value)
         {
             this.Execute("INSERT OR REPLACE INTO Globals (Block, Key, Value) " +
-                "Values (?, ?, ?);", block, key, value);
+                "Values (@p1, @p2, @p3);", block, key, value);
         }
 
         #endregion cruise/cut specific stuff
@@ -352,7 +352,9 @@ namespace CruiseDAL
         {
             ReleaseConnection(true);
 
+#if SYSTEM_DATA_SQLITE
             System.Data.SQLite.SQLiteConnection.ClearAllPools();
+#endif
             GC.Collect();
             GC.WaitForPendingFinalizers();
 

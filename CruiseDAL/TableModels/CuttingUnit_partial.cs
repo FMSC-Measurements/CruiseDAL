@@ -48,7 +48,7 @@ namespace CruiseDAL.DataObjects
             return dal.From<CuttingUnitDO>()
                 .Join("CuttingUnitStratum", "USING (CuttingUnit_CN)")
                 .Join("Stratum", "Using (Stratum_CN)")
-                .Where("Stratum.Code = ?")
+                .Where("Stratum.Code = @p1")
                 .Read(code).ToList();
 
             //.Read<CuttingUnitDO>("JOIN CuttingUnitStratum JOIN Stratum WHERE CuttingUnit.CuttingUnit_CN = CuttingUnitStratum.CuttingUnit_CN AND CuttingUnitStratum.Stratum_CN = Stratum.Stratum_CN AND Stratum.Code = ?;", (object)code);
@@ -63,7 +63,7 @@ namespace CruiseDAL.DataObjects
         {
             return this.DAL.From<T>()
                 .Join("CuttingUnitStratum", "USING (Stratum_CN)")
-                .Where("CuttingUnit_CN = ?")
+                .Where("CuttingUnit_CN = @p1")
                 .Read(this.CuttingUnit_CN).ToList(); 
 
                 //.Read<T>("JOIN CuttingUnitStratum USING (Stratum_CN) WHERE CuttingUnit_CN = ?", this.CuttingUnit_CN);

@@ -25,7 +25,7 @@ namespace CruiseDAL.DataObjects
                             //this.TreeDefaultValue.TreeAuditValues.Populate();
                             List<TreeAuditValueDO> tavList = this.DAL.From<TreeAuditValueDO>()
                                 .Join("TreeDefaultValueTreeAuditValue", "Using (TreeAuditValue_CN)")
-                                .Where("TreeDefaultValue_CN = ?")
+                                .Where("TreeDefaultValue_CN = @p1")
                                 .Read(this.TreeDefaultValue_CN).ToList();
 
                             //    .Read<TreeAuditValueDO>(
@@ -56,9 +56,9 @@ namespace CruiseDAL.DataObjects
             lock (this)
             {
                 var db = this.DAL;
-                List<LogDO> logs = db.From<LogDO>().Where("Tree_CN = ?").Read(this.Tree_CN).ToList(); //.Read<LogDO>("WHERE Tree_CN = ?", this.Tree_CN);
-                List<TreeCalculatedValuesDO> tcvList = db.From<TreeCalculatedValuesDO>().Where("Tree_CN = ?").Read(this.Tree_CN).ToList(); //.Read<TreeCalculatedValuesDO>("WHERE Tree_CN = ?", this.Tree_CN);
-                List<LogStockDO> lsList = db.From<LogStockDO>().Where("Tree_CN = ?").Read(this.Tree_CN).ToList(); //.Read<LogStockDO>("WHERE Tree_CN = ?", this.Tree_CN);
+                List<LogDO> logs = db.From<LogDO>().Where("Tree_CN = @p1").Read(this.Tree_CN).ToList(); //.Read<LogDO>("WHERE Tree_CN = ?", this.Tree_CN);
+                List<TreeCalculatedValuesDO> tcvList = db.From<TreeCalculatedValuesDO>().Where("Tree_CN = @p1").Read(this.Tree_CN).ToList(); //.Read<TreeCalculatedValuesDO>("WHERE Tree_CN = ?", this.Tree_CN);
+                List<LogStockDO> lsList = db.From<LogStockDO>().Where("Tree_CN = @p1").Read(this.Tree_CN).ToList(); //.Read<LogStockDO>("WHERE Tree_CN = ?", this.Tree_CN);
 
                 db.BeginTransaction();
                 try
