@@ -5,52 +5,32 @@ namespace FMSC.ORM.SQLite
 {
     public abstract class SQLiteDatabaseBuilder : DatabaseBuilder
     {
-        public new SQLiteDatastore Datastore
+        public override void CreateDatastore(DatastoreRedux datastore)
         {
-            get
-            {
-                return (SQLiteDatastore)base.Datastore;
-            }
-            set
-            {
-                base.Datastore = value;
-            }
-        }
+            var sqliteDatastore = (SQLiteDatastore)datastore;
 
-        public override void CreateDatastore()
-        {
-            if (Datastore.Exists && !Datastore.IsInMemory)
+            if (!sqliteDatastore.IsInMemory)
             {
-                System.IO.File.Delete(Datastore.Path);
+                if (sqliteDatastore.Exists)
+                {
+                    System.IO.File.Delete(sqliteDatastore.Path);
+                }
+
+                //This just creates a zero - byte file which SQLite
+                // will turn into a database when the file is opened properly.
+                using (FileStream fs = File.Create(sqliteDatastore.Path))
+                {
+                    fs.Close();
+                }
             }
 
             try
             {
-                if (!Datastore.IsInMemory)
-                {
-                    //This just creates a zero - byte file which SQLite
-                    // will turn into a database when the file is opened properly.
-                    using (FileStream fs = File.Create(Datastore.Path))
-                    {
-                        fs.Close();
-                    }
-                }
-                Datastore.BeginTransaction();
-                try
-                {
-                    CreateTables();
-                    CreateTriggers();
-                    Datastore.CommitTransaction();
-                }
-                catch
-                {
-                    Datastore.RollbackTransaction();
-                    throw;
-                }
+                base.CreateDatastore(datastore);
             }
             catch
             {
-                System.IO.File.Delete(Datastore.Path);
+                System.IO.File.Delete(sqliteDatastore.Path);
                 throw;
             }
         }

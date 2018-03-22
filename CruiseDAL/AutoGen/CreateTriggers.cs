@@ -1,5 +1,13 @@
 ﻿ 
 
+using System;
+
+namespace CruiseDAL.Schema
+{
+	public static partial class Schema
+	{
+			public static readonly string CREATE_TRIGGERS = 
+			@"
 --Core Tables--
 --Sale--
 CREATE TRIGGER OnInsertedSale
@@ -450,5 +458,9 @@ END;
 --MessageLog--
 --Globals--
 --Component--
+";
+
+	}//END CLASS
+}//END NAMESPACE
 
 

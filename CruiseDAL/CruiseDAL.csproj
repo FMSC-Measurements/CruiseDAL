@@ -1,10 +1,18 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net40</TargetFramework>
+    <TargetFrameworks>net40;netstandard20</TargetFrameworks>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
   </PropertyGroup>
 
+  <PropertyGroup Condition="'$(TargetFramework)' == 'net40'">
+    <DefineConstants>$(DefineConstrants);SYSTEM_DATA_SQLITE</DefineConstants>
+  </PropertyGroup>
+
+  <!--<PropertyGroup Condition="'$(TargetFramework)' == 'netstandard20'">
+    <DefineConstants>$(DefineConstrants);NETSTANDARD</DefineConstants>
+  </PropertyGroup>-->
+  
   <ItemGroup>
     <Compile Remove="NetCF\**" />
     <EmbeddedResource Remove="NetCF\**" />
@@ -18,10 +26,39 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Include="AutoGen\CreateTriggers.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>CreateTriggers.tt</DependentUpon>
+    </None>
+    <None Include="AutoGen\CruiseCreate.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>CruiseCreate.tt</DependentUpon>
+    </None>
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\FMSC.ORM\FMSC.ORM.csproj" />
   </ItemGroup>
 
   <ItemGroup>
+    <None Update="AutoGen\CreateTriggers.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>CreateTriggers.cs</LastGenOutput>
+    </None>
+    <None Update="AutoGen\CruiseCreate.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>CruiseCreate.cs</LastGenOutput>
+    </None>
+    <None Update="AutoGen\DAL.AutoGen.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>DAL.AutoGen.cs</LastGenOutput>
+    </None>
+    <None Update="CruiseDAL\Schema\Schema.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>Schema.cs</LastGenOutput>
+    </None>
     <None Update="TableModels\TableModels.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
       <LastGenOutput>TableModels.cs</LastGenOutput>
@@ -33,6 +70,26 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Compile Update="AutoGen\CreateTriggers.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>CreateTriggers.tt</DependentUpon>
+    </Compile>
+    <Compile Update="AutoGen\CruiseCreate.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>CruiseCreate.tt</DependentUpon>
+    </Compile>
+    <Compile Update="AutoGen\DAL.AutoGen.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>DAL.AutoGen.tt</DependentUpon>
+    </Compile>
+    <Compile Update="CruiseDAL\Schema\Schema.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Schema.tt</DependentUpon>
+    </Compile>
     <Compile Update="TableModels\TableModels.cs">
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>

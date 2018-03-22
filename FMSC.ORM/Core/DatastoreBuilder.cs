@@ -1,15 +1,19 @@
-﻿namespace FMSC.ORM.Core
+﻿using System.Data;
+
+namespace FMSC.ORM.Core
 {
     public abstract class DatabaseBuilder
     {
-        public DatastoreRedux Datastore { get; set; }
+        public virtual void CreateDatastore(DatastoreRedux datastore)
+        {
+            CreateTables(datastore);
+            CreateTriggers(datastore);
+        }
 
-        public abstract void CreateDatastore();
+        public abstract void CreateTables(DatastoreRedux datastore);
 
-        public abstract void CreateTables();
+        public abstract void CreateTriggers(DatastoreRedux datastore);
 
-        public abstract void CreateTriggers();
-
-        public abstract void UpdateDatastore();
+        public abstract void UpdateDatastore(DatastoreRedux datastore);
     }
 }

@@ -1,5 +1,5 @@
-﻿<#@ template language="C#v3.5"  debug="true" hostSpecific="true" #>
-<#@ output extension=".sql" #>
+﻿<#@ template language="C#"  debug="true" hostSpecific="true" #>
+<#@ output extension=".cs" #>
 <#@ Assembly Name="System.Core.dll" #>
 <#@ Assembly Name="System.Windows.Forms.dll" #>
 <#@ Assembly Name="C:\tmp\CruiseDAL.CodeGenEngine.exe" #>
@@ -15,10 +15,15 @@ DataDictionaryReader dr = new DataDictionaryReader();
 
 ICollection<Table> TableList = dr.AllTables.Values;
 #>
+using System;
 
-PRAGMA foreign_keys = ON;--is the nessicary? no data is being inserted yet.
+namespace CruiseDAL.Schema
+{
+	public static partial class Schema
+	{
 
-
+		public static string CREATE_TABLES = 
+		@"
 <#
 	
 	foreach(TableCollection tc in dr.TableCollections)
@@ -62,8 +67,10 @@ JOIN CuttingUnit USING (CuttingUnit_CN)
 JOIN Stratum USING (Stratum_CN);
 
 
-INSERT INTO Globals (Block, Key, Value) VALUES ("Database", "Version", "<#=dr.DBVersion#>"); 
-PRAGMA user_version = <#=dr.SchemaVersion#>;
+INSERT INTO Globals (Block, Key, Value) VALUES ('Database', 'Version', '<#=dr.DBVersion#>'); 
+PRAGMA user_version = <#=dr.SchemaVersion#>;";
+	}//END CLASS
+}//END NAMESPACE
 
 
 <#+

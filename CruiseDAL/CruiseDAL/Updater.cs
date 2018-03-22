@@ -2,11 +2,12 @@
 using CruiseDAL.Schema;
 using FMSC.ORM;
 using FMSC.ORM.Core.SQL;
+using SqlBuilder;
 using System;
 
 namespace CruiseDAL
 {
-    internal static class Updater
+    public static class Updater
     {
         public static void Update(DAL db)
         {
@@ -1065,8 +1066,7 @@ JOIN Stratum USING (Stratum_CN);");
                     db.Execute("DROP TRIGGER " + trigName + ";");
                 }
 
-                string createTriggers = CruiseDALDatastoreBuilder.GetCreateTriggers();
-                db.Execute(createTriggers);
+                db.Execute(Schema.Schema.CREATE_TRIGGERS);
 
                 SetDatabaseVersion(db, "2015.09.01");
                 db.CommitTransaction();

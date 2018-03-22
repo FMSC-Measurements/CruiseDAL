@@ -16,7 +16,6 @@ DataDictionaryReader dr = new DataDictionaryReader();
 #>
 
 using System;
-using CruiseDAL;
 
 namespace CruiseDAL.Schema
 {
@@ -39,7 +38,7 @@ PopIndent();
 
 #>
 
-	public static class Schema
+	public static partial class Schema
 	{
 		public static String[] TABLE_NAMES = { <#=String.Join(",", tableNames.ToArray())#> };
 	}

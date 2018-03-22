@@ -1,7 +1,6 @@
  
 
 using System;
-using CruiseDAL;
 
 namespace CruiseDAL.Schema
 {
@@ -944,7 +943,7 @@ namespace CruiseDAL.Schema
 
 	#endregion
 
-	public static class Schema
+	public static partial class Schema
 	{
 		public static String[] TABLE_NAMES = { "Sale","CuttingUnit","Stratum","CuttingUnitStratum","SampleGroup","TreeDefaultValue","SampleGroupTreeDefaultValue","Plot","Tree","Log","Stem","CountTree","Tally","TreeEstimate","FixCNTTallyClass","FixCNTTallyPopulation","VolumeEquation","BiomassEquation","ValueEquation","QualityAdjEquation","Reports","TreeCalculatedValues","LCD","POP","PRO","LogStock","SampleGroupStats","SampleGroupStatsTreeDefaultValue","StratumStats","Regression","LogMatrix","TreeDefaultValueTreeAuditValue","TreeAuditValue","LogGradeAuditRule","LogFieldSetup","TreeFieldSetup","LogFieldSetupDefault","TreeFieldSetupDefault","CruiseMethods","LoggingMethods","ProductCodes","UOMCodes","Regions","Forests","ErrorLog","MessageLog","Globals","Component" };
 	}

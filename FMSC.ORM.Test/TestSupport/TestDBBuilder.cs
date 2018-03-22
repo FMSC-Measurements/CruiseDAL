@@ -1,9 +1,6 @@
-﻿using FMSC.ORM.SQLite;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using FMSC.ORM.Core;
+using FMSC.ORM.SQLite;
+using System.Data;
 
 namespace FMSC.ORM.TestSupport
 {
@@ -39,17 +36,17 @@ namespace FMSC.ORM.TestSupport
     Data TEXT
 );";
 
-        public override void CreateTables()
+        public override void CreateTables(DatastoreRedux datastore)
         {
-            this.Datastore.Execute(CREATE_MULTIPROPTABLE);
-            this.Datastore.Execute(CREATE_AUTOINCREMENT_TABLE);
+            datastore.Execute(CREATE_MULTIPROPTABLE);
+            datastore.Execute(CREATE_AUTOINCREMENT_TABLE);
         }
 
-        public override void CreateTriggers()
+        public override void CreateTriggers(DatastoreRedux datastore)
         {
         }
 
-        public override void UpdateDatastore()
+        public override void UpdateDatastore(DatastoreRedux datastore)
         {
         }
     }

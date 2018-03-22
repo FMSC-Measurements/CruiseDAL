@@ -1,8 +1,13 @@
 ﻿ 
+using System;
 
-PRAGMA foreign_keys = ON;--is the nessicary? no data is being inserted yet.
+namespace CruiseDAL.Schema
+{
+	public static partial class Schema
+	{
 
-
+		public static string CREATE_TABLES = 
+		@"
 --Core Tables--
     CREATE TABLE Sale (
 				Sale_CN INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -49,7 +54,7 @@ PRAGMA foreign_keys = ON;--is the nessicary? no data is being inserted yet.
 				KZ3PPNT INTEGER Default 0,
 				Hotkey TEXT,
 				FBSCode TEXT,
-				YieldComponent TEXT Default "CL",
+				YieldComponent TEXT Default 'CL',
 				Month INTEGER Default 0,
 				Year INTEGER Default 0,
 				CreatedBy TEXT DEFAULT 'none',
@@ -106,9 +111,9 @@ PRAGMA foreign_keys = ON;--is the nessicary? no data is being inserted yet.
 				Recoverable REAL Default 0.0,
 				Chargeable TEXT,
 				ContractSpecies TEXT,
-				TreeGrade TEXT Default "0",
+				TreeGrade TEXT Default '0',
 				MerchHeightLogLength INTEGER Default 0,
-				MerchHeightType TEXT Default "F",
+				MerchHeightType TEXT Default 'F',
 				FormClass REAL Default 0.0,
 				BarkThicknessRatio REAL Default 0.0,
 				AverageZ REAL Default 0.0,
@@ -161,7 +166,7 @@ PRAGMA foreign_keys = ON;--is the nessicary? no data is being inserted yet.
 				CountOrMeasure TEXT,
 				TreeCount REAL Default 0.0,
 				KPI REAL Default 0.0,
-				STM TEXT Default "N",
+				STM TEXT Default 'N',
 				SeenDefectPrimary REAL Default 0.0,
 				SeenDefectSecondary REAL Default 0.0,
 				RecoverablePrimary REAL Default 0.0,
@@ -812,7 +817,9 @@ JOIN CuttingUnit USING (CuttingUnit_CN)
 JOIN Stratum USING (Stratum_CN);
 
 
-INSERT INTO Globals (Block, Key, Value) VALUES ("Database", "Version", "2.2.0"); 
-PRAGMA user_version = 4;
+INSERT INTO Globals (Block, Key, Value) VALUES ('Database', 'Version', '2.2.1'); 
+PRAGMA user_version = 4;";
+	}//END CLASS
+}//END NAMESPACE
 
 

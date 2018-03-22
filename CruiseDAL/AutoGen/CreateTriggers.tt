@@ -1,5 +1,5 @@
-﻿<#@ template language="C#v3.5"  debug="true" hostSpecific="true" #>
-<#@ output extension=".sql" #>
+﻿<#@ template language="C#"  debug="true" hostSpecific="true" #>
+<#@ output extension=".cs" #>
 <#@ Assembly Name="System.Core.dll" #>
 <#@ Assembly Name="System.Windows.Forms.dll" #>
 <#@ Assembly Name="C:\tmp\CruiseDAL.CodeGenEngine.exe" #>
@@ -16,6 +16,14 @@ DataDictionaryReader dr = new DataDictionaryReader();
 ICollection<Table> TableList = dr.AllTables.Values;
 #>
 
+using System;
+
+namespace CruiseDAL.Schema
+{
+	public static partial class Schema
+	{
+			public static readonly string CREATE_TRIGGERS = 
+			@"
 <#
 	
 	foreach(TableCollection tc in dr.TableCollections)
@@ -28,9 +36,11 @@ ICollection<Table> TableList = dr.AllTables.Values;
 	        
 		}//end foreach
     }
-
-
 #>
+";
+
+	}//END CLASS
+}//END NAMESPACE
 
 
 <#+
