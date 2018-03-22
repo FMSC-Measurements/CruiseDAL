@@ -81,8 +81,10 @@ namespace SqlBuilder.Dialects
                     { return SqliteDataType.REAL; }
                 case DbType.Date:
                 case DbType.DateTime:
+#if!NetCF
                 case DbType.DateTime2:
                 case DbType.DateTimeOffset:
+#endif
                 case DbType.Time:
                 case DbType.Byte:
                 case DbType.Boolean:
