@@ -2,7 +2,7 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProductVersion>9.0.30729</ProductVersion>
+    <ProductVersion>9.0.21022</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{DC8A4894-F4A8-4554-B475-2EBAD49AF148}</ProjectGuid>
     <OutputType>Library</OutputType>
@@ -59,6 +59,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AutoGen\CreateTriggers.cs" />
+    <Compile Include="AutoGen\CruiseCreate.cs" />
     <Compile Include="AutoGen\DAL.AutoGen.cs" />
     <Compile Include="EntityAttributes\CreatedByFieldAttribute.cs" />
     <Compile Include="EntityAttributes\ModifiedByFieldAttribute.cs" />
@@ -77,11 +79,6 @@
     <Compile Include="NetCF\DeviceInfo.cs" />
     <Compile Include="NetCF\ExtensionAttribute.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Properties\Resources_CF20.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>Resources.resx</DependentUpon>
-    </Compile>
     <Compile Include="TableModels\AuditValue_partial.cs" />
     <Compile Include="TableModels\CruiseMethod_partial.cs" />
     <Compile Include="TableModels\CuttingUnit_partial.cs" />
@@ -100,14 +97,6 @@
     <Compile Include="TableModels\Tree_partial.cs" />
     <Compile Include="ViewModels\CountTree_ViewDO.cs" />
     <Compile Include="ViewModels\StratumAcres_ViewDO.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="AutoGen\CreateTriggers.sql" />
-    <EmbeddedResource Include="AutoGen\CruiseCreate.sql" />
-    <EmbeddedResource Include="Properties\Resources.resx">
-      <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>Resources_CF20.Designer.cs</LastGenOutput>
-    </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
     <Service Include="{B4F97281-0DBD-4835-9ED8-7DFB966E87FF}" />

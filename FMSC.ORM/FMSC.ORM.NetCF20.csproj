@@ -84,7 +84,6 @@
     <Compile Include="Core\SQL\SQLUpdateCommand.cs" />
     <Compile Include="Core\SQL\TableOrSubQuery.cs" />
     <Compile Include="Core\SQL\WhereClause.cs" />
-    <Compile Include="Properties\AssemblyInfo.NetCF20.cs" />
     <Compile Include="SQLite\SQLiteDatabaseBuilder.cs" />
     <Compile Include="SQLite\SQLiteDatastore.cs" />
   </ItemGroup>
@@ -129,9 +128,11 @@
     <Compile Include="EntityModel\Validation\Validator.cs" />
     <Compile Include="NetCF\ExtensionAttribute.cs" />
     <Compile Include="NetCF\StringBuilderExtentions.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SQLite\SQLiteDataTypes.cs" />
     <Compile Include="SQLite\SqliteDialect.cs" />
     <Compile Include="SQLite\SqliteExceptionProcessor.cs" />
+    <Compile Include="SQLite\SqliteResultCode.cs" />
     <Compile Include="Util\EnumerableExtentions.cs" />
     <Compile Include="Util\StringBuilderExtentions.cs" />
   </ItemGroup>

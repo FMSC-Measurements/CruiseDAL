@@ -117,8 +117,6 @@ namespace CruiseDAL
             Debug.Assert(builder != null);
             System.Diagnostics.Debug.Assert(!String.IsNullOrEmpty(path), "path is null or empty");
 
-            builder.Datastore = this;
-
             Path = path;
 
             this.Initialize(makeNew, builder);
@@ -133,7 +131,7 @@ namespace CruiseDAL
             }
             if (makeNew)
             {
-                builder.CreateDatastore();
+                builder.CreateDatastore(this);
             }
             else if (!makeNew && !Exists)
             {
@@ -147,7 +145,7 @@ namespace CruiseDAL
             }
 
             this.SchemaVersion = this.ExecuteScalar<long>("PRAGMA user_version;");
-            builder.UpdateDatastore();
+            builder.UpdateDatastore(this);
 
             try
             {

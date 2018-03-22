@@ -2,7 +2,6 @@
 using CruiseDAL.Schema;
 using FMSC.ORM;
 using FMSC.ORM.Core.SQL;
-using SqlBuilder;
 using System;
 
 namespace CruiseDAL
