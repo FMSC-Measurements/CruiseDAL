@@ -63,6 +63,7 @@ namespace FMSC.Util
         {
             string str = "<Unknown>";
 
+#if NET40
             try
             {
                 RegistryKey key = Registry.CurrentUser.OpenSubKey(@"ControlPanel\Owner");
@@ -85,6 +86,9 @@ namespace FMSC.Util
             catch
             {
             }
+#else
+#warning GetUserName not defined
+#endif
 
             return str;
         }
@@ -97,6 +101,7 @@ namespace FMSC.Util
         {
             string str = "<Unknown>";
 
+#if NET40
             try
             {
                 RegistryKey key = Registry.LocalMachine.OpenSubKey("Ident");
@@ -106,6 +111,9 @@ namespace FMSC.Util
             catch
             {
             }
+#else
+#warning GetMichineName not defined
+#endif
 
             return str;
         }
@@ -118,6 +126,7 @@ namespace FMSC.Util
         {
             string str = "<Unknown>";
 
+#if NET40
             try
             {
                 RegistryKey key = Registry.LocalMachine.OpenSubKey("Ident");
@@ -128,6 +137,10 @@ namespace FMSC.Util
             catch
             {
             }
+
+#else
+#warning GetMachineDescription not defined
+#endif
 
             return str;
         }
