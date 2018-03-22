@@ -1,12 +1,20 @@
-﻿namespace FMSC.ORM.Core.SQL
+﻿using System;
+using System.Text;
+using SqlBuilder;
+
+namespace FMSC.ORM.Core.SQL
 {
-    public class LegacySelectPlaceholder : SelectClause
+    public class LegacyWhereClausePlaceholder : WhereClause
     {
+        public LegacyWhereClausePlaceholder() 
+        {
+        }
+
         public uint Index { get; set; }
 
-        public override string ToSQL()
+        public override void AppendTo(StringBuilder sb)
         {
-            return "{" + Index.ToString() + "}";
+            sb.Append("{").Append(Index).Append("}");
         }
     }
 }

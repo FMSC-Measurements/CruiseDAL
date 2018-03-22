@@ -1,4 +1,5 @@
-﻿using System;
+﻿using SqlBuilder;
+using System;
 using System.Collections.Generic;
 
 namespace FMSC.ORM.Core.SQL.QueryBuilder
@@ -6,9 +7,9 @@ namespace FMSC.ORM.Core.SQL.QueryBuilder
     public class QueryBuilder<T> : IQuerryAcceptsJoin<T> where T : class, new()
     {
         protected DatastoreRedux Datastore;
-        protected SQLSelectBuilder Builder;
+        protected SqlSelectBuilder Builder;
 
-        public QueryBuilder(DatastoreRedux datastore, SQLSelectBuilder builder)
+        public QueryBuilder(DatastoreRedux datastore, SqlSelectBuilder builder)
         {
             Datastore = datastore;
             Builder = builder;

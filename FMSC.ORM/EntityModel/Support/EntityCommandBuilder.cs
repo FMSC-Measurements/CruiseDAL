@@ -1,5 +1,7 @@
-﻿using FMSC.ORM.Core.SQL;
+﻿using FMSC.ORM.Core;
+using FMSC.ORM.Core.SQL;
 using FMSC.ORM.EntityModel.Attributes;
+using SqlBuilder;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -9,7 +11,7 @@ namespace FMSC.ORM.EntityModel.Support
 {
     public class EntityCommandBuilder
     {
-        private SQLSelectBuilder _legacySelectBuilder;
+        private SqlSelectBuilder _legacySelectBuilder;
 
         public EntityDescription EntityDescription { get; set; }
 
@@ -39,9 +41,9 @@ namespace FMSC.ORM.EntityModel.Support
 
         //}
 
-        public SQLSelectBuilder MakeSelectCommand(SelectSource source)
+        public SqlSelectBuilder MakeSelectCommand(TableOrSubQuery source)
         {
-            var selectBuilder = new SQLSelectBuilder();
+            var selectBuilder = new SqlSelectBuilder();
             selectBuilder.Source = source ?? EntityDescription.Source;
 
             //order fields by ordinal
@@ -60,9 +62,9 @@ namespace FMSC.ORM.EntityModel.Support
         {
             Debug.Assert(_legacySelectBuilder != null);
 
-            this._legacySelectBuilder.Clause = new LegacySelectPlaceholder() { Index = 0 };
+            this._legacySelectBuilder.WhereClause = new LegacyWhereClausePlaceholder() { Index = 0 };
 
-            return String.Format(_legacySelectBuilder.ToSQL(), selection);
+            return String.Format(_legacySelectBuilder.ToString(), selection);
         }
 
         //protected void InitializeLegacySelectCommand()
@@ -100,7 +102,7 @@ namespace FMSC.ORM.EntityModel.Support
 
         #region build insert
 
-        public void BuildInsertCommand(IDbCommand command, object data, object keyData, Core.SQL.OnConflictOption option)
+        public void BuildInsertCommand(IDbCommand command, object data, object keyData, OnConflictOption option)
         {
             Debug.Assert(data != null);
 
@@ -139,7 +141,7 @@ namespace FMSC.ORM.EntityModel.Support
                 command.Parameters.Add(pram);
             }
 
-            var builder = new SQLInsertCommand
+            var builder = new SqlInsertCommand
             {
                 TableName = EntityDescription.SourceName,
                 ConflictOption = option,
@@ -154,7 +156,7 @@ namespace FMSC.ORM.EntityModel.Support
 
         #region build update
 
-        public void BuildUpdateCommand(IDbCommand command, object data, object keyData, Core.SQL.OnConflictOption option)
+        public void BuildUpdateCommand(IDbCommand command, object data, object keyData, OnConflictOption option)
         {
             Debug.Assert(data != null);
             Debug.Assert(EntityDescription.Fields.PrimaryKeyField != null);
@@ -183,7 +185,7 @@ namespace FMSC.ORM.EntityModel.Support
 
             var where = new WhereClause(keyField.Name + " = " + keyField.SQLPramName);
 
-            var expression = new SQLUpdateCommand()
+            var expression = new SqlUpdateCommand()
             {
                 TableName = EntityDescription.SourceName,
                 ColumnNames = columnNames,

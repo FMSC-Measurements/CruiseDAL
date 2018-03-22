@@ -2,6 +2,7 @@
 using FMSC.ORM.Core.SQL;
 using FMSC.ORM.EntityModel.Attributes;
 using FMSC.ORM.EntityModel.Support;
+using SqlBuilder;
 using System;
 using System.ComponentModel;
 using System.Diagnostics;

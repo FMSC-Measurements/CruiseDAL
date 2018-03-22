@@ -1,11 +1,13 @@
-﻿using FMSC.ORM.Core.SQL;
-using FMSC.ORM.Core.SQL.QueryBuilder;
+﻿using FMSC.ORM.Core.SQL.QueryBuilder;
 using FMSC.ORM.EntityModel;
 using FMSC.ORM.EntityModel.Attributes;
 using FMSC.ORM.EntityModel.Support;
+using SqlBuilder;
+using SqlBuilder.Dialects;
 using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Data.Common;
 using System.Diagnostics;
 using System.Linq;
 
@@ -33,15 +35,17 @@ namespace FMSC.ORM.Core
 
         protected ISqlDialect SqlDialect { get; set; }
         protected IExceptionProcessor ExceptionProcessor { get; set; }
+        protected DbProviderFactory ProviderFactory { get; set; }
 
         public DatabaseBuilder DatabaseBuilder { get; set; }
         public string Path { get; protected set; }
         public object TransactionSyncLock { get { return _transactionSyncLock; } }
 
-        protected DatastoreRedux(ISqlDialect dialect, IExceptionProcessor exceptionProcessor)
+        protected DatastoreRedux(ISqlDialect dialect, IExceptionProcessor exceptionProcessor, DbProviderFactory providerFactory)
         {
             SqlDialect = dialect;
             ExceptionProcessor = exceptionProcessor;
+            ProviderFactory = providerFactory;
         }
 
         #region Entity Info
@@ -106,19 +110,19 @@ namespace FMSC.ORM.Core
 
         public QueryBuilder<T> From<T>() where T : class, new()
         {
-            return From<T>((SelectSource)null);
+            return From<T>((TableOrSubQuery)null);
         }
 
-        public QueryBuilder<T> From<T>(SQLSelectBuilder selectCMD) where T : class, new()
+        public QueryBuilder<T> From<T>(SqlSelectBuilder selectCMD) where T : class, new()
         {
             var source = new TableOrSubQuery(selectCMD, null);
             return From<T>(source);
         }
 
-        public QueryBuilder<T> From<T>(SelectSource source) where T : class, new()
+        public QueryBuilder<T> From<T>(TableOrSubQuery source) where T : class, new()
         {
             EntityDescription entityDescription = LookUpEntityByType(typeof(T));
-            SQLSelectBuilder builder = entityDescription.CommandBuilder.MakeSelectCommand(source);
+            SqlSelectBuilder builder = entityDescription.CommandBuilder.MakeSelectCommand(source);
 
             return new QueryBuilder<T>(this, builder);
         }
@@ -456,9 +460,9 @@ namespace FMSC.ORM.Core
             }
         }
 
-        public IEnumerable<TResult> Read<TResult>(SQLSelectBuilder selectBuilder, object[] selectionArgs) where TResult : class, new()
+        public IEnumerable<TResult> Read<TResult>(SqlSelectBuilder selectBuilder, object[] selectionArgs) where TResult : class, new()
         {
-            return Read<TResult>(selectBuilder.ToSQL() + ";", selectionArgs);
+            return Read<TResult>(selectBuilder.ToString() + ";", selectionArgs);
         }
 
         //protected IEnumerable<TResult> Read<TResult>(IDbConnection connection, IDbTransaction transaction, string commandText, object[] paramaters) where TResult : class, new()
@@ -635,9 +639,9 @@ namespace FMSC.ORM.Core
             }
         }
 
-        public IEnumerable<TResult> Query<TResult>(SQLSelectBuilder selectBuilder, Object[] selectionArgs) where TResult : new()
+        public IEnumerable<TResult> Query<TResult>(SqlSelectBuilder selectBuilder, Object[] selectionArgs) where TResult : new()
         {
-            return Query<TResult>(selectBuilder.ToSQL() + ";", selectionArgs);
+            return Query<TResult>(selectBuilder.ToString() + ";", selectionArgs);
         }
 
         //protected IEnumerable<TResult> Query<TResult>(IDbConnection connection, IDbTransaction transaction, String commandText, Object[] paramaters) where TResult : new()
@@ -1019,11 +1023,13 @@ namespace FMSC.ORM.Core
 
         public IDbConnection CreateConnection()
         {
-            IDbConnection conn = SqlDialect.CreateConnection();
-            conn.ConnectionString = SqlDialect.BuildConnectionString(this);
+            IDbConnection conn = ProviderFactory.CreateConnection();
+            conn.ConnectionString = BuildConnectionString();
 
             return conn;
         }
+
+        protected abstract string BuildConnectionString();
 
         /// <summary>
         /// if _holdConnection > 0 returns PersistentConnection
@@ -1113,7 +1119,7 @@ namespace FMSC.ORM.Core
             }
         }
 
-        protected virtual void OnInsertingData(object data, SQL.OnConflictOption option)
+        protected virtual void OnInsertingData(object data, OnConflictOption option)
         {
             if (data is IPersistanceTracking)
             {
@@ -1179,14 +1185,12 @@ namespace FMSC.ORM.Core
         /// <param name="fieldDef">The field definition.</param>
         public void AddField(string tableName, ColumnInfo fieldDef)
         {
-            var command = string.Format("ALTER TABLE {0} ADD COLUMN {1};", tableName, SqlDialect.GetColumnDef(fieldDef, true));
+            var command = string.Format("ALTER TABLE {0} ADD COLUMN {1};", tableName, SqlDialect.GetColumnDefinition(fieldDef));
             Execute(command);
         }
 
         public void CreateTable(string tableName, IEnumerable<ColumnInfo> cols, bool temp)
         {
-            var createTableCommand = SqlDialect.BuildCreateTable(tableName, cols, temp);
-
             lock (_persistentConnectionSyncLock)
             {
                 var connection = OpenConnection();
@@ -1203,9 +1207,14 @@ namespace FMSC.ORM.Core
 
         public void CreateTable(IDbConnection connection, string tableName, IEnumerable<ColumnInfo> cols, bool temp, IDbTransaction transaction)
         {
-            var createTableCommand = SqlDialect.BuildCreateTable(tableName, cols, temp);
+            var createTableCommand = new CreateTable(SqlDialect)
+            {
+                TableName = tableName,
+                Columns = cols,
+                Temp = temp
+            };
 
-            ExecuteNonQuery(connection, createTableCommand, (object[])null, transaction);
+            ExecuteNonQuery(connection, createTableCommand.ToString() + ";", (object[])null, transaction);
         }
 
         #region IDisposable Support

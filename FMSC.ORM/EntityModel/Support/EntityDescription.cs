@@ -1,5 +1,6 @@
 using FMSC.ORM.Core.SQL;
 using FMSC.ORM.EntityModel.Attributes;
+using SqlBuilder;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -17,7 +18,7 @@ namespace FMSC.ORM.EntityModel.Support
             get { return (Source != null) ? Source.SourceName : null; }
         }
 
-        public SelectSource Source { get; set; }
+        public TableOrSubQuery Source { get; set; }
 
         public FieldAttributeCollection Fields { get; set; }
 
@@ -57,7 +58,7 @@ namespace FMSC.ORM.EntityModel.Support
                         eAttr.SourceName
                         , eAttr.Alias)
                     {
-                        JoinCommands = eAttr.JoinCommands
+                        Joins = eAttr.JoinCommands
                     };
                 }
 
