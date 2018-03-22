@@ -1,0 +1,26 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net452</TargetFramework>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="$(TargetFramework) == 'net452'">
+    <DefineConstants>$(DefineConstants);SYSTEM_DATA_SQLITE</DefineConstants>
+  </PropertyGroup>
+
+  <ItemGroup Condition="$(DefineConstants.Contains('SYSTEM_DATA_SQLITE'))">
+    <PackageReference Include="System.Data.SQLite.Core" Version="1.0.108" />
+  </ItemGroup>
+  
+  <ItemGroup>
+    <PackageReference Include="FluentAssertions" Version="4.19.4" />
+    
+    <PackageReference Include="xunit" Version="2.3.1" />
+    <PackageReference Include="xunit.runner.visualstudio" Version="2.3.1" />
+  </ItemGroup>
+  
+  <ItemGroup>
+    <ProjectReference Include="..\SQLbuilders\SqlBuilder.csproj" />
+  </ItemGroup>
+
+</Project>
