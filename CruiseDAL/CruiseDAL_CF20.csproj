@@ -106,6 +106,10 @@
       <Project>{D346BFEA-85A0-4A5D-BD89-D07E073B065E}</Project>
       <Name>FMSC.ORM.NetCF20</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Sqlbuilder\SqlBuilder_CF20.csproj">
+      <Project>{212479E1-1FB7-41D8-A264-EA7D85720D12}</Project>
+      <Name>SqlBuilder_CF20</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <Content Include="..\libs\SQLite\Mobile_CF20\SQLite.Interop.094.dll">

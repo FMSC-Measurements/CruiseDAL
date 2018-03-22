@@ -5,6 +5,7 @@ using System.Text;
 
 using CruiseDAL.DataObjects;
 using FMSC.ORM.Core.SQL;
+using SqlBuilder;
 
 namespace CruiseDAL
 {

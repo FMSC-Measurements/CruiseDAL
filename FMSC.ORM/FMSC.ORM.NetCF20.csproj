@@ -63,27 +63,8 @@
     <Compile Include="Core\DatastoreRedux.cs" />
     <Compile Include="Core\EntityCache.cs" />
     <Compile Include="Core\Exceptions.cs" />
-    <Compile Include="Core\SQL\ColumnInfo.cs" />
-    <Compile Include="Core\SQL\GroupByClause.cs" />
-    <Compile Include="Core\SQL\Interfaces\IAcceptsGroupBy.cs" />
-    <Compile Include="Core\SQL\Interfaces\IAcceptsJoin.cs" />
-    <Compile Include="Core\SQL\Interfaces\IAcceptsLimit.cs" />
-    <Compile Include="Core\SQL\Interfaces\IAcceptsOrderBy.cs" />
-    <Compile Include="Core\SQL\Interfaces\IAcceptsWhere.cs" />
-    <Compile Include="Core\SQL\JoinClause.cs" />
-    <Compile Include="Core\SQL\LimitClause.cs" />
-    <Compile Include="Core\SQL\OnConflictOption.cs" />
-    <Compile Include="Core\SQL\OrderByClause.cs" />
     <Compile Include="Core\SQL\QueryBuilder\QueryBuilder.cs" />
     <Compile Include="Core\SQL\QueryBuilder\QueryInterfaces.cs" />
-    <Compile Include="Core\SQL\ResultColumnCollection.cs" />
-    <Compile Include="Core\SQL\SelectClause.cs" />
-    <Compile Include="Core\SQL\SelectSource.cs" />
-    <Compile Include="Core\SQL\SQLInsertCommand.cs" />
-    <Compile Include="Core\SQL\SQLSelectBuilder.cs" />
-    <Compile Include="Core\SQL\SQLUpdateCommand.cs" />
-    <Compile Include="Core\SQL\TableOrSubQuery.cs" />
-    <Compile Include="Core\SQL\WhereClause.cs" />
     <Compile Include="SQLite\SQLiteDatabaseBuilder.cs" />
     <Compile Include="SQLite\SQLiteDatastore.cs" />
   </ItemGroup>
@@ -96,8 +77,6 @@
     <Compile Include="Core\IExceptionProcessor.cs" />
     <Compile Include="Core\ISqlDialect.cs" />
     <Compile Include="Core\Logger.cs" />
-    <Compile Include="Core\SQL\Interfaces\ISelectElement.cs" />
-    <Compile Include="Core\SQL\JoinComponent.cs" />
     <Compile Include="Core\SQL\LegacySelectPlaceholder.cs" />
     <Compile Include="EntityModel\Attributes\BaseFieldAttribute.cs" />
     <Compile Include="EntityModel\Attributes\EntityAttributeBase.cs" />
@@ -126,12 +105,13 @@
     <Compile Include="EntityModel\Validation\IFieldValidator.cs" />
     <Compile Include="EntityModel\Validation\IValidatable.cs" />
     <Compile Include="EntityModel\Validation\Validator.cs" />
+    <Compile Include="NetCF\DbProviderFactory.cs" />
     <Compile Include="NetCF\ExtensionAttribute.cs" />
     <Compile Include="NetCF\StringBuilderExtentions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SQLite\SQLiteDataTypes.cs" />
-    <Compile Include="SQLite\SqliteDialect.cs" />
     <Compile Include="SQLite\SqliteExceptionProcessor.cs" />
+    <Compile Include="NetCF\SQLiteFactory.cs" />
     <Compile Include="SQLite\SqliteResultCode.cs" />
     <Compile Include="Util\EnumerableExtentions.cs" />
     <Compile Include="Util\StringBuilderExtentions.cs" />
@@ -141,6 +121,12 @@
       <Link>SQLite.Interop.094.dll</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Sqlbuilder\SqlBuilder_CF20.csproj">
+      <Project>{212479E1-1FB7-41D8-A264-EA7D85720D12}</Project>
+      <Name>SqlBuilder_CF20</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CompactFramework.CSharp.targets" />
   <ProjectExtensions>
