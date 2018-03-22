@@ -45,10 +45,10 @@ namespace System.Data.SQLite
             return null;
         }
 
-        public virtual DbConnectionStringBuilder CreateConnectionStringBuilder()
-        {
-            return null;
-        }
+        //public virtual DbConnectionStringBuilder CreateConnectionStringBuilder()
+        //{
+        //    return null;
+        //}
 
         public virtual DbDataAdapter CreateDataAdapter()
         {
@@ -60,15 +60,15 @@ namespace System.Data.SQLite
             return null;
         }
 
-        public virtual CodeAccessPermission CreatePermission(PermissionState state)
-        {
-            return null;
-        }
+        //public virtual CodeAccessPermission CreatePermission(PermissionState state)
+        //{
+        //    return null;
+        //}
 
-        public virtual DbDataSourceEnumerator CreateDataSourceEnumerator()
-        {
-            return null;
-        }
+        //public virtual DbDataSourceEnumerator CreateDataSourceEnumerator()
+        //{
+        //    return null;
+        //}
     }
 
     /// <summary>
@@ -195,15 +195,15 @@ namespace System.Data.SQLite
             return new SQLiteConnection();
         }
 
-        /// <summary>
-        /// Creates and returns a new <see cref="SQLiteConnectionStringBuilder" /> object.
-        /// </summary>
-        /// <returns>The new object.</returns>
-        public override DbConnectionStringBuilder CreateConnectionStringBuilder()
-        {
-            CheckDisposed();
-            return new SQLiteConnectionStringBuilder();
-        }
+        ///// <summary>
+        ///// Creates and returns a new <see cref="SQLiteConnectionStringBuilder" /> object.
+        ///// </summary>
+        ///// <returns>The new object.</returns>
+        //public override DbConnectionStringBuilder CreateConnectionStringBuilder()
+        //{
+        //    CheckDisposed();
+        //    return new SQLiteConnectionStringBuilder();
+        //}
 
         /// <summary>
         /// Creates and returns a new <see cref="SQLiteDataAdapter" /> object.
