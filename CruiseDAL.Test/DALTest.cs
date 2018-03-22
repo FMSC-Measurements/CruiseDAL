@@ -1,25 +1,47 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Threading;
+﻿using FluentAssertions;
+using System;
 using System.IO;
+using System.Linq;
+using System.Threading;
 using Xunit;
 using Xunit.Abstractions;
-using CruiseDAL;
-using CruiseDAL.DataObjects;
-using CruiseDAL.Schema;
-using FluentAssertions;
-using System.Linq;
 
-namespace FMSCORM.Tests
+namespace CruiseDAL.Tests
 {
-    public class DALTest
+    public class DALTest : TestBase
     {
-        private readonly ITestOutputHelper _output;
-
-
-        public DALTest(ITestOutputHelper output)
+        public DALTest(ITestOutputHelper output) : base(output)
         {
-            _output = output;
+        }
+
+        [Fact]
+        public void Constructor_inMemory_create_test()
+        {
+            using (var datastore = new DAL())
+            {
+                foreach (var table in Schema.Schema.TABLE_NAMES)
+                {
+                    datastore.CheckTableExists(table).Should().BeTrue();
+                }
+            }
+        }
+
+        [Fact]
+        public void Constructor_file_create_test()
+        {
+            var filePath = Path.Combine(base.TestTempPath, "testCreate.cruise");
+
+            try
+            {
+                var datastore = new DAL(filePath, true);
+            }
+            finally
+            {
+                if (File.Exists(filePath))
+                {
+                    File.Delete(filePath);
+                }
+            }
         }
 
         [Fact]
@@ -31,10 +53,10 @@ namespace FMSCORM.Tests
             action.ShouldNotThrow<Exception>();
         }
 
-        void DoWorkBlockMultiThreadDALFileAcess()
+        private void DoWorkBlockMultiThreadDALFileAcess()
         {
             DAL newDAL = new DAL(".\\TestResources\\Test.cruise");
-            _output.WriteLine("waiting");
+            Output.WriteLine("waiting");
             Thread.Sleep(2000);
         }
 
@@ -50,12 +72,31 @@ namespace FMSCORM.Tests
         }
 
         [Fact]
+        public void ReadGlobalValue()
+        {
+            var block = "block";
+            var key = "key";
+            var value = "test";
+
+            var filePath = Path.Combine(base.TestTempPath, "testReadGlobal.cruise");
+
+            using (var datastore = new DAL(filePath, true))
+            {
+                datastore.WriteGlobalValue(block, key, value);
+
+                datastore.ReadGlobalValue(block, key).ShouldBeEquivalentTo(value);
+            }
+        }
+
+        [Fact]
         public void TypeReflect_Test()
         {
             var cruisedalAssm = System.Reflection.Assembly.GetAssembly(typeof(DAL));
             var entityTypes = cruisedalAssm.ExportedTypes
                 .Where(t => t.GetCustomAttributes(typeof(FMSC.ORM.EntityModel.Attributes.EntitySourceAttribute), true).Any())
                 .ToArray();
+
+            Output.WriteLine(String.Join(", ", entityTypes.Select(x => x.Name).ToArray()));
 
             foreach (var type in entityTypes)
             {
@@ -64,18 +105,25 @@ namespace FMSCORM.Tests
             }
         }
 
-        [Fact(Skip =" ")]
-        public void DatabaseUpdateTest()
-        {
-            throw new NotImplementedException();
-        }
-
-        [Fact(Skip =" ")]
+        [Fact]
         public void TestCopyTo()
         {
-            throw new NotImplementedException();
+            var fileToCopyPath = Path.Combine(TestTempPath, "TestCopy.cruise");
+            var copiedFilePath = Path.Combine(TestTempPath, "TestCopy2.cruise");
+            try
+            {
+                using (var dal = new DAL(fileToCopyPath, true))
+                {
+                    dal.CopyTo(copiedFilePath);
+
+                    File.Exists(copiedFilePath).Should().BeTrue();
+                }
+            }
+            finally
+            {
+                if (File.Exists(fileToCopyPath)) { File.Delete(fileToCopyPath); }
+                if (File.Exists(copiedFilePath)) { File.Delete(copiedFilePath); }
+            }
         }
-
-
     }
 }

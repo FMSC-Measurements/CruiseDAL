@@ -8,7 +8,7 @@ using Xunit.Abstractions;
 
 namespace FMSC.ORM.Core
 {
-    public class DatastoreTest : TestClassBase
+    public class DatastoreTest : TestBase
     {
         public DatastoreTest(ITestOutputHelper output) : base(output)
         { }

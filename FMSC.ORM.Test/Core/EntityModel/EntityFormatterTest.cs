@@ -6,7 +6,7 @@ using Xunit.Abstractions;
 
 namespace FMSC.ORM.EntityModel.Support
 {
-    public class EntityFormatterTest : TestClassBase
+    public class EntityFormatterTest : TestBase
     {
         public EntityFormatterTest(ITestOutputHelper output)
             : base(output)
@@ -32,7 +32,7 @@ namespace FMSC.ORM.EntityModel.Support
                  .Except(TestSupport.TestSQLConstants.NON_REFLECTED_MULTI_PROP_TABLE_FIELDS)
                  select "[" + field + formatVariant + "]"));
 
-            _output.WriteLine(formatString);
+            Output.WriteLine(formatString);
 
             var formatedString = formatter.Format(formatString, data, null);
             Assert.NotNull(formatString);
@@ -41,7 +41,7 @@ namespace FMSC.ORM.EntityModel.Support
             Assert.NotEqual(formatString, formatedString);
 
             
-            _output.WriteLine(formatedString);
+            Output.WriteLine(formatedString);
 
         }
 
@@ -64,7 +64,7 @@ namespace FMSC.ORM.EntityModel.Support
             {
                 var formatString = "[" + fieldName + formatVariant + "]";
 
-                _output.WriteLine(formatString);
+                Output.WriteLine(formatString);
 
                 var formatedString = formatter.Format(formatString, data, null);
                 Assert.NotNull(formatString);
@@ -73,7 +73,7 @@ namespace FMSC.ORM.EntityModel.Support
                 Assert.NotEqual(formatString, formatedString);
 
 
-                _output.WriteLine(formatedString);
+                Output.WriteLine(formatedString);
             }
 
         }

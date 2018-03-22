@@ -8,7 +8,7 @@ using Xunit.Abstractions;
 
 namespace FMSC.ORM.EntityModel.Support
 {
-    public class EntityInflatorTest : TestClassBase
+    public class EntityInflatorTest : TestBase
     {
         public EntityInflatorTest(ITestOutputHelper output)
             : base(output)
@@ -53,8 +53,8 @@ namespace FMSC.ORM.EntityModel.Support
             ed.Inflator.CheckOrdinals(reader);
             ed.Inflator.ReadData(reader, data);
 
-            Assert.Equal(data.StringField, "1");
-            Assert.Equal(data.ID, 1);
+            data.StringField.ShouldBeEquivalentTo("1");
+            data.ID.ShouldBeEquivalentTo(1);
         }
 
         [Fact]
@@ -71,9 +71,7 @@ namespace FMSC.ORM.EntityModel.Support
             var ed = new EntityDescription(typeof(POCOMultiTypeObject));
 
             ed.Inflator.CheckOrdinals(reader);
-            var id = ed.Inflator.ReadPrimaryKey(reader);
-
-            Assert.Equal(id, 1);
+            ed.Inflator.ReadPrimaryKey(reader).ShouldBeEquivalentTo(1);
         }
 
         [Fact]

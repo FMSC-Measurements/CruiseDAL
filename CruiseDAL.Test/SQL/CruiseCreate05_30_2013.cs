@@ -1,5 +1,10 @@
-﻿//for test purposes
-
+﻿
+namespace CruiseDAL.Test
+{
+    public static class SQL
+    {
+        public static string CRUISECREATE_05_30_2013 =
+            @"
 PRAGMA foreign_keys = ON;
 
 
@@ -119,9 +124,9 @@ PRAGMA foreign_keys = ON;
 				Recoverable REAL Default 0.0,
 				Chargeable TEXT,
 				ContractSpecies TEXT,
-				TreeGrade TEXT Default "0",
+				TreeGrade TEXT Default '0',
 				MerchHeightLogLength INTEGER Default 0,
-				MerchHeightType TEXT Default "F",
+				MerchHeightType TEXT Default 'F',
 				FormClass REAL Default 0.0,
 				BarkThicknessRatio REAL Default 0.0,
 				AverageZ REAL Default 0.0,
@@ -258,7 +263,7 @@ PRAGMA foreign_keys = ON;
 				CountOrMeasure TEXT,
 				TreeCount REAL Default 0.0,
 				KPI REAL Default 0.0,
-				STM TEXT Default "N",
+				STM TEXT Default 'N',
 				SeenDefectPrimary REAL Default 0.0,
 				SeenDefectSecondary REAL Default 0.0,
 				RecoverablePrimary REAL Default 0.0,
@@ -747,4 +752,6 @@ PRAGMA foreign_keys = ON;
 				Number INTEGER Default 0);
 
 
-INSERT INTO Globals (Block, Key, Value) VALUES ("Database", "Version", "2013.05.30"); 
+INSERT INTO Globals (Block, Key, Value) VALUES ('Database', 'Version', '2013.05.30');";
+    }
+}

@@ -1,4 +1,5 @@
-﻿using FMSC.ORM.EntityModel.Attributes;
+﻿using FluentAssertions;
+using FMSC.ORM.EntityModel.Attributes;
 using FMSC.ORM.TestSupport.TestModels;
 using System;
 using System.Linq;
@@ -7,7 +8,7 @@ using Xunit.Abstractions;
 
 namespace FMSC.ORM.EntityModel.Support
 {
-    public class EntityDescriptionTest : TestClassBase
+    public class EntityDescriptionTest : TestBase
     {
         public EntityDescriptionTest(ITestOutputHelper output)
             : base(output)
@@ -37,7 +38,7 @@ namespace FMSC.ORM.EntityModel.Support
 
             foreach (Type t in types)
             {
-                _output.WriteLine(t.FullName);
+                Output.WriteLine(t.FullName);
                 var doi = new EntityDescription(t);
 
                 VerifyDataObjectInfo(t, doi);
@@ -46,9 +47,9 @@ namespace FMSC.ORM.EntityModel.Support
 
         void VerifyDataObjectInfo(Type dataType, EntityDescription doi)
         {
-            Assert.NotNull(doi);
-            Assert.Equal(dataType, doi.EntityType);
-            AssertEx.NotNullOrWhitespace(doi.SourceName);
+            doi.Should().NotBeNull();
+            doi.EntityType.ShouldBeEquivalentTo(dataType);
+            doi.SourceName.Should().NotBeNullOrWhiteSpace();
 
             VerifyDataObjectInfoFields(doi);
         }
@@ -89,7 +90,7 @@ namespace FMSC.ORM.EntityModel.Support
 
         void VerifyField(EntityDescription doi, string fieldName)
         {
-            _output.WriteLine("Verifying " + fieldName);
+            Output.WriteLine("Verifying " + fieldName);
             Assert.Contains(doi.Fields, x => x.Name == fieldName);
 
             var field = doi.Fields[fieldName];
@@ -100,7 +101,7 @@ namespace FMSC.ORM.EntityModel.Support
             Assert.True(field.PersistanceFlags.HasFlag(PersistanceFlags.OnUpdate));
             Assert.True(field.PersistanceFlags.HasFlag(PersistanceFlags.OnInsert));
 
-            _output.WriteLine("done");
+            Output.WriteLine("done");
         }
 
         void VerifyNonvisableField(EntityDescription doi, string fieldName)

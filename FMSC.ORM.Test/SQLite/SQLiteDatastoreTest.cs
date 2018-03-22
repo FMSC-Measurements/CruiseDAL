@@ -1,15 +1,18 @@
 ﻿using FluentAssertions;
+using FMSC.ORM.Core;
 using FMSC.ORM.Core.SQL;
 using FMSC.ORM.TestSupport;
 using FMSC.ORM.TestSupport.TestModels;
+using SqlBuilder;
 using System;
+using System.Data;
 using System.Linq;
 using Xunit;
 using Xunit.Abstractions;
 
 namespace FMSC.ORM.SQLite
 {
-    public class SQLiteDatastoreTest : TestClassBase , IDisposable
+    public class SQLiteDatastoreTest : TestBase , IDisposable
     {
         private readonly string _tempDir;
         private readonly string _testCreatePath;
@@ -25,13 +28,27 @@ namespace FMSC.ORM.SQLite
             _testReadOnlyPath = System.IO.Path.Combine(_tempDir, "testReadOnly.db");
         }
 
+        public void Dispose()
+        {
+            if (System.IO.File.Exists(_testCreatePath))
+            {
+                System.IO.File.Delete(_testCreatePath);
+            }
+
+            if (System.IO.File.Exists(_testReadOnlyPath))
+            {
+                System.IO.File.SetAttributes(_testReadOnlyPath, System.IO.FileAttributes.Normal);
+                System.IO.File.Delete(_testReadOnlyPath);
+            }
+        }
+
 
 
 
         [Fact]
         public void CreateSQLiteDatastoreTest()
         {
-            _output.WriteLine("Path: " + _testCreatePath);
+            Output.WriteLine("Path: " + _testCreatePath);
             var dbBuilder = new TestDBBuilder();
 
             using (var ds = new SQLiteDatastore(_testCreatePath))
@@ -39,11 +56,10 @@ namespace FMSC.ORM.SQLite
                 Assert.False(ds.Exists, "Pre-condition failed file already created");
 
                 //TODO hide builder inside dataStore
-                dbBuilder.Datastore = ds;
-                dbBuilder.CreateDatastore();
+                dbBuilder.CreateDatastore(ds);
 
-                AssertEx.NotNullOrWhitespace(ds.Extension, "Assert file has extension");
-                AssertEx.NotNullOrWhitespace(ds.Path);
+                ds.Extension.Should().NotBeNullOrWhiteSpace("file must have extention");
+                ds.Path.Should().NotBeNullOrWhiteSpace();
 
                 VerifySQLiteDatastore(ds);
             }
@@ -59,24 +75,20 @@ namespace FMSC.ORM.SQLite
                 Assert.True(ds.Exists);
 
                 //TODO hide builder inside dataStore
-                dbBuilder.Datastore = ds;
-                dbBuilder.CreateDatastore();
+                dbBuilder.CreateDatastore(ds);
 
                 VerifySQLiteDatastore(ds);
             }
         }
 
-        public void VerifySQLiteDatastore(SQLiteDatastore ds)
+        protected void VerifySQLiteDatastore(SQLiteDatastore ds)
         {
-            Assert.True(ds.Exists, "Assert file exists");
-
-            Assert.NotNull(ds);
-            //AssertEx.NotNullOrWhitespace(ds.Extension, "Assert file has extension");
-            //AssertEx.NotNullOrWhitespace(ds.Path);
+            ds.Should().NotBeNull();
+            ds.Exists.Should().BeTrue();
 
             ds.Invoking(x => x.Execute("EXPLAIN SELECT 1;")).ShouldNotThrow();
 
-            Assert.True(ds.GetRowCount("sqlite_master", null, null) > 0);
+            ds.GetRowCount("sqlite_master", null, null).Should().BeGreaterThan(0);
         }
 
         [Fact]
@@ -88,11 +100,11 @@ namespace FMSC.ORM.SQLite
                 Assert.True(ds.CheckFieldExists("TableA", "ID"));
                 Assert.False(ds.CheckFieldExists("TABLEA", "Data"));
 
-                ds.AddField("TableA", new ColumnInfo() { Name = "Data", DBType = "TEXT" });
+                ds.AddField("TableA", new ColumnInfo() { Name = "Data", DBType = System.Data.DbType.AnsiString });
 
                 Assert.True(ds.CheckFieldExists("TABLEA", "Data"));
 
-                Assert.Throws<SQLException>(() => ds.AddField("TableA", new ColumnInfo() { Name = "Data", DBType = "TEXT" }));
+                Assert.Throws<SQLException>(() => ds.AddField("TableA", new ColumnInfo() { Name = "Data", DBType = System.Data.DbType.AnsiString }));
             }
         }
 
@@ -101,11 +113,10 @@ namespace FMSC.ORM.SQLite
         {
             using (var ds = new SQLiteDatastore())
             {
-                ds.Execute(TestDBBuilder.CREATE_MULTIPROPTABLE);
+                ds.Execute("CREATE TABLE tbl (col1 TEXT);");
 
-                Assert.True(ds.CheckTableExists("MultiPropTable"));
-
-                Assert.False(ds.CheckTableExists("notATable"));
+                ds.CheckTableExists("tbl");
+                ds.CheckTableExists("notATable").Should().BeFalse();
             }
         }
 
@@ -131,13 +142,15 @@ namespace FMSC.ORM.SQLite
             {
                 var cols = new ColumnInfo[]
                     {
-                        new ColumnInfo("ID", Types.INTEGER) {AutoIncrement = true },
-                        new ColumnInfo("Field1", Types.TEXT)
+                        new ColumnInfo("ID", System.Data.DbType.Int64) {AutoIncrement = true },
+                        new ColumnInfo("Field1", System.Data.DbType.AnsiString)
                     };
 
                 ds.CreateTable("TableA", cols, false);
 
-                Assert.True(ds.CheckTableExists("TableA"));
+                ds.Invoking(x => x.Execute("EXPLAIN SELECT * FROM TableA;")).ShouldNotThrow();
+
+                ds.CheckTableExists("TableA").Should().BeTrue();
             }
         }
 
@@ -150,22 +163,11 @@ namespace FMSC.ORM.SQLite
 
                 var ti = ds.GetTableInfo("MultiPropTable");
 
-                Assert.NotNull(ti);
-                Assert.NotEmpty(ti);
+                ti.Should().NotBeNullOrEmpty();
 
-                try
+                foreach (string fieldName in TestSQLConstants.MULTI_PROP_TABLE_FIELDS)
                 {
-                    foreach (string fieldName in TestSQLConstants.MULTI_PROP_TABLE_FIELDS)
-                    {
-                        bool contains = ti.Any(x => x.Name.ToLower() == fieldName.ToLower());
-                        _output.WriteLine("{0} exists.. {1}", fieldName, contains);
-                        Assert.True(contains);
-                    }
-                }
-                finally
-                {
-                    _output.WriteLine(string.Join(",", (from colInfo in ti
-                                                        select colInfo.Name).OrderBy(x => x)));
+                    ti.Should().Contain(x => x.Name.ToLower() == fieldName.ToLower());
                 }
             }
         }
@@ -212,8 +214,41 @@ namespace FMSC.ORM.SQLite
                 ds.CreateTable("something", new ColumnInfo[] { new ColumnInfo("data") });
 
                 var tableSQL = ds.GetTableSQL("something");
-                AssertEx.NotNullOrWhitespace(tableSQL);
-                _output.WriteLine(tableSQL);
+                tableSQL.Should().NotBeNullOrWhiteSpace();
+                Output.WriteLine(tableSQL);
+            }
+        }
+
+        [Fact]
+        public void GetLastInsertRowID()
+        {
+            using (var ds = new SQLiteDatastore())
+            {
+                using (var connection = ds.CreateConnection())
+                {
+                    connection.Open();
+                    ds.ExecuteNonQuery(connection, "CREATE TABLE tbl (id INTEGER PRIMARY KEY AUTOINCREMENT, col1 TEXT);", null, null);
+
+                    ds.ExecuteNonQuery(connection, "INSERT INTO tbl (col1) VALUES ('something');", null, null);
+
+                    ds.GetLastInsertRowID(connection, (IDbTransaction)null).ShouldBeEquivalentTo(1);
+                }
+            }
+        }
+
+        [Fact]
+        public void GetLastInsertKeyValue()
+        {
+            using (var ds = new SQLiteDatastore())
+            {
+                using (var connection = ds.CreateConnection())
+                {
+                    connection.Open();
+                    ds.ExecuteNonQuery(connection, "CREATE TABLE tbl (id TEXT PRIMARY KEY);", null, null);
+
+                    ds.ExecuteNonQuery(connection, "INSERT INTO tbl (id) VALUES ('something');", null, null);
+                    ds.GetLastInsertKeyValue(connection, "tbl", "id", null);
+                }
             }
         }
 
@@ -222,84 +257,89 @@ namespace FMSC.ORM.SQLite
         {
             using (var ds = new SQLiteDatastore())
             {
-                ds.Execute(TestDBBuilder.CREATE_AUTOINCREMENT_TABLE);
+                ds.Execute("CREATE TABLE tbl (id INTEGER PRIMARY KEY AUTOINCREMENT);");
+                ds.ExecuteScalar<int>("SELECT max(id) FROM tbl;").ShouldBeEquivalentTo(0);
+                ds.Execute("INSERT INTO tbl DEFAULT VALUES;");
+                ds.ExecuteScalar<int>("SELECT max(id) FROM tbl;").ShouldBeEquivalentTo(1);
 
-                var seq = ds.From<SQLiteSequenceModel>()
-                    .Where("name = 'AutoIncrementTable'").Query().FirstOrDefault();
-
-                Assert.Null(seq);
-
-                ds.Insert(new AutoIncrementTable() { Data = "something" }, OnConflictOption.Fail);
-
-                seq = ds.From<SQLiteSequenceModel>()
-                    .Where("name = 'AutoIncrementTable'").Query().FirstOrDefault();
-
-                Assert.NotNull(seq);
-                Assert.Equal(1, seq.Seq);
-
-                var incVal = 200;
-                ds.SetTableAutoIncrementStart("AutoIncrementTable", incVal);
-
-                seq = ds.From<SQLiteSequenceModel>()
-                    .Where("name = 'AutoIncrementTable'").Query().FirstOrDefault();
-
-                Assert.NotNull(seq);
-                Assert.Equal(incVal, seq.Seq);
-
-                ds.Insert(new AutoIncrementTable() { Data = "something" }, OnConflictOption.Fail);
-
-                seq = ds.From<SQLiteSequenceModel>()
-                    .Where("name = 'AutoIncrementTable'").Query().FirstOrDefault();
-
-                Assert.NotNull(seq);
-                Assert.Equal(incVal + 1, seq.Seq);
+                ds.SetTableAutoIncrementStart("tbl", 100);
+                ds.ExecuteScalar<int>("SELECT max(id) FROM tbl;").ShouldBeEquivalentTo(1);
+                ds.Execute("INSERT INTO tbl DEFAULT VALUES;");
+                ds.ExecuteScalar<int>("SELECT max(id) FROM tbl;").ShouldBeEquivalentTo(101);
             }
         }
 
+        //[Fact]
+        //public void SetTableAutoIncrementStartTest()
+        //{
+        //    using (var ds = new SQLiteDatastore())
+        //    {
+        //        ds.Execute(TestDBBuilder.CREATE_AUTOINCREMENT_TABLE);
+
+        //        var seq = ds.From<SQLiteSequenceModel>()
+        //            .Where("name = 'AutoIncrementTable'").Query().FirstOrDefault();
+
+        //        Assert.Null(seq);
+
+        //        ds.Insert(new AutoIncrementTable() { Data = "something" }, OnConflictOption.Fail);
+
+        //        seq = ds.From<SQLiteSequenceModel>()
+        //            .Where("name = 'AutoIncrementTable'").Query().FirstOrDefault();
+
+        //        Assert.NotNull(seq);
+        //        Assert.Equal(1, seq.Seq);
+
+        //        var incVal = 200;
+        //        ds.SetTableAutoIncrementStart("AutoIncrementTable", incVal);
+
+        //        seq = ds.From<SQLiteSequenceModel>()
+        //            .Where("name = 'AutoIncrementTable'").Query().FirstOrDefault();
+
+        //        Assert.NotNull(seq);
+        //        Assert.Equal(incVal, seq.Seq);
+
+        //        ds.Insert(new AutoIncrementTable() { Data = "something" }, OnConflictOption.Fail);
+
+        //        seq = ds.From<SQLiteSequenceModel>()
+        //            .Where("name = 'AutoIncrementTable'").Query().FirstOrDefault();
+
+        //        Assert.NotNull(seq);
+        //        Assert.Equal(incVal + 1, seq.Seq);
+        //    }
+        //}
+
         [Fact]
-        public void TestReadOnly_Insert()
+        public void ReadOnly_Throws_On_Insert()
         {
             var path = _testReadOnlyPath;
 
-            _output.WriteLine(path);
-
-            if (System.IO.File.Exists(path))
-            {
-                System.IO.File.SetAttributes(path, System.IO.FileAttributes.Normal);
-                System.IO.File.Delete(path);
-            }
+            Output.WriteLine(path);
 
             using (var ds = new SQLiteDatastore(path))
             {
                 ds.Execute(TestDBBuilder.CREATE_AUTOINCREMENT_TABLE);
-                ds.CreateTable("Tbl", new ColumnInfo[] { new ColumnInfo() { Name = "Data", DBType = "TEXT" } }, false);
+                ds.CreateTable("Tbl", new ColumnInfo[] { new ColumnInfo() { Name = "Data", DBType = System.Data.DbType.String } }, false);
 
 
                 System.IO.File.Exists(path).Should().BeTrue();
                 System.IO.File.SetAttributes(path, System.IO.FileAttributes.ReadOnly);
 
                 //TODO assert that connection is not open and transaction depth is 0
-                Assert.Throws<ReadOnlyException>(() => ds.Execute("INSERT INTO Tbl (Data) VALUES ('something');"));
+                ds.Invoking(x => x.Execute("INSERT INTO Tbl (Data) VALUES ('something');")).ShouldThrow<ReadOnlyException>();
             }
         }
 
         [Fact]
-        public void TestReadOnly_BeginTransaction()
+        public void ReadOnly_Throws_On_BeginTransaction()
         {
             var path = _testReadOnlyPath;
 
-            _output.WriteLine(path);
-
-            if (System.IO.File.Exists(path))
-            {
-                System.IO.File.SetAttributes(path, System.IO.FileAttributes.Normal);
-                System.IO.File.Delete(path);
-            }
+            Output.WriteLine(path);
 
             using (var ds = new SQLiteDatastore(path))
             {
                 ds.Execute(TestDBBuilder.CREATE_AUTOINCREMENT_TABLE);
-                ds.CreateTable("Tbl", new ColumnInfo[] { new ColumnInfo() { Name = "Data", DBType = "TEXT" } }, false);
+                ds.CreateTable("Tbl", new ColumnInfo[] { new ColumnInfo() { Name = "Data", DBType = System.Data.DbType.String } }, false);
 
                 System.IO.File.Exists(path).Should().BeTrue();
                 System.IO.File.SetAttributes(path, System.IO.FileAttributes.ReadOnly);
@@ -342,18 +382,10 @@ namespace FMSC.ORM.SQLite
         //}
 
         [Fact]
-        public void ExecuteScalarGenericTest()
+        public void ExecuteScalar_Generic()
         {
             using (var ds = new SQLiteDatastore())
             {
-                var query = "SELECT 1;";
-                var nQuery = "SELECT NULL;";
-                string sResult = ds.ExecuteScalar<string>(query);
-                AssertEx.NotNullOrEmpty(sResult);
-
-                sResult = ds.ExecuteScalar<string>(nQuery);
-                Assert.Null(sResult);
-
                 VerifyExecuteScalarWithType<int>(1, ds);
 
                 VerifyExecuteScalarWithType<long>(1, ds);
@@ -370,26 +402,39 @@ namespace FMSC.ORM.SQLite
             }
         }
 
+        [Theory]
+        [InlineData("SELECT 1;", "1")]
+        [InlineData("SELECT NULL;", null)]
+        [InlineData("SELECT 'something';", "something")]
+        [InlineData("SELECT CAST(1 AS INTEGER);", "1")]
+        public void ExecuteScalar_Generic_String(string query, object expectedValue)
+        {
+            using (var ds = new SQLiteDatastore())
+            {
+                ds.ExecuteScalar<string>(query).ShouldBeEquivalentTo(expectedValue);
+            }
+        }
+
         private void VerifyExecuteScalarWithType<T>(T expected, SQLiteDatastore ds)
             where T : struct
         {
-            _output.WriteLine("testing value {0} : {1}", expected, typeof(T).Name);
+            Output.WriteLine("testing value {0} : {1}", expected, typeof(T).Name);
 
-            T result = ds.ExecuteScalar<T>("SELECT ?1;", expected);
-            _output.WriteLine("     as {0} gives {1}", typeof(T).Name, result.ToString());
+            T result = ds.ExecuteScalar<T>("SELECT @p1;", expected);
+            Output.WriteLine("     as {0} gives {1}", typeof(T).Name, result.ToString());
             Assert.Equal(expected, result);
 
             result = ds.ExecuteScalar<T>("SELECT NULL;");
-            _output.WriteLine("     NULL as {0} gives {1}", typeof(T).Name, result.ToString());
+            Output.WriteLine("     NULL as {0} gives {1}", typeof(T).Name, result.ToString());
             Assert.Equal(default(T), result);
 
-            T? nResult = ds.ExecuteScalar<T?>("SELECT ?1;", expected);
-            _output.WriteLine("     as {0} gives {1}", typeof(T?).Name, nResult.ToString());
+            T? nResult = ds.ExecuteScalar<T?>("SELECT @p1;", expected);
+            Output.WriteLine("     as {0} gives {1}", typeof(T?).Name, nResult.ToString());
             Assert.True(nResult.HasValue);
             Assert.Equal(expected, nResult.Value);
 
             nResult = ds.ExecuteScalar<T?>("SELECT NULL;");
-            _output.WriteLine("     NULL as {0} gives {1}", typeof(T?).Name, nResult.ToString());
+            Output.WriteLine("     NULL as {0} gives {1}", typeof(T?).Name, nResult.ToString());
             Assert.False(nResult.HasValue);
         }
 
@@ -633,12 +678,6 @@ namespace FMSC.ORM.SQLite
             }
         }
 
-        public void Dispose()
-        {
-            if(System.IO.File.Exists(_testCreatePath))
-            {
-                System.IO.File.Delete(_testCreatePath);
-            }
-        }
+        
     }
 }
