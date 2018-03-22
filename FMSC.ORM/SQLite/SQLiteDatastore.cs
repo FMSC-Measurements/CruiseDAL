@@ -1,5 +1,7 @@
 ﻿using FMSC.ORM.Core;
 using FMSC.ORM.Core.SQL;
+using SqlBuilder;
+using SqlBuilder.Dialects;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -62,13 +64,17 @@ namespace FMSC.ORM.SQLite
             //TODO find a better way to hold the connection for the life of the DAL
         }
 
-        public SQLiteDatastore(string path) : base(new SqliteDialect(), new SqliteExceptionProcessor())
+#if MICROSOFT_DATA_SQLITE
+        public SQLiteDatastore(string path) : base(new SqliteDialect(), new SqliteExceptionProcessor(), Microsoft.Data.Sqlite.SqliteFactory.Instance)
+#elif SYSTEM_DATA_SQLITE
+        public SQLiteDatastore(string path) : base(new SqliteDialect(), new SqliteExceptionProcessor(), System.Data.SQLite.SQLiteFactory.Instance)
+#endif
         {
             if (path == null) { throw new ArgumentNullException("path"); }
             Path = path;
         }
 
-        #region SavePoints
+#region SavePoints
 
         public void StartSavePoint(String name)
         {
@@ -85,7 +91,18 @@ namespace FMSC.ORM.SQLite
             this.Execute("ROLLBACK TO SAVEPOINT " + name + ";");
         }
 
-        #endregion SavePoints
+#endregion SavePoints
+
+        protected override string BuildConnectionString()
+        {
+            if(Path == null) { throw new InvalidOperationException("Path can not be null"); }
+
+#if SYSTEM_DATA_SQLITE
+            return string.Format("Data Source={0};Version=3;", Path);
+#else
+            return string.Format("Data Source={0};", Path);
+#endif
+        }
 
         /// <summary>
         /// Sets the starting value of a AutoIncrement field for a table
@@ -97,13 +114,13 @@ namespace FMSC.ORM.SQLite
         {
             string commandText = null;
             //check sqlite_sequence to see if we need to perform update or insert
-            if (this.GetRowCount("sqlite_sequence", "WHERE name = ?1", tableName) >= 1)
+            if (this.ExecuteScalar<int>("SELECT count(*) FROM sqlite_sequence WHERE name = @p1;", tableName) >= 1)
             {
-                commandText = "UPDATE sqlite_sequence SET seq = ?1 WHERE name = ?2";
+                commandText = "UPDATE sqlite_sequence SET seq = @p1 WHERE name = @p2";
             }
             else
             {
-                commandText = "INSERT INTO sqlite_sequence  (seq, name) VALUES (?1, ?2);";
+                commandText = "INSERT INTO sqlite_sequence  (seq, name) VALUES (@p1, @p2);";
             }
 
             this.Execute(commandText, start, tableName);
@@ -116,7 +133,7 @@ namespace FMSC.ORM.SQLite
         /// <returns></returns>
         public bool CheckTableExists(string tableName)
         {
-            return GetRowCount("sqlite_master", "WHERE type = 'table' AND name = ?1", tableName) > 0;
+            return GetRowCount("sqlite_master", "WHERE type = 'table' AND name = @p1", tableName) > 0;
         }
 
         /// <summary>
@@ -190,9 +207,9 @@ namespace FMSC.ORM.SQLite
                                 var colInfo = new ColumnInfo()
                                 {
                                     Name = reader.GetString(nameOrd),
-                                    DBType = reader.GetString(dbTypeOrd),
+                                    DBType = SqlDialect.MapSQLtypeToDbType(reader.GetString(dbTypeOrd)),
                                     IsPK = reader.GetBoolean(pkOrd),
-                                    IsRequired = reader.GetBoolean(notNullOrd),
+                                    NotNull = reader.GetBoolean(notNullOrd),
                                     Default = (!reader.IsDBNull(defaultValOrd)) ? reader.GetString(defaultValOrd) : null
                                 };
                                 colList.Add(colInfo);
@@ -222,7 +239,7 @@ namespace FMSC.ORM.SQLite
         {
             var ident = GetLastInsertRowID(connection, transaction);
 
-            var query = "SELECT " + fieldName + " FROM " + tableName + " WHERE rowid = ?1;";
+            var query = "SELECT " + fieldName + " FROM " + tableName + " WHERE rowid = @p1;";
 
             return ExecuteScalar(connection, query, new object[] { ident }, transaction);
 
@@ -236,7 +253,7 @@ namespace FMSC.ORM.SQLite
         /// <returns></returns>
         public string GetTableSQL(String tableName)
         {
-            return (String)this.ExecuteScalar("SELECT sql FROM Sqlite_master WHERE name = ?1 COLLATE NOCASE and type = 'table';", tableName);
+            return (String)this.ExecuteScalar("SELECT sql FROM Sqlite_master WHERE name = @p1 COLLATE NOCASE and type = 'table';", tableName);
         }
 
         /// <summary>
@@ -310,7 +327,7 @@ namespace FMSC.ORM.SQLite
             }
         }
 
-        #region File utility methods
+#region File utility methods
 
         ///// <summary>
         ///// Copies entire file to <paramref name="path"/> Overwriting any existing file
@@ -345,6 +362,6 @@ namespace FMSC.ORM.SQLite
             return true;
         }
 
-        #endregion File utility methods
+#endregion File utility methods
     }
 }

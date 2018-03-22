@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Data;
+using System.Data.Common;
 using System.Diagnostics;
 
 namespace FMSC.ORM.Core
@@ -8,7 +9,7 @@ namespace FMSC.ORM.Core
     {
         protected static Logger _logger = new Logger();
 
-        public ISqlDialect Dialect { get; set; }
+        public DbProviderFactory Provider { get; set; }
         protected IExceptionProcessor ExceptionProcessor { get; set; }
 
         private int _holdConnection;
@@ -159,7 +160,7 @@ namespace FMSC.ORM.Core
                 IDbConnection conn;
                 if (_holdConnection == 0)
                 {
-                    conn = Dialect.CreateConnection();
+                    conn = Provider.CreateConnection();
                 }
                 else
                 {
