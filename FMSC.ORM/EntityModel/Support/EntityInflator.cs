@@ -29,13 +29,27 @@ namespace FMSC.ORM.EntityModel.Support
         {
             foreach (FieldAttribute field in EntityDescription.Fields)
             {
-                field.Ordinal = reader.GetOrdinal(field.NameOrAlias);
+                try
+                {
+                    field.Ordinal = reader.GetOrdinal(field.NameOrAlias);
+                }
+                catch
+                {
+                    field.Ordinal = -1;
+                }
             }
 
             PrimaryKeyFieldAttribute keyField = EntityDescription.Fields.PrimaryKeyField;
             if (keyField != null)
             {
-                keyField.Ordinal = reader.GetOrdinal(keyField.NameOrAlias);
+                try
+                {
+                    keyField.Ordinal = reader.GetOrdinal(keyField.NameOrAlias);
+                }
+                catch
+                {
+                    keyField.Ordinal = -1;
+                }
             }
         }
 
