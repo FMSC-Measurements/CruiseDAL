@@ -20,7 +20,7 @@
   </ItemGroup>
   
   <ItemGroup>
-    <ProjectReference Include="..\SQLbuilders\SqlBuilder.csproj" />
+    <ProjectReference Include="..\SqlBuilder\SqlBuilder.csproj" />
   </ItemGroup>
 
 </Project>
