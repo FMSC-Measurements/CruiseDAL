@@ -1,0 +1,17 @@
+
+--get tree counts at sample group level
+select SampleGroup.Code, CountTree.SampleGroup_CN, sum(TreeCount)
+From CountTree
+join CuttingUnit using (CuttingUnit_CN)
+join SampleGroup using (SampleGroup_CN)
+Group by CountTree.SampleGroup_CN;
+
+
+--get sample selector state. Use Count property on sample selector to view counts at sG level
+select code, sampleGroup.SampleSelectorState from SampleGroup;
+
+--view tree count edits with sample group code
+Select SampleGroup.Code, * from messagelog 
+JOIN CountTree ON message like '%CT_CN=' || CountTree.CountTree_CN || ';%'
+Join SampleGroup USING (SampleGroup_CN)
+where message like 'Tree Count Edit%'
