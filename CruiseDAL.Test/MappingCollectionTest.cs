@@ -19,9 +19,11 @@ namespace FMSCORM.Tests
             List<CuttingUnitDO> units = new List<CuttingUnitDO>();
             for (int i = 1; i <= 10; i++)
             {
-                CuttingUnitDO cu = new CuttingUnitDO(testDB);
-                cu.Code = i.ToString();
-                cu.Area = rand.Next(9) + 1.0f;
+                CuttingUnitDO cu = new CuttingUnitDO(testDB)
+                {
+                    Code = i.ToString(),
+                    Area = rand.Next(9) + 1.0f
+                };
                 cu.Save();
                 units.Add(cu);
             }
@@ -29,9 +31,11 @@ namespace FMSCORM.Tests
             List<StratumDO> strata = new List<StratumDO>();
             for (int i = 0; i <= 10; i++)
             {
-                StratumDO st = new StratumDO(testDB);
-                st.Code = i.ToString();
-                st.Method = "something";
+                StratumDO st = new StratumDO(testDB)
+                {
+                    Code = i.ToString(),
+                    Method = "something"
+                };
                 st.Save();
                 strata.Add(st);
             }
@@ -40,9 +44,11 @@ namespace FMSCORM.Tests
             {
                 for (int i = 0; i < cu.Area; i++)
                 {
-                    CuttingUnitStratumDO cust = new CuttingUnitStratumDO(testDB);
-                    cust.CuttingUnit_CN = cu.CuttingUnit_CN;
-                    cust.Stratum_CN = strata[i].Stratum_CN;
+                    CuttingUnitStratumDO cust = new CuttingUnitStratumDO(testDB)
+                    {
+                        CuttingUnit_CN = cu.CuttingUnit_CN,
+                        Stratum_CN = strata[i].Stratum_CN
+                    };
                     cust.Save();
                 }
             }

@@ -13,6 +13,9 @@ namespace FMSC.ORM.TestSupport.TestModels
         [PrimaryKeyField(Name = "ID")]
         public int ID { get; set; }
 
+        [Field(Name = "RowID")]
+        public int RowID { get; set; }
+
         [Field(Name = "StringField")]
         public string StringField { get; set; }
 

@@ -15,11 +15,20 @@ namespace FMSC.ORM.Test.SQLite
         }
 
         [Theory]
-        [InlineData(1L, "1", "?1")]//system.data.sqlite works this way
-        [InlineData(1L, "?1", "?1")]//microsoft.data.sqlite works this way
+        [InlineData(1L, "1", "?1" 
+#if MICROSOFT_DATA_SQLITE 
+            ,Skip ="not supported my Microsoft.Data.Sqlite" 
+#endif
+            )]//system.data.sqlite works this way
+
+        [InlineData(1L, "?1", "?1"
+#if SYSTEM_DATA_SQLITE
+            ,Skip ="not supported my System.Data.SQLite" 
+#endif
+            )]//microsoft.data.sqlite works this way
         [InlineData(1L, "@1", "@1")]
         [InlineData(1L, "@something", "@something")]
-        public void Bind_works(object value, string pName, string pExpr)
+        public void Bind_Paramater(object value, string pName, string pExpr)
         {
             using (var connection = DbProvider.CreateConnection())
             {

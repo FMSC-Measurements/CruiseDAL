@@ -1,5 +1,4 @@
 ﻿using FluentAssertions;
-using FMSC.ORM.Core;
 using FMSC.ORM.TestSupport.TestModels;
 using SqlBuilder;
 using System.Data.Common;
@@ -13,7 +12,19 @@ namespace FMSC.ORM.EntityModel.Support
     {
         public EntityCommandBuilderTest(ITestOutputHelper output)
             : base(output)
-        {}
+        { }
+
+        private void ValidateCommand(DbCommand command)
+        {
+            for (int i = 0; i < command.Parameters.Count; i++)
+            {
+                var param = command.Parameters[i];
+                param.Value.Should().NotBeNull();
+                param.ParameterName.Should().NotBeNull();
+            }
+
+            command.CommandText.Should().NotBeNullOrWhiteSpace();
+        }
 
         [Fact]
         public void MakeSelectCommandTest()
@@ -32,7 +43,7 @@ namespace FMSC.ORM.EntityModel.Support
         }
 
         [Fact]
-        public void BuildInsertTest_withOutKeyData()
+        public void BuildInsert_Without_KeyData()
         {
             var data = new POCOMultiTypeObject();
 
@@ -42,12 +53,13 @@ namespace FMSC.ORM.EntityModel.Support
             using (var command = DbProvider.CreateCommand())
             {
                 commandBuilder.BuildInsertCommand(command, data, null, OnConflictOption.Default);
+
+                ValidateCommand(command);
+
                 var commandText = command.CommandText;
 
                 Output.WriteLine(commandText);
-
-                commandText.Should().NotBeNullOrWhiteSpace();
-                commandText.Should().NotContain("ID", "Inset with no keyData should not assign ID column");
+                commandText.Should().NotContain("@ID", "Insert with no keyData should not assign ID column");
 
                 VerifyCommandSyntex(commandText);
             }
@@ -67,7 +79,7 @@ namespace FMSC.ORM.EntityModel.Support
                 var commandText = command.CommandText;
                 Output.WriteLine(commandText);
 
-                commandText.Should().NotBeNullOrWhiteSpace();
+                ValidateCommand(command);
                 commandText.Should().Contain("ID", "Insert with keyData should assign ID column");
 
                 VerifyCommandSyntex(commandText);
@@ -87,7 +99,7 @@ namespace FMSC.ORM.EntityModel.Support
                 commandBuilder.BuildUpdateCommand(command, data, 1, OnConflictOption.Default);
                 var commandText = command.CommandText;
 
-                commandText.Should().NotBeNullOrWhiteSpace();
+                ValidateCommand(command);
                 commandText.Should().Contain("ID", "");
 
                 command.Parameters.OfType<DbParameter>().Where(x => x.ParameterName == "@id")
@@ -116,7 +128,7 @@ namespace FMSC.ORM.EntityModel.Support
                 commandBuilder.BuildSQLDeleteCommand(command, data);
                 var commandText = command.CommandText;
 
-                commandText.Should().NotBeNullOrWhiteSpace();
+                ValidateCommand(command);
 
                 command.Parameters.Should().HaveCount(1);
                 command.Parameters.OfType<DbParameter>().Where(x => x.ParameterName == "@keyValue")

@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Xunit;
+﻿using Xunit;
 using Xunit.Abstractions;
 
 namespace FMSC.ORM.Core
@@ -12,8 +7,5 @@ namespace FMSC.ORM.Core
     {
         public DatastoreTest(ITestOutputHelper output) : base(output)
         { }
-
-
-
     }
 }

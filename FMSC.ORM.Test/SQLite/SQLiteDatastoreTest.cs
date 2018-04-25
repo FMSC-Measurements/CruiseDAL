@@ -555,6 +555,19 @@ namespace FMSC.ORM.SQLite
         }
 
         [Fact]
+        public void Read_Empty_Table()
+        {
+            using (var ds = new SQLiteDatastore())
+            {
+                ds.Execute(TestDBBuilder.CREATE_MULTIPROPTABLE);
+
+                ds.CheckTableExists("MultiPropTable").Should().BeTrue();
+
+                ds.From<POCOMultiTypeObject>().Invoking(x => x.Query()).ShouldNotThrow();
+            }
+        }
+
+        [Fact]
         public void RollBackTransaction_WtihNoTransaction()
         {
             using (var ds = new SQLiteDatastore())

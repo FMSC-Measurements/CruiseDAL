@@ -12,7 +12,7 @@ using Xunit.Runners.UI;
 
 namespace FMSC.ORM.Test.Android
 {
-    [Activity(Label = "xUnit Android Runner", MainLauncher = true, Theme = "@android:style/Theme.Material.Light")]
+    [Activity(Label = "FMSC.ORM.Test xUnit Android Runner", MainLauncher = true, Theme = "@android:style/Theme.Material.Light")]
     public class MainActivity : RunnerActivity
     {
 
