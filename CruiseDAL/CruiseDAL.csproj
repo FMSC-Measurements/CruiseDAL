@@ -1,8 +1,10 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
+    <!--<TargetFramework>netstandard20</TargetFramework>-->
     <TargetFrameworks>net40;netstandard20</TargetFrameworks>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+    <Version>2.2.1.1</Version>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(TargetFramework)' == 'net40'">
@@ -26,11 +28,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Include="AutoGen\CreateTriggers.cs">
-      <DesignTime>True</DesignTime>
-      <AutoGen>True</AutoGen>
-      <DependentUpon>CreateTriggers.tt</DependentUpon>
-    </None>
     <None Include="AutoGen\CruiseCreate.cs">
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
@@ -49,7 +46,6 @@
     </None>
     <None Update="AutoGen\CruiseCreate.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
-      <LastGenOutput>CruiseCreate.cs</LastGenOutput>
     </None>
     <None Update="AutoGen\DAL.AutoGen.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
@@ -74,11 +70,6 @@
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
       <DependentUpon>CreateTriggers.tt</DependentUpon>
-    </Compile>
-    <Compile Update="AutoGen\CruiseCreate.cs">
-      <DesignTime>True</DesignTime>
-      <AutoGen>True</AutoGen>
-      <DependentUpon>CruiseCreate.tt</DependentUpon>
     </Compile>
     <Compile Update="AutoGen\DAL.AutoGen.cs">
       <DesignTime>True</DesignTime>
