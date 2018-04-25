@@ -5,7 +5,7 @@ using System.ComponentModel;
 
 namespace FMSC.ORM.EntityModel
 {
-    public interface IDataObject : IPersistanceTracking, IChangeTracking
+    public interface IDataObject : IPersistanceTracking, IChangeTracking, ISupportInitialize
     {
         DatastoreRedux DAL { get; set; }
 

@@ -6,6 +6,7 @@ using SqlBuilder;
 using SqlBuilder.Dialects;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Data;
 using System.Data.Common;
 using System.Diagnostics;
@@ -437,8 +438,21 @@ namespace FMSC.ORM.Core
                                     {
                                         ((IDataObject)entity).DAL = this;
                                     }
-
-                                    inflator.ReadData(reader, entity);
+                                    if (entity is ISupportInitialize)
+                                    {
+                                        ((ISupportInitialize)entity).BeginInit();// allow dataobject to suspend property changed notifications or whatever
+                                    }
+                                    try
+                                    {
+                                        inflator.ReadData(reader, entity);
+                                    }
+                                    finally
+                                    {
+                                        if (entity is ISupportInitialize)
+                                        {
+                                            ((ISupportInitialize)entity).EndInit();
+                                        }
+                                    }
                                 }
                             }
                             catch (Exception e)
@@ -603,6 +617,8 @@ namespace FMSC.ORM.Core
 
                     using (var reader = ExecuteReader(connection, commandText, paramaters, CurrentTransaction))
                     {
+                        //HACK with microsoft.data.sqlite calling GetOrdinal throws exception if reader is empty
+                        //if(reader is DbDataReader && ((DbDataReader)reader).HasRows == false) { yield break; }
                         inflator.CheckOrdinals(reader);
 
                         while (reader.Read())
@@ -611,6 +627,10 @@ namespace FMSC.ORM.Core
                             if (newDO is IDataObject)
                             {
                                 ((IDataObject)newDO).DAL = this;
+                            }
+                            if (newDO is ISupportInitialize)
+                            {
+                                ((ISupportInitialize)newDO).BeginInit();// allow dataobject to suspend property changed notifications or whatever
                             }
                             try
                             {
@@ -628,6 +648,14 @@ namespace FMSC.ORM.Core
                                     throw;
                                 }
                             }
+                            finally
+                            {
+                                if (newDO is ISupportInitialize)
+                                {
+                                    ((ISupportInitialize)newDO).EndInit();
+                                }
+                            }
+
                             yield return newDO;
                         }
                     }
