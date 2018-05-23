@@ -22,6 +22,24 @@ namespace SqlBuilder
             return @this;
         }
 
+        public static IAcceptsJoin LeftJoin(this IAcceptsJoin @this, TableOrSubQuery source, string constraint)
+        {
+            @this.Accept(new JoinClause(source, constraint) { JoinType = "LEFT" });
+            return @this;
+        }
+
+        public static IAcceptsJoin LeftJoin(this IAcceptsJoin @this, string tableName, string constraint)
+        {
+            @this.Accept(new JoinClause(new TableOrSubQuery(tableName), constraint) { JoinType = "LEFT" });
+            return @this;
+        }
+
+        public static IAcceptsJoin LeftJoin(this IAcceptsJoin @this, string tableName, string constraint, string alias)
+        {
+            @this.Accept(new JoinClause(tableName, constraint, alias) { JoinType = "LEFT" });
+            return @this;
+        }
+
         public static IAcceptsGroupBy Where(this IAcceptsWhere @this, string expression)
         {
             @this.Accept(new WhereClause(expression));
