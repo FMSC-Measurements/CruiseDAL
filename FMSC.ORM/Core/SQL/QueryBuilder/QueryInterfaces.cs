@@ -39,5 +39,9 @@ namespace FMSC.ORM.Core.SQL.QueryBuilder
         IQuerryAcceptsJoin<T> Join(string table, string joinContraint);
 
         IQuerryAcceptsJoin<T> Join(string table, string joinContraint, string alias);
+
+        IQuerryAcceptsJoin<T> LeftJoin(string table, string joinContraint);
+
+        IQuerryAcceptsJoin<T> LeftJoin(string table, string joinContraint, string alias);
     }
 }

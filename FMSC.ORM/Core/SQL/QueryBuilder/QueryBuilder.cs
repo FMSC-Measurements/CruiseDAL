@@ -72,5 +72,17 @@ namespace FMSC.ORM.Core.SQL.QueryBuilder
             Builder.Join(table, joinContraint, null);
             return this;
         }
+
+        public IQuerryAcceptsJoin<T> LeftJoin(string table, string joinContraint)
+        {
+            Builder.LeftJoin(table, joinContraint);
+            return this;
+        }
+
+        public IQuerryAcceptsJoin<T> LeftJoin(string table, string joinContraint, string alias)
+        {
+            Builder.LeftJoin(table, joinContraint, alias);
+            return this;
+        }
     }
 }
