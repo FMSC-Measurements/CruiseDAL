@@ -567,7 +567,15 @@ namespace CruiseDAL
             {
                 db.BeginTransaction();
 
-                string command = @"CREATE TABLE TempCountTree (
+                var command = @"CREATE TABLE Component (
+				Component_CN INTEGER PRIMARY KEY AUTOINCREMENT,
+				GUID TEXT,
+				LastMerge DATETIME,
+				FileName TEXT);";
+
+                db.Execute(command);
+
+                command = @"CREATE TABLE TempCountTree (
 				CountTree_CN INTEGER PRIMARY KEY AUTOINCREMENT,
 				SampleGroup_CN INTEGER REFERENCES SampleGroup NOT NULL,
 				CuttingUnit_CN INTEGER REFERENCES CuttingUnit NOT NULL,
@@ -630,13 +638,7 @@ namespace CruiseDAL
 			    UPDATE CountTree SET ModifiedDate = datetime(current_timestamp, 'localtime') WHERE rowID = new.rowID; END;";
                 db.Execute(command);
 
-                command = @"CREATE TABLE Component (
-				Component_CN INTEGER PRIMARY KEY AUTOINCREMENT,
-				GUID TEXT,
-				LastMerge DATETIME,
-				FileName TEXT);";
-
-                db.Execute(command);
+                
 
                 SetDatabaseVersion(db, "2013.11.22");
                 db.CommitTransaction();
