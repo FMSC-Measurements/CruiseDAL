@@ -6,7 +6,7 @@
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo><!--Dont generate assembly info because we will use same assembly info from VS2008--> 
     <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
     <Authors>Ben Campbell</Authors>
-    <Version>2.0.0.4</Version>
+    <Version>2.0.0.5</Version>
   </PropertyGroup>
     
   <PropertyGroup Condition="'$(TargetFramework)' == 'net40'">

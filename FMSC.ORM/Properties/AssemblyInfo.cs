@@ -34,8 +34,8 @@ using System.Runtime.InteropServices;
 // [assembly: AssemblyVersion("1.0.*")]
 
 
-[assembly: AssemblyVersion("2.0.0.4")]
+[assembly: AssemblyVersion("2.0.0.5")]
 
 #if !NetCF
-[assembly: AssemblyFileVersion("2.0.0.4")]
+[assembly: AssemblyFileVersion("2.0.0.5")]
 #endif
