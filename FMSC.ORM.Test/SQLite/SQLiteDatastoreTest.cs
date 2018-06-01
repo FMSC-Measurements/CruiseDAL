@@ -43,7 +43,26 @@ namespace FMSC.ORM.SQLite
         }
 
 
+        [Fact]
+        public void Ctor_with_null_path()
+        {
+            Action action = () =>
+            {
+                var db = new SQLiteDatastore(null);
+            };
+            action.ShouldThrow<ArgumentException>();
 
+        }
+
+        [Fact]
+        public void Ctor_with_empty_path()
+        {
+            Action action = () =>
+            {
+                var db = new SQLiteDatastore("");
+            };
+            action.ShouldThrow<ArgumentException>();
+        }
 
         [Fact]
         public void CreateSQLiteDatastoreTest()

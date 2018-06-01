@@ -39,7 +39,19 @@ namespace FMSC.ORM.Core
         protected DbProviderFactory ProviderFactory { get; set; }
 
         public DatabaseBuilder DatabaseBuilder { get; set; }
-        public string Path { get; protected set; }
+
+        private string _path;
+
+        public string Path
+        {
+            get { return _path; }
+            protected set
+            {
+                if (value == null || value == "") { throw new ArgumentException("Path"); }
+                _path = null;
+            }
+        }
+
         public object TransactionSyncLock { get { return _transactionSyncLock; } }
 
         protected DatastoreRedux(ISqlDialect dialect, IExceptionProcessor exceptionProcessor, DbProviderFactory providerFactory)
