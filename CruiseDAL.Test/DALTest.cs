@@ -26,6 +26,27 @@ namespace CruiseDAL.Tests
         }
 
         [Fact]
+        public void Ctor_with_null_path()
+        {
+            Action action = () =>
+            {
+                var db = new DAL(null);
+            };
+            action.ShouldThrow<ArgumentException>();
+
+        }
+
+        [Fact]
+        public void Ctor_with_empty_path()
+        {
+            Action action = () =>
+            {
+                var db = new DAL("");
+            };
+            action.ShouldThrow<ArgumentException>();
+        }
+
+        [Fact]
         public void Constructor_file_create_test()
         {
             var filePath = Path.Combine(base.TestTempPath, "testCreate.cruise");
@@ -160,6 +181,42 @@ namespace CruiseDAL.Tests
             {
                 if (File.Exists(fileToCopyPath)) { File.Delete(fileToCopyPath); }
                 if (File.Exists(copiedFilePath)) { File.Delete(copiedFilePath); }
+            }
+        }
+
+        [Theory]
+        [InlineData("", CruiseFileType.Unknown)]
+        [InlineData("something", CruiseFileType.Unknown)]
+        [InlineData("something.cruise", CruiseFileType.Cruise)]
+        [InlineData("something.CRUISE", CruiseFileType.Cruise)]
+        [InlineData("something.bananas.cruise", CruiseFileType.Cruise)]
+
+        [InlineData("something.m.cruise", CruiseFileType.Master, CruiseFileType.Cruise)]
+        [InlineData("something.M.cruise", CruiseFileType.Master, CruiseFileType.Cruise)]
+        [InlineData("something.m.CRUISE", CruiseFileType.Master, CruiseFileType.Cruise)]
+        [InlineData("something.bananas.m.CRUISE", CruiseFileType.Master, CruiseFileType.Cruise)]
+
+
+        [InlineData("something.1.cruise", CruiseFileType.Component, CruiseFileType.Cruise)]
+        [InlineData("something.bananas.1.cruise", CruiseFileType.Component, CruiseFileType.Cruise)]
+        [InlineData("something.123456789.cruise", CruiseFileType.Component, CruiseFileType.Cruise)]
+
+        [InlineData("something.back-cruise", CruiseFileType.Backup, CruiseFileType.Cruise)]
+        [InlineData("something.m.back-cruise", CruiseFileType.Backup, CruiseFileType.Cruise)]
+        [InlineData("something.M.back-cruise", CruiseFileType.Backup, CruiseFileType.Cruise)]
+        [InlineData("something.1.back-cruise", CruiseFileType.Backup, CruiseFileType.Cruise)]
+
+        [InlineData("something.cut", CruiseFileType.Template)]
+
+        [InlineData("something.design", CruiseFileType.Design)]
+        public void ExtrapolateCruiseFileType_Test(string fileName, CruiseFileType expectedType, params CruiseFileType[] flags)
+        {
+            var result = CruiseDAL.DAL.ExtrapolateCruiseFileType(fileName);
+            result.Should().Be(expectedType);
+
+            foreach(var flag in flags)
+            {
+                result.Should().HaveFlag(flag);
             }
         }
     }

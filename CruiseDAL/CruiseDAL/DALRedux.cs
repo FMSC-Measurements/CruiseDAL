@@ -11,7 +11,7 @@ using System.Threading;
 
 namespace CruiseDAL
 {
-    public enum CruiseFileType { Unknown, Cruise, Template, Design, Master, Component, Backup }
+    public enum CruiseFileType { Unknown, Cruise, Template, Design, Master = 32 | Cruise, Component = 64 | Cruise, Backup = 128 | Cruise }
 
     public partial class DAL : SQLiteDatastore
     {
@@ -66,21 +66,7 @@ namespace CruiseDAL
         {
             get
             {
-                _cruiseFileType = this.ReadCruiseFileType();
-                if (_cruiseFileType == CruiseFileType.Unknown)
-                {
-                    _cruiseFileType = ExtrapolateCruiseFileType(this.Path);
-                    if (_cruiseFileType == CruiseFileType.Unknown)
-                    {
-                        WriteCruiseFileType(_cruiseFileType);
-                    }
-                }
-                return _cruiseFileType;
-            }
-            protected set
-            {
-                _cruiseFileType = CruiseFileType.Unknown;
-                WriteCruiseFileType(value);
+                return ExtrapolateCruiseFileType(this.Path);
             }
         }
 
@@ -114,9 +100,8 @@ namespace CruiseDAL
         /// <exception cref="UnauthorizedAccessException">File open in another application or thread</exception>
         public DAL(string path, bool makeNew, DatabaseBuilder builder) : base(path)
         {
-            Debug.Assert(builder != null);
-            System.Diagnostics.Debug.Assert(!String.IsNullOrEmpty(path), "path is null or empty");
-
+            if(builder == null) { throw new ArgumentNullException("builder"); }
+            
             Path = path;
 
             this.Initialize(makeNew, builder);
