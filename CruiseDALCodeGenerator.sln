@@ -1,21 +1,9 @@
-﻿
+
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.27130.2036
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CruiseDAL", "CruiseDAL\CruiseDAL.csproj", "{18E03183-FD2C-4676-B40C-ABCB5FC65E90}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FMSC.ORM", "FMSC.ORM\FMSC.ORM.csproj", "{05B23426-797F-46B5-B376-5111BFD779DC}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FMSC.ORM.Test", "FMSC.ORM.Test\FMSC.ORM.Test.csproj", "{BE45AC61-FA51-431A-AC8A-C1B16D73F276}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CruiseDAL.Tests", "CruiseDAL.Test\CruiseDAL.Tests.csproj", "{886A3CDF-FD6E-4D0E-8D05-8884DC11D877}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FMSC.ORM.Test.Android", "FMSC.ORM.Test.Android\FMSC.ORM.Test.Android.csproj", "{C94C17D1-7837-4E51-94BC-336D119DC164}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SqlBuilder", "SqlBuilder\SqlBuilder.csproj", "{56B414A3-7016-4436-B7F0-2A3DE41ED6AC}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SqlBuilder.Test", "SqlBuilder.Test\SqlBuilder.Test.csproj", "{4EAC5AFD-9535-4DA8-BAE9-2FCAE0620AE1}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CruiseDAL.CodeGenEngine", "CruiseDAL.CodeGenEngine\CruiseDAL.CodeGenEngine.csproj", "{FAFF3BAF-E84F-4CBE-AB52-6CEBEC124127}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
