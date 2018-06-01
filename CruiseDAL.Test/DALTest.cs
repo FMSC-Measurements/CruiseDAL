@@ -1,8 +1,10 @@
-﻿using FluentAssertions;
+﻿using CruiseDAL.DataObjects;
+using FluentAssertions;
 using System;
 using System.IO;
 using System.Linq;
 using System.Threading;
+using System.Threading.Tasks;
 using Xunit;
 using Xunit.Abstractions;
 
@@ -19,10 +21,7 @@ namespace CruiseDAL.Tests
         {
             using (var datastore = new DAL())
             {
-                foreach (var table in Schema.Schema.TABLE_NAMES)
-                {
-                    datastore.CheckTableExists(table).Should().BeTrue();
-                }
+                ValidateDAL(datastore);
             }
         }
 
@@ -34,6 +33,8 @@ namespace CruiseDAL.Tests
             try
             {
                 var datastore = new DAL(filePath, true);
+
+                ValidateDAL(datastore);
             }
             finally
             {
@@ -44,31 +45,67 @@ namespace CruiseDAL.Tests
             }
         }
 
+        void ValidateDAL(DAL db)
+        {
+            db.DatabaseVersion.Should().Be(CruiseDAL.DAL.CURENT_DBVERSION);
+
+            var messageLogs = db.From<MessageLogDO>().Query().ToArray();
+            var latestMessage = messageLogs.Last();
+
+            latestMessage.Program.Should().NotBeNullOrWhiteSpace();
+            latestMessage.Message.Should().Be("File Opened");
+
+            var timeStamp = latestMessage.Time;
+            timeStamp.Should().NotBeNullOrWhiteSpace();
+            //assert that file opened message was within the last 30 seconds
+            DateTime.Parse(timeStamp).Subtract(DateTime.Now).TotalSeconds.Should().BeLessThan(30);
+
+
+            foreach (var table in Schema.Schema.TABLE_NAMES)
+            {
+                db.CheckTableExists(table).Should().BeTrue();
+            }
+
+        }
+
         [Fact]
         public void TestAllowMultDALOnSameThread()
         {
-            var dal1 = new DAL(".\\TestResources\\Test.cruise");
-            DAL dal2 = null;
-            Action action = () => dal2 = new DAL(".\\TestResources\\Test.cruise");
-            action.ShouldNotThrow<Exception>();
+            var filePath = Path.Combine(base.TestTempPath, "testCreate.cruise");
+
+            try
+            {
+                using (var dal1 = new DAL(filePath, true))
+                {
+
+                    Action action = () =>
+                    {
+                        using (var dal2 = new DAL(filePath))
+                        {
+                            ValidateDAL(dal2);
+                        }
+                    };
+                    action.ShouldNotThrow<Exception>();
+                }
+            }
+            finally
+            {
+                if (File.Exists(filePath))
+                {
+                    File.Delete(filePath);
+                }
+            }
         }
 
-        private void DoWorkBlockMultiThreadDALFileAcess()
+        private void DoWorkBlockMultiThreadDALFileAcess(object obj)
         {
-            DAL newDAL = new DAL(".\\TestResources\\Test.cruise");
-            Output.WriteLine("waiting");
-            Thread.Sleep(2000);
-        }
+            var path = (string)obj;
 
-        [Fact]
-        public void BlockMultiThreadDALFileAcess()
-        {
-            Thread thread = new Thread(DoWorkBlockMultiThreadDALFileAcess);
-            thread.Start();
-
-            DAL dal = null;
-            Action action = () => dal = new DAL(".\\TestResources\\Test.cruise");
-            action.ShouldThrow<DatabaseShareException>();
+            using (DAL newDAL = new DAL(path, true))
+            {
+                Output.WriteLine("waiting");
+                Thread.Sleep(30000);
+            }
         }
 
         [Fact]
