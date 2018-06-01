@@ -391,86 +391,30 @@ namespace CruiseDAL
 
         #endregion not implemented
 
-        #region accessControl
+        //#region IDisposable Members
 
-        private Mutex _accessControl;
+        //private bool _disposed = false;
 
-        private void releaseAccessControl()
-        {
-#if !NetCF
-            if (_accessControl != null)
-            {
-                try
-                {
-                    _accessControl.ReleaseMutex();
-                }
-                catch
-                {
-                }
-                _accessControl.Close();
-                _accessControl = null;
-            }
-            //FileSecurity fSecurity = file.GetAccessControl();
-            //fSecurity.PurgeAccessRules(new NTAccount(@"FMSC\CruiseDAL"));
-            //file.SetAccessControl(fSecurity);
-#endif
-        }
+        //protected override void Dispose(bool disposing)
+        //{
+        //    base.Dispose(disposing);
+        //    if (_disposed)
+        //    {
+        //        return;
+        //    }
 
-        private void establishAccessControl()
-        {
-            //releaseAccessControl();
-#if !NetCF
-            try
-            {
-                string semaName = "CruiseDAL" + Path.GetHashCode().ToString();
-                _accessControl = new Mutex(false, semaName);
-            }
-            catch
-            {
-            }
-            if (_accessControl == null)
-            {
-                throw new DatabaseShareException("File Open Somewhere Else");
-            }
-            else
-            {
-                if (!_accessControl.WaitOne(0, true))
-                {
-                    this.releaseAccessControl();
-                    throw new DatabaseShareException("File Open Somewhere Else");
-                }
-            }
-#endif
-        }
+        //    if (disposing)
+        //    {
+        //    }
 
-        #endregion accessControl
+        //    _disposed = true;
+        //}
 
-        #region IDisposable Members
+        //~DAL()
+        //{
+        //    this.Dispose(false);
+        //}
 
-        private bool _disposed = false;
-
-        protected override void Dispose(bool disposing)
-        {
-            base.Dispose(disposing);
-            if (_disposed)
-            {
-                return;
-            }
-
-            if (disposing)
-            {
-            }
-
-            releaseAccessControl();
-
-            _disposed = true;
-        }
-
-        ~DAL()
-        {
-            this.Dispose(false);
-        }
-
-        #endregion IDisposable Members
+        //#endregion IDisposable Members
     }
 }
