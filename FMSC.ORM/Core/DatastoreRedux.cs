@@ -852,15 +852,29 @@ namespace FMSC.ORM.Core
             }
             else
             {
-                Type t = typeof(T);
-                if (t.IsGenericType && t.GetGenericTypeDefinition() == typeof(Nullable<>))
+                Type targetType = typeof(T);
+
+                if (targetType.IsGenericType && targetType.GetGenericTypeDefinition() == typeof(Nullable<>))
                 {
-                    t = Nullable.GetUnderlyingType(t);
+                    targetType = Nullable.GetUnderlyingType(targetType);
                 }
 
-                return (T)Convert.ChangeType(result, t
-                    , System.Globalization.CultureInfo.CurrentCulture);
-                //return (T)Convert.ChangeType(result, typeof(T));
+                if (result is IConvertible)
+                {
+                    return (T)Convert.ChangeType(result, targetType
+                        , System.Globalization.CultureInfo.CurrentCulture);
+                }
+                else
+                {
+                    try
+                    {
+                        return (T)result;
+                    }
+                    catch(InvalidCastException)
+                    {
+                        return (T)Activator.CreateInstance(targetType, result);
+                    }
+                }
             }
         }
 

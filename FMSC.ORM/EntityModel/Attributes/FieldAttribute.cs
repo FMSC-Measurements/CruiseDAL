@@ -13,8 +13,6 @@ namespace FMSC.ORM.EntityModel.Attributes
         public virtual object DefaultValue { get; set; }
         //public bool IsDepreciated { get; set; }
 
-        internal bool IsGuid;
-
         internal string SQLPramName { get { return "@" + Name.ToLower(); } }
 
         public string NameOrAlias { get { return Name ?? Alias; } }

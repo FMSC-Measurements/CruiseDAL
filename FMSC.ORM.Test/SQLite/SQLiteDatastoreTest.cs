@@ -17,8 +17,6 @@ namespace FMSC.ORM.SQLite
         private readonly string _tempDir;
         private readonly string _testCreatePath;
         private readonly string _testReadOnlyPath;
-        string _emptyDatastorePath;
-        SQLiteDatastore _emptyDataStore;
 
         public SQLiteDatastoreTest(ITestOutputHelper output) : base(output)
         {
@@ -441,6 +439,18 @@ namespace FMSC.ORM.SQLite
             using (var ds = new SQLiteDatastore())
             {
                 ds.ExecuteScalar<string>(query).ShouldBeEquivalentTo(expectedValue);
+            }
+        }
+
+        [Fact]
+        public void ExecuteScalar_Generic_Guid()
+        {
+            var query = "SELECT @p1;";
+            var expectedValue = Guid.NewGuid();
+
+            using (var ds = new SQLiteDatastore())
+            {
+                ds.ExecuteScalar<Guid>(query, expectedValue).ShouldBeEquivalentTo(expectedValue);
             }
         }
 
