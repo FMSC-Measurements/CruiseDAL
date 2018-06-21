@@ -994,10 +994,10 @@ namespace FMSC.ORM.Core
                     }
                     TransactionDepth = transactionDepth;
                 }
-                else// transactionDepth <= 0
-                {
-                    Debug.Fail("Transaction depth is " + transactionDepth.ToString());
-                }
+                //else// transactionDepth <= 0
+                //{
+                //    Debug.Fail("Transaction depth is " + transactionDepth.ToString());
+                //}
             }
         }
 
@@ -1019,10 +1019,10 @@ namespace FMSC.ORM.Core
                     }
                     TransactionDepth = transactionDepth;
                 }
-                else
-                {
-                    Debug.Fail("Transaction depth is " + transactionDepth.ToString());
-                }
+                //else
+                //{
+                //    Debug.Fail("Transaction depth is " + transactionDepth.ToString());
+                //}
             }
         }
 

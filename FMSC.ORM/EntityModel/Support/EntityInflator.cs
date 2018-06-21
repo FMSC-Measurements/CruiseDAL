@@ -170,7 +170,7 @@ namespace FMSC.ORM.EntityModel.Support
                 {
                     return reader.GetGuid(ord);
                 }
-                catch (Exception ex)
+                catch (Exception)
                 {
                     return Guid.Empty;
                 }

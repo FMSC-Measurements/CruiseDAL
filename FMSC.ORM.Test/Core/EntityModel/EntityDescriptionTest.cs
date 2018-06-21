@@ -30,7 +30,7 @@ namespace FMSC.ORM.EntityModel.Support
             VerifyDataObjectInfo(t, doi);
         }
 
-        public void LoadDataObjects()
+        private void LoadDataObjects()
         {
             var types = (from t in System.Reflection.Assembly.GetAssembly(typeof(DataObject_Base)).GetTypes()
                          where t.IsClass && t.Namespace == "CruiseDAL.DataObjects"
@@ -45,7 +45,7 @@ namespace FMSC.ORM.EntityModel.Support
             }
         }
 
-        void VerifyDataObjectInfo(Type dataType, EntityDescription doi)
+        private void VerifyDataObjectInfo(Type dataType, EntityDescription doi)
         {
             doi.Should().NotBeNull();
             doi.EntityType.ShouldBeEquivalentTo(dataType);
@@ -54,7 +54,7 @@ namespace FMSC.ORM.EntityModel.Support
             VerifyDataObjectInfoFields(doi);
         }
 
-        void VerifyDataObjectInfoFields(EntityDescription doi)
+        private void VerifyDataObjectInfoFields(EntityDescription doi)
         {
             Assert.NotNull(doi.Fields.PrimaryKeyField);
             //Assert.NotNull(doi.Fields.PrimaryKeyField.Property.Getter);
@@ -88,7 +88,7 @@ namespace FMSC.ORM.EntityModel.Support
             VerifyNonvisableField(doi, "InterfaceProperty", true);
         }
 
-        void VerifyField(EntityDescription doi, string fieldName)
+        private void VerifyField(EntityDescription doi, string fieldName)
         {
             Output.WriteLine("Verifying " + fieldName);
             Assert.Contains(doi.Fields, x => x.Name == fieldName);
@@ -104,12 +104,12 @@ namespace FMSC.ORM.EntityModel.Support
             Output.WriteLine("done");
         }
 
-        void VerifyNonvisableField(EntityDescription doi, string fieldName)
+        private void VerifyNonvisableField(EntityDescription doi, string fieldName)
         {
             VerifyNonvisableField(doi, fieldName, false);
         }
 
-        void VerifyNonvisableField(EntityDescription doi, string fieldName, bool isPrivate)
+        private void VerifyNonvisableField(EntityDescription doi, string fieldName, bool isPrivate)
         {
             Assert.DoesNotContain(doi.Fields, x => x.Name == fieldName);
 
