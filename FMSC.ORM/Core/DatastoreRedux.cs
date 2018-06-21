@@ -48,7 +48,7 @@ namespace FMSC.ORM.Core
             protected set
             {
                 if (value == null || value == "") { throw new ArgumentException("Path"); }
-                _path = null;
+                _path = value;
             }
         }
 

@@ -55,6 +55,16 @@ namespace FMSC.ORM.SQLite
         }
 
         [Fact]
+        public void Ctor_inMemory()
+        {
+            var db = new SQLiteDatastore();
+
+            db.Path.Should().NotBeNullOrWhiteSpace();
+            db.Execute("Select 1;");
+
+        }
+
+        [Fact]
         public void Ctor_with_empty_path()
         {
             Action action = () =>
