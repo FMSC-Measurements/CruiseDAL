@@ -7,6 +7,7 @@ using System.Xml.Serialization;
 using FMSC.ORM.Core;
 using FMSC.ORM.EntityModel;
 using FMSC.ORM.EntityModel.Attributes;
+using FMSC.ORM.EntityModel.Support;
 
 namespace CruiseDAL
 {
@@ -19,7 +20,7 @@ namespace CruiseDAL
         protected DataObject(DatastoreRedux ds)
             : base(ds)
         {
-            string tableName = DatastoreRedux.LookUpEntityByType(this.GetType()).SourceName;
+            string tableName = GlobalEntityDescriptionLookup.Instance.LookUpEntityByType(this.GetType()).SourceName;
             ErrorCollection = new CruiseDALErrorCollection(this, tableName);
         }
 
@@ -472,7 +473,7 @@ namespace CruiseDAL
             object value = null;
             try
             {
-                value = DatastoreRedux.LookUpEntityByType(this.GetType())
+                value = GlobalEntityDescriptionLookup.Instance.LookUpEntityByType(this.GetType())
                     .Properties[name].GetValue(this);
                 //PropertyInfo property = this.GetType().GetProperty(name, BindingFlags.Instance | BindingFlags.Public);
                 ////if (property == null) { return true; }

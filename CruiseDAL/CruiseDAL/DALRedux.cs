@@ -200,7 +200,7 @@ namespace CruiseDAL
                     var commandText = "ATTACH DATABASE \"" + externalDB.DS.Path + "\" AS " + externalDB.Alias + ";";
                     try
                     {
-                        ExecuteNonQuery(connection, commandText, (object[])null, CurrentTransaction);
+                        connection.ExecuteNonQuery(commandText, (object[])null, CurrentTransaction);
                     }
                     catch (Exception e)
                     {
@@ -244,7 +244,7 @@ namespace CruiseDAL
                     var commandText = "DETACH DATABASE \"" + externalDB.Alias + "\";";
                     try
                     {
-                        ExecuteNonQuery(connection, commandText, (object[])null, CurrentTransaction);
+                        connection.ExecuteNonQuery(commandText, (object[])null, CurrentTransaction);
                     }
                     catch (Exception e)
                     {

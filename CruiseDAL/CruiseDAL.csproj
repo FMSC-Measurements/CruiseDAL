@@ -4,7 +4,8 @@
     <!--<TargetFramework>netstandard20</TargetFramework>-->
     <TargetFrameworks>net40;netstandard20</TargetFrameworks>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
-    <Version>2.2.1.2</Version>
+    <Version>2.2.1.4</Version>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(TargetFramework)' == 'net40'">

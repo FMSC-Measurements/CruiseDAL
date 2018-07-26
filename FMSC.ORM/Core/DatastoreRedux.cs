@@ -7,7 +7,6 @@ using SqlBuilder.Dialects;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Data;
 using System.Data.Common;
 using System.Diagnostics;
 using System.Linq;
@@ -19,7 +18,6 @@ namespace FMSC.ORM.Core
     public abstract partial class DatastoreRedux : IDisposable
     {
         protected static Logger _logger = new Logger();
-        protected static Dictionary<string, EntityDescription> _globalEntityDescriptionLookup = new Dictionary<string, EntityDescription>();
 
         protected int _holdConnection = 0;
 
@@ -27,10 +25,10 @@ namespace FMSC.ORM.Core
         protected readonly object _persistentConnectionSyncLock = new object();
 
         protected bool _transactionCanceled = false;
-        public IDbTransaction CurrentTransaction { get; protected set; }
+        public DbTransaction CurrentTransaction { get; protected set; }
         public int TransactionDepth { get; protected set; }
 
-        public IDbConnection PersistentConnection { get; protected set; }
+        public DbConnection PersistentConnection { get; protected set; }
 
         protected Dictionary<Type, EntityCache> _entityCache;
 
@@ -87,22 +85,6 @@ namespace FMSC.ORM.Core
             }
         }
 
-        private EntityInflator GetEntityInflator(Type type)
-        {
-            return LookUpEntityByType(type).Inflator;
-        }
-
-        public static EntityDescription LookUpEntityByType(Type t)
-        {
-            string name = t.Name;
-            if (!_globalEntityDescriptionLookup.ContainsKey(name))
-            {
-                _globalEntityDescriptionLookup.Add(name, new EntityDescription(t));
-            }
-
-            return _globalEntityDescriptionLookup[t.Name];
-        }
-
         #endregion Entity Info
 
         #region Abstract Members
@@ -113,9 +95,9 @@ namespace FMSC.ORM.Core
 
         public abstract bool HasForeignKeyErrors(string table_name);
 
-        public abstract long GetLastInsertRowID(IDbConnection connection, IDbTransaction transaction);
+        public abstract long GetLastInsertRowID(DbConnection connection, DbTransaction transaction);
 
-        public abstract object GetLastInsertKeyValue(IDbConnection connection, String tableName, String fieldName, IDbTransaction transaction);
+        public abstract object GetLastInsertKeyValue(DbConnection connection, String tableName, String fieldName, DbTransaction transaction);
 
         #endregion Abstract Members
 
@@ -134,7 +116,7 @@ namespace FMSC.ORM.Core
 
         public QueryBuilder<T> From<T>(TableOrSubQuery source) where T : class, new()
         {
-            EntityDescription entityDescription = LookUpEntityByType(typeof(T));
+            EntityDescription entityDescription = GlobalEntityDescriptionLookup.Instance.LookUpEntityByType(typeof(T));
             SqlSelectBuilder builder = entityDescription.CommandBuilder.MakeSelectCommand(source);
 
             return new QueryBuilder<T>(this, builder);
@@ -151,7 +133,7 @@ namespace FMSC.ORM.Core
                 var connection = OpenConnection();
                 try
                 {
-                    Delete(connection, data, CurrentTransaction);
+                    connection.Delete(data, CurrentTransaction);
                 }
                 finally
                 {
@@ -160,34 +142,34 @@ namespace FMSC.ORM.Core
             }
         }
 
-        protected void Delete(IDbConnection connection, object data, IDbTransaction transaction)
-        {
-            if (data == null) { throw new ArgumentNullException("data"); }
+        //protected void Delete(IDbConnection connection, object data, IDbTransaction transaction)
+        //{
+        //    if (data == null) { throw new ArgumentNullException("data"); }
 
-            EntityDescription entityDescription = LookUpEntityByType(data.GetType());
-            PrimaryKeyFieldAttribute keyFieldInfo = entityDescription.Fields.PrimaryKeyField;
+        //    EntityDescription entityDescription = LookUpEntityByType(data.GetType());
+        //    PrimaryKeyFieldAttribute keyFieldInfo = entityDescription.Fields.PrimaryKeyField;
 
-            if (keyFieldInfo == null) { throw new InvalidOperationException("type doesn't have primary key field"); }
+        //    if (keyFieldInfo == null) { throw new InvalidOperationException("type doesn't have primary key field"); }
 
-            EntityCommandBuilder builder = entityDescription.CommandBuilder;
+        //    EntityCommandBuilder builder = entityDescription.CommandBuilder;
 
-            lock (data)
-            {
-                OnDeletingData(data);
+        //    lock (data)
+        //    {
+        //        OnDeletingData(data);
 
-                using (var command = connection.CreateCommand())
-                {
-                    builder.BuildSQLDeleteCommand(command, data);
+        //        using (var command = connection.CreateCommand())
+        //        {
+        //            builder.BuildSQLDeleteCommand(command, data);
 
-                    ExecuteNonQuery(connection, command, transaction);
-                }
+        //            ExecuteNonQuery(connection, command, transaction);
+        //        }
 
-                if (data is IPersistanceTracking)
-                {
-                    ((IPersistanceTracking)data).OnDeleted();
-                }
-            }
-        }
+        //        if (data is IPersistanceTracking)
+        //        {
+        //            ((IPersistanceTracking)data).OnDeleted();
+        //        }
+        //    }
+        //}
 
         public object Insert(object data, OnConflictOption option)
         {
@@ -221,30 +203,33 @@ namespace FMSC.ORM.Core
             }
         }
 
-        public object Insert(IDbConnection connection, object data, IDbTransaction transaction, OnConflictOption option)
+        public object Insert(DbConnection connection, object data, DbTransaction transaction, OnConflictOption option)
         {
             if (data == null) { throw new ArgumentNullException("data"); }
 
-            EntityDescription entityDescription = LookUpEntityByType(data.GetType());
+            EntityDescription entityDescription = GlobalEntityDescriptionLookup.Instance.LookUpEntityByType(data.GetType());
             var keyField = entityDescription.Fields.PrimaryKeyField;
             object keyData = (keyField != null) ? keyField.GetFieldValue(data) : null;
             return Insert(connection, data, keyData, transaction, option);
         }
 
-        public object Insert(IDbConnection connection, object data, object keyData, IDbTransaction transaction, OnConflictOption option)
+        public object Insert(DbConnection connection, object data, object keyData, DbTransaction transaction, OnConflictOption option)
         {
             if (data == null) { throw new ArgumentNullException("data"); }
 
-            EntityDescription entityDescription = LookUpEntityByType(data.GetType());
+            EntityDescription entityDescription = GlobalEntityDescriptionLookup.Instance.LookUpEntityByType(data.GetType());
             EntityCommandBuilder builder = entityDescription.CommandBuilder;
 
-            OnInsertingData(data, option);
+            if (data is IPersistanceTracking)
+            {
+                ((IPersistanceTracking)data).OnInserting();
+            }
 
             using (var command = connection.CreateCommand())
             {
                 builder.BuildInsertCommand(command, data, keyData, option);
 
-                var changes = ExecuteNonQuery(connection, command, transaction);
+                var changes = connection.ExecuteNonQuery(command, transaction);
                 if (changes == 0)   //command did not result in any changes to the database
                 {
                     return null;    //so do not try to get the rowid or call OnInsertedData
@@ -266,7 +251,10 @@ namespace FMSC.ORM.Core
                         primaryKeyField.SetFieldValue(data, keyData);
                     }
 
-                    OnInsertedData(data);
+                    if (data is IPersistanceTracking)
+                    {
+                        ((IPersistanceTracking)data).OnInserted();
+                    }
 
                     return keyData;
                 }
@@ -280,7 +268,7 @@ namespace FMSC.ORM.Core
                 var connection = OpenConnection();
                 try
                 {
-                    Update(connection, data, CurrentTransaction, option);
+                    connection.Update(data, CurrentTransaction, option);
                 }
                 finally
                 {
@@ -296,7 +284,7 @@ namespace FMSC.ORM.Core
                 var connection = OpenConnection();
                 try
                 {
-                    Update(connection, data, keyData, CurrentTransaction, option);
+                    connection.Update(data, keyData, CurrentTransaction, option);
                 }
                 finally
                 {
@@ -305,43 +293,43 @@ namespace FMSC.ORM.Core
             }
         }
 
-        public void Update(IDbConnection connection, object data, IDbTransaction transaction, OnConflictOption option)
-        {
-            if (data == null) { throw new ArgumentNullException("data"); }
+        //public void Update(IDbConnection connection, object data, IDbTransaction transaction, OnConflictOption option)
+        //{
+        //    if (data == null) { throw new ArgumentNullException("data"); }
 
-            EntityDescription entityDescription = LookUpEntityByType(data.GetType());
-            EntityCommandBuilder builder = entityDescription.CommandBuilder;
-            var keyField = entityDescription.Fields.PrimaryKeyField;
-            object keyData = keyField.GetFieldValue(data);
+        //    EntityDescription entityDescription = LookUpEntityByType(data.GetType());
+        //    EntityCommandBuilder builder = entityDescription.CommandBuilder;
+        //    var keyField = entityDescription.Fields.PrimaryKeyField;
+        //    object keyData = keyField.GetFieldValue(data);
 
-            Update(connection, data, keyData, transaction, option);
-        }
+        //    Update(connection, data, keyData, transaction, option);
+        //}
 
-        public void Update(IDbConnection connection, object data, object keyData, IDbTransaction transaction, OnConflictOption option)
-        {
-            if (data == null) { throw new ArgumentNullException("data"); }
+        //public void Update(IDbConnection connection, object data, object keyData, IDbTransaction transaction, OnConflictOption option)
+        //{
+        //    if (data == null) { throw new ArgumentNullException("data"); }
 
-            EntityDescription entityDescription = LookUpEntityByType(data.GetType());
-            EntityCommandBuilder builder = entityDescription.CommandBuilder;
+        //    EntityDescription entityDescription = LookUpEntityByType(data.GetType());
+        //    EntityCommandBuilder builder = entityDescription.CommandBuilder;
 
-            OnUpdatingData(data);
+        //    OnUpdatingData(data);
 
-            using (var command = connection.CreateCommand())
-            {
-                builder.BuildUpdateCommand(command, data, keyData, option);
+        //    using (var command = connection.CreateCommand())
+        //    {
+        //        builder.BuildUpdateCommand(command, data, keyData, option);
 
-                var changes = ExecuteNonQuery(connection, command, transaction);
-                if (option != OnConflictOption.Ignore)
-                {
-                    Debug.Assert(changes > 0, "update command resulted in no changes");
-                }
-            }
+        //        var changes = ExecuteNonQuery(connection, command, transaction);
+        //        if (option != OnConflictOption.Ignore)
+        //        {
+        //            Debug.Assert(changes > 0, "update command resulted in no changes");
+        //        }
+        //    }
 
-            if (data is IPersistanceTracking)
-            {
-                ((IPersistanceTracking)data).OnUpdated();
-            }
-        }
+        //    if (data is IPersistanceTracking)
+        //    {
+        //        ((IPersistanceTracking)data).OnUpdated();
+        //    }
+        //}
 
         public void Save(IPersistanceTracking data, OnConflictOption option, bool cache)
         {
@@ -378,7 +366,7 @@ namespace FMSC.ORM.Core
             }
         }
 
-        public void Save(IDbConnection connection, IPersistanceTracking data, IDbTransaction transaction, OnConflictOption option, bool cache)
+        public void Save(DbConnection connection, IPersistanceTracking data, DbTransaction transaction, OnConflictOption option, bool cache)
         {
             if (data == null) { throw new ArgumentNullException("data"); }
 
@@ -409,7 +397,7 @@ namespace FMSC.ORM.Core
             }
             else
             {
-                Update(connection, data, transaction, option);
+                connection.Update(data, transaction, option);
             }
         }
 
@@ -422,11 +410,10 @@ namespace FMSC.ORM.Core
                 var connection = OpenConnection();
                 try
                 {
-                    EntityDescription entityDescription = LookUpEntityByType(typeof(TResult));
-                    EntityInflator inflator = entityDescription.Inflator;
+                    EntityInflator inflator = GlobalEntityDescriptionLookup.Instance.GetEntityInflator(typeof(TResult));
                     EntityCache cache = GetEntityCache(typeof(TResult));//TODO delegate access of cach to data context type
 
-                    using (var reader = ExecuteReader(connection, commandText, paramaters, CurrentTransaction))
+                    using (var reader = connection.ExecuteReader(commandText, paramaters, CurrentTransaction))
                     {
                         inflator.CheckOrdinals(reader);
                         while (reader.Read())
@@ -552,65 +539,11 @@ namespace FMSC.ORM.Core
         /// <returns>a single data object</returns>
         public T ReadSingleRow<T>(object primaryKeyValue) where T : class, new()
         {
-            var entityDiscription = LookUpEntityByType(typeof(T));
+            var entityDiscription = GlobalEntityDescriptionLookup.Instance.LookUpEntityByType(typeof(T));
             var keyField = entityDiscription.Fields.PrimaryKeyField;
 
             return From<T>().Where(keyField.Name + " = ?").Read(primaryKeyValue).FirstOrDefault();
             //return ReadSingleRow<T>(null, "WHERE rowID = ?", primaryKeyValue);
-        }
-
-        internal T ReadSingleRow<T>(IDbCommand command, EntityDescription entityDescription) where T : class, new()
-        {
-            object entity = null;
-            EntityCache cache = GetEntityCache(typeof(T));
-            EntityInflator inflator = entityDescription.Inflator;
-
-            lock (_persistentConnectionSyncLock)
-            {
-                var conn = OpenConnection();
-                try
-                {
-                    using (var reader = ExecuteReader(conn, command, CurrentTransaction))
-                    {
-                        inflator.CheckOrdinals(reader);
-
-                        if (reader.Read())
-                        {
-                            object key = inflator.ReadPrimaryKey(reader);
-                            if (cache.ContainsKey(key))
-                            {
-                                entity = cache[key];
-                            }
-                            else
-                            {
-                                entity = new T();
-                                if (entity is IDataObject)
-                                {
-                                    ((IDataObject)entity).DAL = this;
-                                }
-                                inflator.ReadData(reader, entity);
-                            }
-                        }
-                    }
-                }
-                catch (Exception e)
-                {
-                    var exceptionProcessor = ExceptionProcessor;
-                    if (exceptionProcessor != null)
-                    {
-                        throw exceptionProcessor.ProcessException(e, conn, command.CommandText, CurrentTransaction);
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
-                finally
-                {
-                    ReleaseConnection();
-                }
-                return (T)entity;
-            }
         }
 
         #endregion read methods
@@ -624,10 +557,9 @@ namespace FMSC.ORM.Core
                 var connection = OpenConnection();
                 try
                 {
-                    FMSC.ORM.EntityModel.Support.EntityDescription entityDescription = LookUpEntityByType(typeof(TResult));
-                    FMSC.ORM.EntityModel.Support.EntityInflator inflator = entityDescription.Inflator;
+                    FMSC.ORM.EntityModel.Support.EntityInflator inflator = GlobalEntityDescriptionLookup.Instance.GetEntityInflator(typeof(TResult));
 
-                    using (var reader = ExecuteReader(connection, commandText, paramaters, CurrentTransaction))
+                    using (var reader = connection.ExecuteReader(commandText, paramaters, CurrentTransaction))
                     {
                         //HACK with microsoft.data.sqlite calling GetOrdinal throws exception if reader is empty
                         //if(reader is DbDataReader && ((DbDataReader)reader).HasRows == false) { yield break; }
@@ -733,150 +665,150 @@ namespace FMSC.ORM.Core
 
         #region general purpose command execution
 
-        public IDataReader ExecuteReader(IDbConnection connection, string commandText, object[] paramaters, IDbTransaction transaction)
-        {
-            using (var command = connection.CreateCommand())
-            {
-                command.CommandText = commandText;
-                command.SetParams(paramaters);
+        //public IDataReader ExecuteReader(IDbConnection connection, string commandText, object[] paramaters, IDbTransaction transaction)
+        //{
+        //    using (var command = connection.CreateCommand())
+        //    {
+        //        command.CommandText = commandText;
+        //        command.SetParams(paramaters);
 
-                command.Transaction = transaction;
+        //        command.Transaction = transaction;
 
-                _logger.LogCommand(command);
+        //        _logger.LogCommand(command);
 
-                try
-                {
-                    return command.ExecuteReader();
-                }
-                catch (Exception e)
-                {
-                    var exceptionProcessor = ExceptionProcessor;
-                    if (exceptionProcessor != null)
-                    { throw exceptionProcessor.ProcessException(e, connection, command.CommandText, transaction); }
-                    else { throw; }
-                }
-            }
-        }
+        //        try
+        //        {
+        //            return command.ExecuteReader();
+        //        }
+        //        catch (Exception e)
+        //        {
+        //            var exceptionProcessor = ExceptionProcessor;
+        //            if (exceptionProcessor != null)
+        //            { throw exceptionProcessor.ProcessException(e, connection, command.CommandText, transaction); }
+        //            else { throw; }
+        //        }
+        //    }
+        //}
 
-        public IDataReader ExecuteReader(IDbConnection connection, IDbCommand command, IDbTransaction transaction)
-        {
-            if (connection == null) { throw new ArgumentNullException("connection"); }
-            if (command == null) { throw new ArgumentNullException("command"); }
+        //public IDataReader ExecuteReader(IDbConnection connection, IDbCommand command, IDbTransaction transaction)
+        //{
+        //    if (connection == null) { throw new ArgumentNullException("connection"); }
+        //    if (command == null) { throw new ArgumentNullException("command"); }
 
-            command.Connection = connection;
-            command.Transaction = transaction;
+        //    command.Connection = connection;
+        //    command.Transaction = transaction;
 
-            _logger.LogCommand(command);
-            try
-            {
-                return command.ExecuteReader();
-            }
-            catch (Exception e)
-            {
-                var exceptionProcessor = ExceptionProcessor;
-                if (exceptionProcessor != null)
-                { throw exceptionProcessor.ProcessException(e, connection, command.CommandText, transaction); }
-                else { throw; }
-            }
-        }
+        //    _logger.LogCommand(command);
+        //    try
+        //    {
+        //        return command.ExecuteReader();
+        //    }
+        //    catch (Exception e)
+        //    {
+        //        var exceptionProcessor = ExceptionProcessor;
+        //        if (exceptionProcessor != null)
+        //        { throw exceptionProcessor.ProcessException(e, connection, command.CommandText, transaction); }
+        //        else { throw; }
+        //    }
+        //}
 
-        public int ExecuteNonQuery(IDbConnection connection, string commandText, object[] parameters, IDbTransaction transaction)
-        {
-            if (string.IsNullOrEmpty(commandText)) { throw new ArgumentException("command can't be null or empty", "command"); }
+        //public int ExecuteNonQuery(IDbConnection connection, string commandText, object[] parameters, IDbTransaction transaction)
+        //{
+        //    if (string.IsNullOrEmpty(commandText)) { throw new ArgumentException("command can't be null or empty", "command"); }
 
-            using (IDbCommand command = connection.CreateCommand())
-            {
-                command.CommandText = commandText;
-                command.SetParams(parameters);
+        //    using (IDbCommand command = connection.CreateCommand())
+        //    {
+        //        command.CommandText = commandText;
+        //        command.SetParams(parameters);
 
-                return ExecuteNonQuery(connection, command, transaction);
-            }
-        }
+        //        return ExecuteNonQuery(connection, command, transaction);
+        //    }
+        //}
 
-        public int ExecuteNonQuery(IDbConnection connection, IDbCommand command, IDbTransaction transaction)
-        {
-            if (connection == null) { throw new ArgumentNullException("connection"); }
-            if (command == null) { throw new ArgumentNullException("command"); }
+        //public int ExecuteNonQuery(IDbConnection connection, IDbCommand command, IDbTransaction transaction)
+        //{
+        //    if (connection == null) { throw new ArgumentNullException("connection"); }
+        //    if (command == null) { throw new ArgumentNullException("command"); }
 
-            command.Connection = connection;
-            command.Transaction = transaction;
+        //    command.Connection = connection;
+        //    command.Transaction = transaction;
 
-            _logger.LogCommand(command);
-            try
-            {
-                return command.ExecuteNonQuery();
-            }
-            catch (Exception e)
-            {
-                var exceptionProcessor = ExceptionProcessor;
-                if (exceptionProcessor != null)
-                { throw exceptionProcessor.ProcessException(e, connection, command.CommandText, transaction); }
-                else { throw; }
-            }
-        }
+        //    _logger.LogCommand(command);
+        //    try
+        //    {
+        //        return command.ExecuteNonQuery();
+        //    }
+        //    catch (Exception e)
+        //    {
+        //        var exceptionProcessor = ExceptionProcessor;
+        //        if (exceptionProcessor != null)
+        //        { throw exceptionProcessor.ProcessException(e, connection, command.CommandText, transaction); }
+        //        else { throw; }
+        //    }
+        //}
 
-        public object ExecuteScalar(IDbConnection connection, string commandText, object[] parameters, IDbTransaction transaction)
-        {
-            using (var command = connection.CreateCommand())
-            {
-                command.CommandText = commandText;
-                command.SetParams(parameters);
+        //public object ExecuteScalar(IDbConnection connection, string commandText, object[] parameters, IDbTransaction transaction)
+        //{
+        //    using (var command = connection.CreateCommand())
+        //    {
+        //        command.CommandText = commandText;
+        //        command.SetParams(parameters);
 
-                command.Transaction = transaction;
+        //        command.Transaction = transaction;
 
-                try
-                {
-                    return command.ExecuteScalar();
-                }
-                catch (Exception e)
-                {
-                    var exceptionProcessor = ExceptionProcessor;
-                    if (exceptionProcessor != null)
-                    { throw exceptionProcessor.ProcessException(e, connection, commandText, transaction); }
-                    else { throw; }
-                }
-            }
-        }
+        //        try
+        //        {
+        //            return command.ExecuteScalar();
+        //        }
+        //        catch (Exception e)
+        //        {
+        //            var exceptionProcessor = ExceptionProcessor;
+        //            if (exceptionProcessor != null)
+        //            { throw exceptionProcessor.ProcessException(e, connection, commandText, transaction); }
+        //            else { throw; }
+        //        }
+        //    }
+        //}
 
-        public T ExecuteScalar<T>(IDbConnection connection, string commandText, object[] parameters, IDbTransaction transaction)
-        {
-            var result = ExecuteScalar(connection, commandText, parameters, transaction);
+        //public T ExecuteScalar<T>(IDbConnection connection, string commandText, object[] parameters, IDbTransaction transaction)
+        //{
+        //    var result = ExecuteScalar(connection, commandText, parameters, transaction);
 
-            if (result is DBNull)
-            {
-                return default(T);
-            }
-            else if (result is T)
-            {
-                return (T)result;
-            }
-            else
-            {
-                Type targetType = typeof(T);
+        //    if (result is DBNull)
+        //    {
+        //        return default(T);
+        //    }
+        //    else if (result is T)
+        //    {
+        //        return (T)result;
+        //    }
+        //    else
+        //    {
+        //        Type targetType = typeof(T);
 
-                if (targetType.IsGenericType && targetType.GetGenericTypeDefinition() == typeof(Nullable<>))
-                {
-                    targetType = Nullable.GetUnderlyingType(targetType);
-                }
+        //        if (targetType.IsGenericType && targetType.GetGenericTypeDefinition() == typeof(Nullable<>))
+        //        {
+        //            targetType = Nullable.GetUnderlyingType(targetType);
+        //        }
 
-                if (result is IConvertible)
-                {
-                    return (T)Convert.ChangeType(result, targetType
-                        , System.Globalization.CultureInfo.CurrentCulture);
-                }
-                else
-                {
-                    try
-                    {
-                        return (T)result;
-                    }
-                    catch(InvalidCastException)
-                    {
-                        return (T)Activator.CreateInstance(targetType, result);
-                    }
-                }
-            }
-        }
+        //        if (result is IConvertible)
+        //        {
+        //            return (T)Convert.ChangeType(result, targetType
+        //                , System.Globalization.CultureInfo.CurrentCulture);
+        //        }
+        //        else
+        //        {
+        //            try
+        //            {
+        //                return (T)result;
+        //            }
+        //            catch(InvalidCastException)
+        //            {
+        //                return (T)Activator.CreateInstance(targetType, result);
+        //            }
+        //        }
+        //    }
+        //}
 
         /// <summary>
         /// Executes SQL command returning number of rows affected
@@ -892,7 +824,7 @@ namespace FMSC.ORM.Core
                 var connection = OpenConnection();
                 try
                 {
-                    return ExecuteNonQuery(connection, commandText, parameters, CurrentTransaction);
+                    return connection.ExecuteNonQuery(commandText, parameters, CurrentTransaction);
                 }
                 finally
                 {
@@ -913,7 +845,7 @@ namespace FMSC.ORM.Core
                 var conn = OpenConnection();
                 try
                 {
-                    return ExecuteScalar(conn, commandText, parameters, CurrentTransaction);
+                    return conn.ExecuteScalar(commandText, parameters, CurrentTransaction);
                 }
                 finally
                 {
@@ -934,7 +866,7 @@ namespace FMSC.ORM.Core
                 var conn = OpenConnection();
                 try
                 {
-                    return ExecuteScalar<T>(conn, commandText, parameters, CurrentTransaction);
+                    return conn.ExecuteScalar<T>(commandText, parameters, CurrentTransaction);
                 }
                 finally
                 {
@@ -1075,9 +1007,9 @@ namespace FMSC.ORM.Core
             System.Threading.Interlocked.Decrement(ref this._holdConnection);
         }
 
-        public IDbConnection CreateConnection()
+        public DbConnection CreateConnection()
         {
-            IDbConnection conn = ProviderFactory.CreateConnection();
+            var conn = ProviderFactory.CreateConnection();
             conn.ConnectionString = BuildConnectionString();
 
             return conn;
@@ -1092,11 +1024,11 @@ namespace FMSC.ORM.Core
         /// </summary>
         /// <exception cref="ConnectionException"></exception>
         /// <returns></returns>
-        protected virtual IDbConnection OpenConnection()
+        public virtual DbConnection OpenConnection()
         {
             lock (_persistentConnectionSyncLock)
             {
-                IDbConnection conn;
+                DbConnection conn;
                 if (_holdConnection == 0)
                 {
                     conn = CreateConnection();
@@ -1132,12 +1064,12 @@ namespace FMSC.ORM.Core
             }
         }
 
-        protected void ReleaseConnection()
+        public void ReleaseConnection()
         {
             ReleaseConnection(false);
         }
 
-        protected virtual void ReleaseConnection(bool force)
+        public virtual void ReleaseConnection(bool force)
         {
             lock (_persistentConnectionSyncLock)
             {
@@ -1259,7 +1191,7 @@ namespace FMSC.ORM.Core
             }
         }
 
-        public void CreateTable(IDbConnection connection, string tableName, IEnumerable<ColumnInfo> cols, bool temp, IDbTransaction transaction)
+        public void CreateTable(DbConnection connection, string tableName, IEnumerable<ColumnInfo> cols, bool temp, DbTransaction transaction)
         {
             var createTableCommand = new CreateTable(SqlDialect)
             {
@@ -1268,7 +1200,7 @@ namespace FMSC.ORM.Core
                 Temp = temp
             };
 
-            ExecuteNonQuery(connection, createTableCommand.ToString() + ";", (object[])null, transaction);
+            connection.ExecuteNonQuery(createTableCommand.ToString() + ";", (object[])null, transaction);
         }
 
         #region IDisposable Support

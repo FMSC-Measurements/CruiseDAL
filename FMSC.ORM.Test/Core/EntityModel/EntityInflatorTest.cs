@@ -1,8 +1,10 @@
 ﻿using FluentAssertions;
+using FMSC.ORM.Core;
 using FMSC.ORM.SQLite;
 using FMSC.ORM.TestSupport.TestModels;
 using System;
 using System.Data;
+using System.Data.Common;
 using Xunit;
 using Xunit.Abstractions;
 
@@ -47,11 +49,11 @@ namespace FMSC.ORM.EntityModel.Support
             var reader = new TestSupport.ObjectDataReader<POCOMultiTypeObject>(new POCOMultiTypeObject[] { poco });
             Assert.True(reader.Read());
 
-            var ed = new EntityDescription(typeof(POCOMultiTypeObject));
+            var inflator = new EntityInflator(new EntityDescription(typeof(POCOMultiTypeObject)));
 
             var data = new POCOMultiTypeObject();
-            ed.Inflator.CheckOrdinals(reader);
-            ed.Inflator.ReadData(reader, data);
+            inflator.CheckOrdinals(reader);
+            inflator.ReadData(reader, data);
 
             data.StringField.ShouldBeEquivalentTo("1");
             data.ID.ShouldBeEquivalentTo(1);
@@ -68,10 +70,10 @@ namespace FMSC.ORM.EntityModel.Support
             var reader = new TestSupport.ObjectDataReader<POCOMultiTypeObject>(new POCOMultiTypeObject[] { poco });
             Assert.True(reader.Read());
 
-            var ed = new EntityDescription(typeof(POCOMultiTypeObject));
+            var inflator = new EntityInflator(new EntityDescription(typeof(POCOMultiTypeObject)));
 
-            ed.Inflator.CheckOrdinals(reader);
-            ed.Inflator.ReadPrimaryKey(reader).ShouldBeEquivalentTo(1);
+            inflator.CheckOrdinals(reader);
+            inflator.ReadPrimaryKey(reader).ShouldBeEquivalentTo(1);
         }
 
         [Fact]
@@ -79,26 +81,24 @@ namespace FMSC.ORM.EntityModel.Support
         {
             using (var ds = new SQLiteDatastore())
             {
-                using (var connection = ds.CreateConnection())
+                using (var connection = ds.OpenConnection())
                 {
-                    connection.Open();
-
                     var value = Guid.NewGuid();
-                    using (var reader = ds.ExecuteReader(connection, $"SELECT '{value}' as thing;", (object[])null, (IDbTransaction)null))
+                    using (var reader = connection.ExecuteReader($"SELECT '{value}' as thing;", (object[])null, (DbTransaction)null))
                     {
                         reader.Read();
                         var result = EntityInflator.GetGuid(reader, 0);
                         result.ShouldBeEquivalentTo(value);
                     }
 
-                    using (var reader = ds.ExecuteReader(connection, $"SELECT hex(randomblob(16)) as thing;", (object[])null, (IDbTransaction)null))
+                    using (var reader = connection.ExecuteReader($"SELECT hex(randomblob(16)) as thing;", (object[])null, (DbTransaction)null))
                     {
                         reader.Read();
                         var result = EntityInflator.GetGuid(reader, 0);
                         result.Should().NotBe(Guid.Empty);
                     }
 
-                    using (var reader = ds.ExecuteReader(connection, $"SELECT null as thing;", (object[])null, (IDbTransaction)null))
+                    using (var reader = connection.ExecuteReader($"SELECT null as thing;", (object[])null, (DbTransaction)null))
                     {
                         reader.Read();
                         var result = EntityInflator.GetGuid(reader, 0);
@@ -124,11 +124,11 @@ namespace FMSC.ORM.EntityModel.Support
         {
             using (var ds = new SQLiteDatastore())
             {
-                using (var connection = ds.CreateConnection())
+                using (var connection = ds.OpenConnection())
                 {
                     connection.Open();
 
-                    using (var reader = ds.ExecuteReader(connection, $"SELECT {sqlStr} as thing;", (object[])null, (IDbTransaction)null))
+                    using (var reader = connection.ExecuteReader($"SELECT {sqlStr} as thing;", (object[])null, (DbTransaction)null))
                     {
                         reader.Read();
                         var result = EntityInflator.GetEnum(reader, 0, typeEnum);

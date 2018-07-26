@@ -243,7 +243,7 @@ namespace FMSC.ORM.EntityModel
         {
             ICustomFormatter formatter;
 
-            var description = DatastoreRedux.LookUpEntityByType(this.GetType());
+            var description = GlobalEntityDescriptionLookup.Instance.LookUpEntityByType(this.GetType());
             formatter = new EntityFormatter(description);
 
             if (formatter != null)

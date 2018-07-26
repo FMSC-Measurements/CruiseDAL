@@ -14,7 +14,7 @@ namespace FMSC.ORM.Core
         public List<T> Read<T>(string tableName, string selection, params Object[] selectionArgs) where T : class, new()
 #pragma warning restore RECS0154 // Parameter is never used
         {
-            EntityDescription entityDescription = LookUpEntityByType(typeof(T));
+            EntityDescription entityDescription = GlobalEntityDescriptionLookup.Instance.LookUpEntityByType(typeof(T));
             EntityCommandBuilder commandBuilder = entityDescription.CommandBuilder;
 
             return Read<T>(commandBuilder.BuildSelectLegacy(selection), selectionArgs).ToList();
@@ -25,7 +25,7 @@ namespace FMSC.ORM.Core
         public T ReadSingleRow<T>(string tableName, string selection, params Object[] selectionArgs) where T : class, new()
 #pragma warning restore RECS0154 // Parameter is never used
         {
-            EntityDescription entityDescription = LookUpEntityByType(typeof(T));
+            EntityDescription entityDescription = GlobalEntityDescriptionLookup.Instance.LookUpEntityByType(typeof(T));
             EntityCommandBuilder commandBuilder = entityDescription.CommandBuilder;
 
             var query = commandBuilder.BuildSelectLegacy(selection);

@@ -27,7 +27,6 @@ namespace FMSC.ORM.EntityModel.Support
         //public Dictionary<String, ReferenceAttribute> ReferenceFields { get; set; }
 
         public EntityCommandBuilder CommandBuilder { get; set; }
-        public EntityInflator Inflator { get; set; }
 
         protected EntityDescription()
         {
@@ -40,7 +39,6 @@ namespace FMSC.ORM.EntityModel.Support
             EntityType = type;
             Initialize();
 
-            this.Inflator = new EntityInflator(this);
             this.CommandBuilder = new EntityCommandBuilder(this);
         }
 

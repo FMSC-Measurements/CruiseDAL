@@ -6,6 +6,7 @@ using FMSC.ORM.TestSupport.TestModels;
 using SqlBuilder;
 using System;
 using System.Data;
+using System.Data.Common;
 using System.Linq;
 using Xunit;
 using Xunit.Abstractions;
@@ -251,14 +252,13 @@ namespace FMSC.ORM.SQLite
         {
             using (var ds = new SQLiteDatastore())
             {
-                using (var connection = ds.CreateConnection())
+                using (var connection = ds.OpenConnection())
                 {
-                    connection.Open();
-                    ds.ExecuteNonQuery(connection, "CREATE TABLE tbl (id INTEGER PRIMARY KEY AUTOINCREMENT, col1 TEXT);", null, null);
+                    connection.ExecuteNonQuery("CREATE TABLE tbl (id INTEGER PRIMARY KEY AUTOINCREMENT, col1 TEXT);", null, null);
 
-                    ds.ExecuteNonQuery(connection, "INSERT INTO tbl (col1) VALUES ('something');", null, null);
+                    connection.ExecuteNonQuery("INSERT INTO tbl (col1) VALUES ('something');", null, null);
 
-                    ds.GetLastInsertRowID(connection, (IDbTransaction)null).ShouldBeEquivalentTo(1);
+                    ds.GetLastInsertRowID(connection, (DbTransaction)null).ShouldBeEquivalentTo(1);
                 }
             }
         }
@@ -268,12 +268,11 @@ namespace FMSC.ORM.SQLite
         {
             using (var ds = new SQLiteDatastore())
             {
-                using (var connection = ds.CreateConnection())
+                using (var connection = ds.OpenConnection())
                 {
-                    connection.Open();
-                    ds.ExecuteNonQuery(connection, "CREATE TABLE tbl (id TEXT PRIMARY KEY);", null, null);
+                    connection.ExecuteNonQuery("CREATE TABLE tbl (id TEXT PRIMARY KEY);", null, null);
 
-                    ds.ExecuteNonQuery(connection, "INSERT INTO tbl (id) VALUES ('something');", null, null);
+                    connection.ExecuteNonQuery("INSERT INTO tbl (id) VALUES ('something');", null, null);
                     ds.GetLastInsertKeyValue(connection, "tbl", "id", null);
                 }
             }

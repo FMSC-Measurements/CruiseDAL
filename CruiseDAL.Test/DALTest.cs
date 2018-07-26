@@ -158,7 +158,7 @@ namespace CruiseDAL.Tests
 
             foreach (var type in entityTypes)
             {
-                var typeInfo = DAL.LookUpEntityByType(type);
+                var typeInfo = FMSC.ORM.EntityModel.Support.GlobalEntityDescriptionLookup.Instance.LookUpEntityByType(type);
                 typeInfo.Should().NotBeNull();
             }
         }

@@ -14,7 +14,7 @@ namespace FMSC.ORM.EntityModel.Support
 
         public object GetFormat(Type formatType)
         {
-            EntityDescription description = DatastoreRedux.LookUpEntityByType(formatType);
+            EntityDescription description = GlobalEntityDescriptionLookup.Instance.LookUpEntityByType(formatType);
             return new EntityFormatter(description);
         }
     }
