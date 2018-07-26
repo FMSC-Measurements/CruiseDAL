@@ -100,9 +100,9 @@ namespace CruiseDAL.DataObjects
         public int DeleteSampleGroup(DatastoreRedux dal, long? SampleGroup_CN)
         {
             // check tree table for data
-            if (dal.GetRowCount("Tree", "WHERE SampleGroup_CN = ?", SampleGroup_CN) > 0) return (-1);
+            if (dal.GetRowCount("Tree", "WHERE SampleGroup_CN = @p1", SampleGroup_CN) > 0) return (-1);
             // Check Count table for each sample group
-            if (dal.GetRowCount("CountTree", "WHERE SampleGroup_CN = ? AND TreeCount > 0", SampleGroup_CN) > 0) return (-1);
+            if (dal.GetRowCount("CountTree", "WHERE SampleGroup_CN = @p1 AND TreeCount > 0", SampleGroup_CN) > 0) return (-1);
 
             //Delete Count Records for stratum
             var allCountInSg = dal.From<CountTreeDO>()
@@ -214,25 +214,25 @@ namespace CruiseDAL.DataObjects
        public TallyMode GetSampleGroupTallyMode()
        {
            TallyMode mode = TallyMode.Unknown;
-           if (base.DAL.GetRowCount("CountTree", "WHERE SampleGroup_CN = ?", SampleGroup_CN) == 0)
+           if (base.DAL.GetRowCount("CountTree", "WHERE SampleGroup_CN = @p1", SampleGroup_CN) == 0)
            {
                return TallyMode.None;
            }
 
            if (base.DAL.GetRowCount("CountTree",
-               "WHERE SampleGroup_CN = ? AND ifnull(TreeDefaultValue_CN, 0) == 0",
+               "WHERE SampleGroup_CN = @p1 AND ifnull(TreeDefaultValue_CN, 0) == 0",
                SampleGroup_CN) > 0)
            {
                mode = mode | TallyMode.BySampleGroup;
            }
            if (base.DAL.GetRowCount("CountTree",
-               "WHERE SampleGroup_CN = ? AND TreeDefaultValue_CN NOT NULL AND TreeDefaultValue_CN > 0",
+               "WHERE SampleGroup_CN = @p1 AND TreeDefaultValue_CN NOT NULL AND TreeDefaultValue_CN > 0",
                this.SampleGroup_CN) > 0)
            {
                mode = mode | TallyMode.BySpecies;
            }
            if (base.DAL.GetRowCount("CountTree",
-               "WHERE SampleGroup_CN = ? AND TreeCount > 0", this.SampleGroup_CN) > 0)
+               "WHERE SampleGroup_CN = @p1 AND TreeCount > 0", this.SampleGroup_CN) > 0)
            {
                mode = mode | TallyMode.Locked;
            }
@@ -292,8 +292,8 @@ namespace CruiseDAL.DataObjects
        public bool CanEditSampleGroup()
        {
            if (base.DAL == null) { return true; }
-           return base.DAL.GetRowCount("Tree", "WHERE SampleGroup_CN = ?", this.SampleGroup_CN) == 0
-               && base.DAL.GetRowCount("CountTree", "WHERE SampleGroup_CN = ? AND TreeCount > 0", this.SampleGroup_CN) == 0;
+           return base.DAL.GetRowCount("Tree", "WHERE SampleGroup_CN = @p1", this.SampleGroup_CN) == 0
+               && base.DAL.GetRowCount("CountTree", "WHERE SampleGroup_CN = @p1 AND TreeCount > 0", this.SampleGroup_CN) == 0;
        }
 
        public static bool CanEnableFrequency(StratumDO stratum)

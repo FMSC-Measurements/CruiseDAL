@@ -136,11 +136,11 @@ namespace CruiseDAL
             {
                 UpdateTo_2_1_1(db);
             }
-            if (db.DatabaseVersion == "2.1.1")
+            if (db.DatabaseVersion.StartsWith("2.1.1"))
             {
                 UpdateTo_2_1_2(db);
             }
-            if (db.DatabaseVersion == "2.1.2")
+            if (db.DatabaseVersion.StartsWith("2.1.2"))
             {
                 UpdateTo_2_2_0(db);
             }
@@ -226,7 +226,7 @@ namespace CruiseDAL
 
         private static void InsureErrorLogEntry(DAL db, ErrorLogDO el)
         {
-            if (db.GetRowCount(el.TableName, "WHERE rowID = ?", el.CN_Number) == 0)
+            if (db.GetRowCount(el.TableName, "WHERE rowID = @p1", el.CN_Number) == 0)
             {
                 el.Delete();
             }
