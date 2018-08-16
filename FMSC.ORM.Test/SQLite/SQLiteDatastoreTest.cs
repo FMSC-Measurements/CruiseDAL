@@ -384,7 +384,11 @@ namespace FMSC.ORM.SQLite
             }
         }
 
-        [Fact]
+        [Fact
+#if MICROSOFT_DATA_SQLITE
+             (Skip = "not supported my Microsoft.Data.Sqlite")
+#endif
+             ]
         public void ReadOnly_Throws_On_BeginTransaction()
         {
             var path = _testReadOnlyPath;
