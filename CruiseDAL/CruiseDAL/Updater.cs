@@ -1,13 +1,10 @@
-﻿using CruiseDAL.DataObjects;
-using CruiseDAL.Schema;
+﻿using Backpack.SqlBuilder;
 using FMSC.ORM;
-using FMSC.ORM.Core;
-using Backpack.SqlBuilder;
 using System;
 
 namespace CruiseDAL
 {
-    public static class Updater
+    public static partial class Updater
     {
         public static void Update(DAL db)
         {
@@ -145,101 +142,10 @@ namespace CruiseDAL
                 UpdateTo_2_2_0(db);
             }
 
-            if (db.HasForeignKeyErrors(TREEDEFAULTVALUETREEAUDITVALUE._NAME))
-            {
-                try
-                {
-                    db.BeginTransaction();
-                    db.Execute("DELETE FROM TreeDefaultValueTreeAuditValue WHERE TreeDefaultValue_CN NOT IN (Select TreeDefaultValue_CN FROM TreeDefaultValue);");
-                    db.Execute("DELETE FROM TreeDefaultValueTreeAuditValue WHERE TreeAuditValue_CN NOT IN (SELECT TreeAuditValue_CN FROM TreeAuditValue);");
-                    db.CommitTransaction();
-                }
-                catch
-                {
-                    db.RollbackTransaction();
-                }
-            }
+            FixTreeAuditValueFKeyErrors(db);
 
-            foreach (ErrorLogDO el in db.From<ErrorLogDO>().Where("CN_Number != 0").Query())
-            {
-                InsureErrorLogEntry(db, el);
-            }
+            CleanupErrorLog(db);
         }
-
-        #region Utility Methods
-
-        private static String[] ListTriggers(DAL db)
-        {
-            var result = db.ExecuteScalar("SELECT group_concat(name,',') FROM sqlite_master WHERE type LIKE 'trigger';") as string;
-            if (string.IsNullOrEmpty(result)) { return new string[0]; }
-            else
-            {
-                return result.Split(',');
-            }
-        }
-
-        private static void RebuildTable(DAL db, String tableName, String newTableDef, String columnList)
-        {
-            //get all triggers associated with table so we can recreate them later
-            var getTriggers = String.Format("SELECT group_concat(sql,';\r\n') FROM sqlite_master WHERE tbl_name LIKE '{0}' and type LIKE 'trigger';", tableName);
-            var triggers = db.ExecuteScalar(getTriggers) as string;
-            db.BeginTransaction();
-            try
-            {
-                db.Execute("PRAGMA foreign_keys = off;");
-                db.Execute("ALTER TABLE " + tableName + " RENAME TO " + tableName + "temp;");
-
-                //create rebuilt table
-                db.Execute(newTableDef + ";");
-
-                //copy data from existing table to rebuilt table
-                db.Execute(
-                    "INSERT INTO " + tableName +
-                    " ( " + columnList + ") " +
-                    "SELECT " + columnList + " FROM " + tableName + "temp;");
-
-                db.Execute("DROP TABLE " + tableName + "temp;");
-
-                //recreate triggers
-                if (triggers != null)
-                {
-                    db.Execute(triggers);
-                }
-
-                db.Execute("PRAGMA foreign_keys = on;");
-                db.CommitTransaction();
-            }
-            catch
-            {
-                db.RollbackTransaction();
-                throw;
-            }
-        }
-
-        private static void SetDatabaseVersion(DAL db, string newVersion)
-        {
-            string command = String.Format("UPDATE Globals SET Value = '{0}' WHERE Block = 'Database' AND Key = 'Version';", newVersion);
-            db.Execute(command);
-            db.LogMessage(String.Format("Updated structure version to {0}", newVersion), "I");
-            db.DatabaseVersion = newVersion;
-        }
-
-        private static void InsureErrorLogEntry(DAL db, ErrorLogDO el)
-        {
-            if (db.GetRowCount(el.TableName, "WHERE rowID = @p1", el.CN_Number) == 0)
-            {
-                el.Delete();
-            }
-        }
-
-        private static void PatchSureToMeasure(DAL db)
-        {
-            string command = @"UPDATE TreeFieldSetup SET Field = 'STM' WHERE Field = 'SureToMeasure';
-                               UPDATE TreeFieldSetupDefault SET Field = 'STM' WHERE Field = 'SureToMeasure';";
-            db.Execute(command);
-        }
-
-        #endregion Utility Methods
 
         private static void UpdateToVersion2013_05_30(DAL db)
         {
@@ -638,8 +544,6 @@ namespace CruiseDAL
 			    UPDATE CountTree SET ModifiedDate = datetime(current_timestamp, 'localtime') WHERE rowID = new.rowID; END;";
                 db.Execute(command);
 
-                
-
                 SetDatabaseVersion(db, "2013.11.22");
                 db.CommitTransaction();
             }
@@ -672,7 +576,7 @@ namespace CruiseDAL
             try
             {
                 db.BeginTransaction();
-                db.AddField("SampleGroup", new ColumnInfo ("SampleSelectorType", "TEXT"));
+                db.AddField("SampleGroup", new ColumnInfo("SampleSelectorType", "TEXT"));
                 db.AddField("SampleGroup", new ColumnInfo("SampleSelectorState", "TEXT"));
 
                 RebuildTable(db, "CountTree",

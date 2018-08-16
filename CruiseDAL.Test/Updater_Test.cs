@@ -1,4 +1,5 @@
-﻿using FluentAssertions;
+﻿using CruiseDAL.DataObjects;
+using FluentAssertions;
 using FMSC.ORM.SQLite;
 using System;
 using System.Collections.Generic;
@@ -11,9 +12,9 @@ using Xunit.Abstractions;
 
 namespace CruiseDAL.Tests
 {
-    public class UpdaterTest : TestBase
+    public class Updater_Test : TestBase
     {
-        public UpdaterTest(ITestOutputHelper output) : base(output)
+        public Updater_Test(ITestOutputHelper output) : base(output)
         {
         }
 
@@ -47,5 +48,7 @@ namespace CruiseDAL.Tests
                 }
             }
         }
+
+        
     }
 }
