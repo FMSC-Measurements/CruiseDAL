@@ -15,7 +15,7 @@ tdv.ContractSpecies,
 st.YieldComponent as Yield
   FROM Tree AS t
 JOIN SampleGroup AS sg USING (SampleGroup_CN)
-JOIN TreeDefaultValue AS tdv USING (TreeDefaultValue_CN)
+LEFT JOIN TreeDefaultValue AS tdv USING (TreeDefaultValue_CN)
 JOIN Stratum AS st USING (Stratum_CN)
 GROUP BY
 sg.Code,
