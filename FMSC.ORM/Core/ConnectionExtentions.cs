@@ -1,9 +1,8 @@
-﻿using FMSC.ORM.EntityModel;
+﻿using Backpack.SqlBuilder;
+using FMSC.ORM.EntityModel;
 using FMSC.ORM.EntityModel.Attributes;
 using FMSC.ORM.EntityModel.Support;
-using Backpack.SqlBuilder;
 using System;
-using System.Collections.Generic;
 using System.Data.Common;
 using System.Diagnostics;
 
@@ -52,14 +51,8 @@ namespace FMSC.ORM.Core
             command.Transaction = transaction;
 
             _logger.LogCommand(command);
-            try
-            {
-                return command.ExecuteNonQuery();
-            }
-            catch (Exception e)
-            {
-                throw new SQLException(connection, command, e);
-            }
+
+            return command.ExecuteNonQuery();
         }
 
         #endregion ExecuteNonQuery
@@ -103,14 +96,8 @@ namespace FMSC.ORM.Core
             command.Transaction = transaction;
 
             _logger.LogCommand(command);
-            try
-            {
-                return command.ExecuteReader();
-            }
-            catch (Exception e)
-            {
-                throw new SQLException(connection, command, e);
-            }
+
+            return command.ExecuteReader();
         }
 
         #endregion ExecuteReader
@@ -126,14 +113,7 @@ namespace FMSC.ORM.Core
 
                 command.Transaction = transaction;
 
-                try
-                {
-                    return command.ExecuteScalar();
-                }
-                catch (Exception e)
-                {
-                    throw new SQLException(connection, command, e);
-                }
+                return command.ExecuteScalar();
             }
         }
 
@@ -146,14 +126,7 @@ namespace FMSC.ORM.Core
 
                 command.Transaction = transaction;
 
-                try
-                {
-                    return command.ExecuteScalar();
-                }
-                catch (Exception e)
-                {
-                    throw new SQLException(connection, command, e);
-                }
+                return command.ExecuteScalar();
             }
         }
 
@@ -173,7 +146,6 @@ namespace FMSC.ORM.Core
             {
                 Type targetType = typeof(T);
                 targetType = Nullable.GetUnderlyingType(targetType) ?? targetType;
-
 
                 if (result is IConvertible)
                 {
@@ -200,8 +172,9 @@ namespace FMSC.ORM.Core
 
         #endregion ExecuteScalar
 
-        #region CRUD 
-		public static void Delete(this DbConnection connection, object data, DbTransaction transaction = null)
+        #region CRUD
+
+        public static void Delete(this DbConnection connection, object data, DbTransaction transaction = null)
         {
             if (data == null) { throw new ArgumentNullException("data"); }
 
@@ -332,11 +305,6 @@ namespace FMSC.ORM.Core
             }
         }
 
-        #endregion
-
-        #region util
-
-
-        #endregion
+        #endregion CRUD
     }
 }

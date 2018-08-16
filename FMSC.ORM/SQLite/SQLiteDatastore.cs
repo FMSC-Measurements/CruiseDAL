@@ -193,7 +193,7 @@ namespace FMSC.ORM.SQLite
                 {
                     var commandText = "PRAGMA table_info(" + tableName + ");";
 
-                    using (var reader = conn.ExecuteReader(commandText, (object[])null, CurrentTransaction))
+                    using (var reader = ExecuteReader(conn, commandText, (object[])null, CurrentTransaction))
                     {
                         int nameOrd = reader.GetOrdinal("name");
                         int dbTypeOrd = reader.GetOrdinal("type");
@@ -233,7 +233,14 @@ namespace FMSC.ORM.SQLite
 
         public override long GetLastInsertRowID(DbConnection connection, DbTransaction transaction)
         {
-            return connection.ExecuteScalar<long>("SELECT last_insert_rowid()", (object[])null, transaction);
+            try
+            {
+                return connection.ExecuteScalar<long>("SELECT last_insert_rowid()", (object[])null, transaction);
+            }
+            catch (Exception e)
+            {
+                throw ExceptionProcessor.ProcessException(e, connection, "SELECT last_insert_rowid()", transaction);
+            }
         }
 
         public override object GetLastInsertKeyValue(DbConnection connection, String tableName, String fieldName, DbTransaction transaction)
@@ -242,7 +249,14 @@ namespace FMSC.ORM.SQLite
 
             var query = "SELECT " + fieldName + " FROM " + tableName + " WHERE rowid = @p1;";
 
-            return connection.ExecuteScalar(query, new object[] { ident }, transaction);
+            try
+            {
+                return connection.ExecuteScalar(query, new object[] { ident }, transaction);
+            }
+            catch(Exception e)
+            {
+                throw ExceptionProcessor.ProcessException(e, connection, query, transaction);
+            }
 
             //String query = "Select " + fieldName + " FROM " + tableName + " WHERE rowid = last_insert_rowid();";
         }
@@ -279,7 +293,7 @@ namespace FMSC.ORM.SQLite
                 var connection = OpenConnection();
                 try
                 {
-                    using (var reader = connection.ExecuteReader(commandText, (object[])null, CurrentTransaction))
+                    using (var reader = ExecuteReader(connection, commandText, (object[])null, CurrentTransaction))
                     {
                         hasErrors = reader.Read();
                     }

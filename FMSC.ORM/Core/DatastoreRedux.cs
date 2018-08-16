@@ -135,6 +135,10 @@ namespace FMSC.ORM.Core
                 {
                     connection.Delete(data, CurrentTransaction);
                 }
+                catch(Exception ex)
+                {
+                    throw ExceptionProcessor.ProcessException(ex, connection, (string)null, CurrentTransaction);
+                }
                 finally
                 {
                     ReleaseConnection();
@@ -229,34 +233,41 @@ namespace FMSC.ORM.Core
             {
                 builder.BuildInsertCommand(command, data, keyData, option);
 
-                var changes = connection.ExecuteNonQuery(command, transaction);
-                if (changes == 0)   //command did not result in any changes to the database
+                try
                 {
-                    return null;    //so do not try to get the rowid or call OnInsertedData
+                    var changes = connection.ExecuteNonQuery(command, transaction);
+                    if (changes == 0)   //command did not result in any changes to the database
+                    {
+                        return null;    //so do not try to get the rowid or call OnInsertedData
+                    }
+                    else
+                    {
+                        var primaryKeyField = entityDescription.Fields.PrimaryKeyField;
+                        if (primaryKeyField != null)
+                        {
+                            if (primaryKeyField.KeyType == KeyType.RowID)
+                            {
+                                keyData = GetLastInsertRowID(connection, transaction);
+                            }
+                            else
+                            {
+                                keyData = GetLastInsertKeyValue(connection, entityDescription.SourceName, primaryKeyField.Name, transaction);
+                            }
+
+                            primaryKeyField.SetFieldValue(data, keyData);
+                        }
+
+                        if (data is IPersistanceTracking)
+                        {
+                            ((IPersistanceTracking)data).OnInserted();
+                        }
+
+                        return keyData;
+                    }
                 }
-                else
+                catch (Exception ex)
                 {
-                    var primaryKeyField = entityDescription.Fields.PrimaryKeyField;
-                    if (primaryKeyField != null)
-                    {
-                        if (primaryKeyField.KeyType == KeyType.RowID)
-                        {
-                            keyData = GetLastInsertRowID(connection, transaction);
-                        }
-                        else
-                        {
-                            keyData = GetLastInsertKeyValue(connection, entityDescription.SourceName, primaryKeyField.Name, transaction);
-                        }
-
-                        primaryKeyField.SetFieldValue(data, keyData);
-                    }
-
-                    if (data is IPersistanceTracking)
-                    {
-                        ((IPersistanceTracking)data).OnInserted();
-                    }
-
-                    return keyData;
+                    throw ExceptionProcessor.ProcessException(ex, connection, (string)null, CurrentTransaction);
                 }
             }
         }
@@ -269,6 +280,10 @@ namespace FMSC.ORM.Core
                 try
                 {
                     connection.Update(data, CurrentTransaction, option);
+                }
+                catch (Exception ex)
+                {
+                    throw ExceptionProcessor.ProcessException(ex, connection, (string)null, CurrentTransaction);
                 }
                 finally
                 {
@@ -285,6 +300,10 @@ namespace FMSC.ORM.Core
                 try
                 {
                     connection.Update(data, keyData, CurrentTransaction, option);
+                }
+                catch (Exception ex)
+                {
+                    throw ExceptionProcessor.ProcessException(ex, connection, (string)null, CurrentTransaction);
                 }
                 finally
                 {
@@ -397,7 +416,14 @@ namespace FMSC.ORM.Core
             }
             else
             {
-                connection.Update(data, transaction, option);
+                try
+                {
+                    connection.Update(data, transaction, option);
+                }
+                catch (Exception ex)
+                {
+                    throw ExceptionProcessor.ProcessException(ex, connection, (string)null, transaction);
+                }
             }
         }
 
@@ -413,7 +439,7 @@ namespace FMSC.ORM.Core
                     EntityInflator inflator = GlobalEntityDescriptionLookup.Instance.GetEntityInflator(typeof(TResult));
                     EntityCache cache = GetEntityCache(typeof(TResult));//TODO delegate access of cach to data context type
 
-                    using (var reader = connection.ExecuteReader(commandText, paramaters, CurrentTransaction))
+                    using (var reader = ExecuteReader(connection, commandText, paramaters, CurrentTransaction))
                     {
                         inflator.CheckOrdinals(reader);
                         while (reader.Read())
@@ -559,7 +585,7 @@ namespace FMSC.ORM.Core
                 {
                     FMSC.ORM.EntityModel.Support.EntityInflator inflator = GlobalEntityDescriptionLookup.Instance.GetEntityInflator(typeof(TResult));
 
-                    using (var reader = connection.ExecuteReader(commandText, paramaters, CurrentTransaction))
+                    using (var reader = ExecuteReader(connection, commandText, paramaters, CurrentTransaction))
                     {
                         //HACK with microsoft.data.sqlite calling GetOrdinal throws exception if reader is empty
                         //if(reader is DbDataReader && ((DbDataReader)reader).HasRows == false) { yield break; }
@@ -810,6 +836,54 @@ namespace FMSC.ORM.Core
         //    }
         //}
 
+        protected DbDataReader ExecuteReader(DbConnection connection, string commandText, object[] paramaters, DbTransaction transaction)
+        {
+            try
+            {
+                return connection.ExecuteReader(commandText, paramaters, transaction);
+            }
+            catch (Exception ex)
+            {
+                throw ExceptionProcessor.ProcessException(ex, connection, commandText, CurrentTransaction);
+            }
+        }
+
+        protected DbDataReader ExecuteReader2(DbConnection connection, string commandText, object paramaterData, DbTransaction transaction)
+        {
+            try
+            {
+                return connection.ExecuteReader2(commandText, paramaterData, transaction);
+            }
+            catch (Exception ex)
+            {
+                throw ExceptionProcessor.ProcessException(ex, connection, commandText, CurrentTransaction);
+            }
+        }
+
+        //protected int ExecuteNonQuery(DbConnection connection, string commandText, object[] parameters, DbTransaction transaction)
+        //{
+        //    try
+        //    {
+        //        return connection.ExecuteNonQuery(commandText, parameters, transaction);
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        throw ExceptionProcessor.ProcessException(ex, connection, commandText, transaction);
+        //    }
+        //}
+
+        //protected int ExecuteNonQuery(DbConnection connection, DbCommand command, DbTransaction transaction)
+        //{
+        //    try
+        //    {
+        //        return connection.ExecuteNonQuery(command, transaction);
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        throw ExceptionProcessor.ProcessException(ex, connection, command.CommandText, CurrentTransaction);
+        //    }
+        //}
+
         /// <summary>
         /// Executes SQL command returning number of rows affected
         /// </summary>
@@ -825,6 +899,10 @@ namespace FMSC.ORM.Core
                 try
                 {
                     return connection.ExecuteNonQuery(commandText, parameters, CurrentTransaction);
+                }
+                catch (Exception ex)
+                {
+                    throw ExceptionProcessor.ProcessException(ex, connection, commandText, CurrentTransaction);
                 }
                 finally
                 {
@@ -847,6 +925,10 @@ namespace FMSC.ORM.Core
                 {
                     return conn.ExecuteScalar(commandText, parameters, CurrentTransaction);
                 }
+                catch (Exception e)
+                {
+                    throw ExceptionProcessor.ProcessException(e, conn, commandText, (DbTransaction)null);
+                }
                 finally
                 {
                     ReleaseConnection();
@@ -867,6 +949,10 @@ namespace FMSC.ORM.Core
                 try
                 {
                     return conn.ExecuteScalar<T>(commandText, parameters, CurrentTransaction);
+                }
+                catch(Exception ex)
+                {
+                    throw ExceptionProcessor.ProcessException(ex, conn, commandText, CurrentTransaction);
                 }
                 finally
                 {
