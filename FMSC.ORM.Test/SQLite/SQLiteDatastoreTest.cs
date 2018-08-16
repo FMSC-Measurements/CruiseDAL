@@ -84,14 +84,17 @@ namespace FMSC.ORM.SQLite
             {
                 var connection = db.OpenConnection();
                 
-
                 var trans = connection.BeginTransaction();
                 var result = connection.ExecuteScalar("SELECT 1;", null, trans);
-                trans.Commit();
+                //trans.Commit();
 
                 db.ReleaseConnection(true);
 
-                connection.State.Should().Be(ConnectionState.Closed);
+                try
+                {
+                    connection.State.Should().Be(ConnectionState.Closed);
+                }
+                catch (ObjectDisposedException) { }
             }
         }
 
