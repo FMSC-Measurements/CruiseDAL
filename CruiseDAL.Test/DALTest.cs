@@ -90,46 +90,6 @@ namespace CruiseDAL.Tests
         }
 
         [Fact]
-        public void TestAllowMultDALOnSameThread()
-        {
-            var filePath = Path.Combine(base.TestTempPath, "testCreate.cruise");
-
-            try
-            {
-                using (var dal1 = new DAL(filePath, true))
-                {
-
-                    Action action = () =>
-                    {
-                        using (var dal2 = new DAL(filePath))
-                        {
-                            ValidateDAL(dal2);
-                        }
-                    };
-                    action.ShouldNotThrow<Exception>();
-                }
-            }
-            finally
-            {
-                if (File.Exists(filePath))
-                {
-                    File.Delete(filePath);
-                }
-            }
-        }
-
-        private void DoWorkBlockMultiThreadDALFileAcess(object obj)
-        {
-            var path = (string)obj;
-
-            using (DAL newDAL = new DAL(path, true))
-            {
-                Output.WriteLine("waiting");
-                Thread.Sleep(30000);
-            }
-        }
-
-        [Fact]
         public void ReadGlobalValue()
         {
             var block = "block";

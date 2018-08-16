@@ -107,7 +107,7 @@ namespace FMSCORM.Tests
                     c.Strata.Populate();
                     foreach (StratumDO s in c.Strata)
                     {
-                        Assert.True(strata.Contains(s));
+                        strata.Should().Contain(s);
                     }
                 }
 
@@ -116,7 +116,7 @@ namespace FMSCORM.Tests
                     s.CuttingUnits.Populate();
                     foreach (CuttingUnitDO c in s.CuttingUnits)
                     {
-                        Assert.True(units.Contains(c));
+                        units.Should().Contain(c);
                     }
                 }
 
@@ -125,7 +125,7 @@ namespace FMSCORM.Tests
                 cu.Strata.Populate();
                 cu.Strata.Add(st);
                 cu.Strata.Populate();
-                Assert.True(cu.Strata.Contains(st));
+                cu.Strata.Should().Contain(st);
             }
         }
     }

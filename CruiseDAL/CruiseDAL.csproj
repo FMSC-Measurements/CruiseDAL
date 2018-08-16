@@ -1,10 +1,10 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <!--<TargetFramework>netstandard20</TargetFramework>-->
     <TargetFrameworks>net40;netstandard20</TargetFrameworks>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
-    <Version>2.2.1.4</Version>
+    <Version>2.2.1.5</Version>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
   </PropertyGroup>
 
@@ -12,81 +12,66 @@
     <DefineConstants>$(DefineConstrants);SYSTEM_DATA_SQLITE</DefineConstants>
   </PropertyGroup>
 
-  <!--<PropertyGroup Condition="'$(TargetFramework)' == 'netstandard20'">
-    <DefineConstants>$(DefineConstrants);NETSTANDARD</DefineConstants>
-  </PropertyGroup>-->
-  
-  <ItemGroup>
+  <ItemGroup Label="Excluded NetCF Files">
+    <Compile Remove="Properties\Resources_CF20.Designer.cs" />
     <Compile Remove="NetCF\**" />
     <EmbeddedResource Remove="NetCF\**" />
     <None Remove="NetCF\**" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Compile Remove="Properties\Resources_CF20.Designer.cs" />
-    <Compile Remove="TableModels\ErrorLog_partial.cs" />
-    <Compile Remove="TableModels\Globals_partial.cs" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <None Include="AutoGen\CruiseCreate.cs">
-      <DesignTime>True</DesignTime>
-      <AutoGen>True</AutoGen>
-      <DependentUpon>CruiseCreate.tt</DependentUpon>
-    </None>
-  </ItemGroup>
-
-  <ItemGroup>
+  <ItemGroup Label="Project References">
     <ProjectReference Include="..\FMSC.ORM\FMSC.ORM.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
+  <ItemGroup Label="Auto Generated Files">
     <None Update="AutoGen\CreateTriggers.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
       <LastGenOutput>CreateTriggers.cs</LastGenOutput>
     </None>
-    <None Update="AutoGen\CruiseCreate.tt">
-      <Generator>TextTemplatingFileGenerator</Generator>
-    </None>
-    <None Update="AutoGen\DAL.AutoGen.tt">
-      <Generator>TextTemplatingFileGenerator</Generator>
-      <LastGenOutput>DAL.AutoGen.cs</LastGenOutput>
-    </None>
-    <None Update="CruiseDAL\Schema\Schema.tt">
-      <Generator>TextTemplatingFileGenerator</Generator>
-      <LastGenOutput>Schema.cs</LastGenOutput>
-    </None>
-    <None Update="TableModels\TableModels.tt">
-      <Generator>TextTemplatingFileGenerator</Generator>
-      <LastGenOutput>TableModels.cs</LastGenOutput>
-    </None>
-  </ItemGroup>
-
-  <ItemGroup>
-    <Service Include="{508349b6-6b84-4df5-91f0-309beebad82d}" />
-  </ItemGroup>
-
-  <ItemGroup>
     <Compile Update="AutoGen\CreateTriggers.cs">
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
       <DependentUpon>CreateTriggers.tt</DependentUpon>
     </Compile>
+    <None Update="AutoGen\CruiseCreate.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+    </None>
+    <Compile Update="AutoGen\CruiseCreate.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>CruiseCreate.tt</DependentUpon>
+    </Compile>
+    <None Update="AutoGen\DAL.AutoGen.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>DAL.AutoGen.cs</LastGenOutput>
+    </None>
     <Compile Update="AutoGen\DAL.AutoGen.cs">
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
       <DependentUpon>DAL.AutoGen.tt</DependentUpon>
     </Compile>
+    <None Update="CruiseDAL\Schema\Schema.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>Schema.cs</LastGenOutput>
+    </None>
     <Compile Update="CruiseDAL\Schema\Schema.cs">
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
       <DependentUpon>Schema.tt</DependentUpon>
     </Compile>
+    <None Update="TableModels\TableModels.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>TableModels.cs</LastGenOutput>
+    </None>
     <Compile Update="TableModels\TableModels.cs">
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
       <DependentUpon>TableModels.tt</DependentUpon>
     </Compile>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Service Include="{508349b6-6b84-4df5-91f0-309beebad82d}" />
   </ItemGroup>
 
 </Project>
