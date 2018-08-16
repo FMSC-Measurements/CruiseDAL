@@ -55,8 +55,8 @@ namespace FMSC.ORM.EntityModel.Support
             inflator.CheckOrdinals(reader);
             inflator.ReadData(reader, data);
 
-            data.StringField.ShouldBeEquivalentTo("1");
-            data.ID.ShouldBeEquivalentTo(1);
+            data.StringField.Should().Be("1");
+            data.ID.Should().Be(1);
         }
 
         [Fact]
@@ -73,7 +73,7 @@ namespace FMSC.ORM.EntityModel.Support
             var inflator = new EntityInflator(new EntityDescription(typeof(POCOMultiTypeObject)));
 
             inflator.CheckOrdinals(reader);
-            inflator.ReadPrimaryKey(reader).ShouldBeEquivalentTo(1);
+            inflator.ReadPrimaryKey(reader).Should().Be(1);
         }
 
         [Fact]
@@ -88,7 +88,7 @@ namespace FMSC.ORM.EntityModel.Support
                     {
                         reader.Read();
                         var result = EntityInflator.GetGuid(reader, 0);
-                        result.ShouldBeEquivalentTo(value);
+                        result.Should().Be(value);
                     }
 
                     using (var reader = connection.ExecuteReader($"SELECT hex(randomblob(16)) as thing;", (object[])null, (DbTransaction)null))
@@ -132,7 +132,7 @@ namespace FMSC.ORM.EntityModel.Support
                     {
                         reader.Read();
                         var result = EntityInflator.GetEnum(reader, 0, typeEnum);
-                        result.ShouldBeEquivalentTo(expectedValue);
+                        result.Should().Be(expectedValue);
                     }
                 }
             }

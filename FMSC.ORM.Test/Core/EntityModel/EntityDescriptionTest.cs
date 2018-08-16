@@ -48,7 +48,7 @@ namespace FMSC.ORM.EntityModel.Support
         private void VerifyDataObjectInfo(Type dataType, EntityDescription doi)
         {
             doi.Should().NotBeNull();
-            doi.EntityType.ShouldBeEquivalentTo(dataType);
+            doi.EntityType.Should().Be(dataType);
             doi.SourceName.Should().NotBeNullOrWhiteSpace();
 
             VerifyDataObjectInfoFields(doi);
