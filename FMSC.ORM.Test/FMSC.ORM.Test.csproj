@@ -1,7 +1,8 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>netcoreapp2.0;netstandard2.0</TargetFrameworks>
+    <!--targeting netstandard2.0 so that the FMSC.ORM.Test can be referenced by FMSC.ORM.Test.Android-->
+    <TargetFrameworks>netcoreapp2.0;netstandard2.0;net461</TargetFrameworks>
     <!--<TargetFrameworks>net461;netcoreapp2.0;netstandard2.0</TargetFrameworks>-->
   </PropertyGroup>
 
@@ -22,6 +23,11 @@
   </ItemGroup>-->
 
   <ItemGroup Condition="$(TargetFramework.Contains(netcoreapp))">
+    <PackageReference Include="xunit.runner.visualstudio" Version="2.4.0" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="15.8.0" />
+  </ItemGroup>
+
+  <ItemGroup Condition="$(TargetFramework.Contains(net461))">
     <PackageReference Include="xunit.runner.visualstudio" Version="2.4.0" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="15.8.0" />
   </ItemGroup>

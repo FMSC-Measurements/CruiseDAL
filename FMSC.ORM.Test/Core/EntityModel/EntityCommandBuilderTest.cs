@@ -1,6 +1,6 @@
 ﻿using FluentAssertions;
 using FMSC.ORM.TestSupport.TestModels;
-using SqlBuilder;
+using Backpack.SqlBuilder;
 using System.Data.Common;
 using System.Linq;
 using Xunit;

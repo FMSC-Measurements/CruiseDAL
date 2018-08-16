@@ -1,7 +1,7 @@
 ﻿using FMSC.ORM.Core;
 using FMSC.ORM.Core.SQL;
-using SqlBuilder;
-using SqlBuilder.Dialects;
+using Backpack.SqlBuilder;
+using Backpack.SqlBuilder.Dialects;
 using System;
 using System.Collections.Generic;
 using System.Data;

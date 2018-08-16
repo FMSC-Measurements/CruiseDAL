@@ -2,8 +2,8 @@
 using FMSC.ORM.EntityModel;
 using FMSC.ORM.EntityModel.Attributes;
 using FMSC.ORM.EntityModel.Support;
-using SqlBuilder;
-using SqlBuilder.Dialects;
+using Backpack.SqlBuilder;
+using Backpack.SqlBuilder.Dialects;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;

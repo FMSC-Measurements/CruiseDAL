@@ -3,13 +3,15 @@ using FMSC.ORM.Core;
 using FMSC.ORM.Core.SQL;
 using FMSC.ORM.TestSupport;
 using FMSC.ORM.TestSupport.TestModels;
-using SqlBuilder;
+using Backpack.SqlBuilder;
 using System;
 using System.Data;
 using System.Data.Common;
+using System.IO;
 using System.Linq;
 using Xunit;
 using Xunit.Abstractions;
+using FMSC.ORM.Test.TestSupport.TestModels;
 
 namespace FMSC.ORM.SQLite
 {
@@ -49,17 +51,18 @@ namespace FMSC.ORM.SQLite
             {
                 var db = new SQLiteDatastore(null);
             };
-            action.ShouldThrow<ArgumentException>();
+            action.Should().Throw<ArgumentException>();
 
         }
 
         [Fact]
         public void Ctor_inMemory()
         {
-            var db = new SQLiteDatastore();
-
-            db.Path.Should().NotBeNullOrWhiteSpace();
-            db.Execute("Select 1;");
+            using (var db = new SQLiteDatastore())
+            {
+                db.Path.Should().NotBeNullOrWhiteSpace();
+                db.Execute("Select 1;");
+            }
 
         }
 
@@ -70,7 +73,26 @@ namespace FMSC.ORM.SQLite
             {
                 var db = new SQLiteDatastore("");
             };
-            action.ShouldThrow<ArgumentException>();
+            action.Should().Throw<ArgumentException>();
+            
+        }
+
+        [Fact]
+        public void ReleaseConnection_force()
+        {
+            using (var db = new SQLiteDatastore())
+            {
+                var connection = db.OpenConnection();
+                
+
+                var trans = connection.BeginTransaction();
+                var result = connection.ExecuteScalar("SELECT 1;", null, trans);
+                trans.Commit();
+
+                db.ReleaseConnection(true);
+
+                connection.State.Should().Be(ConnectionState.Closed);
+            }
         }
 
         [Fact]
@@ -91,6 +113,10 @@ namespace FMSC.ORM.SQLite
 
                 VerifySQLiteDatastore(ds);
             }
+
+            File.Exists(_testCreatePath + "-journal").Should().BeFalse();
+            var file = new FileInfo(_testCreatePath);
+            file.Invoking(f => f.Delete()).Should().NotThrow();
         }
 
         [Fact]
@@ -114,7 +140,7 @@ namespace FMSC.ORM.SQLite
             ds.Should().NotBeNull();
             ds.Exists.Should().BeTrue();
 
-            ds.Invoking(x => x.Execute("EXPLAIN SELECT 1;")).ShouldNotThrow();
+            ds.Invoking(x => x.Execute("EXPLAIN SELECT 1;")).Should().NotThrow();
 
             ds.GetRowCount("sqlite_master", null, null).Should().BeGreaterThan(0);
         }
@@ -176,7 +202,7 @@ namespace FMSC.ORM.SQLite
 
                 ds.CreateTable("TableA", cols, false);
 
-                ds.Invoking(x => x.Execute("EXPLAIN SELECT * FROM TableA;")).ShouldNotThrow();
+                ds.Invoking(x => x.Execute("EXPLAIN SELECT * FROM TableA;")).Should().NotThrow();
 
                 ds.CheckTableExists("TableA").Should().BeTrue();
             }
@@ -258,7 +284,7 @@ namespace FMSC.ORM.SQLite
 
                     connection.ExecuteNonQuery("INSERT INTO tbl (col1) VALUES ('something');", null, null);
 
-                    ds.GetLastInsertRowID(connection, (DbTransaction)null).ShouldBeEquivalentTo(1);
+                    ds.GetLastInsertRowID(connection, (DbTransaction)null).Should().Be(1);
                 }
             }
         }
@@ -284,14 +310,14 @@ namespace FMSC.ORM.SQLite
             using (var ds = new SQLiteDatastore())
             {
                 ds.Execute("CREATE TABLE tbl (id INTEGER PRIMARY KEY AUTOINCREMENT);");
-                ds.ExecuteScalar<int>("SELECT max(id) FROM tbl;").ShouldBeEquivalentTo(0);
+                ds.ExecuteScalar<int>("SELECT max(id) FROM tbl;").Should().Be(0);
                 ds.Execute("INSERT INTO tbl DEFAULT VALUES;");
-                ds.ExecuteScalar<int>("SELECT max(id) FROM tbl;").ShouldBeEquivalentTo(1);
+                ds.ExecuteScalar<int>("SELECT max(id) FROM tbl;").Should().Be(1);
 
                 ds.SetTableAutoIncrementStart("tbl", 100);
-                ds.ExecuteScalar<int>("SELECT max(id) FROM tbl;").ShouldBeEquivalentTo(1);
+                ds.ExecuteScalar<int>("SELECT max(id) FROM tbl;").Should().Be(1);
                 ds.Execute("INSERT INTO tbl DEFAULT VALUES;");
-                ds.ExecuteScalar<int>("SELECT max(id) FROM tbl;").ShouldBeEquivalentTo(101);
+                ds.ExecuteScalar<int>("SELECT max(id) FROM tbl;").Should().Be(101);
             }
         }
 
@@ -351,7 +377,7 @@ namespace FMSC.ORM.SQLite
                 System.IO.File.SetAttributes(path, System.IO.FileAttributes.ReadOnly);
 
                 //TODO assert that connection is not open and transaction depth is 0
-                ds.Invoking(x => x.Execute("INSERT INTO Tbl (Data) VALUES ('something');")).ShouldThrow<ReadOnlyException>();
+                ds.Invoking(x => x.Execute("INSERT INTO Tbl (Data) VALUES ('something');")).Should().Throw<ReadOnlyException>();
             }
         }
 
@@ -370,7 +396,7 @@ namespace FMSC.ORM.SQLite
                 System.IO.File.Exists(path).Should().BeTrue();
                 System.IO.File.SetAttributes(path, System.IO.FileAttributes.ReadOnly);
 
-                ds.Invoking(x => x.BeginTransaction()).ShouldThrow<ReadOnlyException>();
+                ds.Invoking(x => x.BeginTransaction()).Should().Throw<ReadOnlyException>();
             }
         }
 
@@ -430,14 +456,14 @@ namespace FMSC.ORM.SQLite
 
         [Theory]
         [InlineData("SELECT 1;", "1")]
-        [InlineData("SELECT NULL;", null)]
+        [InlineData("SELECT NULL;", (string)null)]
         [InlineData("SELECT 'something';", "something")]
         [InlineData("SELECT CAST(1 AS INTEGER);", "1")]
-        public void ExecuteScalar_Generic_String(string query, object expectedValue)
+        public void ExecuteScalar_Generic_String(string query, string expectedValue)
         {
             using (var ds = new SQLiteDatastore())
             {
-                ds.ExecuteScalar<string>(query).ShouldBeEquivalentTo(expectedValue);
+                ds.ExecuteScalar<string>(query).Should().Be(expectedValue);
             }
         }
 
@@ -449,7 +475,7 @@ namespace FMSC.ORM.SQLite
 
             using (var ds = new SQLiteDatastore())
             {
-                ds.ExecuteScalar<Guid>(query, expectedValue).ShouldBeEquivalentTo(expectedValue);
+                ds.ExecuteScalar<Guid>(query, expectedValue).Should().Be(expectedValue);
             }
         }
 
@@ -557,6 +583,20 @@ namespace FMSC.ORM.SQLite
         }
 
         [Fact]
+        public void QueryRowIDAsPrimaryKeyObject()
+        {
+            using (var ds = new SQLiteDatastore())
+            {
+                ds.Execute(RowIDAsPrimaryKey.CREATE_TABLE_COMMAND);
+
+                ds.Insert(new RowIDAsPrimaryKey { StringField = "something" });
+
+                var result = ds.From<RowIDAsPrimaryKey>().Query().First();
+                result.RowID.Should().Be(1);
+            }
+        }
+
+        [Fact]
         public void CommitTransaction_WtihNoTransaction()
         {
             using (var ds = new SQLiteDatastore())
@@ -586,7 +626,7 @@ namespace FMSC.ORM.SQLite
                 ds.CommitTransaction();
 
                 ds.CurrentTransaction.Should().BeNull();
-                ds.TransactionDepth.ShouldBeEquivalentTo(0);
+                ds.TransactionDepth.Should().Be(0);
 
                 ds.CheckTableExists("TableA").Should().BeTrue();
             }
@@ -601,7 +641,7 @@ namespace FMSC.ORM.SQLite
 
                 ds.CheckTableExists("MultiPropTable").Should().BeTrue();
 
-                ds.From<POCOMultiTypeObject>().Invoking(x => x.Query()).ShouldNotThrow();
+                ds.From<POCOMultiTypeObject>().Invoking(x => x.Query()).Should().NotThrow();
             }
         }
 
@@ -614,7 +654,7 @@ namespace FMSC.ORM.SQLite
 
                 ds.CurrentTransaction.Should().BeNull();
                 ds.RollbackTransaction();//extra rollback should not throw exception, but will fail Debug.Assert
-                ds.TransactionDepth.ShouldBeEquivalentTo(0);
+                ds.TransactionDepth.Should().Be(0);
 
                 ds.CheckTableExists("TableA").Should().BeTrue();
             }
@@ -641,26 +681,26 @@ namespace FMSC.ORM.SQLite
             using (var ds = new SQLiteDatastore())
             {
                 ds.CurrentTransaction.Should().BeNull();
-                ds.TransactionDepth.ShouldBeEquivalentTo(0);
+                ds.TransactionDepth.Should().Be(0);
 
                 ds.Execute("CREATE TABLE TableA (Data TEXT);");
 
                 ds.BeginTransaction();
 
                 ds.CurrentTransaction.Should().NotBeNull();
-                ds.TransactionDepth.ShouldBeEquivalentTo(1);
+                ds.TransactionDepth.Should().Be(1);
 
                 ds.BeginTransaction();
 
                 ds.CurrentTransaction.Should().NotBeNull();
-                ds.TransactionDepth.ShouldBeEquivalentTo(2);
+                ds.TransactionDepth.Should().Be(2);
 
                 ds.Execute("INSERT INTO TableA VALUES ('something');");
 
                 ds.RollbackTransaction();
-                ds.GetRowCount("TableA", null).ShouldBeEquivalentTo(1);
+                ds.GetRowCount("TableA", null).Should().Be(1);
                 ds.CommitTransaction();
-                ds.GetRowCount("TableA", null).ShouldBeEquivalentTo(0);
+                ds.GetRowCount("TableA", null).Should().Be(0);
             }
         }
 
@@ -670,26 +710,26 @@ namespace FMSC.ORM.SQLite
             using (var ds = new SQLiteDatastore())
             {
                 ds.CurrentTransaction.Should().BeNull();
-                ds.TransactionDepth.ShouldBeEquivalentTo(0);
+                ds.TransactionDepth.Should().Be(0);
 
                 ds.Execute("CREATE TABLE TableA (Data TEXT);");
 
                 ds.BeginTransaction();
 
                 ds.CurrentTransaction.Should().NotBeNull();
-                ds.TransactionDepth.ShouldBeEquivalentTo(1);
+                ds.TransactionDepth.Should().Be(1);
 
                 ds.BeginTransaction();
 
                 ds.CurrentTransaction.Should().NotBeNull();
-                ds.TransactionDepth.ShouldBeEquivalentTo(2);
+                ds.TransactionDepth.Should().Be(2);
 
                 ds.Execute("INSERT INTO TableA VALUES ('something');");
 
                 ds.CommitTransaction();
-                ds.GetRowCount("TableA", null).ShouldBeEquivalentTo(1);
+                ds.GetRowCount("TableA", null).Should().Be(1);
                 ds.RollbackTransaction();
-                ds.GetRowCount("TableA", null).ShouldBeEquivalentTo(0);
+                ds.GetRowCount("TableA", null).Should().Be(0);
             }
         }
 
@@ -699,33 +739,33 @@ namespace FMSC.ORM.SQLite
             using (var ds = new SQLiteDatastore())
             {
                 ds.CurrentTransaction.Should().BeNull();
-                ds.TransactionDepth.ShouldBeEquivalentTo(0);
+                ds.TransactionDepth.Should().Be(0);
 
                 ds.Execute("CREATE TABLE TableA (Data TEXT);");
 
                 ds.BeginTransaction();
 
                 ds.CurrentTransaction.Should().NotBeNull();
-                ds.TransactionDepth.ShouldBeEquivalentTo(1);
+                ds.TransactionDepth.Should().Be(1);
 
                 ds.BeginTransaction();
 
                 ds.CurrentTransaction.Should().NotBeNull();
-                ds.TransactionDepth.ShouldBeEquivalentTo(2);
+                ds.TransactionDepth.Should().Be(2);
 
                 ds.Execute("INSERT INTO TableA VALUES ('something');");
 
                 ds.CommitTransaction();
-                ds.GetRowCount("TableA", null).ShouldBeEquivalentTo(1);
+                ds.GetRowCount("TableA", null).Should().Be(1);
 
                 ds.CurrentTransaction.Should().NotBeNull();
-                ds.TransactionDepth.ShouldBeEquivalentTo(1);
+                ds.TransactionDepth.Should().Be(1);
 
                 ds.CommitTransaction();
-                ds.GetRowCount("TableA", null).ShouldBeEquivalentTo(1);
+                ds.GetRowCount("TableA", null).Should().Be(1);
 
                 ds.CurrentTransaction.Should().BeNull();
-                ds.TransactionDepth.ShouldBeEquivalentTo(0);
+                ds.TransactionDepth.Should().Be(0);
             }
         }
 

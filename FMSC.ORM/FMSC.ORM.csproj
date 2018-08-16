@@ -1,15 +1,16 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <!--<TargetFramework>netstandard2.0</TargetFramework>-->
-    <TargetFrameworks>net40;netstandard2.0</TargetFrameworks>
-    <GenerateAssemblyInfo>false</GenerateAssemblyInfo><!--Dont generate assembly info because we will use same assembly info from VS2008--> 
+    <!--minimum target framework is net35 but if we add async support we will need to bump it to net40-->
+    <TargetFrameworks>net35;netstandard2.0</TargetFrameworks>
+    <!--Dont generate assembly info because we will use same assembly info from VS2008-->
+    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
     <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
     <Authors>Ben Campbell</Authors>
     <Version>2.1.0.0</Version>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
   </PropertyGroup>
-    
+
   <PropertyGroup Condition="'$(TargetFramework)' == 'net40'">
     <DefineConstants>SYSTEM_DATA_SQLITE</DefineConstants>
   </PropertyGroup>
@@ -28,7 +29,7 @@
 
   <ItemGroup Condition="$(DefineConstants.Contains(SYSTEM_DATA_SQLITE))">
     <PackageReference Include="System.Data.SQLite.Core" Version="1.0.108" />
-  </ItemGroup> 
+  </ItemGroup>
 
   <ItemGroup Condition="'$(TargetFramework)' == 'netstandard2.0'">
     <PackageReference Include="Microsoft.Data.Sqlite.Core" Version="2.0.0" />
@@ -42,7 +43,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\SqlBuilder\SqlBuilder.csproj" />
+    <PackageReference Include="Backpack.SqlBuilder" Version="1.0.23" />
   </ItemGroup>
-  
-</Project> 
+</Project>

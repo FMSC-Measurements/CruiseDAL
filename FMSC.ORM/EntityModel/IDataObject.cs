@@ -1,6 +1,6 @@
 ﻿using FMSC.ORM.Core;
 using FMSC.ORM.Core.SQL;
-using SqlBuilder;
+using Backpack.SqlBuilder;
 using System.ComponentModel;
 
 namespace FMSC.ORM.EntityModel

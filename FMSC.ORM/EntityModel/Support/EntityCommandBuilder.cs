@@ -1,7 +1,7 @@
 ﻿using FMSC.ORM.Core;
 using FMSC.ORM.Core.SQL;
 using FMSC.ORM.EntityModel.Attributes;
-using SqlBuilder;
+using Backpack.SqlBuilder;
 using System;
 using System.Collections.Generic;
 using System.Data;

@@ -1,9 +1,9 @@
 ﻿using CruiseDAL.DataObjects;
 using CruiseDAL.Schema;
 using FMSC.ORM;
-using FMSC.ORM.Core.SQL;
+using FMSC.ORM.Core;
+using Backpack.SqlBuilder;
 using System;
-using SqlBuilder;
 
 namespace CruiseDAL
 {
