@@ -1,5 +1,6 @@
 ﻿using FMSC.ORM.EntityModel.Attributes;
 using System;
+using System.Collections.Generic;
 using System.Data;
 using System.Diagnostics;
 
@@ -10,6 +11,8 @@ namespace FMSC.ORM.EntityModel.Support
         private const int BYTE_READ_LENGTH = 1024;//TODO once we start reading byte data figure out our byte read length... should this be done at runtime?
 
         //ConstructorInfo _constructor;
+
+        Dictionary<string, int> OrdinalMapping { get; set; }
 
         protected EntityDescription EntityDescription { get; set; }
 
@@ -27,30 +30,23 @@ namespace FMSC.ORM.EntityModel.Support
         /// <param name="reader"></param>
         public void CheckOrdinals(System.Data.IDataReader reader)
         {
-            foreach (FieldAttribute field in EntityDescription.Fields)
+            var fieldCount = reader.FieldCount;
+            var ordinalMapping = new Dictionary<string, int>(fieldCount);
+
+            for(int i = 0; i < fieldCount; i++)
             {
+                var fieldName = reader.GetName(i).ToLowerInvariant();
                 try
                 {
-                    field.Ordinal = reader.GetOrdinal(field.NameOrAlias);
+                    ordinalMapping.Add(fieldName, i);
                 }
                 catch
                 {
-                    field.Ordinal = -1;
+                    //ignore exception when adding duplicate or null value
                 }
             }
 
-            PrimaryKeyFieldAttribute keyField = EntityDescription.Fields.PrimaryKeyField;
-            if (keyField != null)
-            {
-                try
-                {
-                    keyField.Ordinal = reader.GetOrdinal(keyField.NameOrAlias);
-                }
-                catch
-                {
-                    keyField.Ordinal = -1;
-                }
-            }
+            OrdinalMapping = ordinalMapping;
         }
 
         //public object CreateInstanceOfEntity()
@@ -60,14 +56,19 @@ namespace FMSC.ORM.EntityModel.Support
 
         public void ReadData(System.Data.IDataReader reader, Object obj)
         {
+            var ordinalMapping = OrdinalMapping;
             foreach (FieldAttribute field in EntityDescription.Fields)
             {
                 try
                 {
-                    if (field.Ordinal < 0) { continue; }
+                    var fieldName = field.NameOrAlias.ToLowerInvariant();
+                    int ordinal = -1;
 
-                    object value = GetValueByType(field.RunTimeType, reader, field.Ordinal);
-                    field.SetFieldValue(obj, value);
+                    if(ordinalMapping.TryGetValue(fieldName, out ordinal))
+                    {
+                        object value = GetValueByType(field.RunTimeType, reader, ordinal);
+                        field.SetFieldValue(obj, value);
+                    }
                 }
                 catch (Exception e)
                 {
@@ -76,9 +77,9 @@ namespace FMSC.ORM.EntityModel.Support
             }
 
             PrimaryKeyFieldAttribute keyField = EntityDescription.Fields.PrimaryKeyField;
-            if (keyField != null && keyField.Ordinal != -1)
+            if (keyField != null)
             {
-                object value = GetValueByType(keyField.RunTimeType, reader, keyField.Ordinal);
+                object value = ReadPrimaryKey(reader);
                 keyField.SetFieldValue(obj, value);
             }
 
@@ -90,15 +91,18 @@ namespace FMSC.ORM.EntityModel.Support
 
         public object ReadPrimaryKey(IDataReader reader)
         {
-            PrimaryKeyFieldAttribute keyField = EntityDescription.Fields.PrimaryKeyField;
-            if (keyField != null && keyField.Ordinal != -1)
+            var keyField = EntityDescription.Fields.PrimaryKeyField;
+            if (keyField == null) { return null; }
+            var fieldName = keyField.NameOrAlias.ToLowerInvariant();
+
+            int ordinal = -1;
+            if(OrdinalMapping.TryGetValue(fieldName.ToLowerInvariant(), out ordinal))
             {
-                object value = GetValueByType(keyField.RunTimeType, reader, keyField.Ordinal);
-                return value;
+                return GetValueByType(keyField.RunTimeType, reader, ordinal);
             }
             else
             {
-                return null;
+                throw new ORMException("field " + fieldName + " not found on datareader");
             }
         }
 

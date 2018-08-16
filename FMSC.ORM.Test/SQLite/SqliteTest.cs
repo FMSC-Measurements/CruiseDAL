@@ -15,9 +15,9 @@ namespace FMSC.ORM.Test.SQLite
         }
 
         [Theory]
-        [InlineData(1L, "1", "?1" 
-#if MICROSOFT_DATA_SQLITE 
-            ,Skip ="not supported my Microsoft.Data.Sqlite" 
+        [InlineData(1L, "1", "?1"
+#if MICROSOFT_DATA_SQLITE
+            , Skip = "not supported my Microsoft.Data.Sqlite"
 #endif
             )]//system.data.sqlite works this way
 

@@ -46,11 +46,7 @@ namespace FMSC.ORM.EntityModel.Support
             var selectBuilder = new SqlSelectBuilder();
             selectBuilder.Source = source ?? EntityDescription.Source;
 
-            //order fields by ordinal
-            var fields = new List<FieldAttribute>(EntityDescription.Fields);
-            fields.Sort(CompareFieldsByOrdinal);
-
-            foreach (FieldAttribute field in fields)
+            foreach (FieldAttribute field in EntityDescription.Fields)
             {
                 selectBuilder.ResultColumns.Add(field.GetResultColumnExpression());
             }
@@ -226,20 +222,5 @@ namespace FMSC.ORM.EntityModel.Support
         }
 
         #endregion build delete
-
-        /// <summary>
-        /// compares fields by ordinal where -1 is always high
-        /// </summary>
-        /// <param name="x"></param>
-        /// <param name="y"></param>
-        /// <returns></returns>
-        protected int CompareFieldsByOrdinal(FieldAttribute x, FieldAttribute y)
-        {
-            if (x.Ordinal == y.Ordinal) { return 0; }
-            if (x.Ordinal == -1) { return 1; }
-            if (y.Ordinal == -1) { return -1; }
-            if (x.Ordinal > y.Ordinal) { return 1; }
-            else { return -1; }
-        }
     }
 }

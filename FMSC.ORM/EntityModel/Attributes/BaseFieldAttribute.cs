@@ -6,10 +6,7 @@ namespace FMSC.ORM.EntityModel.Attributes
     [AttributeUsage(AttributeTargets.Property, Inherited = true)]
     public abstract class BaseFieldAttribute : Attribute
     {
-        private int _ordinal = -1;
-
         public string Name { get; set; }
-        public int Ordinal { get { return _ordinal; } set { _ordinal = value; } }
         public PersistanceFlags PersistanceFlags { get; set; }
         internal PropertyAccessor Property { get; set; }
         internal Type RunTimeType { get { return Property.RuntimeType; } }
