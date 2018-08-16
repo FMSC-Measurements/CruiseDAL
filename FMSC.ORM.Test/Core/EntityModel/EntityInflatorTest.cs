@@ -126,8 +126,6 @@ namespace FMSC.ORM.EntityModel.Support
             {
                 using (var connection = ds.OpenConnection())
                 {
-                    connection.Open();
-
                     using (var reader = connection.ExecuteReader($"SELECT {sqlStr} as thing;", (object[])null, (DbTransaction)null))
                     {
                         reader.Read();
