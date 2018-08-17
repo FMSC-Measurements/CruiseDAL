@@ -1,47 +1,48 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
+  <PropertyGroup Label="Assembly Info">
+    <Version>2.1.0.0</Version>
+    <RootNamespace>FMSC.ORM</RootNamespace>
+  </PropertyGroup>
+  
+  <PropertyGroup Label="Build Config">
     <!--we could probably target net35 but im using net40 as the minimum because 'dotnet' cli only supports down to net40-->
     <!--and i want dotnet cli to run test in the cli to test all target frameworks-->
-    <TargetFrameworks>net40;netstandard2.0</TargetFrameworks>
-    <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
-    <Authors>Ben Campbell</Authors>
-    <Version>2.1.0.0</Version>
+    <TargetFrameworks>net40</TargetFrameworks>
+    <!--Dont generate assembly info because we will use same assembly info from VS2008-->
+    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <DefineConstants>SYSTEM_DATA_SQLITE;LEGACY</DefineConstants>
   </PropertyGroup>
 
-  <PropertyGroup Condition="'$(TargetFramework)' == 'net40'">
-    <DefineConstants>SYSTEM_DATA_SQLITE</DefineConstants>
+  <PropertyGroup Label="Package Info">
+    <Authors>Ben Campbell</Authors>
   </PropertyGroup>
 
-  <PropertyGroup Condition="'$(TargetFramework)' == 'netstandard2.0'">
-    <DefineConstants>MICROSOFT_DATA_SQLITE</DefineConstants>
+  <PropertyGroup Label="Package Config">
+    <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
   </PropertyGroup>
 
   <!--Required for System.Data.Sqlite See: https://stackoverflow.com/questions/32639630/sqlite-interop-dll-files-does-not-copy-to-project-output-path-when-required-by-r/32639631#32639631-->
-  <PropertyGroup Condition="$(DefineConstants.Contains(SYSTEM_DATA_SQLITE))">
+  <PropertyGroup>
     <ContentSQLiteInteropFiles>true</ContentSQLiteInteropFiles>
     <CopySQLiteInteropFiles>false</CopySQLiteInteropFiles>
     <CleanSQLiteInteropFiles>false</CleanSQLiteInteropFiles>
     <CollectSQLiteInteropFiles>false</CollectSQLiteInteropFiles>
   </PropertyGroup>
 
-  <ItemGroup Condition="$(DefineConstants.Contains(SYSTEM_DATA_SQLITE))">
+  <ItemGroup Label="PackageReferences">
     <PackageReference Include="System.Data.SQLite.Core" Version="1.0.108" />
+    <PackageReference Include="Backpack.SqlBuilder" Version="1.0.23" />
   </ItemGroup>
 
-  <ItemGroup Condition="'$(TargetFramework)' == 'netstandard2.0'">
-    <PackageReference Include="Microsoft.Data.Sqlite.Core" Version="2.0.0" />
-    <PackageReference Include="SQLitePCLRaw.bundle_green" Version="1.1.9" />
-  </ItemGroup>
-
-  <ItemGroup>
+  <ItemGroup Label="Exclude All NetCF">
     <Compile Remove="NetCF\**" />
     <EmbeddedResource Remove="NetCF\**" />
     <None Remove="NetCF\**" />
   </ItemGroup>
 
-  <ItemGroup>
-    <PackageReference Include="Backpack.SqlBuilder" Version="1.0.23" />
+  <ItemGroup Label="Include All Code Files from FMC.ORM">
+    <Compile Include="..\FMSC.ORM\**\*.cs" Exclude="..\FMSC.ORM\obj\**\*.cs;..\FMSC.ORM\bin\**\*.cs;..\FMSC.ORM\*~\**\*.cs;..\FMSC.ORM\.*\**\*.cs" />
   </ItemGroup>
 </Project>

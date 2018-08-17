@@ -1,17 +1,9 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 10.00
 # Visual Studio 2008
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CruiseDAL_CF20", "CruiseDAL\CruiseDAL_CF20.csproj", "{DC8A4894-F4A8-4554-B475-2EBAD49AF148}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CruiseDAL_CF20", "CruiseDAL.Legacy\CruiseDAL_CF20.csproj", "{DC8A4894-F4A8-4554-B475-2EBAD49AF148}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{770A329F-9981-40B5-8AD1-85C573421463}"
-	ProjectSection(SolutionItems) = preProject
-		CruiseDAL2.vsmdi = CruiseDAL2.vsmdi
-		LocalTestRun.testrunconfig = LocalTestRun.testrunconfig
-	EndProjectSection
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FMSC.ORM.NetCF20", "FMSC.ORM\FMSC.ORM.NetCF20.csproj", "{D346BFEA-85A0-4A5D-BD89-D07E073B065E}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SqlBuilder_CF20", "Sqlbuilder\SqlBuilder_CF20.csproj", "{212479E1-1FB7-41D8-A264-EA7D85720D12}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FMSC.ORM.NetCF20", "FMSC.ORM.Legacy\FMSC.ORM.NetCF20.csproj", "{D346BFEA-85A0-4A5D-BD89-D07E073B065E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -34,9 +26,5 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
-	EndGlobalSection
-	GlobalSection(SubversionScc) = preSolution
-		Svn-Managed = True
-		Manager = AnkhSVN - Subversion Support for Visual Studio
 	EndGlobalSection
 EndGlobal

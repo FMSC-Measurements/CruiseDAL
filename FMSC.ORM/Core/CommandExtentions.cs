@@ -11,11 +11,21 @@ namespace FMSC.ORM.Core
         {
             if (paramArgs != null)
             {
-                int counter = 1; 
+#if !LEGACY
+                int counter = 1;
+#else 
+                var commandText = System.Text.RegularExpressions.Regex.Replace(command.CommandText, "@p\\d+", "?");
+                command.CommandText = commandText;
+
+#endif
                 foreach (var value in paramArgs)
                 {
                     var param = command.CreateParameter();
+#if LEGACY
+                    //legacy behavior: leave paramater name blank 
+#else
                     param.ParameterName = "@p" + counter++.ToString();
+#endif
 
                     param.Value = value ?? DBNull.Value;
 

@@ -5,7 +5,7 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("FMSC.ORM")]
+[assembly: AssemblyTitle("FMSC.ORM.Legacy")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("USDA Forest Service")]
@@ -34,8 +34,9 @@ using System.Runtime.InteropServices;
 // [assembly: AssemblyVersion("1.0.*")]
 
 
-[assembly: AssemblyVersion("2.1.0.0")]
+//legacy versions will have a major version of 1
+[assembly: AssemblyVersion("1.1.0.0")]
 
 #if !NetCF
-[assembly: AssemblyFileVersion("2.1.0.0")]
+[assembly: AssemblyFileVersion("1.1.0.0")]
 #endif

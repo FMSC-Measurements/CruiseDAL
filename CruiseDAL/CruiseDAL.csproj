@@ -3,9 +3,9 @@
   <PropertyGroup>
     <!--<TargetFramework>netstandard20</TargetFramework>-->
     <TargetFrameworks>net40;netstandard20</TargetFrameworks>
-    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
     <Version>2.2.1.5</Version>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <IsTestProject>false</IsTestProject>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(TargetFramework)' == 'net40'">
@@ -13,7 +13,6 @@
   </PropertyGroup>
 
   <ItemGroup Label="Excluded NetCF Files">
-    <Compile Remove="Properties\Resources_CF20.Designer.cs" />
     <Compile Remove="NetCF\**" />
     <EmbeddedResource Remove="NetCF\**" />
     <None Remove="NetCF\**" />

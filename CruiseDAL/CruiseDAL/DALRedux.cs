@@ -23,7 +23,6 @@ namespace CruiseDAL
 
         private string _userInfo;
         private string _databaseVersion = "Unknown";
-        private CruiseFileType _cruiseFileType;
 
         protected ICollection<ExternalDatastore> _attachedDataStores = new List<ExternalDatastore>();
 

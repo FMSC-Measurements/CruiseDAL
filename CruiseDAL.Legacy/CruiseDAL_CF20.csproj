@@ -1,0 +1,126 @@
+﻿<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="3.5">
+  <!--VisualStudio Boilerplate-->
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>9.0.21022</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+	<AppDesignerFolder>Properties</AppDesignerFolder>
+  </PropertyGroup>
+
+  <!--Platform Settings-->
+  <PropertyGroup>
+    <PlatformFamilyName>WindowsCE</PlatformFamilyName>
+    <PlatformID>E2BECB1F-8C8C-41ba-B736-9BE7D946A398</PlatformID>
+    <OSVersion>5.0</OSVersion>
+    <TargetFrameworkVersion>v2.0</TargetFrameworkVersion>
+    <NativePlatformName>Windows CE</NativePlatformName>
+    <FormFactorID>
+    </FormFactorID>
+	<ProjectTypeGuids>{4D628B5B-2FBC-4AA6-8C16-197242AEB884};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
+  </PropertyGroup>
+  
+  <!--Project Settings-->
+  <PropertyGroup>
+    <AssemblyName>CruiseDAL.NetCF20</AssemblyName>
+	<OutputType>Library</OutputType>
+    <RootNamespace>CruiseDAL</RootNamespace>
+	<DeployDirSuffix>CruiseDAL_CF20CE</DeployDirSuffix>
+	<ProjectGuid>{DC8A4894-F4A8-4554-B475-2EBAD49AF148}</ProjectGuid>
+  </PropertyGroup>
+  
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\CF20\Debug\</OutputPath>
+    <DefineConstants>TRACE;DEBUG;WindowsCE;NetCF;NetCF2;LEGACY;</DefineConstants>
+    <NoStdLib>true</NoStdLib>
+    <NoConfig>true</NoConfig>
+    <ErrorReport>prompt</ErrorReport>
+    <FileAlignment>512</FileAlignment>
+    <WarningLevel>4</WarningLevel>
+    <GenerateSerializationAssemblies>Off</GenerateSerializationAssemblies>
+  </PropertyGroup>
+  
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\CF20\Release\</OutputPath>
+    <DefineConstants>TRACE;WindowsCE;NetCF;NetCF2;LEGACY;</DefineConstants>
+    <NoStdLib>true</NoStdLib>
+    <NoConfig>true</NoConfig>
+    <ErrorReport>prompt</ErrorReport>
+    <FileAlignment>512</FileAlignment>
+    <WarningLevel>4</WarningLevel>
+    <GenerateSerializationAssemblies>Off</GenerateSerializationAssemblies>
+  </PropertyGroup>
+  
+  <!--Core References-->
+  <ItemGroup>
+    <Reference Include="mscorlib" />
+    <Reference Include="System" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>  
+  
+  <!--Dll References-->
+  <ItemGroup>
+    <Reference Include="LINQBridge.CF, Version=1.0.6354.22636, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\libs\LINQBridge.CF.dll</HintPath>
+    </Reference>
+	<Reference Include="Backpack.Sqlbuilder, Version=1.0.0, Culture=neutral, processorArchitecture=MSIL">
+	  <SpecificVersion>False</SpecificVersion>
+	  <HintPath>..libs\Backpack.SqlBuilder\net20-cf\Backpack.SqlBuilder.dll</HintPath>
+	</Reference>
+	<Reference Include="System.Data.SQLite, Version=1.0.94.0, Culture=neutral, PublicKeyToken=1fdb50b1b62b4c84, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\libs\SQLite\Mobile_CF20\System.Data.SQLite.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  
+  <!--Include Other Dll Dependencies-->
+  <ItemGroup>
+    <Content Include="..\libs\SQLite\Mobile_CF20\SQLite.Interop.094.dll">
+      <Link>SQLite.Interop.094.dll</Link>
+    </Content>
+  </ItemGroup>
+  
+  <!--Project References-->
+  <ItemGroup>
+    <ProjectReference Include="..\FMSC.ORM.Legacy\FMSC.ORM.NetCF20.csproj">
+      <Project>{D346BFEA-85A0-4A5D-BD89-D07E073B065E}</Project>
+      <Name>FMSC.ORM.NetCF20</Name>
+    </ProjectReference>
+  </ItemGroup>
+  
+  <ItemGroup>
+    <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  
+  <!--Include All Code Files From CruiseDAL-->
+  <ItemGroup>
+    <Compile Include="..\CruiseDAL\**\*.cs" Exclude="..\CruiseDAL\obj\**\*.cs;..\CruiseDAL\bin\**\*.cs;..\CruiseDAL\*~\**\*.cs;..\CruiseDAL\.*\**\*.cs" />
+  </ItemGroup>
+  
+
+  <Import Project="$(MSBuildBinPath)\Microsoft.CompactFramework.CSharp.targets" />
+  
+  <!--dont know what this does but I'm not going to mess with it-->
+  <ProjectExtensions>
+    <VisualStudio>
+      <FlavorProperties GUID="{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}">
+        <HostingProcess disable="1" />
+      </FlavorProperties>
+    </VisualStudio>
+  </ProjectExtensions>
+  
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>
