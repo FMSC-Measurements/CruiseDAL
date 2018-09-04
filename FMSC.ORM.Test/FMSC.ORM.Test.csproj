@@ -6,6 +6,10 @@
     <!--<TargetFrameworks>net461;netcoreapp2.0;netstandard2.0</TargetFrameworks>-->
   </PropertyGroup>
 
+  <PropertyGroup Condition="$(TargetFramework.Contains(netcoreapp)) OR $(TargetFramework.Contains(net461))">
+    <IsTestProject>true</IsTestProject>
+  </PropertyGroup>
+
   <PropertyGroup Condition="$(TargetFramework.StartsWith(net4))">
     <DefineConstants>$(DefineConstants);SYSTEM_DATA_SQLITE</DefineConstants>
   </PropertyGroup>
@@ -13,7 +17,7 @@
   <PropertyGroup Condition="$(TargetFramework.Contains(netstandard)) OR $(TargetFramework.Contains(netcoreapp))">
     <DefineConstants>$(DefineConstants);MICROSOFT_DATA_SQLITE</DefineConstants>
   </PropertyGroup>
-  
+
 
   <PropertyGroup Condition="$(DefineConstants.Contains(SYSTEM_DATA_SQLITE))">
   </PropertyGroup>
@@ -22,12 +26,7 @@
     <PackageReference Include="xunit.runner.visualstudio" Version="2.3.1" />
   </ItemGroup>-->
 
-  <ItemGroup Condition="$(TargetFramework.Contains(netcoreapp))">
-    <PackageReference Include="xunit.runner.visualstudio" Version="2.4.0" />
-    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="15.8.0" />
-  </ItemGroup>
-
-  <ItemGroup Condition="$(TargetFramework.Contains(net461))">
+  <ItemGroup Condition="$(TargetFramework.Contains(netcoreapp)) OR $(TargetFramework.Contains(net461))">
     <PackageReference Include="xunit.runner.visualstudio" Version="2.4.0" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="15.8.0" />
   </ItemGroup>

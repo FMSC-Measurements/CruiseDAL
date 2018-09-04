@@ -1,0 +1,14 @@
+<Project>
+<PropertyGroup Label="Package Info" >
+    <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
+    <Authors>Ben Campbell</Authors>
+	<PackageProjectUrl>https://github.com/FMSC-Measurements/CruiseDAL</PackageProjectUrl>
+	<RepositoryType>git</RepositoryType>
+	<RepositoryUrl>https://github.com/FMSC-Measurements/CruiseDAL.git</RepositoryUrl>
+</PropertyGroup>
+
+<PropertyGroup Label="Package Config" Condition="$(IsTestProject) == '' OR $(IsTestProject) == 'false'">
+	<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <AllowedOutputExtensionsInPackageBuildOutputFolder>$(AllowedOutputExtensionsInPackageBuildOutputFolder);.pdb</AllowedOutputExtensionsInPackageBuildOutputFolder>
+</PropertyGroup>
+</Project>

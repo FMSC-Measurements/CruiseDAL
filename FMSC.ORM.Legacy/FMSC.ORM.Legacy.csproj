@@ -1,26 +1,17 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup Label="Assembly Info">
-    <Version>2.1.0.0</Version>
+    <AssemblyName>FMSC.ORM.Legacy</AssemblyName>
+    <Version>1.1.1</Version>
     <RootNamespace>FMSC.ORM</RootNamespace>
   </PropertyGroup>
-  
+
   <PropertyGroup Label="Build Config">
-    <!--we could probably target net35 but im using net40 as the minimum because 'dotnet' cli only supports down to net40-->
-    <!--and i want dotnet cli to run test in the cli to test all target frameworks-->
-    <TargetFrameworks>net40</TargetFrameworks>
+    <TargetFrameworks>net35</TargetFrameworks>
     <!--Dont generate assembly info because we will use same assembly info from VS2008-->
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
-    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <DefineConstants>SYSTEM_DATA_SQLITE;LEGACY</DefineConstants>
-  </PropertyGroup>
-
-  <PropertyGroup Label="Package Info">
-    <Authors>Ben Campbell</Authors>
-  </PropertyGroup>
-
-  <PropertyGroup Label="Package Config">
-    <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
+    <DefineConstants>$(DefineConstants);SYSTEM_DATA_SQLITE;LEGACY</DefineConstants>
+    <IsTestProject>false</IsTestProject>
   </PropertyGroup>
 
   <!--Required for System.Data.Sqlite See: https://stackoverflow.com/questions/32639630/sqlite-interop-dll-files-does-not-copy-to-project-output-path-when-required-by-r/32639631#32639631-->

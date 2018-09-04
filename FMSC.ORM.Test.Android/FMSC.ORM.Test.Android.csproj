@@ -2,6 +2,7 @@
   <PropertyGroup>
     <TargetFramework>MonoAndroid80</TargetFramework>
     <Configurations>Debug;Release;Legacy</Configurations>
+    <IsTestProject>false</IsTestProject>
   </PropertyGroup>
 
   <ItemGroup>

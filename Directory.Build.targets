@@ -1,0 +1,5 @@
+<Project>
+	<Target Name="CopyPackage" AfterTargets="Pack">
+		<Copy SourceFiles="$(OutputPath)$(PackageId).$(PackageVersion).nupkg" DestinationFolder="$(SolutionDir)\PackageOutput" />
+	</Target>
+</Project>

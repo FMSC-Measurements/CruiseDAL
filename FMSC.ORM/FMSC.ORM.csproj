@@ -4,10 +4,8 @@
     <!--we could probably target net35 but im using net40 as the minimum because 'dotnet' cli only supports down to net40-->
     <!--and i want dotnet cli to run test in the cli to test all target frameworks-->
     <TargetFrameworks>net40;netstandard2.0</TargetFrameworks>
-    <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
-    <Authors>Ben Campbell</Authors>
-    <Version>2.1.0.0</Version>
-    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <Version>2.1.1</Version>
+    <IsTestProject>false</IsTestProject>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(TargetFramework)' == 'net40'">
@@ -30,15 +28,8 @@
     <PackageReference Include="System.Data.SQLite.Core" Version="1.0.108" />
   </ItemGroup>
 
-  <ItemGroup Condition="'$(TargetFramework)' == 'netstandard2.0'">
-    <PackageReference Include="Microsoft.Data.Sqlite.Core" Version="2.0.0" />
-    <PackageReference Include="SQLitePCLRaw.bundle_green" Version="1.1.9" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Compile Remove="NetCF\**" />
-    <EmbeddedResource Remove="NetCF\**" />
-    <None Remove="NetCF\**" />
+  <ItemGroup Condition="$(DefineConstants.Contains(MICROSOFT_DATA_SQLITE))">
+    <PackageReference Include="Microsoft.Data.Sqlite" Version="2.1.0" />
   </ItemGroup>
 
   <ItemGroup>

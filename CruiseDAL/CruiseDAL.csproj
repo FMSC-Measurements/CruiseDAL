@@ -1,22 +1,15 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-    <!--<TargetFramework>netstandard20</TargetFramework>-->
+  <PropertyGroup Label="Build Config">
     <TargetFrameworks>net40;netstandard20</TargetFrameworks>
-    <Version>2.2.1.5</Version>
-    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <IsTestProject>false</IsTestProject>
   </PropertyGroup>
 
-  <PropertyGroup Condition="'$(TargetFramework)' == 'net40'">
-    <DefineConstants>$(DefineConstrants);SYSTEM_DATA_SQLITE</DefineConstants>
+  <PropertyGroup Label="Assembily Info" >
+    <AssemblyName>CruiseDAL</AssemblyName>
+    <RootNamespace>CruiseDAL</RootNamespace>
+    <Version>2.2.1.6</Version>    
   </PropertyGroup>
-
-  <ItemGroup Label="Excluded NetCF Files">
-    <Compile Remove="NetCF\**" />
-    <EmbeddedResource Remove="NetCF\**" />
-    <None Remove="NetCF\**" />
-  </ItemGroup>
 
   <ItemGroup Label="Project References">
     <ProjectReference Include="..\FMSC.ORM\FMSC.ORM.csproj" />
@@ -67,10 +60,6 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>TableModels.tt</DependentUpon>
     </Compile>
-  </ItemGroup>
-
-  <ItemGroup>
-    <Service Include="{508349b6-6b84-4df5-91f0-309beebad82d}" />
   </ItemGroup>
 
 </Project>

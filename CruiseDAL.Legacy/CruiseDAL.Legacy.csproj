@@ -1,22 +1,15 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup Label="Assembly Info">
-    <Version>2.2.1.5</Version>
+    <AssemblyName>CruiseDAL.Legacy</AssemblyName>
+    <Version>2.2.1.6</Version>
     <RootNamespace>CruiseDAL</RootNamespace>
   </PropertyGroup>
 
   <PropertyGroup Label="Build Config">
-    <TargetFrameworks>net40;</TargetFrameworks>
+    <TargetFrameworks>net35;</TargetFrameworks>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <DefineConstants>SYSTEM_DATA_SQLITE;LEGACY;$(DefineConstrants)</DefineConstants>
-  </PropertyGroup>
-
-  <PropertyGroup Label="Package Info">
-    <Authors>Ben Campbell</Authors>
-  </PropertyGroup>
-
-  <PropertyGroup Label="Package Config">
-    <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
   </PropertyGroup>
 
   <ItemGroup Label="Excluded NetCF Files">
