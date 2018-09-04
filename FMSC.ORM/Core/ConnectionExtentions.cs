@@ -64,13 +64,12 @@ namespace FMSC.ORM.Core
             if (string.IsNullOrEmpty(commandText)) { throw new ArgumentException("command can't be null or empty", "command"); }
             if (connection == null) { throw new ArgumentNullException("connection"); }
 
-            using (var command = connection.CreateCommand())
-            {
-                command.CommandText = commandText;
-                command.SetParams(paramaters);
+            var command = connection.CreateCommand();
 
-                return ExecuteReader(connection, command, transaction);
-            }
+            command.CommandText = commandText;
+            command.SetParams(paramaters);
+
+            return ExecuteReader(connection, command, transaction);
         }
 
         public static DbDataReader ExecuteReader2(this DbConnection connection, string commandText, object paramaterData, DbTransaction transaction)
@@ -78,13 +77,12 @@ namespace FMSC.ORM.Core
             if (string.IsNullOrEmpty(commandText)) { throw new ArgumentException("command can't be null or empty", "command"); }
             if (connection == null) { throw new ArgumentNullException("connection"); }
 
-            using (var command = connection.CreateCommand())
-            {
-                command.CommandText = commandText;
-                command.AddParams(paramaterData);
+            var command = connection.CreateCommand();
 
-                return ExecuteReader(connection, command, transaction);
-            }
+            command.CommandText = commandText;
+            command.AddParams(paramaterData);
+
+            return ExecuteReader(connection, command, transaction);
         }
 
         public static DbDataReader ExecuteReader(this DbConnection connection, DbCommand command, DbTransaction transaction)
