@@ -1,5 +1,7 @@
 .vs/
 
+PackageOutput/
+
 /InnoSetupFiles/Output/
 /CruiseSystemManager/STPinfo/
 
