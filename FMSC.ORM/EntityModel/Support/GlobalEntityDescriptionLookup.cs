@@ -33,29 +33,36 @@ namespace FMSC.ORM.EntityModel.Support
         public EntityDescription LookUpEntityByType(Type type)
         {
             string name = type.Name;
-            if (!_entityDescriptionLookup.ContainsKey(name))
+            lock (_entityDescriptionLookup)
             {
-                var ed = new EntityDescription(type);
-                _entityDescriptionLookup.Add(name, ed);
-                return ed;
-            }
+                if (!_entityDescriptionLookup.ContainsKey(name))
+                {
+                    var ed = new EntityDescription(type);
+                    _entityDescriptionLookup.Add(name, ed);
+                    return ed;
+                }
 
-            return _entityDescriptionLookup[type.Name];
+                return _entityDescriptionLookup[type.Name];
+            }
         }
 
         public EntityInflator GetEntityInflator(Type type)
         {
             string name = type.Name;
-            if (!_entityInflatorLookup.ContainsKey(name))
+
+            lock (_entityDescriptionLookup)
             {
-                var entityDescription = LookUpEntityByType(type);
-                var entityInflator = new EntityInflator(entityDescription);
-                _entityInflatorLookup.Add(name, entityInflator);
-                return entityInflator;
-            }
-            else
-            {
-                return _entityInflatorLookup[name];
+                if (!_entityInflatorLookup.ContainsKey(name))
+                {
+                    var entityDescription = LookUpEntityByType(type);
+                    var entityInflator = new EntityInflator(entityDescription);
+                    _entityInflatorLookup.Add(name, entityInflator);
+                    return entityInflator;
+                }
+                else
+                {
+                    return _entityInflatorLookup[name];
+                }
             }
         }
     }
