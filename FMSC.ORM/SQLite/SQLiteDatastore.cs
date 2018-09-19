@@ -208,7 +208,7 @@ namespace FMSC.ORM.SQLite
                                 var colInfo = new ColumnInfo()
                                 {
                                     Name = reader.GetString(nameOrd),
-                                    DBType = SqlDialect.MapSQLtypeToDbType(reader.GetString(dbTypeOrd)),
+                                    Type = reader.GetString(dbTypeOrd),
                                     IsPK = reader.GetBoolean(pkOrd),
                                     NotNull = reader.GetBoolean(notNullOrd),
                                     Default = (!reader.IsDBNull(defaultValOrd)) ? reader.GetString(defaultValOrd) : null

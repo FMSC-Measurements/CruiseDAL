@@ -35,8 +35,8 @@ using System.Runtime.InteropServices;
 
 
 //legacy versions will have a major version of 1
-[assembly: AssemblyVersion("1.1.1")]
+[assembly: AssemblyVersion("1.1.2")]
 
 #if !NetCF
-[assembly: AssemblyFileVersion("1.1.1")]
+[assembly: AssemblyFileVersion("1.1.2")]
 #endif
