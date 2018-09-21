@@ -7422,6 +7422,23 @@ namespace CruiseDAL.DataObjects
 		        this.NotifyPropertyChanged(TREECALCULATEDVALUES.BIOMASSTIP);
 		    }
 		}
+		private float _tipwoodvolume  = 0.0f;
+		[XmlElement]
+		[Field(Name = "TipwoodVolume")]
+		public virtual float TipwoodVolume
+		{
+		    get 
+		    { 
+		                return _tipwoodvolume; 
+		    }
+		    set 
+		    {
+		        if(Math.Abs(_tipwoodvolume - value) < float.Epsilon) { return; }
+		        _tipwoodvolume = value;
+		        this.ValidateProperty(TREECALCULATEDVALUES.TIPWOODVOLUME, _tipwoodvolume);
+		        this.NotifyPropertyChanged(TREECALCULATEDVALUES.TIPWOODVOLUME);
+		    }
+		}
 
 		protected override bool DoValidate()
 		{
@@ -7462,6 +7479,7 @@ namespace CruiseDAL.DataObjects
 			isValid = ValidateProperty("Biomassdeadbranches", this.Biomassdeadbranches) && isValid;
 			isValid = ValidateProperty("Biomassfoliage", this.Biomassfoliage) && isValid;
 			isValid = ValidateProperty("BiomassTip", this.BiomassTip) && isValid;
+			isValid = ValidateProperty("TipwoodVolume", this.TipwoodVolume) && isValid;
 			isValid = ValidateProperty("Tree_CN", this.Tree_CN) && isValid ;
 			return isValid;
 		}
@@ -7505,6 +7523,7 @@ namespace CruiseDAL.DataObjects
 			Biomassdeadbranches = obj.Biomassdeadbranches;
 			Biomassfoliage = obj.Biomassfoliage;
 			BiomassTip = obj.BiomassTip;
+			TipwoodVolume = obj.TipwoodVolume;
 		}
 	}
 	[EntitySource(SourceName = "LCD")]
@@ -8464,6 +8483,23 @@ namespace CruiseDAL.DataObjects
 		        this.NotifyPropertyChanged(LCD.SUMWGTTIP);
 		    }
 		}
+		private Double _sumtipwood  = 0.0;
+		[XmlElement]
+		[Field(Name = "SumTipwood")]
+		public virtual Double SumTipwood
+		{
+		    get 
+		    { 
+		                return _sumtipwood; 
+		    }
+		    set 
+		    {
+		        if(Math.Abs(_sumtipwood - value) < Double.Epsilon) { return; }
+		        _sumtipwood = value;
+		        this.ValidateProperty(LCD.SUMTIPWOOD, _sumtipwood);
+		        this.NotifyPropertyChanged(LCD.SUMTIPWOOD);
+		    }
+		}
 
 		protected override bool DoValidate()
 		{
@@ -8525,6 +8561,7 @@ namespace CruiseDAL.DataObjects
 			isValid = ValidateProperty("SumWgtBBD", this.SumWgtBBD) && isValid;
 			isValid = ValidateProperty("SumWgtBFT", this.SumWgtBFT) && isValid;
 			isValid = ValidateProperty("SumWgtTip", this.SumWgtTip) && isValid;
+			isValid = ValidateProperty("SumTipwood", this.SumTipwood) && isValid;
 			return isValid;
 		}
 		public override void SetValues(DataObject obj)
@@ -8588,6 +8625,7 @@ namespace CruiseDAL.DataObjects
 			SumWgtBBD = obj.SumWgtBBD;
 			SumWgtBFT = obj.SumWgtBFT;
 			SumWgtTip = obj.SumWgtTip;
+			SumTipwood = obj.SumTipwood;
 		}
 	}
 	[EntitySource(SourceName = "POP")]

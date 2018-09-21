@@ -153,7 +153,7 @@ namespace FMSCORM.CodeGenEngine
                 }
                 else if( Type == "TEXT" )
                 {
-                    return "\"" + Default + "\"";
+                    return "'" + Default + "'";
                 }
                 
             }

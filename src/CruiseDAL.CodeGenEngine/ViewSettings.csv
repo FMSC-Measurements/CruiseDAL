@@ -1,14 +1,22 @@
-View Name	Select STMT
-StratumAcres_View	"SELECT CuttingUnit.Code as CuttingUnitCode, 
+View Name,Select STMT
+StratumAcres_View,"SELECT CuttingUnit.Code as CuttingUnitCode, 
 Stratum.Code as StratumCode, 
 ifnull(Area, CuttingUnit.Area) as Area, 
 CuttingUnitStratum.* 
 FROM CuttingUnitStratum 
 JOIN CuttingUnit USING (CuttingUnit_CN) 
 JOIN Stratum USING (Stratum_CN);"
-CountTree_View	"SELECT Stratum.Code as StratumCode,
+CountTree_View,"SELECT Stratum.Code as StratumCode,
 Stratum.Method as Method, 
 SampleGroup.Code as SampleGroupCode,
 SampleGroup.PrimaryProduct as PrimaryProduct, 
 CountTree.* 
 FROM CountTree JOIN SampleGroup USING (SampleGroup_CN) JOIN Stratum USING (Stratum_CN);"
+TallyPopulation,"SELECT CuttingUnit.Code, Stratum.Code, SampleGroup.Code, TDV.Species, TDV.LiveDead, Tally.Description, Tally.HotKey 
+FROM CountTree 
+JOIN CuttingUnit USING (CuttingUnit_CN) 
+JOIN SampleGroup USING (SampleGroup_CN) 
+JOIN Stratum USING (Stratum_CN) 
+LEFT JOIN TreeDefaultValue AS TDV USING (TreeDefaultValue_CN) 
+JOIN Tally USING (Tally_CN) 
+GROUP BY CuttingUnit_CN, SampleGroup_CN, ifnull(TreeDefaultValue_CN, 0);"

@@ -405,6 +405,7 @@ namespace CruiseDAL.Schema
 				Biomassdeadbranches REAL Default 0.0,
 				Biomassfoliage REAL Default 0.0,
 				BiomassTip REAL Default 0.0,
+				TipwoodVolume REAL Default 0.0,
 				UNIQUE (Tree_CN));
 
     CREATE TABLE LCD (
@@ -461,7 +462,8 @@ namespace CruiseDAL.Schema
 				SumWgtBBL DOUBLE Default 0.0,
 				SumWgtBBD DOUBLE Default 0.0,
 				SumWgtBFT DOUBLE Default 0.0,
-				SumWgtTip DOUBLE Default 0.0);
+				SumWgtTip DOUBLE Default 0.0,
+				SumTipwood DOUBLE Default 0.0);
 
     CREATE TABLE POP (
 				POP_CN INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -799,6 +801,20 @@ TableName TEXT NOT NULL COLLATE NOCASE,
 Data TEXT, 
 DeletedDate DATETIME NON NULL);
 
+CREATE TABLE TallyLedger (
+	TallyLedgerID TEXT PRIMARY KEY,
+	UnitCode TEXT,
+	StratumCode TEXT,
+	SampleGroupCode TEXT,
+	Species TEXT,
+	LiveDead TEXT,
+	TreeCount INTEGER NOT NULL,
+	KPI INTEGER Default 0,
+	TreePRandomValue INTEGER Default 0,
+	Tree_GUID TEXT REFERENCES Tree (Tree_GUID) ON DELETE CASCADE,
+	TimeStamp TEXT DEFAULT (datetime('now', 'localtime')),
+	Signature TEXT);
+
 CREATE VIEW CountTree_View AS 
 SELECT Stratum.Code as StratumCode,
 Stratum.Method as Method, 
@@ -816,9 +832,21 @@ FROM CuttingUnitStratum
 JOIN CuttingUnit USING (CuttingUnit_CN) 
 JOIN Stratum USING (Stratum_CN);
 
+CREATE VIEW TallyPopulation 
+( UnitCode, StratumCode, SampleGroupCode, Species, LiveDead, Description, HotKey) 
+AS 
+SELECT CuttingUnit.Code, Stratum.Code, SampleGroup.Code, TDV.Species, TDV.LiveDead, Tally.Description, Tally.HotKey 
+FROM CountTree 
+JOIN CuttingUnit USING (CuttingUnit_CN) 
+JOIN SampleGroup USING (SampleGroup_CN) 
+JOIN Stratum USING (Stratum_CN) 
+LEFT JOIN TreeDefaultValue AS TDV USING (TreeDefaultValue_CN) 
+JOIN Tally USING (Tally_CN) 
+GROUP BY CuttingUnit_CN, SampleGroup_CN, ifnull(TreeDefaultValue_CN, 0);
 
-INSERT INTO Globals (Block, Key, Value) VALUES ('Database', 'Version', '2.2.1'); 
-PRAGMA user_version = 4;";
+
+INSERT INTO Globals (Block, Key, Value) VALUES ('Database', 'Version', '2.4.0'); 
+PRAGMA user_version = 5;";
 	}//END CLASS
 }//END NAMESPACE
 
