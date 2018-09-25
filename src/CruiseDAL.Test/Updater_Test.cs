@@ -36,8 +36,8 @@ namespace CruiseDAL.Tests
                     var semVerActual = new Version(datastore.DatabaseVersion);
                     var semVerExpected = new Version(DAL.CURENT_DBVERSION);
 
-                    semVerActual.Major.ShouldBeEquivalentTo(semVerExpected.Major);
-                    semVerActual.Minor.ShouldBeEquivalentTo(semVerExpected.Minor);
+                    semVerActual.Major.Should().Be(semVerExpected.Major);
+                    semVerActual.Minor.Should().Be(semVerExpected.Minor);
                 }
             }
             finally

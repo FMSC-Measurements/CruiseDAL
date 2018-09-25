@@ -1,8 +1,8 @@
 ﻿<Project Sdk="MSBuild.Sdk.Extras/1.5.4">
   <PropertyGroup>
-    <TargetFramework>MonoAndroid80</TargetFramework>
+    <TargetFramework>MonoAndroid81</TargetFramework>
     <Configurations>Debug;Release;Legacy</Configurations>
-    <IsTestProject>false</IsTestProject>
+    <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
   </PropertyGroup>
 
   <ItemGroup>

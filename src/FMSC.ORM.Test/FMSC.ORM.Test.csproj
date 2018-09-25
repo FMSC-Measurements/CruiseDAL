@@ -4,6 +4,7 @@
     <!--targeting netstandard2.0 so that the FMSC.ORM.Test can be referenced by FMSC.ORM.Test.Android-->
     <TargetFrameworks>netcoreapp2.0;netstandard2.0;net461</TargetFrameworks>
     <!--<TargetFrameworks>net461;netcoreapp2.0;netstandard2.0</TargetFrameworks>-->
+    <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
   </PropertyGroup>
 
   <PropertyGroup Condition="$(TargetFramework.Contains(netcoreapp)) OR $(TargetFramework.Contains(net461))">

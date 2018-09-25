@@ -32,7 +32,7 @@ namespace CruiseDAL.Tests
             {
                 var db = new DAL(null);
             };
-            action.ShouldThrow<ArgumentException>();
+            action.Should().Throw<ArgumentException>();
 
         }
 
@@ -43,7 +43,7 @@ namespace CruiseDAL.Tests
             {
                 var db = new DAL("");
             };
-            action.ShouldThrow<ArgumentException>();
+            action.Should().Throw<ArgumentException>();
         }
 
         [Fact]
@@ -102,7 +102,7 @@ namespace CruiseDAL.Tests
             {
                 datastore.WriteGlobalValue(block, key, value);
 
-                datastore.ReadGlobalValue(block, key).ShouldBeEquivalentTo(value);
+                datastore.ReadGlobalValue(block, key).Should().Be(value);
             }
         }
 

@@ -66,7 +66,7 @@ namespace FMSCORM.Tests
                 {
                     u.Strata.Populate();
 
-                    u.Strata.Count.ShouldBeEquivalentTo((int)u.Area);
+                    u.Strata.Count.Should().Be((int)u.Area);
                 }
             }
         }
