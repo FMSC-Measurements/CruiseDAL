@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup Label="Assembly Info">
     <AssemblyName>CruiseDAL.Legacy</AssemblyName>
-    <Version>2.2.1.7</Version>
+    <Version>2.4.0.1</Version>
     <RootNamespace>CruiseDAL</RootNamespace>
   </PropertyGroup>
 

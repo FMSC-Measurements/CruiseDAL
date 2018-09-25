@@ -120,13 +120,14 @@ PRAGMA user_version = <#=dr.SchemaVersion#>;";
                     defaultOpt = " Default 0";
                 }
                 
-            cols.Add(String.Format("\t\t\t\t{0} {1}{2}{3}{4}{5}{6}", //col Name, type, is Primay key, is auto increment, references, not null, zero as default value for numbers
+            cols.Add(String.Format("\t\t\t\t{0} {1}{2}{3}{4}{5}{6}{7}", //col Name, type, is Primay key, is auto increment, references, not null, zero as default value for numbers
                 f.Name, 
                 f.DBType,
                 (f.IsPK == true) ? " PRIMARY KEY" : "",
                 (f.IsAutoI) ? " AUTOINCREMENT" :"",
                 (f.IsFK)? " REFERENCES " + f.Ref : "",
                 (f.IsReq) ? " NOT NULL":"",
+				(f.IsTransitionalPK) ? " UNIQUE" : "",
                 defaultOpt
                 //(f.IsReq == false && f.IsPK == false && f.IsFK == false &&(f.DBType == "INTEGER" || f.DBType == "REAL" || f.DBType == "DOUBLE")) ? //use default value 0 and 0.0 if value is a integer 
                 //    " Default " + (( f.DBType == "INTEGER" ) ? "0" : "0.0") : ""        //or floating point value, respectively

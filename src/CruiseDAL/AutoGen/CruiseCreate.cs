@@ -132,7 +132,7 @@ namespace CruiseDAL.Schema
 
     CREATE TABLE Plot (
 				Plot_CN INTEGER PRIMARY KEY AUTOINCREMENT,
-				Plot_GUID TEXT,
+				Plot_GUID TEXT UNIQUE,
 				Stratum_CN INTEGER REFERENCES Stratum NOT NULL,
 				CuttingUnit_CN INTEGER REFERENCES CuttingUnit NOT NULL,
 				PlotNumber INTEGER NOT NULL,
@@ -155,7 +155,7 @@ namespace CruiseDAL.Schema
 
     CREATE TABLE Tree (
 				Tree_CN INTEGER PRIMARY KEY AUTOINCREMENT,
-				Tree_GUID TEXT,
+				Tree_GUID TEXT UNIQUE,
 				TreeDefaultValue_CN INTEGER REFERENCES TreeDefaultValue,
 				Stratum_CN INTEGER REFERENCES Stratum NOT NULL,
 				SampleGroup_CN INTEGER REFERENCES SampleGroup,
@@ -212,7 +212,7 @@ namespace CruiseDAL.Schema
 
     CREATE TABLE Log (
 				Log_CN INTEGER PRIMARY KEY AUTOINCREMENT,
-				Log_GUID TEXT,
+				Log_GUID TEXT UNIQUE,
 				Tree_CN INTEGER REFERENCES Tree NOT NULL,
 				LogNumber TEXT NOT NULL,
 				Grade TEXT,
@@ -239,7 +239,7 @@ namespace CruiseDAL.Schema
 
     CREATE TABLE Stem (
 				Stem_CN INTEGER PRIMARY KEY AUTOINCREMENT,
-				Stem_GUID TEXT,
+				Stem_GUID TEXT UNIQUE,
 				Tree_CN INTEGER REFERENCES Tree,
 				Diameter REAL Default 0.0,
 				DiameterType TEXT,
@@ -276,7 +276,7 @@ namespace CruiseDAL.Schema
     CREATE TABLE TreeEstimate (
 				TreeEstimate_CN INTEGER PRIMARY KEY AUTOINCREMENT,
 				CountTree_CN INTEGER REFERENCES CountTree,
-				TreeEstimate_GUID TEXT,
+				TreeEstimate_GUID TEXT UNIQUE,
 				KPI REAL NOT NULL,
 				CreatedBy TEXT DEFAULT 'none',
 				CreatedDate DateTime DEFAULT (datetime(current_timestamp, 'localtime')) ,
@@ -810,7 +810,7 @@ CREATE TABLE TallyLedger (
 	LiveDead TEXT,
 	TreeCount INTEGER NOT NULL,
 	KPI INTEGER Default 0,
-	TreePRandomValue INTEGER Default 0,
+	ThreePRandomValue INTEGER Default 0,
 	Tree_GUID TEXT REFERENCES Tree (Tree_GUID) ON DELETE CASCADE,
 	TimeStamp TEXT DEFAULT (datetime('now', 'localtime')),
 	Signature TEXT);
