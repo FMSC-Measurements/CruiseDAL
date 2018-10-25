@@ -6,9 +6,8 @@
   </PropertyGroup>
 
   <PropertyGroup Label="Build Config">
-    <TargetFrameworks>net35;</TargetFrameworks>
+    <TargetFrameworks>net40;</TargetFrameworks>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
-    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <DefineConstants>SYSTEM_DATA_SQLITE;LEGACY;$(DefineConstrants)</DefineConstants>
   </PropertyGroup>
 

@@ -7,11 +7,10 @@
   </PropertyGroup>
 
   <PropertyGroup Label="Build Config">
-    <TargetFrameworks>net35</TargetFrameworks>
+    <TargetFrameworks>net40</TargetFrameworks>
     <!--Dont generate assembly info because we will use same assembly info from VS2008-->
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
     <DefineConstants>$(DefineConstants);SYSTEM_DATA_SQLITE;LEGACY</DefineConstants>
-    <IsTestProject>false</IsTestProject>
   </PropertyGroup>
 
   <!--Required for System.Data.Sqlite See: https://stackoverflow.com/questions/32639630/sqlite-interop-dll-files-does-not-copy-to-project-output-path-when-required-by-r/32639631#32639631-->

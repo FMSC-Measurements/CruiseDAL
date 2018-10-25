@@ -6,9 +6,4 @@
 	<RepositoryType>git</RepositoryType>
 	<RepositoryUrl>https://github.com/FMSC-Measurements/CruiseDAL.git</RepositoryUrl>
 </PropertyGroup>
-
-<PropertyGroup Label="Package Config" Condition="('$(IsTestProject)' == '' OR '$(IsTestProject)' == 'false') AND '$(Configuration)' == 'Release'">
-	<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <AllowedOutputExtensionsInPackageBuildOutputFolder>$(AllowedOutputExtensionsInPackageBuildOutputFolder);.pdb</AllowedOutputExtensionsInPackageBuildOutputFolder>
-</PropertyGroup>
 </Project>
