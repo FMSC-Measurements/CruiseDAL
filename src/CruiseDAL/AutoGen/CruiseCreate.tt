@@ -58,7 +58,7 @@ CREATE TABLE TallyLedger (
 	LiveDead TEXT,
 	TreeCount INTEGER NOT NULL,
 	KPI INTEGER Default 0,
-	TreePRandomValue INTEGER Default 0,
+	ThreePRandomValue INTEGER Default 0,
 	Tree_GUID TEXT REFERENCES Tree (Tree_GUID) ON DELETE CASCADE,
 	TimeStamp TEXT DEFAULT (datetime('now', 'localtime')),
 	Signature TEXT);

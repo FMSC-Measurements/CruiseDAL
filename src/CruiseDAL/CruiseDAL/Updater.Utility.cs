@@ -7,6 +7,7 @@ namespace CruiseDAL
 {
     public static partial class Updater
     {
+
         public static void SetDatabaseVersion(DAL db, string newVersion)
         {
             string command = String.Format("UPDATE Globals SET Value = '{0}' WHERE Block = 'Database' AND Key = 'Version';", newVersion);
@@ -23,6 +24,35 @@ namespace CruiseDAL
                 {
                     el.Delete();
                 }
+            }
+        }
+
+        public static bool CheckNeedsMajorUpdate(DAL dal)
+        {
+            var version = dal.DatabaseVersion;
+
+            if(version.StartsWith("2"))
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+
+        public static bool CheckCanUpdate(DAL dal)
+        {
+            var version = dal.DatabaseVersion;
+
+            if (version.StartsWith("2") 
+                || version.StartsWith("3."))
+            {
+                return true;
+            }
+            else
+            {
+                return false;
             }
         }
 

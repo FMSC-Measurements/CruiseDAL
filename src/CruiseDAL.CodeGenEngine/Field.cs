@@ -100,7 +100,7 @@ namespace FMSCORM.CodeGenEngine
         {
             if (IsTransitionalPK)
             {
-                return "Guid.NewGuid()";
+                return null;// "Guid.NewGuid().ToString()";
             }
 
             if (IsAccessableTypeEnum) { return "0"; }

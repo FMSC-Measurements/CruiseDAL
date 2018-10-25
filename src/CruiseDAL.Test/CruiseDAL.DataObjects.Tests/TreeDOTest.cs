@@ -20,7 +20,7 @@ namespace CruiseDAL.DataObjects.Tests
                 ds.Insert(new StratumDO() { Code = "st1", Stratum_CN = 1, Method = "something" });
                 ds.Insert(new SampleGroupDO() { Code = "sg1", SampleGroup_CN = 1, Stratum_CN = 1, CutLeave = "Something", UOM = "bla", PrimaryProduct = "wha" });
 
-                var tree_guid_1 = Guid.NewGuid();
+                var tree_guid_1 = Guid.NewGuid().ToString();
 
                 ds.Insert(new TreeDO()
                 {

@@ -12,148 +12,161 @@ namespace CruiseDAL
 
             //killswitch
             //if the version is not 2.* or not using date versioning
-            if (!db.DatabaseVersion.StartsWith("2"))
+            if (!CheckCanUpdate(db))
             {
                 throw new IncompatibleSchemaException("The version of this cruise file is not compatible with the version of the software you are using." +
                     "Go to github.com/FMSC-Measurements to get the latest version of our software.", null);
             }
 
-            if (db.DatabaseVersion == "2013.05.28" || db.DatabaseVersion == "Unknown")
+            if (db.DatabaseVersion.StartsWith("2"))
             {
-                UpdateToVersion2013_05_30(db);
-            }
+                if (db.DatabaseVersion == "2013.05.28" || db.DatabaseVersion == "Unknown")
+                {
+                    UpdateToVersion2013_05_30(db);
+                }
 
-            if (db.DatabaseVersion == "2013.05.30")
-            {
-                UpdateToVersion2013_06_12(db);
-            }
+                if (db.DatabaseVersion == "2013.05.30")
+                {
+                    UpdateToVersion2013_06_12(db);
+                }
 
-            if (db.DatabaseVersion == "2013.06.12" || db.DatabaseVersion == "2013.06.13")
-            {
-                UpdateToVersion2013_06_17(db);
-            }
+                if (db.DatabaseVersion == "2013.06.12" || db.DatabaseVersion == "2013.06.13")
+                {
+                    UpdateToVersion2013_06_17(db);
+                }
 
-            if (db.DatabaseVersion == "2013.06.17" || db.DatabaseVersion == "2013.06.18")
-            {
-                UpdateToVersion2013_06_19(db);
-            }
+                if (db.DatabaseVersion == "2013.06.17" || db.DatabaseVersion == "2013.06.18")
+                {
+                    UpdateToVersion2013_06_19(db);
+                }
 
-            if (db.DatabaseVersion == "2013.06.19")
-            {
-                UpdateVersion2013_06_19(db);
-                UpdateToVersion2013_08_02(db);
-            }
+                if (db.DatabaseVersion == "2013.06.19")
+                {
+                    UpdateVersion2013_06_19(db);
+                    UpdateToVersion2013_08_02(db);
+                }
 
-            if (db.DatabaseVersion == "2013.08.02")
-            {
-                UpdateToVersion2013_08_29(db);
-            }
+                if (db.DatabaseVersion == "2013.08.02")
+                {
+                    UpdateToVersion2013_08_29(db);
+                }
 
-            if (db.DatabaseVersion == "2013.08.29")
-            {
-                UpdateToVersion2013_10_29(db);
-            }
+                if (db.DatabaseVersion == "2013.08.29")
+                {
+                    UpdateToVersion2013_10_29(db);
+                }
 
-            if (db.DatabaseVersion == "2013.10.29")
-            {
-                UpdateToVersion2013_11_01(db);
-            }
+                if (db.DatabaseVersion == "2013.10.29")
+                {
+                    UpdateToVersion2013_11_01(db);
+                }
 
-            if (db.DatabaseVersion == "2013.11.01")
-            {
-                UpdateToVersion2013_11_22(db);
-            }
+                if (db.DatabaseVersion == "2013.11.01")
+                {
+                    UpdateToVersion2013_11_22(db);
+                }
 
-            if (db.DatabaseVersion == "2013.11.22")
-            {
-                UpdateToVersion2014_01_21(db);
-            }
-            if (db.DatabaseVersion == "2014.01.21")
-            {
-                UpdateToVersion2014_03_12(db);
-            }
-            if (db.DatabaseVersion == "2014.03.12")
-            {
-                UpdateToVersion2014_06_04(db);
-            }
-            if (db.DatabaseVersion == "2014.06.04")
-            {
-                UpdateToVersion2014_07_02(db);
-            }
-            if (db.DatabaseVersion == "2014.07.02")
-            {
-                UpdateToVersion2014_07_07(db);
-            }
-            if (db.DatabaseVersion == "2014.07.07")
-            {
-                UpdateToVersion2014_07_17(db);
-            }
-            if (db.DatabaseVersion == "2014.07.17")
-            {
-                UpdateToVersion2014_07_24(db);
-            }
-            if (db.DatabaseVersion == "2014.07.24")
-            {
-                UpdateToVersion2014_08_20(db);
-            }
-            if (db.DatabaseVersion == "2014.08.20")
-            {
-                UpdateToVersion2014_09_02(db);
-            }
-            if (db.DatabaseVersion == "2014.09.02")
-            {
-                UpdateToVersion2014_10_01(db);
-            }
-            if (db.DatabaseVersion == "2014.10.01" || db.DatabaseVersion == "2015.01.05")
-            {
-                UpdateToVersion2015_04_28(db);
-            }
+                if (db.DatabaseVersion == "2013.11.22")
+                {
+                    UpdateToVersion2014_01_21(db);
+                }
+                if (db.DatabaseVersion == "2014.01.21")
+                {
+                    UpdateToVersion2014_03_12(db);
+                }
+                if (db.DatabaseVersion == "2014.03.12")
+                {
+                    UpdateToVersion2014_06_04(db);
+                }
+                if (db.DatabaseVersion == "2014.06.04")
+                {
+                    UpdateToVersion2014_07_02(db);
+                }
+                if (db.DatabaseVersion == "2014.07.02")
+                {
+                    UpdateToVersion2014_07_07(db);
+                }
+                if (db.DatabaseVersion == "2014.07.07")
+                {
+                    UpdateToVersion2014_07_17(db);
+                }
+                if (db.DatabaseVersion == "2014.07.17")
+                {
+                    UpdateToVersion2014_07_24(db);
+                }
+                if (db.DatabaseVersion == "2014.07.24")
+                {
+                    UpdateToVersion2014_08_20(db);
+                }
+                if (db.DatabaseVersion == "2014.08.20")
+                {
+                    UpdateToVersion2014_09_02(db);
+                }
+                if (db.DatabaseVersion == "2014.09.02")
+                {
+                    UpdateToVersion2014_10_01(db);
+                }
+                if (db.DatabaseVersion == "2014.10.01" || db.DatabaseVersion == "2015.01.05")
+                {
+                    UpdateToVersion2015_04_28(db);
+                }
 
-            if (db.DatabaseVersion == "2015.04.28")
-            {
-                UpdateToVersion2015_08_03(db);
-            }
+                if (db.DatabaseVersion == "2015.04.28")
+                {
+                    UpdateToVersion2015_08_03(db);
+                }
 
-            if (db.DatabaseVersion == "2015.06.01")
-            {
-                SetDatabaseVersion(db, "2015.08.03");
-            }
+                if (db.DatabaseVersion == "2015.06.01")
+                {
+                    SetDatabaseVersion(db, "2015.08.03");
+                }
 
-            if (db.DatabaseVersion == "2015.08.03")
-            {
-                UpdateToVersion2015_08_19(db);
+                if (db.DatabaseVersion == "2015.08.03")
+                {
+                    UpdateToVersion2015_08_19(db);
+                }
+                if (db.DatabaseVersion == "2015.08.19")
+                {
+                    UpdateToVersion2015_09_01(db);
+                }
+                if (db.DatabaseVersion == "2015.09.01"
+                    || db.DatabaseVersion == "2.0.0"
+                    || db.DatabaseVersion == "2.1.0")
+                {
+                    UpdateTo_2_1_1(db);
+                }
+                if (db.DatabaseVersion.StartsWith("2.1.1"))
+                {
+                    UpdateTo_2_1_2(db);
+                }
+                if (db.DatabaseVersion.StartsWith("2.1.2"))
+                {
+                    UpdateTo_2_2_0(db);
+                }
+                if (db.DatabaseVersion.StartsWith("2.2.")
+                    || db.DatabaseVersion.StartsWith("2.3."))
+                {
+                    UpdateTo_2_4_0(db);
+                }
             }
-            if (db.DatabaseVersion == "2015.08.19")
+            else if (db.DatabaseVersion.StartsWith("3."))
             {
-                UpdateToVersion2015_09_01(db);
+                //no updates yet
             }
-            if (db.DatabaseVersion == "2015.09.01"
-                || db.DatabaseVersion == "2.0.0"
-                || db.DatabaseVersion == "2.1.0")
-            {
-                UpdateTo_2_1_1(db);
-            }
-            if (db.DatabaseVersion.StartsWith("2.1.1"))
-            {
-                UpdateTo_2_1_2(db);
-            }
-            if (db.DatabaseVersion.StartsWith("2.1.2"))
-            {
-                UpdateTo_2_2_0(db);
-            }
-            if(db.DatabaseVersion.StartsWith("2.2."))
-            {
-                UpdateTo_2_3_0(db);
-            }
-            if(db.DatabaseVersion.StartsWith("2.3."))
-            {
-                UpdateTo_2_4_0(db);
-            }
-
 
             FixTreeAuditValueFKeyErrors(db);
 
             CleanupErrorLog(db);
+        }
+
+        public static void UpdateMajorVersion(DAL db)
+        {
+            var version = db.DatabaseVersion;
+
+            if(version.StartsWith("2"))
+            {
+                UpdateTo_3_0(db);
+            }
         }
 
         private static void UpdateToVersion2013_05_30(DAL db)
@@ -1178,6 +1191,26 @@ ValidGrades TEXT);");
         }
 
 
+
+        private static void UpdateTo_2_4_0(DAL db)
+        {
+            db.BeginTransaction();
+            try
+            {
+                db.AddField("TreeCalculatedValues", new ColumnInfo() { Name = "TipwoodVolume", DBType = System.Data.DbType.Double });
+                db.AddField("LCD", new ColumnInfo() { Name = "SumTipwood", DBType = System.Data.DbType.Double });
+
+                SetDatabaseVersion(db, "2.4.0");
+                db.CommitTransaction();
+            }
+            catch (Exception e)
+            {
+                db.RollbackTransaction();
+                throw new SchemaUpdateException(db.DatabaseVersion, "2.4.0", e);
+            }
+        }
+
+
         private const string CREATE_TABLE_TALLY_LEDGER_COMMAND =
             "CREATE TABLE TallyLedger " +
             "( " +
@@ -1293,9 +1326,9 @@ ValidGrades TEXT);");
             "LEFT JOIN TreeDefaultValue AS TDV USING (TreeDefaultValue_CN) " +
             "GROUP BY CuttingUnit.Code, Stratum.Code, SampleGroup.Code, ifnull(TDV.Species, 0), ifnull(TDV.LiveDead, 0), Component_CN;";
 
-        private static void UpdateTo_2_3_0(DAL db)
-        {
 
+        public static void UpdateTo_3_0(DAL db)
+        {
             db.Execute("PRAGMA foreign_keys=OFF;");
             db.BeginTransaction();
             try
@@ -1303,34 +1336,15 @@ ValidGrades TEXT);");
                 db.Execute(CREATE_VIEW_TALLY_POPULATION);
                 db.Execute(REBUILD_TREE_TABLE);
                 db.Execute(CREATE_TABLE_TALLY_LEDGER_COMMAND);
-                SetDatabaseVersion(db, "2.3.0");
+                SetDatabaseVersion(db, "3.0.0");
                 db.CommitTransaction();
                 db.Execute("PRAGMA foreign_keys=ON;");
 
             }
-            catch(Exception e)
-            {
-                db.RollbackTransaction();
-                throw new SchemaUpdateException(db.DatabaseVersion, "2.3.0", e);
-            }
-
-        }
-
-        private static void UpdateTo_2_4_0(DAL db)
-        {
-            db.BeginTransaction();
-            try
-            {
-                db.AddField("TreeCalculatedValues", new ColumnInfo() { Name = "TipwoodVolume", DBType = System.Data.DbType.Double });
-                db.AddField("LCD", new ColumnInfo() { Name = "SumTipwood", DBType = System.Data.DbType.Double });
-
-                SetDatabaseVersion(db, "2.4.0");
-                db.CommitTransaction();
-            }
             catch (Exception e)
             {
                 db.RollbackTransaction();
-                throw new SchemaUpdateException(db.DatabaseVersion, "2.4.0", e);
+                throw new SchemaUpdateException(db.DatabaseVersion, "3.0.0", e);
             }
         }
     }

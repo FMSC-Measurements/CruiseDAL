@@ -1,6 +1,6 @@
 Table Name, Deletion Method,Track Creation (Created Date), Track Modification (Modified Date),,TrackRowVersion
 $MinimumCompatibleVersion=0,,,,,
-$DBVersion=2.4.0,,,,,
+$DBVersion=3.0.0,,,,,
 $SchemaVersion=5,,,,,
 !Core Tables,,,,,TRUE
 Sale			,Tombstone,TRUE,TRUE,,
