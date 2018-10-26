@@ -1,12 +1,7 @@
-﻿using CruiseDAL.DataObjects;
-using FluentAssertions;
+﻿using FluentAssertions;
 using FMSC.ORM.SQLite;
 using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Xunit;
 using Xunit.Abstractions;
 
@@ -25,7 +20,6 @@ namespace CruiseDAL.Tests
 
             try
             {
-
                 using (var setup = new SQLiteDatastore(filePath))
                 {
                     setup.Execute(CruiseDAL.Test.SQL.CRUISECREATE_05_30_2013);
@@ -33,6 +27,39 @@ namespace CruiseDAL.Tests
 
                 using (var datastore = new DAL(filePath))
                 {
+                    var semVerActual = new Version(datastore.DatabaseVersion);
+                    var semVerExpected = new Version("2.5.0");
+
+                    semVerActual.Major.Should().Be(semVerExpected.Major);
+                    semVerActual.Minor.Should().Be(semVerExpected.Minor);
+                }
+            }
+            finally
+            {
+                if (File.Exists(filePath))
+                {
+                    File.Delete(filePath);
+                }
+            }
+        }
+
+        [Fact]
+        public void Update_FROM_05_30_2013_to_v3()
+        {
+            var filePath = Path.Combine(TestTempPath, "TestUpdate.cruise");
+
+            try
+            {
+                using (var setup = new SQLiteDatastore(filePath))
+                {
+                    setup.Execute(CruiseDAL.Test.SQL.CRUISECREATE_05_30_2013);
+                }
+
+                using (var datastore = new DAL(filePath))
+                {
+                    CruiseDAL.Updater.CheckNeedsMajorUpdate(datastore).Should().BeTrue();
+                    CruiseDAL.Updater.UpdateMajorVersion(datastore);
+
                     var semVerActual = new Version(datastore.DatabaseVersion);
                     var semVerExpected = new Version(DAL.CURENT_DBVERSION);
 
@@ -42,13 +69,11 @@ namespace CruiseDAL.Tests
             }
             finally
             {
-                if(File.Exists(filePath))
+                if (File.Exists(filePath))
                 {
                     File.Delete(filePath);
                 }
             }
         }
-
-        
     }
 }

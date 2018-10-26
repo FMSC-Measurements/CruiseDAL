@@ -61,36 +61,36 @@ namespace FMSC.Util
         /// <returns>Whatever has been entered into (Settings > Owner Information > Identification > Name)</returns>
         private static string GetUserName()
         {
-            string str = "<Unknown>";
-
 #if NET40
             try
             {
                 RegistryKey key = Registry.CurrentUser.OpenSubKey(@"ControlPanel\Owner");
-                if (key == null) { return str; }
+                if (key == null) { return "<Unknown>"; }
 
-                str = (string)key.GetValue("Name", string.Empty);
-                if (str != string.Empty)
+                var userName = (string)key.GetValue("Name", string.Empty);
+                if (userName != string.Empty)
                 {
-                    return str;
+                    return userName;
                 }
 
                 byte[] bytes = (byte[])key.GetValue("Owner", null);
 
                 if (bytes != null)
                 {
-                    str = Encoding.Unicode.GetString(bytes, 0, 0x48);
-                    str = str.Substring(0, str.IndexOf("\0"));
+                    userName = Encoding.Unicode.GetString(bytes, 0, 0x48);
+                    userName = userName.Substring(0, userName.IndexOf("\0"));
+                    return userName;
                 }
+                else
+                { return "<Unknown>"; }
             }
             catch
             {
+                return "<Unknown>";
             }
 #else
-#warning GetUserName not defined
+            return Environment.UserName;
 #endif
-
-            return str;
         }
 
         /// <summary>
@@ -99,25 +99,24 @@ namespace FMSC.Util
         /// <returns>Whatever has been entered into (Settings > System > About > Device ID > Device Name)</returns>
         public static string GetMachineName()
         {
-            string str = "<Unknown>";
-
 #if NET40
             try
             {
                 RegistryKey key = Registry.LocalMachine.OpenSubKey("Ident");
-                str = key.GetValue("Name").ToString();                
+                var machineName = key.GetValue("Name").ToString();                
                 key.Close();
+                return machineName;
             }
             catch
             {
+                return "<Unknown>";
             }
 #else
-#warning GetMichineName not defined
+            return Environment.MachineName;
 #endif
-
-            return str;
         }
 
+#if NetCF
         /// <summary>
         /// 
         /// </summary>
@@ -126,7 +125,6 @@ namespace FMSC.Util
         {
             string str = "<Unknown>";
 
-#if NET40
             try
             {
                 RegistryKey key = Registry.LocalMachine.OpenSubKey("Ident");
@@ -138,12 +136,10 @@ namespace FMSC.Util
             {
             }
 
-#else
-#warning GetMachineDescription not defined
-#endif
-
             return str;
         }
-        #endregion
+#endif
+
+#endregion
     }
 }

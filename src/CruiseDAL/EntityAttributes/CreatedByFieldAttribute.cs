@@ -44,8 +44,6 @@ namespace FMSC.ORM.EntityModel.Attributes
 #else //full framework
             return Environment.UserName + " on " + System.Environment.MachineName;
 #endif
-
-            //return Environment.UserName + " on " + System.Windows.Forms.SystemInformation.ComputerName;
         }
     }
 }

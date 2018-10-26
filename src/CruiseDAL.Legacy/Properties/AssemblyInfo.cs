@@ -29,5 +29,5 @@ using System.Runtime.InteropServices;
 //      Build Number
 //      Revision
 //
-[assembly: AssemblyVersion(CruiseDAL.DAL.CURENT_DBVERSION + ".1")]
+[assembly: AssemblyVersion(CruiseDAL.DAL.CURENT_DBVERSION + ".2")]
 

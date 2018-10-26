@@ -7,7 +7,7 @@
   <PropertyGroup Label="Assembily Info">
     <AssemblyName>CruiseDAL</AssemblyName>
     <RootNamespace>CruiseDAL</RootNamespace>
-    <Version>3.0.0.1</Version>    
+    <Version>3.0.0.2</Version>    
   </PropertyGroup>
 
   <ItemGroup Label="Project References">

@@ -143,10 +143,9 @@ namespace CruiseDAL
                 {
                     UpdateTo_2_2_0(db);
                 }
-                if (db.DatabaseVersion.StartsWith("2.2.")
-                    || db.DatabaseVersion.StartsWith("2.3."))
+                if (db.DatabaseVersion.StartsWith("2.2."))
                 {
-                    UpdateTo_2_4_0(db);
+                    UpdateTo_2_5_0(db);
                 }
             }
             else if (db.DatabaseVersion.StartsWith("3."))
@@ -1192,7 +1191,7 @@ ValidGrades TEXT);");
 
 
 
-        private static void UpdateTo_2_4_0(DAL db)
+        private static void UpdateTo_2_5_0(DAL db)
         {
             db.BeginTransaction();
             try
@@ -1200,13 +1199,13 @@ ValidGrades TEXT);");
                 db.AddField("TreeCalculatedValues", new ColumnInfo() { Name = "TipwoodVolume", DBType = System.Data.DbType.Double });
                 db.AddField("LCD", new ColumnInfo() { Name = "SumTipwood", DBType = System.Data.DbType.Double });
 
-                SetDatabaseVersion(db, "2.4.0");
+                SetDatabaseVersion(db, "2.5.0");
                 db.CommitTransaction();
             }
             catch (Exception e)
             {
                 db.RollbackTransaction();
-                throw new SchemaUpdateException(db.DatabaseVersion, "2.4.0", e);
+                throw new SchemaUpdateException(db.DatabaseVersion, "2.5.0", e);
             }
         }
 

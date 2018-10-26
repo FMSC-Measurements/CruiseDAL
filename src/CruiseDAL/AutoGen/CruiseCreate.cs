@@ -845,7 +845,7 @@ JOIN Tally USING (Tally_CN)
 GROUP BY CuttingUnit_CN, SampleGroup_CN, ifnull(TreeDefaultValue_CN, 0);
 
 
-INSERT INTO Globals (Block, Key, Value) VALUES ('Database', 'Version', '2.4.0'); 
+INSERT INTO Globals (Block, Key, Value) VALUES ('Database', 'Version', '3.0.0'); 
 PRAGMA user_version = 5;";
 	}//END CLASS
 }//END NAMESPACE
