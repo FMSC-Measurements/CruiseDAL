@@ -457,6 +457,23 @@ namespace CruiseDAL.DataObjects
 		        this.NotifyPropertyChanged(CUTTINGUNIT.TALLYHISTORY);
 		    }
 		}
+		private String _rx ;
+		[XmlElement]
+		[Field(Name = "Rx")]
+		public virtual String Rx
+		{
+		    get 
+		    { 
+		                return _rx; 
+		    }
+		    set 
+		    {
+		        if(_rx == value) { return; }
+		        _rx = value;
+		        this.ValidateProperty(CUTTINGUNIT.RX, _rx);
+		        this.NotifyPropertyChanged(CUTTINGUNIT.RX);
+		    }
+		}
 
 		[XmlIgnore]
 		[CreatedByField()]
@@ -489,6 +506,7 @@ namespace CruiseDAL.DataObjects
 			isValid = ValidateProperty("LoggingMethod", this.LoggingMethod) && isValid;
 			isValid = ValidateProperty("PaymentUnit", this.PaymentUnit) && isValid;
 			isValid = ValidateProperty("TallyHistory", this.TallyHistory) && isValid;
+			isValid = ValidateProperty("Rx", this.Rx) && isValid;
 			return isValid;
 		}
 		public override void SetValues(DataObject obj)
@@ -505,6 +523,7 @@ namespace CruiseDAL.DataObjects
 			LoggingMethod = obj.LoggingMethod;
 			PaymentUnit = obj.PaymentUnit;
 			TallyHistory = obj.TallyHistory;
+			Rx = obj.Rx;
 		}
 	}
 	[EntitySource(SourceName = "Stratum")]
@@ -660,6 +679,23 @@ namespace CruiseDAL.DataObjects
 		        this.NotifyPropertyChanged(STRATUM.KZ3PPNT);
 		    }
 		}
+		private Int64 _samplingfrequency ;
+		[XmlElement]
+		[Field(Name = "SamplingFrequency")]
+		public virtual Int64 SamplingFrequency
+		{
+		    get 
+		    { 
+		                return _samplingfrequency; 
+		    }
+		    set 
+		    {
+		        if(_samplingfrequency == value) { return; }
+		        _samplingfrequency = value;
+		        this.ValidateProperty(STRATUM.SAMPLINGFREQUENCY, _samplingfrequency);
+		        this.NotifyPropertyChanged(STRATUM.SAMPLINGFREQUENCY);
+		    }
+		}
 		private String _hotkey ;
 		[XmlElement]
 		[Field(Name = "Hotkey")]
@@ -777,6 +813,7 @@ namespace CruiseDAL.DataObjects
 			isValid = ValidateProperty("BasalAreaFactor", this.BasalAreaFactor) && isValid;
 			isValid = ValidateProperty("FixedPlotSize", this.FixedPlotSize) && isValid;
 			isValid = ValidateProperty("KZ3PPNT", this.KZ3PPNT) && isValid;
+			isValid = ValidateProperty("SamplingFrequency", this.SamplingFrequency) && isValid;
 			isValid = ValidateProperty("Hotkey", this.Hotkey) && isValid;
 			isValid = ValidateProperty("FBSCode", this.FBSCode) && isValid;
 			isValid = ValidateProperty("YieldComponent", this.YieldComponent) && isValid;
@@ -798,6 +835,7 @@ namespace CruiseDAL.DataObjects
 			BasalAreaFactor = obj.BasalAreaFactor;
 			FixedPlotSize = obj.FixedPlotSize;
 			KZ3PPNT = obj.KZ3PPNT;
+			SamplingFrequency = obj.SamplingFrequency;
 			Hotkey = obj.Hotkey;
 			FBSCode = obj.FBSCode;
 			YieldComponent = obj.YieldComponent;
@@ -2417,6 +2455,23 @@ namespace CruiseDAL.DataObjects
 		        this.NotifyPropertyChanged(PLOT.BLOB);
 		    }
 		}
+		private Int64 _threeprandomvalue ;
+		[XmlElement]
+		[Field(Name = "ThreePRandomValue")]
+		public virtual Int64 ThreePRandomValue
+		{
+		    get 
+		    { 
+		                return _threeprandomvalue; 
+		    }
+		    set 
+		    {
+		        if(_threeprandomvalue == value) { return; }
+		        _threeprandomvalue = value;
+		        this.ValidateProperty(PLOT.THREEPRANDOMVALUE, _threeprandomvalue);
+		        this.NotifyPropertyChanged(PLOT.THREEPRANDOMVALUE);
+		    }
+		}
 
 		[XmlIgnore]
 		[CreatedByField()]
@@ -2455,6 +2510,7 @@ namespace CruiseDAL.DataObjects
 			isValid = ValidateProperty("ZCoordinate", this.ZCoordinate) && isValid;
 			isValid = ValidateProperty("MetaData", this.MetaData) && isValid;
 			isValid = ValidateProperty("Blob", this.Blob) && isValid;
+			isValid = ValidateProperty("ThreePRandomValue", this.ThreePRandomValue) && isValid;
 			isValid = ValidateProperty("Stratum_CN", this.Stratum_CN) && isValid ;
 			isValid = ValidateProperty("CuttingUnit_CN", this.CuttingUnit_CN) && isValid ;
 			return isValid;
@@ -2479,6 +2535,7 @@ namespace CruiseDAL.DataObjects
 			ZCoordinate = obj.ZCoordinate;
 			MetaData = obj.MetaData;
 			Blob = obj.Blob;
+			ThreePRandomValue = obj.ThreePRandomValue;
 		}
 	}
 	[EntitySource(SourceName = "Tree")]

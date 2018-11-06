@@ -1196,8 +1196,11 @@ ValidGrades TEXT);");
             db.BeginTransaction();
             try
             {
-                db.AddField("TreeCalculatedValues", new ColumnInfo() { Name = "TipwoodVolume", DBType = System.Data.DbType.Double });
-                db.AddField("LCD", new ColumnInfo() { Name = "SumTipwood", DBType = System.Data.DbType.Double });
+                db.Execute("ALTER TABLE TreeCalculatedValues ADD COLUMN TipwoodVolume REAL Default 0.0;");
+                db.Execute("ALTER TABLE LCD ADD COLUMN SumTipwood DOUBLE Default 0.0;");
+                db.Execute("ALTER TABLE CuttingUnit  ADD COLUMN Rx TEXT;");
+                db.Execute("ALTER TABLE Stratum ADD COLUMN SamplingFrequency INTEGER Default 0;");
+                db.Execute("ALTER TABLE Plot ADD COLUMN ThreePRandomValue INTEGER Default 0;");
 
                 SetDatabaseVersion(db, "2.5.0");
                 db.CommitTransaction();

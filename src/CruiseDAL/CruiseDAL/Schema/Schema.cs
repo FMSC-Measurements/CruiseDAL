@@ -34,8 +34,9 @@ namespace CruiseDAL.Schema
 		public const string LOGGINGMETHOD = "LoggingMethod";
 		public const string PAYMENTUNIT = "PaymentUnit";
 		public const string TALLYHISTORY = "TallyHistory";
-		public static string[] _ALL = { CUTTINGUNIT_CN, CODE, AREA, DESCRIPTION, LOGGINGMETHOD, PAYMENTUNIT, TALLYHISTORY };
-		public enum CUTTINGUNIT_FIELDS { CuttingUnit_CN, Code, Area, Description, LoggingMethod, PaymentUnit, TallyHistory };
+		public const string RX = "Rx";
+		public static string[] _ALL = { CUTTINGUNIT_CN, CODE, AREA, DESCRIPTION, LOGGINGMETHOD, PAYMENTUNIT, TALLYHISTORY, RX };
+		public enum CUTTINGUNIT_FIELDS { CuttingUnit_CN, Code, Area, Description, LoggingMethod, PaymentUnit, TallyHistory, Rx };
 	}
 
 	public static class STRATUM
@@ -48,13 +49,14 @@ namespace CruiseDAL.Schema
 		public const string BASALAREAFACTOR = "BasalAreaFactor";
 		public const string FIXEDPLOTSIZE = "FixedPlotSize";
 		public const string KZ3PPNT = "KZ3PPNT";
+		public const string SAMPLINGFREQUENCY = "SamplingFrequency";
 		public const string HOTKEY = "Hotkey";
 		public const string FBSCODE = "FBSCode";
 		public const string YIELDCOMPONENT = "YieldComponent";
 		public const string MONTH = "Month";
 		public const string YEAR = "Year";
-		public static string[] _ALL = { STRATUM_CN, CODE, DESCRIPTION, METHOD, BASALAREAFACTOR, FIXEDPLOTSIZE, KZ3PPNT, HOTKEY, FBSCODE, YIELDCOMPONENT, MONTH, YEAR };
-		public enum STRATUM_FIELDS { Stratum_CN, Code, Description, Method, BasalAreaFactor, FixedPlotSize, KZ3PPNT, Hotkey, FBSCode, YieldComponent, Month, Year };
+		public static string[] _ALL = { STRATUM_CN, CODE, DESCRIPTION, METHOD, BASALAREAFACTOR, FIXEDPLOTSIZE, KZ3PPNT, SAMPLINGFREQUENCY, HOTKEY, FBSCODE, YIELDCOMPONENT, MONTH, YEAR };
+		public enum STRATUM_FIELDS { Stratum_CN, Code, Description, Method, BasalAreaFactor, FixedPlotSize, KZ3PPNT, SamplingFrequency, Hotkey, FBSCode, YieldComponent, Month, Year };
 	}
 
 	public static class CUTTINGUNITSTRATUM
@@ -147,8 +149,9 @@ namespace CruiseDAL.Schema
 		public const string ZCOORDINATE = "ZCoordinate";
 		public const string METADATA = "MetaData";
 		public const string BLOB = "Blob";
-		public static string[] _ALL = { PLOT_CN, PLOT_GUID, STRATUM_CN, CUTTINGUNIT_CN, PLOTNUMBER, ISEMPTY, SLOPE, KPI, ASPECT, REMARKS, XCOORDINATE, YCOORDINATE, ZCOORDINATE, METADATA, BLOB };
-		public enum PLOT_FIELDS { Plot_CN, Plot_GUID, Stratum_CN, CuttingUnit_CN, PlotNumber, IsEmpty, Slope, KPI, Aspect, Remarks, XCoordinate, YCoordinate, ZCoordinate, MetaData, Blob };
+		public const string THREEPRANDOMVALUE = "ThreePRandomValue";
+		public static string[] _ALL = { PLOT_CN, PLOT_GUID, STRATUM_CN, CUTTINGUNIT_CN, PLOTNUMBER, ISEMPTY, SLOPE, KPI, ASPECT, REMARKS, XCOORDINATE, YCOORDINATE, ZCOORDINATE, METADATA, BLOB, THREEPRANDOMVALUE };
+		public enum PLOT_FIELDS { Plot_CN, Plot_GUID, Stratum_CN, CuttingUnit_CN, PlotNumber, IsEmpty, Slope, KPI, Aspect, Remarks, XCoordinate, YCoordinate, ZCoordinate, MetaData, Blob, ThreePRandomValue };
 	}
 
 	public static class TREE

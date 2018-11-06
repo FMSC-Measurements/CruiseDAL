@@ -56,7 +56,7 @@ BEGIN
 END; 
  
 CREATE TRIGGER OnUpdateCuttingUnit 
-AFTER UPDATE OF CuttingUnit_CN, Code, Area, Description, LoggingMethod, PaymentUnit, TallyHistory 
+AFTER UPDATE OF CuttingUnit_CN, Code, Area, Description, LoggingMethod, PaymentUnit, TallyHistory, Rx 
 ON CuttingUnit 
 BEGIN
 	UPDATE CuttingUnit 
@@ -66,7 +66,7 @@ END;
 
  
 CREATE TRIGGER OnUpdateCuttingUnitRowVersion AFTER UPDATE 
-OF CuttingUnit_CN, Code, Area, Description, LoggingMethod, PaymentUnit, TallyHistory 
+OF CuttingUnit_CN, Code, Area, Description, LoggingMethod, PaymentUnit, TallyHistory, Rx 
 ON CuttingUnit
 BEGIN 
 	UPDATE CuttingUnit SET RowVersion = OLD.RowVersion + 1 
@@ -92,7 +92,7 @@ BEGIN
 END; 
  
 CREATE TRIGGER OnUpdateStratum 
-AFTER UPDATE OF Stratum_CN, Code, Description, Method, BasalAreaFactor, FixedPlotSize, KZ3PPNT, Hotkey, FBSCode, YieldComponent, Month, Year 
+AFTER UPDATE OF Stratum_CN, Code, Description, Method, BasalAreaFactor, FixedPlotSize, KZ3PPNT, SamplingFrequency, Hotkey, FBSCode, YieldComponent, Month, Year 
 ON Stratum 
 BEGIN
 	UPDATE Stratum 
@@ -102,7 +102,7 @@ END;
 
  
 CREATE TRIGGER OnUpdateStratumRowVersion AFTER UPDATE 
-OF Stratum_CN, Code, Description, Method, BasalAreaFactor, FixedPlotSize, KZ3PPNT, Hotkey, FBSCode, YieldComponent, Month, Year 
+OF Stratum_CN, Code, Description, Method, BasalAreaFactor, FixedPlotSize, KZ3PPNT, SamplingFrequency, Hotkey, FBSCode, YieldComponent, Month, Year 
 ON Stratum
 BEGIN 
 	UPDATE Stratum SET RowVersion = OLD.RowVersion + 1 
@@ -218,7 +218,7 @@ BEGIN
 END; 
  
 CREATE TRIGGER OnUpdatePlot 
-AFTER UPDATE OF Plot_CN, Plot_GUID, Stratum_CN, CuttingUnit_CN, PlotNumber, IsEmpty, Slope, KPI, Aspect, Remarks, XCoordinate, YCoordinate, ZCoordinate, MetaData, Blob 
+AFTER UPDATE OF Plot_CN, Plot_GUID, Stratum_CN, CuttingUnit_CN, PlotNumber, IsEmpty, Slope, KPI, Aspect, Remarks, XCoordinate, YCoordinate, ZCoordinate, MetaData, Blob, ThreePRandomValue 
 ON Plot 
 BEGIN
 	UPDATE Plot 
@@ -228,7 +228,7 @@ END;
 
  
 CREATE TRIGGER OnUpdatePlotRowVersion AFTER UPDATE 
-OF Plot_CN, Plot_GUID, Stratum_CN, CuttingUnit_CN, PlotNumber, IsEmpty, Slope, KPI, Aspect, Remarks, XCoordinate, YCoordinate, ZCoordinate, MetaData, Blob 
+OF Plot_CN, Plot_GUID, Stratum_CN, CuttingUnit_CN, PlotNumber, IsEmpty, Slope, KPI, Aspect, Remarks, XCoordinate, YCoordinate, ZCoordinate, MetaData, Blob, ThreePRandomValue 
 ON Plot
 BEGIN 
 	UPDATE Plot SET RowVersion = OLD.RowVersion + 1 
