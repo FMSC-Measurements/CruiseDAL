@@ -92,7 +92,7 @@ BEGIN
 END; 
  
 CREATE TRIGGER OnUpdateStratum 
-AFTER UPDATE OF Stratum_CN, Code, Description, Method, BasalAreaFactor, FixedPlotSize, KZ3PPNT, SamplingFrequency, Hotkey, FBSCode, YieldComponent, Month, Year 
+AFTER UPDATE OF Stratum_CN, Code, Description, Method, BasalAreaFactor, FixedPlotSize, KZ3PPNT, SamplingFrequency, Hotkey, FBSCode, YieldComponent, VolumeFactor, Month, Year 
 ON Stratum 
 BEGIN
 	UPDATE Stratum 
@@ -102,7 +102,7 @@ END;
 
  
 CREATE TRIGGER OnUpdateStratumRowVersion AFTER UPDATE 
-OF Stratum_CN, Code, Description, Method, BasalAreaFactor, FixedPlotSize, KZ3PPNT, SamplingFrequency, Hotkey, FBSCode, YieldComponent, Month, Year 
+OF Stratum_CN, Code, Description, Method, BasalAreaFactor, FixedPlotSize, KZ3PPNT, SamplingFrequency, Hotkey, FBSCode, YieldComponent, VolumeFactor, Month, Year 
 ON Stratum
 BEGIN 
 	UPDATE Stratum SET RowVersion = OLD.RowVersion + 1 

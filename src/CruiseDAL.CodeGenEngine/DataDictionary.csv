@@ -30,6 +30,7 @@ Schema,Table,Column,Type,Primary Key,AutoIncrement,Is Transitional PK,Unique,For
 ,Stratum,Hotkey,TEXT,,,,,,,,,,,,,,,,,
 ,Stratum,FBSCode,TEXT,,,,,,,,,,,,,,,,,
 ,Stratum,YieldComponent,TEXT,,,,,,,,CL,,,,,,,,,
+,Stratum,VolumeFactor,REAL,,,,,,,,0.333,,,,,,,,,
 ,Stratum,Month,INTEGER,,,,,,,,,,1,12,,Month Out of Range,,,,
 ,Stratum,Year,INTEGER,,,,,,,,,,1900,2199,,Year Out of Range,,,,
 ,CuttingUnitStratum,CuttingUnit_CN,INTEGER,,,,X,X,CuttingUnit,X,,,,,,,,,,

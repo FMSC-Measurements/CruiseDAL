@@ -53,10 +53,11 @@ namespace CruiseDAL.Schema
 		public const string HOTKEY = "Hotkey";
 		public const string FBSCODE = "FBSCode";
 		public const string YIELDCOMPONENT = "YieldComponent";
+		public const string VOLUMEFACTOR = "VolumeFactor";
 		public const string MONTH = "Month";
 		public const string YEAR = "Year";
-		public static string[] _ALL = { STRATUM_CN, CODE, DESCRIPTION, METHOD, BASALAREAFACTOR, FIXEDPLOTSIZE, KZ3PPNT, SAMPLINGFREQUENCY, HOTKEY, FBSCODE, YIELDCOMPONENT, MONTH, YEAR };
-		public enum STRATUM_FIELDS { Stratum_CN, Code, Description, Method, BasalAreaFactor, FixedPlotSize, KZ3PPNT, SamplingFrequency, Hotkey, FBSCode, YieldComponent, Month, Year };
+		public static string[] _ALL = { STRATUM_CN, CODE, DESCRIPTION, METHOD, BASALAREAFACTOR, FIXEDPLOTSIZE, KZ3PPNT, SAMPLINGFREQUENCY, HOTKEY, FBSCODE, YIELDCOMPONENT, VOLUMEFACTOR, MONTH, YEAR };
+		public enum STRATUM_FIELDS { Stratum_CN, Code, Description, Method, BasalAreaFactor, FixedPlotSize, KZ3PPNT, SamplingFrequency, Hotkey, FBSCode, YieldComponent, VolumeFactor, Month, Year };
 	}
 
 	public static class CUTTINGUNITSTRATUM

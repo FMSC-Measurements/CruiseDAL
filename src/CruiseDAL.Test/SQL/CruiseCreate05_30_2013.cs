@@ -1,7 +1,7 @@
 ﻿
-namespace CruiseDAL.Test
+namespace CruiseDAL.Tests
 {
-    public static class SQL
+    public static partial class SQL
     {
         public static string CRUISECREATE_05_30_2013 =
             @"

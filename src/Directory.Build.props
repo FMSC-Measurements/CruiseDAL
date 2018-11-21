@@ -1,6 +1,6 @@
 <Project>
 <PropertyGroup Label="CustomProperties">
-	<CruiseDALVersion>3.0.0.3</CruiseDALVersion>
+	<CruiseDALVersion>3.0.0.4</CruiseDALVersion>
 </PropertyGroup>
 
 <PropertyGroup Label="Package Info" >

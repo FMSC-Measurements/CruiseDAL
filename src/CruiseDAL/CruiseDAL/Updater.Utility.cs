@@ -7,7 +7,6 @@ namespace CruiseDAL
 {
     public static partial class Updater
     {
-
         public static void SetDatabaseVersion(DAL db, string newVersion)
         {
             string command = String.Format("UPDATE Globals SET Value = '{0}' WHERE Block = 'Database' AND Key = 'Version';", newVersion);
@@ -31,7 +30,7 @@ namespace CruiseDAL
         {
             var version = dal.DatabaseVersion;
 
-            if(version.StartsWith("2"))
+            if (version.StartsWith("2"))
             {
                 return true;
             }
@@ -45,7 +44,7 @@ namespace CruiseDAL
         {
             var version = dal.DatabaseVersion;
 
-            if (version.StartsWith("2") 
+            if (version.StartsWith("2")
                 || version.StartsWith("3."))
             {
                 return true;
@@ -84,42 +83,10 @@ namespace CruiseDAL
             }
         }
 
-        public static void RebuildTable(DatastoreRedux db, String tableName, String newTableDef, String columnList)
+        public static string GetTriggerDDL(DatastoreRedux db, string tableName)
         {
-            //get all triggers associated with table so we can recreate them later
             var getTriggers = String.Format("SELECT group_concat(sql,';\r\n') FROM sqlite_master WHERE tbl_name LIKE '{0}' and type LIKE 'trigger';", tableName);
-            var triggers = db.ExecuteScalar(getTriggers) as string;
-            db.BeginTransaction();
-            try
-            {
-                db.Execute("PRAGMA foreign_keys = off;");
-                db.Execute("ALTER TABLE " + tableName + " RENAME TO " + tableName + "temp;");
-
-                //create rebuilt table
-                db.Execute(newTableDef + ";");
-
-                //copy data from existing table to rebuilt table
-                db.Execute(
-                    "INSERT INTO " + tableName +
-                    " ( " + columnList + ") " +
-                    "SELECT " + columnList + " FROM " + tableName + "temp;");
-
-                db.Execute("DROP TABLE " + tableName + "temp;");
-
-                //recreate triggers
-                if (triggers != null)
-                {
-                    db.Execute(triggers);
-                }
-
-                db.Execute("PRAGMA foreign_keys = on;");
-                db.CommitTransaction();
-            }
-            catch
-            {
-                db.RollbackTransaction();
-                throw;
-            }
+            return db.ExecuteScalar(getTriggers) as string;
         }
     }
 }

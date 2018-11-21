@@ -57,6 +57,7 @@ namespace CruiseDAL.Schema
 				Hotkey TEXT,
 				FBSCode TEXT,
 				YieldComponent TEXT Default 'CL',
+				VolumeFactor REAL Default 0.0,
 				Month INTEGER Default 0,
 				Year INTEGER Default 0,
 				CreatedBy TEXT DEFAULT 'none',

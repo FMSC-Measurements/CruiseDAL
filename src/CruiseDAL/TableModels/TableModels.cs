@@ -747,6 +747,23 @@ namespace CruiseDAL.DataObjects
 		        this.NotifyPropertyChanged(STRATUM.YIELDCOMPONENT);
 		    }
 		}
+		private float _volumefactor  = 0.333f;
+		[XmlElement]
+		[Field(Name = "VolumeFactor")]
+		public virtual float VolumeFactor
+		{
+		    get 
+		    { 
+		                return _volumefactor; 
+		    }
+		    set 
+		    {
+		        if(Math.Abs(_volumefactor - value) < float.Epsilon) { return; }
+		        _volumefactor = value;
+		        this.ValidateProperty(STRATUM.VOLUMEFACTOR, _volumefactor);
+		        this.NotifyPropertyChanged(STRATUM.VOLUMEFACTOR);
+		    }
+		}
 		private Int64 _month ;
 		[XmlElement]
 		[Field(Name = "Month")]
@@ -817,6 +834,7 @@ namespace CruiseDAL.DataObjects
 			isValid = ValidateProperty("Hotkey", this.Hotkey) && isValid;
 			isValid = ValidateProperty("FBSCode", this.FBSCode) && isValid;
 			isValid = ValidateProperty("YieldComponent", this.YieldComponent) && isValid;
+			isValid = ValidateProperty("VolumeFactor", this.VolumeFactor) && isValid;
 			isValid = ValidateProperty("Month", this.Month) && isValid;
 			isValid = ValidateProperty("Year", this.Year) && isValid;
 			return isValid;
@@ -839,6 +857,7 @@ namespace CruiseDAL.DataObjects
 			Hotkey = obj.Hotkey;
 			FBSCode = obj.FBSCode;
 			YieldComponent = obj.YieldComponent;
+			VolumeFactor = obj.VolumeFactor;
 			Month = obj.Month;
 			Year = obj.Year;
 		}
