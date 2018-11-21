@@ -1,4 +1,4 @@
-﻿<#@ template language="C#v3.5" debug="True" hostspecific="True" #>
+﻿<#@ template language="C#" debug="True" hostspecific="True" #>
 <#@ Assembly Name="C:\tmp\CruiseDAL.CodeGenEngine.exe" #>
 <#@ import namespace="System.Diagnostics" #>
 <#@ import namespace="System.IO" #>
