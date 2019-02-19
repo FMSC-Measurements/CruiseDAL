@@ -490,23 +490,26 @@ ValidGrades TEXT);");
             }
         }
 
-        private const string CREATE_TABLE_TALLY_LEDGER_COMMAND =
-            "CREATE TABLE TallyLedger " +
-            "( " +
-            "TallyLedgerID TEXT PRIMARY KEY, " + //guid
-            "UnitCode TEXT NOT NULL, " +
-            //"PlotNumber INTEGER, " + // no plot number, currently we are only using tally ledger for tree based
-            "StratumCode TEXT NOT NULL, " +
-            "SampleGroupCode TEXT NOT NULL, " +
-            "Species TEXT, " +
-            "LiveDead TEXT, " +
-            "TreeCount INTEGER NOT NULL, " +
-            "KPI INTEGER DEFAULT 0, " +
-            "ThreePRandomValue INTEGER DEFAULT 0, " +
-            "Tree_GUID TEXT REFERENCES Tree (Tree_GUID) ON DELETE CASCADE, " +
-            "TimeStamp TEXT DEFAULT (datetime('now', 'localtime')), " +
-            "Signature TEXT " +
-            ");";
+        //private const string CREATE_TABLE_TALLY_LEDGER_COMMAND =
+        //    "CREATE TABLE TallyLedger " +
+        //    "( " +
+        //    "TallyLedgerID TEXT PRIMARY KEY, " + //guid
+        //    "UnitCode TEXT NOT NULL, " +
+        //    "StratumCode TEXT NOT NULL, " +
+        //    "SampleGroupCode TEXT NOT NULL, " +
+        //    "PlotNumber INTEGER," +
+        //    "Species TEXT, " +
+        //    "LiveDead TEXT, " +
+        //    "TreeCount INTEGER NOT NULL, " +
+        //    "KPI INTEGER DEFAULT 0, " +
+        //    "ThreePRandomValue INTEGER DEFAULT 0, " +
+        //    "Tree_GUID TEXT REFERENCES Tree (Tree_GUID) ON DELETE CASCADE, " +
+        //    "TimeStamp TEXT DEFAULT (datetime('now', 'localtime')), " +
+        //    "Signature TEXT, " +
+        //    "Reason TEXT, " +
+        //    "Remarks TEXT, " +
+        //    "EntryType TEXT" +
+        //    ");";
 
         private const string REBUILD_TREE_TABLE =
             //"CREATE TEMP TABLE sqlite_master_temp AS SELECT * FROM sqlite_master WHERE Name = 'Tree';\r\n" +
@@ -570,24 +573,22 @@ ValidGrades TEXT);");
             "DROP Table Tree;\r\n" +
             "ALTER Table new_Tree RENAME TO Tree;\r\n";
 
-        private const string CREATE_VIEW_TALLY_POPULATION =
-            "CREATE VIEW TallyPopulation " +
-            "( UnitCode, StratumCode, SampleGroupCode, Species, LiveDead, Description, HotKey) " +
-            "AS " +
-            "SELECT CuttingUnit.Code, Stratum.Code, SampleGroup.Code, TDV.Species, TDV.LiveDead, Tally.Description, Tally.HotKey " +
-            "FROM CountTree " +
-            "JOIN CuttingUnit USING (CuttingUnit_CN) " +
-            "JOIN SampleGroup USING (SampleGroup_CN) " +
-            "JOIN Stratum USING (Stratum_CN) " +
-            "LEFT JOIN TreeDefaultValue AS TDV USING (TreeDefaultValue_CN) " +
-            "JOIN Tally USING (Tally_CN) " +
-            "GROUP BY CuttingUnit_CN, SampleGroup_CN, ifnull(TreeDefaultValue_CN, 0);";
+        //private const string CREATE_VIEW_TALLY_POPULATION =
+        //    "CREATE VIEW TallyPopulation " +
+        //    "( StratumCode, SampleGroupCode, Species, LiveDead, Description, HotKey) " +
+        //    "AS " +
+        //    "SELECT Stratum.Code, SampleGroup.Code, TDV.Species, TDV.LiveDead, Tally.Description, Tally.HotKey  " +
+        //    "FROM CountTree " +
+        //    "JOIN SampleGroup USING (SampleGroup_CN) " +
+        //    "JOIN Stratum USING (Stratum_CN) " +
+        //    "LEFT JOIN TreeDefaultValue AS TDV USING (TreeDefaultValue_CN) " +
+        //    "JOIN Tally USING (Tally_CN) " +
+        //    "GROUP BY SampleGroup_CN, ifnull(TreeDefaultValue_CN, '');";
 
         private const string INITIALIZE_TALLY_LEDGER_FROM_COUNTTREE =
             "INSERT INTO TallyLedger " +
-            "(TallyLedgerID, UnitCode, StratumCode, SampleGroupCode, Species, LiveDead, TreeCount, KPI, Signature)" +
-            "VALUES " +
-            "(SELECT " +
+            "(TallyLedgerID, UnitCode, StratumCode, SampleGroupCode, Species, LiveDead, TreeCount, KPI, EntryType) " +
+            "SELECT " +
             "(lower(hex(randomblob(4))) || '-' || lower(hex(randomblob(2))) || '-4' || substr(lower(hex(randomblob(2))),2) || '-' || substr('89ab',abs(random()) % 4 + 1, 1) || substr(lower(hex(randomblob(2))),2) || '-' || lower(hex(randomblob(6)))), " +
             "CuttingUnit.Code AS UnitCode, " +
             "Stratum.Code AS StratumCode, " +
@@ -596,6 +597,7 @@ ValidGrades TEXT);");
             "TDV.LiveDead AS LiveDead, " +
             "Sum(TreeCount) AS TreeCount, " +
             "Sum(SumKPI) AS SumKPI, " +
+            "'utility' AS EntryType " +
             "FROM CountTree " +
             "JOIN CuttingUnit USING (CuttingUnit_CN) " +
             "JOIN SampleGroup USING (SampleGroup_CN) " +
@@ -609,9 +611,10 @@ ValidGrades TEXT);");
             db.BeginTransaction();
             try
             {
-                db.Execute(CREATE_VIEW_TALLY_POPULATION);
+                db.Execute(Schema.Schema.CREATE_VIEW_TALLY_POPULATION);
                 db.Execute(REBUILD_TREE_TABLE);
-                db.Execute(CREATE_TABLE_TALLY_LEDGER_COMMAND);
+                db.Execute(Schema.Schema.CREATE_TABLE_TALLY_LEDGER_COMMAND);
+                db.Execute(INITIALIZE_TALLY_LEDGER_FROM_COUNTTREE);
                 SetDatabaseVersion(db, "3.0.0");
                 db.CommitTransaction();
                 db.Execute("PRAGMA foreign_keys=ON;");

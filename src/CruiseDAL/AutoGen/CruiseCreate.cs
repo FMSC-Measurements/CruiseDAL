@@ -803,23 +803,13 @@ RecordID INTEGER ,
 RecordGUID TEXT, 
 TableName TEXT NOT NULL COLLATE NOCASE,
 Data TEXT, 
-DeletedDate DATETIME NON NULL);
+DeletedDate DATETIME NON NULL);" +
 
-CREATE TABLE TallyLedger (
-	TallyLedgerID TEXT PRIMARY KEY,
-	UnitCode TEXT,
-	StratumCode TEXT,
-	SampleGroupCode TEXT,
-	Species TEXT,
-	LiveDead TEXT,
-	TreeCount INTEGER NOT NULL,
-	KPI INTEGER Default 0,
-	ThreePRandomValue INTEGER Default 0,
-	Tree_GUID TEXT REFERENCES Tree (Tree_GUID) ON DELETE CASCADE,
-	TimeStamp TEXT DEFAULT (datetime('now', 'localtime')),
-	Signature TEXT);
+CREATE_TABLE_TALLY_LEDGER_COMMAND +
 
-CREATE VIEW CountTree_View AS 
+
+
+@"CREATE VIEW CountTree_View AS 
 SELECT Stratum.Code as StratumCode,
 Stratum.Method as Method, 
 SampleGroup.Code as SampleGroupCode,
@@ -834,23 +824,47 @@ ifnull(Area, CuttingUnit.Area) as Area,
 CuttingUnitStratum.* 
 FROM CuttingUnitStratum 
 JOIN CuttingUnit USING (CuttingUnit_CN) 
-JOIN Stratum USING (Stratum_CN);
+JOIN Stratum USING (Stratum_CN);" +
 
-CREATE VIEW TallyPopulation 
-( UnitCode, StratumCode, SampleGroupCode, Species, LiveDead, Description, HotKey) 
-AS 
-SELECT CuttingUnit.Code, Stratum.Code, SampleGroup.Code, TDV.Species, TDV.LiveDead, Tally.Description, Tally.HotKey 
-FROM CountTree 
-JOIN CuttingUnit USING (CuttingUnit_CN) 
-JOIN SampleGroup USING (SampleGroup_CN) 
-JOIN Stratum USING (Stratum_CN) 
-LEFT JOIN TreeDefaultValue AS TDV USING (TreeDefaultValue_CN) 
-JOIN Tally USING (Tally_CN) 
-GROUP BY CuttingUnit_CN, SampleGroup_CN, ifnull(TreeDefaultValue_CN, 0);
+CREATE_VIEW_TALLY_POPULATION +
 
-
+@"
 INSERT INTO Globals (Block, Key, Value) VALUES ('Database', 'Version', '3.0.0'); 
 PRAGMA user_version = 5;";
+
+	internal const string CREATE_TABLE_TALLY_LEDGER_COMMAND =
+		"CREATE TABLE TallyLedger ( " +
+			"TallyLedgerID TEXT PRIMARY KEY, " +
+			"UnitCode TEXT NOT NULL, " +
+			"StratumCode TEXT NOT NULL, " +
+			"SampleGroupCode TEXT NOT NULL, " +
+			"PlotNumber INTEGER, " +
+			"Species TEXT, " +
+			"LiveDead TEXT, " +
+			"TreeCount INTEGER NOT NULL, " +
+			"KPI INTEGER Default 0, " +
+			"ThreePRandomValue INTEGER Default 0, " +
+			"Tree_GUID TEXT REFERENCES Tree (Tree_GUID) ON DELETE CASCADE, " +
+			"TimeStamp TEXT DEFAULT (datetime('now', 'localtime')), " +
+			"Signature TEXT, " +
+			"Reason TEXT, " +
+			"Remarks TEXT, " +
+			"EntryType TEXT " +
+		");";
+
+	internal const string CREATE_VIEW_TALLY_POPULATION =  
+		"CREATE VIEW TallyPopulation "+
+		"( StratumCode, SampleGroupCode, Species, LiveDead, Description, HotKey) " +
+		"AS " + 
+		"SELECT Stratum.Code, SampleGroup.Code, TDV.Species, TDV.LiveDead, Tally.Description, Tally.HotKey " +
+		"FROM CountTree " +
+		"JOIN SampleGroup USING (SampleGroup_CN) " +
+		"JOIN Stratum USING (Stratum_CN) " +
+		"LEFT JOIN TreeDefaultValue AS TDV USING (TreeDefaultValue_CN) " +
+		"JOIN Tally USING (Tally_CN) " +
+		"GROUP BY SampleGroup_CN, ifnull(TreeDefaultValue_CN, '');";
+
+
 	}//END CLASS
 }//END NAMESPACE
 
