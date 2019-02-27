@@ -139,6 +139,48 @@ namespace CruiseDAL
             {/*ignore, in case we want to allow access to a read-only DB*/}
         }
 
+        public void LogMessage(string message, string level)
+        {
+            string appStr = GetCallingProgram();
+            LogMessage(appStr, message, level);
+        }
+
+        private static string GetCallingProgram()
+        {
+#if !NetCF
+            try
+            {
+                return System.Reflection.Assembly.GetEntryAssembly().FullName;
+            }
+            catch
+            {
+                //TODO add error report message so we know when we encounter this exception and what platforms 
+                return AppDomain.CurrentDomain.FriendlyName;
+            }
+#else
+            return AppDomain.CurrentDomain.FriendlyName;
+
+#endif
+        }
+
+        public void LogMessage(string program, string message, string level)
+        {
+            Logger.Log.L(message);
+
+            if (Exists)
+            {
+                Execute("INSERT INTO MessageLog (Program, Message, Level, Date, Time)" +
+                    "VALUES " +
+                    "(@p1, @p2, @p3, @p4, @p5)",
+                    new object[] { program,
+                        message,
+                        level,
+                        DateTime.Now.ToString("yyyy/MM/dd"),
+                        DateTime.Now.ToString("HH:mm") }
+                    );
+            }
+        }
+
         protected static string GetUserInformation()
         {
 #if NetCF

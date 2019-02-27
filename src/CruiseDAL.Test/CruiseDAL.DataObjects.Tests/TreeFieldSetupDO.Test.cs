@@ -1,8 +1,8 @@
-﻿using CruiseDAL.DataObjects;
+﻿using CruiseDAL.Tests;
 using Xunit;
 using Xunit.Abstractions;
 
-namespace CruiseDAL.Tests.CruiseDALDataObjectsTests
+namespace CruiseDAL.DataObjects.Tests
 {
     public class TreeFieldSetupDO_Test : TestBase
     {

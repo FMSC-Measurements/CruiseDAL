@@ -1,5 +1,4 @@
-﻿using CruiseDAL.DataObjects;
-using FluentAssertions;
+﻿using FluentAssertions;
 using System;
 using System.IO;
 using System.Linq;
@@ -70,16 +69,16 @@ namespace CruiseDAL.Tests
         {
             db.DatabaseVersion.Should().Be(CruiseDAL.DAL.CURENT_DBVERSION);
 
-            var messageLogs = db.From<MessageLogDO>().Query().ToArray();
-            var latestMessage = messageLogs.Last();
+            db.ExecuteScalar<int>("SELECT count(*) FROM MessageLog WHERE Program IS NULL or Program = '';")
+                .Should().Be(0);
 
-            latestMessage.Program.Should().NotBeNullOrWhiteSpace();
-            latestMessage.Message.Should().Be("File Opened");
+            db.ExecuteScalar<string>("SELECT Message FROM MessageLog ORDER BY RowID DESC LIMIT 1;")
+                .Should().Be("File Opened");
 
-            var timeStamp = latestMessage.Time;
-            timeStamp.Should().NotBeNullOrWhiteSpace();
-            //assert that file opened message was within the last 30 seconds
-            DateTime.Parse(timeStamp).Subtract(DateTime.Now).TotalSeconds.Should().BeLessThan(30);
+            //var timeStamp = latestMessage.Time;
+            //timeStamp.Should().NotBeNullOrWhiteSpace();
+            ////assert that file opened message was within the last 30 seconds
+            //DateTime.Parse(timeStamp).Subtract(DateTime.Now).TotalSeconds.Should().BeLessThan(30);
 
 
             foreach (var table in CruiseDAL.Schema.Schema.TABLE_NAMES)

@@ -7,7 +7,7 @@ using Xunit;
 using CruiseDAL;
 using FluentAssertions;
 
-namespace FMSCORM.Tests
+namespace CruiseDAL.MappingCollections
 {
     public class MappingCollectionTest
     {

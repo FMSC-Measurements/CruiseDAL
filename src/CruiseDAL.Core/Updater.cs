@@ -241,7 +241,7 @@ JOIN CuttingUnit USING (CuttingUnit_CN)
 JOIN Stratum USING (Stratum_CN);");
 
                 db.Execute("PRAGMA user_version = 1");
-                SetDatabaseVersion(db, "2015.04.28");
+                db.SetDatabaseVersion("2015.04.28");
                 db.CommitTransaction();
             }
             catch (Exception e)
@@ -585,11 +585,27 @@ ValidGrades TEXT);");
         //    "JOIN Tally USING (Tally_CN) " +
         //    "GROUP BY SampleGroup_CN, ifnull(TreeDefaultValue_CN, '');";
 
+        private const string INITIALIZE_TALLYPOPULATION_FROM_COUNTTREE =
+            "INSTER INTO TallyPopulation " +
+            "(CuttingUnitCode, StratumCode, SampleGroupCode, Species, LiveDead, Description, HotKey) " +
+            "SELECT " +
+            "cu.Code AS CuttingUnitCode, " +
+            "st.Code AS StratumCode, " +
+            "sg.Code AS SampleGroupCode, " +
+            "tdv.Species AS Species, " +
+            "tdv.LiveDead AS LiveDead, " +
+            "FROM CountTree " +
+            "JOIN CuttingUnit AS cu USING (CuttingUnit_CN) " +
+            "JOIN SampleGroup AS sg USING (SampleGroup_CN) " +
+            "JOIN Stratum USING (Stratum_CN) " +
+            "LEFT JOIN TreeDefaultValue AS tdv USING (TreeDefaultValue_CN) " +
+            "GROUP BY cu.Code, st.Code, sg.Code, ifnull(tdv.Species, ''), ifnull(tdv.LiveDead, '');";
+
         private const string INITIALIZE_TALLY_LEDGER_FROM_COUNTTREE =
             "INSERT INTO TallyLedger " +
-            "(TallyLedgerID, UnitCode, StratumCode, SampleGroupCode, Species, LiveDead, TreeCount, KPI, EntryType) " +
+            "(TallyLedgerID, CuttingUnitCode, StratumCode, SampleGroupCode, Species, LiveDead, TreeCount, KPI, EntryType) " +
             "SELECT " +
-            "(lower(hex(randomblob(4))) || '-' || lower(hex(randomblob(2))) || '-4' || substr(lower(hex(randomblob(2))),2) || '-' || substr('89ab',abs(random()) % 4 + 1, 1) || substr(lower(hex(randomblob(2))),2) || '-' || lower(hex(randomblob(6)))), " +
+            "'initFromCountTree' | '-' | ifnull(Component_CN, 'master'), " +
             "CuttingUnit.Code AS UnitCode, " +
             "Stratum.Code AS StratumCode, " +
             "SampleGroup.Code AS SampleGroupCode, " +
@@ -598,12 +614,23 @@ ValidGrades TEXT);");
             "Sum(TreeCount) AS TreeCount, " +
             "Sum(SumKPI) AS SumKPI, " +
             "'utility' AS EntryType " +
-            "FROM CountTree " +
-            "JOIN CuttingUnit USING (CuttingUnit_CN) " +
-            "JOIN SampleGroup USING (SampleGroup_CN) " +
-            "JOIN Stratum USING (Stratum_CN) " +
-            "LEFT JOIN TreeDefaultValue AS TDV USING (TreeDefaultValue_CN) " +
-            "GROUP BY CuttingUnit.Code, Stratum.Code, SampleGroup.Code, ifnull(TDV.Species, 0), ifnull(TDV.LiveDead, 0), Component_CN;";
+            "FROM CountTree AS ct " +
+            "JOIN CuttingUnit AS cu USING (CuttingUnit_CN) " +
+            "JOIN SampleGroup AS sg USING (SampleGroup_CN) " +
+            "JOIN Stratum AS st USING (Stratum_CN) " +
+            "LEFT JOIN TreeDefaultValue AS tdv USING (TreeDefaultValue_CN) " +
+            "GROUP BY cu.Code, st.Code, sg.Code, ifnull(tdv.Species, ''), ifnull(tdv.LiveDead, ''), ifnull(ct.Component_CN, 0);";
+
+        private const string INITIALIZE_TALLYLEDGER_FROM_TREE =
+            "WITH measureTrees AS (" +
+            "SELECT tv3.TreeID, tv3.CuttingUnitCode, tp.StratumCode, tp.SampleGroupCode, tp.Species, tp.LiveDead, " +
+            "t.TreeCount, t.KPI, t.STM,  * FROM Tree as t " +
+            "JOIN Tree_V3 as tv3 USING (Tree_CN) " +
+            "JOIN TallyPopulation AS tp ON tp.StratumCode = tv3.StratumCode AND tp.SampleGroupCode = tv3.SampleGroupCode AND (tp.Species = tv3.Species OR tp.Species = '') AND (tp.LiveDead = tv3.LiveDead OR tp.LiveDead = 'default') " +
+            "WHERE t.CountOrMeasure = 'M' OR t.CountOrMeasure = 'm') " +
+            "INSERT INTO TallyLedger " +
+            "(TallyLedgerID, TreeID, CuttingUnitCode, StratumCode, SampleGroupCode, Species, LiveDead, TreeCount, KPI, STM) " +
+            "SELECT 'updateFromTree' | TreeID AS TallyLedgerID, * FROM measureTrees;";
 
         public static void UpdateTo_3_0(DAL db)
         {
@@ -611,9 +638,9 @@ ValidGrades TEXT);");
             db.BeginTransaction();
             try
             {
-                db.Execute(Schema.Schema.CREATE_VIEW_TALLY_POPULATION);
+                //db.Execute(Schema.Schema.CREATE_VIEW_TALLY_POPULATION);
                 db.Execute(REBUILD_TREE_TABLE);
-                db.Execute(Schema.Schema.CREATE_TABLE_TALLY_LEDGER_COMMAND);
+                //db.Execute(Schema.Schema.CREATE_TABLE_TALLY_LEDGER_COMMAND);
                 db.Execute(INITIALIZE_TALLY_LEDGER_FROM_COUNTTREE);
                 SetDatabaseVersion(db, "3.0.0");
                 db.CommitTransaction();

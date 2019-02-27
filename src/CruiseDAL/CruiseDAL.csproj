@@ -1,69 +1,23 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup Label="Build Config">
-    <TargetFrameworks>net40;netstandard20</TargetFrameworks>    
+    <TargetFrameworks>net40;netstandard20</TargetFrameworks>
   </PropertyGroup>
 
   <PropertyGroup Label="Assembily Info">
     <AssemblyName>CruiseDAL</AssemblyName>
     <RootNamespace>CruiseDAL</RootNamespace>
-    <Version>$(CruiseDALVersion)</Version>    
+    <Version>$(CruiseDALVersion)</Version>
   </PropertyGroup>
 
-  <ItemGroup Label="Project References">
-    <ProjectReference Include="..\FMSC.ORM\FMSC.ORM.csproj" />
-  </ItemGroup>
-
-  <ItemGroup Label="Auto Generated Files">
-    <None Update="AutoGen\CreateTriggers.tt">
-      <Generator>TextTemplatingFileGenerator</Generator>
-      <LastGenOutput>CreateTriggers.cs</LastGenOutput>
-    </None>
-    <Compile Update="AutoGen\CreateTriggers.cs">
-      <DesignTime>True</DesignTime>
-      <AutoGen>True</AutoGen>
-      <DependentUpon>CreateTriggers.tt</DependentUpon>
-    </Compile>
-    <None Update="AutoGen\CruiseCreate.tt">
-      <Generator>TextTemplatingFileGenerator</Generator>
-      <LastGenOutput>CruiseCreate.cs</LastGenOutput>
-    </None>
-    <Compile Update="AutoGen\CruiseCreate.cs">
-      <DesignTime>True</DesignTime>
-      <AutoGen>True</AutoGen>
-      <DependentUpon>CruiseCreate.tt</DependentUpon>
-    </Compile>
-    <None Update="AutoGen\DAL.AutoGen.tt">
-      <Generator>TextTemplatingFileGenerator</Generator>
-      <LastGenOutput>DAL.AutoGen.cs</LastGenOutput>
-    </None>
-    <Compile Update="AutoGen\DAL.AutoGen.cs">
-      <DesignTime>True</DesignTime>
-      <AutoGen>True</AutoGen>
-      <DependentUpon>DAL.AutoGen.tt</DependentUpon>
-    </Compile>
-    <None Update="CruiseDAL\Schema\Schema.tt">
-      <Generator>TextTemplatingFileGenerator</Generator>
-      <LastGenOutput>Schema.cs</LastGenOutput>
-    </None>
-    <Compile Update="CruiseDAL\Schema\Schema.cs">
-      <DesignTime>True</DesignTime>
-      <AutoGen>True</AutoGen>
-      <DependentUpon>Schema.tt</DependentUpon>
-    </Compile>
-    <None Update="TableModels\TableModels.tt">
-      <Generator>TextTemplatingFileGenerator</Generator>
-      <LastGenOutput>TableModels.cs</LastGenOutput>
-    </None>
-    <Compile Update="TableModels\TableModels.cs">
-      <DesignTime>True</DesignTime>
-      <AutoGen>True</AutoGen>
-      <DependentUpon>TableModels.tt</DependentUpon>
-    </Compile>
+  <ItemGroup>
+    <ProjectReference Include="..\CruiseDAL.Core\CruiseDAL.Core.csproj" />
   </ItemGroup>
 
   <ItemGroup>
-    <Service Include="{508349b6-6b84-4df5-91f0-309beebad82d}" />
+    <None Update="TableModels\V2\TableModels.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+    </None>
   </ItemGroup>
 
 </Project>
