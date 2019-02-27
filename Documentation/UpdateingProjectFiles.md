@@ -1,9 +1,8 @@
 # updating project files to VS 2017 sdk style projects 
 In this tutorial we will be updating a older style Visual Studio solution to a VS 2017 solution using the new sky style project file. 
-This is typically not a very complex conversion. The new sdk style project file is primarly a streamed down version of the older style project file and most of our work involves deleting unnecessary stuff. 
+This is typically not a very complex conversion. The new sdk style project file is primarily a slimmed down version of the older style project file and most of our work involves removing the unnecessary stuff. 
 
 ## Step 1 - clean up your existing project
-Garbage in, garbage out. 
 
 First thing we want to do is clean up your source code folders. With your existing project open in Visual Studio take a look at the list of code file in your project in the Solution Explorer. At the top of the solution Explorer 
 there is a button to show/hide all files. Set it so that all files are visible. This will make it so that all files in your project directory are visible. 
@@ -26,8 +25,8 @@ Create the new project file by creating a new empty text file and adding the fol
 	<AssemblyName>{your library/program name</AssemblyName>
     <Version>{your version here}</Version>
     <Copyright>{your copyright info here}</Copyright>
-	<Company>{compary name here}</Company>
-    <Authors>{authors here}</Authors>
+	<Company>USDA FS FMSC</Company>
+    <Authors>{your name here}</Authors>
   </PropertyGroup>
 
   <PropertyGroup Label="Build Config">
@@ -35,7 +34,15 @@ Create the new project file by creating a new empty text file and adding the fol
     <Platform>Any Cpu</Platform>
 	<OutputType>WinExe</OutputType>
     <StartupObject>$(RootNamespace).Program</StartupObject>
-	<ApplicationIcon>{path to your icon}</ApplicationIcon>
+	<ApplicationIcon>{path to your icon (ex ./icons/myIcon.ico)}</ApplicationIcon>
+  </PropertyGroup>
+
+  <!--Required for System.Data.Sqlite See: https://stackoverflow.com/questions/32639630/sqlite-interop-dll-files-does-not-copy-to-project-output-path-when-required-by-r/32639631#32639631-->
+  <PropertyGroup>
+    <ContentSQLiteInteropFiles>true</ContentSQLiteInteropFiles>
+    <CopySQLiteInteropFiles>false</CopySQLiteInteropFiles>
+    <CleanSQLiteInteropFiles>false</CleanSQLiteInteropFiles>
+    <CollectSQLiteInteropFiles>false</CollectSQLiteInteropFiles>
   </PropertyGroup>
 
   <ItemGroup>
@@ -60,7 +67,7 @@ VisualStudioVersion = 15.0.26730.10
 MinimumVisualStudioVersion = 10.0.40219.1
 ```
 
-### 2.3
+### 2.3 - add your project to your new solution file
 Open the newly created solution file. It should open using Visual Studio 2017. If it doesn't, open Visual Studio 2017 and open it manually. 
 
 In the Solution Explorer right click the solution, go to `Add->Existing Project` and add the new project file we created in the first step. At this point your project might not build but don't worry, as long as it is loading correctly we are happy.
@@ -80,7 +87,7 @@ In the same folder as your solution create a new text file and name it `NuGet.co
   </packageSources>
 </configuration>
 ``` 
-Create a new `local-packages` folder in you solution directory and copy the CruiseDAL.Legacy.{version}.nupkg and FMSC.ORM.Legacy.{version}.nupkg into it. 
+Create a new `local-packages` folder in your solution directory and copy the CruiseDAL.{version}.nupkg and FMSC.ORM.{version}.nupkg into it. 
 
 Note: you may need to restart visual studio at this point. 
 
