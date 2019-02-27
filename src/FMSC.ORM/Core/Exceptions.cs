@@ -63,8 +63,12 @@ namespace FMSC.ORM
         {
             get
             {
-                return String.Format("{0}\r\n: ConnectionString={1}, ConnectionState={2}, CommandText={3}"
-                    , base.Message, ConnectionString, ConnectionState, CommandText);
+                return String.Format("{0}\r\n: ConnectionString={1}, ConnectionState={2}, CommandText={3}, InnerException={4}"
+                    , base.Message, 
+                    ConnectionString, 
+                    ConnectionState, 
+                    CommandText, 
+                    (InnerException != null) ? InnerException.Message : "");
             }
         }
 
