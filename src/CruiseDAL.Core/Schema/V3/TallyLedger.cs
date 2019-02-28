@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace CruiseDAL.Schema
+namespace CruiseDAL.Schema.V3
 {
     public partial class DDL
     {
@@ -38,7 +38,6 @@ namespace CruiseDAL.Schema
             "FOREIGN KEY (StratumCode, SampleGroupCode, Species, LiveDead) REFERENCES TallyPopulation, " +
             "FOREIGN KEY (StratumCode, PlotNumber) REFERENCES Plot_Stratum (StratumCode, PlotNumber), " +
             "FOREIGN KEY (TreeID) REFERENCES Tree_V3 (TreeID) ON DELETE CASCADE" +
-            ");" +
         ");";
     }
 }

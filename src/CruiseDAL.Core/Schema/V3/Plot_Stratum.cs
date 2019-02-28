@@ -8,9 +8,9 @@ namespace CruiseDAL.Schema.V3
 {
     public partial class DDL
     {
-        public const string CREATE_TALBE_PLOT_STRATUM =
+        public const string CREATE_TABLE_PLOT_STRATUM =
             "CREATE TABLE Plot_Stratum (" +
-                "Plot_Stratum_CN INTIGER PRIMARY KEY AUTOINCREMENT, " +
+                "Plot_Stratum_CN INTEGER PRIMARY KEY AUTOINCREMENT, " +
                 "CuttingUnitCode TEXT NOT NULL COLLATE NOCASE, " +
                 "PlotNumber INTEGER NOT NULL, " +
                 "StratumCode TEXT NOT NULL COLLATE NOCASE, " +

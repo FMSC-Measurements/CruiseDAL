@@ -8,7 +8,7 @@ namespace CruiseDAL.Schema.V2Backports
 {
     public partial class DDL
     {
-        public const string CREATE_VIEW_COUNT_TREE =
+        public const string CREATE_VIEW_COUNTTREE =
             "CREATE VIEW CountTree AS " +
             "WITH tallyLedgerGrouped AS (" +
                 "SELECT CuttingUnitCode, StratumCode, SampleGroupCode, ifnull(Species, '') AS Species, ifnull(LiveDead, '') AS LiveDead, " +

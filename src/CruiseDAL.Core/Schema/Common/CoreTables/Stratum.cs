@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace CruiseDAL.Schema.Common.CoreTables
+namespace CruiseDAL.Schema.Common
 {
     public class Stratum
     {

@@ -12,6 +12,9 @@
  - SampleGroup_V3 (was SampleGroup)
  - Tree_V3 (part of Tree)
  - TreeMeasurments (part of Tree) 
+ - SubPopulation_TreeAuditValue (was TreeDefaultValueTreeAuditValue)
+ - LogFieldSetup_V3 ( removed unused fields and changed Stratum_CN to StratumCode, no backport? )
+ - TreeFieldSetup_V3 ( removed unused fields and changed Stratum_CN to StratumCode, no backport? )
 
 # Old tables with read-only back-ports
  - CountTree
@@ -21,6 +24,7 @@
  - SampleGroupTreeDefaultValue
  - Tree
  - Log
+ - TreeDefaultValueTreeAuditValue
 
 ## TreeEstimate
 
@@ -31,6 +35,34 @@
  - TreeDefaultValue 
  - FixCNTTallyClass
  - FixCNTTallyPopulation
+
+## LogStock
+ - deletes from tree will cascade to LogStock
+ - modifiedDate no longer updated on modifications, because table doenst really need to track modifications
+
+## SampleGroupStatsTreeDefaultValue
+ - TreeDefaultValue and SampleGroupStats deletes cascade
+
+## StratumStats
+ - deletes from stratum cascade 
+ - added not null to `stratum_cn` 
+
+## SampleGroupStats 
+ - deletes from StratumStats cascade
+
+## TreeAuditValue 
+ - added `TreeAuditValueID TEXT` field
+
+## MessageLog
+ - added new key field MessageLogID (required)
+ - date and time fields now auto populate with current date and time
+ - level auto-populates with 'N'
+ - level collates nocase
+
+## Globals
+ - block defaults to 'Database'
+ - add collate nocase to block, and key
+
 
 # Minor changes to old table
 In some places fields that had been marked as `NOT NULL` have been changed to have a default value instead. This has been to make the database easier to use and test while maintaining the requirement that those fields always have a non-null value. 
@@ -71,3 +103,8 @@ Initially this table made it hard to define tally populations using the CountTre
 - ? Separate table for all hot-keys (Stratum_HotKey) 
 - figure out update cascades 
 - redesign fixcnt tables?
+- LogGradeAuditRule reference Species
+- whats up with LogFieldSetupDefault.FieldName, TreeFieldSetupDefault has it too!
+
+#Recomended Changes
+ - remove duplicated fields from StratumStats

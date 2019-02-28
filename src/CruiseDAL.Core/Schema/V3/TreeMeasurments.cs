@@ -56,7 +56,6 @@ namespace CruiseDAL.Schema.V3
         public const string CREATE_TRIGGER_TREEMEASURMENTS_ONUPDATE =
             "CREATE TRIGGER TREEMEASURMENT_ONUPDATE " +
             "AFTER UPDATE OF " +
-            "(" +
                 "SeenDefectPrimary, " +
                 "SeenDefectSecondary, " +
                 "RecoverablePrimary, " +
@@ -87,8 +86,7 @@ namespace CruiseDAL.Schema.V3
                 "YCoordinate, " +
                 "ZCoordinate, " +
                 "MetaData, " +
-                "IsFallBuckScale" +
-            ") " +
+                "IsFallBuckScale " +
             "ON TreeMeasurments " +
             "FOR EACH ROW " +
             "BEGIN " +
