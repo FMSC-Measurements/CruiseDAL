@@ -94,4 +94,50 @@ namespace CruiseDAL.Schema.V3
                 "UPDATE TreeMeasurment SET ModifiedDate = datetime('now', 'localtime') WHERE TreeMeasurment_CN = old.TreeMeasusrment_CN; " +
             "END;";
     }
+
+    public partial class Updater
+    {
+        public const string INITIALIZE_TREEMEASURMENTS_FROM_TREE =
+            "INSERT INTO TreeMeasurments " +
+            "SELECT " +
+            "Tree_GUID AS TreeID, " +
+            "SeenDefectPrimary, " +
+            "SeenDefectSecondary, " +
+            "RecoverablePrimary, " +
+            "HiddenPrimary, " +
+            "Grade, " +
+            "HeightToFirstLiveLimb, " +
+            "PoleLength, " +
+            "ClearFace, " +
+            "CrownRatio, " +
+            "DBH, " +
+            "DRC, " +
+            "TotalHeight, " +
+            "MerchHeightPrimary, " +
+            "MerchHeightSecondary, " +
+            "FormClass, " +
+            "UpperStemDOB, " +
+            "UpperStemDiameter, " +
+            "UpperStemHeight, " +
+            "DBHDoubleBarkThickness, " +
+            "TopDIBPrimary, " +
+            "TopDIBSecondary, " +
+            "DefectCode, " +
+            "DiameterAtDefect, " +
+            "VoidPercent, " +
+            "Slope, " +
+            "Aspect, " +
+            "Remarks, " +
+            "XCoordinate, " +
+            "YCoordinate, " +
+            "ZCoordinate, " +
+            "MetaData, " +
+            "IsFallBuckScale, " +
+            "CreatedBy, " +
+            "CreatedDate, " +
+            "ModifiedBy, " +
+            "ModifiedDate, " +
+            "RowVersion " +
+            "FROM Tree AS t WHERE CountOrMeasure = 'M'; ";
+    }
 }

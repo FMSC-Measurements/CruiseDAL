@@ -40,4 +40,38 @@ namespace CruiseDAL.Schema.V3
             "FOREIGN KEY (TreeID) REFERENCES Tree_V3 (TreeID) ON DELETE CASCADE" +
         ");";
     }
+
+    public partial class Updater
+    {
+        public const string INITIALIZE_TALLYLEDGER_FROM_COUNTTREE =
+            "INSERT INTO TallyLedger " +
+            "(TallyLedgerID, CuttingUnitCode, StratumCode, SampleGroupCode, Species, LiveDead, TreeCount, KPI, EntryType) " +
+            "SELECT " +
+            "'initFromCountTree' | '-' | ifnull(Component_CN, 'master'), " +
+            "CuttingUnit.Code AS CuttingUnitCode, " +
+            "Stratum.Code AS StratumCode, " +
+            "SampleGroup.Code AS SampleGroupCode, " +
+            "TDV.Species AS Species, " +
+            "TDV.LiveDead AS LiveDead, " +
+            "Sum(TreeCount) AS TreeCount, " +
+            "Sum(SumKPI) AS SumKPI, " +
+            "'utility' AS EntryType " +
+            "FROM CountTree AS ct " +
+            "JOIN CuttingUnit AS cu USING (CuttingUnit_CN) " +
+            "JOIN SampleGroup AS sg USING (SampleGroup_CN) " +
+            "JOIN Stratum AS st USING (Stratum_CN) " +
+            "LEFT JOIN TreeDefaultValue AS tdv USING (TreeDefaultValue_CN) " +
+            "GROUP BY cu.Code, st.Code, sg.Code, ifnull(tdv.Species, ''), ifnull(tdv.LiveDead, ''), ifnull(ct.Component_CN, 0);";
+
+        public const string INITIALIZE_TALLYLEDGER_FROM_TREE =
+            "WITH measureTrees AS (" +
+            "SELECT tv3.TreeID, tv3.CuttingUnitCode, tp.StratumCode, tp.SampleGroupCode, tp.Species, tp.LiveDead, " +
+            "t.TreeCount, t.KPI, t.STM,  * FROM Tree as t " +
+            "JOIN Tree_V3 as tv3 USING (Tree_CN) " +
+            "JOIN TallyPopulation AS tp ON tp.StratumCode = tv3.StratumCode AND tp.SampleGroupCode = tv3.SampleGroupCode AND (tp.Species = tv3.Species OR tp.Species = '') AND (tp.LiveDead = tv3.LiveDead OR tp.LiveDead = 'default') " +
+            "WHERE t.CountOrMeasure = 'M' OR t.CountOrMeasure = 'm') " +
+            "INSERT INTO TallyLedger " +
+            "(TallyLedgerID, TreeID, CuttingUnitCode, StratumCode, SampleGroupCode, Species, LiveDead, TreeCount, KPI, STM) " +
+            "SELECT 'initFromTree' | TreeID AS TallyLedgerID, * FROM measureTrees;";
+    }
 }

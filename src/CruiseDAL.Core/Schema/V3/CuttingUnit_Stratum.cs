@@ -18,4 +18,16 @@ namespace CruiseDAL.Schema.V3
             "FOREIGN KEY (StratumCode) REFERENCES Stratum (Code) ON DELETE CASCADE ON UPDATE CASCADE, " +
             "UNIQUE (CuttingUnitCode, StratumCode));";
     }
+
+    public partial class Updater
+    {
+        public const string INITIALIZE_TABLE_CUTTINGUNIT_STRATUM_FROM_CUTTINGUNITSTRATUM =
+            "INSERT INTO CuttingUnitStratum " +
+            "(CuttingUnitCode, StratumCode, StratumArea)" +
+            "SELECT cu.Code, st.Code, cust.StratumArea " +
+            "FROM CuttingUnitStratum AS cust " +
+            "JOIN CuttingUnit AS cu USING (CuttingUnit_CN) " +
+            "JOIN Stratum AS st USING (Stratum_CN);";
+    }
+
 }

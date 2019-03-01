@@ -13,4 +13,11 @@ namespace CruiseDAL.Schema.V3
             "Species PRIMARY KEY" +
             ");";
     }
+
+    public partial class Updater
+    {
+        public const string INITIALIZE_SPECIES_FROM_TREEDEFAULTVALUE =
+            "INSERT INTO Species " +
+            "SELECT DISTINCT Species  FROM TreeDefaultValue;";
+    }
 }

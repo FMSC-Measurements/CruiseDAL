@@ -19,4 +19,18 @@ namespace CruiseDAL.Schema.V3
                 "FOREIGN KEY (StratumCode) REFERENCES Stratum (StratumCode) ON DELETE CASCADE ON UPDATE CASCADE" +
             ");";
     }
+
+    public partial class Updater
+    {
+        public const string INITIALIZE_TREEFIELDSETUP_V3_FROM_TREEFIELDSETUP =
+            "INSERT INTO TreeFieldSetup_V3 " +
+            "SELECT " +
+            "st.Code AS StratumCode, " +
+            "Field, " +
+            "FieldOrder, " +
+            "Heading, " +
+            "Width " +
+            "FROM TreeFieldSetup " +
+            "JOIN Stratum AS st USING (Stratum_CN);";
+    }
 }

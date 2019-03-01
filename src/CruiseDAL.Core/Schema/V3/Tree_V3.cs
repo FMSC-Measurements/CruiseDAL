@@ -35,4 +35,32 @@ namespace CruiseDAL.Schema.V3
                 "FOREIGN KEY (Species) REFERENCES Species (Species) " +
             ")";
     }
+
+    public partial class Updater
+    {
+        public const string INITIALIZE_TREE_V3_FROM_TREE =
+            "INSERT INTO Tree_V3 " +
+            "SELECT " +
+            "Tree_CN, " +
+            "Tree_GUID AS TreeID, " +
+            "cu.Code AS CuttingUnitCode, " +
+            "st.Code AS StratumCode, " +
+            "sg.Code AS SampleGroupCode, " +
+            "tdv.Species, " +
+            "tdv.LiveDead, " +
+            "p.PlotNumber, " +
+            "TreeNumber, " +
+            "CountOrMeasure, " +
+            "Initials, " +
+            "CreatedBy, " +
+            "CreatedDate, " +
+            "ModifiedDate, " +
+            "RowVersion " +
+            "FROM Tree as t " +
+            "JOIN CuttingUnit AS cu USING (CuttingUnit_CN) " +
+            "JOIN Stratum AS st USING (Stratum_CN) " +
+            "JOIN SampleGroup AS sg USING (SampleGroup_CN) " +
+            "LEFT JOIN TreeDefaultValue AS tdv USING (TreeDefaultValue_CN) " +
+            "LEFT JOIN Plot AS p USING (Plot_CN);";
+    }
 }

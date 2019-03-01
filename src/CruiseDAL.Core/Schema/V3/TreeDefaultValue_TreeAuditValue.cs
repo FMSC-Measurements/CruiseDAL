@@ -20,4 +20,18 @@ namespace CruiseDAL.Schema.V3
             "FOREIGN KEY (Species) REFERENCES Species (Species) ON UPDATE CASCADE" +
             ");";
     }
+
+    public partial class Updater
+    {
+        public const string INITIALIZE_TREEDEFAULTVALUE_TREEAUDITVALUE_FROM_TREEDEFAULTVALUETREEAUDITVALUE =
+            "INSERT INTO TreeDefaultValue_TreeAuditValue " +
+            "SELECT " +
+            "tdv.Species, " +
+            "tdv.LiveDead, " +
+            "tdv.PrimaryProduct, " +
+            "tav.TreeAuditValueID " +
+            "FROM TreeDefaultValueTreeAuditValue AS tdvtav " +
+            "JOIN TreeDefaultValue AS tdv USING (TreeDefaultValue_CN) " +
+            "JOIN TreeAuditValue AS tav USING (TreeAuditValue_CN)";
+    }
 }

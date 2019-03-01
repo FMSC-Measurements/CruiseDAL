@@ -35,4 +35,26 @@ namespace CruiseDAL.Schema.V3
             "UNIQUE (StratumCode, SampleGroupCode, Species, LiveDead) " +
             ");";
     }
+
+    public partial class Updater
+    {
+        public const string INITIALIZE_TALLYPOPULATION_FROM_COUNTTREE =
+            "INSTER INTO TallyPopulation " +
+            "(CuttingUnitCode, StratumCode, SampleGroupCode, Species, LiveDead, Description, HotKey) " +
+                "SELECT " +
+                    "cu.Code AS CuttingUnitCode, " +
+                    "st.Code AS StratumCode, " +
+                    "sg.Code AS SampleGroupCode, " +
+                    "tdv.Species AS Species, " +
+                    "tdv.LiveDead AS LiveDead, " +
+                    "tal.Description, " +
+                    "tal.HotKey " +
+                "FROM CountTree " +
+                "JOIN CuttingUnit AS cu USING (CuttingUnit_CN) " +
+                "JOIN SampleGroup AS sg USING (SampleGroup_CN) " +
+                "JOIN Stratum USING (Stratum_CN) " +
+                "LEFT JOIN TreeDefaultValue AS tdv USING (TreeDefaultValue_CN) " +
+                "JOIN Tally tal USING (Tally_CN) " +
+                "GROUP BY cu.Code, st.Code, sg.Code, ifnull(tdv.Species, ''), ifnull(tdv.LiveDead, '');";
+    }
 }

@@ -21,4 +21,18 @@ namespace CruiseDAL.Schema.V3
             "FOREIGN KEY (Species) REFERENCES Species (Species) " +
             ");";
     }
+
+    public partial class Updater
+    {
+        public const string INITIALIZE_SUBPOPULATION_FROM_SAMPLEGROUPTREEDEFAULTVALUE =
+            "INSERT INTO SubPopulation " +
+            "SELECT " +
+            "sg.StratumCode, " +
+            "sg.SampleGroupCode, " +
+            "tdv.Species, " +
+            "tdv.LiveDead " +
+            "FROM SampleGroupTreeDefaultValue as sgtdv " +
+            "JOIN SampleGroup_V3 AS sg USING (SampleGroup_CN) " +
+            "JOIN TreeDefaultValue AS tdv USING (TreeDefaultValue_CN);";
+    }
 }

@@ -16,7 +16,21 @@ namespace CruiseDAL.Schema.V3
                 "Heading TEXT, " +
                 "Width REAL Default 0.0, " +
                 "UNIQUE (StratumCode, Field), " +
-                "FOREIGN KEY (StratumCode) REFERENCES Stratum (StratumCode) ON DELETE CASCADE ON UPDATE CASCADE" +
+                "FOREIGN KEY (StratumCode) REFERENCES Stratum (Code) ON DELETE CASCADE ON UPDATE CASCADE" +
             ");";
+    }
+
+    public partial class Updater
+    {
+        public const string INITIALIZE_LOGFIELDSETUP_V3_FROM_LOGFIELDSETUP =
+            "INSERT INTO LogFieldSetup_V3 " +
+            "SELECT " +
+            "st.Code AS StratumCode, " +
+            "Field, " +
+            "FieldOrder, " +
+            "Heading, " +
+            "Width " +
+            "FROM LogFieldSetup " +
+            "JOIN Stratum AS st USING (Stratum_CN);";
     }
 }

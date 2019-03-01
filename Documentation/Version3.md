@@ -105,6 +105,7 @@ Initially this table made it hard to define tally populations using the CountTre
 - redesign fixcnt tables?
 - LogGradeAuditRule reference Species
 - whats up with LogFieldSetupDefault.FieldName, TreeFieldSetupDefault has it too!
+- change tallyPoplulation to a view that populates from subPopulation with SampleGroup_v3.tallyBySpecies as a condition
 
 #Recomended Changes
  - remove duplicated fields from StratumStats

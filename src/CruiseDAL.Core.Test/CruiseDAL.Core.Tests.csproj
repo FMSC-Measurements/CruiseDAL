@@ -46,8 +46,4 @@
     <ProjectReference Include="..\CruiseDAL.Core\CruiseDAL.Core.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Schema\V3\" />
-  </ItemGroup>
-
 </Project>

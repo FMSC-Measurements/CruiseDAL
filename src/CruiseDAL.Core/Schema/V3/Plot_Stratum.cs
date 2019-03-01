@@ -26,5 +26,42 @@ namespace CruiseDAL.Schema.V3
                 "FOREIGN KEY (CuttingUnitCode) REFERENCES CuttingUnit (Code), " +
                 "FOREIGN KEY (PlotNumber, CuttingUnitCode) REFERENCES Plot_V3 (PlotNumber, CuttingUnitCode) ON DELETE CASCADE ON UPDATE CASCADE" +
             ");";
+
+        public const string CREATE_TRIGGER_PLOT_STRATUM_ONUPDATE =
+            "CREATE TRIGGER Plot_Stratum_OnUpdate " +
+            "AFTER UPDATE OF " +
+                "CuttingUnitCode, " +
+                "PlotNumber, " +
+                "StratumCode, " +
+                "IsEmpty, " +
+                "KPI, " +
+                "ThreePRandomValue " +
+            "ON Plot_Stratum " +
+            "FOR EACH ROW " +
+            "BEGIN " +
+                "UPDATE Plot_Stratum SET ModifiedDate = datetime('now', 'localtime') WHERE Plot_Stratum_CN = old.Plot_Stratum_CN; " +
+                "UPDATE Plot_Stratum SET RowVersion = old.RowVersion + 1 WHERE Plot_Stratum_CN = old.Plot_Stratum_CN; " +
+            "END;";
+    }
+
+    public partial class Updater
+    {
+        public const string INITIALIZE_PLOT_STRATUM_FROM_PLOT =
+            "INSERT INTO Plot_Stratum " +
+            "SELECT " +
+            "cu.Code AS CuttingUnitCode, " +
+            "PlotNumber, " +
+            "st.Code AS StratumCode, " +
+            "(CASE IsEmpty WHEN 'True' THEN 1 ELSE 0) AS IsEmpty, " +
+            "KPI, " +
+            "ThreePRandomValue, " +
+            "CreatedBy, " +
+            "CreatedDate, " +
+            "ModifiedBy, " +
+            "ModifiedDate, " +
+            "RowVersion " +
+            "FROM Plot " +
+            "JOIN CuttingUnit AS cu USING (CuttingUnit_CN) " +
+            "JOIN Stratum AS st USING (Stratum_CN);";
     }
 }
