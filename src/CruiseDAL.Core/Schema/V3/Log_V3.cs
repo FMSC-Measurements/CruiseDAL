@@ -6,11 +6,11 @@ using System.Threading.Tasks;
 
 namespace CruiseDAL.Schema.V3
 {
-    public class Log_V3
+    public partial class DDL
     {
         public const string CREATE_TABLE_LOG_V3 =
             "CREATE TABLE Log_V3 ( " +
-                "Log_CN INTIGER PRIMARY KEY AUTOINCREMENT, " +
+                "Log_CN INTEGER PRIMARY KEY AUTOINCREMENT, " +
                 "LogID TEXT NOT NULL, " +
                 "TreeID TEXT NOT NULL, " +
                 "LogNumber TEXT NOT NULL, " +
@@ -30,7 +30,7 @@ namespace CruiseDAL.Schema.V3
                 "DIBClass REAL Default 0.0, " +
                 "BarkThickness REAL Default 0.0, " +
                 "CreatedBy TEXT DEFAULT 'none', " +
-                "CreatedDate DateTime DEFAULT DEFAULT (datetime('now', 'localtime')), " +
+                "CreatedDate DateTime DEFAULT (datetime('now', 'localtime')), " +
                 "ModifiedBy TEXT , " +
                 "ModifiedDate DateTime , " +
                 "RowVersion INTEGER DEFAULT 0, " +

@@ -20,7 +20,7 @@ namespace CruiseDAL.Schema.V3
                 "YCoordinate REAL Default 0.0, " +
                 "ZCoordinate REAL Default 0.0, " +
                 "CreatedBy TEXT DEFAULT '', " +
-                "CreatedDate DATETIME (datetime('now', 'localtime')), " +
+                "CreatedDate DATETIME DEFAULT (datetime('now', 'localtime')), " +
                 "ModifiedBy TEXT COLLATE NOCASE, " +
                 "ModifiedDate DATETIME, " +
                 "RowVersion, " +

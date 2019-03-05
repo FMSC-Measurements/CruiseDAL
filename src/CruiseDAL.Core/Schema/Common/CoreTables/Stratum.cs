@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace CruiseDAL.Schema.Common
 {
-    public class Stratum
+    public partial class DDL
     {
         public const string CREATE_TABLE_STRATUM =
             "CREATE TABLE Stratum ( " +

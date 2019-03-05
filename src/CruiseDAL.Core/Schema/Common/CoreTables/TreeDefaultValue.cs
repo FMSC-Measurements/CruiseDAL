@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace CruiseDAL.Schema.Common
 {
-    public class TreeDefaultValue
+    public partial class DDL
     {
         public const string CREATE_TABLE_TREEDEFAULTVALUE =
             "CREATE TABLE TreeDefaultValue ( " +

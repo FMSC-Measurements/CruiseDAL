@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace CruiseDAL.Schema.V3
 {
-    public partial class DLL
+    public partial class DDL
     {
         public const string CREATE_TABLE_TREE_V3 =
             "CREATE TABLE Tree_V3 ( " +

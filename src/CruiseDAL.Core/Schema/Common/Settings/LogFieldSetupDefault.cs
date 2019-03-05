@@ -8,7 +8,7 @@ namespace CruiseDAL.Schema.Common
 {
     public partial class DDL
     {
-        public const string CREATE_TABLE_LODFIELDSETUPDEFAULT =
+        public const string CREATE_TABLE_LOGFIELDSETUPDEFAULT =
             "CREATE TABLE LogFieldSetupDefault ( " +
                 "LogFieldSetupDefault_CN INTEGER PRIMARY KEY AUTOINCREMENT, " +
                 "Field TEXT NOT NULL, " +

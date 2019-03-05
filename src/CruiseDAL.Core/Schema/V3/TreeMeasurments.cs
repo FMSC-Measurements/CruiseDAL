@@ -87,7 +87,7 @@ namespace CruiseDAL.Schema.V3
                 "ZCoordinate, " +
                 "MetaData, " +
                 "IsFallBuckScale " +
-            "ON TreeMeasurments " +
+            "ON TreeMeasurment " +
             "FOR EACH ROW " +
             "BEGIN " +
                 "UPDATE TreeMeasurment SET RowVersion = old.RowVersion + 1 WHERE TreeMeasurment_CN = old.TreeMeasusrment_CN; " +
