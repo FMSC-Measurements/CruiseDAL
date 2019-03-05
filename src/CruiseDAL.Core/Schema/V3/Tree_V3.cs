@@ -34,6 +34,26 @@ namespace CruiseDAL.Schema.V3
                 "FOREIGN KEY (Species, LiveDead, SampleGroupCode, StratumCode) REFERENCES SampleGroup_Species " +
                 "FOREIGN KEY (Species) REFERENCES Species (Species) " +
             ")";
+
+        public const string CREATE_TRIGGER_TREE_V3_ONUPDATE =
+            "CREATE TRIGGER Tree_V3_OnUpdate " +
+            "AFTER UPDATE OF " +
+                "TreeID, " +
+                "CuttingUnitCode, " +
+                "StratumCode, " +
+                "SampleGroupCode, " +
+                "Species, " +
+                "LiveDead, " +
+                "PlotNumber, " +
+                "TreeNumber, " +
+                "CountOrMeasure, " +
+                "Initials " +
+            "ON Tree_V3 " +
+            "FOR EACH ROW " +
+            "BEGIN " +
+                "UPDATE Tree_V3 SET ModifiedDate = datetime('now', 'localtime') WHERE Tree_CN = old.Tree_CN; " +
+                "UPDATE Tree_V3 SET RowVersion = old.RowVersion + 1 WHERE Tree_CN = old.Tree_CN; " +
+            "END; ";
     }
 
     public partial class Updater

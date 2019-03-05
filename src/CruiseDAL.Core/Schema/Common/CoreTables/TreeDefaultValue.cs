@@ -36,5 +36,33 @@ namespace CruiseDAL.Schema.Common
                 "RowVersion INTEGER DEFAULT 0, " +
                 "UNIQUE(PrimaryProduct, Species, LiveDead, Chargeable)" +
             ");";
+
+        public const string CREATE_TRIGGER_TREEDEFAULTVALUE_ONUPDATE =
+            "CREATE TRIGGER TreeDefaultValue_OnUpdate " +
+            "AFTER UPDATE OF " +
+                "PrimaryProduct, " +
+                "Species, " +
+                "LiveDead, " +
+                "Chargeable, " +
+                "FIAcode, " +
+                "CullPrimary, " +
+                "HiddenPrimary, " +
+                "CullSecondary, " +
+                "HiddenSecondary, " +
+                "Recoverable, " +
+                "ContractSpecies, " +
+                "TreeGrade, " +
+                "MerchHeightLogLength, " +
+                "MerchHeightType, " +
+                "FormClass, " +
+                "BarkThicknessRatio, " +
+                "AverageZ, " +
+                "ReferenceHeightPercent " +
+            "ON TreeDefaultValue " +
+            "FOR EACH ROW " +
+            "BEGIN " +
+                "UPDATE TreeDefaultValue SET ModifiedDate = datetime( 'now', 'localtime') WHERE TreeDefaultValue_CN = new.TreeDefaultValue_CN; " +
+                "UPDATE TreeDefaultValue SET RowVersion = old.RowVersion + 1 WHERE TreeDefaultValue_CN = old.TreeDefaultValue_CN; " +
+            "END; ";
     }
 }

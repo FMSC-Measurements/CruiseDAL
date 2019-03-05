@@ -31,5 +31,28 @@ namespace CruiseDAL.Schema.Common
                 "RowVersion INTEGER DEFAULT 0, " +
                 "UNIQUE(Code) " +
             ");";
+
+        public const string CREATE_TRIGGER_STRATUM_ONUPDATE =
+            "CREATE TRIGGER Stratum_OnUpdate " +
+            "AFTER UPDATE OF " +
+                "Code, " +
+                "Description, " +
+                "Method, " +
+                "BasalAreaFactor, " +
+                "FixedPlotSize, " +
+                "KZ3PPNT, " +
+                "SamplingFrequency, " +
+                "HotKey, " +
+                "FBSCode, " +
+                "YieldComponent, " +
+                "VolumeFactor, " +
+                "Month, " +
+                "Year " +
+            "ON Stratum " +
+            "FOR EACH ROW " +
+            "BEGIN " +
+                "UPDATE Stratum SET ModifiedDate = datetime( 'now', 'localtime') WHERE Stratum_CN = old.Stratum_CN; " +
+                "UPDATE Stratum SET RowVersion = datetime( 'now', 'localtime') WHERE Stratum_CN = old.Stratum_CN; " +
+            "END; ";
     }
 }

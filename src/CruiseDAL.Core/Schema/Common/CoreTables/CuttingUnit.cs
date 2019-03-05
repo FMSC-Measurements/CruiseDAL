@@ -25,5 +25,22 @@ namespace CruiseDAL.Schema.Common
                 "RowVersion INTEGER DEFAULT 0, " +
                 "UNIQUE(Code)" +
             ");";
+
+        public const string CREATE_TRIGGER_CUTTINGUNIT_ONUPDATE =
+            "CREATE TRIGGER CuttingUnit_OnUpdate " +
+            "AFTER UPDATE OF " +
+            "Code, " +
+            "Area, " +
+            "Description, " +
+            "LoggingMethod, " +
+            "PaymentUnit, " +
+            "TallyHistory, " +
+            "Rx " +
+            "ON CuttingUnit " +
+            "FOR EACH ROW " +
+            "BEGIN " +
+                "UPDATE CuttingUnit SET ModifiedDate = datetime('now', 'localtime') WHERE CuttingUnit_CN = old.CuttingUnit_CN; " +
+                "UPDATE CuttingUnit SET RowVersion = old.RowVersion + 1 WHERE CuttingUnit_CN = old.CuttingUnit_CN; " +
+            "END; ";
     }
 }
