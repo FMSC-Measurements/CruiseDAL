@@ -8,7 +8,7 @@ namespace CruiseDAL.Schema.V3
 {
     public partial class DDL
     {
-        public const string CREATE_TABLE_TALLY_LEDGER_COMMAND =
+        public const string CREATE_TABLE_TALLYLEDGER =
         "CREATE TABLE TallyLedger ( " +
             "TallyLedgerID TEXT PRIMARY KEY, " +
             "TreeID TEXT, " +
