@@ -31,7 +31,7 @@ namespace CruiseDAL.Schema.Common
                 "BoardUtil REAL Default 0.0, " +
                 "CubicUtil REAL Default 0.0, " +
                 "CreatedBy TEXT DEFAULT 'none', " +
-                "CreatedDate DateTime DEFAULT (datetime(current_timestamp, 'localtime')) , " +
+                "CreatedDate DateTime DEFAULT (datetime( 'now', 'localtime')), " +
                 "ModifiedBy TEXT, " +
                 "ModifiedDate DateTime , " +
                 "UNIQUE(Tree_CN, LogNumber), " +

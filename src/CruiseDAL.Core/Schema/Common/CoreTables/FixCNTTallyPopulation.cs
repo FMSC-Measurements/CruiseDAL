@@ -16,6 +16,7 @@ namespace CruiseDAL.Schema.Common
                 "TreeDefaultValue_CN INTEGER REFERENCES TreeDefaultValue NOT NULL, " +
                 "IntervalSize INTEGER Default 0, " +
                 "Min INTEGER Default 0, " +
-                "Max INTEGER Default 0);"; 
+                "Max INTEGER Default 0" +
+            ");"; 
     }
 }

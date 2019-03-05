@@ -28,7 +28,7 @@ namespace CruiseDAL.Schema.V3
             "EntryType TEXT COLLATE NOCASE, " +
 
             "CreatedBy TEXT DEFAULT 'none', " +
-            "CreatedDate DateTime DEFAULT (datetime(current_timestamp, 'localtime')) ," +
+            "CreatedDate DATETIME DEFAULT (datetime('now', 'localtime'))," +
             "IsDeleted BOOLEAN DEFAULT 0," +
 
             "FOREIGN KEY (CuttingUnitCode) REFERENCES CuttingUnit (Code) " +

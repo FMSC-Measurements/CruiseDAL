@@ -22,6 +22,7 @@ namespace CruiseDAL.Schema.Common
                 "LogGrade6 TEXT, " +
                 "SEDlimit TEXT, " +
                 "SEDminimum DOUBLE Default 0.0, " +
-                "SEDmaximum DOUBLE Default 0.0);";
+                "SEDmaximum DOUBLE Default 0.0" +
+            ");";
     }
 }

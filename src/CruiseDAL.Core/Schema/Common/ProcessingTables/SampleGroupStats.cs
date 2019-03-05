@@ -43,7 +43,7 @@ namespace CruiseDAL.Schema.Common
                 "ReconPlots INTEGER Default 0, " +
                 "ReconTrees INTEGER Default 0, " +
                 "UNIQUE (StratumStats_CN, Code, SgSet), " +
-            "FOREIGN KEY (StratumStats_CN) REFERENCES StratumStats (StratumStats_CN) ON DELETE CASCADE" +
+                "FOREIGN KEY (StratumStats_CN) REFERENCES StratumStats (StratumStats_CN) ON DELETE CASCADE" +
             ");";
     }
 }

@@ -25,7 +25,7 @@ namespace CruiseDAL.Schema.Common
                 "Month INTEGER DEFAULT 0, " +
                 "Year INTEGER DEFAULT 0, " +
                 "CreatedBy TEXT DEFAULT 'none', " +
-                "CreatedDate DateTime DEFAULT (datetime(current_timestamp, 'localtime')) , " +
+                "CreatedDate DateTime DEFAULT (datetime('now', 'localtime')), " +
                 "ModifiedBy TEXT, " +
                 "ModifiedDate DateTime , " +
                 "RowVersion INTEGER DEFAULT 0, " +

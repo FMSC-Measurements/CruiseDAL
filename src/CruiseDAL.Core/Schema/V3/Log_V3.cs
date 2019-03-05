@@ -30,7 +30,7 @@ namespace CruiseDAL.Schema.V3
                 "DIBClass REAL Default 0.0, " +
                 "BarkThickness REAL Default 0.0, " +
                 "CreatedBy TEXT DEFAULT 'none', " +
-                "CreatedDate DateTime DEFAULT (datetime(current_timestamp, 'localtime')) , " +
+                "CreatedDate DateTime DEFAULT DEFAULT (datetime('now', 'localtime')), " +
                 "ModifiedBy TEXT , " +
                 "ModifiedDate DateTime , " +
                 "RowVersion INTEGER DEFAULT 0, " +

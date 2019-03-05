@@ -32,6 +32,7 @@ namespace CruiseDAL.Schema.Common
                 "CommonSpeciesName TEXT, " +
                 "MerchModFlag INTEGER Default 0, " +
                 "EvenOddSegment INTEGER Default 0, " +
-                "UNIQUE (Species, PrimaryProduct, VolumeEquationNumber));";
+                "UNIQUE (Species, PrimaryProduct, VolumeEquationNumber)" +
+            ");";
     }
 }

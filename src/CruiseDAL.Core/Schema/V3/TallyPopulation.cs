@@ -22,17 +22,17 @@ namespace CruiseDAL.Schema.V3
 
         public const string CREATE_TABLE_TALLYPOPULATION =
             "CREATE TABLE TallyPopulation ( " +
-            "TallyPopulation_CN INTEGER PRIMARY KEY AUTOINCREMENT, " +
-            "StratumCode TEXT NOT NULL COLLATE NOCASE, " +
-            "SampleGroupCode TEXT NOT NULL COLLATE NOCASE, " +
-            "Species TEXT DEFAULT '' COLLATE NOCASE, " +
-            "LiveDead TEXT DEFAULT 'default' COLLATE NOCASE, " +
-            "Description TEXT, " +
-            "HotKey COLLATE NOCASE, " +
-            "FOREIGN KEY (StratumCode) REFERENCES Stratum (Code), " +
-            "FOREIGN KEY (SampleGroupCode, StratumCode) REFERENCES SampleGroup_V3 (SampleGroupCode, StratumCode)  ON DELETE CASCADE ON UPDATE CASCADE, " +
-            "FOREIGN KEY (Species) REFERENCES Species (Species), " +
-            "UNIQUE (StratumCode, SampleGroupCode, Species, LiveDead) " +
+                "TallyPopulation_CN INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                "StratumCode TEXT NOT NULL COLLATE NOCASE, " +
+                "SampleGroupCode TEXT NOT NULL COLLATE NOCASE, " +
+                "Species TEXT DEFAULT '' COLLATE NOCASE, " +
+                "LiveDead TEXT DEFAULT 'default' COLLATE NOCASE, " +
+                "Description TEXT, " +
+                "HotKey COLLATE NOCASE, " +
+                "FOREIGN KEY (StratumCode) REFERENCES Stratum (Code), " +
+                "FOREIGN KEY (SampleGroupCode, StratumCode) REFERENCES SampleGroup_V3 (SampleGroupCode, StratumCode)  ON DELETE CASCADE ON UPDATE CASCADE, " +
+                "FOREIGN KEY (Species) REFERENCES Species (Species), " +
+                "UNIQUE (StratumCode, SampleGroupCode, Species, LiveDead) " +
             ");";
     }
 

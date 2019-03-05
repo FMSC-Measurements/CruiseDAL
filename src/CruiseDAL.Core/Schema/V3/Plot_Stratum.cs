@@ -18,7 +18,7 @@ namespace CruiseDAL.Schema.V3
                 "KPI REAL DEFAULT 0.0, " +
                 "ThreePRandomValue INTEGER Default 0, " +
                 "CreatedBy TEXT DEFAULT '', " +
-                "CreatedDate DATETIME, " +
+                "CreatedDate DATETIME DEFAULT (datetime('now', 'localtime')), " +
                 "ModifiedBy TEXT DEFAULT '', " +
                 "ModifiedDate DATETIME, " +
                 "RowVersion INTEGER DEFAULT 0, " +

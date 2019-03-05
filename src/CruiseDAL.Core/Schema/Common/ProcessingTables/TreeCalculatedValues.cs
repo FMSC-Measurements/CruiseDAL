@@ -45,6 +45,7 @@ namespace CruiseDAL.Schema.Common
                 "Biomassfoliage REAL Default 0.0, " +
                 "BiomassTip REAL Default 0.0, " +
                 "TipwoodVolume REAL Default 0.0, " +
-                "UNIQUE (Tree_CN));";
+                "UNIQUE (Tree_CN)" +
+            ");";
     }
 }

@@ -10,14 +10,14 @@ namespace CruiseDAL.Schema.V3
     {
         public const string CREATE_TABLE_TREEDEFAULTVALUE_TREEAUDITVALUE =
             "CREATE TABLE TreeDefaultValue_TreeAuditValue (" +
-            "TreeDefaultValue_TreeAuditValue_CN INTEGER PRIMARY KEY AUTOINCREMENT, " +
-            "Species TEXT NOT NULL COLLATE NOCASE, " +
-            "LiveDead TEXT NOT NULL COLLATE NOCASE, " +
-            "PrimaryProduct TEXT NOT NULL COLLATE NOCASE, " +
-            "TreeAuditValueID TEXT NOT NULL, " +
-            "FOREIGN KEY (Species, LiveDead, PrimaryProduct) REFERENCES TreeDefaultValue (Species, LiveDead, PrimaryProduct) ON DELETE CASCADE, " +
-            "FOREIGN KEY (TreeAuditValueID) REFERENCES TreeAuditValue (TreeAuditValueID) ON DELETE CASCADE, " +
-            "FOREIGN KEY (Species) REFERENCES Species (Species) ON UPDATE CASCADE" +
+                "TreeDefaultValue_TreeAuditValue_CN INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                "Species TEXT NOT NULL COLLATE NOCASE, " +
+                "LiveDead TEXT NOT NULL COLLATE NOCASE, " +
+                "PrimaryProduct TEXT NOT NULL COLLATE NOCASE, " +
+                "TreeAuditValueID TEXT NOT NULL, " +
+                "FOREIGN KEY (Species, LiveDead, PrimaryProduct) REFERENCES TreeDefaultValue (Species, LiveDead, PrimaryProduct) ON DELETE CASCADE, " +
+                "FOREIGN KEY (TreeAuditValueID) REFERENCES TreeAuditValue (TreeAuditValueID) ON DELETE CASCADE, " +
+                "FOREIGN KEY (Species) REFERENCES Species (Species) ON UPDATE CASCADE" +
             ");";
     }
 

@@ -20,6 +20,7 @@ namespace CruiseDAL.Schema.Common
                 "Coefficient4 REAL Default 0.0, " +
                 "Coefficient5 REAL Default 0.0, " +
                 "Coefficient6 REAL Default 0.0, " +
-                "UNIQUE (Species, PrimaryProduct, ValueEquationNumber));";
+                "UNIQUE (Species, PrimaryProduct, ValueEquationNumber)" +
+            ");";
     }
 }

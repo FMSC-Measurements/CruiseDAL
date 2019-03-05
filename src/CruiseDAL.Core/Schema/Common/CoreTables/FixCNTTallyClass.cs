@@ -12,6 +12,7 @@ namespace CruiseDAL.Schema.Common
             "CREATE TABLE FixCNTTallyClass( " +
                 "FixCNTTallyClass_CN INTEGER PRIMARY KEY AUTOINCREMENT, " +
                 "Stratum_CN INTEGER REFERENCES Stratum NOT NULL, " +
-                "FieldName INTEGER Default 0);";
+                "FieldName INTEGER Default 0" +
+            ");";
     }
 }

@@ -64,6 +64,7 @@ namespace CruiseDAL.Schema.Common
                 "SumWgtBBD DOUBLE Default 0.0, " +
                 "SumWgtBFT DOUBLE Default 0.0, " +
                 "SumWgtTip DOUBLE Default 0.0, " +
-                "SumTipwood DOUBLE Default 0.0);";
+                "SumTipwood DOUBLE Default 0.0" +
+            ");";
     }
 }

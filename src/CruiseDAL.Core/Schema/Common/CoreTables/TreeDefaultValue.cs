@@ -30,7 +30,7 @@ namespace CruiseDAL.Schema.Common
                 "AverageZ REAL DEFAULT 0.0, " +
                 "ReferenceHeightPercent REAL DEFAULT 0.0, " +
                 "CreatedBy TEXT DEFAULT 'none', " +
-                "CreatedDate DateTime DEFAULT(datetime(current_timestamp, 'localtime')) , " +
+                "CreatedDate DateTime DEFAULT (datetime( 'now', 'localtime')), " +
                 "ModifiedBy TEXT, " +
                 "ModifiedDate DateTime , " +
                 "RowVersion INTEGER DEFAULT 0, " +

@@ -10,7 +10,7 @@ namespace CruiseDAL.Schema.V3
     {
         public const string CREATE_TABLE_SPECIES =
             "CREATE TABLE Species (" +
-            "Species PRIMARY KEY" +
+                "Species PRIMARY KEY" +
             ");";
     }
 

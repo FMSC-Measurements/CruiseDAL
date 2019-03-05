@@ -17,7 +17,7 @@
                 "Remarks TEXT, " +
                 "DefaultUOM TEXT, " +
                 "CreatedBy TEXT DEFAULT 'none', " +
-                "CreatedDate DateTime DEFAULT (datetime('now', 'localtime')) , " +
+                "CreatedDate DateTime DEFAULT (datetime('now', 'localtime')), " +
                 "ModifiedBy TEXT, " +
                 "ModifiedDate DateTime , " +
                 "RowVersion INTEGER DEFAULT 0, " +

@@ -21,6 +21,7 @@ namespace CruiseDAL.Schema.Common
                 "MetaData TEXT, " +
                 "WeightFactorPrimary REAL Default 0.0, " +
                 "WeightFactorSecondary REAL Default 0.0, " +
-                "UNIQUE (Species, Product, Component, LiveDead));";
+                "UNIQUE (Species, Product, Component, LiveDead)" +
+            ");";
     }
 }

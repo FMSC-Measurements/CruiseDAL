@@ -31,7 +31,7 @@ namespace CruiseDAL.Schema.Common
                 "PlotSpacing INTEGER Default 0, " +
                 "Used INTEGER Default 0, " +
                 "UNIQUE (Code, Method, SgSet)," +
-            "FOREIGN KEY (Stratum_CN) REFERENCES Stratum (Stratum_CN) ON DELETE CASCADE" +
+                "FOREIGN KEY (Stratum_CN) REFERENCES Stratum (Stratum_CN) ON DELETE CASCADE" +
             ");";
     }
 }

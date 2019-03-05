@@ -60,6 +60,7 @@ namespace CruiseDAL.Schema.Common
                 "Stg2NetXRP DOUBLE Default 0.0, " +
                 "Stg2NetXsqrdRP DOUBLE Default 0.0, " +
                 "Stg2ValueXRP DOUBLE Default 0.0, " +
-                "Stg2ValueXsqrdRP DOUBLE Default 0.0);";
+                "Stg2ValueXsqrdRP DOUBLE Default 0.0" +
+            ");";
     }
 }

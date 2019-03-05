@@ -25,6 +25,7 @@ namespace CruiseDAL.Schema.Common
                 "SumKPI DOUBLE Default 0.0, " +
                 "SumMeasuredKPI DOUBLE Default 0.0, " +
                 "ProrationFactor DOUBLE Default 0.0, " +
-                "ProratedEstimatedTrees DOUBLE Default 0.0);";
+                "ProratedEstimatedTrees DOUBLE Default 0.0" +
+            ");";
     }
 }

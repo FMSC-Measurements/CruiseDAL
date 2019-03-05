@@ -13,6 +13,7 @@ namespace CruiseDAL.Schema.Common
                 "ReportID TEXT NOT NULL, " +
                 "Selected BOOLEAN Default 0, " +
                 "Title TEXT, " +
-                "UNIQUE (ReportID));";
+                "UNIQUE (ReportID)" +
+            ");";
     }
 }

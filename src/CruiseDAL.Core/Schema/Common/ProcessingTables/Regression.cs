@@ -24,6 +24,7 @@ namespace CruiseDAL.Schema.Common
                 "Rsquared REAL Default 0.0, " +
                 "RegressModel TEXT, " +
                 "rMinDbh REAL Default 0.0, " +
-                "rMaxDbh REAL Default 0.0);";
+                "rMaxDbh REAL Default 0.0" +
+            ");";
     }
 }
