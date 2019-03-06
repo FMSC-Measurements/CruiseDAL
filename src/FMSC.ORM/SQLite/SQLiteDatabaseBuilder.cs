@@ -30,7 +30,10 @@ namespace FMSC.ORM.SQLite
             }
             catch
             {
-                System.IO.File.Delete(sqliteDatastore.Path);
+                if (!sqliteDatastore.IsInMemory)
+                {
+                    System.IO.File.Delete(sqliteDatastore.Path);
+                }
                 throw;
             }
         }

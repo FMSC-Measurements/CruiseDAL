@@ -600,7 +600,7 @@ ValidGrades TEXT);");
                 //db.Execute(Schema.Schema.CREATE_VIEW_TALLY_POPULATION);
                 db.Execute(REBUILD_TREE_TABLE);
                 //db.Execute(Schema.Schema.CREATE_TABLE_TALLY_LEDGER_COMMAND);
-                db.Execute(INITIALIZE_TALLY_LEDGER_FROM_COUNTTREE);
+                //db.Execute(INITIALIZE_TALLY_LEDGER_FROM_COUNTTREE);
                 SetDatabaseVersion(db, "3.0.0");
                 db.CommitTransaction();
                 db.Execute("PRAGMA foreign_keys=ON;");
