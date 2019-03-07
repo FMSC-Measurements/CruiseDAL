@@ -89,6 +89,7 @@ namespace CruiseDAL
             CruiseDAL.Schema.Common.DDL.CREATE_TABLE_LOGGRADEAUDITRULE,
             CruiseDAL.Schema.Common.DDL.CREATE_TABLE_TREEAUDITVALUE,
             CruiseDAL.Schema.V3.DDL.CREATE_TABLE_TREEDEFAULTVALUE_TREEAUDITVALUE,
+            CruiseDAL.Schema.Common.DDL.CREATE_TABLE_ERRORLOG,
 
             //views 
             CruiseDAL.Schema.V2Backports.DDL.CREATE_VIEW_COUNTTREE,
@@ -115,17 +116,21 @@ namespace CruiseDAL
         public void CreateDatabase(System.Data.Common.DbConnection conn)
         {
             var transaction = conn.BeginTransaction();
-            foreach (var cmd in CREATE_COMMANDS)
+            try
             {
-                try
+                foreach (var cmd in CREATE_COMMANDS)
                 {
+
                     conn.ExecuteNonQuery(cmd, (object[])null, transaction);
+
                 }
-                catch(Exception e)
-                {
-                    Logger.Log.E(e);
-                    throw;
-                }
+
+                transaction.Commit();
+            }
+            catch (Exception e)
+            {
+                Logger.Log.E(e);
+                throw;
             }
         }
 

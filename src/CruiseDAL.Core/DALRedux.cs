@@ -169,10 +169,12 @@ namespace CruiseDAL
 
             if (Exists)
             {
-                Execute("INSERT INTO MessageLog (Program, Message, Level, Date, Time)" +
+                Execute("INSERT INTO MessageLog (MessageLogID, Program, Message, Level, Date, Time)" +
                     "VALUES " +
-                    "(@p1, @p2, @p3, @p4, @p5)",
-                    new object[] { program,
+                    "(@p1, @p2, @p3, @p4, @p5, @p6)",
+                    new object[] {
+                        Guid.NewGuid().ToString(),
+                        program,
                         message,
                         level,
                         DateTime.Now.ToString("yyyy/MM/dd"),

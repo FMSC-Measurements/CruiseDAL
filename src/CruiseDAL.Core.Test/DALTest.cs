@@ -83,7 +83,7 @@ namespace CruiseDAL.Tests
 
             foreach (var table in CruiseDAL.Schema.Schema.TABLE_NAMES)
             {
-                db.CheckTableExists(table).Should().BeTrue();
+                db.CheckTableExists(table).Should().BeTrue($"{table} should exist");
             }
 
         }
