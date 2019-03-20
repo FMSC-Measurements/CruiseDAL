@@ -1,4 +1,5 @@
 ﻿using FMSC.ORM.Core;
+using System;
 using System.IO;
 
 namespace FMSC.ORM.SQLite
@@ -28,11 +29,18 @@ namespace FMSC.ORM.SQLite
             {
                 base.CreateDatastore(datastore);
             }
-            catch
+            catch 
             {
                 if (!sqliteDatastore.IsInMemory)
                 {
-                    System.IO.File.Delete(sqliteDatastore.Path);
+                    try
+                    {
+                        System.IO.File.Delete(sqliteDatastore.Path);
+                    }
+                    catch
+                    {
+                        // don't stomp on original exception
+                    }
                 }
                 throw;
             }

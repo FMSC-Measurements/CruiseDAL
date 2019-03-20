@@ -24,11 +24,11 @@
   </PropertyGroup>
 
   <ItemGroup Condition="$(DefineConstants.Contains(SYSTEM_DATA_SQLITE))">
-    <PackageReference Include="System.Data.SQLite.Core" Version="1.0.108" />
+    <PackageReference Include="System.Data.SQLite.Core" Version="1.0.110" />
   </ItemGroup>
 
   <ItemGroup Condition="$(DefineConstants.Contains(MICROSOFT_DATA_SQLITE))">
-    <PackageReference Include="Microsoft.Data.Sqlite" Version="2.1.0" />
+    <PackageReference Include="Microsoft.Data.Sqlite" Version="2.2.3" />
   </ItemGroup>
 
   <ItemGroup>

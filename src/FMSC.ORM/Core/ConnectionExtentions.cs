@@ -14,6 +14,16 @@ namespace FMSC.ORM.Core
 
         #region ExecuteNonQuery
 
+        public static int ExecuteNonQuery(this DbConnection connection, string commandText)
+        {
+            return ExecuteNonQuery(connection, commandText, (object[])null, (DbTransaction)null);
+        }
+
+        public static int ExecuteNonQuery(this DbConnection connection, string commandText, object[] parameters)
+        {
+            return ExecuteNonQuery(connection, commandText, parameters, (DbTransaction)null);
+        }
+
         public static int ExecuteNonQuery(this DbConnection connection, string commandText, object[] parameters, DbTransaction transaction)
         {
             if (string.IsNullOrEmpty(commandText)) { throw new ArgumentException("command can't be null or empty", "command"); }
@@ -40,6 +50,11 @@ namespace FMSC.ORM.Core
 
                 return ConnectionExtentions.ExecuteNonQuery(connection, command, transaction);
             }
+        }
+
+        public static int ExecuteNonQuery(this DbConnection connection, DbCommand command)
+        {
+            return ExecuteNonQuery(connection, command);
         }
 
         public static int ExecuteNonQuery(this DbConnection connection, DbCommand command, DbTransaction transaction)
