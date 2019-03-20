@@ -184,6 +184,40 @@ namespace CruiseDAL.Tests.Schema
             }
         }
 
+        [Theory]
+        [InlineData("7Wolf.cruise")]
+        public void Migrate_CountTree_Test(string fileName)
+        {
+            var (origFile, testFile) = SetUpTestFile(fileName);
+            using (var origDatastore = new DAL(origFile))
+            using (var newDatastore = new DAL(testFile))
+            {
+                var countTreeOrig = origDatastore.QueryGeneric(
+                    "SELECT " +
+                        "CuttingUnit_CN, " +
+                        "SampleGroup_CN, " +
+                        "TreeDefaultValue_CN, " +
+                        "sum(TreeCount) AS TreeCount, " +
+                        "sum(SumKPI) AS SumKPI " +
+                    "FROM CountTree " +
+                    "GROUP BY CuttingUnit_CN, SampleGroup_CN, ifnull(TreeDefaultValue_CN, 0) " +
+                    "ORDER BY CuttingUnit_CN, SampleGroup_CN, ifnull(TreeDefaultValue_CN, 0);").ToArray();
+
+                var countTreeAfter = newDatastore.QueryGeneric(
+                    "SELECT " +
+                        "CuttingUnit_CN, " +
+                        "SampleGroup_CN, " +
+                        "TreeDefaultValue_CN, " +
+                        "TreeCount, " +
+                        "SumKPI " +
+                    "FROM CountTree " +
+                    //"GROUP BY CuttingUnit_CN, SampleGroup_CN, ifnull(TreeDefaultValue_CN, 0) " +
+                    "ORDER BY CuttingUnit_CN, SampleGroup_CN, ifnull(TreeDefaultValue_CN, 0);").ToArray();
+
+                Compare(countTreeAfter, countTreeOrig);
+            }
+        }
+
         public class DirectoryComparar : IEqualityComparer<IDictionary<string, object>>
         {
             public IEnumerable<string> MatchKeys { get; set; }
@@ -201,7 +235,7 @@ namespace CruiseDAL.Tests.Schema
 
                 foreach (var key in matchKeys)
                 {
-                    if(IgnoreKeys != null 
+                    if (IgnoreKeys != null
                         && IgnoreKeys.Contains(key))
                     { continue; }
 
