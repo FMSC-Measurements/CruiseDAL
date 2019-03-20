@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace CruiseDAL.Schema.Common
+﻿namespace CruiseDAL.Schema
 {
     public partial class DDL
     {
@@ -13,5 +7,20 @@ namespace CruiseDAL.Schema.Common
                 "Species TEXT, " +
                 "DefectMax REAL Default 0.0, " +
                 "ValidGrades TEXT);";
+    }
+
+    public partial class Migrations
+    {
+        public const string MIGRATE_LOGGRADEAUDITRULE =
+            "INSERT INTO {0}.LogGradeAuditRule ( " +
+                "Species, " +
+                "DefectMax, " +
+                "ValidGrades" +
+            ") " +
+            "SELECT " +
+                "Species, " +
+                "DefectMax, " +
+                "ValidGrades " +
+            "FROM {1}.LogGradeAuditRule;";
     }
 }

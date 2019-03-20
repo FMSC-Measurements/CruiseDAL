@@ -1,0 +1,116 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace CruiseDAL.Schema
+{
+    public static partial class DDL
+    {
+        public static string SET_DBVERSION =
+            "INSERT INTO Globals (Block, Key, Value) VALUES ('Database', 'Version', '3.0.0'); ";
+
+        public static string[] CREATE_COMMANDS = new string[]
+        {
+            //core tables
+            CREATE_TABLE_SALE,
+            CREATE_TRIGGER_SALE_ONUPDATE,
+
+            CREATE_TABLE_CUTTINGUNIT,
+            CREATE_TRIGGER_CUTTINGUNIT_ONUPDATE,
+
+            CREATE_TABLE_STRATUM,
+            CREATE_TRIGGER_STRATUM_ONUPDATE,
+
+            CREATE_TABLE_CUTTINGUNIT_STRATUM,
+
+            CREATE_TABLE_TREEFIELDSETUP_V3,
+
+            CREATE_TABLE_SAMPLEGROUP_V3,
+            CREATE_TRIGGER_SAMPLEGROUP_V3_ONUPDATE,
+            CREATE_TALBE_SAMPLERSTATE,
+
+            CREATE_TABLE_SPECIES,
+
+            CREATE_TABLE_SUBPOPULATION,
+
+            CREATE_TABLE_TALLYPOPULATION,
+            CREATE_TABLE_TALLYDESCRIPTION,
+            CREATE_TABLE_TALLYHOTKEY,
+
+            CREATE_TABLE_PLOT_V3,
+            CREATE_TRIGGER_PLOT_V3_ONUPDATE,
+
+            CREATE_TABLE_PLOT_STRATUM,
+            CREATE_TRIGGER_PLOT_STRATUM_ONUPDATE,
+
+            CREATE_TABLE_TREE_V3,
+            CREATE_TRIGGER_TREE_V3_ONUPDATE,
+
+            CREATE_TABLE_TREEMEASURMENT,
+            CREATE_TRIGGER_TREEMEASURMENTS_ONUPDATE,
+
+            CREATE_TABLE_LOG_V3,
+            CREATE_TRIGGER_LOG_V3_ONUPDATE,
+
+            CREATE_TABLE_LOGFIELDSETUP_V3,
+
+            CREATE_TABLE_TALLYLEDGER,
+
+            CREATE_TABLE_FIXCNTTALLYCLASS_V3,
+            CREATE_TABLE_FIXCNTTALLYPOPULATION_V3,
+            CREATE_TABLE_TREEDEFAULTVALUE,
+            CREATE_TRIGGER_TREEDEFAULTVALUE_ONUPDATE,
+
+            //processing tables
+            CREATE_TABLE_BIOMASSEQUATION,
+            CREATE_TABLE_LCD,
+            CREATE_TABLE_LOGMATRIX,
+            CREATE_TABLE_LOGSTOCK,
+            CREATE_TRIGGER_LOGSTOCK_ONUPDATE,
+            CREATE_TABLE_POP,
+            CREATE_TABLE_PRO,
+            CREATE_TABLE_QUALITYADJEQUATION,
+            CREATE_TABLE_REGRESSION,
+            CREATE_TABLE_REPORTS,
+            CREATE_TABLE_STRATUMSTATS,
+            CREATE_TABLE_SAMPLEGROUPSTATS,
+            CREATE_TABLE_SAMPLEGROUPSTATSTREEDEFAULTVALUE,
+            CREATE_TABLE_TREECALCULATEDVALUES,
+            CREATE_TABLE_VALUEEQUATION,
+            CREATE_TABLE_VOLUMEEQUATION,
+
+
+            //setup tables 
+            CREATE_TABLE_LOGFIELDSETUPDEFAULT,
+            CREATE_TABLE_TREEFIELDSETUPDEFAULT,
+
+            //utility tables
+            CREATE_TABLE_GLOBALS,
+            CREATE_TABLE_MESSAGELOG,
+
+            //validation 
+            CREATE_TABLE_LOGGRADEAUDITRULE,
+            CREATE_TABLE_TREEAUDITVALUE,
+            CREATE_TABLE_TREEDEFAULTVALUE_TREEAUDITVALUE,
+            CREATE_TABLE_ERRORLOG,
+
+            //views 
+            CREATE_VIEW_COUNTTREE,
+            CREATE_VIEW_CUTTINGUNITSTRATUM,
+            CREATE_VIEW_LOG,
+            CREATE_VIEW_PLOT,
+            CREATE_VIEW_SAMPLEGROUP,
+            CREATE_VIEW_SAMPLEGROUPTREEDEFAULTVALUE,
+            CREATE_VIEW_TREE,
+            CTEATE_TRIGGER_TREE_ONUPDATE,
+            CREATE_VIEW_TREEDEFAULTVALUETREEAUDITVALUE,
+            CREATE_VIEW_TREEESTIMATE,
+            CREATE_VIEW_TALLYPOPULATION,
+
+            SET_DBVERSION,
+        };
+    }
+}
+

@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace CruiseDAL.Schema.V3
+﻿namespace CruiseDAL.Schema
 {
     public partial class DDL
     {
@@ -27,7 +21,7 @@ namespace CruiseDAL.Schema.V3
                 "MerchHeightPrimary REAL Default 0.0, " +
                 "MerchHeightSecondary REAL Default 0.0, " +
                 "FormClass REAL Default 0.0, " +
-                "UpperStemDOB REAL Default 0.0, " +
+                //"UpperStemDOB REAL Default 0.0, " +
                 "UpperStemDiameter REAL Default 0.0, " +
                 "UpperStemHeight REAL Default 0.0, " +
                 "DBHDoubleBarkThickness REAL Default 0.0, " +
@@ -70,7 +64,7 @@ namespace CruiseDAL.Schema.V3
                 "MerchHeightPrimary, " +
                 "MerchHeightSecondary, " +
                 "FormClass, " +
-                "UpperStemDOB, " +
+                //"UpperStemDOB, " +
                 "UpperStemDiameter, " +
                 "UpperStemHeight, " +
                 "DBHDoubleBarkThickness, " +
@@ -95,49 +89,138 @@ namespace CruiseDAL.Schema.V3
             "END;";
     }
 
-    public partial class Updater
+    public partial class Migrations
     {
-        public const string INITIALIZE_TREEMEASURMENTS_FROM_TREE =
-            "INSERT INTO TreeMeasurments " +
-            "SELECT " +
-            "Tree_GUID AS TreeID, " +
-            "SeenDefectPrimary, " +
-            "SeenDefectSecondary, " +
-            "RecoverablePrimary, " +
-            "HiddenPrimary, " +
-            "Grade, " +
-            "HeightToFirstLiveLimb, " +
-            "PoleLength, " +
-            "ClearFace, " +
-            "CrownRatio, " +
-            "DBH, " +
-            "DRC, " +
-            "TotalHeight, " +
-            "MerchHeightPrimary, " +
-            "MerchHeightSecondary, " +
-            "FormClass, " +
-            "UpperStemDOB, " +
-            "UpperStemDiameter, " +
-            "UpperStemHeight, " +
-            "DBHDoubleBarkThickness, " +
-            "TopDIBPrimary, " +
-            "TopDIBSecondary, " +
-            "DefectCode, " +
-            "DiameterAtDefect, " +
-            "VoidPercent, " +
-            "Slope, " +
-            "Aspect, " +
-            "Remarks, " +
-            "XCoordinate, " +
-            "YCoordinate, " +
-            "ZCoordinate, " +
-            "MetaData, " +
-            "IsFallBuckScale, " +
-            "CreatedBy, " +
-            "CreatedDate, " +
-            "ModifiedBy, " +
-            "ModifiedDate, " +
-            "RowVersion " +
-            "FROM Tree AS t WHERE CountOrMeasure = 'M'; ";
+        public const string MIGRATE_TREEMEASURMENT_FROM_TREE_FORMAT_STR =
+            "INSERT INTO {0}.TreeMeasurment ( " +
+                    "TreeMeasurment_CN, " +
+                    "TreeID, " +
+                    "SeenDefectPrimary, " +
+                    "SeenDefectSecondary, " +
+                    "RecoverablePrimary, " +
+                    "HiddenPrimary, " +
+                    "Grade, " +
+                    "HeightToFirstLiveLimb, " +
+                    "PoleLength, " +
+                    "ClearFace, " +
+                    "CrownRatio, " +
+                    "DBH, " +
+                    "DRC, " +
+                    "TotalHeight, " +
+                    "MerchHeightPrimary, " +
+                    "MerchHeightSecondary, " +
+                    "FormClass, " +
+                    //"UpperStemDOB, " +
+                    "UpperStemDiameter, " +
+                    "UpperStemHeight, " +
+                    "DBHDoubleBarkThickness, " +
+                    "TopDIBPrimary, " +
+                    "TopDIBSecondary, " +
+                    "DefectCode, " +
+                    "DiameterAtDefect, " +
+                    "VoidPercent, " +
+                    "Slope, " +
+                    "Aspect, " +
+                    "Remarks, " +
+                    "XCoordinate, " +
+                    "YCoordinate, " +
+                    "ZCoordinate, " +
+                    "MetaData, " +
+                    "IsFallBuckScale, " +
+                    "CreatedBy, " +
+                    "CreatedDate, " +
+                    "ModifiedBy, " +
+                    "ModifiedDate, " +
+                    "RowVersion " +
+                ") " +
+                "SELECT " +
+                    "t.Tree_CN AS TreeMeasurment_CN, " +
+                    "t3.TreeID AS TreeID, " +
+                    "t.SeenDefectPrimary, " +
+                    "t.SeenDefectSecondary, " +
+                    "t.RecoverablePrimary, " +
+                    "t.HiddenPrimary, " +
+                    "t.Grade, " +
+                    "t.HeightToFirstLiveLimb, " +
+                    "t.PoleLength, " +
+                    "t.ClearFace, " +
+                    "t.CrownRatio, " +
+                    "t.DBH, " +
+                    "t.DRC, " +
+                    "t.TotalHeight, " +
+                    "t.MerchHeightPrimary, " +
+                    "t.MerchHeightSecondary, " +
+                    "t.FormClass, " +
+                    //"UpperStemDOB, " +
+                    "t.UpperStemDiameter, " +
+                    "t.UpperStemHeight, " +
+                    "t.DBHDoubleBarkThickness, " +
+                    "t.TopDIBPrimary, " +
+                    "t.TopDIBSecondary, " +
+                    "t.DefectCode, " +
+                    "t.DiameterAtDefect, " +
+                    "t.VoidPercent, " +
+                    "t.Slope, " +
+                    "t.Aspect, " +
+                    "t.Remarks, " +
+                    "t.XCoordinate, " +
+                    "t.YCoordinate, " +
+                    "t.ZCoordinate, " +
+                    "t.MetaData, " +
+                    "t.IsFallBuckScale, " +
+                    "t.CreatedBy, " +
+                    "t.CreatedDate, " +
+                    "t.ModifiedBy, " +
+                    "t.ModifiedDate, " +
+                    "t.RowVersion " +
+                "FROM {1}.Tree AS t " +
+                "JOIN {0}.Tree_V3 AS t3 USING (Tree_CN);";
     }
+
+    //public partial class Updater
+    //{
+    //    public const string INITIALIZE_TREEMEASURMENTS_FROM_TREE =
+    //        "INSERT INTO TreeMeasurment " +
+    //        "SELECT " +
+    //            "null AS TreeMeasurment_CN, " +
+    //            "Tree_GUID AS TreeID, " +
+    //            "SeenDefectPrimary, " +
+    //            "SeenDefectSecondary, " +
+    //            "RecoverablePrimary, " +
+    //            "HiddenPrimary, " +
+    //            "Grade, " +
+    //            "HeightToFirstLiveLimb, " +
+    //            "PoleLength, " +
+    //            "ClearFace, " +
+    //            "CrownRatio, " +
+    //            "DBH, " +
+    //            "DRC, " +
+    //            "TotalHeight, " +
+    //            "MerchHeightPrimary, " +
+    //            "MerchHeightSecondary, " +
+    //            "FormClass, " +
+    //            //"UpperStemDOB, " +
+    //            "UpperStemDiameter, " +
+    //            "UpperStemHeight, " +
+    //            "DBHDoubleBarkThickness, " +
+    //            "TopDIBPrimary, " +
+    //            "TopDIBSecondary, " +
+    //            "DefectCode, " +
+    //            "DiameterAtDefect, " +
+    //            "VoidPercent, " +
+    //            "Slope, " +
+    //            "Aspect, " +
+    //            "Remarks, " +
+    //            "XCoordinate, " +
+    //            "YCoordinate, " +
+    //            "ZCoordinate, " +
+    //            "MetaData, " +
+    //            "IsFallBuckScale, " +
+    //            "CreatedBy, " +
+    //            "CreatedDate, " +
+    //            "ModifiedBy, " +
+    //            "ModifiedDate, " +
+    //            "RowVersion " +
+    //        "FROM Tree AS t WHERE CountOrMeasure = 'M'; ";
+    //}
 }

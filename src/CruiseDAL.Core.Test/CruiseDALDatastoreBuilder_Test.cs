@@ -18,13 +18,15 @@ namespace CruiseDAL.Tests
         [Fact]
         public void CreateTables_Test()
         {
-            using(var database = new FMSC.ORM.SQLite.SQLiteDatastore())
+            using (var database = new FMSC.ORM.SQLite.SQLiteDatastore())
             using (var conn = database.CreateConnection())
             {
                 conn.Open();
 
                 var dbBuilder = new CruiseDALDatastoreBuilder();
+
                 dbBuilder.CreateDatabase(conn);
+
             }
         }
     }

@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace CruiseDAL.Schema.Common
+﻿namespace CruiseDAL.Schema
 {
     public partial class DDL
     {
@@ -19,5 +13,28 @@ namespace CruiseDAL.Schema.Common
                 "Suppress BOOLEAN Default 0, " +
                 "UNIQUE(TableName, CN_Number, ColumnName, Level)" +
             ");";
+    }
+
+    public partial class Migrations
+    {
+        public const string MIGRATE_ERRORLOG_FORMAT_STR =
+            "INSERT INTO {0}.ErrorLog ( " +
+                    "TableName, " +
+                    "CN_Number, " +
+                    "ColumnName, " +
+                    "Level, " +
+                    "Message, " +
+                    "Program, " +
+                    "Suppress " +
+                ") " +
+                "SELECT " +
+                    "TableName, " +
+                    "CN_Number, " +
+                    "ColumnName, " +
+                    "Level, " +
+                    "Message, " +
+                    "Program, " +
+                    "Suppress " +
+                "FROM {1}.ErrorLog;";
     }
 }

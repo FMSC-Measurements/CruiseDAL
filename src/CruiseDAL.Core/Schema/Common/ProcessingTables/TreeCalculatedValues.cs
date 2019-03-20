@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace CruiseDAL.Schema.Common
+﻿namespace CruiseDAL.Schema
 {
     public partial class DDL
     {
@@ -45,6 +39,9 @@ namespace CruiseDAL.Schema.Common
                 "Biomassfoliage REAL Default 0.0, " +
                 "BiomassTip REAL Default 0.0, " +
                 "TipwoodVolume REAL Default 0.0, " +
+                "ExpansionFactor REAL Default 0.0, " +
+                "TreeFactor REAL Default 0.0, " +
+                "PointFactor REAL Default 0.0, " +
                 "UNIQUE (Tree_CN)" +
             ");";
     }

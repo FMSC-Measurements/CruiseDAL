@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace CruiseDAL.Schema.Common
+﻿namespace CruiseDAL.Schema
 {
     public partial class DDL
     {
@@ -13,7 +7,7 @@ namespace CruiseDAL.Schema.Common
                 "TreeFieldSetupDefault_CN INTEGER PRIMARY KEY AUTOINCREMENT, " +
                 "Method TEXT NOT NULL COLLATE NOCASE, " +
                 "Field TEXT NOT NULL COLLATE NOCASE, " +
-                "FieldName TEXT, " +
+                //"FieldName TEXT, " +
                 "FieldOrder INTEGER Default 0, " +
                 "ColumnType TEXT, " +
                 "Heading TEXT, " +
@@ -22,5 +16,32 @@ namespace CruiseDAL.Schema.Common
                 "Behavior TEXT, " +
                 "UNIQUE (Method, Field)" +
             ");";
+    }
+
+    public partial class Migrations
+    {
+        public const string MIGRATE_TREEFIELDSETUPDEFAULT_FORMAT_STR =
+            "INSERT INTO {0}.TreeFieldSetupDefault ( " +
+                    "TreeFieldSetupDefault_CN, " +
+                    "Method, " +
+                    "Field, " +
+                    "FieldOrder, " +
+                    "ColumnType, " +
+                    "Heading, " +
+                    "Width, " +
+                    "Format, " +
+                    "Behavior " +
+                ") " +
+                "SELECT " +
+                    "TreeFieldSetupDefault_CN, " +
+                    "Method, " +
+                    "Field, " +
+                    "FieldOrder, " +
+                    "ColumnType, " +
+                    "Heading, " +
+                    "Width, " +
+                    "Format, " +
+                    "Behavior " +
+                    "FROM {1}.TreeFieldSetupDefault;";
     }
 }

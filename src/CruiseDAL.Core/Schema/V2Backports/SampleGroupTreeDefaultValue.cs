@@ -1,23 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace CruiseDAL.Schema.V2Backports
+﻿namespace CruiseDAL.Schema
 {
     public partial class DDL
     {
         public const string CREATE_VIEW_SAMPLEGROUPTREEDEFAULTVALUE =
-            "CREATE VIEW SampleGroupTreeDefaultValue " +
-            "(SampleGroup_CN, StratumCode, SampleGroupCode, TreeDefaultValue_CN, PrimaryProduct, FiaCode, LiveDead) AS " +
-            "SELECT sg.SampleGroup_CN, sgsp.StratumCode, sgsp.SampleGroupCode, tdv.TreeDefaultValue_CN, sg.PrimaryProduct, sgsp.FiaCode, fiasp.Species, sgsp.LiveDead " +
-            "FROM SampleGroup_Species AS sgsp " +
-            "JOIN FiaCode_Species as fiasp USING (FiaCode)" +
+            "CREATE VIEW SampleGroupTreeDefaultValue AS " +
+            "SELECT " +
+                "sg.SampleGroup_CN, " +
+                "tdv.TreeDefaultValue_CN " +
+            "FROM SubPopulation AS subpop " +
             "JOIN SampleGroup_V3 AS sg USING (SampleGroupCode, StratumCode) " +
-            "JOIN TreeDefaultValue_V3 AS tdv ON sg.PrimaryProduct = tdv.PrimaryProduct AND sgsp.FiaCode = tdv.FiaCode AND sgsp.LiveDead = tdv.LiveDead " +
+            "JOIN TreeDefaultValue AS tdv ON sg.PrimaryProduct = tdv.PrimaryProduct AND subpop.Species = tdv.Species AND subpop.LiveDead = tdv.LiveDead " +
             ";";
-
-
     }
 }

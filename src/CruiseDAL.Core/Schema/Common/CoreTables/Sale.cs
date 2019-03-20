@@ -1,4 +1,4 @@
-﻿namespace CruiseDAL.Schema.Common
+﻿namespace CruiseDAL.Schema
 {
     public partial class DDL
     {
@@ -44,5 +44,48 @@
                 "UPDATE Sale SET ModifiedDate = datetime('now', 'localtime') WHERE Sale_CN = old.Sale_CN; " +
                 "UPDATE Sale SET RowVersion = old.RowVersion + 1 WHERE Sale_CN = old.Sale_CN;" +
             "END;";
+    }
+
+    public partial class Migrations
+    {
+        public const string MIGRATE_SALE_FORMAT_STR =
+            "INSERT INTO {0}.Sale ( " +
+                    "Sale_CN, " +
+                    "SaleNumber, " +
+                    "Name, " +
+                    "Purpose, " +
+                    "Region, " +
+                    "Forest, " +
+                    "District, " +
+                    "MeasurementYear, " +
+                    "CalendarYear, " +
+                    "LogGradingEnabled, " +
+                    "Remarks, " +
+                    "DefaultUOM, " +
+                    "CreatedBy, " +
+                    "CreatedDate, " +
+                    "ModifiedBy, " +
+                    "ModifiedDate, " +
+                    "RowVersion " +
+                ") " +
+                "SELECT " +
+                    "Sale_CN, " +
+                    "SaleNumber, " +
+                    "Name, " +
+                    "Purpose, " +
+                    "Region, " +
+                    "Forest, " +
+                    "District, " +
+                    "MeasurementYear, " +
+                    "CalendarYear, " +
+                    "LogGradingEnabled, " +
+                    "Remarks, " +
+                    "DefaultUOM, " +
+                    "CreatedBy, " +
+                    "CreatedDate, " +
+                    "ModifiedBy, " +
+                    "ModifiedDate, " +
+                    "RowVersion " +
+                "FROM {1}.Sale;";
     }
 }

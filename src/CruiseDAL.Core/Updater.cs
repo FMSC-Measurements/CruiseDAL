@@ -1,6 +1,9 @@
 ﻿using Backpack.SqlBuilder;
 using FMSC.ORM;
+using FMSC.ORM.Core;
 using System;
+using System.Data.Common;
+using System.IO;
 
 namespace CruiseDAL
 {
@@ -20,60 +23,6 @@ namespace CruiseDAL
 
             if (db.DatabaseVersion.StartsWith("2"))
             {
-                //if (db.DatabaseVersion == "2013.05.28" || db.DatabaseVersion == "Unknown")
-                //{
-                //    UpdateToVersion2013_05_30(db);
-                //}
-
-                //if (db.DatabaseVersion == "2013.05.30")
-                //{
-                //    UpdateToVersion2013_06_12(db);
-                //}
-
-                //if (db.DatabaseVersion == "2013.06.12" || db.DatabaseVersion == "2013.06.13")
-                //{
-                //    UpdateToVersion2013_06_17(db);
-                //}
-
-                //if (db.DatabaseVersion == "2013.06.17" || db.DatabaseVersion == "2013.06.18")
-                //{
-                //    UpdateToVersion2013_06_19(db);
-                //}
-
-                //if (db.DatabaseVersion == "2013.06.19")
-                //{
-                //    UpdateVersion2013_06_19(db);
-                //    UpdateToVersion2013_08_02(db);
-                //}
-
-                //if (db.DatabaseVersion == "2013.08.02")
-                //{
-                //    UpdateToVersion2013_08_29(db);
-                //}
-
-                //if (db.DatabaseVersion == "2013.08.29")
-                //{
-                //    UpdateToVersion2013_10_29(db);
-                //}
-
-                //if (db.DatabaseVersion == "2013.10.29")
-                //{
-                //    UpdateToVersion2013_11_01(db);
-                //}
-
-                //if (db.DatabaseVersion == "2013.11.01")
-                //{
-                //    UpdateToVersion2013_11_22(db);
-                //}
-
-                //if (db.DatabaseVersion == "2013.11.22")
-                //{
-                //    UpdateToVersion2014_01_21(db);
-                //}
-                //if (db.DatabaseVersion == "2014.01.21")
-                //{
-                //    UpdateToVersion2014_03_12(db);
-                //}
                 if (db.DatabaseVersion.StartsWith("2013") || db.DatabaseVersion == "2014.01.21")
                 {
                     throw new IncompatibleSchemaException("The version of this cruise file is no longer supported." +
@@ -164,18 +113,10 @@ namespace CruiseDAL
             CleanupErrorLog(db);
         }
 
-        public static void UpdateMajorVersion(DAL db)
-        {
-            var version = db.DatabaseVersion;
-
-            if (version.StartsWith("2"))
-            {
-                UpdateTo_3_0(db);
-            }
-        }
-
         public static void UpdateToVersion2015_04_28(DAL db)
         {
+            var startVersion = db.DatabaseVersion;
+
             try
             {
                 db.BeginTransaction();
@@ -247,12 +188,14 @@ JOIN Stratum USING (Stratum_CN);");
             catch (Exception e)
             {
                 db.RollbackTransaction();
-                throw new SchemaUpdateException(db.DatabaseVersion, "2015.04.28", e);
+                throw new SchemaUpdateException(startVersion, "2015.04.28", e);
             }
         }
 
         public static void UpdateToVersion2015_08_03(DAL db)
         {
+            var startVersion = db.DatabaseVersion;
+
             try
             {
                 db.BeginTransaction();
@@ -269,12 +212,14 @@ JOIN Stratum USING (Stratum_CN);");
             catch (Exception e)
             {
                 db.RollbackTransaction();
-                throw new SchemaUpdateException(db.DatabaseVersion, "2015.08.03", e);
+                throw new SchemaUpdateException(startVersion, "2015.08.03", e);
             }
         }
 
         private static void UpdateToVersion2015_08_19(DAL db)
         {
+            var startVersion = db.DatabaseVersion;
+
             var tavCols = db.GetTableInfo("TreeAuditValue");
             bool hasErrorMessageCol = false;
             foreach (ColumnInfo col in tavCols)
@@ -299,13 +244,15 @@ JOIN Stratum USING (Stratum_CN);");
             catch (Exception e)
             {
                 db.RollbackTransaction();
-                throw new SchemaUpdateException(db.DatabaseVersion, "2015.08.19", e);
+                throw new SchemaUpdateException(startVersion, "2015.08.19", e);
             }
         }
 
         //patch for some a version that got out in the wild with bad triggers
         private static void UpdateToVersion2015_09_01(DAL db)
         {
+            var startVersion = db.DatabaseVersion;
+
             db.BeginTransaction();
             try
             {
@@ -324,12 +271,14 @@ JOIN Stratum USING (Stratum_CN);");
             catch (Exception e)
             {
                 db.RollbackTransaction();
-                throw new SchemaUpdateException(db.DatabaseVersion, "2015.09.01", e);
+                throw new SchemaUpdateException(startVersion, "2015.09.01", e);
             }
         }
 
         private static void UpdateTo_2_1_1(DAL db)
         {
+            var startVersion = db.DatabaseVersion;
+
             db.BeginTransaction();
             try
             {
@@ -353,7 +302,7 @@ JOIN Stratum USING (Stratum_CN);");
             catch (Exception e)
             {
                 db.RollbackTransaction();
-                throw new SchemaUpdateException(db.DatabaseVersion, "2.1.1", e);
+                throw new SchemaUpdateException(startVersion, "2.1.1", e);
             }
         }
 
@@ -367,20 +316,23 @@ JOIN Stratum USING (Stratum_CN);");
         // not null I'm deciding to remove it alltogether. RIP
         private static void UpdateTo_2_1_2(DAL db)
         {
-            db.Execute("PRAGMA primary_keys = off;");
+            var startVersion = db.DatabaseVersion;
 
-            db.BeginTransaction();
             try
             {
+                var fk = db.ExecuteScalar("Pragma foreign_keys;");
+
                 var treeTriggerDDL = GetTriggerDDL(db, "Tree");
 
                 db.Execute(
-            "CREATE TABLE new_Tree (\r\n" +
+                "PRAGMA foreign_keys = off;\r\n" +
+                "BEGIN;\r\n" +
+                "CREATE TABLE new_Tree (\r\n" +
                 "Tree_CN INTEGER PRIMARY KEY AUTOINCREMENT,\r\n" +
                 "Tree_GUID TEXT," +
                 "TreeDefaultValue_CN INTEGER REFERENCES TreeDefaultValue,\r\n" +
                 "Stratum_CN INTEGER REFERENCES Stratum NOT NULL,\r\n" +
-                "SampleGroup_CN INTEGER REFERENCES SampleGroup," +
+                "SampleGroup_CN INTEGER REFERENCES SampleGroup,\r\n" +
                 "CuttingUnit_CN INTEGER REFERENCES CuttingUnit NOT NULL,\r\n" +
                 "Plot_CN INTEGER REFERENCES Plot,\r\n" +
                 "TreeNumber INTEGER NOT NULL,\r\n" +
@@ -431,25 +383,138 @@ JOIN Stratum USING (Stratum_CN);");
                 "ModifiedBy TEXT,\r\n" +
                 "ModifiedDate DateTime,\r\n" +
                 "RowVersion INTEGER DEFAULT 0);" +
-            "INSERT INTO new_Tree SELECT * FROM Tree;\r\n" +
+            "INSERT INTO new_Tree ( " +
+                "Tree_CN,\r\n" +
+                "Tree_GUID," +
+                "TreeDefaultValue_CN,\r\n" +
+                "Stratum_CN,\r\n" +
+                "SampleGroup_CN,\r\n" +
+                "CuttingUnit_CN,\r\n" +
+                "Plot_CN,\r\n" +
+                "TreeNumber,\r\n" +
+                "Species,\r\n" +
+                "CountOrMeasure,\r\n" +
+                "TreeCount,\r\n" +
+                "KPI,\r\n" +
+                "STM,\r\n" +
+                "SeenDefectPrimary,\r\n" +
+                "SeenDefectSecondary,\r\n" +
+                "RecoverablePrimary,\r\n" +
+                "HiddenPrimary,\r\n" +
+                "Initials,\r\n" +
+                "LiveDead,\r\n" +
+                "Grade,\r\n" +
+                "HeightToFirstLiveLimb,\r\n" +
+                "PoleLength,\r\n" +
+                "ClearFace,\r\n" +
+                "CrownRatio,\r\n" +
+                "DBH,\r\n" +
+                "DRC,\r\n" +
+                "TotalHeight,\r\n" +
+                "MerchHeightPrimary,\r\n" +
+                "MerchHeightSecondary,\r\n" +
+                "FormClass,\r\n" +
+                "UpperStemDOB,\r\n" +
+                "UpperStemDiameter,\r\n" +
+                "UpperStemHeight,\r\n" +
+                "DBHDoubleBarkThickness,\r\n" +
+                "TopDIBPrimary,\r\n" +
+                "TopDIBSecondary,\r\n" +
+                "DefectCode,\r\n" +
+                "DiameterAtDefect,\r\n" +
+                "VoidPercent,\r\n" +
+                "Slope,\r\n" +
+                "Aspect,\r\n" +
+                "Remarks,\r\n" +
+                "XCoordinate,\r\n" +
+                "YCoordinate,\r\n" +
+                "ZCoordinate,\r\n" +
+                "MetaData,\r\n" +
+                "IsFallBuckScale,\r\n" +
+                "ExpansionFactor,\r\n" +
+                "TreeFactor,\r\n" +
+                "PointFactor,\r\n" +
+                "CreatedBy,\r\n" +
+                "CreatedDate,\r\n" +
+                "ModifiedBy,\r\n" +
+                "ModifiedDate,\r\n" +
+                "RowVersion " +
+                ") " +
+            " SELECT " +
+                "Tree_CN,\r\n" +
+                "Tree_GUID," +
+                "TreeDefaultValue_CN,\r\n" +
+                "Stratum_CN,\r\n" +
+                "SampleGroup_CN,\r\n" +
+                "CuttingUnit_CN,\r\n" +
+                "Plot_CN,\r\n" +
+                "TreeNumber,\r\n" +
+                "Species,\r\n" +
+                "CountOrMeasure,\r\n" +
+                "TreeCount,\r\n" +
+                "KPI,\r\n" +
+                "STM,\r\n" +
+                "SeenDefectPrimary,\r\n" +
+                "SeenDefectSecondary,\r\n" +
+                "RecoverablePrimary,\r\n" +
+                "HiddenPrimary,\r\n" +
+                "Initials,\r\n" +
+                "LiveDead,\r\n" +
+                "Grade,\r\n" +
+                "HeightToFirstLiveLimb,\r\n" +
+                "PoleLength,\r\n" +
+                "ClearFace,\r\n" +
+                "CrownRatio,\r\n" +
+                "DBH,\r\n" +
+                "DRC,\r\n" +
+                "TotalHeight,\r\n" +
+                "MerchHeightPrimary,\r\n" +
+                "MerchHeightSecondary,\r\n" +
+                "FormClass,\r\n" +
+                "UpperStemDOB,\r\n" +
+                "UpperStemDiameter,\r\n" +
+                "UpperStemHeight,\r\n" +
+                "DBHDoubleBarkThickness,\r\n" +
+                "TopDIBPrimary,\r\n" +
+                "TopDIBSecondary,\r\n" +
+                "DefectCode,\r\n" +
+                "DiameterAtDefect,\r\n" +
+                "VoidPercent,\r\n" +
+                "Slope,\r\n" +
+                "Aspect,\r\n" +
+                "Remarks,\r\n" +
+                "XCoordinate,\r\n" +
+                "YCoordinate,\r\n" +
+                "ZCoordinate,\r\n" +
+                "MetaData,\r\n" +
+                "IsFallBuckScale,\r\n" +
+                "ExpansionFactor,\r\n" +
+                "TreeFactor,\r\n" +
+                "PointFactor,\r\n" +
+                "CreatedBy,\r\n" +
+                "CreatedDate,\r\n" +
+                "ModifiedBy,\r\n" +
+                "ModifiedDate,\r\n" +
+                "RowVersion " +
+            "FROM Tree;\r\n" +
             "DROP Table Tree;\r\n" +
             "ALTER Table new_Tree RENAME TO Tree;\r\n" +
+            "COMMIT;\r\n" +
+            "PRAGMA primary_keys = on; " +
             treeTriggerDDL);
 
                 SetDatabaseVersion(db, "2.1.2");
-                db.CommitTransaction();
-
-                db.Execute("PRAGMA primary_keys = on;");
             }
             catch (Exception e)
             {
-                db.RollbackTransaction();
-                throw new SchemaUpdateException(db.DatabaseVersion, "2.1.2", e);
+                throw new SchemaUpdateException(startVersion, "2.1.2", e);
             }
         }
 
         private static void UpdateTo_2_2_0(DAL db)
         {
+            var startVersion = db.DatabaseVersion;
+
             try
             {
                 db.BeginTransaction();
@@ -464,12 +529,14 @@ ValidGrades TEXT);");
             catch (Exception e)
             {
                 db.RollbackTransaction();
-                throw new SchemaUpdateException(db.DatabaseVersion, "2.2.0", e);
+                throw new SchemaUpdateException(startVersion, "2.2.0", e);
             }
         }
 
         private static void UpdateTo_2_5_0(DAL db)
         {
+            var startVersion = db.DatabaseVersion;
+
             db.BeginTransaction();
             try
             {
@@ -486,129 +553,89 @@ ValidGrades TEXT);");
             catch (Exception e)
             {
                 db.RollbackTransaction();
-                throw new SchemaUpdateException(db.DatabaseVersion, "2.5.0", e);
+                throw new SchemaUpdateException(startVersion, "2.5.0", e);
             }
         }
 
-        //private const string CREATE_TABLE_TALLY_LEDGER_COMMAND =
-        //    "CREATE TABLE TallyLedger " +
-        //    "( " +
-        //    "TallyLedgerID TEXT PRIMARY KEY, " + //guid
-        //    "UnitCode TEXT NOT NULL, " +
-        //    "StratumCode TEXT NOT NULL, " +
-        //    "SampleGroupCode TEXT NOT NULL, " +
-        //    "PlotNumber INTEGER," +
-        //    "Species TEXT, " +
-        //    "LiveDead TEXT, " +
-        //    "TreeCount INTEGER NOT NULL, " +
-        //    "KPI INTEGER DEFAULT 0, " +
-        //    "ThreePRandomValue INTEGER DEFAULT 0, " +
-        //    "Tree_GUID TEXT REFERENCES Tree (Tree_GUID) ON DELETE CASCADE, " +
-        //    "TimeStamp TEXT DEFAULT (datetime('now', 'localtime')), " +
-        //    "Signature TEXT, " +
-        //    "Reason TEXT, " +
-        //    "Remarks TEXT, " +
-        //    "EntryType TEXT" +
-        //    ");";
-
-        private const string REBUILD_TREE_TABLE =
-            //"CREATE TEMP TABLE sqlite_master_temp AS SELECT * FROM sqlite_master WHERE Name = 'Tree';\r\n" +
-            "CREATE TABLE new_Tree ( " +
-                "Tree_CN INTEGER PRIMARY KEY AUTOINCREMENT, " +
-                "Tree_GUID TEXT UNIQUE , " + //added unique constraint
-                "TreeDefaultValue_CN INTEGER REFERENCES TreeDefaultValue, " +
-                "Stratum_CN INTEGER REFERENCES Stratum NOT NULL, " +
-                "SampleGroup_CN INTEGER REFERENCES SampleGroup, " +
-                "CuttingUnit_CN INTEGER REFERENCES CuttingUnit NOT NULL, " +
-                "Plot_CN INTEGER REFERENCES Plot, " +
-                "TreeNumber INTEGER NOT NULL, " +
-                "Species TEXT, " +
-                "CountOrMeasure TEXT, " +
-                "TreeCount REAL Default 0.0, " +
-                "KPI REAL Default 0.0, " +
-                "STM TEXT Default 'N', " +
-                "SeenDefectPrimary REAL Default 0.0, " +
-                "SeenDefectSecondary REAL Default 0.0, " +
-                "RecoverablePrimary REAL Default 0.0, " +
-                "HiddenPrimary REAL Default 0.0, " +
-                "Initials TEXT, " +
-                "LiveDead TEXT, " +
-                "Grade TEXT, " +
-                "HeightToFirstLiveLimb REAL Default 0.0, " +
-                "PoleLength REAL Default 0.0, " +
-                "ClearFace TEXT, " +
-                "CrownRatio REAL Default 0.0, " +
-                "DBH REAL Default 0.0, " +
-                "DRC REAL Default 0.0, " +
-                "TotalHeight REAL Default 0.0, " +
-                "MerchHeightPrimary REAL Default 0.0, " +
-                "MerchHeightSecondary REAL Default 0.0, " +
-                "FormClass REAL Default 0.0, " +
-                "UpperStemDOB REAL Default 0.0, " +
-                "UpperStemDiameter REAL Default 0.0, " +
-                "UpperStemHeight REAL Default 0.0, " +
-                "DBHDoubleBarkThickness REAL Default 0.0, " +
-                "TopDIBPrimary REAL Default 0.0, " +
-                "TopDIBSecondary REAL Default 0.0, " +
-                "DefectCode TEXT, " +
-                "DiameterAtDefect REAL Default 0.0, " +
-                "VoidPercent REAL Default 0.0, " +
-                "Slope REAL Default 0.0, " +
-                "Aspect REAL Default 0.0, " +
-                "Remarks TEXT, " +
-                "XCoordinate DOUBLE Default 0.0, " +
-                "YCoordinate DOUBLE Default 0.0, " +
-                "ZCoordinate DOUBLE Default 0.0, " +
-                "MetaData TEXT, " +
-                "IsFallBuckScale INTEGER Default 0, " +
-                "ExpansionFactor REAL Default 0.0, " +
-                "TreeFactor REAL Default 0.0, " +
-                "PointFactor REAL Default 0.0, " +
-                "CreatedBy TEXT DEFAULT 'none', " +
-                "CreatedDate DateTime DEFAULT (datetime('now', 'localtime')) , " + //date time changed
-                "ModifiedBy TEXT, " +
-                "ModifiedDate DateTime , " +
-                "RowVersion INTEGER DEFAULT 0);\r\n" +
-            "INSERT INTO new_Tree SELECT * FROM Tree;\r\n" +
-            "DROP Table Tree;\r\n" +
-            "ALTER Table new_Tree RENAME TO Tree;\r\n";
-
-        //private const string CREATE_VIEW_TALLY_POPULATION =
-        //    "CREATE VIEW TallyPopulation " +
-        //    "( StratumCode, SampleGroupCode, Species, LiveDead, Description, HotKey) " +
-        //    "AS " +
-        //    "SELECT Stratum.Code, SampleGroup.Code, TDV.Species, TDV.LiveDead, Tally.Description, Tally.HotKey  " +
-        //    "FROM CountTree " +
-        //    "JOIN SampleGroup USING (SampleGroup_CN) " +
-        //    "JOIN Stratum USING (Stratum_CN) " +
-        //    "LEFT JOIN TreeDefaultValue AS TDV USING (TreeDefaultValue_CN) " +
-        //    "JOIN Tally USING (Tally_CN) " +
-        //    "GROUP BY SampleGroup_CN, ifnull(TreeDefaultValue_CN, '');";
-
-        
-
-        
-
-        
-
-        public static void UpdateTo_3_0(DAL db)
+        public static void UpdateMajorVersion(DAL db)
         {
-            db.Execute("PRAGMA foreign_keys=OFF;");
-            db.BeginTransaction();
-            try
+            var version = db.DatabaseVersion;
+
+            if (version.StartsWith("2"))
             {
-                //db.Execute(Schema.Schema.CREATE_VIEW_TALLY_POPULATION);
-                db.Execute(REBUILD_TREE_TABLE);
-                //db.Execute(Schema.Schema.CREATE_TABLE_TALLY_LEDGER_COMMAND);
-                //db.Execute(INITIALIZE_TALLY_LEDGER_FROM_COUNTTREE);
-                SetDatabaseVersion(db, "3.0.0");
-                db.CommitTransaction();
-                db.Execute("PRAGMA foreign_keys=ON;");
+                var connection = db.OpenConnection();
+                try
+                {
+                    Migrate_From_V2(db);
+                }
+                catch
+                {
+                    db.ReleaseConnection();
+                    throw;
+                }
             }
-            catch (Exception e)
+        }
+
+        public static void Migrate_From_V2(DAL db)
+        {
+            var startingDbVersion = db.DatabaseVersion;
+
+            // get path, directory and filename of original file
+            var originalPath = db.Path;
+            var fileDirectory = System.IO.Path.GetDirectoryName(originalPath);
+            var fileName = System.IO.Path.GetFileName(originalPath);
+
+            // create path for new temp file
+            var tempFileName = fileName + ".new";
+            var tempFilePath = System.IO.Path.Combine(fileDirectory, tempFileName);
+
+            // check temp file doesn't already exist, otherwise delete it
+            if (File.Exists(tempFilePath)) { File.Delete(tempFilePath); }
+
+            using (var newCruise = new DAL(tempFilePath, true))
             {
-                db.RollbackTransaction();
-                throw new SchemaUpdateException(db.DatabaseVersion, "3.0.0", e);
+                var oldDbAlias = "v2";
+                newCruise.AttachDB(db, oldDbAlias);
+                var count = newCruise.ExecuteScalar("SELECT count(*) from sale;");
+
+                try
+                {
+                    var connection = newCruise.OpenConnection();
+                    Migrate_From_V2(connection, oldDbAlias);
+                }
+                finally
+                {
+                    db.ReleaseConnection();
+                }
+            }
+
+            // copy original to backup path
+            var backUpFileName = fileName + Guid.NewGuid() + "_" + startingDbVersion + ".Bak";
+            var backUpPath = System.IO.Path.Combine(fileDirectory, backUpFileName);
+            db.CopyTo(backUpPath);
+
+            File.Delete(originalPath);
+            File.Move(tempFilePath, originalPath);
+        }
+
+        public static void Migrate_From_V2(DbConnection connection, string from)
+        {
+            var to = "main";
+            using (var transaction = connection.BeginTransaction())
+            {
+                foreach (var command in Schema.Migrations.GetMigrateCommands(to, from))
+                {
+                    try
+                    {
+                        connection.ExecuteNonQuery(command, (object[])null, transaction);
+                    }
+                    catch (Exception e)
+                    {
+                        throw;
+                    }
+                }
+
+                transaction.Commit();
             }
         }
     }

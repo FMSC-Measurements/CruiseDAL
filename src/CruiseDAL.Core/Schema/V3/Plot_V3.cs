@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace CruiseDAL.Schema.V3
+﻿namespace CruiseDAL.Schema
 {
     public partial class DDL
     {
@@ -24,7 +18,10 @@ namespace CruiseDAL.Schema.V3
                 "ModifiedBy TEXT COLLATE NOCASE, " +
                 "ModifiedDate DATETIME, " +
                 "RowVersion, " +
-                "UNIQUE (CuttingUnitCode, PlotNumber)" +
+
+                "UNIQUE (CuttingUnitCode, PlotNumber), " +
+
+                "FOREIGN KEY (CuttingUnitCode) REFERENCES CuttingUnit (Code) ON DELETE CASCADE " +
             ");";
 
         public const string CREATE_TRIGGER_PLOT_V3_ONUPDATE =
@@ -45,23 +42,66 @@ namespace CruiseDAL.Schema.V3
             "END;";
     }
 
-    public partial class Updater
+    public partial class Migrations
     {
-        public const string INITIALIZE_PLOT_V3_FROM_PLOT =
-            "INSERT INTO Plot_V3 " +
-            "SELECT " +
-            "PlotNumber, " +
-            "cu.Code AS CuttingUnitCode, " +
-            "Slope, " +
-            "Aspect, " +
-            "Remarks, " +
-            "XCoordinate, " +
-            "YCoordinate, " +
-            "ZCoordinate, " +
-            "CreatedBy, " +
-            "CreatedDate " +
-            "FROM Plot AS p " +
-            "JOIN CuttingUnit AS cu USING (CuttingUnit_CN) " +
-            "GROUP BY cu.Code, PlotNumber;";
+        public const string MIGRATE_PLOT_V3_FROM_PLOT_FORMAT_STR =
+            "INSERT INTO {0}.Plot_V3 ( " +
+                    "Plot_CN, " +
+                    "PlotNumber, " +
+                    "CuttingUnitCode, " +
+                    "Slope, " +
+                    "Aspect, " +
+                    "Remarks, " +
+                    "XCoordinate, " +
+                    "YCoordinate, " +
+                    "ZCoordinate, " +
+                    "CreatedBy, " +
+                    "CreatedDate, " +
+                    "ModifiedBy, " +
+                    "ModifiedDate, " +
+                    "RowVersion " +
+                ") " +
+                "SELECT " +
+                    "p.Plot_CN, " +
+                    "p.PlotNumber, " +
+                    "cu.Code AS CuttingUnitCode, " +
+                    "p.Slope, " +
+                    "p.Aspect, " +
+                    "p.Remarks, " +
+                    "p.XCoordinate, " +
+                    "p.YCoordinate, " +
+                    "p.ZCoordinate, " +
+                    "p.CreatedBy, " +
+                    "p.CreatedDate, " +
+                    "p.ModifiedBy, " +
+                    "p.ModifiedDate, " +
+                    "p.RowVersion " +
+                "FROM {1}.Plot AS p " +
+                "JOIN {1}.CuttingUnit AS cu USING (CuttingUnit_CN) " +
+                "GROUP BY cu.Code, PlotNumber;";
     }
+
+    //public partial class Updater
+    //{
+    //    public const string INITIALIZE_PLOT_V3_FROM_PLOT =
+    //        "INSERT INTO Plot_V3 " +
+    //        "SELECT " +
+    //        "p.Plot_CN, " +
+    //        "p.PlotNumber, " +
+    //        "cu.Code AS CuttingUnitCode, " +
+    //        "p.Slope, " +
+    //        "p.Aspect, " +
+    //        "p.Remarks, " +
+    //        "p.XCoordinate, " +
+    //        "p.YCoordinate, " +
+    //        "p.ZCoordinate, " +
+    //        "p.CreatedBy, " +
+    //        "p.CreatedDate, " +
+    //        "p.ModifiedBy, " +
+    //        "p.ModifiedDate, " +
+    //        "p.RowVersion " +
+    //        "FROM Plot AS p " +
+    //        "JOIN CuttingUnit AS cu USING (CuttingUnit_CN) " +
+    //        "GROUP BY cu.Code, PlotNumber;";
+    //}
 }

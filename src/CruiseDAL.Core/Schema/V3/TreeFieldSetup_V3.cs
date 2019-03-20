@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace CruiseDAL.Schema.V3
+﻿namespace CruiseDAL.Schema
 {
     public partial class DDL
     {
@@ -16,21 +10,41 @@ namespace CruiseDAL.Schema.V3
                 "Heading TEXT, " +
                 "Width REAL Default 0.0, " +
                 "UNIQUE(StratumCode, Field), " +
-                "FOREIGN KEY (StratumCode) REFERENCES Stratum (StratumCode) ON DELETE CASCADE ON UPDATE CASCADE" +
+                "FOREIGN KEY (StratumCode) REFERENCES Stratum (Code) ON DELETE CASCADE ON UPDATE CASCADE" +
             ");";
     }
 
-    public partial class Updater
+    public partial class Migrations
     {
-        public const string INITIALIZE_TREEFIELDSETUP_V3_FROM_TREEFIELDSETUP =
-            "INSERT INTO TreeFieldSetup_V3 " +
-            "SELECT " +
-            "st.Code AS StratumCode, " +
-            "Field, " +
-            "FieldOrder, " +
-            "Heading, " +
-            "Width " +
-            "FROM TreeFieldSetup " +
-            "JOIN Stratum AS st USING (Stratum_CN);";
+        public const string MIGRATE_TREEFIELDSETUP_V3_FROM_TREEFIELDSETUP_FORMAT_STR =
+            "INSERT INTO {0}.TreeFieldSetup_V3 ( " +
+                    "StratumCode, " +
+                    "Field, " +
+                    "FieldOrder, " +
+                    "Heading, " +
+                    "Width " +
+                ") " +
+                "SELECT " +
+                    "st.Code AS StratumCode, " +
+                    "Field, " +
+                    "FieldOrder, " +
+                    "Heading, " +
+                    "Width " +
+                "FROM {1}.TreeFieldSetup " +
+                "JOIN {1}.Stratum AS st USING (Stratum_CN);";
     }
+
+    //public partial class Updater
+    //{
+    //    public const string INITIALIZE_TREEFIELDSETUP_V3_FROM_TREEFIELDSETUP =
+    //        "INSERT INTO TreeFieldSetup_V3 " +
+    //        "SELECT " +
+    //            "st.Code AS StratumCode, " +
+    //            "Field, " +
+    //            "FieldOrder, " +
+    //            "Heading, " +
+    //            "Width " +
+    //        "FROM TreeFieldSetup " +
+    //        "JOIN Stratum AS st USING (Stratum_CN);";
+    //}
 }

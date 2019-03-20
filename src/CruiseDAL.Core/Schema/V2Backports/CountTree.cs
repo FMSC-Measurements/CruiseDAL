@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace CruiseDAL.Schema.V2Backports
+﻿namespace CruiseDAL.Schema
 {
     public partial class DDL
     {
@@ -12,13 +6,16 @@ namespace CruiseDAL.Schema.V2Backports
             "CREATE VIEW CountTree AS " +
             "WITH tallyLedgerGrouped AS (" +
                 "SELECT CuttingUnitCode, StratumCode, SampleGroupCode, ifnull(Species, '') AS Species, ifnull(LiveDead, '') AS LiveDead, " +
-                "sum(TreeCount), sum(KPI) AS SumKPI " +
+                "sum(TreeCount) AS TreeCount, sum(KPI) AS SumKPI, " +
+                "min(TallyLedger_CN) AS CountTree_CN " +
                 "FROM TallyLedger " +
                 "GROUP BY CuttingUnitCode, StratumCode, SampleGroupCode, Species, LiveDead " +
             ") " +
 
             ", tallyPopulationTallyLedger AS (" +
-                "SELECT cust.CuttingUnitCode, " +
+                "SELECT " +
+                "tl.CountTree_CN, " +
+                "cust.CuttingUnitCode, " +
                 "tp.StratumCode, " +
                 "tp.SampleGroupCode, " +
                 "tp.Species, tp.LiveDead, " +
@@ -28,12 +25,12 @@ namespace CruiseDAL.Schema.V2Backports
                 "LEFT JOIN tallyLedgerGrouped AS tl ON cust.CuttingUnitCode = tl.CuttingUnitCode " +
                     "AND tl.StratumCode = tp.StratumCode " +
                     "AND tl.SampleGroupCode = tp.SampleGroupCode " +
-                    "AND tl.Species = tp.Species " +
-                    "AND tl.LiveDead = tp.LiveDead " +
+                    "AND tl.Species = ifnull(tp.Species,'') " +
+                    "AND tl.LiveDead = ifnull(tp.LiveDead, '') " +
             ") " +
 
             "SELECT " +
-                "row_number() AS CountTree_CN, " +
+                "tptl.CountTree_CN AS CountTree_CN, " +
                 "cu.CuttingUnit_CN, " +
                 "sg.SampleGroup_CN, " +
                 "tdv.TreeDefaultValue_CN, " +
@@ -47,7 +44,7 @@ namespace CruiseDAL.Schema.V2Backports
                 "0 AS RowVersion " +
             "FROM tallyPopulationTallyLedger AS tptl " +
             "JOIN CuttingUnit AS cu ON tptl.CuttingUnitCode = cu.Code " +
-            "JOIN SampleGroup AS sg USING (SampleGroupCode, StratumCode) " +
+            "JOIN SampleGroup_V3 AS sg USING (SampleGroupCode, StratumCode) " +
             "LEFT JOIN TreeDefaultValue AS tdv ON tptl.Species = tdv.Species AND tptl.LiveDead = tdv.LiveDead AND tdv.PrimaryProduct = sg.PrimaryProduct " +
             "; ";
     }

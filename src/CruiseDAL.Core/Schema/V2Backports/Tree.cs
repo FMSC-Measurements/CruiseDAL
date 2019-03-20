@@ -1,27 +1,39 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace CruiseDAL.Schema.V2Backports
+﻿namespace CruiseDAL.Schema
 {
     public partial class DDL
     {
         public const string CREATE_VIEW_TREE =
             "CREATE VIEW Tree AS " +
-            "SELECT t.Tree_CN, t.TreeID, t.CuttingUnitCode, t.StratumCode, t.SampleGroupCode, t.Species, tdv.FiaCode, t.LiveDead, t.PlotNumber, t.TreeNumber, " +
-            "st.Stratum_CN, sg.SampleGroup_CN, tdv.TreeDefaultValue_CN,  plt.Plot_Stratum_CN AS Plot_CN, " +
-            "tl.TreeCount, tl.KPI, tl.STM, tl.Signature, " +
-            "tcv.ExpansionFactor, tcv.TreeFactor, tcv.PointFactor, " +
-            "tm.* " +
+            "SELECT " +
+                "t.Tree_CN, " +
+                "t.TreeID AS Tree_GUID, " +
+                "cu.CuttingUnit_CN, " +
+                "st.Stratum_CN, " +
+                "sg.SampleGroup_CN, " +
+                "tdv.TreeDefaultValue_CN,  " +
+                "plt.Plot_Stratum_CN AS Plot_CN, " +
+                "t.Species, " +
+                "t.LiveDead, " +
+                "t.TreeNumber, " +
+                "t.CountOrMeasure, " +                
+                "CAST (ifnull(tl.TreeCount, 0) AS REAL) AS TreeCount, " + // in v2 TreeCount and kpi had a type of REAL
+                "CAST (ifnull(tl.KPI, 0) AS REAL) AS KPI, " +
+                "ifnull(tl.STM, 'N') AS STM, " +
+                "tcv.ExpansionFactor, " +
+                "tcv.TreeFactor, " +
+                "tcv.PointFactor, " +
+                "tm.* " +
             "FROM Tree_V3 AS t " +
-            "JOIN Stratum AS st ON StratumCode = st.Code " +
-            "JOIN SampleGroup AS sg USING (StratumCode, SampleGroupCode) " +
-            "JOIN TallyLedger AS tl USING (TreeID) " +
-            "LEFT JOIN TreeMeasurments AS tm USING (TreeID) " +
+            "JOIN SampleGroup_V3 AS sg ON t.StratumCode = sg.StratumCode AND t.SampleGroupCode = sg.SampleGroupCode  " +
+            "JOIN Stratum AS st ON t.StratumCode = st.Code " +
+            "JOIN CuttingUnit AS cu ON t.CuttingUnitCode = cu.Code " +
+            "LEFT JOIN TallyLedger AS tl USING (TreeID) " +
+            "LEFT JOIN TreeMeasurment AS tm USING (TreeID) " +
             "LEFT JOIN TreeCalculatedValues AS tcv USING (Tree_CN) " +
-            "LEFT JOIN TreeDefaultValue AS tdv ON tdv.Species = t.Species AND tdv.LiveDead = t.LiveDead AND tdv.PrimaryProduct = sg.PrimaryProduct " +
+            "LEFT JOIN TreeDefaultValue AS tdv ON " +
+                        "tdv.Species = t.Species " +
+                        "AND tdv.LiveDead = t.LiveDead " +
+                        "AND tdv.PrimaryProduct = sg.PrimaryProduct " +
             "LEFT JOIN Plot_Stratum AS plt USING (StratumCode, PlotNumber);";
 
         public const string CTEATE_TRIGGER_TREE_ONUPDATE =

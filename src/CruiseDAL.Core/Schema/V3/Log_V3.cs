@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace CruiseDAL.Schema.V3
+﻿namespace CruiseDAL.Schema
 {
     public partial class DDL
     {
@@ -29,12 +23,15 @@ namespace CruiseDAL.Schema.V3
                 "CubicFootRemoved REAL Default 0.0, " +
                 "DIBClass REAL Default 0.0, " +
                 "BarkThickness REAL Default 0.0, " +
-                "CreatedBy TEXT DEFAULT 'none', " +
+                "CreatedBy TEXT DEFAULT '', " +
                 "CreatedDate DateTime DEFAULT (datetime('now', 'localtime')), " +
                 "ModifiedBy TEXT , " +
                 "ModifiedDate DateTime , " +
                 "RowVersion INTEGER DEFAULT 0, " +
-                "UNIQUE (TreeID, LogNumber)" +
+
+                "UNIQUE (TreeID, LogNumber), " +
+
+                "FOREIGN KEY (TreeID) REFERENCES Tree_V3 (TreeID) ON DELETE CASCADE " +
             ");";
 
         public const string CREATE_TRIGGER_LOG_V3_ONUPDATE =
@@ -64,35 +61,94 @@ namespace CruiseDAL.Schema.V3
             "END;";
     }
 
-    public partial class Updater
+    public partial class Migrations
     {
-        public const string INITIALIZE_LOG_V3_FROM_LOG =
-            "INSERT INTO LOG_V3 " +
-            "SELECT " +
-            "Log_GUID AS LogID, " +
-            "t.TreeID AS TreeID, " +
-            "LogNumber, " +
-            "Grade, " +
-            "SeenDefect, " +
-            "PercentRecoverable, " +
-            "Length, " +
-            "ExportGrade, " +
-            "SmallEndDiameter, " +
-            "LargeEndDiameter, " +
-            "GrossBoardFoot, " +
-            "NetBoardFoot, " +
-            "GrossCubicFoot, " +
-            "NetCubicFoot, " +
-            "BoardFootRemoved, " +
-            "CubicFootRemoved, " +
-            "DIBClass, " +
-            "BarkThickness, " +
-            "CreatedBy, " +
-            "CreatedDate, " +
-            "ModifiedBy, " +
-            "ModifiedDate, " +
-            "RowVersion" +
-            "FROM Log " +
-            "JOIN Tree_V3 AS t USING (Tree_CN);";
+        public const string MIGRATE_LOG_V3_FROM_LOG =
+            "INSERT INTO {0}.Log_V3 ( " +
+                    "Log_CN, " +
+                    "LogID, " +
+                    "TreeID, " +
+                    "LogNumber, " +
+                    "Grade, " +
+                    "SeenDefect, " +
+                    "PercentRecoverable, " +
+                    "Length, " +
+                    "ExportGrade, " +
+                    "SmallEndDiameter, " +
+                    "LargeEndDiameter, " +
+                    "GrossBoardFoot, " +
+                    "NetBoardFoot, " +
+                    "GrossCubicFoot, " +
+                    "NetCubicFoot, " +
+                    "BoardFootRemoved, " +
+                    "CubicFootRemoved, " +
+                    "DIBClass, " +
+                    "BarkThickness, " +
+                    "CreatedBy, " +
+                    "CreatedDate, " +
+                    "ModifiedBy, " +
+                    "ModifiedDate, " +
+                    "RowVersion " +
+                ") " +
+                "SELECT " +
+                    "l.Log_CN, " +
+                    "l.Log_GUID AS LogID, " +
+                    "t.TreeID AS TreeID, " +
+                    "l.LogNumber, " +
+                    "l.Grade, " +
+                    "l.SeenDefect, " +
+                    "l.PercentRecoverable, " +
+                    "l.Length, " +
+                    "l.ExportGrade, " +
+                    "l.SmallEndDiameter, " +
+                    "l.LargeEndDiameter, " +
+                    "l.GrossBoardFoot, " +
+                    "l.NetBoardFoot, " +
+                    "l.GrossCubicFoot, " +
+                    "l.NetCubicFoot, " +
+                    "l.BoardFootRemoved, " +
+                    "l.CubicFootRemoved, " +
+                    "l.DIBClass, " +
+                    "l.BarkThickness, " +
+                    "l.CreatedBy, " +
+                    "l.CreatedDate, " +
+                    "l.ModifiedBy, " +
+                    "l.ModifiedDate, " +
+                    "l.RowVersion " +
+                "FROM {1}.Log as l " +
+                "JOIN {0}.Tree_V3 AS t USING (Tree_CN);";
     }
+
+    //public partial class Updater
+    //{
+    //    public const string INITIALIZE_LOG_V3_FROM_LOG =
+    //        "INSERT INTO LOG_V3 " +
+    //        "SELECT " +
+    //            "l.Log_CN, " +
+    //            "l.Log_GUID AS LogID, " +
+    //            "t.TreeID AS TreeID, " +
+    //            "l.LogNumber, " +
+    //            "l.Grade, " +
+    //            "l.SeenDefect, " +
+    //            "l.PercentRecoverable, " +
+    //            "l.Length, " +
+    //            "l.ExportGrade, " +
+    //            "l.SmallEndDiameter, " +
+    //            "l.LargeEndDiameter, " +
+    //            "l.GrossBoardFoot, " +
+    //            "l.NetBoardFoot, " +
+    //            "l.GrossCubicFoot, " +
+    //            "l.NetCubicFoot, " +
+    //            "l.BoardFootRemoved, " +
+    //            "l.CubicFootRemoved, " +
+    //            "l.DIBClass, " +
+    //            "l.BarkThickness, " +
+    //            "l.CreatedBy, " +
+    //            "l.CreatedDate, " +
+    //            "l.ModifiedBy, " +
+    //            "l.ModifiedDate, " +
+    //            "l.RowVersion " +
+    //        "FROM Log as l " +
+    //        "JOIN Tree_V3 AS t USING (Tree_CN);";
+    //}
 }

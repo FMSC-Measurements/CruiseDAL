@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace CruiseDAL.Schema.Common
+﻿namespace CruiseDAL.Schema
 {
     public partial class DDL
     {
@@ -13,7 +7,7 @@ namespace CruiseDAL.Schema.Common
                 "Stratum_CN INTEGER PRIMARY KEY AUTOINCREMENT, " +
                 "Code TEXT NOT NULL COLLATE NOCASE, " +
                 "Description TEXT, " +
-                "Method TEXT DEFAULT '', " +
+                "Method TEXT DEFAULT '' COLLATE NOCASE, " +
                 "BasalAreaFactor REAL DEFAULT 0.0, " +
                 "FixedPlotSize REAL DEFAULT 0.0, " +
                 "KZ3PPNT INTEGER DEFAULT 0, " +
@@ -54,5 +48,50 @@ namespace CruiseDAL.Schema.Common
                 "UPDATE Stratum SET ModifiedDate = datetime( 'now', 'localtime') WHERE Stratum_CN = old.Stratum_CN; " +
                 "UPDATE Stratum SET RowVersion = datetime( 'now', 'localtime') WHERE Stratum_CN = old.Stratum_CN; " +
             "END; ";
+    }
+
+    public partial class Migrations
+    {
+        public const string MIGRATE_STRATUM_FORMAT_STR =
+            "INSERT INTO {0}.Stratum ( " +
+                    "Code, " +
+                    "Description, " +
+                    "Method, " +
+                    "BasalAreaFactor, " +
+                    "FixedPlotSize, " +
+                    "KZ3PPNT, " +
+                    "SamplingFrequency, " +
+                    "HotKey, " +
+                    "FBSCode, " +
+                    "YieldComponent, " +
+                    "VolumeFactor, " +
+                    "Month, " +
+                    "Year, " +
+                    "CreatedBy, " +
+                    "CreatedDate, " +
+                    "ModifiedBy, " +
+                    "ModifiedDate, " +
+                    "RowVersion " +
+                ") " +
+                "SELECT " +
+                    "Code, " +
+                    "Description, " +
+                    "Method, " +
+                    "BasalAreaFactor, " +
+                    "FixedPlotSize, " +
+                    "KZ3PPNT, " +
+                    "SamplingFrequency, " +
+                    "HotKey, " +
+                    "FBSCode, " +
+                    "YieldComponent, " +
+                    "VolumeFactor, " +
+                    "Month, " +
+                    "Year, " +
+                    "CreatedBy, " +
+                    "CreatedDate, " +
+                    "ModifiedBy, " +
+                    "ModifiedDate, " +
+                    "RowVersion " +
+                "FROM {1}.Stratum;";
     }
 }

@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace CruiseDAL.Schema.Common
+﻿namespace CruiseDAL.Schema
 {
     public partial class DDL
     {
@@ -42,5 +36,30 @@ namespace CruiseDAL.Schema.Common
                 "UPDATE CuttingUnit SET ModifiedDate = datetime('now', 'localtime') WHERE CuttingUnit_CN = old.CuttingUnit_CN; " +
                 "UPDATE CuttingUnit SET RowVersion = old.RowVersion + 1 WHERE CuttingUnit_CN = old.CuttingUnit_CN; " +
             "END; ";
+    }
+
+    public partial class Migrations
+    {
+        public const string MIGRATE_CUTTINGUNIT_FORMAT_STR =
+            "INSERT INTO {0}.CuttingUnit ( " +
+                    "CuttingUnit_CN, " +
+                    "Code, " +
+                    "Area, " +
+                    "Description, " +
+                    "LoggingMethod, " +
+                    "PaymentUnit, " +
+                    "TallyHistory, " +
+                    "Rx " +
+                ") " +
+                "SELECT " +
+                    "CuttingUnit_CN, " +
+                    "Code, " +
+                    "Area, " +
+                    "Description, " +
+                    "LoggingMethod, " +
+                    "PaymentUnit, " +
+                    "TallyHistory, " +
+                    "Rx " +
+                "FROM {1}.CuttingUnit; ";
     }
 }

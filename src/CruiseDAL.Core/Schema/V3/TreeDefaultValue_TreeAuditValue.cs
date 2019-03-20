@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace CruiseDAL.Schema.V3
+﻿namespace CruiseDAL.Schema
 {
     public partial class DDL
     {
@@ -21,17 +15,39 @@ namespace CruiseDAL.Schema.V3
             ");";
     }
 
-    public partial class Updater
+    public partial class Migrations
     {
-        public const string INITIALIZE_TREEDEFAULTVALUE_TREEAUDITVALUE_FROM_TREEDEFAULTVALUETREEAUDITVALUE =
-            "INSERT INTO TreeDefaultValue_TreeAuditValue " +
-            "SELECT " +
-            "tdv.Species, " +
-            "tdv.LiveDead, " +
-            "tdv.PrimaryProduct, " +
-            "tav.TreeAuditValueID " +
-            "FROM TreeDefaultValueTreeAuditValue AS tdvtav " +
-            "JOIN TreeDefaultValue AS tdv USING (TreeDefaultValue_CN) " +
-            "JOIN TreeAuditValue AS tav USING (TreeAuditValue_CN)";
+        public const string MIGRATE_TREEDEFAULTVALUE_TREEAUDITVALUE_FROM_TREEDEFAULTVALUETREEAUDITVALUE =
+            "INSERT INTO {0}.TreeDefaultValue_TreeAuditValue ( " +
+                    "TreeDefaultValue_TreeAuditValue_CN," +
+                    "Species, " +
+                    "LiveDead, " +
+                    "PrimaryProduct, " +
+                    "TreeAuditValueID " +
+                ") " +
+                "SELECT " +
+                    "tdvtav.RowID AS TreeDefaultValue_TreeAuditValue_CN," +
+                    "tdv.Species, " +
+                    "tdv.LiveDead, " +
+                    "tdv.PrimaryProduct, " +
+                    "tav.TreeAuditValueID " +
+                "FROM TreeDefaultValueTreeAuditValue AS tdvtav " +
+                "JOIN TreeDefaultValue AS tdv USING (TreeDefaultValue_CN) " +
+                "JOIN TreeAuditValue AS tav USING (TreeAuditValue_CN);";
     }
+
+    //public partial class Updater
+    //{
+    //    public const string INITIALIZE_TREEDEFAULTVALUE_TREEAUDITVALUE_FROM_TREEDEFAULTVALUETREEAUDITVALUE =
+    //        "INSERT INTO TreeDefaultValue_TreeAuditValue " +
+    //        "SELECT " +
+    //            "tdvtav.RowID AS TreeDefaultValue_TreeAuditValue_CN," +
+    //            "tdv.Species, " +
+    //            "tdv.LiveDead, " +
+    //            "tdv.PrimaryProduct, " +
+    //            "tav.TreeAuditValueID " +
+    //        "FROM TreeDefaultValueTreeAuditValue AS tdvtav " +
+    //        "JOIN TreeDefaultValue AS tdv USING (TreeDefaultValue_CN) " +
+    //        "JOIN TreeAuditValue AS tav USING (TreeAuditValue_CN);";
+    //}
 }
