@@ -4,7 +4,6 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
-using System.Threading;
 
 #pragma warning disable RECS0122 // Initializing field with default value is redundant
 #pragma warning disable RECS0104 // When object creation uses object or collection initializer, empty argument list is redundant
@@ -17,19 +16,19 @@ namespace CruiseDAL
     {
         protected class ExternalDatastore
         {
+            private string _dbPath;
             public DatastoreRedux DS;
+
+            public string DbPath
+            {
+                get => _dbPath ?? DS.Path;
+                set => _dbPath = value;
+            }
+
             public string Alias;
         }
 
-        private string _userInfo;
-        private string _databaseVersion = "Unknown";
-
-        protected ICollection<ExternalDatastore> _attachedDataStores = new List<ExternalDatastore>();
-
-        /// <summary>
-        /// represents value returned by PRAGMA user_version;
-        /// </summary>
-        internal long SchemaVersion { get; set; }
+        private ICollection<ExternalDatastore> _attachedDataStores = new List<ExternalDatastore>();
 
         /// <summary>
         /// Get the database version
@@ -38,26 +37,14 @@ namespace CruiseDAL
         {
             get
             {
-                return _databaseVersion;
-            }
-            internal set
-            {
-                this._databaseVersion = value;
-            }
-        }
-
-        /// <summary>
-        /// Gets the string used to identify the user, for the purpose of CreatedBy and ModifiedBy values
-        /// </summary>
-        public string User
-        {
-            get
-            {
-                if (_userInfo == null)
+                try
                 {
-                    _userInfo = GetUserInformation();
+                    return ReadGlobalValue("Database", "Version");
                 }
-                return _userInfo;
+                catch
+                {
+                    return "";
+                }
             }
         }
 
@@ -99,8 +86,8 @@ namespace CruiseDAL
         /// <exception cref="UnauthorizedAccessException">File open in another application or thread</exception>
         public DAL(string path, bool makeNew, DatabaseBuilder builder) : base(path)
         {
-            if(builder == null) { throw new ArgumentNullException("builder"); }
-            
+            if (builder == null) { throw new ArgumentNullException("builder"); }
+
             Path = path;
 
             this.Initialize(makeNew, builder);
@@ -122,13 +109,6 @@ namespace CruiseDAL
                 throw new FileNotFoundException();
             }
 
-            String dbVersion = this.ReadGlobalValue("Database", "Version");
-            if (dbVersion != null)
-            {
-                DatabaseVersion = dbVersion;
-            }
-
-            this.SchemaVersion = this.ExecuteScalar<long>("PRAGMA user_version;");
             builder.UpdateDatastore(this);
 
             try
@@ -141,8 +121,23 @@ namespace CruiseDAL
 
         public void LogMessage(string message, string level)
         {
-            string appStr = GetCallingProgram();
-            LogMessage(appStr, message, level);
+            string program = GetCallingProgram();
+
+            Logger.Log.L(message);
+
+            if (Exists)
+            {
+                Execute("INSERT INTO MessageLog (Program, Message, Level, Date, Time) " +
+                    "VALUES " +
+                    "(@p1, @p2, @p3, @p4, @p5)",
+                    new object[] {
+                        program,
+                        message,
+                        level,
+                        DateTime.Now.ToString("yyyy/MM/dd"),
+                        DateTime.Now.ToString("HH:mm") }
+                    );
+            }
         }
 
         private static string GetCallingProgram()
@@ -154,7 +149,7 @@ namespace CruiseDAL
             }
             catch
             {
-                //TODO add error report message so we know when we encounter this exception and what platforms 
+                //TODO add error report message so we know when we encounter this exception and what platforms
                 return AppDomain.CurrentDomain.FriendlyName;
             }
 #else
@@ -163,27 +158,7 @@ namespace CruiseDAL
 #endif
         }
 
-        public void LogMessage(string program, string message, string level)
-        {
-            Logger.Log.L(message);
-
-            if (Exists)
-            {
-                Execute("INSERT INTO MessageLog (MessageLogID, Program, Message, Level, Date, Time)" +
-                    "VALUES " +
-                    "(@p1, @p2, @p3, @p4, @p5, @p6)",
-                    new object[] {
-                        Guid.NewGuid().ToString(),
-                        program,
-                        message,
-                        level,
-                        DateTime.Now.ToString("yyyy/MM/dd"),
-                        DateTime.Now.ToString("HH:mm") }
-                    );
-            }
-        }
-
-        protected static string GetUserInformation()
+        public static string GetUserInformation()
         {
 #if NetCF
 
@@ -222,9 +197,23 @@ namespace CruiseDAL
             if (String.IsNullOrEmpty(alias)) { throw new ArgumentException("alias can't be null or empty", "alias"); }
 
             var externalDS = new ExternalDatastore()
-
             {
                 DS = dataStore,
+                Alias = alias
+            };
+
+            _attachedDataStores.Add(externalDS);
+            AttachDBInternal(externalDS);
+        }
+
+        public void AttachDB(string dbPath, string alias)
+        {
+            if (dbPath == null) { throw new ArgumentNullException("dbPath"); }
+            if (String.IsNullOrEmpty(alias)) { throw new ArgumentException("alias can't be null or empty", "alias"); }
+
+            var externalDS = new ExternalDatastore()
+            {
+                DbPath = dbPath,
                 Alias = alias
             };
 
@@ -240,7 +229,7 @@ namespace CruiseDAL
                 var connection = PersistentConnection;
                 if (connection != null)
                 {
-                    var commandText = "ATTACH DATABASE \"" + externalDB.DS.Path + "\" AS " + externalDB.Alias + ";";
+                    var commandText = "ATTACH DATABASE \"" + externalDB.DbPath + "\" AS " + externalDB.Alias + ";";
                     try
                     {
                         connection.ExecuteNonQuery(commandText, (object[])null, CurrentTransaction);
@@ -349,11 +338,6 @@ namespace CruiseDAL
             }
         }
 
-        protected void WriteCruiseFileType(CruiseFileType cType)
-        {
-            this.WriteGlobalValue("Database", "CruiseFileType", cType.ToString());
-        }
-
         public string ReadGlobalValue(String block, String key)
         {
             return this.ExecuteScalar("SELECT Value FROM GLOBALS WHERE " +
@@ -418,31 +402,5 @@ namespace CruiseDAL
         //}
 
         #endregion not implemented
-
-        //#region IDisposable Members
-
-        //private bool _disposed = false;
-
-        //protected override void Dispose(bool disposing)
-        //{
-        //    base.Dispose(disposing);
-        //    if (_disposed)
-        //    {
-        //        return;
-        //    }
-
-        //    if (disposing)
-        //    {
-        //    }
-
-        //    _disposed = true;
-        //}
-
-        //~DAL()
-        //{
-        //    this.Dispose(false);
-        //}
-
-        //#endregion IDisposable Members
     }
 }
