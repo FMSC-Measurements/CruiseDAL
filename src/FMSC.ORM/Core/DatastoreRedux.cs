@@ -1,9 +1,9 @@
-﻿using FMSC.ORM.Core.SQL.QueryBuilder;
+﻿using Backpack.SqlBuilder;
+using Backpack.SqlBuilder.Dialects;
+using FMSC.ORM.Core.SQL.QueryBuilder;
 using FMSC.ORM.EntityModel;
 using FMSC.ORM.EntityModel.Attributes;
 using FMSC.ORM.EntityModel.Support;
-using Backpack.SqlBuilder;
-using Backpack.SqlBuilder.Dialects;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -135,7 +135,7 @@ namespace FMSC.ORM.Core
                 {
                     connection.Delete(data, CurrentTransaction);
                 }
-                catch(Exception ex)
+                catch (Exception ex)
                 {
                     throw ExceptionProcessor.ProcessException(ex, connection, (string)null, CurrentTransaction);
                 }
@@ -576,6 +576,48 @@ namespace FMSC.ORM.Core
 
         #region query methods
 
+        public IEnumerable<GenericEntity> QueryGeneric(string commandText)
+        {
+            return QueryGeneric(commandText, (object)null);
+        }
+
+        public IEnumerable<GenericEntity> QueryGeneric(string commandText, object paramaters)
+        {
+            lock (_persistentConnectionSyncLock)
+            {
+                var connection = OpenConnection();
+                try
+                {
+                    using (var reader = ExecuteReader2(connection, commandText, paramaters, CurrentTransaction))
+                    {
+                        while (reader.Read())
+                        {
+                            var fieldCount = reader.FieldCount;
+                            var fields = new string[fieldCount];
+                            for (int i = 0; i < fieldCount; i++)
+                            {
+                                fields[i] = reader.GetName(i);
+                            }
+
+                            var data = new GenericEntity(fieldCount);
+
+                            foreach (var x in fields.Select((field, i) => new { field, i }))
+                            {
+                                var value = reader.GetValue(x.i);
+                                data.Add(x.field, value);
+                            }
+
+                            yield return data;
+                        }
+                    }
+                }
+                finally
+                {
+                    ReleaseConnection();
+                }
+            }
+        }
+
         public IEnumerable<TResult> Query<TResult>(String commandText, Object[] paramaters) where TResult : new()
         {
             lock (_persistentConnectionSyncLock)
@@ -950,7 +992,7 @@ namespace FMSC.ORM.Core
                 {
                     return conn.ExecuteScalar<T>(commandText, parameters, CurrentTransaction);
                 }
-                catch(Exception ex)
+                catch (Exception ex)
                 {
                     throw ExceptionProcessor.ProcessException(ex, conn, commandText, CurrentTransaction);
                 }
@@ -1135,6 +1177,7 @@ namespace FMSC.ORM.Core
                     if (conn.State == System.Data.ConnectionState.Closed)
                     {
                         conn.Open();
+                        //conn.ExecuteNonQuery("PRAGMA foreign_keys=off;", (object[])null, null);
                         PersistentConnection = conn;
                         OnConnectionOpened();
                     }
