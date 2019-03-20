@@ -5,8 +5,7 @@
         public const string CREATE_TABLE_PLOT_STRATUM =
             "CREATE TABLE Plot_Stratum (" +
                 "Plot_Stratum_CN INTEGER PRIMARY KEY AUTOINCREMENT, " +
-                "CuttingUnitCode TEXT NOT NULL COLLATE NOCASE, " +
-                "PlotNumber INTEGER NOT NULL, " +
+                "PlotID TEXT NOT NULL, " +
                 "StratumCode TEXT NOT NULL COLLATE NOCASE, " +
                 "IsEmpty BOOLEAN DEFAULT 0, " +
                 "KPI REAL DEFAULT 0.0, " +
@@ -17,11 +16,11 @@
                 "ModifiedDate DATETIME, " +
                 "RowVersion INTEGER DEFAULT 0, " +
 
-                "UNIQUE (CuttingUnitCode, PlotNumber, StratumCode), " +
+                "UNIQUE (PlotID, StratumCode), " +
 
-                "FOREIGN KEY (CuttingUnitCode) REFERENCES CuttingUnit (Code), " +
+                "FOREIGN KEY (CuttingUnitCode) REFERENCES CuttingUnit (Code) ON DELETE CASCADE ON UPDATE CASCADE, " +
                 "FOREIGN KEY (StratumCode) REFERENCES Stratum (Code) ON DELETE CASCADE ON UPDATE CASCADE, " +
-                "FOREIGN KEY (PlotNumber, CuttingUnitCode) REFERENCES Plot_V3 (PlotNumber, CuttingUnitCode) ON DELETE CASCADE ON UPDATE CASCADE " +
+                "FOREIGN KEY (PlotID) REFERENCES Plot_V3 (PlotID) ON DELETE CASCADE ON " +
             ");";
 
         public const string CREATE_TRIGGER_PLOT_STRATUM_ONUPDATE =

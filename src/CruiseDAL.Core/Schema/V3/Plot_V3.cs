@@ -22,7 +22,7 @@
 
                 "UNIQUE (PlotID), " +
 
-                "FOREIGN KEY (CuttingUnitCode) REFERENCES CuttingUnit (Code) ON DELETE CASCADE " +
+                "FOREIGN KEY (CuttingUnitCode) REFERENCES CuttingUnit (Code) ON DELETE CASCADE ON UPDATE CASCADE " +
             ");";
 
         public const string CREATE_TRIGGER_PLOT_V3_ONUPDATE =
@@ -48,6 +48,7 @@
         public const string MIGRATE_PLOT_V3_FROM_PLOT_FORMAT_STR =
             "INSERT INTO {0}.Plot_V3 ( " +
                     "Plot_CN, " +
+                    "PlotID, " +
                     "PlotNumber, " +
                     "CuttingUnitCode, " +
                     "Slope, " +
@@ -64,6 +65,7 @@
                 ") " +
                 "SELECT " +
                     "p.Plot_CN, " +
+                    "ifnull(Plot_GUID, 'migrateFormPlot-' || p.Plot_CN) AS PlotID, " +
                     "p.PlotNumber, " +
                     "cu.Code AS CuttingUnitCode, " +
                     "p.Slope, " +

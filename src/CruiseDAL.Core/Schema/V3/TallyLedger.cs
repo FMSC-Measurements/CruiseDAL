@@ -108,7 +108,7 @@
             "JOIN {0}.Tree_V3 AS t3 USING (Tree_CN) " +
             "LEFT JOIN {0}.Plot_Stratum AS ps ON t.Plot_CN = ps.Plot_Stratum_CN " +
             "LEFT JOIN {1}.TreeDefaultValue AS tdv USING (TreeDefaultValue_CN) " +
-            "WHERE t.TreeCount > 0 OR t.KPI > 0 OR t.CountOrMeasure = 'M' " +
+            "WHERE t.TreeCount > 0 OR t.KPI > 0 OR t.CountOrMeasure = 'M' OR t.CountOrMeasure = 'I' " +
             ";";
     }
 

@@ -17,7 +17,7 @@
                 "Initials TEXT, " +
 
                 "CreatedBy TEXT DEFAULT '', " +
-                "CreatedDate DateTime DEFAULT (datetime('now', 'localtime')) , " +
+                "CreatedDate DateTime DEFAULT (datetime('now', 'localtime')), " +
                 "ModifiedBy TEXT, " +
                 "ModifiedDate DateTime , " +
                 "RowVersion INTEGER DEFAULT 0, " +
