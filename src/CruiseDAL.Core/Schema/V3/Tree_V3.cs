@@ -16,7 +16,7 @@
                 "CountOrMeasure TEXT DEFAULT 'M' COLLATE NOCASE," +
                 "Initials TEXT, " +
 
-                "CreatedBy TEXT DEFAULT 'none', " +
+                "CreatedBy TEXT DEFAULT '', " +
                 "CreatedDate DateTime DEFAULT (datetime('now', 'localtime')) , " +
                 "ModifiedBy TEXT, " +
                 "ModifiedDate DateTime , " +
@@ -24,7 +24,8 @@
                 "UNIQUE (TreeID), " +
                 "FOREIGN KEY (CuttingUnitCode) REFERENCES CuttingUnit (Code) ON DELETE CASCADE ON UPDATE CASCADE, " +
                 "FOREIGN KEY (StratumCode) REFERENCES Stratum (Code) " +
-                "FOREIGN KEY (SampleGroupCode, StratumCode) REFERENCES SampleGroup_V3 (SampleGroupCode, StratumCode) ON DELETE CASCADE ON UPDATE CASCADE," +
+                "FOREIGN KEY (SampleGroupCode, StratumCode) REFERENCES SampleGroup_V3 (SampleGroupCode, StratumCode) ON DELETE CASCADE ON UPDATE CASCADE, " +
+                "FOREIGN KEY (PlotNumber) REFERENCES Plot_V3 (PlotNumber) ON DELETE CASCADE, " +
                 //"FOREIGN KEY (Species, LiveDead, SampleGroupCode, StratumCode) REFERENCES SubPopulation (Species, LiveDead, SampleGroupCode, StratumCode), " +
                 "FOREIGN KEY (Species) REFERENCES Species (Species) " +
             ")";

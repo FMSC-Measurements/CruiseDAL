@@ -5,6 +5,7 @@
         public const string CREATE_TABLE_PLOT_V3 =
             "CREATE TABLE Plot_V3 ( " +
                 "Plot_CN INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                "PlotID TEXT NOT NULL, " +
                 "PlotNumber INTEGER NOT NULL, " +
                 "CuttingUnitCode TEXT NOT NULL COLLATE NOCASE, " +
                 "Slope REAL Default 0.0, " +
@@ -19,7 +20,7 @@
                 "ModifiedDate DATETIME, " +
                 "RowVersion, " +
 
-                "UNIQUE (CuttingUnitCode, PlotNumber), " +
+                "UNIQUE (PlotID), " +
 
                 "FOREIGN KEY (CuttingUnitCode) REFERENCES CuttingUnit (Code) ON DELETE CASCADE " +
             ");";

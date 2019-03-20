@@ -152,6 +152,23 @@ Initially this table made it hard to define tally populations using the CountTre
 - dont migrate CuttingUnit.TallyHistory
 - implement tree auditing within the database
 - implement systematic sample selection using just the database
+- create indexes
+
+## Tree
+ - only return treeCount if plot tree
+
+## CountTree 
+ ? issues if countTree returns treecount > 0 for plot tally populations
+ - only read tree counts from tallyLedger for non plot trees
+
+## Tree_V3
+ - create index on tree number
+
+## Log_V3
+ - create index on log number
+
+## Plot_V3
+ - create index on PlotNumber
 
 #Recomended Changes
  - remove duplicated fields from StratumStats
@@ -198,7 +215,7 @@ Starting in version 3 foreign keys will be set on by default. The new database d
 
 # migration guarintees 
 ## Tree
- - generaly will return same values and types as original tree table, without additional fields
+ - generally will return same values and types as original tree table, without additional fields
  - TreeID in the new file will be the same as Tree_GUID the old file
  
 ### Exceptions: 
@@ -206,5 +223,6 @@ Starting in version 3 foreign keys will be set on by default. The new database d
  - Values for Tree_GUID may be populated if null in the original file
  - modifiedDate values will be different
  - species will be different if there were tree records in the original file where the species on the tree record didn't match up with the species on the treeDefaultValue 
+
 
 
