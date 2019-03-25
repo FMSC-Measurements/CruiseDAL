@@ -10,7 +10,6 @@
                 "Description TEXT, " +
                 "LoggingMethod TEXT, " +
                 "PaymentUnit TEXT, " +
-                "TallyHistory TEXT, " +
                 "Rx TEXT, " +
                 "CreatedBy TEXT DEFAULT 'none', " +
                 "CreatedDate DateTime DEFAULT (datetime('now', 'localtime')), " +
@@ -28,7 +27,6 @@
             "Description, " +
             "LoggingMethod, " +
             "PaymentUnit, " +
-            "TallyHistory, " +
             "Rx " +
             "ON CuttingUnit " +
             "FOR EACH ROW " +
@@ -48,7 +46,6 @@
                     "Description, " +
                     "LoggingMethod, " +
                     "PaymentUnit, " +
-                    "TallyHistory, " +
                     "Rx " +
                 ") " +
                 "SELECT " +
@@ -58,7 +55,6 @@
                     "Description, " +
                     "LoggingMethod, " +
                     "PaymentUnit, " +
-                    "TallyHistory, " +
                     "Rx " +
                 "FROM {1}.CuttingUnit; ";
     }
