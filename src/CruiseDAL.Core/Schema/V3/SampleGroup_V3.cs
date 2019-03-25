@@ -7,12 +7,12 @@
                 "SampleGroup_CN INTEGER PRIMARY KEY AUTOINCREMENT, " +
                 "SampleGroupCode TEXT NOT NULL COLLATE NOCASE, " +
                 "StratumCode TEXT NOT NULL COLLATE NOCASE, " +
-                "CutLeave TEXT NOT NULL COLLATE NOCASE, " +
-                "UOM TEXT NOT NULL COLLATE NOCASE, " +
-                "PrimaryProduct TEXT NOT NULL COLLATE NOCASE, " +
+                "CutLeave TEXT DEFAULT 'C' COLLATE NOCASE, " +
+                "UOM TEXT DEFAULT '' COLLATE NOCASE, " +
+                "PrimaryProduct TEXT DEFAULT '' COLLATE NOCASE, " +
                 "SecondaryProduct TEXT COLLATE NOCASE, " +
                 "BiomassProduct TEXT, " +
-                "DefaultLiveDead TEXT COLLATE NOCASE, " +
+                "DefaultLiveDead TEXT DEFAULT 'L' COLLATE NOCASE, " +
                 "SamplingFrequency INTEGER Default 0, " +
                 "InsuranceFrequency INTEGER Default 0, " +
                 "KZ INTEGER Default 0, " +
