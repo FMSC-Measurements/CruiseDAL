@@ -4,7 +4,7 @@
     {
         public const string CREATE_TABLE_SPECIES =
             "CREATE TABLE Species (" +
-                "Species PRIMARY KEY COLLATE NOCASE" +
+                "Species PRIMARY KEY COLLATE NOCASE CHECK (length(Species) > 0" +
             "); " +
             "INSERT INTO Species (Species) VALUES ('');";
     }

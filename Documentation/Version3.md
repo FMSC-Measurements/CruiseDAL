@@ -31,8 +31,15 @@ Table for storing the state of samplers. This data was moved to a separate table
  - FixCNTTallyClass_V3 (changed Stratum_CN to StratumCode, added unique constraint for StratumCode)
  - FixCNTTallyPopulation_V3 (removed reference to FixCNTTallyClass_CN because we can use StratumCode instead, changed SampleGroup_CN to StratumCode and SampleGroupCode)
 
+## LogGradeAuditRule_V3
+ - Split out Valid Grades. This is a slightly better design and allows for audits to be preformed by just querying the data. 
+
 ## SampleGroup_V3
 TallyBySubPop value for original file is ignored. Instead the value is determined automatically by detecting if that samplegroup has tally setup with tree defaults.
+- CutLeave defaults to "C"
+- ? UOM defaults to empty string. It might be preferable to use null as the default value this would better reflect our indended behavior of having UOM be set at the Sale level and allowing it to be overridden at the sample group level 
+- DefaultLiveDead defaults to "L"
+- PrimaryProduct defaults to empty string
 
 ## Tree 
 
@@ -80,6 +87,7 @@ Tables that have a `Code` or `[tableName]Code`, `Species`, `LiveDead` or `Primar
  - Region, Forest, District changed `not-null` to `default ''`
  
 ## CuttingUnit
+ - removed field TallyHistory
  - Code add `COLLATE NOCASE`
  - Area changed `NOT NULL` to `default 0.0`
  
@@ -141,18 +149,23 @@ Initially this table made it hard to define tally populations using the CountTre
 
 
 # TODO 
-- ? Separate table for all hot-keys (Stratum_HotKey) 
-- figure out update cascades 
-- redesign fixcnt tables?
-- LogGradeAuditRule reference Species
-- whats up with LogFieldSetupDefault.FieldName, TreeFieldSetupDefault has it too!
-- change tallyPoplulation to a view that populates from subPopulation with SampleGroup_v3.tallyBySpecies as a condition
+
+ [x] ? Separate table for all hot-keys (TallyHotKey) 
+ [] figure out update cascades 
+ [x] redesign fixcnt tables?
+
+ [x] whats up with LogFieldSetupDefault.FieldName, TreeFieldSetupDefault has it too! : these fields are not used by cruise manager so I guess they are safe to remove
+ [x] change tallyPoplulation to a view that populates from subPopulation with SampleGroup_v3.tallyBySpecies as a condition
 - change PlotNumber references to PlotID to prevent issues when merging
 - TreeEstimate view doesn't really work well because it needs to references CountTree which is also a view
 - dont migrate CuttingUnit.TallyHistory
 - implement tree auditing within the database
 - implement systematic sample selection using just the database
 - create indexes
+ [] figure out the best null solution for species codes( tables that need a null option for species: TallyHotKey, TallyDescription, LogGradeAuditRule (extra special because needs to indicate value is for ANY species), TreeAditValue
+ [] LogGradeAuditRule reference Species
+ [] fIXcnt figure out why FieldName was integer, and fix so it can reference new TreeField talbe
+ [] use queries to return non-treeAuditRule errors through the TreeError view i.e. checks that tree has a height and diameter 
 
 ## Tree
  - only return treeCount if plot tree

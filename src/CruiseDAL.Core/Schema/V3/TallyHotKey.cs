@@ -10,6 +10,7 @@ namespace CruiseDAL.Schema
     {
         public const string CREATE_TABLE_TALLYHOTKEY =
             "CREATE TABLE TallyHotKey ( " +
+                "TallyHotKey_CN INTEGER PRIMARY KEY AUTOINCREMENT, " +
                 "StratumCode TEXT NOT NULL COLLATE NOCASE, " +
                 "SampleGroupCode TEXT NOT NULL COLLATE NOCASE, " +
                 "Species TEXT DEFAULT '' COLLATE NOCASE, " +
@@ -17,11 +18,13 @@ namespace CruiseDAL.Schema
                 "HotKey TEXT COLLATE NOCASE," +
 
                 "UNIQUE (StratumCode, HotKey) ON CONFLICT REPLACE, " +
-                "UNIQUE (StratumCode, SampleGroupCode, Species, LiveDead) ON CONFLICT REPLACE, " +
+                //"UNIQUE (StratumCode, SampleGroupCode, Species, LiveDead) ON CONFLICT REPLACE, " +
 
                 "FOREIGN KEY (StratumCode, SampleGroupCode) REFERENCES SampleGroup_V3 (StratumCode, SampleGroupCode) ON DELETE CASCADE, " +
-                "FOREIGN KEY (Species) REFERENCES Species (Species) ON UPDATE CASCADE " +
-            ");";
+                "FOREIGN KEY (Species) REFERENCES Species (Species) ON DELETE CASCADE ON UPDATE CASCADE " +
+            ");" +
+            "CREATE UNIQUE INDEX TallyHotKey_StratumCode_SampleGroupCode_Species_LiveDead " +
+            "(StratumCode, SampleGroupCode, ifnull(Species, ''), ifnull(LiveDead, ''));";
     }
 
     public partial class Migrations

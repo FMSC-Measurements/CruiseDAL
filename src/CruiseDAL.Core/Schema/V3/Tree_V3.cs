@@ -2,6 +2,8 @@
 {
     public partial class DDL
     {
+        // values stored in the tree table are value we don't expect to change after the initial insert of the record
+        // for changable values use the treeMeasurments table or treeFieldValue table
         public const string CREATE_TABLE_TREE_V3 =
             "CREATE TABLE Tree_V3 ( " +
                 "Tree_CN INTEGER PRIMARY KEY AUTOINCREMENT, " +
@@ -13,8 +15,11 @@
                 "LiveDead TEXT COLLATE NOCASE, " +
                 "PlotNumber INTEGER, " +
                 "TreeNumber INTEGER NOT NULL, " +
-                "CountOrMeasure TEXT DEFAULT 'M' COLLATE NOCASE," +
-                "Initials TEXT, " +
+                "CountOrMeasure TEXT DEFAULT 'M' COLLATE NOCASE," + // field is for compatibility with older schema. because plot cruising still requires a tree record to record non measure trees
+                "Initials TEXT, " +                                 // initials of the cruiser taking measurments
+                "XCoordinate REAL, " +
+                "YCoordinate REAL, " +
+                "ZCoordinate REAL, " +
 
                 "CreatedBy TEXT DEFAULT '', " +
                 "CreatedDate DateTime DEFAULT (datetime('now', 'localtime')), " +

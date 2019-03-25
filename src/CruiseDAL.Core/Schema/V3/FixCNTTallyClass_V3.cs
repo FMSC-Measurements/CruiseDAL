@@ -5,12 +5,13 @@
         public const string CREATE_TABLE_FIXCNTTALLYCLASS_V3 =
             "CREATE TABLE FixCNTTallyClass_V3 ( " +
                 "FixCNTTallyClass_CN INTEGER PRIMARY KEY AUTOINCREMENT, " +
-                "StratumCode TEXT NOT NULL, " +
-                "FieldName INTEGER Default 0, " +
+                "StratumCode TEXT NOTNULL, " +
+                "Field TEXT NOTNULL, " +
 
                 "UNIQUE (StratumCode) " +
 
-                "FOREIGN KEY (StratumCode) REFERENCES Stratum (Code) ON DELETE CASCADE " +
+                "FOREIGN KEY (StratumCode) REFERENCES Stratum (Code) ON DELETE CASCADE, " +
+                "FOREIGN KEY (Field) REFERENCES TreeField (Field) " +
             ");";
     }
 
@@ -20,7 +21,7 @@
             "INSERT INTO {0}.FixCNTTallyClass_V3 ( " +
                 "FixCNTTallyClass_CN, " +
                 "StratumCode, " +
-                "FieldName " +
+                "Field " +
             ") " +
             "SELECT " +
                 "FixCNTTallyClass_CN, " +
