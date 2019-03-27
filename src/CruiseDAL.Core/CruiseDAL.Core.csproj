@@ -15,33 +15,6 @@
   </ItemGroup>
 
   <ItemGroup Label="Auto Generated Files">
-    <None Update="AutoGen\CreateTriggers.tt">
-      <Generator>TextTemplatingFileGenerator</Generator>
-      <LastGenOutput>CreateTriggers.cs</LastGenOutput>
-    </None>
-    <Compile Update="AutoGen\CreateTriggers.cs">
-      <DesignTime>True</DesignTime>
-      <AutoGen>True</AutoGen>
-      <DependentUpon>CreateTriggers.tt</DependentUpon>
-    </Compile>
-    <None Update="AutoGen\CruiseCreate.tt">
-      <Generator>TextTemplatingFileGenerator</Generator>
-      <LastGenOutput>CruiseCreate.cs</LastGenOutput>
-    </None>
-    <Compile Update="AutoGen\CruiseCreate.cs">
-      <DesignTime>True</DesignTime>
-      <AutoGen>True</AutoGen>
-      <DependentUpon>CruiseCreate.tt</DependentUpon>
-    </Compile>
-    <None Update="AutoGen\DAL.AutoGen.tt">
-      <Generator>TextTemplatingFileGenerator</Generator>
-      <LastGenOutput>DAL.AutoGen.cs</LastGenOutput>
-    </None>
-    <Compile Update="AutoGen\DAL.AutoGen.cs">
-      <DesignTime>True</DesignTime>
-      <AutoGen>True</AutoGen>
-      <DependentUpon>DAL.AutoGen.tt</DependentUpon>
-    </Compile>
     <None Update="CruiseDAL\Schema\Schema.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
       <LastGenOutput>Schema.cs</LastGenOutput>

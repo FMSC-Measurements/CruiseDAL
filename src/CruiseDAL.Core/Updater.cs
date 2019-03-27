@@ -263,7 +263,7 @@ JOIN Stratum USING (Stratum_CN);");
                     db.Execute("DROP TRIGGER " + trigName + ";");
                 }
 
-                db.Execute(Schema.Schema.CREATE_TRIGGERS);
+                //db.Execute(Schema.Schema.CREATE_TRIGGERS);
 
                 SetDatabaseVersion(db, "2015.09.01");
                 db.CommitTransaction();

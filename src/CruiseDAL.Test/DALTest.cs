@@ -68,7 +68,7 @@ namespace CruiseDAL.Tests
 
         void ValidateDAL(DAL db)
         {
-            db.DatabaseVersion.Should().Be(CruiseDAL.DAL.CURENT_DBVERSION);
+            db.DatabaseVersion.Should().NotBeNullOrEmpty();
 
             var messageLogs = db.From<MessageLogDO>().Query().ToArray();
             var latestMessage = messageLogs.Last();

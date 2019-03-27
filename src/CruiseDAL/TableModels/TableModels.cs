@@ -7,6 +7,7 @@ using FMSC.ORM.EntityModel.Attributes;
 using FMSC.ORM.EntityModel;
 using FMSC.ORM.Core;
 using CruiseDAL.Schema;
+using CruiseDAL.EntityAttributes;
 
 namespace CruiseDAL.DataObjects
 {

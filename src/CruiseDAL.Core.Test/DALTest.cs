@@ -67,7 +67,9 @@ namespace CruiseDAL.Tests
 
         void ValidateDAL(DAL db)
         {
-            db.DatabaseVersion.Should().Be(CruiseDAL.DAL.CURENT_DBVERSION);
+            var version = db.DatabaseVersion;
+            version.Should().NotBeNull();
+            Version.TryParse(version, out var versionParsed).Should().BeTrue(version);
 
             db.ExecuteScalar<int>("SELECT count(*) FROM MessageLog WHERE Program IS NULL or Program = '';")
                 .Should().Be(0);

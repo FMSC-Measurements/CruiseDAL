@@ -251,6 +251,7 @@ Initially this table made it hard to define tally populations using the CountTre
  [] remove heading from TreeFieldSetup and LogFieldSetup
  [] LogGradeAuditResolution
  [x] only return treeCount if plot tree
+ [] remove support for updating pre-2.1.1 version
 
 ## Tree_V3
  - create index on tree number
