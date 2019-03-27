@@ -102,15 +102,15 @@ namespace CruiseDAL
                 {
                     UpdateTo_2_5_0(db);
                 }
+
+                CleanupErrorLog(db);
+
+                FixTreeAuditValueFKeyErrors(db);
             }
             else if (db.DatabaseVersion.StartsWith("3."))
             {
                 //no updates yet
             }
-
-            FixTreeAuditValueFKeyErrors(db);
-
-            CleanupErrorLog(db);
         }
 
         public static void UpdateToVersion2015_04_28(DAL db)
