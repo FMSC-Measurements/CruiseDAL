@@ -3,6 +3,7 @@
     public partial class DDL
     {
         public const string CREATE_VIEW_TREE =
+            "CREATE VIEW Tree AS " +
             "WITH plotTrees AS ( " +
             "SELECT " +
                 "t.Tree_CN, " +
@@ -11,7 +12,7 @@
                 "st.Stratum_CN, " +
                 "sg.SampleGroup_CN, " +
                 "tdv.TreeDefaultValue_CN,  " +
-                "plt.Plot_Stratum_CN AS Plot_CN, " +
+                "plt.Plot_Stratum_CN AS Plot_Stratum_CN, " +
                 "t.Species, " +
                 "t.LiveDead, " +
                 "t.TreeNumber, " +
@@ -22,19 +23,20 @@
                 "tcv.ExpansionFactor, " +
                 "tcv.TreeFactor, " +
                 "tcv.PointFactor, " +
-                "tm.* " +
+                "t.XCoordinate, " +
+                "t.YCoordinate, " +
+                "t.ZCoordinate " +
             "FROM Tree_V3 AS t " +
             "JOIN SampleGroup_V3 AS sg ON t.StratumCode = sg.StratumCode AND t.SampleGroupCode = sg.SampleGroupCode  " +
             "JOIN Stratum AS st ON t.StratumCode = st.Code " +
             "JOIN CuttingUnit AS cu ON t.CuttingUnitCode = cu.Code " +
+            "JOIN Plot_Stratum AS plt USING (StratumCode, PlotNumber) " +
             "LEFT JOIN TallyLedger AS tl USING (TreeID) " +
-            "LEFT JOIN TreeMeasurment AS tm USING (TreeID) " +
             "LEFT JOIN TreeCalculatedValues AS tcv USING (Tree_CN) " +
             "LEFT JOIN TreeDefaultValue AS tdv ON " +
                         "tdv.Species = t.Species " +
                         "AND tdv.LiveDead = t.LiveDead " +
                         "AND tdv.PrimaryProduct = sg.PrimaryProduct " +
-            "LEFT JOIN Plot_Stratum AS plt USING (StratumCode, PlotNumber) " +
             "), " +
             "nonPlotTrees AS ( " +
             "SELECT " +
@@ -44,32 +46,33 @@
                 "st.Stratum_CN, " +
                 "sg.SampleGroup_CN, " +
                 "tdv.TreeDefaultValue_CN,  " +
-                "null AS Plot_CN, " +
+                "null AS Plot_Stratum_CN, " +
                 "t.Species, " +
                 "t.LiveDead, " +
                 "t.TreeNumber, " +
                 "t.CountOrMeasure, " +
-                "0 AS TreeCount, " + 
+                "0 AS TreeCount, " +
                 "ifnull(tl.KPI, 0) AS KPI, " +
                 "ifnull(tl.STM, 'N') AS STM, " +
                 "tcv.ExpansionFactor, " +
                 "tcv.TreeFactor, " +
                 "tcv.PointFactor, " +
-                "tm.* " +
+                "XCoordinate," +
+                "YCoordinate," +
+                "ZCoordinate " +
             "FROM Tree_V3 AS t " +
             "JOIN SampleGroup_V3 AS sg ON t.StratumCode = sg.StratumCode AND t.SampleGroupCode = sg.SampleGroupCode  " +
             "JOIN Stratum AS st ON t.StratumCode = st.Code " +
             "JOIN CuttingUnit AS cu ON t.CuttingUnitCode = cu.Code " +
             "LEFT JOIN TallyLedger AS tl USING (TreeID) " +
-            
             "LEFT JOIN TreeCalculatedValues AS tcv USING (Tree_CN) " +
             "LEFT JOIN TreeDefaultValue AS tdv ON " +
                         "tdv.Species = t.Species " +
                         "AND tdv.LiveDead = t.LiveDead " +
                         "AND tdv.PrimaryProduct = sg.PrimaryProduct " +
-            "), " +
-            "" +
-            "CREATE VIEW Tree AS " +
+            "WHERE t.PlotNumber IS NULL " +
+            ") " +
+
             "SELECT " +
                 "Tree_CN, " +
                 "Tree_GUID, " +
@@ -81,20 +84,23 @@
                 "Species, " +
                 "LiveDead, " +
                 "TreeNumber, " +
-                "CountOrMeasure, " +                
-                "CAST (ifnull(s1.TreeCount, 0) AS REAL) AS TreeCount, " + // in v2 TreeCount and kpi had a type of REAL
-                "CAST (ifnull(s1.KPI, 0) AS REAL) AS KPI, " +
-                "ifnull(s1.STM, 'N') AS STM, " +
+                "CountOrMeasure, " +
+                "CAST (ifnull(t.TreeCount, 0) AS REAL) AS TreeCount, " + // in v2 TreeCount and kpi had a type of REAL
+                "CAST (ifnull(t.KPI, 0) AS REAL) AS KPI, " +
+                "ifnull(t.STM, 'N') AS STM, " +
                 "ExpansionFactor, " +
                 "TreeFactor, " +
                 "PointFactor, " +
+                "ifnull(t.XCoordinate, 0.0) AS XCoordinate," +
+                "ifnull(t.YCoordinate, 0.0) AS YCoordinate," +
+                "ifnull(t.ZCoordinate, 0.0) AS ZCoordinate, " +
                 "tm.* " +
             "FROM (" +
             "SELECT * FROM plotTrees " +
             "UNION ALL " +
             "SELECT * FROM nonPlotTrees " +
-            ") AS s1" +
-            "LEFT JOIN TreeMeasurment AS tm ON s1.Tree_GUID = tm.TreeID " +
+            ") AS t " +
+            "LEFT JOIN TreeMeasurment AS tm ON t.Tree_GUID = tm.TreeID " +
             ";";
 
         public const string CTEATE_TRIGGER_TREE_ONUPDATE =

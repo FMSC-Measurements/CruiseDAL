@@ -2,6 +2,12 @@
 {
     public partial class DDL
     {
+        public static readonly string[] PLOT_V3 = new string[]
+        {
+            CREATE_TABLE_PLOT_V3,
+            CREATE_TRIGGER_PLOT_V3_ONUPDATE,
+        };
+
         public const string CREATE_TABLE_PLOT_V3 =
             "CREATE TABLE Plot_V3 ( " +
                 "Plot_CN INTEGER PRIMARY KEY AUTOINCREMENT, " +
@@ -21,6 +27,7 @@
                 "RowVersion, " +
 
                 "UNIQUE (PlotID), " +
+                "UNIQUE (PlotNumber, CuttingUnitCode)," +
 
                 "FOREIGN KEY (CuttingUnitCode) REFERENCES CuttingUnit (Code) ON DELETE CASCADE ON UPDATE CASCADE " +
             ");";

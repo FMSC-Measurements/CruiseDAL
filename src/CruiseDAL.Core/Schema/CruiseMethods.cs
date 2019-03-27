@@ -1,5 +1,3 @@
-using System;
-
 namespace CruiseDAL.Schema
 {
     public static class CruiseMethods

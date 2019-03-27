@@ -5,17 +5,14 @@
         public const string CREATE_VIEW_TREEESTIMATE =
             "CREATE VIEW TreeEstimate AS " +
             "SELECT " +
-                "tl.TallyLedger_CN AS TreeEstimate_CN, " +
-                "ct.CountTree_CN, " +
-                "TallyLedgerID AS TreeEstimate_GUID, " +
-                "tl.KPI, " +
-                "tl.CreatedBy, " +
-                "tl.CreatedDate, " +
-                "null AS ModifiedBy, " +
-                "null AS ModifiedDate " +
-            "FROM TallyLedger AS tl " +
-            "JOIN CountTree AS ct " +
-            "WHERE tl.KPI > 0 AND IsDeleted = 0" +
+            "0 AS TreeEstimate_CN, " +
+            "0 AS CountTree_CN, " +
+            "0 AS KPI, " +
+            "null AS CreatedBy, " +
+            "null AS CreatedDate, " +
+            "null AS ModifiedBy, " +
+            "null AS ModifiedDate " +
+            "FROM notATable (0)" +
             ";";
     }
 }

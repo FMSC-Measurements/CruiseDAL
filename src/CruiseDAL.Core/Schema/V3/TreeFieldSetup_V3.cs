@@ -10,7 +10,8 @@
                 "Heading TEXT, " +
                 "Width REAL Default 0.0, " +
                 "UNIQUE(StratumCode, Field), " +
-                "FOREIGN KEY (StratumCode) REFERENCES Stratum (Code) ON DELETE CASCADE ON UPDATE CASCADE" +
+                "FOREIGN KEY (StratumCode) REFERENCES Stratum (Code) ON DELETE CASCADE ON UPDATE CASCADE," +
+                "FOREIGN KEY (Field) REFERENCES TreeField (Field) " +
             ");";
     }
 
@@ -26,12 +27,13 @@
                 ") " +
                 "SELECT " +
                     "st.Code AS StratumCode, " +
-                    "Field, " +
-                    "FieldOrder, " +
-                    "Heading, " +
-                    "Width " +
-                "FROM {1}.TreeFieldSetup " +
-                "JOIN {1}.Stratum AS st USING (Stratum_CN);";
+                    "tfs.Field, " +
+                    "tfs.FieldOrder, " +
+                    "tfs.Heading, " +
+                    "tfs.Width " +
+                "FROM {1}.TreeFieldSetup AS tfs " +
+                "JOIN {1}.Stratum AS st USING (Stratum_CN)" +
+                "JOIN {0}.TreeField AS tf USING (Field);";
     }
 
     //public partial class Updater

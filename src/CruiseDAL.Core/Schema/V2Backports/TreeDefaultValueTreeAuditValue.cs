@@ -6,9 +6,9 @@
             "CREATE VIEW TreeDefaultValueTreeAuditValue AS " +
             "SELECT " +
                 "tdv.TreeDefaultValue_CN, " +
-                "tav.TreeAuditValue_CN " +
-            "FROM TreeDefaultValue_TreeAuditValue tdvtav " +
+                "tar.TreeAuditRule_CN AS TreeAuditValue_CN " +
+            "FROM TreeDefaultValue_TreeAuditRule tdvtar " +
             "JOIN TreeDefaultValue AS tdv USING (Species, LiveDead, PrimaryProduct) " +
-            "JOIN TreeAuditValue AS tav USING (TreeAuditValueID)";
+            "JOIN TreeAuditRule AS tar USING (TreeAuditRuleID)";
     }
 }

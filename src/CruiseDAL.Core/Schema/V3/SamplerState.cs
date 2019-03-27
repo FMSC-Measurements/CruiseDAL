@@ -1,13 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace CruiseDAL.Schema
+﻿namespace CruiseDAL.Schema
 {
     public partial class DDL
     {
+        public static readonly string[] SAMPLERSTATE = new string[]
+        {
+            CREATE_TALBE_SAMPLERSTATE
+        };
+
         public const string CREATE_TALBE_SAMPLERSTATE =
             "CREATE TABLE SamplerState ( " +
                 "SamplerState_CN INTEGER PRIMARY KEY AUTOINCREMENT, " +

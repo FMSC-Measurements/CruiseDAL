@@ -79,7 +79,9 @@ namespace CruiseDAL.Tests.Schema
         [Fact]
         public void CREATE_COMMANDS_Contains_All_Public_Static_String_commands()
         {
-            var commandsLookup = CruiseDAL.Schema.DDL.CREATE_COMMANDS.ToDictionary(x => x);
+            var commandsLookup = CruiseDAL.Schema.DDL.CREATE_COMMANDS
+                .Where(x=> x != null)
+                .ToDictionary(x => x);
 
             var type = typeof(CruiseDAL.Schema.DDL);
 

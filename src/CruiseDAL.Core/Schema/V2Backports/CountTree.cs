@@ -9,7 +9,7 @@
                 "sum(TreeCount) AS TreeCount, sum(KPI) AS SumKPI, " +
                 "min(TallyLedger_CN) AS CountTree_CN " +
                 "FROM TallyLedger " +
-                "WHERE IsDeleted = 0" +
+                "WHERE IsDeleted = 0 " +
                 "GROUP BY CuttingUnitCode, StratumCode, SampleGroupCode, Species, LiveDead " +
             ") " +
 

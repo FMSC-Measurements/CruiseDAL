@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace CruiseDAL.Schema
+﻿namespace CruiseDAL.Schema
 {
     public static partial class DDL
     {
@@ -25,19 +19,28 @@ namespace CruiseDAL.Schema
 
             CREATE_TABLE_CUTTINGUNIT_STRATUM,
 
+            CREATE_TABLE_TREEFIELD,
+            INITIALIZE_TABLE_TREEFIELD,
             CREATE_TABLE_TREEFIELDSETUP_V3,
+
+            CREATE_TABLE_LOGFIELD,
+            INITIALIZE_TABLE_LOGFIELD,
+            CREATE_TABLE_LOGFIELDSETUP_V3,
 
             CREATE_TABLE_SAMPLEGROUP_V3,
             CREATE_TRIGGER_SAMPLEGROUP_V3_ONUPDATE,
             CREATE_TALBE_SAMPLERSTATE,
 
             CREATE_TABLE_SPECIES,
+            INITIALIZE_TABLE_SPECIES,
 
             CREATE_TABLE_SUBPOPULATION,
 
             CREATE_TABLE_TALLYPOPULATION,
             CREATE_TABLE_TALLYDESCRIPTION,
+            CREATE_INDEX_TALLYDESCRIPTION,
             CREATE_TABLE_TALLYHOTKEY,
+            CREATE_INDEX_TALLYHOTKEY,
 
             CREATE_TABLE_PLOT_V3,
             CREATE_TRIGGER_PLOT_V3_ONUPDATE,
@@ -51,10 +54,10 @@ namespace CruiseDAL.Schema
             CREATE_TABLE_TREEMEASURMENT,
             CREATE_TRIGGER_TREEMEASURMENTS_ONUPDATE,
 
+            CREATE_TABLE_TREEFIELDVALUE,
+
             CREATE_TABLE_LOG_V3,
             CREATE_TRIGGER_LOG_V3_ONUPDATE,
-
-            CREATE_TABLE_LOGFIELDSETUP_V3,
 
             CREATE_TABLE_TALLYLEDGER,
 
@@ -68,7 +71,7 @@ namespace CruiseDAL.Schema
             CREATE_TABLE_LCD,
             CREATE_TABLE_LOGMATRIX,
             CREATE_TABLE_LOGSTOCK,
-            CREATE_TRIGGER_LOGSTOCK_ONUPDATE,
+            //CREATE_TRIGGER_LOGSTOCK_ONUPDATE,
             CREATE_TABLE_POP,
             CREATE_TABLE_PRO,
             CREATE_TABLE_QUALITYADJEQUATION,
@@ -81,8 +84,7 @@ namespace CruiseDAL.Schema
             CREATE_TABLE_VALUEEQUATION,
             CREATE_TABLE_VOLUMEEQUATION,
 
-
-            //setup tables 
+            //setup tables
             CREATE_TABLE_LOGFIELDSETUPDEFAULT,
             CREATE_TABLE_TREEFIELDSETUPDEFAULT,
 
@@ -90,13 +92,23 @@ namespace CruiseDAL.Schema
             CREATE_TABLE_GLOBALS,
             CREATE_TABLE_MESSAGELOG,
 
-            //validation 
-            CREATE_TABLE_LOGGRADEAUDITRULE,
-            CREATE_TABLE_TREEAUDITVALUE,
+            //validation
+            CREATE_TABLE_LOGGRADEAUDITRULE_V3,
+            CREATE_INDEX_LOGGRADEAUDITRULE_V3,
+            CREATE_TABLE_TREEAUDITRULE,
             CREATE_TABLE_TREEDEFAULTVALUE_TREEAUDITVALUE,
-            CREATE_TABLE_ERRORLOG,
+            CREATE_TABLE_ERRORLOG_LEGACY,
+            CREATE_TABLE_TREEAUDITRESOLUTION,
 
-            //views 
+            //views
+            CREATE_VIEW_TALLYPOPULATION,
+            CREATE_VIEW_TreeFieldValue_TreeMeasurment,
+            CREATE_VIEW_TreeFieldValue_TreeMeasurment_Filtered,
+            CREATE_VIEW_LOGGRADEERROR,
+            CREATE_VIEW_TREEAUDITERROR,
+            CREATE_VIEW_TREEFIELDVALUE_ALL,
+
+            // back ports
             CREATE_VIEW_COUNTTREE,
             CREATE_VIEW_CUTTINGUNITSTRATUM,
             CREATE_VIEW_LOG,
@@ -107,10 +119,12 @@ namespace CruiseDAL.Schema
             CTEATE_TRIGGER_TREE_ONUPDATE,
             CREATE_VIEW_TREEDEFAULTVALUETREEAUDITVALUE,
             CREATE_VIEW_TREEESTIMATE,
-            CREATE_VIEW_TALLYPOPULATION,
+            CREATE_VIEW_ERRORLOG,
+            CREATE_TRIGGER_ERRORLOG_INSERT,
+            CREATE_TRIGGER_ERRORLOG_UPDATE,
+            CREATE_TRIGGER_ERRORLOG_DELETE,
 
             SET_DBVERSION,
         };
     }
 }
-

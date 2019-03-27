@@ -39,18 +39,17 @@ namespace CruiseDAL.Schema
             MIGRATE_MESSAGELOG_FORMAT_STR,
 
             MIGRATE_ERRORLOG_FORMAT_STR,
-            MIGRATE_LOGGRADEAUDITRULE,
-            MIGRATE_TREEAUDITVALUE_FORMAT_STR,
+            MIGRATE_LOGGRADEAUDITRULE_V3,
+            MIGRATE_TREEAUDITRULE_FROM_TREEAUDITVALUE_FORMAT_STR,
             MIGRATE_TREEDEFAULTVALUE_TREEAUDITVALUE_FROM_TREEDEFAULTVALUETREEAUDITVALUE,
         };
 
         public static IEnumerable<string> GetMigrateCommands(string to, string from)
         {
-            foreach(var str in MIGRATION_FORMAT_STRINGS)
+            foreach (var str in MIGRATION_FORMAT_STRINGS)
             {
                 yield return string.Format(str, to, from);
             }
-
         }
     }
 }

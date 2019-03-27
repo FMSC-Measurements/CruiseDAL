@@ -96,6 +96,7 @@
                 "cu.Code AS CuttingUnitCode, " +
                 "st.Code AS StratumCode, " +
                 "sg.Code AS SampleGroupCode, " +
+                "ps.PlotNumber AS PlotNumber, " +
                 "tdv.Species AS Species, " +
                 "tdv.LiveDead AS LiveDead, " +
                 "t.TreeCount, " +

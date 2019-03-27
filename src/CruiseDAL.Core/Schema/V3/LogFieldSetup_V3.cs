@@ -2,6 +2,11 @@
 {
     public partial class DDL
     {
+        public static readonly string[] LOGFIELDSETUP_V3 = new string[]
+        {
+            CREATE_TABLE_LOGFIELDSETUP_V3
+        };
+
         public const string CREATE_TABLE_LOGFIELDSETUP_V3 =
             "CREATE TABLE LogFieldSetup_V3 (" +
                 "StratumCode TEXT NOT NULL, " +
@@ -12,7 +17,8 @@
 
                 "UNIQUE (StratumCode, Field), " +
 
-                "FOREIGN KEY (StratumCode) REFERENCES Stratum (Code) ON DELETE CASCADE ON UPDATE CASCADE " +
+                "FOREIGN KEY (StratumCode) REFERENCES Stratum (Code) ON DELETE CASCADE ON UPDATE CASCADE," +
+                "FOREIGN KEY (Field) REFERENCES LogField (Field) " +
             ");";
     }
 
@@ -28,12 +34,13 @@
                 ") " +
                 "SELECT " +
                     "st.Code AS StratumCode, " +
-                    "Field, " +
-                    "FieldOrder, " +
-                    "Heading, " +
-                    "Width " +
-                "FROM {1}.LogFieldSetup " +
-                "JOIN {1}.Stratum AS st USING (Stratum_CN);";
+                    "lfs.Field, " +
+                    "lfs.FieldOrder, " +
+                    "lfs.Heading, " +
+                    "lfs.Width " +
+                "FROM {1}.LogFieldSetup AS lfs " +
+                "JOIN {1}.Stratum AS st USING (Stratum_CN)" +
+                "JOIN {0}.LogField USING (Field);"; // join with LogField so we only get valid fields
     }
 
     //public partial class Updater

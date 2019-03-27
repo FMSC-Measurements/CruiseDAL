@@ -2,6 +2,11 @@
 {
     public partial class DDL
     {
+        public static readonly string[] FIXCNTTALLYPOPULATION_V3 = new string[]
+        {
+            CREATE_TABLE_FIXCNTTALLYPOPULATION_V3
+        };
+
         public const string CREATE_TABLE_FIXCNTTALLYPOPULATION_V3 =
             "CREATE TABLE FixCNTTallyPopulation_V3 ( " +
                 "FixCNTTallyPopulation_CN INTEGER PRIMARY KEY AUTOINCREMENT, " +

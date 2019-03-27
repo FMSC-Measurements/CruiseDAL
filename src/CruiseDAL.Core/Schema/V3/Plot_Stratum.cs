@@ -2,25 +2,32 @@
 {
     public partial class DDL
     {
+        public static readonly string[] PLOT_STRATUM = new string[]
+        {
+            CREATE_TABLE_PLOT_STRATUM,
+            CREATE_TRIGGER_PLOT_STRATUM_ONUPDATE
+        };
+
         public const string CREATE_TABLE_PLOT_STRATUM =
             "CREATE TABLE Plot_Stratum (" +
                 "Plot_Stratum_CN INTEGER PRIMARY KEY AUTOINCREMENT, " +
-                "PlotID TEXT NOT NULL, " +
+                "PlotNumber INTEGER NOT NULL, " +
+                "CuttingUnitCode TEXT NOT NULL COLLATE NOCASE, " +
                 "StratumCode TEXT NOT NULL COLLATE NOCASE, " +
                 "IsEmpty BOOLEAN DEFAULT 0, " +
                 "KPI REAL DEFAULT 0.0, " +
                 "ThreePRandomValue INTEGER Default 0, " +
                 "CreatedBy TEXT DEFAULT '', " +
                 "CreatedDate DATETIME DEFAULT (datetime('now', 'localtime')), " +
-                "ModifiedBy TEXT DEFAULT '', " +
+                "ModifiedBy TEXT, " +
                 "ModifiedDate DATETIME, " +
                 "RowVersion INTEGER DEFAULT 0, " +
 
-                "UNIQUE (PlotID, StratumCode), " +
+                "UNIQUE (PlotNumber, CuttingUnitCode, StratumCode), " +
 
-                "FOREIGN KEY (CuttingUnitCode) REFERENCES CuttingUnit (Code) ON DELETE CASCADE ON UPDATE CASCADE, " +
+                //"FOREIGN KEY (CuttingUnitCode) REFERENCES CuttingUnit (Code) ON DELETE CASCADE ON UPDATE CASCADE, " +
                 "FOREIGN KEY (StratumCode) REFERENCES Stratum (Code) ON DELETE CASCADE ON UPDATE CASCADE, " +
-                "FOREIGN KEY (PlotID) REFERENCES Plot_V3 (PlotID) ON DELETE CASCADE ON " +
+                "FOREIGN KEY (PlotNumber, CuttingUnitCode) REFERENCES Plot_V3 (PlotNumber, CuttingUnitCode) ON DELETE CASCADE " +
             ");";
 
         public const string CREATE_TRIGGER_PLOT_STRATUM_ONUPDATE =

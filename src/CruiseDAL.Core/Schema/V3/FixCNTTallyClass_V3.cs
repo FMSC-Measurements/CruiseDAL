@@ -2,11 +2,16 @@
 {
     public partial class DDL
     {
+        public static readonly string[] FIXCNTTALLYCLASS_V3 = new string[]
+        {
+            CREATE_TABLE_FIXCNTTALLYCLASS_V3
+        };
+
         public const string CREATE_TABLE_FIXCNTTALLYCLASS_V3 =
             "CREATE TABLE FixCNTTallyClass_V3 ( " +
                 "FixCNTTallyClass_CN INTEGER PRIMARY KEY AUTOINCREMENT, " +
-                "StratumCode TEXT NOTNULL, " +
-                "Field TEXT NOTNULL, " +
+                "StratumCode TEXT NOT NULL, " +
+                "Field TEXT NOT NULL, " +
 
                 "UNIQUE (StratumCode) " +
 

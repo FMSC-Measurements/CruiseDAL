@@ -42,7 +42,8 @@
                 "ExpansionFactor REAL Default 0.0, " +
                 "TreeFactor REAL Default 0.0, " +
                 "PointFactor REAL Default 0.0, " +
-                "UNIQUE (Tree_CN)" +
+                "UNIQUE (Tree_CN)," +
+                "FOREIGN KEY (Tree_CN) REFERENCES Tree_V3 (Tree_CN) ON DELETE CASCADE ON UPDATE CASCADE " +
             ");";
     }
 }

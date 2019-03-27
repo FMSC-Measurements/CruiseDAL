@@ -3,14 +3,14 @@
     public partial class DDL
     {
         public const string CREATE_TABLE_TREEDEFAULTVALUE_TREEAUDITVALUE =
-            "CREATE TABLE TreeDefaultValue_TreeAuditValue (" +
-                "TreeDefaultValue_TreeAuditValue_CN INTEGER PRIMARY KEY AUTOINCREMENT, " +
+            "CREATE TABLE TreeDefaultValue_TreeAuditRule (" +
+                "TreeDefaultValue_TreeAuditRule_CN INTEGER PRIMARY KEY AUTOINCREMENT, " +
                 "Species TEXT NOT NULL COLLATE NOCASE, " +
                 "LiveDead TEXT NOT NULL COLLATE NOCASE, " +
                 "PrimaryProduct TEXT NOT NULL COLLATE NOCASE, " +
-                "TreeAuditValueID TEXT NOT NULL, " +
+                "TreeAuditRuleID TEXT NOT NULL, " +
                 "FOREIGN KEY (Species, LiveDead, PrimaryProduct) REFERENCES TreeDefaultValue (Species, LiveDead, PrimaryProduct) ON DELETE CASCADE, " +
-                "FOREIGN KEY (TreeAuditValueID) REFERENCES TreeAuditValue (TreeAuditValueID) ON DELETE CASCADE, " +
+                "FOREIGN KEY (TreeAuditRuleID) REFERENCES TreeAuditRule (TreeAuditRuleID) ON DELETE CASCADE, " +
                 "FOREIGN KEY (Species) REFERENCES Species (Species) ON UPDATE CASCADE" +
             ");";
     }
@@ -18,22 +18,22 @@
     public partial class Migrations
     {
         public const string MIGRATE_TREEDEFAULTVALUE_TREEAUDITVALUE_FROM_TREEDEFAULTVALUETREEAUDITVALUE =
-            "INSERT INTO {0}.TreeDefaultValue_TreeAuditValue ( " +
-                    "TreeDefaultValue_TreeAuditValue_CN," +
+            "INSERT INTO {0}.TreeDefaultValue_TreeAuditRule ( " +
+                    "TreeDefaultValue_TreeAuditRule_CN," +
                     "Species, " +
                     "LiveDead, " +
                     "PrimaryProduct, " +
-                    "TreeAuditValueID " +
+                    "TreeAuditRuleID " +
                 ") " +
                 "SELECT " +
                     "tdvtav.RowID AS TreeDefaultValue_TreeAuditValue_CN," +
                     "tdv.Species, " +
                     "tdv.LiveDead, " +
                     "tdv.PrimaryProduct, " +
-                    "tav.TreeAuditValueID " +
-                "FROM TreeDefaultValueTreeAuditValue AS tdvtav " +
-                "JOIN TreeDefaultValue AS tdv USING (TreeDefaultValue_CN) " +
-                "JOIN TreeAuditValue AS tav USING (TreeAuditValue_CN);";
+                    "tar.TreeAuditRuleID " +
+                "FROM {1}.TreeDefaultValueTreeAuditValue AS tdvtav " +
+                "JOIN {1}.TreeDefaultValue AS tdv USING (TreeDefaultValue_CN) " +
+                "JOIN {0}.TreeAuditRule AS tar ON tdvtav.TreeAuditValue_CN = tar.TreeAuditRule_CN;";
     }
 
     //public partial class Updater

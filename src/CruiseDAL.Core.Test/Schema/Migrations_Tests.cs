@@ -180,7 +180,73 @@ namespace CruiseDAL.Tests.Schema
                     "SELECT * FROM Tree " +
                     "ORDER BY CuttingUnit_CN, Plot_CN, TreeNumber; ", null);
 
-                Compare(treeAfter, treeOrig, ignore: new string[] { "Tree_GUID", "TreeID", "ModifiedDate", "ExpansionFactor", "TreeFactor", "PointFactor", "TreeMeasurment_CN" });
+                var ignore = new string[] { "Tree_GUID", "TreeID", "ModifiedDate", "ExpansionFactor", "TreeFactor", "PointFactor", "TreeMeasurment_CN" };
+                if(fileName == "7Wolf.cruise")
+                { ignore = ignore.Prepend("Species").ToArray(); }
+
+                Compare(treeAfter, treeOrig, ignore: ignore);
+            }
+        }
+
+        [Theory]
+        [InlineData("7Wolf.cruise")]
+        public void Migrate_TreeDefaultValueTreeAuditvalue(string fileName)
+        {
+            var (origFile, testFile) = SetUpTestFile(fileName);
+            using (var origDatastore = new DAL(origFile))
+            using (var newDatastore = new DAL(testFile))
+            {
+                var tdvtavOrig = origDatastore.QueryGeneric(
+                    "SELECT * FROM TreeDefaultValueTreeAuditValue " +
+                    "ORDER BY TreeDefaultValue_CN, TreeAuditValue_CN;");
+
+                var tdvtavAfter = newDatastore.QueryGeneric(
+                    "SELECT * FROM TreeDefaultValueTreeAuditValue " +
+                    "ORDER BY TreeDefaultValue_CN, TreeAuditValue_CN;");
+
+                Compare(tdvtavAfter, tdvtavOrig);
+            }
+        }
+
+        [Theory]
+        [InlineData("7Wolf.cruise")]
+        public void Migrate_ErrorLog_Test(string fileName)
+        {
+            var (origFile, testFile) = SetUpTestFile(fileName);
+            using (var origDatastore = new DAL(origFile))
+            using (var newDatastore = new DAL(testFile))
+            {
+                // note: program and message may be different so we wont read those fields
+
+                var erroLogOrig = origDatastore.QueryGeneric(
+                    "SELECT TableName, CN_Number, ColumnName, Level, Suppress FROM ErrorLog " +
+                    "ORDER BY TableName, CN_Number, ColumnName;");
+
+                var errorLogAfter = newDatastore.QueryGeneric(
+                    "SELECT TableName, CN_Number, ColumnName, Level, Suppress FROM ErrorLog " +
+                    "ORDER BY TableName, CN_Number, ColumnName;");
+
+                Compare(errorLogAfter, erroLogOrig);
+            }
+        }
+
+        [Theory]
+        [InlineData("7Wolf.cruise")]
+        public void Migrate_Plot_Test(string fileName)
+        {
+            var (origFile, testFile) = SetUpTestFile(fileName);
+            using (var origDatastore = new DAL(origFile))
+            using (var newDatastore = new DAL(testFile))
+            {
+                var plotOrig = origDatastore.QueryGeneric(
+                    "SELECT * FROM Plot " +
+                    "ORDER BY CuttingUnit_CN, Plot_CN;");
+
+                var plotAfter = newDatastore.QueryGeneric(
+                    "SELECT * FROM Plot " +
+                    "ORDER BY CuttingUnit_CN, Plot_CN;");
+
+                Compare(plotAfter, plotOrig);
             }
         }
 

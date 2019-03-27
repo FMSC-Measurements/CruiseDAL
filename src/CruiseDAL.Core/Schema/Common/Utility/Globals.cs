@@ -4,7 +4,7 @@
     {
         public const string CREATE_TABLE_GLOBALS =
             "CREATE TABLE Globals ( " +
-                "Block TEXT DEFAULT 'Database' COLLATE NOCASE, " +
+                "Block TEXT DEFAULT '' COLLATE NOCASE, " +
                 "Key TEXT COLLATE NOCASE, " +
                 "Value TEXT, " +
                 "UNIQUE (Block, Key)" +

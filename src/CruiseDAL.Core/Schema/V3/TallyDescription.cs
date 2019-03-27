@@ -1,13 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace CruiseDAL.Schema
+﻿namespace CruiseDAL.Schema
 {
     public partial class DDL
     {
+        public static readonly string[] TALLYDESCRIPTION = new string[]
+        {
+            CREATE_TABLE_TALLYDESCRIPTION,
+            CREATE_INDEX_TALLYDESCRIPTION,
+        };
+
         public const string CREATE_TABLE_TALLYDESCRIPTION =
             "CREATE TABLE TallyDescription ( " +
                 "StratumCode TEXT NOT NULL COLLATE NOCASE, " +
@@ -21,8 +21,11 @@ namespace CruiseDAL.Schema
 
                 "FOREIGN KEY (StratumCode, SampleGroupCode) REFERENCES SampleGroup_V3 (StratumCode, SampleGroupCode) ON DELETE CASCADE, " +
                 "FOREIGN KEY (Species) REFERENCES Species (Species) ON DELETE CASCADE ON UPDATE CASCADE " +
-            ");" +
+            ");";
+
+        public const string CREATE_INDEX_TALLYDESCRIPTION =
             "CREATE UNIQUE INDEX TallyDescription_StratumCode_SampleGroupCode_Species_LiveDead " +
+            "ON TallyDescription " +
             "(StratumCode, SampleGroupCode, ifnull(Species, ''), ifnull(LiveDead, ''));";
     }
 
@@ -53,7 +56,5 @@ namespace CruiseDAL.Schema
             "JOIN {1}.Tally AS t USING (Tally_CN) " +
             "LEFT JOIN {1}.TreeDefaultValue AS tdv USING (TreeDefaultValue_CN)" +
             "; ";
-
     }
-
 }

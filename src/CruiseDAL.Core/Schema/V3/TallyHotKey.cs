@@ -1,30 +1,33 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace CruiseDAL.Schema
-{ 
+﻿namespace CruiseDAL.Schema
+{
     public partial class DDL
     {
+        public static readonly string[] TALLYHOTKEY = new string[]
+        {
+            CREATE_TABLE_TALLYHOTKEY,
+            CREATE_INDEX_TALLYHOTKEY,
+        };
+
         public const string CREATE_TABLE_TALLYHOTKEY =
-            "CREATE TABLE TallyHotKey ( " +
-                "TallyHotKey_CN INTEGER PRIMARY KEY AUTOINCREMENT, " +
-                "StratumCode TEXT NOT NULL COLLATE NOCASE, " +
-                "SampleGroupCode TEXT NOT NULL COLLATE NOCASE, " +
-                "Species TEXT DEFAULT '' COLLATE NOCASE, " +
-                "LiveDead TEXT DEFAULT '' COLLATE NOCASE, " +
-                "HotKey TEXT COLLATE NOCASE," +
+@"CREATE TABLE TallyHotKey (
+    TallyHotKey_CN INTEGER PRIMARY KEY AUTOINCREMENT,
+    StratumCode TEXT NOT NULL COLLATE NOCASE,
+    SampleGroupCode TEXT NOT NULL COLLATE NOCASE,
+    Species TEXT DEFAULT '' COLLATE NOCASE,
+    LiveDead TEXT DEFAULT '' COLLATE NOCASE,
+    HotKey TEXT COLLATE NOCASE,
 
-                "UNIQUE (StratumCode, HotKey) ON CONFLICT REPLACE, " +
-                //"UNIQUE (StratumCode, SampleGroupCode, Species, LiveDead) ON CONFLICT REPLACE, " +
+    UNIQUE (StratumCode, HotKey) ON CONFLICT REPLACE,
+    --UNIQUE (StratumCode, SampleGroupCode, Species, LiveDead) ON CONFLICT REPLACE,
 
-                "FOREIGN KEY (StratumCode, SampleGroupCode) REFERENCES SampleGroup_V3 (StratumCode, SampleGroupCode) ON DELETE CASCADE, " +
-                "FOREIGN KEY (Species) REFERENCES Species (Species) ON DELETE CASCADE ON UPDATE CASCADE " +
-            ");" +
-            "CREATE UNIQUE INDEX TallyHotKey_StratumCode_SampleGroupCode_Species_LiveDead " +
-            "(StratumCode, SampleGroupCode, ifnull(Species, ''), ifnull(LiveDead, ''));";
+    FOREIGN KEY (StratumCode, SampleGroupCode) REFERENCES SampleGroup_V3 (StratumCode, SampleGroupCode) ON DELETE CASCADE,
+    FOREIGN KEY (Species) REFERENCES Species (Species) ON DELETE CASCADE ON UPDATE CASCADE
+);";
+
+        public const string CREATE_INDEX_TALLYHOTKEY =
+@"CREATE UNIQUE INDEX TallyHotKey_StratumCode_SampleGroupCode_Species_LiveDead
+ON TallyHotKey
+(StratumCode, SampleGroupCode, ifnull(Species, ''), ifnull(LiveDead, ''));";
     }
 
     public partial class Migrations
@@ -54,7 +57,5 @@ namespace CruiseDAL.Schema
             "JOIN {1}.Tally AS t USING (Tally_CN) " +
             "LEFT JOIN {1}.TreeDefaultValue AS tdv USING (TreeDefaultValue_CN)" +
             "; ";
-
     }
-
 }

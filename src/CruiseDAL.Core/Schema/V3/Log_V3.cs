@@ -2,6 +2,12 @@
 {
     public partial class DDL
     {
+        public static readonly string[] LOG_V3 = new string[]
+        {
+            CREATE_TABLE_LOG_V3,
+            CREATE_TRIGGER_LOG_V3_ONUPDATE
+        };
+
         public const string CREATE_TABLE_LOG_V3 =
             "CREATE TABLE Log_V3 ( " +
                 "Log_CN INTEGER PRIMARY KEY AUTOINCREMENT, " +

@@ -2,6 +2,9 @@
 {
     public partial class DDL
     {
+        public static readonly string[] CUTTINGUNIT_STRATUM = new string[]{
+            CREATE_TABLE_CUTTINGUNIT_STRATUM };
+
         public const string CREATE_TABLE_CUTTINGUNIT_STRATUM =
             "CREATE TABLE CuttingUnit_Stratum (" +
                 "CuttingUnit_Stratum_CN INTEGER PRIMARY KEY AUTOINCREMENT, " +

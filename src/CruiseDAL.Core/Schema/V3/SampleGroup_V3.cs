@@ -2,6 +2,12 @@
 {
     public partial class DDL
     {
+        public static readonly string[] SAMPLEGROUP_V3 = new string[]
+        {
+            CREATE_TABLE_SAMPLEGROUP_V3,
+            CREATE_TRIGGER_SAMPLEGROUP_V3_ONUPDATE,
+        };
+
         public const string CREATE_TABLE_SAMPLEGROUP_V3 =
             "CREATE TABLE SampleGroup_V3 (" +
                 "SampleGroup_CN INTEGER PRIMARY KEY AUTOINCREMENT, " +

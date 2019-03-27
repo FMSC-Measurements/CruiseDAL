@@ -2,6 +2,11 @@
 {
     public partial class DDL
     {
+        public static readonly string[] SUBPOPULATION = new string[]
+        {
+            CREATE_TABLE_SUBPOPULATION,
+        };
+
         public const string CREATE_TABLE_SUBPOPULATION =
             "CREATE TABLE Subpopulation (" +
                 "Subpopulation_CN INTEGER PRIMARY KEY AUTOINCREMENT, " +

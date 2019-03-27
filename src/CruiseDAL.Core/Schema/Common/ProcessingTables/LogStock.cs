@@ -32,32 +32,32 @@
                 "FOREIGN KEY (Tree_CN) REFERENCES Tree (Tree_CN) ON DELETE CASCADE" +
             ");";
 
-        public const string CREATE_TRIGGER_LOGSTOCK_ONUPDATE =
-            "CREATE TRIGGER LogStock_OnUpdate " +
-            "AFTER UPDATE OF " +
-                "LogNumber, " +
-                "Grade, " +
-                "SeenDefect, " +
-                "PercentRecoverable, " +
-                "Length, " +
-                "ExportGrade, " +
-                "SmallEndDiameter, " +
-                "LargeEndDiameter, " +
-                "GrossBoardFoot, " +
-                "NetBoardFoot, " +
-                "GrossCubicFoot, " +
-                "NetCubicFoot, " +
-                "BoardFootRemoved, " +
-                "CubicFootRemoved, " +
-                "DIBClass, " +
-                "BarkThickness, " +
-                "BoardUtil, " +
-                "CubicUtil " +
-            "ON LogStock " +
-            "FOR EACH ROW " +
-            "BEGIN " +
-                "UPDATE LogStock SET ModifiedDate = datetime( 'now', 'localtime') WHERE LogStock_CN = new.LogStock_CN; " +
-                "UPDATE LogStock SET RowVersion = new.RowVersion + 1 WHERE LogStock_CN = new.LogStock_CN; " +
-            "END; ";
+        //public const string CREATE_TRIGGER_LOGSTOCK_ONUPDATE =
+        //    "CREATE TRIGGER LogStock_OnUpdate " +
+        //    "AFTER UPDATE OF " +
+        //        "LogNumber, " +
+        //        "Grade, " +
+        //        "SeenDefect, " +
+        //        "PercentRecoverable, " +
+        //        "Length, " +
+        //        "ExportGrade, " +
+        //        "SmallEndDiameter, " +
+        //        "LargeEndDiameter, " +
+        //        "GrossBoardFoot, " +
+        //        "NetBoardFoot, " +
+        //        "GrossCubicFoot, " +
+        //        "NetCubicFoot, " +
+        //        "BoardFootRemoved, " +
+        //        "CubicFootRemoved, " +
+        //        "DIBClass, " +
+        //        "BarkThickness, " +
+        //        "BoardUtil, " +
+        //        "CubicUtil " +
+        //    "ON LogStock " +
+        //    "FOR EACH ROW " +
+        //    "BEGIN " +
+        //        "UPDATE LogStock SET ModifiedDate = datetime( 'now', 'localtime') WHERE LogStock_CN = new.LogStock_CN; " +
+        //        "UPDATE LogStock SET RowVersion = new.RowVersion + 1 WHERE LogStock_CN = new.LogStock_CN; " +
+        //    "END; ";
     }
 }

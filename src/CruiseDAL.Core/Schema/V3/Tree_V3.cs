@@ -2,6 +2,12 @@
 {
     public partial class DDL
     {
+        public static readonly string[] TREE_V3 = new string[]
+        {
+            CREATE_TABLE_TREE_V3,
+            CREATE_TRIGGER_TREE_V3_ONUPDATE,
+        };
+
         // values stored in the tree table are value we don't expect to change after the initial insert of the record
         // for changable values use the treeMeasurments table or treeFieldValue table
         public const string CREATE_TABLE_TREE_V3 =
@@ -15,8 +21,7 @@
                 "LiveDead TEXT COLLATE NOCASE, " +
                 "PlotNumber INTEGER, " +
                 "TreeNumber INTEGER NOT NULL, " +
-                "CountOrMeasure TEXT DEFAULT 'M' COLLATE NOCASE," + // field is for compatibility with older schema. because plot cruising still requires a tree record to record non measure trees
-                "Initials TEXT, " +                                 // initials of the cruiser taking measurments
+                "CountOrMeasure TEXT DEFAULT 'M' COLLATE NOCASE," + // field is for compatibility with older schema. because plot cruising still requires a tree record to record non measure trees                               // initials of the cruiser taking measurments
                 "XCoordinate REAL, " +
                 "YCoordinate REAL, " +
                 "ZCoordinate REAL, " +
@@ -30,7 +35,7 @@
                 "FOREIGN KEY (CuttingUnitCode) REFERENCES CuttingUnit (Code) ON DELETE CASCADE ON UPDATE CASCADE, " +
                 "FOREIGN KEY (StratumCode) REFERENCES Stratum (Code) " +
                 "FOREIGN KEY (SampleGroupCode, StratumCode) REFERENCES SampleGroup_V3 (SampleGroupCode, StratumCode) ON DELETE CASCADE ON UPDATE CASCADE, " +
-                "FOREIGN KEY (PlotNumber) REFERENCES Plot_V3 (PlotNumber) ON DELETE CASCADE, " +
+                "FOREIGN KEY (PlotNumber, CuttingUnitCode) REFERENCES Plot_V3 (PlotNumber, CuttingUnitCode) ON DELETE CASCADE, " +
                 //"FOREIGN KEY (Species, LiveDead, SampleGroupCode, StratumCode) REFERENCES SubPopulation (Species, LiveDead, SampleGroupCode, StratumCode), " +
                 "FOREIGN KEY (Species) REFERENCES Species (Species) " +
             ")";
@@ -46,8 +51,7 @@
                 "LiveDead, " +
                 "PlotNumber, " +
                 "TreeNumber, " +
-                "CountOrMeasure, " +
-                "Initials " +
+                "CountOrMeasure " +
             "ON Tree_V3 " +
             "FOR EACH ROW " +
             "BEGIN " +
@@ -70,7 +74,6 @@
                     "PlotNumber, " +
                     "TreeNumber, " +
                     "CountOrMeasure, " +
-                    "Initials, " +
                     "CreatedBy, " +
                     "CreatedDate, " +
                     "ModifiedBy, " +
@@ -88,7 +91,6 @@
                     "p.PlotNumber, " +
                     "t.TreeNumber, " +
                     "t.CountOrMeasure, " +
-                    "t.Initials, " +
                     "t.CreatedBy, " +
                     "t.CreatedDate, " +
                     "t.ModifiedBy, " +
