@@ -2,12 +2,6 @@
 {
     public partial class DDL
     {
-        public static readonly string[] TALLYDESCRIPTION = new string[]
-        {
-            CREATE_TABLE_TALLYDESCRIPTION,
-            CREATE_INDEX_TALLYDESCRIPTION,
-        };
-
         public const string CREATE_TABLE_TALLYDESCRIPTION =
             "CREATE TABLE TallyDescription ( " +
                 "StratumCode TEXT NOT NULL COLLATE NOCASE, " +
@@ -23,10 +17,13 @@
                 "FOREIGN KEY (Species) REFERENCES Species (Species) ON DELETE CASCADE ON UPDATE CASCADE " +
             ");";
 
-        public const string CREATE_INDEX_TALLYDESCRIPTION =
+        public const string CREATE_INDEX_TallyDescription_StratumCode_SampleGroupCode_Species_LiveDead =
             "CREATE UNIQUE INDEX TallyDescription_StratumCode_SampleGroupCode_Species_LiveDead " +
             "ON TallyDescription " +
             "(StratumCode, SampleGroupCode, ifnull(Species, ''), ifnull(LiveDead, ''));";
+
+        public const string CREATE_INDEX_TallyDescription_Species =
+            @"CREATE INDEX 'TallyDescription_Species' ON 'TallyDescription'('Species');";
     }
 
     public partial class Migrations

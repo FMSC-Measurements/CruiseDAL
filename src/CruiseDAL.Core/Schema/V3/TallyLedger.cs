@@ -36,6 +36,19 @@
             //"FOREIGN KEY (CuttingUnitCode, StratumCode, PlotNumber) REFERENCES Plot_Stratum (CuttingUnitCode, StratumCode, PlotNumber), " +
             "FOREIGN KEY (TreeID) REFERENCES Tree_V3 (TreeID) ON DELETE CASCADE" +
         ");";
+
+        public const string CREATE_INDEX_TallyLedger_TreeID =
+            @"CREATE INDEX 'TallyLedger_TreeID' ON 'TallyLedger'('TreeID');";
+
+        public const string CREATE_INDEX_TallyLedger_SampleGroupCode_StratumCode =
+            @"CREATE INDEX 'TallyLedger_SampleGroupCode_StratumCode' ON 'TallyLedger'('SampleGroupCode', 'StratumCode');";
+
+        public const string CREATE_INDEX_TallyLedger_StratumCode =
+            @"CREATE INDEX 'TallyLedger_StratumCode' ON 'TallyLedger'('StratumCode');";
+
+        public const string CREATE_INDEX_TallyLedger_CuttingUnitCode =
+            @"CREATE INDEX 'TallyLedger_CuttingUnitCode' ON 'TallyLedger'('CuttingUnitCode');";
+
     }
 
     public partial class Migrations

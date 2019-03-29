@@ -2,11 +2,6 @@
 {
     public partial class DDL
     {
-        public static readonly string[] SUBPOPULATION = new string[]
-        {
-            CREATE_TABLE_SUBPOPULATION,
-        };
-
         public const string CREATE_TABLE_SUBPOPULATION =
             "CREATE TABLE Subpopulation (" +
                 "Subpopulation_CN INTEGER PRIMARY KEY AUTOINCREMENT, " +
@@ -21,6 +16,9 @@
                 "FOREIGN KEY (StratumCode, SampleGroupCode) REFERENCES SampleGroup_V3 (StratumCode, SampleGroupCode) ON DELETE CASCADE ON UPDATE CASCADE," +
                 "FOREIGN KEY (Species) REFERENCES Species (Species) ON UPDATE CASCADE " +
             ");";
+
+        public const string CREATE_INDEX_Subpopulation_Species =
+            @"CREATE INDEX 'Subpopulation_Species' ON 'Subpopulation'('Species' COLLATE NOCASE);";
     }
 
     public partial class Migrations

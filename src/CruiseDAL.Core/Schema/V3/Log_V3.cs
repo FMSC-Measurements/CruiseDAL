@@ -2,11 +2,7 @@
 {
     public partial class DDL
     {
-        public static readonly string[] LOG_V3 = new string[]
-        {
-            CREATE_TABLE_LOG_V3,
-            CREATE_TRIGGER_LOG_V3_ONUPDATE
-        };
+
 
         public const string CREATE_TABLE_LOG_V3 =
             "CREATE TABLE Log_V3 ( " +
@@ -39,6 +35,9 @@
 
                 "FOREIGN KEY (TreeID) REFERENCES Tree_V3 (TreeID) ON DELETE CASCADE " +
             ");";
+
+        public const string CREATE_INDEX_Log_V3_TreeID =
+            @"CREATE INDEX Log_V3_TreeID ON Log_V3 (TreeID);";
 
         public const string CREATE_TRIGGER_LOG_V3_ONUPDATE =
             "CREATE TRIGGER Log_V3_OnUpdate " +

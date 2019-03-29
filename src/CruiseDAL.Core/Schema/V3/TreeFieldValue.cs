@@ -132,6 +132,12 @@ CROSS JOIN TreeFieldSetup_V3 AS tfs
 JOIN TreeField AS tf USING (Field)
 WHERE tf.IsTreeMeasurmentField = 1;";
 
+        public const string CREATE_INDEX_TreeFieldValue_TreeID =
+            @"CREATE INDEX 'TreeFieldValue_TreeID' ON 'TreeFieldValue'('TreeID');";
+
+        public const string CREATE_INDEX_TreeFieldValue_Field =
+            @"CREATE INDEX 'TreeFieldValue_Field' ON 'TreeFieldValue'('Field');";
+
         public const string CREATE_VIEW_TREEFIELDVALUE_ALL =
 @"CREATE VIEW TreeFieldValue_All AS
 SELECT

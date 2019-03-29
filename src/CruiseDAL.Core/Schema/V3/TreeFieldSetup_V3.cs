@@ -13,6 +13,12 @@
                 "FOREIGN KEY (StratumCode) REFERENCES Stratum (Code) ON DELETE CASCADE ON UPDATE CASCADE," +
                 "FOREIGN KEY (Field) REFERENCES TreeField (Field) " +
             ");";
+
+        public const string CREATE_INDEX_TreeFieldSetup_V3_Field =
+            @"CREATE INDEX 'TreeFieldSetup_V3_Field' ON 'TreeFieldSetup_V3'('Field' COLLATE NOCASE);";
+
+        public const string CREATE_INDEX_TreeFieldSetup_V3_StratumCode =
+            @"CREATE INDEX 'TreeFieldSetup_V3_StratumCode' ON 'TreeFieldSetup_V3'('StratumCode' COLLATE NOCASE);";
     }
 
     public partial class Migrations

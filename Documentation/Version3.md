@@ -124,7 +124,8 @@ Note this table has no backport
  - changed SampleGroup_CN to (StratumCode and SampleGroupCode)
 
 ### LogGradeAuditRule_V3
- - Split out Valid Grades. This is a slightly better design and allows for audits to be preformed by just querying the data. 
+ - Split out Valid Grades. This is a slightly better design and allows for audits to be preformed by just querying the data. Also don't store multiple values in on field
+ - changed from using 'ANY' to indicate that rule applies to all species values, to NULL indicate that value applies to all species values
 
 ### TreeAuditRule
  - removed ErrorMessage (this field hadn't been used in a long time)
@@ -252,6 +253,10 @@ Initially this table made it hard to define tally populations using the CountTre
  [] LogGradeAuditResolution
  [x] only return treeCount if plot tree
  [] remove support for updating pre-2.1.1 version
+ [] TallyPopulation as a table or as a veiw?
+ [] plot error view
+ [] log error view (no log grade audits)
+ [] dont migrate if species, livedead, prod is inconsistent with TDV
 
 ## Tree_V3
  - create index on tree number
@@ -305,16 +310,24 @@ Starting in version 3 foreign keys will be set on by default. The new database d
  - BOOLEAN fields are considered false if == 0 and true if != 0
  - CreatedBy fields default to ''
 
-# migration guarintees 
+# migration notes 
 ## Tree
  - generally will return same values and types as original tree table, without additional fields
  - TreeID in the new file will be the same as Tree_GUID the old file
  
-### Exceptions: 
+### differences: 
  - additional column is TreeID which is a shortcut to the id of the tree in the new Tree_v3 table
  - Values for Tree_GUID may be populated if null in the original file
  - modifiedDate values will be different
  - species will be different if there were tree records in the original file where the species on the tree record didn't match up with the species on the treeDefaultValue 
+
+# TreeFieldSetup, LogFieldSetup, TreeFieldSetupDefault, LogFieldSetupDefault 
+It may be possible that some files have tree field setups that use invalid or no longer supported fields. These fields wont be migrated over.
+
+# Tree species and LiveDead
+in the previous database it is possible for species and live dead values to not match up with the tree default value on a tree. This could cause a tree to be moved into a different population during the migration process. This is why we audit the database before hand and see that is free of errors. 
+
+
 
 
 

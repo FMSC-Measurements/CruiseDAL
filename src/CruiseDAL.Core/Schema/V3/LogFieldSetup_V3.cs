@@ -2,10 +2,7 @@
 {
     public partial class DDL
     {
-        public static readonly string[] LOGFIELDSETUP_V3 = new string[]
-        {
-            CREATE_TABLE_LOGFIELDSETUP_V3
-        };
+
 
         public const string CREATE_TABLE_LOGFIELDSETUP_V3 =
             "CREATE TABLE LogFieldSetup_V3 (" +
@@ -20,6 +17,12 @@
                 "FOREIGN KEY (StratumCode) REFERENCES Stratum (Code) ON DELETE CASCADE ON UPDATE CASCADE," +
                 "FOREIGN KEY (Field) REFERENCES LogField (Field) " +
             ");";
+
+        public const string CREATE_INDEX_LogFieldSetup_V3_Field =
+            @"CREATE INDEX 'LogFieldSetup_V3_Field' ON 'LogFieldSetup_V3'('Field' COLLATE NOCASE);";
+
+        public const string CREATE_INDEX_LogFieldSetup_V3_StratumCode =
+            @"CREATE INDEX 'LogFieldSetup_V3_StratumCode' ON 'LogFieldSetup_V3'('StratumCode' COLLATE NOCASE);";
     }
 
     public partial class Migrations

@@ -2,10 +2,6 @@
 {
     public partial class DDL
     {
-        public static readonly string[] SAMPLERSTATE = new string[]
-        {
-            CREATE_TALBE_SAMPLERSTATE
-        };
 
         public const string CREATE_TALBE_SAMPLERSTATE =
             "CREATE TABLE SamplerState ( " +

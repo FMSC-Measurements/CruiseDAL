@@ -2,8 +2,6 @@
 {
     public partial class DDL
     {
-        public static readonly string[] CUTTINGUNIT_STRATUM = new string[]{
-            CREATE_TABLE_CUTTINGUNIT_STRATUM };
 
         public const string CREATE_TABLE_CUTTINGUNIT_STRATUM =
             "CREATE TABLE CuttingUnit_Stratum (" +
@@ -17,6 +15,9 @@
                 "FOREIGN KEY (CuttingUnitCode) REFERENCES CuttingUnit (Code) ON DELETE CASCADE ON UPDATE CASCADE, " +
                 "FOREIGN KEY (StratumCode) REFERENCES Stratum (Code) ON DELETE CASCADE ON UPDATE CASCADE " +
             ");";
+
+        public const string CREATE_INDEX_CUTTINGUNIT_STRATUM_STRATUMCODE =
+            @"CREATE INDEX 'CuttingUnit_Stratum_StratumCode' ON 'CuttingUnit_Stratum'('StratumCode');";
     }
 
     public partial class Migrations

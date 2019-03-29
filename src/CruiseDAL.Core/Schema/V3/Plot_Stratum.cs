@@ -2,11 +2,6 @@
 {
     public partial class DDL
     {
-        public static readonly string[] PLOT_STRATUM = new string[]
-        {
-            CREATE_TABLE_PLOT_STRATUM,
-            CREATE_TRIGGER_PLOT_STRATUM_ONUPDATE
-        };
 
         public const string CREATE_TABLE_PLOT_STRATUM =
             "CREATE TABLE Plot_Stratum (" +
@@ -29,6 +24,9 @@
                 "FOREIGN KEY (StratumCode) REFERENCES Stratum (Code) ON DELETE CASCADE ON UPDATE CASCADE, " +
                 "FOREIGN KEY (PlotNumber, CuttingUnitCode) REFERENCES Plot_V3 (PlotNumber, CuttingUnitCode) ON DELETE CASCADE " +
             ");";
+
+        public const string CREATE_INDEX_Plot_Stratum_StratumCode =
+            @"CREATE INDEX 'Plot_Stratum_StratumCode' ON 'Plot_Stratum'('StratumCode');";
 
         public const string CREATE_TRIGGER_PLOT_STRATUM_ONUPDATE =
             "CREATE TRIGGER Plot_Stratum_OnUpdate " +

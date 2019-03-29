@@ -27,5 +27,8 @@
                 "UNIQUE (Code, Method, SgSet)," +
                 "FOREIGN KEY (Stratum_CN) REFERENCES Stratum (Stratum_CN) ON DELETE CASCADE" +
             ");";
+
+        public const string CREATE_INDEX_StratumStats_Stratum_CN =
+            @"CREATE INDEX 'StratumStats_Stratum_CN' ON 'StratumStats'('Stratum_CN');";
     }
 }

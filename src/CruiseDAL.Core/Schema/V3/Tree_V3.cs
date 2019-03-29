@@ -2,12 +2,6 @@
 {
     public partial class DDL
     {
-        public static readonly string[] TREE_V3 = new string[]
-        {
-            CREATE_TABLE_TREE_V3,
-            CREATE_TRIGGER_TREE_V3_ONUPDATE,
-        };
-
         // values stored in the tree table are value we don't expect to change after the initial insert of the record
         // for changable values use the treeMeasurments table or treeFieldValue table
         public const string CREATE_TABLE_TREE_V3 =
@@ -39,6 +33,21 @@
                 //"FOREIGN KEY (Species, LiveDead, SampleGroupCode, StratumCode) REFERENCES SubPopulation (Species, LiveDead, SampleGroupCode, StratumCode), " +
                 "FOREIGN KEY (Species) REFERENCES Species (Species) " +
             ")";
+
+        public const string CREATE_INDEX_Tree_V3_Species =
+            @"CREATE INDEX 'Tree_V3_Species' ON 'Tree_V3'('Species');";
+
+        public const string CREATE_INDEX_Tree_V3_PlotNumber_CuttingUnitCode =
+            @"CREATE INDEX 'Tree_V3_PlotNumber_CuttingUnitCode' ON 'Tree_V3'('PlotNumber', 'CuttingUnitCode');";
+
+        public const string CREATE_INDEX_Tree_V3_SampleGroupCode_StratumCode =
+            @"CREATE INDEX 'Tree_V3_SampleGroupCode_StratumCode' ON 'Tree_V3'('SampleGroupCode', 'StratumCode');";
+
+        public const string CREATE_INDEX_Tree_V3_StratumCode =
+            @"CREATE INDEX 'Tree_V3_StratumCode' ON 'Tree_V3'('StratumCode');";
+
+        public const string CREATE_INDEX_Tree_V3_CuttingUnitCode =
+            @"CREATE INDEX 'Tree_V3_CuttingUnitCode' ON 'Tree_V3'('CuttingUnitCode');";
 
         public const string CREATE_TRIGGER_TREE_V3_ONUPDATE =
             "CREATE TRIGGER Tree_V3_OnUpdate " +

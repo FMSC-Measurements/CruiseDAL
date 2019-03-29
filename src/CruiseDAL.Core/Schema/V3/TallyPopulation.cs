@@ -50,10 +50,18 @@
                 "null AS Species, " +
                 "null AS LiveDead, " +
                 "ifnull(td.Description,'') AS Description, " +
-                "ifnull(td.HotKey, '') AS HotKey " +
+                "ifnull(thk.HotKey, '') AS HotKey " +
             "FROM SampleGroup_V3 AS sg " +
-            "LEFT JOIN TallyHotKey AS thk ON thk.StratumCode = sg.StratumCode AND thk.SampleGroupCode = sg.SampleGroupCode AND thk.Species = '' AND thk.LiveDead = '' " +
-            "LEFT JOIN TallyDescription AS td on td.StratumCode = sg.StratumCode AND td.SampleGroupCode = sg.SampleGroupCode AND td.Species = '' AND td.LiveDead = '' " +
+            "LEFT JOIN TallyHotKey AS thk ON " +
+                    "thk.StratumCode = sg.StratumCode " +
+                    "AND thk.SampleGroupCode = sg.SampleGroupCode " +
+                    "AND ifnull(thk.Species, '') = '' " +
+                    "AND ifnull(thk.LiveDead, '') = '' " +
+            "LEFT JOIN TallyDescription AS td ON " +
+                    "td.StratumCode = sg.StratumCode " +
+                    "AND td.SampleGroupCode = sg.SampleGroupCode " +
+                    "AND ifnull(td.Species, '') = '' " +
+                    "AND ifnull(td.LiveDead, '') = '' " +
             "WHERE sg.TallyBySubPop == 0" +
             ";";
     }

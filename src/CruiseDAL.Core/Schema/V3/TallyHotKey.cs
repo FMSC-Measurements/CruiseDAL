@@ -2,11 +2,6 @@
 {
     public partial class DDL
     {
-        public static readonly string[] TALLYHOTKEY = new string[]
-        {
-            CREATE_TABLE_TALLYHOTKEY,
-            CREATE_INDEX_TALLYHOTKEY,
-        };
 
         public const string CREATE_TABLE_TALLYHOTKEY =
 @"CREATE TABLE TallyHotKey (
@@ -24,7 +19,10 @@
     FOREIGN KEY (Species) REFERENCES Species (Species) ON DELETE CASCADE ON UPDATE CASCADE
 );";
 
-        public const string CREATE_INDEX_TALLYHOTKEY =
+        public const string CREATE_INDEX_TallyHotKey_Species =
+            @"CREATE INDEX 'TallyHotKey_Species' ON 'TallyHotKey'('Species');";
+
+        public const string CREATE_INDEX_TallyHotKey_StratumCode_SampleGroupCode_Species_LiveDead =
 @"CREATE UNIQUE INDEX TallyHotKey_StratumCode_SampleGroupCode_Species_LiveDead
 ON TallyHotKey
 (StratumCode, SampleGroupCode, ifnull(Species, ''), ifnull(LiveDead, ''));";

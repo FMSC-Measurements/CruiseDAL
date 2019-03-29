@@ -31,6 +31,9 @@
                 "FOREIGN KEY (Species) REFERENCES Species (Species) ON UPDATE CASCADE ON DELETE CASCADE" +
             ");";
 
+        public const string CREATE_INDEX_TreeDefaultValue_Species =
+            @"CREATE INDEX 'TreeDefaultValue_Species' ON 'TreeDefaultValue'('Species');";
+
         public const string CREATE_TRIGGER_TREEDEFAULTVALUE_ONUPDATE =
             "CREATE TRIGGER TreeDefaultValue_OnUpdate " +
             "AFTER UPDATE OF " +

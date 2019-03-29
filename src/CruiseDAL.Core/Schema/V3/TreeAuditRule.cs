@@ -13,6 +13,9 @@
     CHECK ((Min IS NULL OR Max IS NULL) OR (Min < Max)),
     FOREIGN KEY (Field) REFERENCES TreeField (Field)
 );";
+
+        public const string CREATE_INDEX_TreeAuditRule_Field =
+            @"CREATE INDEX 'TreeAuditRule_Field' ON 'TreeAuditRule'('Field');";
     }
 
     public partial class Migrations

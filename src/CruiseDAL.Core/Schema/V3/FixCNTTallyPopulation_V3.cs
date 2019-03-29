@@ -2,10 +2,6 @@
 {
     public partial class DDL
     {
-        public static readonly string[] FIXCNTTALLYPOPULATION_V3 = new string[]
-        {
-            CREATE_TABLE_FIXCNTTALLYPOPULATION_V3
-        };
 
         public const string CREATE_TABLE_FIXCNTTALLYPOPULATION_V3 =
             "CREATE TABLE FixCNTTallyPopulation_V3 ( " +
@@ -24,6 +20,12 @@
                 "FOREIGN KEY (StratumCode) REFERENCES FixCNTTallyClass_V3 (StratumCode) ON DELETE CASCADE, " +
                 "FOREIGN KEY (Species) REFERENCES Species (Species) ON UPDATE CASCADE ON DELETE CASCADE" +
             ");";
+
+        public const string CREATE_INDEX_FixCNTTallyPopulation_V3_Species =
+            @"CREATE INDEX 'FixCNTTallyPopulation_V3_Species' ON 'FixCNTTallyPopulation_V3'('Species');";
+
+        public const string CREATE_INDEX_FixCNTTallyPopulation_V3_StratumCode =
+            @"CREATE INDEX 'FixCNTTallyPopulation_V3_StratumCode' ON 'FixCNTTallyPopulation_V3'('StratumCode' COLLATE BINARY);";
     }
 
     public partial class Migrations

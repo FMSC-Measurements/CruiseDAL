@@ -2,11 +2,7 @@
 {
     public partial class DDL
     {
-        public static readonly string[] LOGGRADEAUDITRULE_V3 = new string[]
-        {
-            CREATE_TABLE_LOGGRADEAUDITRULE_V3,
-            CREATE_TABLE_LOGGRADEAUDITRULE_V3,
-        };
+
 
         public const string CREATE_TABLE_LOGGRADEAUDITRULE_V3 =
             "CREATE TABLE LogGradeAuditRule_V3 ( " +
@@ -17,10 +13,13 @@
                 "FOREIGN KEY (Species) REFERENCES Species (Species) ON DELETE CASCADE ON UPDATE CASCADE" +
             ");";
 
-        public const string CREATE_INDEX_LOGGRADEAUDITRULE_V3 =
+        public const string CREATE_INDEX_LogGradeAuditRule_V3_Species_DefectMax_Grade =
             "CREATE UNIQUE INDEX LogGradeAuditRule_V3_Species_DefectMax_Grade " +
             "ON LogGradeAuditRule_V3 " +
-            "( ifnull(Species, ''), Grade );";
+            "( ifnull(Species, ''), DefectMax, Grade );";
+
+        public const string CREATE_INDEX_LogGradeAuditRule_V3_Species =
+            @"CREATE INDEX 'LogGradeAuditRule_V3_Species' ON 'LogGradeAuditRule_V3'('Species');";
     }
 
     public partial class Migrations
@@ -42,7 +41,7 @@
                     "WHERE length(ValidGrades) > 0" + // end loop when length of remaining text is 0
             ") " +
             "SELECT " +
-                "sg.Species, " +
+                "nullif(sg.Species, 'ANY') AS Species, " + // in version 2 'ANY' was used to indicate that a rule applied to all species values
                 "sg.DefectMax, " +
                 "sg.Grade " +
             "FROM splitGrades AS sg " +

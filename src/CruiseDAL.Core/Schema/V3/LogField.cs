@@ -2,11 +2,7 @@
 {
     public partial class DDL
     {
-        public static readonly string[] LOGFIELD = new string[]
-        {
-            CREATE_TABLE_LOGFIELD,
-            INITIALIZE_TABLE_LOGFIELD,
-        };
+
 
         public const string CREATE_TABLE_LOGFIELD =
 @"CREATE TABLE LogField (

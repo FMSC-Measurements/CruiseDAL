@@ -2,11 +2,6 @@
 {
     public partial class DDL
     {
-        public static readonly string[] PLOT_V3 = new string[]
-        {
-            CREATE_TABLE_PLOT_V3,
-            CREATE_TRIGGER_PLOT_V3_ONUPDATE,
-        };
 
         public const string CREATE_TABLE_PLOT_V3 =
             "CREATE TABLE Plot_V3 ( " +
@@ -31,6 +26,9 @@
 
                 "FOREIGN KEY (CuttingUnitCode) REFERENCES CuttingUnit (Code) ON DELETE CASCADE ON UPDATE CASCADE " +
             ");";
+
+        public const string CREATE_INDEX_Plot_V3_CuttingUnitCode =
+            @"CREATE INDEX 'Plot_V3_CuttingUnitCode' ON 'Plot_V3'('CuttingUnitCode');";
 
         public const string CREATE_TRIGGER_PLOT_V3_ONUPDATE =
             "CREATE TRIGGER Plot_V3_OnUpdate " +

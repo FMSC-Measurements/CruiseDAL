@@ -2,12 +2,6 @@
 {
     public partial class DDL
     {
-        public static readonly string[] SPECIES = new string[]
-        {
-            CREATE_TABLE_SPECIES,
-            INITIALIZE_TABLE_SPECIES,
-        };
-
         public const string CREATE_TABLE_SPECIES =
             "CREATE TABLE Species (" +
                 "Species PRIMARY KEY COLLATE NOCASE CHECK (length(Species) > 0)" +
