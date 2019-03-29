@@ -81,13 +81,6 @@ namespace CruiseDAL.Tests
             //timeStamp.Should().NotBeNullOrWhiteSpace();
             ////assert that file opened message was within the last 30 seconds
             //DateTime.Parse(timeStamp).Subtract(DateTime.Now).TotalSeconds.Should().BeLessThan(30);
-
-
-            foreach (var table in CruiseDAL.Schema.Schema.TABLE_NAMES)
-            {
-                db.CheckTableExists(table).Should().BeTrue($"{table} should exist");
-            }
-
         }
 
         [Fact]

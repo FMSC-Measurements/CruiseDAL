@@ -65,7 +65,7 @@ namespace CruiseDAL
 
         public static void FixTreeAuditValueFKeyErrors(DatastoreRedux db)
         {
-            if (db.HasForeignKeyErrors(TREEDEFAULTVALUETREEAUDITVALUE._NAME))
+            if (db.HasForeignKeyErrors("TreeDefaultValueTreeAuditValue"))
             {
                 db.BeginTransaction();
                 try

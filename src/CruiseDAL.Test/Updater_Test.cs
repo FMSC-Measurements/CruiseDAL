@@ -4,6 +4,7 @@ using FMSC.ORM;
 using FMSC.ORM.SQLite;
 using System;
 using System.IO;
+using System.Linq;
 using Xunit;
 using Xunit.Abstractions;
 
@@ -95,6 +96,7 @@ namespace CruiseDAL.Tests
 
             try
             {
+                // create database file from scratch
                 using (var setup = new SQLiteDatastore(filePath))
                 {
                     setup.Execute(CruiseDAL.Tests.SQL.CRUISECREATE_2015_01_05);
@@ -192,16 +194,18 @@ namespace CruiseDAL.Tests
                     });
 
 
+                    datastore.CurrentTransaction.Should().BeNull();
+
                     CruiseDAL.Updater.UpdateMajorVersion(datastore);
 
                     //datastore.ExecuteScalar<int>("SELECT count(*) FROM TallyPopulation;").Should().Be(2);
                     datastore.ExecuteScalar<int>("SELECT count(*) FROM TallyPopulation WHERE Description IS NOT NULL;").Should().Be(2);
 
-                    var semVerActual = new Version(datastore.DatabaseVersion);
-                    var semVerExpected = new Version(DAL.CURENT_DBVERSION);
+                    //var semVerActual = new Version(datastore.DatabaseVersion);
+                    //var semVerExpected = new Version(DAL.CURENT_DBVERSION);
 
-                    semVerActual.Major.Should().Be(semVerExpected.Major);
-                    semVerActual.Minor.Should().Be(semVerExpected.Minor);
+                    //semVerActual.Major.Should().Be(semVerExpected.Major);
+                    //semVerActual.Minor.Should().Be(semVerExpected.Minor);
 
                     VerifyTablesCanDelete(datastore);
 
@@ -219,7 +223,9 @@ namespace CruiseDAL.Tests
 
         protected void VerifyTablesCanDelete(DAL datastore)
         {
-            foreach (var table in CruiseDAL.Schema.Schema.TABLE_NAMES)
+            var tableNames = datastore.ExecuteScalar<string>("SELECT group_concat(Name) FROM sqlite_master WHERE Type = 'table';").Split(',');
+
+            foreach (var table in tableNames.Union(CruiseDAL.Schema.Schema.TABLE_NAMES))
             {
                 try
                 {

@@ -118,7 +118,7 @@ CREATE TRIGGER OnDeletePlot AFTER DELETE ON Plot BEGIN
             try
             {
                 db.BeginTransaction();
-                db.AddField(Schema.VOLUMEEQUATION._NAME, new ColumnInfo("EvenOddSegment", "INTEGER") { Default = "0" });
+                db.AddField("VolumeEquation", new ColumnInfo("EvenOddSegment", "INTEGER") { Default = "0" });
                 SetDatabaseVersion(db, "2014.08.20");
                 db.CommitTransaction();
             }
@@ -136,7 +136,7 @@ CREATE TRIGGER OnDeletePlot AFTER DELETE ON Plot BEGIN
             try
             {
                 db.BeginTransaction();
-                db.AddField(Schema.SAMPLEGROUP._NAME, new ColumnInfo("TallyMethod", "TEXT"));
+                db.AddField("SampleGroup", new ColumnInfo("TallyMethod", "TEXT"));
                 SetDatabaseVersion(db, "2014.09.02");
                 db.CommitTransaction();
             }
