@@ -122,10 +122,20 @@ namespace FMSC.ORM.EntityModel.Support
                 else { return null; }
             }
 
-            TypeCode tc = Type.GetTypeCode(type);
+            var underlyingType = Nullable.GetUnderlyingType(type);
+            TypeCode tc = Type.GetTypeCode(underlyingType ?? type);
+
+
             try
             {
-                return GetValueByTypeCode(tc, reader, ord);
+                var value = GetValueByTypeCode(tc, reader, ord);
+
+                if(underlyingType != null)
+                {
+                    return Convert.ChangeType(value, type);
+                }
+
+                return value;
             }
             catch (InvalidCastException)
             {
