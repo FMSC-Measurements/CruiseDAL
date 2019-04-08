@@ -147,6 +147,18 @@ namespace FMSC.ORM.Core
         {
             var result = ExecuteScalar(connection, commandText, parameters, transaction);
 
+            return ProcessResult<T>(result);
+        }
+
+        public static T ExecuteScalar2<T>(this DbConnection connection, string commandText, object parameters, DbTransaction transaction)
+        {
+            var result = ExecuteScalar2(connection, commandText, parameters, transaction);
+
+            return ProcessResult<T>(result);
+        }
+
+        private static T ProcessResult<T>(object result)
+        {
             if (result == null || result is DBNull)
             {
                 return default(T);

@@ -578,10 +578,10 @@ namespace FMSC.ORM.Core
 
         public IEnumerable<GenericEntity> QueryGeneric(string commandText)
         {
-            return QueryGeneric(commandText, (object)null);
+            return QueryGeneric2(commandText, (object)null);
         }
 
-        public IEnumerable<GenericEntity> QueryGeneric(string commandText, object paramaters)
+        public IEnumerable<GenericEntity> QueryGeneric2(string commandText, object paramaters)
         {
             lock (_persistentConnectionSyncLock)
             {
@@ -618,7 +618,7 @@ namespace FMSC.ORM.Core
             }
         }
 
-        public IEnumerable<TResult> Query<TResult>(String commandText, Object[] paramaters) where TResult : new()
+        public IEnumerable<TResult> Query<TResult>(string commandText, params object[] paramaters) where TResult : new()
         {
             lock (_persistentConnectionSyncLock)
             {
@@ -628,6 +628,128 @@ namespace FMSC.ORM.Core
                     FMSC.ORM.EntityModel.Support.EntityInflator inflator = GlobalEntityDescriptionLookup.Instance.GetEntityInflator(typeof(TResult));
 
                     using (var reader = ExecuteReader(connection, commandText, paramaters, CurrentTransaction))
+                    {
+                        //HACK with microsoft.data.sqlite calling GetOrdinal throws exception if reader is empty
+                        //if(reader is DbDataReader && ((DbDataReader)reader).HasRows == false) { yield break; }
+                        inflator.CheckOrdinals(reader);
+
+                        while (reader.Read())
+                        {
+                            TResult newDO = new TResult();
+                            if (newDO is IDataObject)
+                            {
+                                ((IDataObject)newDO).DAL = this;
+                            }
+                            if (newDO is ISupportInitialize)
+                            {
+                                ((ISupportInitialize)newDO).BeginInit();// allow dataobject to suspend property changed notifications or whatever
+                            }
+                            try
+                            {
+                                inflator.ReadData(reader, newDO);
+                            }
+                            catch (Exception e)
+                            {
+                                var exceptionProcessor = ExceptionProcessor;
+                                if (exceptionProcessor != null)
+                                {
+                                    throw exceptionProcessor.ProcessException(e, connection, commandText, CurrentTransaction);
+                                }
+                                else
+                                {
+                                    throw;
+                                }
+                            }
+                            finally
+                            {
+                                if (newDO is ISupportInitialize)
+                                {
+                                    ((ISupportInitialize)newDO).EndInit();
+                                }
+                            }
+
+                            yield return newDO;
+                        }
+                    }
+                }
+                finally
+                {
+                    ReleaseConnection();
+                }
+            }
+        }
+
+        public IEnumerable<TResult> Query2<TResult>(string commandText, object paramaters) where TResult : new()
+        {
+            lock (_persistentConnectionSyncLock)
+            {
+                var connection = OpenConnection();
+                try
+                {
+                    FMSC.ORM.EntityModel.Support.EntityInflator inflator = GlobalEntityDescriptionLookup.Instance.GetEntityInflator(typeof(TResult));
+
+                    using (var reader = ExecuteReader2(connection, commandText, paramaters, CurrentTransaction))
+                    {
+                        //HACK with microsoft.data.sqlite calling GetOrdinal throws exception if reader is empty
+                        //if(reader is DbDataReader && ((DbDataReader)reader).HasRows == false) { yield break; }
+                        inflator.CheckOrdinals(reader);
+
+                        while (reader.Read())
+                        {
+                            TResult newDO = new TResult();
+                            if (newDO is IDataObject)
+                            {
+                                ((IDataObject)newDO).DAL = this;
+                            }
+                            if (newDO is ISupportInitialize)
+                            {
+                                ((ISupportInitialize)newDO).BeginInit();// allow dataobject to suspend property changed notifications or whatever
+                            }
+                            try
+                            {
+                                inflator.ReadData(reader, newDO);
+                            }
+                            catch (Exception e)
+                            {
+                                var exceptionProcessor = ExceptionProcessor;
+                                if (exceptionProcessor != null)
+                                {
+                                    throw exceptionProcessor.ProcessException(e, connection, commandText, CurrentTransaction);
+                                }
+                                else
+                                {
+                                    throw;
+                                }
+                            }
+                            finally
+                            {
+                                if (newDO is ISupportInitialize)
+                                {
+                                    ((ISupportInitialize)newDO).EndInit();
+                                }
+                            }
+
+                            yield return newDO;
+                        }
+                    }
+                }
+                finally
+                {
+                    ReleaseConnection();
+                }
+            }
+        }
+
+        public IEnumerable<TResult> Query<TResult>(string commandText, object paramaters) where TResult : new()
+        {
+            lock (_persistentConnectionSyncLock)
+            {
+                var connection = OpenConnection();
+                try
+                {
+                    FMSC.ORM.EntityModel.Support.EntityInflator inflator = GlobalEntityDescriptionLookup.Instance.GetEntityInflator(typeof(TResult));
+
+                    using (var reader = ExecuteReader2(connection, commandText, paramaters, CurrentTransaction))
                     {
                         //HACK with microsoft.data.sqlite calling GetOrdinal throws exception if reader is empty
                         //if(reader is DbDataReader && ((DbDataReader)reader).HasRows == false) { yield break; }
@@ -931,7 +1053,7 @@ namespace FMSC.ORM.Core
         /// </summary>
         /// <param name="commandText"></param>
         /// <returns></returns>
-        public int Execute(String commandText, params object[] parameters)
+        public int Execute(string commandText, params object[] parameters)
         {
             if (string.IsNullOrEmpty(commandText)) { throw new ArgumentNullException("command"); }
 
@@ -941,6 +1063,28 @@ namespace FMSC.ORM.Core
                 try
                 {
                     return connection.ExecuteNonQuery(commandText, parameters, CurrentTransaction);
+                }
+                catch (Exception ex)
+                {
+                    throw ExceptionProcessor.ProcessException(ex, connection, commandText, CurrentTransaction);
+                }
+                finally
+                {
+                    ReleaseConnection();
+                }
+            }
+        }
+
+        public int Execute2(string commandText, object parameters)
+        {
+            if (string.IsNullOrEmpty(commandText)) { throw new ArgumentNullException("command"); }
+
+            lock (_persistentConnectionSyncLock)
+            {
+                var connection = OpenConnection();
+                try
+                {
+                    return connection.ExecuteNonQuery2(commandText, parameters, CurrentTransaction);
                 }
                 catch (Exception ex)
                 {
@@ -995,6 +1139,26 @@ namespace FMSC.ORM.Core
                 catch (Exception ex)
                 {
                     throw ExceptionProcessor.ProcessException(ex, conn, commandText, CurrentTransaction);
+                }
+                finally
+                {
+                    ReleaseConnection();
+                }
+            }
+        }
+
+        public T ExecuteScalar2<T>(string command, object parameters)
+        {
+            lock (_persistentConnectionSyncLock)
+            {
+                var conn = OpenConnection();
+                try
+                {
+                    return conn.ExecuteScalar2<T>(command, parameters, CurrentTransaction);
+                }
+                catch (Exception ex)
+                {
+                    throw ExceptionProcessor.ProcessException(ex, conn, command, CurrentTransaction);
                 }
                 finally
                 {
