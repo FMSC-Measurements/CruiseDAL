@@ -1,9 +1,9 @@
-﻿using FluentAssertions;
+﻿using Backpack.SqlBuilder;
+using FluentAssertions;
 using FMSC.ORM.Core;
-using FMSC.ORM.Core.SQL;
+using FMSC.ORM.Test.TestSupport.TestModels;
 using FMSC.ORM.TestSupport;
 using FMSC.ORM.TestSupport.TestModels;
-using Backpack.SqlBuilder;
 using System;
 using System.Data;
 using System.Data.Common;
@@ -11,11 +11,10 @@ using System.IO;
 using System.Linq;
 using Xunit;
 using Xunit.Abstractions;
-using FMSC.ORM.Test.TestSupport.TestModels;
 
 namespace FMSC.ORM.SQLite
 {
-    public class SQLiteDatastoreTest : TestBase , IDisposable
+    public class SQLiteDatastoreTest : TestBase, IDisposable
     {
         private readonly string _tempDir;
         private readonly string _testCreatePath;
@@ -43,7 +42,6 @@ namespace FMSC.ORM.SQLite
             }
         }
 
-
         [Fact]
         public void Ctor_with_null_path()
         {
@@ -52,7 +50,6 @@ namespace FMSC.ORM.SQLite
                 var db = new SQLiteDatastore(null);
             };
             action.Should().Throw<ArgumentException>();
-
         }
 
         [Fact]
@@ -63,7 +60,6 @@ namespace FMSC.ORM.SQLite
                 db.Path.Should().NotBeNullOrWhiteSpace();
                 db.Execute("Select 1;");
             }
-
         }
 
         [Fact]
@@ -74,7 +70,6 @@ namespace FMSC.ORM.SQLite
                 var db = new SQLiteDatastore("");
             };
             action.Should().Throw<ArgumentException>();
-            
         }
 
         [Fact]
@@ -83,7 +78,7 @@ namespace FMSC.ORM.SQLite
             using (var db = new SQLiteDatastore())
             {
                 var connection = db.OpenConnection();
-                
+
                 var trans = connection.BeginTransaction();
                 var result = connection.ExecuteScalar("SELECT 1;", null, trans);
                 //trans.Commit();
@@ -375,7 +370,6 @@ namespace FMSC.ORM.SQLite
                 ds.Execute(TestDBBuilder.CREATE_AUTOINCREMENT_TABLE);
                 ds.CreateTable("Tbl", new ColumnInfo[] { new ColumnInfo() { Name = "Data", DBType = System.Data.DbType.String } }, false);
 
-
                 System.IO.File.Exists(path).Should().BeTrue();
                 System.IO.File.SetAttributes(path, System.IO.FileAttributes.ReadOnly);
 
@@ -567,7 +561,7 @@ namespace FMSC.ORM.SQLite
                 ds.BeginTransaction();
                 for (int i = 1; i <= recordsToCreate; i++)
                 {
-                    ds.Execute(string.Format(" INSERT INTO MultiPropTable (IntField) VALUES ({0});\r\n", i));
+                    ds.Execute(string.Format(" INSERT INTO MultiPropTable (IntField, NIntField) VALUES ({0}, {0});\r\n", i));
                 }
                 ds.CommitTransaction();
 
@@ -775,7 +769,5 @@ namespace FMSC.ORM.SQLite
                 ds.TransactionDepth.Should().Be(0);
             }
         }
-
-        
     }
 }
