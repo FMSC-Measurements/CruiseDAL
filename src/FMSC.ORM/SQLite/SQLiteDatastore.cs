@@ -134,7 +134,7 @@ namespace FMSC.ORM.SQLite
         /// <returns></returns>
         public bool CheckTableExists(string tableName)
         {
-            return GetRowCount("sqlite_master", "WHERE type = 'table' OR type = 'view' AND name = @p1", tableName) > 0;
+            return GetRowCount("sqlite_master", "WHERE (type = 'table' OR type = 'view') AND name = @p1", tableName) > 0;
         }
 
         /// <summary>
