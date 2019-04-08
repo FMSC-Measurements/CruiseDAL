@@ -49,7 +49,18 @@ SELECT
     'FScruiser' AS Program,
     le.Resolution IS NOT NULL AS Suppress
 FROM LogGradeError AS le
-JOIN Log_V3 AS l USING (LogID);";
+JOIN Log_V3 AS l USING (LogID)
+UNION ALL 
+SELECT 
+    abs(random()) * -1 AS RowID,
+    'Plot' AS TableName,
+    pe.Plot_Stratum_CN AS CN_Number, 
+    pe.Field, 
+    pe.Level, 
+    pe.Message,
+    'FScruiser' AS Program,
+    pe.Resolution IS NOT NULL AS Suppress
+FROM PlotError AS pe;";
 
         public const string CREATE_TRIGGER_ERRORLOG_INSERT =
 @"CREATE TRIGGER ErrorLog_Insert

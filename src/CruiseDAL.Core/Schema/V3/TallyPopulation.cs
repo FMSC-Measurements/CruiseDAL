@@ -2,35 +2,24 @@
 {
     public partial class DDL
     {
-        //internal const string CREATE_VIEW_TALLY_POPULATION =
-        //    "CREATE VIEW TallyPopulation " +
-        //    "( StratumCode, SampleGroupCode, Species, LiveDead, Description, HotKey) " +
-        //    "AS " +
-        //    "SELECT Stratum.Code, SampleGroup.Code, TDV.Species, TDV.LiveDead, Tally.Description, Tally.HotKey " +
-        //    "FROM CountTree " +
-        //    "JOIN SampleGroup USING (SampleGroup_CN) " +
-        //    "JOIN Stratum USING (Stratum_CN) " +
-        //    "LEFT JOIN TreeDefaultValue AS TDV USING (TreeDefaultValue_CN) " +
-        //    "JOIN Tally USING (Tally_CN) " +
-        //    "GROUP BY SampleGroup_CN, ifnull(TreeDefaultValue_CN, '');";
 
-        public const string CREATE_TABLE_TALLYPOPULATION =
-            "CREATE TABLE TallyPopulation ( " +
-                "TallyPopulation_CN INTEGER PRIMARY KEY AUTOINCREMENT, " +
-                "StratumCode TEXT NOT NULL COLLATE NOCASE, " +
-                "SampleGroupCode TEXT NOT NULL COLLATE NOCASE, " +
-                "Species TEXT DEFAULT '' COLLATE NOCASE, " +
-                "LiveDead TEXT DEFAULT 'default' COLLATE NOCASE, " +
-                "Description TEXT, " +
-                "HotKey COLLATE NOCASE, " +
-                "FOREIGN KEY (StratumCode) REFERENCES Stratum (Code), " +
-                "FOREIGN KEY (SampleGroupCode, StratumCode) REFERENCES SampleGroup_V3 (SampleGroupCode, StratumCode)  ON DELETE CASCADE ON UPDATE CASCADE, " +
-                "FOREIGN KEY (Species) REFERENCES Species (Species), " +
-                "UNIQUE (StratumCode, SampleGroupCode, Species, LiveDead) " +
-            ");";
+        //public const string CREATE_TABLE_TALLYPOPULATION =
+        //    "CREATE TABLE TallyPopulation ( " +
+        //        "TallyPopulation_CN INTEGER PRIMARY KEY AUTOINCREMENT, " +
+        //        "StratumCode TEXT NOT NULL COLLATE NOCASE, " +
+        //        "SampleGroupCode TEXT NOT NULL COLLATE NOCASE, " +
+        //        "Species TEXT DEFAULT '' COLLATE NOCASE, " +
+        //        "LiveDead TEXT DEFAULT 'default' COLLATE NOCASE, " +
+        //        "Description TEXT, " +
+        //        "HotKey COLLATE NOCASE, " +
+        //        "FOREIGN KEY (StratumCode) REFERENCES Stratum (Code), " +
+        //        "FOREIGN KEY (SampleGroupCode, StratumCode) REFERENCES SampleGroup_V3 (SampleGroupCode, StratumCode)  ON DELETE CASCADE ON UPDATE CASCADE, " +
+        //        "FOREIGN KEY (Species) REFERENCES Species (Species), " +
+        //        "UNIQUE (StratumCode, SampleGroupCode, Species, LiveDead) " +
+        //    ");";
 
         public const string CREATE_VIEW_TALLYPOPULATION =
-            "CREATE VIEW TallyPopulation_VIEW AS " +
+            "CREATE VIEW TallyPopulation AS " +
             "SELECT " +
                 "sp.StratumCode, " +
                 "sp.SampleGroupCode, " +
@@ -68,34 +57,34 @@
 
     public partial class Migrations
     {
-        public const string MIGRATE_TALLYPOPULATION_FROM_COUNTTREE_FORMAT_STR =
-            "INSERT INTO {0}.TallyPopulation ( " +
-                    "StratumCode, " +
-                    "SampleGroupCode, " +
-                    "Species, " +
-                    "LiveDead, " +
-                    "Description, " +
-                    "HotKey " +
-                ") " +
-                "SELECT " +
-                    "st.Code AS StratumCode, " +
-                    "sg.Code AS SampleGroupCode, " +
-                    "tdv.Species AS Species, " +
-                    "tdv.LiveDead AS LiveDead, " +
-                    "tal.Description, " +
-                    "tal.HotKey " +
-                "FROM {1}.CountTree " +
-                "JOIN {1}.CuttingUnit AS cu USING (CuttingUnit_CN) " +
-                "JOIN {1}.SampleGroup AS sg USING (SampleGroup_CN) " +
-                "JOIN {1}.Stratum as st USING (Stratum_CN) " +
-                "LEFT JOIN {1}.TreeDefaultValue AS tdv USING (TreeDefaultValue_CN) " +
-                "JOIN {1}.Tally tal USING (Tally_CN) " +
-                "GROUP BY " +
-                    "cu.Code, " +
-                    "st.Code, " +
-                    "sg.Code, " +
-                    "ifnull(tdv.Species, ''), " +
-                    "ifnull(tdv.LiveDead, '');";
+        //public const string MIGRATE_TALLYPOPULATION_FROM_COUNTTREE_FORMAT_STR =
+        //    "INSERT INTO {0}.TallyPopulation ( " +
+        //            "StratumCode, " +
+        //            "SampleGroupCode, " +
+        //            "Species, " +
+        //            "LiveDead, " +
+        //            "Description, " +
+        //            "HotKey " +
+        //        ") " +
+        //        "SELECT " +
+        //            "st.Code AS StratumCode, " +
+        //            "sg.Code AS SampleGroupCode, " +
+        //            "tdv.Species AS Species, " +
+        //            "tdv.LiveDead AS LiveDead, " +
+        //            "tal.Description, " +
+        //            "tal.HotKey " +
+        //        "FROM {1}.CountTree " +
+        //        "JOIN {1}.CuttingUnit AS cu USING (CuttingUnit_CN) " +
+        //        "JOIN {1}.SampleGroup AS sg USING (SampleGroup_CN) " +
+        //        "JOIN {1}.Stratum as st USING (Stratum_CN) " +
+        //        "LEFT JOIN {1}.TreeDefaultValue AS tdv USING (TreeDefaultValue_CN) " +
+        //        "JOIN {1}.Tally tal USING (Tally_CN) " +
+        //        "GROUP BY " +
+        //            "cu.Code, " +
+        //            "st.Code, " +
+        //            "sg.Code, " +
+        //            "ifnull(tdv.Species, ''), " +
+        //            "ifnull(tdv.LiveDead, '');";
     }
 
     //public partial class Updater

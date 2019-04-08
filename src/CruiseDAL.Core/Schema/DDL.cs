@@ -42,7 +42,7 @@
             CREATE_TABLE_SUBPOPULATION,
             CREATE_INDEX_Subpopulation_Species,
 
-            CREATE_TABLE_TALLYPOPULATION,
+            //CREATE_TABLE_TALLYPOPULATION,
             CREATE_TABLE_TALLYDESCRIPTION,
             CREATE_INDEX_TallyDescription_Species,
             CREATE_INDEX_TallyDescription_StratumCode_SampleGroupCode_Species_LiveDead,
@@ -146,6 +146,7 @@
             CREATE_VIEW_TreeFieldValue_TreeMeasurment_Filtered,
             CREATE_VIEW_LOGGRADEERROR,
             CREATE_VIEW_TREEAUDITERROR,
+            CREATE_VIEW_PLOTERROR,
             CREATE_VIEW_TREEFIELDVALUE_ALL,
 
             // back ports
