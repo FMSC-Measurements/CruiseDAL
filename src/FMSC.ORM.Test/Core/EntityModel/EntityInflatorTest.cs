@@ -39,11 +39,41 @@ namespace FMSC.ORM.EntityModel.Support
         [Fact]
         public void ReadDataTest()
         {
+            var rand = new Random();
+
             var poco = new POCOMultiTypeObject()
             {
-                ID = 1,
+                ID = rand.Next(),
                 StringField = "1",
-                IntField = 1
+                IntField = rand.Next(),
+                NIntField = rand.Next(),
+                BoolField = (rand.Next() & 1) == 1,
+                NBoolField = (rand.Next() & 1) == 1,
+                FloatField = (float)rand.NextDouble(),
+                NFloatField = (float)rand.NextDouble(),
+                DoubleField = rand.NextDouble(),
+                NDoubleField = rand.NextDouble(),
+                GuidField = Guid.NewGuid(),
+                DateTimeField = DateTime.Now,
+            };
+
+            var reader = new TestSupport.ObjectDataReader<POCOMultiTypeObject>(new POCOMultiTypeObject[] { poco });
+            Assert.True(reader.Read());
+
+            var inflator = new EntityInflator(new EntityDescription(typeof(POCOMultiTypeObject)));
+
+            var data = new POCOMultiTypeObject();
+            inflator.CheckOrdinals(reader);
+            inflator.ReadData(reader, data);
+
+            data.Should().BeEquivalentTo(poco);
+        }
+
+        [Fact]
+        public void ReadDataTest_with_defaultValues()
+        {
+            var poco = new POCOMultiTypeObject()
+            {
             };
 
             var reader = new TestSupport.ObjectDataReader<POCOMultiTypeObject>(new POCOMultiTypeObject[] { poco });

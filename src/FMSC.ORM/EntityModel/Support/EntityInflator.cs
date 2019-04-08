@@ -122,7 +122,12 @@ namespace FMSC.ORM.EntityModel.Support
                 else { return null; }
             }
 
-            var underlyingType = Nullable.GetUnderlyingType(type);
+            // check our target type and see if it is a nullable type
+            // if so get the underlying type
+            var underlyingType = (type.IsGenericType && type.GetGenericTypeDefinition() == typeof(Nullable<>))
+                ? Nullable.GetUnderlyingType(type) : null; 
+
+            // get typecode for our target type or underlying type if target type is nullable
             TypeCode tc = Type.GetTypeCode(underlyingType ?? type);
 
 
@@ -130,9 +135,10 @@ namespace FMSC.ORM.EntityModel.Support
             {
                 var value = GetValueByTypeCode(tc, reader, ord);
 
-                if(underlyingType != null)
+                if (underlyingType != null)
                 {
-                    return Convert.ChangeType(value, type);
+                    return Convert.ChangeType(value, tc
+                        , System.Globalization.CultureInfo.CurrentCulture);
                 }
 
                 return value;
