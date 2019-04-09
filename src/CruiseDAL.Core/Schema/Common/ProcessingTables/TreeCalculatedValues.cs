@@ -5,7 +5,7 @@
         public const string CREATE_TABLE_TREECALCULATEDVALUES =
             "CREATE TABLE TreeCalculatedValues(" +
                 "TreeCalcValues_CN INTEGER PRIMARY KEY AUTOINCREMENT, " +
-                "Tree_CN INTEGER REFERENCES Tree NOT NULL, " +
+                "Tree_CN INTEGER NOT NULL, " +
                 "TotalCubicVolume REAL Default 0.0, " +
                 "GrossBDFTPP REAL Default 0.0, " +
                 "NetBDFTPP REAL Default 0.0, " +
