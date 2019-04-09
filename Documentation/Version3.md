@@ -244,19 +244,30 @@ Initially this table made it hard to define tally populations using the CountTre
 [x] dont migrate CuttingUnit.TallyHistory
 [x] implement tree auditing within the database
 ? implement systematic sample selection using just the database
-[] create indexes
+ [] create indexes
  [] figure out the best null solution for species codes( tables that need a null option for species: TallyHotKey, TallyDescription, LogGradeAuditRule (extra special because needs to indicate value is for ANY species), TreeAditValue
- [] LogGradeAuditRule reference Species
- [] fIXcnt figure out why FieldName was integer, and fix so it can reference new TreeField talbe - 
+ [x] LogGradeAuditRule reference Species
+ [x] fIXcnt figure out why FieldName was integer, and fix so it can reference new TreeField talbe - we were using a enum to access fieldName 
  [] use queries to return non-treeAuditRule errors through the TreeError view i.e. checks that tree has a height and diameter 
- [] remove heading from TreeFieldSetup and LogFieldSetup
- [] LogGradeAuditResolution
+ [!] remove heading from TreeFieldSetup and LogFieldSetup
+ [!] LogGradeAuditResolution
  [x] only return treeCount if plot tree
- [] remove support for updating pre-2.1.1 version
- [] TallyPopulation as a table or as a veiw?
- [] plot error view
- [] log error view (no log grade audits)
- [] dont migrate if species, livedead, prod is inconsistent with TDV
+ [!] remove support for updating pre-2.1.1 version - although we could keep this ability, the primary issue is that triggers might not be all there for older converted versions. 
+ [!] TallyPopulation as a table or as a veiw?
+ [x] plot error view
+ [?] log error view (non log grade audits)
+ [!] dont migrate if species, livedead, prod is inconsistent with TDV - added auto fix to fix mismatched livedead to solution that auto fixes mismatched species
+
+ [] move column type to TreeField if being kept
+ [] add method to tallyPopulation?
+ [] add view for easy access to tally population tree counts
+ [] indicate tally by clicker in SG, subpop or SampleSelector
+ [!] override TallyBySubPop in TallyPopulation View when sg has only one species
+ [] change type on stm to bool
+ [] check IsFallBuckScale was bool or 'y'/'n'
+ [!] implement logical deletes 
+ [] if using treeID for tallyLedgerID aswell, update migration command
+ [] allow multiple tally ledgers per tree
 
 ## Tree_V3
  - create index on tree number
@@ -320,6 +331,22 @@ Starting in version 3 foreign keys will be set on by default. The new database d
  - Values for Tree_GUID may be populated if null in the original file
  - modifiedDate values will be different
  - species will be different if there were tree records in the original file where the species on the tree record didn't match up with the species on the treeDefaultValue 
+ - treeCount will always be 0 on tree records for non-plot trees
+
+#count tree 
+## guarintees 
+ - CountTree_CN will remain consistant across reads unless TallyLedger records are deleted. CountTree_CN is taken from the lowest TallyLedger_CN value in a population. 
+ 
+## diferences
+ - tally_CN will always be 0
+ - component_CN will always be 0
+ - createdBy will always be an empty string
+ - CreatedDate will always be an empty string
+ - modifiedBy will always be null
+ - modifiedDate will always be null
+ - number of countTree records may be different. this may be because of
+	 - consolidation of treeCounts across components
+	 - filling in of counts based on tally setup (either by populations that had already been set up but had a missing countTree on a unit or by populations that were given a default tally setup)
 
 # TreeFieldSetup, LogFieldSetup, TreeFieldSetupDefault, LogFieldSetupDefault 
 It may be possible that some files have tree field setups that use invalid or no longer supported fields. These fields wont be migrated over.
