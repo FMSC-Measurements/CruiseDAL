@@ -2,7 +2,6 @@
 {
     public partial class DDL
     {
-
         public const string CREATE_TABLE_PLOT_STRATUM =
             "CREATE TABLE Plot_Stratum (" +
                 "Plot_Stratum_CN INTEGER PRIMARY KEY AUTOINCREMENT, " +

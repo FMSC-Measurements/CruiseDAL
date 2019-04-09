@@ -2,8 +2,6 @@
 {
     public partial class DDL
     {
-
-
         public const string CREATE_TABLE_LOGFIELD =
 @"CREATE TABLE LogField (
     Field TEXT NOT NULL COLLATE NOCASE,

@@ -2,7 +2,6 @@
 {
     public partial class DDL
     {
-
         public const string CREATE_TABLE_SAMPLEGROUP_V3 =
             "CREATE TABLE SampleGroup_V3 (" +
                 "SampleGroup_CN INTEGER PRIMARY KEY AUTOINCREMENT, " +

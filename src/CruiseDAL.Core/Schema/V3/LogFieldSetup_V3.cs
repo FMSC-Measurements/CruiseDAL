@@ -2,8 +2,6 @@
 {
     public partial class DDL
     {
-
-
         public const string CREATE_TABLE_LOGFIELDSETUP_V3 =
             "CREATE TABLE LogFieldSetup_V3 (" +
                 "StratumCode TEXT NOT NULL, " +

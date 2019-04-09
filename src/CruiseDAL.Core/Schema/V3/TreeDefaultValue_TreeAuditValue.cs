@@ -21,7 +21,7 @@
             @"CREATE INDEX 'TreeDefaultValue_TreeAuditRule_TreeAuditRuleID' ON 'TreeDefaultValue_TreeAuditRule'('TreeAuditRuleID');";
 
         public const string CREATE_INDEX_TreeDefaultValue_TreeAuditRule_Species_LiveDead_PrimaryProduct =
-@"CREATE INDEX 'TreeDefaultValue_TreeAuditRule_Species_LiveDead_PrimaryProduct' 
+@"CREATE INDEX 'TreeDefaultValue_TreeAuditRule_Species_LiveDead_PrimaryProduct'
 ON 'TreeDefaultValue_TreeAuditRule'('Species', 'LiveDead', 'PrimaryProduct');";
     }
 

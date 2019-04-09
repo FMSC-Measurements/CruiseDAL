@@ -2,7 +2,6 @@
 {
     public partial class DDL
     {
-
         public const string CREATE_TALBE_SAMPLERSTATE =
             "CREATE TABLE SamplerState ( " +
                 "SamplerState_CN INTEGER PRIMARY KEY AUTOINCREMENT, " +

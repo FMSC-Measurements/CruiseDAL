@@ -2,7 +2,6 @@
 {
     public partial class DDL
     {
-
         public const string CREATE_TABLE_CUTTINGUNIT_STRATUM =
             "CREATE TABLE CuttingUnit_Stratum (" +
                 "CuttingUnit_Stratum_CN INTEGER PRIMARY KEY AUTOINCREMENT, " +
@@ -17,7 +16,10 @@
             ");";
 
         public const string CREATE_INDEX_CUTTINGUNIT_STRATUM_STRATUMCODE =
-            @"CREATE INDEX 'CuttingUnit_Stratum_StratumCode' ON 'CuttingUnit_Stratum'('StratumCode');";
+            @"CREATE INDEX CuttingUnit_Stratum_StratumCode ON CuttingUnit_Stratum (StratumCode COLLATE NOCASE);";
+
+        public const string CREATE_INDEX_CuttingUnit_Stratum_CuttingUnitCode =
+            @"CREATE INDEX CuttingUnit_Stratum_CuttingUnitCode ON CuttingUnit_Stratum (CuttingUnitCode COLLATE NOCASE);";
     }
 
     public partial class Migrations

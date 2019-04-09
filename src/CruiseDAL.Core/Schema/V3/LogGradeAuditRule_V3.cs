@@ -2,8 +2,6 @@
 {
     public partial class DDL
     {
-
-
         public const string CREATE_TABLE_LOGGRADEAUDITRULE_V3 =
             "CREATE TABLE LogGradeAuditRule_V3 ( " +
                 "LogGradeAuditRule_CN INTEGER PRIMARY KEY AUTOINCREMENT, " +

@@ -83,7 +83,7 @@
                 "IsFallBuckScale BOOLEAN Default 0, " +
 
                 "MetaData TEXT, " +
-                
+
                 "Initials TEXT, " +
                 "CreatedBy TEXT DEFAULT 'none', " +
                 "CreatedDate DateTime DEFAULT (datetime('now', 'localtime')) , " +

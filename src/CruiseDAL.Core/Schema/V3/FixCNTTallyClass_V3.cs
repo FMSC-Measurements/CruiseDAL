@@ -2,8 +2,6 @@
 {
     public partial class DDL
     {
-
-
         public const string CREATE_TABLE_FIXCNTTALLYCLASS_V3 =
             "CREATE TABLE FixCNTTallyClass_V3 ( " +
                 "FixCNTTallyClass_CN INTEGER PRIMARY KEY AUTOINCREMENT, " +
@@ -17,10 +15,10 @@
             ");";
 
         public const string CREATE_INDEX_FixCNTTallyClass_V3_Field =
-            @"CREATE INDEX 'FixCNTTallyClass_V3_Field' ON 'FixCNTTallyClass_V3'('Field' COLLATE NOCASE);";
+            @"CREATE INDEX FixCNTTallyClass_V3_Field ON FixCNTTallyClass_V3 (Field COLLATE NOCASE);";
 
         public const string CREATE_INDEX_FixCNTTallyClass_V3_StratumCode =
-            @"CREATE INDEX 'FixCNTTallyClass_V3_StratumCode' ON 'FixCNTTallyClass_V3'('StratumCode' COLLATE NOCASE);";
+            @"CREATE INDEX FixCNTTallyClass_V3_StratumCode ON FixCNTTallyClass_V3 (StratumCode COLLATE NOCASE);";
     }
 
     public partial class Migrations

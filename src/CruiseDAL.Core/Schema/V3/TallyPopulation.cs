@@ -2,7 +2,6 @@
 {
     public partial class DDL
     {
-
         //public const string CREATE_TABLE_TALLYPOPULATION =
         //    "CREATE TABLE TallyPopulation ( " +
         //        "TallyPopulation_CN INTEGER PRIMARY KEY AUTOINCREMENT, " +

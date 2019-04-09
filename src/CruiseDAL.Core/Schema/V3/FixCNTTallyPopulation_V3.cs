@@ -2,7 +2,6 @@
 {
     public partial class DDL
     {
-
         public const string CREATE_TABLE_FIXCNTTALLYPOPULATION_V3 =
             "CREATE TABLE FixCNTTallyPopulation_V3 ( " +
                 "FixCNTTallyPopulation_CN INTEGER PRIMARY KEY AUTOINCREMENT, " +
@@ -19,14 +18,14 @@
                 "FOREIGN KEY (StratumCode, SampleGroupCode) REFERENCES SampleGroup_V3 (StratumCode, SampleGroupCode) ON DELETE CASCADE ON UPDATE CASCADE, " +
                 "FOREIGN KEY (StratumCode, SampleGroupCode, Species, LiveDead) REFERENCES SubPopulation (StratumCode, SampleGroupCode, Species, LiveDead) ON DELETE CASCADE ON UPDATE CASCADE " +
                 "FOREIGN KEY (StratumCode) REFERENCES FixCNTTallyClass_V3 (StratumCode) ON DELETE CASCADE, " +
-                "FOREIGN KEY (Species) REFERENCES Species (Species) ON UPDATE CASCADE ON DELETE CASCADE" +
+                "FOREIGN KEY (Species) REFERENCES Species (Species) ON DELETE CASCADE ON UPDATE CASCADE" +
             ");";
 
         public const string CREATE_INDEX_FixCNTTallyPopulation_V3_Species =
-            @"CREATE INDEX 'FixCNTTallyPopulation_V3_Species' ON 'FixCNTTallyPopulation_V3'('Species');";
+            @"CREATE INDEX FixCNTTallyPopulation_V3_Species ON FixCNTTallyPopulation_V3 (Species COLLATE NOCASE);";
 
         public const string CREATE_INDEX_FixCNTTallyPopulation_V3_StratumCode =
-            @"CREATE INDEX 'FixCNTTallyPopulation_V3_StratumCode' ON 'FixCNTTallyPopulation_V3'('StratumCode' COLLATE BINARY);";
+            @"CREATE INDEX FixCNTTallyPopulation_V3_StratumCode ON FixCNTTallyPopulation_V3 (StratumCode COLLATE NOCASE);";
     }
 
     public partial class Migrations

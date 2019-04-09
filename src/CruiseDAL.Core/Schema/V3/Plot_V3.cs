@@ -2,7 +2,6 @@
 {
     public partial class DDL
     {
-
         public const string CREATE_TABLE_PLOT_V3 =
             "CREATE TABLE Plot_V3 ( " +
                 "Plot_CN INTEGER PRIMARY KEY AUTOINCREMENT, " +

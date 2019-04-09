@@ -2,8 +2,6 @@
 {
     public partial class DDL
     {
-
-
         public const string CREATE_TABLE_LOG_V3 =
             "CREATE TABLE Log_V3 ( " +
                 "Log_CN INTEGER PRIMARY KEY AUTOINCREMENT, " +

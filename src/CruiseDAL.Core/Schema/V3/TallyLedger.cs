@@ -48,7 +48,6 @@
 
         public const string CREATE_INDEX_TallyLedger_CuttingUnitCode =
             @"CREATE INDEX 'TallyLedger_CuttingUnitCode' ON 'TallyLedger'('CuttingUnitCode');";
-
     }
 
     public partial class Migrations

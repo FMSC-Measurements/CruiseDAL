@@ -2,7 +2,6 @@
 {
     public partial class DDL
     {
-
         public const string CREATE_TABLE_TALLYHOTKEY =
 @"CREATE TABLE TallyHotKey (
     TallyHotKey_CN INTEGER PRIMARY KEY AUTOINCREMENT,

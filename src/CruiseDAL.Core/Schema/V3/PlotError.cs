@@ -3,7 +3,7 @@ namespace CruiseDAL.Schema
     public partial class DDL
     {
         public const string CREATE_VIEW_PLOTERROR =
-@"CREATE VIEW PlotError AS 
+@"CREATE VIEW PlotError AS
     SELECT
         ps.CuttingUnitCode,
         ps.PlotNumber,
