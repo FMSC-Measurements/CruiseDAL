@@ -75,7 +75,7 @@
                     "cu.Code AS CuttingUnitCode, " +
                     "p.Slope, " +
                     "p.Aspect, " +
-                    "p.Remarks, " +
+                    "group_concat(p.Remarks) AS Remarks, " +
                     "p.XCoordinate, " +
                     "p.YCoordinate, " +
                     "p.ZCoordinate, " +

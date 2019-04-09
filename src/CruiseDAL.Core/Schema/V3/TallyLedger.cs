@@ -15,7 +15,7 @@
             "LiveDead TEXT DEFAULT '' COLLATE NOCASE, " +
             "TreeCount INTEGER NOT NULL, " +
             "KPI INTEGER Default 0, " +
-            "STM TEXT DEFAULT 'N' COLLATE NOCASE, " +
+            "STM BOOLEAN DEFAULT 0, " +
             "ThreePRandomValue INTEGER Default 0, " +
             "Signature TEXT COLLATE NOCASE, " +
             "Reason TEXT, " +

@@ -19,7 +19,7 @@
                 "t.CountOrMeasure, " +
                 "ifnull(tl.TreeCount, 0) AS TreeCount, " + // in v2 TreeCount and kpi had a type of REAL
                 "ifnull(tl.KPI, 0) AS KPI, " +
-                "ifnull(tl.STM, 'N') AS STM, " +
+                "ifnull(tl.STM, 0) AS STM, " +
                 "tcv.ExpansionFactor, " +
                 "tcv.TreeFactor, " +
                 "tcv.PointFactor, " +
@@ -53,7 +53,7 @@
                 "t.CountOrMeasure, " +
                 "0 AS TreeCount, " +
                 "ifnull(tl.KPI, 0) AS KPI, " +
-                "ifnull(tl.STM, 'N') AS STM, " +
+                "ifnull(tl.STM, 0) AS STM, " +
                 "tcv.ExpansionFactor, " +
                 "tcv.TreeFactor, " +
                 "tcv.PointFactor, " +
@@ -87,7 +87,7 @@
                 "CountOrMeasure, " +
                 "CAST (ifnull(t.TreeCount, 0) AS REAL) AS TreeCount, " + // in v2 TreeCount and kpi had a type of REAL
                 "CAST (ifnull(t.KPI, 0) AS REAL) AS KPI, " +
-                "ifnull(t.STM, 'N') AS STM, " +
+                "(CASE ifnull(tl.STM, 0) WHEN 0 THEN 'N' WHEN 1 THEN 'Y' END) AS STM, " +
                 "ExpansionFactor, " +
                 "TreeFactor, " +
                 "PointFactor, " +

@@ -16,7 +16,8 @@
 
                 "UNIQUE (StratumCode, SampleGroupCode), " +
 
-                "FOREIGN KEY (StratumCode, SampleGroupCode) REFERENCES SampleGroup_V3 (StratumCode, SampleGroupCode) ON DELETE CASCADE," +
+                "FOREIGN KEY (StratumCode, SampleGroupCode) REFERENCES SampleGroup_V3 (StratumCode, SampleGroupCode) ON DELETE CASCADE ON UPDATE CASCADE, " +
+                "FOREIGN KEY (StratumCode, SampleGroupCode, Species, LiveDead) REFERENCES SubPopulation (StratumCode, SampleGroupCode, Species, LiveDead) ON DELETE CASCADE ON UPDATE CASCADE " +
                 "FOREIGN KEY (StratumCode) REFERENCES FixCNTTallyClass_V3 (StratumCode) ON DELETE CASCADE, " +
                 "FOREIGN KEY (Species) REFERENCES Species (Species) ON UPDATE CASCADE ON DELETE CASCADE" +
             ");";

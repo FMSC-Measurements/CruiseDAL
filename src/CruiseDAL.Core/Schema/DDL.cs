@@ -41,6 +41,7 @@
 
             CREATE_TABLE_SUBPOPULATION,
             CREATE_INDEX_Subpopulation_Species,
+            CREATE_INDEX_Subpopulation_StratumCode_SampleGroupCode,
 
             //CREATE_TABLE_TALLYPOPULATION,
             CREATE_TABLE_TALLYDESCRIPTION,

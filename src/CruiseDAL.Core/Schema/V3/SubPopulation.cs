@@ -7,7 +7,7 @@
                 "Subpopulation_CN INTEGER PRIMARY KEY AUTOINCREMENT, " +
                 "StratumCode TEXT NOT NULL COLLATE NOCASE, " +
                 "SampleGroupCode TEXT NOT NULL COLLATE NOCASE, " +
-                "Species TEXT NOT NULL, " +
+                "Species TEXT NOT NULL COLLATE NOCASE, " +
                 "LiveDead TEXT NOT NULL COLLATE NOCASE, " +
 
                 "UNIQUE (StratumCode, SampleGroupCode, Species, LiveDead), " +
@@ -18,7 +18,10 @@
             ");";
 
         public const string CREATE_INDEX_Subpopulation_Species =
-            @"CREATE INDEX 'Subpopulation_Species' ON 'Subpopulation'('Species' COLLATE NOCASE);";
+            @"CREATE INDEX Subpopulation_Species ON Subpopulation (Species COLLATE NOCASE);";
+
+        public const string CREATE_INDEX_Subpopulation_StratumCode_SampleGroupCode =
+            @"CREATE INDEX Subpopulation_StratumCode_SampleGroupCode ON Subpopulation (StratumCode COLLATE NOCASE, SampleGroupCode COLLATE NOCASE);";
     }
 
     public partial class Migrations

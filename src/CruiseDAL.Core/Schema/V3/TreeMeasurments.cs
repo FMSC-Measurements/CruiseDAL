@@ -46,35 +46,44 @@
             "CREATE TABLE TreeMeasurment ( " +
                 "TreeMeasurment_CN INTEGER PRIMARY KEY AUTOINCREMENT, " +
                 "TreeID TEXT NOT NULL, " +
+
                 "SeenDefectPrimary REAL Default 0.0, " +
                 "SeenDefectSecondary REAL Default 0.0, " +
                 "RecoverablePrimary REAL Default 0.0, " +
                 "HiddenPrimary REAL Default 0.0, " +
                 "Grade TEXT, " +
+
                 "HeightToFirstLiveLimb REAL Default 0.0, " +
                 "PoleLength REAL Default 0.0, " +
                 "ClearFace TEXT, " +
                 "CrownRatio REAL Default 0.0, " +
                 "DBH REAL Default 0.0, " +
+
                 "DRC REAL Default 0.0, " +
                 "TotalHeight REAL Default 0.0, " +
                 "MerchHeightPrimary REAL Default 0.0, " +
                 "MerchHeightSecondary REAL Default 0.0, " +
                 "FormClass REAL Default 0.0, " +
+
                 //"UpperStemDOB REAL Default 0.0, " +
+
                 "UpperStemDiameter REAL Default 0.0, " +
                 "UpperStemHeight REAL Default 0.0, " +
                 "DBHDoubleBarkThickness REAL Default 0.0, " +
                 "TopDIBPrimary REAL Default 0.0, " +
                 "TopDIBSecondary REAL Default 0.0, " +
+
                 "DefectCode TEXT, " +
                 "DiameterAtDefect REAL Default 0.0, " +
                 "VoidPercent REAL Default 0.0, " +
                 "Slope REAL Default 0.0, " +
                 "Aspect REAL Default 0.0, " +
+
                 "Remarks TEXT, " +
-                "MetaData TEXT, " +
                 "IsFallBuckScale BOOLEAN Default 0, " +
+
+                "MetaData TEXT, " +
+                
                 "Initials TEXT, " +
                 "CreatedBy TEXT DEFAULT 'none', " +
                 "CreatedDate DateTime DEFAULT (datetime('now', 'localtime')) , " +
