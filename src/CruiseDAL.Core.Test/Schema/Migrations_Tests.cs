@@ -118,9 +118,9 @@ namespace CruiseDAL.Tests.Schema
             {
                 //CruiseDAL.Updater.CheckNeedsMajorUpdate(datastore).Should().BeTrue();
 
-                var sales = origDatastore.QueryGeneric("SELECT * FROM Sale;", null).Single();
+                var sales = origDatastore.QueryGeneric("SELECT * FROM Sale;").Single();
 
-                var salesAfter = newDatastore.QueryGeneric("SELECT * FROM Sale;", null).Single();
+                var salesAfter = newDatastore.QueryGeneric("SELECT * FROM Sale;").Single();
 
                 Compare(salesAfter, sales);
             }
@@ -147,7 +147,7 @@ namespace CruiseDAL.Tests.Schema
                     "LEFT JOIN TreeDefaultValue AS tdv USING (TreeDefaultValue_CN) " +
                     "JOIN Tally AS t USING (Tally_CN) " +
                     "Order by st.Code, sg.Code, tdv.Species, tdv.LiveDead" +
-                    ";", null).ToArray();
+                    ";").ToArray();
 
                 var tallyPopsAfter = newDatastore.QueryGeneric("SELECT " +
                     "StratumCode, " +
@@ -158,7 +158,7 @@ namespace CruiseDAL.Tests.Schema
                     "Description " +
                     "FROM TallyPopulation " +
                     "Order by StratumCode, SampleGroupCode, Species, LiveDead" +
-                    ";", null).ToArray();
+                    ";").ToArray();
 
                 Compare(tallyPopsAfter, tallyPops);
             }
@@ -174,11 +174,11 @@ namespace CruiseDAL.Tests.Schema
             {
                 var treeOrig = origDatastore.QueryGeneric(
                     "SELECT * FROM Tree " +
-                    "ORDER BY CuttingUnit_CN, Plot_CN, TreeNumber; ", null);
+                    "ORDER BY CuttingUnit_CN, Plot_CN, TreeNumber; ");
 
                 var treeAfter = newDatastore.QueryGeneric(
                     "SELECT * FROM Tree " +
-                    "ORDER BY CuttingUnit_CN, Plot_CN, TreeNumber; ", null);
+                    "ORDER BY CuttingUnit_CN, Plot_CN, TreeNumber; ");
 
                 var ignore = new string[] { "Tree_GUID", "TreeID", "ModifiedDate", "ExpansionFactor", "TreeFactor", "PointFactor", "TreeMeasurment_CN" };
                 if(fileName == "7Wolf.cruise")

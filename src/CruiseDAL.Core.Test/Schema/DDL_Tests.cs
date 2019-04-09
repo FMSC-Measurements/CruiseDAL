@@ -80,7 +80,7 @@ namespace CruiseDAL.Tests.Schema
         public void CREATE_COMMANDS_Contains_All_Public_Static_String_commands()
         {
             var commandsLookup = CruiseDAL.Schema.DDL.CREATE_COMMANDS
-                .Where(x=> x != null)
+                .Where(x => x != null)
                 .ToDictionary(x => x);
 
             var type = typeof(CruiseDAL.Schema.DDL);
@@ -88,9 +88,7 @@ namespace CruiseDAL.Tests.Schema
             var fields = type.GetFields(System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags.Public)
                 .Where(x => x.FieldType == typeof(string));
 
-            
-
-            foreach(var field in  fields)
+            foreach (var field in fields)
             {
                 var command = (string)field.GetValue(null);
                 commandsLookup.ContainsKey(command).Should().BeTrue(field.Name);
@@ -98,5 +96,37 @@ namespace CruiseDAL.Tests.Schema
 
             commandsLookup.Count().Should().Be(fields.Count());
         }
+
+        //[Fact]
+        //public void SqliteLint()
+        //{
+        //    var sqlite3path = Path.Combine(ResourceDirectory, "sqlite3.exe");
+        //    var testLintPath = Path.Combine(TestTempPath, "TestLint.cruise");
+
+        //    using (var datastore = new DAL())
+        //    { }
+
+        //    var proc = new System.Diagnostics.Process()
+        //    {
+        //        StartInfo =
+        //        new System.Diagnostics.ProcessStartInfo()
+        //        {
+        //            FileName = sqlite3path,
+        //            Arguments = $"'{testLintPath}' '.echo ON .lint fkey-indexs'",
+        //            RedirectStandardOutput = true,
+        //            UseShellExecute = false,
+        //        }
+        //    };
+
+        //    proc.OutputDataReceived += Proc_OutputDataReceived;
+        //    proc.Start();
+        //    proc.WaitForExit();
+        //    //var outputLines = output.Split(new char[] { '\r', '\n' }, StringSplitOptions.RemoveEmptyEntries);
+        //}
+
+        //private void Proc_OutputDataReceived(object sender, System.Diagnostics.DataReceivedEventArgs e)
+        //{
+        //    Output.WriteLine(e.Data);
+        //}
     }
 }
