@@ -348,6 +348,12 @@ Starting in version 3 foreign keys will be set on by default. The new database d
 	 - consolidation of treeCounts across components
 	 - filling in of counts based on tally setup (either by populations that had already been set up but had a missing countTree on a unit or by populations that were given a default tally setup)
 
+# ErrorLog
+In V3 most of the validation will be handled within the database using views to query the data and return detected errors rather than reading the data out of the database and performing audits in the client and saving the results of the audits back to the database. 
+For backwards compatibility errorlogs can still be saved back to the database. The data from inserts to the ErrorLog view will be stored in the tbl_ErrorLog table. 
+
+There may be some compatibility issues with the CruiseDAL because the ErrorLog records generated from audits within the database may not be consistent when re-queried. Because of this any application that accesses the ErrorLog view should not use the Read methods because the Read methods cache data across reads. Instead they should use the Query methods which offer the same functionality but dont cache data. 
+
 # TreeFieldSetup, LogFieldSetup, TreeFieldSetupDefault, LogFieldSetupDefault 
 It may be possible that some files have tree field setups that use invalid or no longer supported fields. These fields wont be migrated over.
 

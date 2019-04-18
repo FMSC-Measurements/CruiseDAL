@@ -29,18 +29,20 @@ SELECT
 FROM tbl_ErrorLog
 UNION ALL
 SELECT
-    abs(random()) * -1 AS RowID,
+    -1 * ((((t.Tree_CN << 4) + (tf.TreeField_CN & 15)) << 4) + 1) AS RowID,
     'Tree' AS TableName,
-    te.Tree_CN AS CN_Number,
+    t.Tree_CN AS CN_Number,
     te.Field,
-    'W' AS Level,
+    te.Level,
     te.Message AS Message,
     'FScruiser' AS Program,
     te.Resolution IS NOT NULL AS Suppress
-FROM TreeAuditError AS te
+FROM TreeError AS te
+JOIN TreeField AS tf ON te.Field = tf.Field
+JOIN Tree_V3 AS t USING (TreeID)
 UNION ALL
 SELECT
-    abs(random()) * -1 AS RowID,
+    -1 *(((le.Log_CN << 4) << 4) + 2) AS RowID,
     'Log' AS TableName,
     l.Log_CN AS CN_Number,
     'Grade' AS Field,
@@ -50,9 +52,10 @@ SELECT
     le.Resolution IS NOT NULL AS Suppress
 FROM LogGradeError AS le
 JOIN Log_V3 AS l USING (LogID)
+
 UNION ALL 
 SELECT 
-    abs(random()) * -1 AS RowID,
+    -1 * (((pe.Plot_Stratum_CN << 4) << 4) + 3) AS RowID,
     'Plot' AS TableName,
     pe.Plot_Stratum_CN AS CN_Number, 
     pe.Field, 
@@ -75,13 +78,14 @@ END;";
 INSTEAD OF UPDATE ON ErrorLog
 WHEN new.RowID > 0
 BEGIN
-UPDATE tbl_ErrorLog SET TableName = new.TableName, CN_Number = new.CN_Number, Level = new.Level, Message = new.Message, Program = new.Program, Suppress = new.Suppress;
+UPDATE tbl_ErrorLog SET TableName = new.TableName, CN_Number = new.CN_Number, Level = new.Level, Message = new.Message, Program = new.Program, Suppress = new.Suppress
+WHERE RowID = new.RowID;
 END;";
 
         public const string CREATE_TRIGGER_ERRORLOG_DELETE =
 @"CREATE TRIGGER ErrorLog_Delete
 INSTEAD OF DELETE ON ErrorLog
-WHEN old.RowID > 0
+WHEN new.RowID > 0
 BEGIN
 DELETE FROM tbl_ErrorLog WHERE RowID = old.RowID;
 END;";

@@ -146,6 +146,7 @@
             CREATE_VIEW_TALLYPOPULATION,
             CREATE_VIEW_TreeFieldValue_TreeMeasurment,
             CREATE_VIEW_TreeFieldValue_TreeMeasurment_Filtered,
+            CREATE_VIEW_TREEERROR,
             CREATE_VIEW_LOGGRADEERROR,
             CREATE_VIEW_TREEAUDITERROR,
             CREATE_VIEW_PLOTERROR,

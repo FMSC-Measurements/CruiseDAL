@@ -10,9 +10,11 @@
 
         public const string CREATE_TABLE_TREEFIELD =
 @"CREATE TABLE TreeField (
-    Field TEXT PRIMARY KEY COLLATE NOCASE,
+    TreeField_CN INTEGER PRIMARY KEY AUTOINCREMENT,
+    Field TEXT COLLATE NOCASE,
     DbType TEXT NOT NULL COLLATE NOCASE,
-    IsTreeMeasurmentField BOOLEAN DEFAULT 0
+    IsTreeMeasurmentField BOOLEAN DEFAULT 0,
+    UNIQUE (Field)
 );";
 
         public const string INITIALIZE_TABLE_TREEFIELD =

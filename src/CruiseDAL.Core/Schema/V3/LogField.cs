@@ -4,6 +4,7 @@
     {
         public const string CREATE_TABLE_LOGFIELD =
 @"CREATE TABLE LogField (
+    LogField_CN INTEGER PRIMARY KEY AUTOINCREMENT,
     Field TEXT NOT NULL COLLATE NOCASE,
     DbType TEXT NOT NULL COLLATE NOCASE,
     CHECK (length(Field) > 0),

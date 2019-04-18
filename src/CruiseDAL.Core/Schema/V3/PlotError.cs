@@ -3,6 +3,9 @@ namespace CruiseDAL.Schema
     public partial class DDL
     {
         public const string CREATE_VIEW_PLOTERROR =
+            // note: if we add anymore log audits you will need to update the RowID 
+            // value returned by the ErrorLog view when reading from PlotError
+
 @"CREATE VIEW PlotError AS
     SELECT
         ps.CuttingUnitCode,
@@ -15,7 +18,7 @@ namespace CruiseDAL.Schema
         null AS Resolution,
         null AS ResolutionInitials
     FROM Plot_Stratum AS ps
-    WHERE IsEmpty = 0
+    WHERE IsEmpty != 0
         AND EXISTS (SELECT * FROM Tree_V3
             WHERE CuttingUnitCode = ps.CuttingUnitCode
             AND PlotNumber = ps.PlotNumber AND StratumCode = ps.StratumCode);";

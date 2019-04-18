@@ -220,11 +220,17 @@ namespace CruiseDAL.Tests.Schema
 
                 var erroLogOrig = origDatastore.QueryGeneric(
                     "SELECT TableName, CN_Number, ColumnName, Level, Suppress FROM ErrorLog " +
-                    "ORDER BY TableName, CN_Number, ColumnName;");
+                    "ORDER BY TableName, CN_Number, ColumnName;").ToArray();
+
+                var treeAuditErrors = newDatastore.QueryGeneric(
+                    "SELECT * FROM TreeAuditError;").ToArray();
+
+                var treeErrors = newDatastore.QueryGeneric(
+                    "SELECT * FROM TreeError;").ToArray();
 
                 var errorLogAfter = newDatastore.QueryGeneric(
                     "SELECT TableName, CN_Number, ColumnName, Level, Suppress FROM ErrorLog " +
-                    "ORDER BY TableName, CN_Number, ColumnName;");
+                    "ORDER BY TableName, CN_Number, ColumnName;").ToArray();
 
                 Compare(errorLogAfter, erroLogOrig);
             }
