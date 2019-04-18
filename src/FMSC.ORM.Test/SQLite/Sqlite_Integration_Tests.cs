@@ -110,6 +110,30 @@ namespace FMSC.ORM.Test.SQLite
             }
         }
 
+        [Theory]
+        [InlineData("1", true)]
+        [InlineData("0", false)]
+        [InlineData("1 IS NOT NULL", true)]
+        [InlineData("1 IS NULL", false)]
+        public void Echo_value_bool(string quoteValue, bool expectedValue)
+        {
+            using (var connection = DbProvider.CreateConnection())
+            {
+                connection.ConnectionString = "Data Source=:memory:";
+
+                var command = connection.CreateCommand();
+                command.CommandText = $"SELECT {quoteValue};";
+
+                connection.Open();
+
+                var reader = command.ExecuteReader();
+                reader.Read();
+
+                var result = reader.GetBoolean(0);
+                result.Should().Be(expectedValue);
+            }
+        }
+
         void LogEncoding(DbConnection conn)
         {
             var command = conn.CreateCommand();
