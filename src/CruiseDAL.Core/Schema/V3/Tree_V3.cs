@@ -25,7 +25,12 @@
                 "ModifiedBy TEXT, " +
                 "ModifiedDate DateTime , " +
                 "RowVersion INTEGER DEFAULT 0, " +
+
                 "UNIQUE (TreeID), " +
+
+                "CHECK (CountOrMeasure IN ('C', 'M', 'I')), " +
+                "CHECK (LiveDead IN ('L', 'D') OR LiveDead IS NULL)" +
+
                 "FOREIGN KEY (CuttingUnitCode) REFERENCES CuttingUnit (Code) ON DELETE CASCADE ON UPDATE CASCADE, " +
                 "FOREIGN KEY (StratumCode) REFERENCES Stratum (Code) " +
                 "FOREIGN KEY (SampleGroupCode, StratumCode) REFERENCES SampleGroup_V3 (SampleGroupCode, StratumCode) ON DELETE CASCADE ON UPDATE CASCADE, " +
