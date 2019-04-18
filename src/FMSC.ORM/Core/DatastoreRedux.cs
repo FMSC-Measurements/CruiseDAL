@@ -740,67 +740,6 @@ namespace FMSC.ORM.Core
             }
         }
 
-        public IEnumerable<TResult> Query<TResult>(string commandText, object paramaters) where TResult : new()
-        {
-            lock (_persistentConnectionSyncLock)
-            {
-                var connection = OpenConnection();
-                try
-                {
-                    FMSC.ORM.EntityModel.Support.EntityInflator inflator = GlobalEntityDescriptionLookup.Instance.GetEntityInflator(typeof(TResult));
-
-                    using (var reader = ExecuteReader2(connection, commandText, paramaters, CurrentTransaction))
-                    {
-                        //HACK with microsoft.data.sqlite calling GetOrdinal throws exception if reader is empty
-                        //if(reader is DbDataReader && ((DbDataReader)reader).HasRows == false) { yield break; }
-                        inflator.CheckOrdinals(reader);
-
-                        while (reader.Read())
-                        {
-                            TResult newDO = new TResult();
-                            if (newDO is IDataObject)
-                            {
-                                ((IDataObject)newDO).DAL = this;
-                            }
-                            if (newDO is ISupportInitialize)
-                            {
-                                ((ISupportInitialize)newDO).BeginInit();// allow dataobject to suspend property changed notifications or whatever
-                            }
-                            try
-                            {
-                                inflator.ReadData(reader, newDO);
-                            }
-                            catch (Exception e)
-                            {
-                                var exceptionProcessor = ExceptionProcessor;
-                                if (exceptionProcessor != null)
-                                {
-                                    throw exceptionProcessor.ProcessException(e, connection, commandText, CurrentTransaction);
-                                }
-                                else
-                                {
-                                    throw;
-                                }
-                            }
-                            finally
-                            {
-                                if (newDO is ISupportInitialize)
-                                {
-                                    ((ISupportInitialize)newDO).EndInit();
-                                }
-                            }
-
-                            yield return newDO;
-                        }
-                    }
-                }
-                finally
-                {
-                    ReleaseConnection();
-                }
-            }
-        }
-
         public IEnumerable<TResult> Query<TResult>(SqlSelectBuilder selectBuilder, Object[] selectionArgs) where TResult : new()
         {
             return Query<TResult>(selectBuilder.ToString() + ";", selectionArgs);
