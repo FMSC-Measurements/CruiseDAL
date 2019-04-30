@@ -13,7 +13,7 @@
                 "Min INTEGER Default 0, " +
                 "Max INTEGER Default 0, " +
 
-                "UNIQUE (StratumCode, SampleGroupCode), " +
+                "UNIQUE (StratumCode, SampleGroupCode, Species, LiveDead), " +
 
                 "FOREIGN KEY (StratumCode, SampleGroupCode) REFERENCES SampleGroup_V3 (StratumCode, SampleGroupCode) ON DELETE CASCADE ON UPDATE CASCADE, " +
                 "FOREIGN KEY (StratumCode, SampleGroupCode, Species, LiveDead) REFERENCES SubPopulation (StratumCode, SampleGroupCode, Species, LiveDead) ON DELETE CASCADE ON UPDATE CASCADE " +

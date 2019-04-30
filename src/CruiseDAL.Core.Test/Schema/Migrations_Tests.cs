@@ -110,6 +110,16 @@ namespace CruiseDAL.Tests.Schema
 
         [Theory]
         [InlineData("7Wolf.cruise")]
+        [InlineData("MultiTest.2014.10.31.cruise")]
+        [InlineData("test_FixCNT.cruise")]
+        public void Migrate(string fileName)
+        {
+            var (origFile, testFile) = SetUpTestFile(fileName);
+        }
+
+
+        [Theory]
+        [InlineData("7Wolf.cruise")]
         public void Migrate_Sale_Test(string fileName)
         {
             var (origFile, testFile) = SetUpTestFile(fileName);
