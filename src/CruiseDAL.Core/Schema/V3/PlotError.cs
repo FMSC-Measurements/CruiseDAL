@@ -8,16 +8,18 @@ namespace CruiseDAL.Schema
 
 @"CREATE VIEW PlotError AS
     SELECT
+        p.PlotID, 
         ps.CuttingUnitCode,
         ps.PlotNumber,
         ps.StratumCode,
         ps.Plot_Stratum_CN,
-        'Unit:' || ps.CuttingUnitCode || ' Plot:' || ps.PlotNumber || ' contains no trees but is not marked as empty' AS Message,
+        'Unit:' || ps.CuttingUnitCode || ' Plot:' || ps.PlotNumber || ' St:' || ps.StratumCode || ' contains trees but is marked as empty' AS Message,
         'IsEmpty' AS Field,
         'E' AS Level,
         null AS Resolution,
         null AS ResolutionInitials
     FROM Plot_Stratum AS ps
+    JOIN Plot_V3 AS p USING (CuttingUnitCode, PlotNumber)
     WHERE IsEmpty != 0
         AND EXISTS (SELECT * FROM Tree_V3
             WHERE CuttingUnitCode = ps.CuttingUnitCode
