@@ -12,6 +12,8 @@
 
                 "UNIQUE (StratumCode, SampleGroupCode, Species, LiveDead), " +
 
+                "CHECK (LiveDead IN ('L', 'D') OR LiveDead IS NULL)" +
+
                 //"FOREIGN KEY (StratumCode) REFERENCES Stratum (Code), " +
                 "FOREIGN KEY (StratumCode, SampleGroupCode) REFERENCES SampleGroup_V3 (StratumCode, SampleGroupCode) ON DELETE CASCADE ON UPDATE CASCADE," +
                 "FOREIGN KEY (Species) REFERENCES Species (Species) ON UPDATE CASCADE " +
