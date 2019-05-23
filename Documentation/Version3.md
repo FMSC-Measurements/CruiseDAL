@@ -352,7 +352,10 @@ Starting in version 3 foreign keys will be set on by default. The new database d
 In V3 most of the validation will be handled within the database using views to query the data and return detected errors rather than reading the data out of the database and performing audits in the client and saving the results of the audits back to the database. 
 For backwards compatibility errorlogs can still be saved back to the database. The data from inserts to the ErrorLog view will be stored in the tbl_ErrorLog table. 
 
-There may be some compatibility issues with the CruiseDAL because the ErrorLog records generated from audits within the database may not be consistent when re-queried. Because of this any application that accesses the ErrorLog view should not use the Read methods because the Read methods cache data across reads. Instead they should use the Query methods which offer the same functionality but dont cache data. 
+To differentiate generated error records from error records stored in the tbl_ErrorLog talbe, generated records will have a negative RowID. 
+The RowID value of generated records will be -1 * ( GENERATED_ID) where GENERATED_ID is an integer in the format: CN_Number value (last four bits), TreeField_CN (2nd four bits), TableName (first 4 bits) (Tree = 1, Log = 2, Plot = 3)
+When updating or deleting generated records from the ErrorLog view will have no effect on the database.
+
 
 # TreeFieldSetup, LogFieldSetup, TreeFieldSetupDefault, LogFieldSetupDefault 
 It may be possible that some files have tree field setups that use invalid or no longer supported fields. These fields wont be migrated over.
