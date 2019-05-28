@@ -89,6 +89,7 @@ SELECT
 	'W' AS Level,
 	tae.Message,
 	tae.Field,
+    tae.IsResolved, 
 	tar.Resolution,
 	tar.Initials AS ResolutionInitials
 FROM TreeAuditError AS tae
@@ -100,6 +101,7 @@ SELECT
     'E' AS Level,
     te.Message,
     te.Field, 
+    0 AS IsResolved, 
     null AS Resolution, 
     null AS ResolutionInitials
 FROM (

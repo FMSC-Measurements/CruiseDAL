@@ -12,7 +12,7 @@
             "null AS CreatedDate, " +
             "null AS ModifiedBy, " +
             "null AS ModifiedDate " +
-            "FROM notATable (0)" +
+            "WHERE 0" +
             ";";
     }
 }

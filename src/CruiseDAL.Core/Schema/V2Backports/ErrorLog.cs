@@ -36,7 +36,7 @@ SELECT
     te.Level,
     te.Message AS Message,
     'FScruiser' AS Program,
-    te.Resolution IS NOT NULL AS Suppress
+    te.IsResolved AS Suppress
 FROM TreeError AS te
 JOIN TreeField AS tf ON te.Field = tf.Field
 JOIN Tree_V3 AS t USING (TreeID)
@@ -49,7 +49,7 @@ SELECT
     'W' AS Level,
     le.Message AS Message,
     'FScruiser' AS Program,
-    le.Resolution IS NOT NULL AS Suppress
+    le.IsResolved AS Suppress
 FROM LogGradeError AS le
 JOIN Log_V3 AS l USING (LogID)
 
@@ -62,7 +62,7 @@ SELECT
     pe.Level, 
     pe.Message,
     'FScruiser' AS Program,
-    pe.Resolution IS NOT NULL AS Suppress
+    pe.IsResolved AS Suppress
 FROM PlotError AS pe;";
 
         public const string CREATE_TRIGGER_ERRORLOG_INSERT =
@@ -85,7 +85,7 @@ END;";
         public const string CREATE_TRIGGER_ERRORLOG_DELETE =
 @"CREATE TRIGGER ErrorLog_Delete
 INSTEAD OF DELETE ON ErrorLog
-WHEN new.RowID > 0
+WHEN old.RowID > 0
 BEGIN
 DELETE FROM tbl_ErrorLog WHERE RowID = old.RowID;
 END;";

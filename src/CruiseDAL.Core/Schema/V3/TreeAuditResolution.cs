@@ -8,7 +8,7 @@
     TreeID TEXT NOT NULL,
     TreeAuditRuleID TEXT NOT NULL,
     Resolution TEXT,
-    Initials TEXT,
+    Initials TEXT NOT NULL,
 
     UNIQUE (TreeID, TreeAuditRuleID),
 

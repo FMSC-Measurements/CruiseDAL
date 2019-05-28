@@ -9,7 +9,9 @@ SELECT
     l.LogID,
     LogGradeAuditRule_CN,
     'Species ' || t.Species || ', log grade ' || lgar.Grade || 'max defect is ' || lgar.DefectMax AS Message,
-    null AS Resolution
+    0 AS IsResolved,
+    null AS Resolution,
+    null AS ResolutionInitials
 FROM Log_V3 AS l
 JOIN Tree_V3 AS t USING (TreeID)
 JOIN LogGradeAuditRule_V3 AS lgar ON

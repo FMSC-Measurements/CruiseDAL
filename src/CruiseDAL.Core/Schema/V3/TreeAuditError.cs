@@ -36,6 +36,7 @@ SELECT
     TreeID,
     TreeAuditRuleID,
     tdvtar.Field AS Field,
+    (CASE WHEN res.TreeAuditResolution_CN IS NULL THEN 0 ELSE 1 END)  AS IsResolved, 
     (CASE
     WHEN tdvtar.Min IS NOT NULL AND (tfv.ValueReal < tdvtar.Min) THEN tdvtar.Field || ' must be greater than ' || tdvtar.Min
     WHEN tdvtar.Max IS NOT NULL AND (tfv.ValueReal > tdvtar.Max) THEN tdvtar.Field || ' must be less than ' || tdvtar.Max
