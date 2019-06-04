@@ -15,7 +15,7 @@
     --UNIQUE (StratumCode, SampleGroupCode, Species, LiveDead) ON CONFLICT REPLACE,
 
     FOREIGN KEY (StratumCode, SampleGroupCode) REFERENCES SampleGroup_V3 (StratumCode, SampleGroupCode) ON DELETE CASCADE,
-    FOREIGN KEY (Species) REFERENCES Species (Species) ON DELETE CASCADE ON UPDATE CASCADE
+    FOREIGN KEY (Species) REFERENCES SpeciesCode (Species) ON DELETE CASCADE ON UPDATE CASCADE
 );";
 
         public const string CREATE_INDEX_TallyHotKey_Species =

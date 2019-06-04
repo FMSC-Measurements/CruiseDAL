@@ -36,7 +36,7 @@
                 "FOREIGN KEY (SampleGroupCode, StratumCode) REFERENCES SampleGroup_V3 (SampleGroupCode, StratumCode) ON DELETE CASCADE ON UPDATE CASCADE, " +
                 "FOREIGN KEY (PlotNumber, CuttingUnitCode) REFERENCES Plot_V3 (PlotNumber, CuttingUnitCode) ON DELETE CASCADE, " +
                 //"FOREIGN KEY (Species, LiveDead, SampleGroupCode, StratumCode) REFERENCES SubPopulation (Species, LiveDead, SampleGroupCode, StratumCode), " +
-                "FOREIGN KEY (Species) REFERENCES Species (Species) " +
+                "FOREIGN KEY (Species) REFERENCES SpeciesCode (Species) " +
             ")";
 
         public const string CREATE_INDEX_Tree_V3_Species =

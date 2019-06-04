@@ -14,7 +14,7 @@
                 //"UNIQUE (StratumCode, Description), " +
 
                 "FOREIGN KEY (StratumCode, SampleGroupCode) REFERENCES SampleGroup_V3 (StratumCode, SampleGroupCode) ON DELETE CASCADE, " +
-                "FOREIGN KEY (Species) REFERENCES Species (Species) ON DELETE CASCADE ON UPDATE CASCADE " +
+                "FOREIGN KEY (Species) REFERENCES SpeciesCode (Species) ON DELETE CASCADE ON UPDATE CASCADE " +
             ");";
 
         public const string CREATE_INDEX_TallyDescription_StratumCode_SampleGroupCode_Species_LiveDead =

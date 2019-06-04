@@ -8,7 +8,7 @@
                 "Species TEXT COLLATE NOCASE, " +
                 "DefectMax REAL Default 0.0, " +
                 "Grade TEXT NOT NULL COLLATE NOCASE CHECK (length(Grade) > 0), " +
-                "FOREIGN KEY (Species) REFERENCES Species (Species) ON DELETE CASCADE ON UPDATE CASCADE" +
+                "FOREIGN KEY (Species) REFERENCES SpeciesCode (Species) ON DELETE CASCADE ON UPDATE CASCADE" +
             ");";
 
         public const string CREATE_INDEX_LogGradeAuditRule_V3_Species_DefectMax_Grade =

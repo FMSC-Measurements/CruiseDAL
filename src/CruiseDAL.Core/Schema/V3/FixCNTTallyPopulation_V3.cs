@@ -18,7 +18,7 @@
                 "FOREIGN KEY (StratumCode, SampleGroupCode) REFERENCES SampleGroup_V3 (StratumCode, SampleGroupCode) ON DELETE CASCADE ON UPDATE CASCADE, " +
                 "FOREIGN KEY (StratumCode, SampleGroupCode, Species, LiveDead) REFERENCES SubPopulation (StratumCode, SampleGroupCode, Species, LiveDead) ON DELETE CASCADE ON UPDATE CASCADE " +
                 "FOREIGN KEY (StratumCode) REFERENCES FixCNTTallyClass_V3 (StratumCode) ON DELETE CASCADE, " +
-                "FOREIGN KEY (Species) REFERENCES Species (Species) ON DELETE CASCADE ON UPDATE CASCADE" +
+                "FOREIGN KEY (Species) REFERENCES SpeciesCode (Species) ON DELETE CASCADE ON UPDATE CASCADE" +
             ");";
 
         public const string CREATE_INDEX_FixCNTTallyPopulation_V3_Species =

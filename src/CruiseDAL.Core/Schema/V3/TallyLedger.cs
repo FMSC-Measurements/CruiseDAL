@@ -32,6 +32,7 @@
             //"FOREIGN KEY (CuttingUnitCode, StratumCode) REFERENCES CuttingUnit_Stratum (CuttingUnitCode, StratumCode), " +
             "FOREIGN KEY (StratumCode) REFERENCES Stratum (Code) , " +
             "FOREIGN KEY (SampleGroupCode, StratumCode) REFERENCES SampleGroup_V3 (SampleGroupCode, StratumCode), " +
+            "FOREIGN KEY (Species) REFERENCES SpeciesCode (Species) " +
             //"FOREIGN KEY (StratumCode, SampleGroupCode, Species, LiveDead) REFERENCES TallyPopulation (StratumCode, SampleGroupCode, Species, LiveDead), " +
             //"FOREIGN KEY (CuttingUnitCode, StratumCode, PlotNumber) REFERENCES Plot_Stratum (CuttingUnitCode, StratumCode, PlotNumber), " +
             "FOREIGN KEY (TreeID) REFERENCES Tree_V3 (TreeID) ON DELETE CASCADE, " +

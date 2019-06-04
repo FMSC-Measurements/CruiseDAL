@@ -16,7 +16,7 @@
 
                 //"FOREIGN KEY (StratumCode) REFERENCES Stratum (Code), " +
                 "FOREIGN KEY (StratumCode, SampleGroupCode) REFERENCES SampleGroup_V3 (StratumCode, SampleGroupCode) ON DELETE CASCADE ON UPDATE CASCADE," +
-                "FOREIGN KEY (Species) REFERENCES Species (Species) ON UPDATE CASCADE " +
+                "FOREIGN KEY (Species) REFERENCES SpeciesCode (Species) ON UPDATE CASCADE " +
             ");";
 
         public const string CREATE_INDEX_Subpopulation_Species =

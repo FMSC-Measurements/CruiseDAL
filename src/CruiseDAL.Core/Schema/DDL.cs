@@ -37,8 +37,8 @@
             CREATE_TRIGGER_SAMPLEGROUP_V3_ONUPDATE,
             CREATE_TALBE_SAMPLERSTATE,
 
-            CREATE_TABLE_SPECIES,
-            INITIALIZE_TABLE_SPECIES,
+            CREATE_TABLE_SpeciesCode,
+            INITIALIZE_TABLE_SpeciesCode,
 
             CREATE_TABLE_SUBPOPULATION,
             CREATE_INDEX_Subpopulation_Species,

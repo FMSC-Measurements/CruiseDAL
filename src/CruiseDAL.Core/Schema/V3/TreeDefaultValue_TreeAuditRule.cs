@@ -11,7 +11,7 @@
                 "TreeAuditRuleID TEXT NOT NULL, " +
                 "FOREIGN KEY (Species, LiveDead, PrimaryProduct) REFERENCES TreeDefaultValue (Species, LiveDead, PrimaryProduct) ON DELETE CASCADE, " +
                 "FOREIGN KEY (TreeAuditRuleID) REFERENCES TreeAuditRule (TreeAuditRuleID) ON DELETE CASCADE, " +
-                "FOREIGN KEY (Species) REFERENCES Species (Species) ON UPDATE CASCADE" +
+                "FOREIGN KEY (Species) REFERENCES SpeciesCode (Species) ON UPDATE CASCADE" +
             ");";
 
         public const string CREATE_INDEX_TreeDefaultValue_TreeAuditRule_Species =

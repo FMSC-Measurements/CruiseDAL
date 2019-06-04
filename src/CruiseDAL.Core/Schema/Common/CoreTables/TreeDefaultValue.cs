@@ -28,7 +28,7 @@
                 "ModifiedDate DateTime, " +
                 "RowVersion INTEGER DEFAULT 0, " +
                 "UNIQUE (PrimaryProduct, Species, LiveDead), " +
-                "FOREIGN KEY (Species) REFERENCES Species (Species) ON UPDATE CASCADE ON DELETE CASCADE" +
+                "FOREIGN KEY (Species) REFERENCES SpeciesCode (Species) ON UPDATE CASCADE ON DELETE CASCADE" +
             ");";
 
         public const string CREATE_INDEX_TreeDefaultValue_Species =

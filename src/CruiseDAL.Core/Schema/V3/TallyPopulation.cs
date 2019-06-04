@@ -13,7 +13,7 @@
         //        "HotKey COLLATE NOCASE, " +
         //        "FOREIGN KEY (StratumCode) REFERENCES Stratum (Code), " +
         //        "FOREIGN KEY (SampleGroupCode, StratumCode) REFERENCES SampleGroup_V3 (SampleGroupCode, StratumCode)  ON DELETE CASCADE ON UPDATE CASCADE, " +
-        //        "FOREIGN KEY (Species) REFERENCES Species (Species), " +
+        //        "FOREIGN KEY (Species) REFERENCES SpeciesCode (Species), " +
         //        "UNIQUE (StratumCode, SampleGroupCode, Species, LiveDead) " +
         //    ");";
 
