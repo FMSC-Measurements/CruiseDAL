@@ -66,6 +66,10 @@
             CREATE_INDEX_Tree_V3_SampleGroupCode_StratumCode,
             CREATE_INDEX_Tree_V3_Species,
             CREATE_INDEX_Tree_V3_StratumCode,
+            CREATE_INDEX_Tree_V3_TreeID_CuttingUnitCode_SampleGroupCode_StratumCode,
+            CREATE_INDEX_Tree_V3_TreeID_LiveDead,
+            CREATE_INDEX_Tree_V3_TreeID_Species,
+            CREATE_INDEX_Tree_V3_TreeID_PlotNumber,
             CREATE_TRIGGER_TREE_V3_ONUPDATE,
 
             CREATE_TABLE_TREEMEASURMENT,

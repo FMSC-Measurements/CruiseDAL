@@ -54,6 +54,18 @@
         public const string CREATE_INDEX_Tree_V3_CuttingUnitCode =
             @"CREATE INDEX 'Tree_V3_CuttingUnitCode' ON 'Tree_V3'('CuttingUnitCode');";
 
+        public const string CREATE_INDEX_Tree_V3_TreeID_CuttingUnitCode_SampleGroupCode_StratumCode =
+            @"CREATE UNIQUE INDEX Tree_V3_TreeID_CuttingUnitCode_SampleGroupCode_StratumCode ON Tree_V3 (TreeID, CuttingUnitCode, SampleGroupCode, StratumCode);";
+
+        public const string CREATE_INDEX_Tree_V3_TreeID_Species =
+            @"CREATE UNIQUE INDEX Tree_V3_TreeID_Species ON Tree_V3 (TreeID, Species);";
+
+        public const string CREATE_INDEX_Tree_V3_TreeID_LiveDead =
+            @"CREATE UNIQUE INDEX Tree_V3_TreeID_LiveDead ON Tree_V3 (TreeID, LiveDead);";
+
+        public const string CREATE_INDEX_Tree_V3_TreeID_PlotNumber =
+            @"CREATE UNIQUE INDEX Tree_V3_TreeID_PlotNumber ON Tree_V3 (TreeID, PlotNumber);";
+
         public const string CREATE_TRIGGER_TREE_V3_ONUPDATE =
             "CREATE TRIGGER Tree_V3_OnUpdate " +
             "AFTER UPDATE OF " +

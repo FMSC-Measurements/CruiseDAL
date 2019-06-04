@@ -34,7 +34,11 @@
             "FOREIGN KEY (SampleGroupCode, StratumCode) REFERENCES SampleGroup_V3 (SampleGroupCode, StratumCode), " +
             //"FOREIGN KEY (StratumCode, SampleGroupCode, Species, LiveDead) REFERENCES TallyPopulation (StratumCode, SampleGroupCode, Species, LiveDead), " +
             //"FOREIGN KEY (CuttingUnitCode, StratumCode, PlotNumber) REFERENCES Plot_Stratum (CuttingUnitCode, StratumCode, PlotNumber), " +
-            "FOREIGN KEY (TreeID) REFERENCES Tree_V3 (TreeID) ON DELETE CASCADE" +
+            "FOREIGN KEY (TreeID) REFERENCES Tree_V3 (TreeID) ON DELETE CASCADE, " +
+            "FOREIGN KEY (TreeID, CuttingUnitCode, StratumCode, SampleGroupCode) REFERENCES Tree_V3 (TreeID, CuttingUnitCode, StratumCode, SampleGroupCode) ON UPDATE CASCADE, " +
+            "FOREIGN KEY (TreeID, Species) REFERENCES Tree_V3 (TreeID, Species) ON UPDATE CASCADE, " +
+            "FOREIGN KEY (TreeID, LiveDead) REFERENCES Tree_V3 (TreeID, LiveDead) ON UPDATE CASCADE, " +
+            "FOREIGN KEY (TreeID, PlotNumber) REFERENCES Tree_V3 (TreeID, PlotNumber) ON UPDATE CASCADE " +
         ");";
 
         public const string CREATE_INDEX_TallyLedger_TreeID =
