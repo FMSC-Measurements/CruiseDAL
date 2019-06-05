@@ -7,6 +7,7 @@
                 "CuttingUnit_CN INTEGER PRIMARY KEY AUTOINCREMENT, " +
                 "Code TEXT NOT NULL COLLATE NOCASE, " +
                 "Area REAL DEFAULT 0.0, " +
+                "TallyHistory TEXT, " + // although tally history is no longer used it is being kept for backwards compatibility
                 "Description TEXT, " +
                 "LoggingMethod TEXT, " +
                 "PaymentUnit TEXT, " +
