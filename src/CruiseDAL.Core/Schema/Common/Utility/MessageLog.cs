@@ -2,9 +2,12 @@
 {
     public partial class DDL
     {
+        // instead of following the convention used by other tables
+        // the primary key for MessageLog is Message_CN
+        // this is for compatibility with the older cruise schema
         public const string CREATE_TABLE_MESSAGELOG =
             "CREATE TABLE MessageLog( " +
-                "MessageLog_CN INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                "Message_CN INTEGER PRIMARY KEY AUTOINCREMENT, " +
                 "Program TEXT COLLATE NOCASE, " +
                 "Message TEXT, " +
                 "Date TEXT DEFAULT (date('now', 'localtime')), " +
