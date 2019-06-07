@@ -1,0 +1,28 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  
+  <PropertyGroup>
+    <TargetFramework>netstandard20</TargetFramework>
+    <Version>$(CruiseDALVersion)</Version>
+  </PropertyGroup>
+
+
+  <PropertyGroup>
+    <GenerateModels Condition="'$(GenerateModels)' == ''">true</GenerateModels>
+  </PropertyGroup>
+  
+  <Target Name="BeforeGenerateModels" BeforeTargets="GenerateModels">
+    <PropertyGroup Label="Model Generator Properties">
+      <ModelGenDatastoreTypeName>CruiseDAL.CruiseDatastore_V3</ModelGenDatastoreTypeName>
+      <ModelGenTargetAssembly>$(MSBuildProjectDirectory)\$(OutputPath)CruiseDAL.V3.dll</ModelGenTargetAssembly>
+    </PropertyGroup>
+  </Target>
+  
+  <Import Project="$(ModelGenToolDirectory)FMSC.ORM.ModelGenerator.targets" />
+  <Target Name="_GenerateModel" DependsOnTargets="GenerateModels" BeforeTargets="Build" Condition="$(GenerateModels) == true">
+  </Target>
+  <ItemGroup>
+    <ProjectReference Include="..\CruiseDAL.V3\CruiseDAL.V3.csproj" />
+  </ItemGroup>
+    
+</Project>
+

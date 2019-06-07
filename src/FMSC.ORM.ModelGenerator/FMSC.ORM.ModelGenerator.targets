@@ -1,0 +1,19 @@
+﻿<Project>
+  
+
+
+  <Target Name="GenerateModels">
+    <PropertyGroup>
+      <ModelGenOutPutDirectory Condition="'$(ModelGenOutPutDirectory)' == ''" >$(MSBuildProjectDirectory)</ModelGenOutPutDirectory>
+      <ModelGenToolPath Condition="'$(ModelGenToolPath)' == ''">$(ModelGenToolDirectory)ModelGen.exe</ModelGenToolPath>
+      <ModelGenRootNamespace Condition="'$(ModelGenRootNamespace)' == ''">$(RootNamespace)</ModelGenRootNamespace>
+      <ModelGenTargetAssembly Condition="'$(ModelGenTargetAssembly)' == ''">$(OutputPath)\$(AssemblyName)</ModelGenTargetAssembly>
+      <ModelGenDatastoreTypeName Condition="'$(ModelGenDatastoreTypeName)' == ''"></ModelGenDatastoreTypeName>
+
+      <ModelGenParams Condition="'$(ModelGenParams)' == ''">--ds --outputdirectory &quot;$(MSBuildProjectDirectory)&quot; --namespace &quot;$(ModelGenRootNamespace)&quot; --targetassembly &quot;$(ModelGenTargetAssembly)&quot; --typename &quot;$(ModelGenDatastoreTypeName)&quot;</ModelGenParams>
+    </PropertyGroup>
+
+    <Message Importance="high" Text="&quot;$(ModelGenToolPath)&quot; $(ModelGenParams)"/>
+    <Exec StandardErrorImportance="high" StandardOutputImportance="high" Command="&quot;$(ModelGenToolPath)&quot; $(ModelGenParams)" />
+  </Target>
+</Project>
