@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <!--targeting netstandard2.0 so that the FMSC.ORM.Test can be referenced by FMSC.ORM.Test.Android-->
-    <TargetFrameworks>netcoreapp2.0;netstandard2.0</TargetFrameworks>
+    <TargetFrameworks>netcoreapp2.0;net472;netstandard2.0</TargetFrameworks>
     <!--<TargetFrameworks>net461;netcoreapp2.0;netstandard2.0</TargetFrameworks>-->
     <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
   </PropertyGroup>

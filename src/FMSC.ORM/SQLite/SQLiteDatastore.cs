@@ -1,12 +1,12 @@
 ﻿using FMSC.ORM.Core;
 using FMSC.ORM.Core.SQL;
 using Backpack.SqlBuilder;
-using Backpack.SqlBuilder.Dialects;
 using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.Common;
 using System.Text;
+using Backpack.SqlBuilder.Sqlite;
 
 namespace FMSC.ORM.SQLite
 {

@@ -1,18 +1,16 @@
-﻿using System;
+﻿using Backpack.SqlBuilder;
+using FMSC.ORM.EntityModel.Support;
+using System;
 using System.Collections.Generic;
 using System.Data.Common;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Backpack.SqlBuilder.Dialects;
-using FMSC.ORM.EntityModel.Support;
 
 namespace FMSC.ORM.Core
 {
     [Obsolete()]
     public abstract class DatastoreRedux : Datastore
     {
-        protected DatastoreRedux(ISqlDialect dialect, IExceptionProcessor exceptionProcessor, DbProviderFactory providerFactory) 
+        protected DatastoreRedux(ISqlDialect dialect, IExceptionProcessor exceptionProcessor, DbProviderFactory providerFactory)
             : base(dialect, exceptionProcessor, providerFactory)
         {
         }

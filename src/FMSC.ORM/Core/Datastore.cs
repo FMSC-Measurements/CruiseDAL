@@ -1,5 +1,4 @@
 ﻿using Backpack.SqlBuilder;
-using Backpack.SqlBuilder.Dialects;
 using FMSC.ORM.Core.SQL.QueryBuilder;
 using FMSC.ORM.EntityModel;
 using FMSC.ORM.EntityModel.Attributes;
@@ -1428,9 +1427,8 @@ namespace FMSC.ORM.Core
             var createTableCommand = new CreateTable(SqlDialect)
             {
                 TableName = tableName,
-                Columns = cols,
-                Temp = temp
-            };
+                Temp = temp,
+            }.WithColumns(cols);
 
             connection.ExecuteNonQuery(createTableCommand.ToString() + ";", (object[])null, transaction);
         }

@@ -1,24 +1,25 @@
 ﻿using Backpack.SqlBuilder;
-using Backpack.SqlBuilder.Dialects;
+using Backpack.SqlBuilder.Sqlite;
 using FluentAssertions;
 using FMSC.ORM.SQLite;
-using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Xunit;
 
 namespace FMSC.ORM.ModelGenerator.Test
 {
     public class SqliteDatastoreSchemaInfoProvider_Test
     {
+        public SqliteDatastoreSchemaInfoProvider_Test()
+        {
+            SqlBuilder.DefaultDialect = new SqliteDialect();
+        }
+
         [Fact]
         public void Tables_Test()
         {
             using (var datastore = new SQLiteDatastore())
             {
-                var createTable = new CreateTable(new SqliteDialect())
+                var createTable = new CreateTable()
                 {
                     TableName = "MyTable",
                     Columns = new[]
@@ -29,10 +30,8 @@ namespace FMSC.ORM.ModelGenerator.Test
                         new ColumnInfo("col3", SqliteDataType.TEXT),
                         new ColumnInfo("col4", SqliteDataType.BOOLEAN),
                     },
-                    
                 };
 
-                
                 datastore.Execute(createTable.ToString());
 
                 // inserting will trigger the creation of Sqlite_squince table
