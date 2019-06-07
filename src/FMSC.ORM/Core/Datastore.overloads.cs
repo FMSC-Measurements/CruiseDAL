@@ -7,7 +7,7 @@ using System.Data.Common;
 
 namespace FMSC.ORM.Core
 {
-    public partial class DatastoreRedux
+    public partial class Datastore
     {
         public object Insert(object data)
         { return Insert(data, (object)null, OnConflictOption.Default); }

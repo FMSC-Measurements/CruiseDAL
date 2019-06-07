@@ -30,20 +30,7 @@ namespace FMSC.ORM.EntityModel.Support
             VerifyDataObjectInfo(t, doi);
         }
 
-        private void LoadDataObjects()
-        {
-            var types = (from t in System.Reflection.Assembly.GetAssembly(typeof(DataObject_Base)).GetTypes()
-                         where t.IsClass && t.Namespace == "CruiseDAL.DataObjects"
-                         select t).ToList();
-
-            foreach (Type t in types)
-            {
-                Output.WriteLine(t.FullName);
-                var doi = new EntityDescription(t);
-
-                VerifyDataObjectInfo(t, doi);
-            }
-        }
+        
 
         private void VerifyDataObjectInfo(Type dataType, EntityDescription doi)
         {

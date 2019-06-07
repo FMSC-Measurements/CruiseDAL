@@ -1,13 +1,16 @@
 <Project>
-<PropertyGroup Label="CustomProperties">
-	<CruiseDALVersion>3.0.0.15</CruiseDALVersion>
-</PropertyGroup>
+  <PropertyGroup Label="CustomProperties">
+    <CruiseDALSchemaVersion>3.0.0</CruiseDALSchemaVersion>
+    <CruiseDALVersion>$(CruiseDALSchemaVersion).16</CruiseDALVersion>
+    <FMSCORMToolsDirectory>$(MSBuildThisFileDirectory)tools\</FMSCORMToolsDirectory>
+    <ModelGenToolDirectory>$(FMSCORMToolsDirectory)ModelGen\</ModelGenToolDirectory>
+  </PropertyGroup>
 
-<PropertyGroup Label="Package Info" >
+  <PropertyGroup Label="Package Info" >
     <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
     <Authors>Ben Campbell</Authors>
-	<PackageProjectUrl>https://github.com/FMSC-Measurements/CruiseDAL</PackageProjectUrl>
-	<RepositoryType>git</RepositoryType>
-	<RepositoryUrl>https://github.com/FMSC-Measurements/CruiseDAL.git</RepositoryUrl>
-</PropertyGroup>
+    <PackageProjectUrl>https://github.com/FMSC-Measurements/CruiseDAL</PackageProjectUrl>
+    <RepositoryType>git</RepositoryType>
+    <RepositoryUrl>https://github.com/FMSC-Measurements/CruiseDAL.git</RepositoryUrl>
+  </PropertyGroup>
 </Project>

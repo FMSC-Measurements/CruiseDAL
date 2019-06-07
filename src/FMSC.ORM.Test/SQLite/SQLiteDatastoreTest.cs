@@ -578,7 +578,7 @@ namespace FMSC.ORM.SQLite
                     ds.From<DOMultiPropType>().Read())
                 {
                     item.FloatField = 1.0F;
-                    item.Save();
+                    ds.Update(item);
                 }
             }
         }

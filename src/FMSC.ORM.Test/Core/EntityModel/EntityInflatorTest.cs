@@ -72,12 +72,15 @@ namespace FMSC.ORM.EntityModel.Support
         [Fact]
         public void ReadDataTest_with_defaultValues()
         {
+            
+
             var poco = new POCOMultiTypeObject()
             {
+
             };
 
             var reader = new TestSupport.ObjectDataReader<POCOMultiTypeObject>(new POCOMultiTypeObject[] { poco });
-            Assert.True(reader.Read());
+            reader.Read().Should().BeTrue();
 
             var inflator = new EntityInflator(new EntityDescription(typeof(POCOMultiTypeObject)));
 
@@ -85,8 +88,8 @@ namespace FMSC.ORM.EntityModel.Support
             inflator.CheckOrdinals(reader);
             inflator.ReadData(reader, data);
 
-            data.StringField.Should().Be("1");
-            data.ID.Should().Be(1);
+            data.StringField.Should().BeNull();
+            data.ID.Should().Be(0);
         }
 
         [Fact]

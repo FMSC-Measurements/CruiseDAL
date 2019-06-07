@@ -4,9 +4,9 @@ using System.IO;
 
 namespace FMSC.ORM.SQLite
 {
-    public abstract class SQLiteDatabaseBuilder : DatabaseBuilder
+    public abstract class SQLiteDatabaseBuilder : IDatastoreBuilder
     {
-        public override void CreateDatastore(DatastoreRedux datastore)
+        public void CreateDatastore(Datastore datastore)
         {
             var sqliteDatastore = (SQLiteDatastore)datastore;
 
@@ -27,7 +27,7 @@ namespace FMSC.ORM.SQLite
 
             try
             {
-                base.CreateDatastore(datastore);
+                BuildDatabase(datastore);
             }
             catch 
             {
@@ -45,5 +45,7 @@ namespace FMSC.ORM.SQLite
                 throw;
             }
         }
+
+        public abstract void BuildDatabase(Datastore datastore);
     }
 }

@@ -6,10 +6,10 @@ namespace FMSC.ORM.Core.SQL.QueryBuilder
 {
     public class QueryBuilder<T> : IQuerryAcceptsJoin<T> where T : class, new()
     {
-        protected DatastoreRedux Datastore;
+        protected Datastore Datastore;
         protected SqlSelectBuilder Builder;
 
-        public QueryBuilder(DatastoreRedux datastore, SqlSelectBuilder builder)
+        public QueryBuilder(Datastore datastore, SqlSelectBuilder builder)
         {
             Datastore = datastore;
             Builder = builder;

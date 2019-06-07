@@ -36,18 +36,10 @@ namespace FMSC.ORM.TestSupport
     Data TEXT
 );";
 
-        public override void CreateTables(DatastoreRedux datastore)
+        public override void BuildDatabase(Datastore datastore)
         {
             datastore.Execute(CREATE_MULTIPROPTABLE);
             datastore.Execute(CREATE_AUTOINCREMENT_TABLE);
-        }
-
-        public override void CreateTriggers(DatastoreRedux datastore)
-        {
-        }
-
-        public override void UpdateDatastore(DatastoreRedux datastore)
-        {
         }
     }
 }

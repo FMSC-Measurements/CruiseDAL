@@ -1,7 +1,9 @@
 ﻿using FluentAssertions;
+using FMSC.ORM;
 using FMSC.ORM.SQLite;
 using System;
 using System.IO;
+using System.Linq;
 using Xunit;
 using Xunit.Abstractions;
 
@@ -11,64 +13,106 @@ namespace CruiseDAL.Tests
     {
         public Updater_Test(ITestOutputHelper output) : base(output)
         {
-            // clean up the test temp path
-            foreach (var file in Directory.GetFiles(TestTempPath))
+        }
+
+        [Fact]
+        public void Update_FROM_05_30_2013()
+        {
+            var filePath = Path.Combine(TestTempPath, "TestUpdate.cruise");
+
+            try
             {
+                using (var setup = new SQLiteDatastore(filePath))
+                {
+                    setup.Execute(CruiseDAL.Tests.SQL.CRUISECREATE_05_30_2013);
+                }
+
                 try
                 {
-                    File.Delete(file);
+                    var dataStore = new CruiseDatastore(filePath);
+
+                    var updater = new Updater_V2();
+                    updater.Update(dataStore);
+
+                    Assert.False(true);
                 }
-                catch { }
+                catch (Exception e)
+                {
+                    e.Should().BeOfType<IncompatibleSchemaException>();
+                }
+
+                //using (var datastore = new DAL(filePath))
+                //{
+                //    var semVerActual = new Version(datastore.DatabaseVersion);
+                //    var semVerExpected = new Version("2.5.0");
+
+                //    semVerActual.Major.Should().Be(semVerExpected.Major);
+                //    semVerActual.Minor.Should().Be(semVerExpected.Minor);
+                //}
+            }
+            finally
+            {
+                if (File.Exists(filePath))
+                {
+                    File.Delete(filePath);
+                }
             }
         }
 
         [Fact]
-        public void Migrate_From_V2_Test()
+        public void Update_FROM_2015_01_05()
         {
-            var testFileName = Guid.NewGuid().ToString() + ".cruise";
-            var filePath = Path.Combine(TestTempPath, testFileName);
+            var filePath = Path.Combine(TestTempPath, "TestUpdate.cruise");
 
-            // create database file from scratch
-            using (var setup = new SQLiteDatastore(filePath))
+            try
             {
-                setup.Execute(CruiseDAL.Tests.SQL.CRUISECREATE_2015_01_05);
+                using (var setup = new SQLiteDatastore(filePath))
+                {
+                    setup.Execute(CruiseDAL.Tests.SQL.CRUISECREATE_2015_01_05);
+                }
+
+                using (var datastore = new CruiseDatastore(filePath))
+                {
+                    var dataStore = new CruiseDatastore(filePath);
+
+                    var updater = new Updater_V2();
+                    updater.Update(dataStore);
+
+                    var semVerActual = new Version(datastore.DatabaseVersion);
+                    var semVerExpected = new Version("2.5.0");
+
+                    semVerActual.Major.Should().Be(semVerExpected.Major);
+                    semVerActual.Minor.Should().Be(semVerExpected.Minor);
+
+                    VerifyTablesCanDelete(datastore);
+                }
             }
-
-            using (var datastore = new DAL(filePath))
+            finally
             {
-                CruiseDAL.Updater.CheckNeedsMajorUpdate(datastore).Should().BeTrue();
-
-                CruiseDAL.Updater.Migrate_From_V2(datastore);
-
-                var semVerActual = new Version(datastore.DatabaseVersion);
-                var semVerExpected = new Version("3.0");
-
-                semVerActual.Major.Should().Be(semVerExpected.Major);
-                semVerActual.Minor.Should().Be(semVerExpected.Minor);
+                if (File.Exists(filePath))
+                {
+                    File.Delete(filePath);
+                }
             }
         }
 
-        [Theory]
-        [InlineData("7Wolf.cruise")]
-        [InlineData("MultiTest.2014.10.31.cruise")]
-        public void Migrate_From_V2_Test_With_Existing_File(string fileName)
+        protected void VerifyTablesCanDelete(CruiseDatastore datastore)
         {
-            var filePath = Path.Combine(TestFilesDirectory, fileName);
-            // copy file to test temp dir
-            var tempPath = Path.Combine(TestTempPath, fileName);
-            File.Copy(filePath, tempPath);
+            var tableNames = datastore.ExecuteScalar<string>("SELECT group_concat(Name) FROM sqlite_master WHERE Type = 'table';").Split(',');
 
-            using (var datastore = new DAL(tempPath))
+            foreach (var table in tableNames)
             {
-                //CruiseDAL.Updater.CheckNeedsMajorUpdate(datastore).Should().BeTrue();
+                try
+                {
+                    datastore.Execute($"DELETE FROM {table};");
+                }
+                catch (Exception e)
+                {
+                    Output.WriteLine(e.Message);
+                    Output.WriteLine(e.InnerException.Message);
+                }
 
-                CruiseDAL.Updater.Migrate_From_V2(datastore);
-
-                var semVerActual = new Version(datastore.DatabaseVersion);
-                var semVerExpected = new Version("3.0");
-
-                semVerActual.Major.Should().Be(semVerExpected.Major);
-                semVerActual.Minor.Should().Be(semVerExpected.Minor);
+                //datastore.Invoking(x => x.Execute($"DELETE FROM {table};")).Should().NotThrow();
             }
         }
     }

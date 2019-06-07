@@ -106,10 +106,28 @@ namespace FMSC.ORM
         { }
     }
 
+    public class UpdateException : System.Exception
+    {
+        public string TargetVersion { get; set; }
+        public string CurrentVersion { get; set; }
+
+        public UpdateException(string message, System.Exception innerEx)
+            : base(message, innerEx)
+        { }
+
+        public UpdateException(string message)
+            : base(message)
+        { }
+
+        public UpdateException()
+            : base()
+        { }
+    }
+
     /// <summary>
     /// base exception for schema errors
     /// </summary>
-    public class SchemaException : System.Exception
+    public class SchemaException : UpdateException
     {
         public SchemaException(String message, System.Exception innerEx)
             : base(message, innerEx)
@@ -139,12 +157,9 @@ namespace FMSC.ORM
             : base(String.Format("Failed updating database from {0} to {1}", currentVersion, targetVersion),
                   innerEx)
         {
-            this.CurrentVersion = currentVersion;
-            this.TargetVersion = targetVersion;
+            CurrentVersion = currentVersion;
+            TargetVersion = targetVersion;
         }
-
-        private string CurrentVersion { get; set; }
-        private string TargetVersion { get; set; }
     }
 
     /// <summary>
