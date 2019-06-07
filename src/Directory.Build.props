@@ -1,7 +1,14 @@
 <Project>
   <PropertyGroup Label="CustomProperties">
-    <CruiseDALSchemaVersion>3.0.0</CruiseDALSchemaVersion>
-    <CruiseDALVersion>$(CruiseDALSchemaVersion).16</CruiseDALVersion>
+    
+    <CruiseDALv2SchemaVersion>2.5.0</CruiseDALv2SchemaVersion>
+    <CruiseDALv3SchemaVersion>3.0.0</CruiseDALv3SchemaVersion>
+    <CruiseDALIncrementalVersion>17</CruiseDALIncrementalVersion>
+    <CruiseDALCoreVersion>$(CruiseDALv3SchemaVersion).$(CruiseDALIncrementalVersion)</CruiseDALCoreVersion>
+    <CruiseDALV2Version>$(CruiseDALv2SchemaVersion).$(CruiseDALIncrementalVersion)</CruiseDALV2Version>
+    <CruiseDALV3Version>$(CruiseDALv3SchemaVersion).$(CruiseDALIncrementalVersion)</CruiseDALV3Version>
+    
+    
     <FMSCORMToolsDirectory>$(MSBuildThisFileDirectory)tools\</FMSCORMToolsDirectory>
     <ModelGenToolDirectory>$(FMSCORMToolsDirectory)ModelGen\</ModelGenToolDirectory>
   </PropertyGroup>

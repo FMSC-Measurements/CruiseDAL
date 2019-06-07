@@ -2,7 +2,7 @@
   
   <PropertyGroup>
     <TargetFramework>netstandard20</TargetFramework>
-    <Version>$(CruiseDALVersion)</Version>
+    <Version>$(CruiseDALV3Version)</Version>
   </PropertyGroup>
 
 
