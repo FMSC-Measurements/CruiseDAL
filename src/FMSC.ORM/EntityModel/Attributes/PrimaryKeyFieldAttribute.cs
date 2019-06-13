@@ -4,6 +4,10 @@
 
     public class PrimaryKeyFieldAttribute : FieldAttribute
     {
+        public PrimaryKeyFieldAttribute(string fieldName) : base(fieldName)
+        {
+        }
+
         public KeyType KeyType { get; set; }
     }
 }
