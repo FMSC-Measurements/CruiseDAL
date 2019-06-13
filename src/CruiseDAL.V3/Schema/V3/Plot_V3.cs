@@ -18,7 +18,7 @@
                 "CreatedDate DATETIME DEFAULT (datetime('now', 'localtime')), " +
                 "ModifiedBy TEXT COLLATE NOCASE, " +
                 "ModifiedDate DATETIME, " +
-                "RowVersion, " +
+                "RowVersion INTEGER DEFAULT 0, " +
 
                 "UNIQUE (PlotID), " +
                 "UNIQUE (PlotNumber, CuttingUnitCode)," +
