@@ -4,6 +4,9 @@
 
     public class PrimaryKeyFieldAttribute : FieldAttribute
     {
+        public PrimaryKeyFieldAttribute() : base()
+        { }
+
         public PrimaryKeyFieldAttribute(string fieldName) : base(fieldName)
         {
         }
