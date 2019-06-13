@@ -4,7 +4,7 @@
     <!--we could probably target net35 but im using net40 as the minimum because 'dotnet' cli only supports down to net40-->
     <!--and i want dotnet cli to run test in the cli to test all target frameworks-->
     <TargetFrameworks>net40;netstandard2.0</TargetFrameworks>
-    <Version>2.3.1</Version>
+    <Version>2.3.2</Version>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(TargetFramework)' == 'net40'">
