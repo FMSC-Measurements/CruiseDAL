@@ -9,7 +9,7 @@ namespace CruiseDAL.V3.Models
   public String ReportID { get; set; }
 
   [Field("Selected")]
-  public Boolean Selected { get; set; }
+  public Boolean? Selected { get; set; }
 
   [Field("Title")]
   public String Title { get; set; }

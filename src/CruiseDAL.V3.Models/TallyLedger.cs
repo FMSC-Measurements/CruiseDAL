@@ -5,8 +5,8 @@ namespace CruiseDAL.V3.Models
  [EntitySource("TallyLedger")]
  public partial class TallyLedger
  {
-  [Field("TallyLedger_CN")]
-  public Int64 TallyLedger_CN { get; set; }
+  [PrimaryKeyField("TallyLedger_CN", PersistanceFlags = PersistanceFlags.OnUpdate)]
+  public Int32? TallyLedger_CN { get; set; }
 
   [Field("TallyLedgerID")]
   public String TallyLedgerID { get; set; }
@@ -24,7 +24,7 @@ namespace CruiseDAL.V3.Models
   public String SampleGroupCode { get; set; }
 
   [Field("PlotNumber")]
-  public Int64 PlotNumber { get; set; }
+  public Int32? PlotNumber { get; set; }
 
   [Field("Species")]
   public String Species { get; set; }
@@ -33,16 +33,16 @@ namespace CruiseDAL.V3.Models
   public String LiveDead { get; set; }
 
   [Field("TreeCount")]
-  public Int64 TreeCount { get; set; }
+  public Int32 TreeCount { get; set; }
 
   [Field("KPI")]
-  public Int64 KPI { get; set; }
+  public Int32? KPI { get; set; }
 
   [Field("STM")]
-  public Boolean STM { get; set; }
+  public Boolean? STM { get; set; }
 
   [Field("ThreePRandomValue")]
-  public Int64 ThreePRandomValue { get; set; }
+  public Int32? ThreePRandomValue { get; set; }
 
   [Field("Signature")]
   public String Signature { get; set; }
@@ -56,14 +56,8 @@ namespace CruiseDAL.V3.Models
   [Field("EntryType")]
   public String EntryType { get; set; }
 
-  [Field("CreatedBy")]
-  public String CreatedBy { get; set; }
-
-  [Field("CreatedDate")]
-  public DateTime CreatedDate { get; set; }
-
   [Field("IsDeleted")]
-  public Boolean IsDeleted { get; set; }
+  public Boolean? IsDeleted { get; set; }
 
  }
 

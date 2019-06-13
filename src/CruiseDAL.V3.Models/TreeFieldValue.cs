@@ -12,19 +12,16 @@ namespace CruiseDAL.V3.Models
   public String Field { get; set; }
 
   [Field("ValueInt")]
-  public Int64 ValueInt { get; set; }
+  public Int32? ValueInt { get; set; }
 
   [Field("ValueReal")]
-  public Double ValueReal { get; set; }
+  public Double? ValueReal { get; set; }
 
   [Field("ValueBool")]
-  public Boolean ValueBool { get; set; }
+  public Boolean? ValueBool { get; set; }
 
   [Field("ValueText")]
   public String ValueText { get; set; }
-
-  [Field("CreatedDate")]
-  public DateTime CreatedDate { get; set; }
 
  }
 

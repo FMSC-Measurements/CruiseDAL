@@ -5,8 +5,8 @@ namespace CruiseDAL.V3.Models
  [EntitySource("LogField")]
  public partial class LogField
  {
-  [Field("LogField_CN")]
-  public Int64 LogField_CN { get; set; }
+  [PrimaryKeyField("LogField_CN", PersistanceFlags = PersistanceFlags.OnUpdate)]
+  public Int32? LogField_CN { get; set; }
 
   [Field("Field")]
   public String Field { get; set; }

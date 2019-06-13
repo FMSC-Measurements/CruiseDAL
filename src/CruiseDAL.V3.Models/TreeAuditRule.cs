@@ -5,8 +5,8 @@ namespace CruiseDAL.V3.Models
  [EntitySource("TreeAuditRule")]
  public partial class TreeAuditRule
  {
-  [Field("TreeAuditRule_CN")]
-  public Int64 TreeAuditRule_CN { get; set; }
+  [PrimaryKeyField("TreeAuditRule_CN", PersistanceFlags = PersistanceFlags.OnUpdate)]
+  public Int32? TreeAuditRule_CN { get; set; }
 
   [Field("TreeAuditRuleID")]
   public String TreeAuditRuleID { get; set; }
@@ -15,10 +15,10 @@ namespace CruiseDAL.V3.Models
   public String Field { get; set; }
 
   [Field("Min")]
-  public Double Min { get; set; }
+  public Double? Min { get; set; }
 
   [Field("Max")]
-  public Double Max { get; set; }
+  public Double? Max { get; set; }
 
  }
 

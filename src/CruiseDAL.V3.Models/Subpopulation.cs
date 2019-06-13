@@ -5,8 +5,8 @@ namespace CruiseDAL.V3.Models
  [EntitySource("Subpopulation")]
  public partial class Subpopulation
  {
-  [Field("Subpopulation_CN")]
-  public Int64 Subpopulation_CN { get; set; }
+  [PrimaryKeyField("Subpopulation_CN", PersistanceFlags = PersistanceFlags.OnUpdate)]
+  public Int32? Subpopulation_CN { get; set; }
 
   [Field("StratumCode")]
   public String StratumCode { get; set; }

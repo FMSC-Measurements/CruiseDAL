@@ -5,8 +5,8 @@ namespace CruiseDAL.V3.Models
  [EntitySource("Regression")]
  public partial class Regression
  {
-  [Field("Regression_CN")]
-  public Int64 Regression_CN { get; set; }
+  [PrimaryKeyField("Regression_CN", PersistanceFlags = PersistanceFlags.OnUpdate)]
+  public Int32? Regression_CN { get; set; }
 
   [Field("rVolume")]
   public String rVolume { get; set; }
@@ -24,31 +24,31 @@ namespace CruiseDAL.V3.Models
   public String rLiveDead { get; set; }
 
   [Field("CoefficientA")]
-  public Double CoefficientA { get; set; }
+  public Double? CoefficientA { get; set; }
 
   [Field("CoefficientB")]
-  public Double CoefficientB { get; set; }
+  public Double? CoefficientB { get; set; }
 
   [Field("CoefficientC")]
-  public Double CoefficientC { get; set; }
+  public Double? CoefficientC { get; set; }
 
   [Field("TotalTrees")]
-  public Int64 TotalTrees { get; set; }
+  public Int32? TotalTrees { get; set; }
 
   [Field("MeanSE")]
-  public Double MeanSE { get; set; }
+  public Double? MeanSE { get; set; }
 
   [Field("Rsquared")]
-  public Double Rsquared { get; set; }
+  public Double? Rsquared { get; set; }
 
   [Field("RegressModel")]
   public String RegressModel { get; set; }
 
   [Field("rMinDbh")]
-  public Double rMinDbh { get; set; }
+  public Double? rMinDbh { get; set; }
 
   [Field("rMaxDbh")]
-  public Double rMaxDbh { get; set; }
+  public Double? rMaxDbh { get; set; }
 
  }
 

@@ -5,119 +5,119 @@ namespace CruiseDAL.V3.Models
  [EntitySource("TreeCalculatedValues")]
  public partial class TreeCalculatedValues
  {
-  [Field("TreeCalcValues_CN")]
-  public Int64 TreeCalcValues_CN { get; set; }
+  [PrimaryKeyField("TreeCalcValues_CN", PersistanceFlags = PersistanceFlags.OnUpdate)]
+  public Int32? TreeCalcValues_CN { get; set; }
 
   [Field("Tree_CN")]
-  public Int64 Tree_CN { get; set; }
+  public Int32 Tree_CN { get; set; }
 
   [Field("TotalCubicVolume")]
-  public Double TotalCubicVolume { get; set; }
+  public Double? TotalCubicVolume { get; set; }
 
   [Field("GrossBDFTPP")]
-  public Double GrossBDFTPP { get; set; }
+  public Double? GrossBDFTPP { get; set; }
 
   [Field("NetBDFTPP")]
-  public Double NetBDFTPP { get; set; }
+  public Double? NetBDFTPP { get; set; }
 
   [Field("GrossCUFTPP")]
-  public Double GrossCUFTPP { get; set; }
+  public Double? GrossCUFTPP { get; set; }
 
   [Field("NetCUFTPP")]
-  public Double NetCUFTPP { get; set; }
+  public Double? NetCUFTPP { get; set; }
 
   [Field("CordsPP")]
-  public Double CordsPP { get; set; }
+  public Double? CordsPP { get; set; }
 
   [Field("GrossBDFTRemvPP")]
-  public Double GrossBDFTRemvPP { get; set; }
+  public Double? GrossBDFTRemvPP { get; set; }
 
   [Field("GrossCUFTRemvPP")]
-  public Double GrossCUFTRemvPP { get; set; }
+  public Double? GrossCUFTRemvPP { get; set; }
 
   [Field("GrossBDFTSP")]
-  public Double GrossBDFTSP { get; set; }
+  public Double? GrossBDFTSP { get; set; }
 
   [Field("NetBDFTSP")]
-  public Double NetBDFTSP { get; set; }
+  public Double? NetBDFTSP { get; set; }
 
   [Field("GrossCUFTSP")]
-  public Double GrossCUFTSP { get; set; }
+  public Double? GrossCUFTSP { get; set; }
 
   [Field("NetCUFTSP")]
-  public Double NetCUFTSP { get; set; }
+  public Double? NetCUFTSP { get; set; }
 
   [Field("CordsSP")]
-  public Double CordsSP { get; set; }
+  public Double? CordsSP { get; set; }
 
   [Field("GrossCUFTRemvSP")]
-  public Double GrossCUFTRemvSP { get; set; }
+  public Double? GrossCUFTRemvSP { get; set; }
 
   [Field("NumberlogsMS")]
-  public Double NumberlogsMS { get; set; }
+  public Double? NumberlogsMS { get; set; }
 
   [Field("NumberlogsTPW")]
-  public Double NumberlogsTPW { get; set; }
+  public Double? NumberlogsTPW { get; set; }
 
   [Field("GrossBDFTRP")]
-  public Double GrossBDFTRP { get; set; }
+  public Double? GrossBDFTRP { get; set; }
 
   [Field("GrossCUFTRP")]
-  public Double GrossCUFTRP { get; set; }
+  public Double? GrossCUFTRP { get; set; }
 
   [Field("CordsRP")]
-  public Double CordsRP { get; set; }
+  public Double? CordsRP { get; set; }
 
   [Field("GrossBDFTIntl")]
-  public Double GrossBDFTIntl { get; set; }
+  public Double? GrossBDFTIntl { get; set; }
 
   [Field("NetBDFTIntl")]
-  public Double NetBDFTIntl { get; set; }
+  public Double? NetBDFTIntl { get; set; }
 
   [Field("BiomassMainStemPrimary")]
-  public Double BiomassMainStemPrimary { get; set; }
+  public Double? BiomassMainStemPrimary { get; set; }
 
   [Field("BiomassMainStemSecondary")]
-  public Double BiomassMainStemSecondary { get; set; }
+  public Double? BiomassMainStemSecondary { get; set; }
 
   [Field("ValuePP")]
-  public Double ValuePP { get; set; }
+  public Double? ValuePP { get; set; }
 
   [Field("ValueSP")]
-  public Double ValueSP { get; set; }
+  public Double? ValueSP { get; set; }
 
   [Field("ValueRP")]
-  public Double ValueRP { get; set; }
+  public Double? ValueRP { get; set; }
 
   [Field("BiomassProd")]
-  public Double BiomassProd { get; set; }
+  public Double? BiomassProd { get; set; }
 
   [Field("Biomasstotalstem")]
-  public Double Biomasstotalstem { get; set; }
+  public Double? Biomasstotalstem { get; set; }
 
   [Field("Biomasslivebranches")]
-  public Double Biomasslivebranches { get; set; }
+  public Double? Biomasslivebranches { get; set; }
 
   [Field("Biomassdeadbranches")]
-  public Double Biomassdeadbranches { get; set; }
+  public Double? Biomassdeadbranches { get; set; }
 
   [Field("Biomassfoliage")]
-  public Double Biomassfoliage { get; set; }
+  public Double? Biomassfoliage { get; set; }
 
   [Field("BiomassTip")]
-  public Double BiomassTip { get; set; }
+  public Double? BiomassTip { get; set; }
 
   [Field("TipwoodVolume")]
-  public Double TipwoodVolume { get; set; }
+  public Double? TipwoodVolume { get; set; }
 
   [Field("ExpansionFactor")]
-  public Double ExpansionFactor { get; set; }
+  public Double? ExpansionFactor { get; set; }
 
   [Field("TreeFactor")]
-  public Double TreeFactor { get; set; }
+  public Double? TreeFactor { get; set; }
 
   [Field("PointFactor")]
-  public Double PointFactor { get; set; }
+  public Double? PointFactor { get; set; }
 
  }
 

@@ -5,8 +5,8 @@ namespace CruiseDAL.V3.Models
  [EntitySource("CuttingUnit_Stratum")]
  public partial class CuttingUnit_Stratum
  {
-  [Field("CuttingUnit_Stratum_CN")]
-  public Int64 CuttingUnit_Stratum_CN { get; set; }
+  [PrimaryKeyField("CuttingUnit_Stratum_CN", PersistanceFlags = PersistanceFlags.OnUpdate)]
+  public Int32? CuttingUnit_Stratum_CN { get; set; }
 
   [Field("CuttingUnitCode")]
   public String CuttingUnitCode { get; set; }
@@ -15,7 +15,7 @@ namespace CruiseDAL.V3.Models
   public String StratumCode { get; set; }
 
   [Field("StratumArea")]
-  public Double StratumArea { get; set; }
+  public Double? StratumArea { get; set; }
 
  }
 

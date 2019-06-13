@@ -5,8 +5,8 @@ namespace CruiseDAL.V3.Models
  [EntitySource("FixCNTTallyPopulation_V3")]
  public partial class FixCNTTallyPopulation_V3
  {
-  [Field("FixCNTTallyPopulation_CN")]
-  public Int64 FixCNTTallyPopulation_CN { get; set; }
+  [PrimaryKeyField("FixCNTTallyPopulation_CN", PersistanceFlags = PersistanceFlags.OnUpdate)]
+  public Int32? FixCNTTallyPopulation_CN { get; set; }
 
   [Field("StratumCode")]
   public String StratumCode { get; set; }
@@ -21,13 +21,13 @@ namespace CruiseDAL.V3.Models
   public String LiveDead { get; set; }
 
   [Field("IntervalSize")]
-  public Int64 IntervalSize { get; set; }
+  public Int32? IntervalSize { get; set; }
 
   [Field("Min")]
-  public Int64 Min { get; set; }
+  public Int32? Min { get; set; }
 
   [Field("Max")]
-  public Int64 Max { get; set; }
+  public Int32? Max { get; set; }
 
  }
 

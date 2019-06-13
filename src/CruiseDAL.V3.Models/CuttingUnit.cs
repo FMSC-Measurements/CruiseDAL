@@ -5,14 +5,14 @@ namespace CruiseDAL.V3.Models
  [EntitySource("CuttingUnit")]
  public partial class CuttingUnit
  {
-  [Field("CuttingUnit_CN")]
-  public Int64 CuttingUnit_CN { get; set; }
+  [PrimaryKeyField("CuttingUnit_CN", PersistanceFlags = PersistanceFlags.OnUpdate)]
+  public Int32? CuttingUnit_CN { get; set; }
 
   [Field("Code")]
   public String Code { get; set; }
 
   [Field("Area")]
-  public Double Area { get; set; }
+  public Double? Area { get; set; }
 
   [Field("TallyHistory")]
   public String TallyHistory { get; set; }
@@ -28,21 +28,6 @@ namespace CruiseDAL.V3.Models
 
   [Field("Rx")]
   public String Rx { get; set; }
-
-  [Field("CreatedBy")]
-  public String CreatedBy { get; set; }
-
-  [Field("CreatedDate")]
-  public DateTime CreatedDate { get; set; }
-
-  [Field("ModifiedBy")]
-  public String ModifiedBy { get; set; }
-
-  [Field("ModifiedDate")]
-  public DateTime ModifiedDate { get; set; }
-
-  [Field("RowVersion")]
-  public Int64 RowVersion { get; set; }
 
  }
 

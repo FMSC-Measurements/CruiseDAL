@@ -5,8 +5,8 @@ namespace CruiseDAL.V3.Models
  [EntitySource("TreeAuditResolution")]
  public partial class TreeAuditResolution
  {
-  [Field("TreeAuditResolution_CN")]
-  public Int64 TreeAuditResolution_CN { get; set; }
+  [PrimaryKeyField("TreeAuditResolution_CN", PersistanceFlags = PersistanceFlags.OnUpdate)]
+  public Int32? TreeAuditResolution_CN { get; set; }
 
   [Field("TreeID")]
   public String TreeID { get; set; }

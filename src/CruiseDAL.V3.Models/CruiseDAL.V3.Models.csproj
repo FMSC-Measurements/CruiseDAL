@@ -2,18 +2,19 @@
   
   <PropertyGroup>
     <TargetFramework>netstandard20</TargetFramework>
-    <Version>$(CruiseDALV3Version)</Version>
+    <Version>$(CruiseDALV3ModelsVersion)</Version>
   </PropertyGroup>
 
 
   <PropertyGroup>
-    <GenerateModels Condition="'$(GenerateModels)' == ''">true</GenerateModels>
+    <GenerateModels Condition="'$(GenerateModels)' == ''">false</GenerateModels>
   </PropertyGroup>
   
   <Target Name="BeforeGenerateModels" BeforeTargets="GenerateModels">
     <PropertyGroup Label="Model Generator Properties">
       <ModelGenDatastoreTypeName>CruiseDAL.CruiseDatastore_V3</ModelGenDatastoreTypeName>
       <ModelGenTargetAssembly>$(MSBuildProjectDirectory)\$(OutputPath)CruiseDAL.V3.dll</ModelGenTargetAssembly>
+      <ModelGenIgnoreColumns>CreatedBy,CreatedDate,ModifiedBy,ModifiedDate,RowVersion</ModelGenIgnoreColumns>
     </PropertyGroup>
   </Target>
   

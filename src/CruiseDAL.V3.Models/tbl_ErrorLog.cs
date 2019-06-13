@@ -5,14 +5,14 @@ namespace CruiseDAL.V3.Models
  [EntitySource("tbl_ErrorLog")]
  public partial class tbl_ErrorLog
  {
-  [Field("RowID")]
-  public Int64 RowID { get; set; }
+  [PrimaryKeyField("RowID", PersistanceFlags = PersistanceFlags.OnUpdate)]
+  public Int32? RowID { get; set; }
 
   [Field("TableName")]
   public String TableName { get; set; }
 
   [Field("CN_Number")]
-  public Int64 CN_Number { get; set; }
+  public Int32 CN_Number { get; set; }
 
   [Field("ColumnName")]
   public String ColumnName { get; set; }
@@ -27,7 +27,7 @@ namespace CruiseDAL.V3.Models
   public String Program { get; set; }
 
   [Field("Suppress")]
-  public Boolean Suppress { get; set; }
+  public Boolean? Suppress { get; set; }
 
  }
 

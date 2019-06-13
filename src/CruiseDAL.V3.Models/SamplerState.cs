@@ -5,8 +5,8 @@ namespace CruiseDAL.V3.Models
  [EntitySource("SamplerState")]
  public partial class SamplerState
  {
-  [Field("SamplerState_CN")]
-  public Int64 SamplerState_CN { get; set; }
+  [PrimaryKeyField("SamplerState_CN", PersistanceFlags = PersistanceFlags.OnUpdate)]
+  public Int32? SamplerState_CN { get; set; }
 
   [Field("StratumCode")]
   public String StratumCode { get; set; }

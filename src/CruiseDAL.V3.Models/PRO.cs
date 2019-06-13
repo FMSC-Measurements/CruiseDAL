@@ -5,8 +5,8 @@ namespace CruiseDAL.V3.Models
  [EntitySource("PRO")]
  public partial class PRO
  {
-  [Field("PRO_CN")]
-  public Int64 PRO_CN { get; set; }
+  [PrimaryKeyField("PRO_CN", PersistanceFlags = PersistanceFlags.OnUpdate)]
+  public Int32? PRO_CN { get; set; }
 
   [Field("CutLeave")]
   public String CutLeave { get; set; }
@@ -33,25 +33,25 @@ namespace CruiseDAL.V3.Models
   public String STM { get; set; }
 
   [Field("FirstStageTrees")]
-  public Double FirstStageTrees { get; set; }
+  public Double? FirstStageTrees { get; set; }
 
   [Field("MeasuredTrees")]
-  public Double MeasuredTrees { get; set; }
+  public Double? MeasuredTrees { get; set; }
 
   [Field("TalliedTrees")]
-  public Double TalliedTrees { get; set; }
+  public Double? TalliedTrees { get; set; }
 
   [Field("SumKPI")]
-  public Double SumKPI { get; set; }
+  public Double? SumKPI { get; set; }
 
   [Field("SumMeasuredKPI")]
-  public Double SumMeasuredKPI { get; set; }
+  public Double? SumMeasuredKPI { get; set; }
 
   [Field("ProrationFactor")]
-  public Double ProrationFactor { get; set; }
+  public Double? ProrationFactor { get; set; }
 
   [Field("ProratedEstimatedTrees")]
-  public Double ProratedEstimatedTrees { get; set; }
+  public Double? ProratedEstimatedTrees { get; set; }
 
  }
 

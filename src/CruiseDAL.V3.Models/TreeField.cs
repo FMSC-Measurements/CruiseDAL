@@ -5,8 +5,8 @@ namespace CruiseDAL.V3.Models
  [EntitySource("TreeField")]
  public partial class TreeField
  {
-  [Field("TreeField_CN")]
-  public Int64 TreeField_CN { get; set; }
+  [PrimaryKeyField("TreeField_CN", PersistanceFlags = PersistanceFlags.OnUpdate)]
+  public Int32? TreeField_CN { get; set; }
 
   [Field("Field")]
   public String Field { get; set; }
@@ -15,7 +15,7 @@ namespace CruiseDAL.V3.Models
   public String DbType { get; set; }
 
   [Field("IsTreeMeasurmentField")]
-  public Boolean IsTreeMeasurmentField { get; set; }
+  public Boolean? IsTreeMeasurmentField { get; set; }
 
  }
 

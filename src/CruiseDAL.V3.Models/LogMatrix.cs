@@ -39,10 +39,10 @@ namespace CruiseDAL.V3.Models
   public String SEDlimit { get; set; }
 
   [Field("SEDminimum")]
-  public Double SEDminimum { get; set; }
+  public Double? SEDminimum { get; set; }
 
   [Field("SEDmaximum")]
-  public Double SEDmaximum { get; set; }
+  public Double? SEDmaximum { get; set; }
 
  }
 

@@ -3,10 +3,11 @@
     
     <CruiseDALv2SchemaVersion>2.5.0</CruiseDALv2SchemaVersion>
     <CruiseDALv3SchemaVersion>3.0.0</CruiseDALv3SchemaVersion>
-    <CruiseDALIncrementalVersion>17</CruiseDALIncrementalVersion>
+    <CruiseDALIncrementalVersion>18</CruiseDALIncrementalVersion>
     <CruiseDALCoreVersion>$(CruiseDALv3SchemaVersion).$(CruiseDALIncrementalVersion)</CruiseDALCoreVersion>
     <CruiseDALV2Version>$(CruiseDALv2SchemaVersion).$(CruiseDALIncrementalVersion)</CruiseDALV2Version>
     <CruiseDALV3Version>$(CruiseDALv3SchemaVersion).$(CruiseDALIncrementalVersion)</CruiseDALV3Version>
+    <CruiseDALV3ModelsVersion>$(CruiseDALv3SchemaVersion).1</CruiseDALV3ModelsVersion>
     
     
     <FMSCORMToolsDirectory>$(MSBuildThisFileDirectory)tools\</FMSCORMToolsDirectory>

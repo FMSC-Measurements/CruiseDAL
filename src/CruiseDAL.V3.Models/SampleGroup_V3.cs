@@ -5,8 +5,8 @@ namespace CruiseDAL.V3.Models
  [EntitySource("SampleGroup_V3")]
  public partial class SampleGroup_V3
  {
-  [Field("SampleGroup_CN")]
-  public Int64 SampleGroup_CN { get; set; }
+  [PrimaryKeyField("SampleGroup_CN", PersistanceFlags = PersistanceFlags.OnUpdate)]
+  public Int32? SampleGroup_CN { get; set; }
 
   [Field("SampleGroupCode")]
   public String SampleGroupCode { get; set; }
@@ -33,19 +33,19 @@ namespace CruiseDAL.V3.Models
   public String DefaultLiveDead { get; set; }
 
   [Field("SamplingFrequency")]
-  public Int64 SamplingFrequency { get; set; }
+  public Int32? SamplingFrequency { get; set; }
 
   [Field("InsuranceFrequency")]
-  public Int64 InsuranceFrequency { get; set; }
+  public Int32? InsuranceFrequency { get; set; }
 
   [Field("KZ")]
-  public Int64 KZ { get; set; }
+  public Int32? KZ { get; set; }
 
   [Field("BigBAF")]
-  public Int64 BigBAF { get; set; }
+  public Int32? BigBAF { get; set; }
 
   [Field("TallyBySubPop")]
-  public Boolean TallyBySubPop { get; set; }
+  public Boolean? TallyBySubPop { get; set; }
 
   [Field("TallyMethod")]
   public String TallyMethod { get; set; }
@@ -54,28 +54,13 @@ namespace CruiseDAL.V3.Models
   public String Description { get; set; }
 
   [Field("MinKPI")]
-  public Int64 MinKPI { get; set; }
+  public Int32? MinKPI { get; set; }
 
   [Field("MaxKPI")]
-  public Int64 MaxKPI { get; set; }
+  public Int32? MaxKPI { get; set; }
 
   [Field("SmallFPS")]
-  public Double SmallFPS { get; set; }
-
-  [Field("CreatedBy")]
-  public String CreatedBy { get; set; }
-
-  [Field("CreatedDate")]
-  public DateTime CreatedDate { get; set; }
-
-  [Field("ModifiedBy")]
-  public String ModifiedBy { get; set; }
-
-  [Field("ModifiedDate")]
-  public DateTime ModifiedDate { get; set; }
-
-  [Field("RowVersion")]
-  public Int64 RowVersion { get; set; }
+  public Double? SmallFPS { get; set; }
 
  }
 

@@ -6,10 +6,10 @@ namespace CruiseDAL.V3.Models
  public partial class SampleGroupStatsTreeDefaultValue
  {
   [Field("TreeDefaultValue_CN")]
-  public Int64 TreeDefaultValue_CN { get; set; }
+  public Int32 TreeDefaultValue_CN { get; set; }
 
   [Field("SampleGroupStats_CN")]
-  public Int64 SampleGroupStats_CN { get; set; }
+  public Int32 SampleGroupStats_CN { get; set; }
 
  }
 

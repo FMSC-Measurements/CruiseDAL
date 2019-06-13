@@ -12,13 +12,13 @@ namespace CruiseDAL.V3.Models
   public String Field { get; set; }
 
   [Field("FieldOrder")]
-  public Int64 FieldOrder { get; set; }
+  public Int32? FieldOrder { get; set; }
 
   [Field("Heading")]
   public String Heading { get; set; }
 
   [Field("Width")]
-  public Double Width { get; set; }
+  public Double? Width { get; set; }
 
  }
 

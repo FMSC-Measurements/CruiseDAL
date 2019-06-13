@@ -5,8 +5,8 @@ namespace CruiseDAL.V3.Models
  [EntitySource("TreeDefaultValue_TreeAuditRule")]
  public partial class TreeDefaultValue_TreeAuditRule
  {
-  [Field("TreeDefaultValue_TreeAuditRule_CN")]
-  public Int64 TreeDefaultValue_TreeAuditRule_CN { get; set; }
+  [PrimaryKeyField("TreeDefaultValue_TreeAuditRule_CN", PersistanceFlags = PersistanceFlags.OnUpdate)]
+  public Int32? TreeDefaultValue_TreeAuditRule_CN { get; set; }
 
   [Field("Species")]
   public String Species { get; set; }

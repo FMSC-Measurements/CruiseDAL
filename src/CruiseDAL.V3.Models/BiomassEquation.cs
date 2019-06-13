@@ -18,25 +18,25 @@ namespace CruiseDAL.V3.Models
   public String LiveDead { get; set; }
 
   [Field("FIAcode")]
-  public Int64 FIAcode { get; set; }
+  public Int32 FIAcode { get; set; }
 
   [Field("Equation")]
   public String Equation { get; set; }
 
   [Field("PercentMoisture")]
-  public Double PercentMoisture { get; set; }
+  public Double? PercentMoisture { get; set; }
 
   [Field("PercentRemoved")]
-  public Double PercentRemoved { get; set; }
+  public Double? PercentRemoved { get; set; }
 
   [Field("MetaData")]
   public String MetaData { get; set; }
 
   [Field("WeightFactorPrimary")]
-  public Double WeightFactorPrimary { get; set; }
+  public Double? WeightFactorPrimary { get; set; }
 
   [Field("WeightFactorSecondary")]
-  public Double WeightFactorSecondary { get; set; }
+  public Double? WeightFactorSecondary { get; set; }
 
  }
 

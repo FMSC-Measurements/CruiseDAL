@@ -5,8 +5,8 @@ namespace CruiseDAL.V3.Models
  [EntitySource("MessageLog")]
  public partial class MessageLog
  {
-  [Field("Message_CN")]
-  public Int64 Message_CN { get; set; }
+  [PrimaryKeyField("Message_CN", PersistanceFlags = PersistanceFlags.OnUpdate)]
+  public Int32? Message_CN { get; set; }
 
   [Field("Program")]
   public String Program { get; set; }

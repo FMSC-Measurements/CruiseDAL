@@ -5,8 +5,8 @@ namespace CruiseDAL.V3.Models
  [EntitySource("Sale")]
  public partial class Sale
  {
-  [Field("Sale_CN")]
-  public Int64 Sale_CN { get; set; }
+  [PrimaryKeyField("Sale_CN", PersistanceFlags = PersistanceFlags.OnUpdate)]
+  public Int32? Sale_CN { get; set; }
 
   [Field("SaleNumber")]
   public String SaleNumber { get; set; }
@@ -30,31 +30,16 @@ namespace CruiseDAL.V3.Models
   public String MeasurementYear { get; set; }
 
   [Field("CalendarYear")]
-  public Int64 CalendarYear { get; set; }
+  public Int32? CalendarYear { get; set; }
 
   [Field("LogGradingEnabled")]
-  public Boolean LogGradingEnabled { get; set; }
+  public Boolean? LogGradingEnabled { get; set; }
 
   [Field("Remarks")]
   public String Remarks { get; set; }
 
   [Field("DefaultUOM")]
   public String DefaultUOM { get; set; }
-
-  [Field("CreatedBy")]
-  public String CreatedBy { get; set; }
-
-  [Field("CreatedDate")]
-  public DateTime CreatedDate { get; set; }
-
-  [Field("ModifiedBy")]
-  public String ModifiedBy { get; set; }
-
-  [Field("ModifiedDate")]
-  public DateTime ModifiedDate { get; set; }
-
-  [Field("RowVersion")]
-  public Int64 RowVersion { get; set; }
 
  }
 
