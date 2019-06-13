@@ -28,6 +28,9 @@ namespace FMSC.ORM.ModelGenerator
 
             [Option(HelpText = "output directory")]
             public string OutputDirectory { get; set; }
+
+            [Option(HelpText = "column seperated list of columns to ignore")]
+            public string IgnoreColumns { get; set; }
         }
 
         static void Main(string[] args)
@@ -43,7 +46,11 @@ namespace FMSC.ORM.ModelGenerator
                         {
                             var datastore = CreateDatastore(o.TargetAssembly, o.TypeName, o.Params);
 
-                            var schemaProvider = new SqliteDatastoreSchemaInfoProvider(datastore);
+                            var ignoreColmns = (string.IsNullOrWhiteSpace(o.IgnoreColumns) == false) ?
+                                o.IgnoreColumns.Split(',')
+                                : (string[])null;
+
+                            var schemaProvider = new SqliteDatastoreSchemaInfoProvider(datastore, ignoreColmns);
 
                             var modelGenerator = new ModelGenerator();
                             modelGenerator.GenerateFiles(schemaProvider, o.Namespace, o.OutputDirectory);

@@ -1,4 +1,5 @@
-﻿using System.Text;
+﻿using System;
+using System.Text;
 
 namespace FMSC.ORM.ModelGenerator
 {
@@ -44,7 +45,8 @@ namespace FMSC.ORM.ModelGenerator
         public string GenerateClass(TableInfo tableInfo,
             int tabIndex = 0,
             string tableAttr = "EntitySource",
-            string columnAttr = "Field")
+            string fieldAttr = "Field",
+            string primaryKeyAttr = "PrimaryKeyField")
         {
             var sb = new StringBuilder();
 
@@ -58,9 +60,17 @@ namespace FMSC.ORM.ModelGenerator
 
             foreach (var fi in tableInfo.Fields)
             {
-                sb.Append(Tab(tabIndex)).AppendLine($"[{columnAttr}(\"{fi.FieldName}\")]");
+                var attr = (fi.IsPK) ?
+                    $"[{primaryKeyAttr}(\"{fi.FieldName}\")]" 
+                    : $"[{fieldAttr}(\"{fi.FieldName}\")]";
+
+                sb.Append(Tab(tabIndex)).AppendLine(attr);
 
                 var typeName = fi.RuntimeTimeType.Name;
+
+                if(fi.RuntimeTimeType.IsValueType && fi.NotNull == false)
+                { typeName = typeName + "?"; }
+
                 sb.Append(Tab(tabIndex)).AppendLine($"public {typeName} {fi.FieldName} {{ get; set; }}");
                 sb.AppendLine();
             }

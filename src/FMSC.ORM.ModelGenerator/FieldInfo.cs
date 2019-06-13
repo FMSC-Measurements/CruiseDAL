@@ -10,6 +10,12 @@ namespace FMSC.ORM.ModelGenerator
     {
         public string FieldName { get; set; }
 
+        public bool IsPK { get; set; }
+
+        //public bool IsAutoIncr { get; set; }
+
+        public bool NotNull { get; set; }
+
         public Type RuntimeTimeType { get; set; }
     }
 }
