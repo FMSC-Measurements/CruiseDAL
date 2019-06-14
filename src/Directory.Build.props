@@ -1,5 +1,12 @@
 <Project>
   <PropertyGroup Label="CustomProperties">
+
+    <!--we could probably target net35 but im using net40 as the minimum because 'dotnet' cli only supports down to net40-->
+    <!--and i want dotnet cli to run test in the cli to test all target frameworks-->
+    <TargetFrameworks>net40;netstandard20</TargetFrameworks>
+    
+    <FMSCORMversion>2.3.2</FMSCORMversion>
+    
     
     <CruiseDALv2SchemaVersion>2.5.0</CruiseDALv2SchemaVersion>
     <CruiseDALv3SchemaVersion>3.0.0</CruiseDALv3SchemaVersion>
