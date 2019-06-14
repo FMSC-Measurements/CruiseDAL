@@ -1,9 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using FMSC.ORM.Core.SQL;
-using FMSC.ORM.EntityModel.Attributes;
+﻿using FMSC.ORM.EntityModel.Attributes;
+using System;
 
 namespace FMSC.ORM.TestSupport.TestModels
 {
@@ -11,10 +7,10 @@ namespace FMSC.ORM.TestSupport.TestModels
     public class POCOMultiTypeObject : IInterface
     {
         [PrimaryKeyField(Name = "ID")]
-        public int ID { get; set; }
+        public int? ID { get; set; }
 
-        [Field(Name = "RowID")]
-        public int RowID { get; set; }
+        //[Field(Name = "RowID")]
+        //public int RowID { get; set; }
 
         [Field(Name = "StringField")]
         public string StringField { get; set; }

@@ -12,8 +12,8 @@ namespace FMSC.ORM.EntityModel.Support
 
     public class GlobalEntityDescriptionLookup : IEntityDescriptionLookup
     {
-        protected Dictionary<string, EntityDescription> _entityDescriptionLookup = new Dictionary<string, EntityDescription>();
-        protected Dictionary<string, EntityInflator> _entityInflatorLookup = new Dictionary<string, EntityInflator>();
+        protected Dictionary<Type, EntityDescription> _entityDescriptionLookup = new Dictionary<Type, EntityDescription>();
+        protected Dictionary<Type, EntityInflator> _entityInflatorLookup = new Dictionary<Type, EntityInflator>();
 
         protected static GlobalEntityDescriptionLookup _instance;
 
@@ -32,36 +32,33 @@ namespace FMSC.ORM.EntityModel.Support
 
         public EntityDescription LookUpEntityByType(Type type)
         {
-            string name = type.Name;
             lock (_entityDescriptionLookup)
             {
-                if (!_entityDescriptionLookup.ContainsKey(name))
+                if (!_entityDescriptionLookup.ContainsKey(type))
                 {
                     var ed = new EntityDescription(type);
-                    _entityDescriptionLookup.Add(name, ed);
+                    _entityDescriptionLookup.Add(type, ed);
                     return ed;
                 }
 
-                return _entityDescriptionLookup[type.Name];
+                return _entityDescriptionLookup[type];
             }
         }
 
         public EntityInflator GetEntityInflator(Type type)
         {
-            string name = type.Name;
-
             lock (_entityDescriptionLookup)
             {
-                if (!_entityInflatorLookup.ContainsKey(name))
+                if (!_entityInflatorLookup.ContainsKey(type))
                 {
                     var entityDescription = LookUpEntityByType(type);
                     var entityInflator = new EntityInflator(entityDescription);
-                    _entityInflatorLookup.Add(name, entityInflator);
+                    _entityInflatorLookup.Add(type, entityInflator);
                     return entityInflator;
                 }
                 else
                 {
-                    return _entityInflatorLookup[name];
+                    return _entityInflatorLookup[type];
                 }
             }
         }
