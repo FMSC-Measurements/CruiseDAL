@@ -1,12 +1,11 @@
-﻿using FMSC.ORM.Core;
-using FMSC.ORM.Core.SQL;
-using Backpack.SqlBuilder;
+﻿using Backpack.SqlBuilder;
+using Backpack.SqlBuilder.Sqlite;
+using FMSC.ORM.Core;
 using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.Common;
 using System.Text;
-using Backpack.SqlBuilder.Sqlite;
 
 namespace FMSC.ORM.SQLite
 {
@@ -68,6 +67,7 @@ namespace FMSC.ORM.SQLite
 #if MICROSOFT_DATA_SQLITE
         public SQLiteDatastore(string path) : base(new SqliteDialect(), new SqliteExceptionProcessor(), Microsoft.Data.Sqlite.SqliteFactory.Instance)
 #elif SYSTEM_DATA_SQLITE
+
         public SQLiteDatastore(string path) : base(new SqliteDialect(), new SqliteExceptionProcessor(), System.Data.SQLite.SQLiteFactory.Instance)
 #endif
         {
@@ -75,7 +75,7 @@ namespace FMSC.ORM.SQLite
             Path = path;
         }
 
-#region SavePoints
+        #region SavePoints
 
         public void StartSavePoint(String name)
         {
@@ -92,11 +92,11 @@ namespace FMSC.ORM.SQLite
             this.Execute("ROLLBACK TO SAVEPOINT " + name + ";");
         }
 
-#endregion SavePoints
+        #endregion SavePoints
 
         protected override string BuildConnectionString()
         {
-            if(Path == null) { throw new InvalidOperationException("Path can not be null"); }
+            if (Path == null) { throw new InvalidOperationException("Path can not be null"); }
 
 #if SYSTEM_DATA_SQLITE
             return string.Format("Data Source={0};Version=3;", Path);
@@ -243,17 +243,15 @@ namespace FMSC.ORM.SQLite
             }
         }
 
-        public override object GetLastInsertKeyValue(DbConnection connection, String tableName, String fieldName, DbTransaction transaction)
+        public override object GetLastInsertKeyValue(DbConnection connection, String tableName, string fieldName, DbTransaction transaction)
         {
-            var ident = GetLastInsertRowID(connection, transaction);
-
-            var query = "SELECT " + fieldName + " FROM " + tableName + " WHERE rowid = @p1;";
+            var query = "SELECT " + fieldName + " FROM " + tableName + " WHERE rowid = last_insert_rowid();";
 
             try
             {
-                return connection.ExecuteScalar(query, new object[] { ident }, transaction);
+                return connection.ExecuteScalar(query, (object[])null, transaction);
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 throw ExceptionProcessor.ProcessException(e, connection, query, transaction);
             }
@@ -342,7 +340,7 @@ namespace FMSC.ORM.SQLite
             }
         }
 
-#region File utility methods
+        #region File utility methods
 
         ///// <summary>
         ///// Copies entire file to <paramref name="path"/> Overwriting any existing file
@@ -377,6 +375,6 @@ namespace FMSC.ORM.SQLite
             return true;
         }
 
-#endregion File utility methods
+        #endregion File utility methods
     }
 }

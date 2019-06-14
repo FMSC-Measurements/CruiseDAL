@@ -147,14 +147,14 @@ namespace FMSC.ORM.Core
         {
             var result = ExecuteScalar(connection, commandText, parameters, transaction);
 
-            return ProcessResult<T>(result);
+            return ValueMapper.ProcessValue<T>(result);
         }
 
         public static T ExecuteScalar2<T>(this DbConnection connection, string commandText, object parameters, DbTransaction transaction)
         {
             var result = ExecuteScalar2(connection, commandText, parameters, transaction);
 
-            return ProcessResult<T>(result);
+            return ValueMapper.ProcessValue<T>(result);
         }
 
         private static T ProcessResult<T>(object result)
@@ -170,27 +170,32 @@ namespace FMSC.ORM.Core
             else
             {
                 Type targetType = typeof(T);
-                targetType = Nullable.GetUnderlyingType(targetType) ?? targetType;
+                return (T)ProcessResult(targetType, result);
+            }
+        }
 
-                if (result is IConvertible)
+        private static object ProcessResult(Type targetType, object result)
+        {
+            targetType = Nullable.GetUnderlyingType(targetType) ?? targetType;
+
+            if (result is IConvertible)
+            {
+                return Convert.ChangeType(result, targetType
+                    , System.Globalization.CultureInfo.CurrentCulture);
+            }
+            else
+            {
+                try
                 {
-                    return (T)Convert.ChangeType(result, targetType
-                        , System.Globalization.CultureInfo.CurrentCulture);
+                    return result;
                 }
-                else
+                catch (InvalidCastException)
                 {
-                    try
-                    {
-                        return (T)result;
-                    }
-                    catch (InvalidCastException)
-                    {
 #if NetCF
                         throw;
 #else
-                        return (T)Activator.CreateInstance(targetType, result);
+                    return Activator.CreateInstance(targetType, result);
 #endif
-                    }
                 }
             }
         }

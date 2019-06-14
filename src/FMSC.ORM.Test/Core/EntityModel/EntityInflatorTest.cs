@@ -109,64 +109,64 @@ namespace FMSC.ORM.EntityModel.Support
             inflator.ReadPrimaryKey(reader).Should().Be(1);
         }
 
-        [Fact]
-        public void GetGUIDTest()
-        {
-            using (var ds = new SQLiteDatastore())
-            {
-                using (var connection = ds.OpenConnection())
-                {
-                    var value = Guid.NewGuid();
-                    using (var reader = connection.ExecuteReader($"SELECT '{value}' as thing;", (object[])null, (DbTransaction)null))
-                    {
-                        reader.Read();
-                        var result = EntityInflator.GetGuid(reader, 0);
-                        result.Should().Be(value);
-                    }
+        //[Fact]
+        //public void GetGUIDTest()
+        //{
+        //    using (var ds = new SQLiteDatastore())
+        //    {
+        //        using (var connection = ds.OpenConnection())
+        //        {
+        //            var value = Guid.NewGuid();
+        //            using (var reader = connection.ExecuteReader($"SELECT '{value}' as thing;", (object[])null, (DbTransaction)null))
+        //            {
+        //                reader.Read();
+        //                var result = EntityInflator.GetGuid(reader, 0);
+        //                result.Should().Be(value);
+        //            }
 
-                    using (var reader = connection.ExecuteReader($"SELECT hex(randomblob(16)) as thing;", (object[])null, (DbTransaction)null))
-                    {
-                        reader.Read();
-                        var result = EntityInflator.GetGuid(reader, 0);
-                        result.Should().NotBe(Guid.Empty);
-                    }
+        //            using (var reader = connection.ExecuteReader($"SELECT hex(randomblob(16)) as thing;", (object[])null, (DbTransaction)null))
+        //            {
+        //                reader.Read();
+        //                var result = EntityInflator.GetGuid(reader, 0);
+        //                result.Should().NotBe(Guid.Empty);
+        //            }
 
-                    using (var reader = connection.ExecuteReader($"SELECT null as thing;", (object[])null, (DbTransaction)null))
-                    {
-                        reader.Read();
-                        var result = EntityInflator.GetGuid(reader, 0);
-                        result.Should().Be(Guid.Empty);
-                    }
-                }
-            }
-        }
+        //            using (var reader = connection.ExecuteReader($"SELECT null as thing;", (object[])null, (DbTransaction)null))
+        //            {
+        //                reader.Read();
+        //                var result = EntityInflator.GetGuid(reader, 0);
+        //                result.Should().Be(Guid.Empty);
+        //            }
+        //        }
+        //    }
+        //}
 
         private enum something { a = 0, b };
 
         private enum somethingElse { b = 1 };
 
-        [Theory]
-        [InlineData("0", something.a, typeof(something))]
-        [InlineData("'b'", something.b, typeof(something))]
-        [InlineData("'c'", something.a, typeof(something))]//exception will be thrown but caught
-        [InlineData("'1'", something.b, typeof(something))]
-        [InlineData("null", something.a, typeof(something))]
-        [InlineData("null", (somethingElse)0, typeof(somethingElse))]
-        [InlineData("0", (somethingElse)0, typeof(somethingElse))]
-        public void GetEnumTest(string sqlStr, object expectedValue, Type typeEnum)
-        {
-            using (var ds = new SQLiteDatastore())
-            {
-                using (var connection = ds.OpenConnection())
-                {
-                    using (var reader = connection.ExecuteReader($"SELECT {sqlStr} as thing;", (object[])null, (DbTransaction)null))
-                    {
-                        reader.Read();
-                        var result = EntityInflator.GetEnum(reader, 0, typeEnum);
-                        result.Should().Be(expectedValue);
-                    }
-                }
-            }
-        }
+        //[Theory]
+        //[InlineData("0", something.a, typeof(something))]
+        //[InlineData("'b'", something.b, typeof(something))]
+        //[InlineData("'c'", something.a, typeof(something))]//exception will be thrown but caught
+        //[InlineData("'1'", something.b, typeof(something))]
+        //[InlineData("null", something.a, typeof(something))]
+        //[InlineData("null", (somethingElse)0, typeof(somethingElse))]
+        //[InlineData("0", (somethingElse)0, typeof(somethingElse))]
+        //public void GetEnumTest(string sqlStr, object expectedValue, Type typeEnum)
+        //{
+        //    using (var ds = new SQLiteDatastore())
+        //    {
+        //        using (var connection = ds.OpenConnection())
+        //        {
+        //            using (var reader = connection.ExecuteReader($"SELECT {sqlStr} as thing;", (object[])null, (DbTransaction)null))
+        //            {
+        //                reader.Read();
+        //                var result = EntityInflator.GetEnum(reader, 0, typeEnum);
+        //                result.Should().Be(expectedValue);
+        //            }
+        //        }
+        //    }
+        //}
     }
 }

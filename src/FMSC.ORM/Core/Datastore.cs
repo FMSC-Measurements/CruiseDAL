@@ -96,7 +96,7 @@ namespace FMSC.ORM.Core
 
         public abstract long GetLastInsertRowID(DbConnection connection, DbTransaction transaction);
 
-        public abstract object GetLastInsertKeyValue(DbConnection connection, String tableName, String fieldName, DbTransaction transaction);
+        public abstract object GetLastInsertKeyValue(DbConnection connection, String tableName, string fieldName, DbTransaction transaction);
 
         #endregion Abstract Members
 
@@ -253,7 +253,8 @@ namespace FMSC.ORM.Core
                                 keyData = GetLastInsertKeyValue(connection, entityDescription.SourceName, primaryKeyField.Name, transaction);
                             }
 
-                            primaryKeyField.SetFieldValue(data, keyData);
+                            var value = ValueMapper.ProcessValue(primaryKeyField.RunTimeType, keyData);
+                            primaryKeyField.SetFieldValue(data, value);
                         }
 
                         if (data is IPersistanceTracking)

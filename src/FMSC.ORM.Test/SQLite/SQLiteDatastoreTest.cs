@@ -294,10 +294,13 @@ namespace FMSC.ORM.SQLite
             {
                 using (var connection = ds.OpenConnection())
                 {
+                    var keyValue = "something";
+
                     connection.ExecuteNonQuery("CREATE TABLE tbl (id TEXT PRIMARY KEY);", null, null);
 
-                    connection.ExecuteNonQuery("INSERT INTO tbl (id) VALUES ('something');", null, null);
-                    ds.GetLastInsertKeyValue(connection, "tbl", "id", null);
+                    connection.ExecuteNonQuery($"INSERT INTO tbl (id) VALUES ('{keyValue}');", null, null);
+                    var result = ds.GetLastInsertKeyValue(connection, "tbl", "id", null);
+                    result.Should().Be(keyValue);
                 }
             }
         }
@@ -580,6 +583,52 @@ namespace FMSC.ORM.SQLite
                     item.FloatField = 1.0F;
                     ds.Update(item);
                 }
+            }
+        }
+
+        private POCOMultiTypeObject CreateRandomPoco(bool nullableSetNull = false)
+        {
+            var randomizer = new Bogus.Randomizer();
+
+            var poco = new POCOMultiTypeObject()
+            {
+                BoolField = randomizer.Bool(),
+                DateTimeField = DateTime.Now,
+                DoubleField = randomizer.Double(),
+                FloatField = randomizer.Float(),
+                GuidField = randomizer.Guid(),
+                ID = randomizer.Int(),
+                IntField = randomizer.Int(),
+                LongField = randomizer.Long(),
+                NBoolField = (nullableSetNull) ? (bool?)null : randomizer.Bool(),
+                NDoubleField = (nullableSetNull) ? (double?)null : randomizer.Double(),
+                NFloatField = (nullableSetNull) ? (float?)null : randomizer.Float(),
+                NIntField = (nullableSetNull) ? (int?)null : randomizer.Int(),
+                NLongField = (nullableSetNull) ? (long?)null : randomizer.Long(),
+                //RowID = randomizer.Int(),
+                StringField = randomizer.String2(16),
+            };
+            return poco;
+        }
+
+        [Theory]
+        [InlineData(true)]
+        [InlineData(false)]
+        public void Query_Test(bool nulls)
+        {
+            using (var ds = new SQLiteDatastore())
+            {
+                ds.Execute(TestDBBuilder.CREATE_MULTIPROPTABLE);
+
+                var poco = CreateRandomPoco(nulls);
+                ds.Insert(poco);
+
+                var result = ds.Query<POCOMultiTypeObject>("SELECT * FROM MultiPropTable;")
+                    .SingleOrDefault();
+
+                result.Should().NotBeNull();
+
+                result.Should().BeEquivalentTo(poco);
             }
         }
 
