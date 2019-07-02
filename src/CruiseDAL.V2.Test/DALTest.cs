@@ -44,6 +44,20 @@ namespace CruiseDAL.Tests
         }
 
         [Fact]
+        public void Update()
+        {
+            var fileName = "MultiTest.2014.10.31.cruise";
+            var testFile = GetTestFile(fileName);
+
+            using (var database = new DAL(testFile))
+            {
+                var strata = database.From<DataObjects.StratumDO>()
+                    .Query().ToArray();
+
+            }
+        }
+
+        [Fact]
         public void Constructor_file_create_test()
         {
             var filePath = Path.Combine(base.TestTempPath, "testCreate.cruise");

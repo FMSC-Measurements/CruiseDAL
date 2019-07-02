@@ -1,12 +1,9 @@
 ﻿using FluentAssertions;
 using System;
-using System.Collections.Generic;
 using System.Data.Common;
 using System.Diagnostics;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Reflection;
 using Xunit.Abstractions;
 
 namespace CruiseDAL.V2.Test
@@ -38,12 +35,37 @@ namespace CruiseDAL.V2.Test
 #endif
         }
 
+        public string TestExecutionDirectory
+        {
+            get
+            {
+                var codeBase = new Uri(Assembly.GetExecutingAssembly().CodeBase).LocalPath;
+                return Path.GetDirectoryName(codeBase);
+            }
+        }
+
+        public string TestFilesDirectory => Path.Combine(TestExecutionDirectory, "TestFiles");
+
+
+
         public string TestTempPath
         {
             get
             {
                 return _testTempPath ?? (_testTempPath = Path.Combine(Path.GetTempPath(), "TestTemp", this.GetType().FullName));
             }
+        }
+
+        public string GetTestFile(string fileName)
+        {
+            var sourceTestFilePath = Path.Combine(TestFilesDirectory, fileName);
+            if (File.Exists(sourceTestFilePath) == false) { throw new FileNotFoundException(sourceTestFilePath); }
+
+            var testTemp = TestTempPath;
+            var destFilePath = Path.Combine(testTemp, fileName);
+
+            File.Copy(sourceTestFilePath, destFilePath, true);
+            return destFilePath;
         }
 
         public void StartTimer()
@@ -88,7 +110,5 @@ namespace CruiseDAL.V2.Test
                 }
             }
         }
-
-
     }
 }

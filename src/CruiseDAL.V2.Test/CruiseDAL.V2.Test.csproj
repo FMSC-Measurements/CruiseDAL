@@ -13,6 +13,13 @@
   <PropertyGroup Condition="$(TargetFramework.StartsWith('netstandard')) OR $(TargetFramework.StartsWith('netcoreapp'))">
     <DefineConstants>$(DefineConstants);MICROSOFT_DATA_SQLITE</DefineConstants>
   </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="TestFiles\*" />
+    <Content Include="TestFiles\*">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
   
   <ItemGroup>
     <PackageReference Include="FluentAssertions" Version="5.6.0" />

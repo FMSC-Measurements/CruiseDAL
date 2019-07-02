@@ -24,6 +24,8 @@ namespace CruiseDAL
             }
         }
 
+        public string User => EntityAttributes.UserInfoProvider.Instance.UserInfo;
+
         /// <summary>
         /// Initializes a new in memory instance of the <see cref="DAL"/> class.
         /// </summary>
@@ -42,7 +44,7 @@ namespace CruiseDAL
         }
 
         public DAL(string path, bool makeNew)
-            : base(path, makeNew, new CruiseDatastoreBuilder_V2(), (IUpdater)null)
+            : base(path, makeNew, new CruiseDatastoreBuilder_V2(), (IUpdater)new Updater_V2())
         {
         }
 
