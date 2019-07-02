@@ -28,16 +28,11 @@ namespace CruiseDAL.V3.Tests
             var testFileName = Guid.NewGuid().ToString() + ".cruise";
             var filePath = Path.Combine(TestTempPath, testFileName);
 
-            //// create database file from scratch
-            //using (var setup = new SQLiteDatastore(filePath))
-            //{
-            //    setup.Execute(CruiseDAL.Tests.SQL.CRUISECREATE_2015_01_05);
-            //}
-
             using (var v2db = new DAL(filePath, true))
             {
-                var newCruisePath = Migrator.MigrateFromV2ToV3(filePath);
-                using (var newCruise = new CruiseDatastore_V3(newCruisePath))
+                var newFilePath = Migrator.GetConvertedPath(filePath);
+                Migrator.MigrateFromV2ToV3(filePath, newFilePath);
+                using (var newCruise = new CruiseDatastore_V3(newFilePath))
                 {
                     var semVerActual = new Version(newCruise.DatabaseVersion);
                     var semVerExpected = new Version("3.0");

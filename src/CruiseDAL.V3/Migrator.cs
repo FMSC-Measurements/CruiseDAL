@@ -30,7 +30,7 @@ namespace CruiseDAL
             var fileAlreadyExists = File.Exists(newFilePath);
             if (fileAlreadyExists && !overwrite) { throw new UpdateException(newFileName + " already exists"); }
 
-            
+            Migrator.MigrateFromV2ToV3(v2Path, newFilePath);
 
             return newFilePath;
         }
