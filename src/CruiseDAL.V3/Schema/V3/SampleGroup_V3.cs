@@ -18,6 +18,7 @@
                 "KZ INTEGER Default 0, " +
                 "BigBAF INTEGER Default 0, " +
                 "TallyBySubPop BOOLEAN DEFAULT 0, " +
+                "UseExternalSampler BOOLEAN DEFAULT 0," +
                 "TallyMethod TEXT COLLATE NOCASE, " +
                 "Description TEXT, " +
                 "MinKPI INTEGER Default 0, " +
@@ -81,6 +82,7 @@
                     "KZ, " +
                     "BigBAF, " +
                     "TallyBySubPop," +
+                    "UseExternalSampler," +
                     "TallyMethod, " +
                     "Description, " +
                     "MinKPI, " +
@@ -110,6 +112,7 @@
                             "SELECT * FROM {1}.CountTree AS ct " +
                             "WHERE ct.SampleGroup_CN = sg.SampleGroup_CN AND ct.TreeDefaultValue_CN NOT NULL" +
                         ")) AS TallyBySubPop, " +
+                    "(CASE WHEN sg.SampleSelectorType = 'ClickerSelecter' THEN 1 ELSE 0 END) AS UseExternalSampler, " +
                     "sg.TallyMethod, " +
                     "sg.Description, " +
                     "sg.MinKPI, " +
