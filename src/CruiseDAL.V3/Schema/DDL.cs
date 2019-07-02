@@ -151,6 +151,7 @@
 
             //views
             CREATE_VIEW_TALLYPOPULATION,
+            CREATE_VIEW_TallyLedger_Totals,
             CREATE_VIEW_TreeFieldValue_TreeMeasurment,
             CREATE_VIEW_TreeFieldValue_TreeMeasurment_Filtered,
             CREATE_VIEW_TREEERROR,
