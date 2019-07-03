@@ -29,7 +29,7 @@
                 "UNIQUE (TreeID), " +
 
                 "CHECK (CountOrMeasure IN ('C', 'M', 'I')), " +
-                "CHECK (LiveDead IN ('L', 'D') OR LiveDead IS NULL)" +
+                "CHECK (LiveDead IN ('L', 'D') OR LiveDead IS NULL)," +
 
                 "FOREIGN KEY (CuttingUnitCode) REFERENCES CuttingUnit (Code) ON DELETE CASCADE ON UPDATE CASCADE, " +
                 "FOREIGN KEY (StratumCode) REFERENCES Stratum (Code) " +

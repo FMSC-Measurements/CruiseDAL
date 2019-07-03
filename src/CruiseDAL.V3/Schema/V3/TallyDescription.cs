@@ -10,6 +10,8 @@
                 "LiveDead TEXT COLLATE NOCASE, " +
                 "Description TEXT, " +
 
+                "CHECK (LiveDead IN ('L', 'D') OR LiveDead IS NULL)," +
+
                 //"UNIQUE (StratumCode, SampleGroupCode, Species, LiveDead)  ON CONFLICT REPLACE, " +
                 //"UNIQUE (StratumCode, Description), " +
 
@@ -20,7 +22,7 @@
         public const string CREATE_INDEX_TallyDescription_StratumCode_SampleGroupCode_Species_LiveDead =
             "CREATE UNIQUE INDEX TallyDescription_StratumCode_SampleGroupCode_Species_LiveDead " +
             "ON TallyDescription " +
-            "(StratumCode, SampleGroupCode, ifnull(Species, ''), ifnull(LiveDead, ''));";
+            "(StratumCode, SampleGroupCode, ifnull(Species, '') COLLATE NOCASE, ifnull(LiveDead, '') COLLATE NOCASE);";
 
         public const string CREATE_INDEX_TallyDescription_Species =
             @"CREATE INDEX 'TallyDescription_Species' ON 'TallyDescription'('Species');";

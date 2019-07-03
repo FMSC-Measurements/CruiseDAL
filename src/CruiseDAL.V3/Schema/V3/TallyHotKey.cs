@@ -7,12 +7,14 @@
     TallyHotKey_CN INTEGER PRIMARY KEY AUTOINCREMENT,
     StratumCode TEXT NOT NULL COLLATE NOCASE,
     SampleGroupCode TEXT NOT NULL COLLATE NOCASE,
-    Species TEXT DEFAULT '' COLLATE NOCASE,
-    LiveDead TEXT DEFAULT '' COLLATE NOCASE,
+    Species TEXT COLLATE NOCASE,
+    LiveDead TEXT COLLATE NOCASE,
     HotKey TEXT COLLATE NOCASE,
 
     UNIQUE (StratumCode, HotKey) ON CONFLICT REPLACE,
     --UNIQUE (StratumCode, SampleGroupCode, Species, LiveDead) ON CONFLICT REPLACE,
+
+    CHECK(LiveDead IN ('L', 'D') OR LiveDead IS NULL),
 
     FOREIGN KEY (StratumCode, SampleGroupCode) REFERENCES SampleGroup_V3 (StratumCode, SampleGroupCode) ON DELETE CASCADE,
     FOREIGN KEY (Species) REFERENCES SpeciesCode (Species) ON DELETE CASCADE ON UPDATE CASCADE
@@ -24,7 +26,7 @@
         public const string CREATE_INDEX_TallyHotKey_StratumCode_SampleGroupCode_Species_LiveDead =
 @"CREATE UNIQUE INDEX TallyHotKey_StratumCode_SampleGroupCode_Species_LiveDead
 ON TallyHotKey
-(StratumCode, SampleGroupCode, ifnull(Species, ''), ifnull(LiveDead, ''));";
+(StratumCode, SampleGroupCode, ifnull(Species, '') COLLATE NOCASE, ifnull(LiveDead, '') COLLATE NOCASE);";
     }
 
     public partial class Migrations

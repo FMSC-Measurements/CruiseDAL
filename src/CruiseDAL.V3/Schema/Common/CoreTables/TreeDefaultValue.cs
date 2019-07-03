@@ -28,6 +28,9 @@
                 "ModifiedDate DateTime, " +
                 "RowVersion INTEGER DEFAULT 0, " +
                 "UNIQUE (PrimaryProduct, Species, LiveDead), " +
+
+                "CHECK (LiveDead IN ('L', 'D'))," +
+
                 "FOREIGN KEY (Species) REFERENCES SpeciesCode (Species) ON UPDATE CASCADE ON DELETE CASCADE" +
             ");";
 

@@ -38,11 +38,11 @@
             CREATE_TALBE_SAMPLERSTATE,
 
             CREATE_TABLE_SpeciesCode,
-            INITIALIZE_TABLE_SpeciesCode,
 
             CREATE_TABLE_SUBPOPULATION,
             CREATE_INDEX_Subpopulation_Species,
             CREATE_INDEX_Subpopulation_StratumCode_SampleGroupCode,
+            CREATE_INDEX_Subpopulation_StratumCode_SampleGroupCode_Species_LiveDead,
 
             //CREATE_TABLE_TALLYPOPULATION,
             CREATE_TABLE_TALLYDESCRIPTION,

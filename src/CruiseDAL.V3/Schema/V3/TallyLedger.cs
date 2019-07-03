@@ -11,8 +11,8 @@
             "StratumCode TEXT NOT NULL COLLATE NOCASE, " +
             "SampleGroupCode TEXT NOT NULL COLLATE NOCASE, " +
             "PlotNumber INTEGER, " +
-            "Species TEXT DEFAULT '' COLLATE NOCASE, " +
-            "LiveDead TEXT DEFAULT '' COLLATE NOCASE, " +
+            "Species TEXT COLLATE NOCASE, " +
+            "LiveDead TEXT COLLATE NOCASE, " +
             "TreeCount INTEGER NOT NULL, " +
             "KPI INTEGER Default 0, " +
             "STM BOOLEAN DEFAULT 0, " +
@@ -25,6 +25,8 @@
             "CreatedBy TEXT DEFAULT 'none', " +
             "CreatedDate DATETIME DEFAULT (datetime('now', 'localtime'))," +
             "IsDeleted BOOLEAN DEFAULT 0," +
+
+            "CHECK (LiveDead IN ('L', 'D') OR LiveDead IS NULL)," +
 
             "UNIQUE (TallyLedgerID)," +
 

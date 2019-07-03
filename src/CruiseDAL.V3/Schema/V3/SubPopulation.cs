@@ -12,12 +12,16 @@
 
                 "UNIQUE (StratumCode, SampleGroupCode, Species, LiveDead), " +
 
-                "CHECK (LiveDead IN ('L', 'D') OR LiveDead IS NULL)" +
+                "CHECK (LiveDead IN ('L', 'D'))," +
 
                 //"FOREIGN KEY (StratumCode) REFERENCES Stratum (Code), " +
                 "FOREIGN KEY (StratumCode, SampleGroupCode) REFERENCES SampleGroup_V3 (StratumCode, SampleGroupCode) ON DELETE CASCADE ON UPDATE CASCADE," +
                 "FOREIGN KEY (Species) REFERENCES SpeciesCode (Species) ON UPDATE CASCADE " +
             ");";
+
+        public const string CREATE_INDEX_Subpopulation_StratumCode_SampleGroupCode_Species_LiveDead =
+@"CREATE INDEX Subpopulation_StratumCode_SampleGroupCode_Species_LiveDead ON Subpopulation 
+(StratumCode COLLATE NOCASE, SampleGroupCode COLLATE NOCASE, ifnull(Species, '') COLLATE NOCASE, ifnull(LiveDead, '') COLLATE NOCASE);";
 
         public const string CREATE_INDEX_Subpopulation_Species =
             @"CREATE INDEX Subpopulation_Species ON Subpopulation (Species COLLATE NOCASE);";
