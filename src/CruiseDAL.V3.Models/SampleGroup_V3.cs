@@ -2,10 +2,10 @@ using System;
 using FMSC.ORM.EntityModel.Attributes;
 namespace CruiseDAL.V3.Models
 {
- [EntitySource("SampleGroup_V3")]
+ [Table("SampleGroup_V3")]
  public partial class SampleGroup_V3
  {
-  [PrimaryKeyField("SampleGroup_CN", PersistanceFlags = PersistanceFlags.OnUpdate)]
+  [PrimaryKeyField("SampleGroup_CN")]
   public Int32? SampleGroup_CN { get; set; }
 
   [Field("SampleGroupCode")]
@@ -46,6 +46,9 @@ namespace CruiseDAL.V3.Models
 
   [Field("TallyBySubPop")]
   public Boolean? TallyBySubPop { get; set; }
+
+  [Field("UseExternalSampler")]
+  public Boolean? UseExternalSampler { get; set; }
 
   [Field("TallyMethod")]
   public String TallyMethod { get; set; }

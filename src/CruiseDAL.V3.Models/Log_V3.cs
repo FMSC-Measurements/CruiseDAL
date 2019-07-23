@@ -2,10 +2,10 @@ using System;
 using FMSC.ORM.EntityModel.Attributes;
 namespace CruiseDAL.V3.Models
 {
- [EntitySource("Log_V3")]
+ [Table("Log_V3")]
  public partial class Log_V3
  {
-  [PrimaryKeyField("Log_CN", PersistanceFlags = PersistanceFlags.OnUpdate)]
+  [PrimaryKeyField("Log_CN")]
   public Int32? Log_CN { get; set; }
 
   [Field("LogID")]

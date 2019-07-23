@@ -2,7 +2,7 @@ using System;
 using FMSC.ORM.EntityModel.Attributes;
 namespace CruiseDAL.V3.Models
 {
- [EntitySource("SampleGroupStatsTreeDefaultValue")]
+ [Table("SampleGroupStatsTreeDefaultValue")]
  public partial class SampleGroupStatsTreeDefaultValue
  {
   [Field("TreeDefaultValue_CN")]

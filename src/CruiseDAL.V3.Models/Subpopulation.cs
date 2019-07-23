@@ -2,10 +2,10 @@ using System;
 using FMSC.ORM.EntityModel.Attributes;
 namespace CruiseDAL.V3.Models
 {
- [EntitySource("Subpopulation")]
+ [Table("Subpopulation")]
  public partial class Subpopulation
  {
-  [PrimaryKeyField("Subpopulation_CN", PersistanceFlags = PersistanceFlags.OnUpdate)]
+  [PrimaryKeyField("Subpopulation_CN")]
   public Int32? Subpopulation_CN { get; set; }
 
   [Field("StratumCode")]

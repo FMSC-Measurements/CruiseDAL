@@ -2,10 +2,10 @@ using System;
 using FMSC.ORM.EntityModel.Attributes;
 namespace CruiseDAL.V3.Models
 {
- [EntitySource("SampleGroupStats")]
+ [Table("SampleGroupStats")]
  public partial class SampleGroupStats
  {
-  [PrimaryKeyField("SampleGroupStats_CN", PersistanceFlags = PersistanceFlags.OnUpdate)]
+  [PrimaryKeyField("SampleGroupStats_CN")]
   public Int32? SampleGroupStats_CN { get; set; }
 
   [Field("StratumStats_CN")]

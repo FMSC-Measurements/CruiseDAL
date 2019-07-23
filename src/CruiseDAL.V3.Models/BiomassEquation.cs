@@ -2,7 +2,7 @@ using System;
 using FMSC.ORM.EntityModel.Attributes;
 namespace CruiseDAL.V3.Models
 {
- [EntitySource("BiomassEquation")]
+ [Table("BiomassEquation")]
  public partial class BiomassEquation
  {
   [Field("Species")]

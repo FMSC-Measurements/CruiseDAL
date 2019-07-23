@@ -44,7 +44,7 @@ namespace FMSC.ORM.ModelGenerator
 
         public string GenerateClass(TableInfo tableInfo,
             int tabIndex = 0,
-            string tableAttr = "EntitySource",
+            string tableAttr = "Table",
             string fieldAttr = "Field",
             string primaryKeyAttr = "PrimaryKeyField")
         {

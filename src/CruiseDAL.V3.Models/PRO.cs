@@ -2,10 +2,10 @@ using System;
 using FMSC.ORM.EntityModel.Attributes;
 namespace CruiseDAL.V3.Models
 {
- [EntitySource("PRO")]
+ [Table("PRO")]
  public partial class PRO
  {
-  [PrimaryKeyField("PRO_CN", PersistanceFlags = PersistanceFlags.OnUpdate)]
+  [PrimaryKeyField("PRO_CN")]
   public Int32? PRO_CN { get; set; }
 
   [Field("CutLeave")]

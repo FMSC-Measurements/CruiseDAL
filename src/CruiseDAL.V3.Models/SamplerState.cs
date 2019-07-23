@@ -2,10 +2,10 @@ using System;
 using FMSC.ORM.EntityModel.Attributes;
 namespace CruiseDAL.V3.Models
 {
- [EntitySource("SamplerState")]
+ [Table("SamplerState")]
  public partial class SamplerState
  {
-  [PrimaryKeyField("SamplerState_CN", PersistanceFlags = PersistanceFlags.OnUpdate)]
+  [PrimaryKeyField("SamplerState_CN")]
   public Int32? SamplerState_CN { get; set; }
 
   [Field("StratumCode")]

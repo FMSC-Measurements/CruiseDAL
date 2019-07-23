@@ -2,10 +2,10 @@ using System;
 using FMSC.ORM.EntityModel.Attributes;
 namespace CruiseDAL.V3.Models
 {
- [EntitySource("Stem_V3")]
+ [Table("Stem_V3")]
  public partial class Stem_V3
  {
-  [PrimaryKeyField("Stem_CN", PersistanceFlags = PersistanceFlags.OnUpdate)]
+  [PrimaryKeyField("Stem_CN")]
   public Int32? Stem_CN { get; set; }
 
   [Field("StemID")]

@@ -2,7 +2,7 @@ using System;
 using FMSC.ORM.EntityModel.Attributes;
 namespace CruiseDAL.V3.Models
 {
- [EntitySource("Reports")]
+ [Table("Reports")]
  public partial class Reports
  {
   [Field("ReportID")]

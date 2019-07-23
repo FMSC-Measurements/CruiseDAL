@@ -2,10 +2,10 @@ using System;
 using FMSC.ORM.EntityModel.Attributes;
 namespace CruiseDAL.V3.Models
 {
- [EntitySource("LogGradeAuditRule_V3")]
+ [Table("LogGradeAuditRule_V3")]
  public partial class LogGradeAuditRule_V3
  {
-  [PrimaryKeyField("LogGradeAuditRule_CN", PersistanceFlags = PersistanceFlags.OnUpdate)]
+  [PrimaryKeyField("LogGradeAuditRule_CN")]
   public Int32? LogGradeAuditRule_CN { get; set; }
 
   [Field("Species")]

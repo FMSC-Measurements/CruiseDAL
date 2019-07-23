@@ -2,10 +2,10 @@ using System;
 using FMSC.ORM.EntityModel.Attributes;
 namespace CruiseDAL.V3.Models
 {
- [EntitySource("TreeAuditResolution")]
+ [Table("TreeAuditResolution")]
  public partial class TreeAuditResolution
  {
-  [PrimaryKeyField("TreeAuditResolution_CN", PersistanceFlags = PersistanceFlags.OnUpdate)]
+  [PrimaryKeyField("TreeAuditResolution_CN")]
   public Int32? TreeAuditResolution_CN { get; set; }
 
   [Field("TreeID")]

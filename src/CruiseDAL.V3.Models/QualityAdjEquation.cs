@@ -2,7 +2,7 @@ using System;
 using FMSC.ORM.EntityModel.Attributes;
 namespace CruiseDAL.V3.Models
 {
- [EntitySource("QualityAdjEquation")]
+ [Table("QualityAdjEquation")]
  public partial class QualityAdjEquation
  {
   [Field("Species")]

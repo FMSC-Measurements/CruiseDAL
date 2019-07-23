@@ -2,10 +2,10 @@ using System;
 using FMSC.ORM.EntityModel.Attributes;
 namespace CruiseDAL.V3.Models
 {
- [EntitySource("tbl_ErrorLog")]
+ [Table("tbl_ErrorLog")]
  public partial class tbl_ErrorLog
  {
-  [PrimaryKeyField("RowID", PersistanceFlags = PersistanceFlags.OnUpdate)]
+  [PrimaryKeyField("RowID")]
   public Int32? RowID { get; set; }
 
   [Field("TableName")]

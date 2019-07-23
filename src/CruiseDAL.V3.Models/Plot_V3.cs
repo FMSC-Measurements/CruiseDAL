@@ -2,10 +2,10 @@ using System;
 using FMSC.ORM.EntityModel.Attributes;
 namespace CruiseDAL.V3.Models
 {
- [EntitySource("Plot_V3")]
+ [Table("Plot_V3")]
  public partial class Plot_V3
  {
-  [PrimaryKeyField("Plot_CN", PersistanceFlags = PersistanceFlags.OnUpdate)]
+  [PrimaryKeyField("Plot_CN")]
   public Int32? Plot_CN { get; set; }
 
   [Field("PlotID")]

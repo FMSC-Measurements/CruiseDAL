@@ -2,7 +2,7 @@ using System;
 using FMSC.ORM.EntityModel.Attributes;
 namespace CruiseDAL.V3.Models
 {
- [EntitySource("TreeFieldValue")]
+ [Table("TreeFieldValue")]
  public partial class TreeFieldValue
  {
   [Field("TreeID")]

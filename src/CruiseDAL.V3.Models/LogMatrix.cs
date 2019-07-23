@@ -2,7 +2,7 @@ using System;
 using FMSC.ORM.EntityModel.Attributes;
 namespace CruiseDAL.V3.Models
 {
- [EntitySource("LogMatrix")]
+ [Table("LogMatrix")]
  public partial class LogMatrix
  {
   [Field("ReportNumber")]

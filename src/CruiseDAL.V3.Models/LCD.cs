@@ -2,10 +2,10 @@ using System;
 using FMSC.ORM.EntityModel.Attributes;
 namespace CruiseDAL.V3.Models
 {
- [EntitySource("LCD")]
+ [Table("LCD")]
  public partial class LCD
  {
-  [PrimaryKeyField("LCD_CN", PersistanceFlags = PersistanceFlags.OnUpdate)]
+  [PrimaryKeyField("LCD_CN")]
   public Int32? LCD_CN { get; set; }
 
   [Field("CutLeave")]

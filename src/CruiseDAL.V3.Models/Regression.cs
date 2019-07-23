@@ -2,10 +2,10 @@ using System;
 using FMSC.ORM.EntityModel.Attributes;
 namespace CruiseDAL.V3.Models
 {
- [EntitySource("Regression")]
+ [Table("Regression")]
  public partial class Regression
  {
-  [PrimaryKeyField("Regression_CN", PersistanceFlags = PersistanceFlags.OnUpdate)]
+  [PrimaryKeyField("Regression_CN")]
   public Int32? Regression_CN { get; set; }
 
   [Field("rVolume")]

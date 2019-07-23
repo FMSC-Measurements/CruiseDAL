@@ -2,7 +2,7 @@ using System;
 using FMSC.ORM.EntityModel.Attributes;
 namespace CruiseDAL.V3.Models
 {
- [EntitySource("TallyDescription")]
+ [Table("TallyDescription")]
  public partial class TallyDescription
  {
   [Field("StratumCode")]

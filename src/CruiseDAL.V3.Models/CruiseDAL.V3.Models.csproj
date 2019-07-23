@@ -6,7 +6,7 @@
 
 
   <PropertyGroup>
-    <GenerateModels Condition="'$(GenerateModels)' == ''">false</GenerateModels>
+    <GenerateModels Condition="'$(GenerateModels)' == ''">true</GenerateModels>
   </PropertyGroup>
   
   <Target Name="BeforeGenerateModels" BeforeTargets="GenerateModels">

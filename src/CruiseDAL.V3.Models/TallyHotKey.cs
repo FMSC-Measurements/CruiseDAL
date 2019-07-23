@@ -2,10 +2,10 @@ using System;
 using FMSC.ORM.EntityModel.Attributes;
 namespace CruiseDAL.V3.Models
 {
- [EntitySource("TallyHotKey")]
+ [Table("TallyHotKey")]
  public partial class TallyHotKey
  {
-  [PrimaryKeyField("TallyHotKey_CN", PersistanceFlags = PersistanceFlags.OnUpdate)]
+  [PrimaryKeyField("TallyHotKey_CN")]
   public Int32? TallyHotKey_CN { get; set; }
 
   [Field("StratumCode")]

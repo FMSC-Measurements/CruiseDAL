@@ -2,7 +2,7 @@ using System;
 using FMSC.ORM.EntityModel.Attributes;
 namespace CruiseDAL.V3.Models
 {
- [EntitySource("VolumeEquation")]
+ [Table("VolumeEquation")]
  public partial class VolumeEquation
  {
   [Field("Species")]

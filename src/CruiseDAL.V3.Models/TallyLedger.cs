@@ -2,10 +2,10 @@ using System;
 using FMSC.ORM.EntityModel.Attributes;
 namespace CruiseDAL.V3.Models
 {
- [EntitySource("TallyLedger")]
+ [Table("TallyLedger")]
  public partial class TallyLedger
  {
-  [PrimaryKeyField("TallyLedger_CN", PersistanceFlags = PersistanceFlags.OnUpdate)]
+  [PrimaryKeyField("TallyLedger_CN")]
   public Int32? TallyLedger_CN { get; set; }
 
   [Field("TallyLedgerID")]
