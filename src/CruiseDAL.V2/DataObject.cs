@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Reflection;
 using System.Text;
 using System.Xml.Serialization;
 using FMSC.ORM.Core;
@@ -473,11 +474,11 @@ namespace CruiseDAL
             object value = null;
             try
             {
-                value = GlobalEntityDescriptionLookup.Instance.LookUpEntityByType(this.GetType())
-                    .Properties[name].GetValue(this);
-                //PropertyInfo property = this.GetType().GetProperty(name, BindingFlags.Instance | BindingFlags.Public);
-                ////if (property == null) { return true; }
-                //value = property.GetValue(this, null);
+                //value = GlobalEntityDescriptionLookup.Instance.LookUpEntityByType(this.GetType())
+                //    .Properties[name].GetValue(this);
+                var property = this.GetType().GetProperty(name, BindingFlags.Instance | BindingFlags.Public);
+                if (property == null) { return true; }
+                value = property.GetValue(this, null);
             }
             catch
             {
