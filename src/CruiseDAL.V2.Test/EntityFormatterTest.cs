@@ -23,8 +23,7 @@ namespace FMSC.ORM.EntityModel.Support
         [InlineData("::5U")]
         public void FormatTest_WithAllFieldsAtOnce(string formatVariant)
         {
-            var ed = new EntityDescription(typeof(POCOMultiTypeObject));
-            var formatter = new EntityFormatter(ed);
+            var formatter = new EntityFormatter(typeof(POCOMultiTypeObject));
             var data = new POCOMultiTypeObject();
 
             var formatString = String.Join(",",
@@ -53,8 +52,7 @@ namespace FMSC.ORM.EntityModel.Support
         [InlineData("::5U")]
         public void FormatTest_WithSingleFieldAtaTime(string formatVariant)
         {
-            var ed = new EntityDescription(typeof(POCOMultiTypeObject));
-            var formatter = new EntityFormatter(ed);
+            var formatter = new EntityFormatter(typeof(POCOMultiTypeObject));
             var data = new POCOMultiTypeObject();
 
             foreach (string fieldName in TestSupport.TestSQLConstants.MULTI_PROP_TABLE_FIELDS

@@ -248,8 +248,7 @@ namespace FMSC.ORM.EntityModel
         {
             ICustomFormatter formatter;
 
-            var description = GlobalEntityDescriptionLookup.Instance.LookUpEntityByType(this.GetType());
-            formatter = new EntityFormatter(description);
+            formatter = new EntityFormatter(this.GetType());
 
             if (formatter != null)
             {

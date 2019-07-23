@@ -1,15 +1,18 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Reflection;
 using System.Text.RegularExpressions;
 
 namespace FMSC.ORM.EntityModel.Support
 {
     public class EntityFormatter : ICustomFormatter
     {
-        private EntityDescription _description;
+        IEnumerable<PropertyInfo> _properties;
 
-        public EntityFormatter(EntityDescription description)
+        public EntityFormatter(Type entityType)
         {
-            _description = description;
+            _properties = entityType.GetProperties(BindingFlags.Public | BindingFlags.Instance);
         }
 
         public string Format(string formatString, object obj, IFormatProvider formatProvider)
@@ -41,7 +44,9 @@ namespace FMSC.ORM.EntityModel.Support
 
             try
             {
-                object value = _description.Properties[propName].GetValue(data);
+                var property = _properties.Where(x => x.Name == propName).FirstOrDefault();
+
+                object value = property?.GetValue(data, null);
 
                 //Object value = _description.Fields[propName].GetFieldValue(data);
                 if (value != null && value is IFormattable)
