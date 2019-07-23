@@ -52,7 +52,7 @@ namespace FMSC.ORM.EntityModel.Support
         public void ReadData(System.Data.IDataReader reader, Object obj)
         {
             var ordinalMapping = OrdinalMapping;
-            foreach (FieldAttribute field in EntityDescription.Fields)
+            foreach (var field in EntityDescription.Fields)
             {
                 if (ReadField(reader, ordinalMapping, field, out var value))
                 {
@@ -60,7 +60,7 @@ namespace FMSC.ORM.EntityModel.Support
                 }
             }
 
-            PrimaryKeyFieldAttribute keyField = EntityDescription.Fields.PrimaryKeyField;
+            var keyField = EntityDescription.Fields.PrimaryKeyField;
             if (keyField != null)
             {
                 if (ReadField(reader, ordinalMapping, keyField, out var value))
@@ -85,11 +85,11 @@ namespace FMSC.ORM.EntityModel.Support
             { return null; }
         }
 
-        private static bool ReadField(IDataReader reader, Dictionary<string, int> ordinalMapping, FieldAttribute field, out object value)
+        private static bool ReadField(IDataReader reader, Dictionary<string, int> ordinalMapping, FieldInfo field, out object value)
         {
             try
             {
-                var fieldName = field.NameOrAlias.ToLowerInvariant();
+                var fieldName = (field.Name ?? field.Alias).ToLowerInvariant();
                 int ordinal = -1;
 
                 if (ordinalMapping.TryGetValue(fieldName, out ordinal))

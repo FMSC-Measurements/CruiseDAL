@@ -24,6 +24,8 @@ namespace FMSC.ORM.TestSupport
 	GuidField TEXT,
 	DateTimeField DATETIME,
 	PartialyPublicField TEXT,
+    AutomaticStringField TEXT,
+    PartialyPublicAutomaticField TEXT,
 	PrivateField TEXT,
 	CreatedBy TEXT,
 	ModifiedBy TEXT

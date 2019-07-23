@@ -209,7 +209,7 @@ namespace FMSC.ORM.Core
             if (data == null) { throw new ArgumentNullException("data"); }
 
             EntityDescription entityDescription = GlobalEntityDescriptionLookup.Instance.LookUpEntityByType(data.GetType());
-            PrimaryKeyFieldAttribute keyFieldInfo = entityDescription.Fields.PrimaryKeyField;
+            var keyFieldInfo = entityDescription.Fields.PrimaryKeyField;
 
             if (keyFieldInfo == null) { throw new InvalidOperationException("type doesn't have primary key field"); }
 

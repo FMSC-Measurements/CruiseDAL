@@ -1,7 +1,6 @@
-﻿using FMSC.ORM.Core;
+﻿using Backpack.SqlBuilder;
 using FMSC.ORM.Core.SQL;
 using FMSC.ORM.EntityModel.Attributes;
-using Backpack.SqlBuilder;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -22,8 +21,15 @@ namespace FMSC.ORM.EntityModel.Support
             if (EntityDescription.Source != null)
             {
                 _legacySelectBuilder = MakeSelectCommand(null);
-                //InitializeLegacySelectCommand();
             }
+        }
+
+        protected IDbDataParameter MakeParameter(FieldInfo field, object value, IDbCommand command)
+        {
+            var param = command.CreateParameter();
+            param.ParameterName = "@" + field.Name.ToLower();
+            param.Value = value;
+            return param;
         }
 
         #region build select
@@ -46,12 +52,34 @@ namespace FMSC.ORM.EntityModel.Support
             var selectBuilder = new SqlSelectBuilder();
             selectBuilder.Source = source ?? EntityDescription.Source;
 
-            foreach (FieldAttribute field in EntityDescription.Fields)
+            foreach (var field in EntityDescription.Fields)
             {
-                selectBuilder.ResultColumns.Add(field.GetResultColumnExpression());
+                var resultColExpr = MakeResultColumnExpression(field);
+                selectBuilder.ResultColumns.Add(resultColExpr);
             }
 
             return selectBuilder;
+        }
+
+        protected string MakeResultColumnExpression(FieldInfo field)
+        {
+            var sqlExpression = field.SQLExpression;
+            var alias = field.Alias;
+            if (!string.IsNullOrEmpty(sqlExpression))
+            {
+                System.Diagnostics.Debug.Assert(!string.IsNullOrEmpty(alias));
+                return sqlExpression + " AS " + alias;
+            }
+            else if (alias != null)
+            {
+                return alias;
+            }
+            else
+            {
+                var sourceName = EntityDescription.SourceName;
+                if (string.IsNullOrEmpty(sourceName)) { return field.Name; }
+                else { return sourceName + "." + field.Name; }
+            }
         }
 
         public string BuildSelectLegacy(string selection)
@@ -98,25 +126,23 @@ namespace FMSC.ORM.EntityModel.Support
 
         #region build insert
 
-        public void BuildInsertCommand(IDbCommand command, object data, object keyData, OnConflictOption option)
+        public void BuildInsertCommand(IDbCommand command, object data, object keyValue, OnConflictOption option)
         {
             Debug.Assert(data != null);
 
             var columnNames = new List<string>();
             var valueExpressions = new List<string>();
 
-            if (keyData != null)
+            if (keyValue != null)
             {
                 var keyField = EntityDescription.Fields.PrimaryKeyField;
                 if (keyField != null)
                 {
-                    columnNames.Add(keyField.Name);
-                    valueExpressions.Add(keyField.SQLPramName);
+                    var param = MakeParameter(keyField, keyValue, command);
+                    command.Parameters.Add(param);
 
-                    var pram = command.CreateParameter();
-                    pram.ParameterName = keyField.SQLPramName;
-                    pram.Value = keyData;
-                    command.Parameters.Add(pram);
+                    columnNames.Add(keyField.Name);
+                    valueExpressions.Add(param.ParameterName);
                 }
                 else
                 {
@@ -124,17 +150,14 @@ namespace FMSC.ORM.EntityModel.Support
                 }
             }
 
-            foreach (FieldAttribute field in EntityDescription.Fields.GetPersistedFields(false, PersistanceFlags.OnInsert))
+            foreach (var field in EntityDescription.Fields.GetPersistedFields(false, PersistanceFlags.OnInsert))
             {
+                object value = field.GetFieldValueOrDefault(data) ?? DBNull.Value;
+                var param = MakeParameter(field, value, command);
+                command.Parameters.Add(param);
+
                 columnNames.Add(field.Name);
-                valueExpressions.Add(field.SQLPramName);
-
-                object value = field.GetFieldValueOrDefault(data);
-
-                var pram = command.CreateParameter();
-                pram.ParameterName = field.SQLPramName;
-                pram.Value = value ?? DBNull.Value;
-                command.Parameters.Add(pram);
+                valueExpressions.Add(param.ParameterName);
             }
 
             var builder = new SqlInsertCommand
@@ -152,34 +175,28 @@ namespace FMSC.ORM.EntityModel.Support
 
         #region build update
 
-        public void BuildUpdateCommand(IDbCommand command, object data, object keyData, OnConflictOption option)
+        public void BuildUpdateCommand(IDbCommand command, object data, object keyValue, OnConflictOption option)
         {
             Debug.Assert(data != null);
             Debug.Assert(EntityDescription.Fields.PrimaryKeyField != null);
 
             var columnNames = new List<string>();
             var columnExpressions = new List<string>();
-            foreach (FieldAttribute field in EntityDescription.Fields.GetPersistedFields(false, PersistanceFlags.OnUpdate))
+            foreach (var field in EntityDescription.Fields.GetPersistedFields(false, PersistanceFlags.OnUpdate))
             {
+                object value = field.GetFieldValueOrDefault(data) ?? DBNull.Value;
+                var param = MakeParameter(field, value, command);
+                command.Parameters.Add(param);
+
                 columnNames.Add(field.Name);
-                columnExpressions.Add(field.SQLPramName);
-
-                object value = field.GetFieldValueOrDefault(data);
-
-                var pram = command.CreateParameter();
-                pram.ParameterName = field.SQLPramName;
-                pram.Value = value ?? DBNull.Value;
-                command.Parameters.Add(pram);
+                columnExpressions.Add(param.ParameterName);
             }
 
-            PrimaryKeyFieldAttribute keyField = EntityDescription.Fields.PrimaryKeyField;
+            var keyField = EntityDescription.Fields.PrimaryKeyField;
+            var param2 = MakeParameter(keyField, keyValue, command);
+            command.Parameters.Add(param2);
 
-            var p = command.CreateParameter();
-            p.ParameterName = keyField.SQLPramName;
-            p.Value = keyData;
-            command.Parameters.Add(p);
-
-            var where = new WhereClause(keyField.Name + " = " + keyField.SQLPramName);
+            var where = new WhereClause(keyField.Name + " = " + param2.ParameterName);
 
             var expression = new SqlUpdateCommand()
             {
@@ -199,26 +216,19 @@ namespace FMSC.ORM.EntityModel.Support
 
         public void BuildSQLDeleteCommand(IDbCommand command, object data)
         {
-            PrimaryKeyFieldAttribute keyFieldInfo = EntityDescription.Fields.PrimaryKeyField;
+            var keyFieldInfo = EntityDescription.Fields.PrimaryKeyField
+                ?? throw new ORMException("type doesn't have primary key field");
 
-            if (keyFieldInfo == null) { throw new InvalidOperationException("type doesn't have primary key field"); }
-            object keyValue = keyFieldInfo.GetFieldValue(data);
+            object keyValue = keyFieldInfo.GetFieldValue(data)
+                ?? throw new ORMException("key value can not be null");
 
-            BuildSQLDeleteCommand(command, keyFieldInfo.Name, keyValue);
-        }
+            var keyParam = MakeParameter(keyFieldInfo, keyValue, command);
+            command.Parameters.Add(keyParam);
 
-        protected void BuildSQLDeleteCommand(IDbCommand command, string keyFieldName, object keyValue)
-        {
-            Debug.Assert(keyValue != null);
-            Debug.Assert(!string.IsNullOrEmpty(keyFieldName));
-
-            string query = string.Format(@"DELETE FROM {0} WHERE {1} = @keyValue;", EntityDescription.SourceName, keyFieldName);
-            command.CommandText = query;
-
-            var param = command.CreateParameter();
-            param.ParameterName = "@keyValue";
-            param.Value = keyValue;
-            command.Parameters.Add(param);
+            command.CommandText = string.Format(@"DELETE FROM {0} WHERE {1} = {2};",
+                EntityDescription.SourceName,
+                keyFieldInfo.Name,
+                keyParam.ParameterName);
         }
 
         #endregion build delete

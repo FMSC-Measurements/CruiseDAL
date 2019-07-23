@@ -54,10 +54,14 @@ namespace FMSC.ORM.TestSupport.TestModels
         [Field(Name = "PartialyPublicField")]
         public string PartialyPublicField { get; protected set; }
 
-        [Field(Name = "PrivateField")]
-        private string PrivateField { get; set; }
+        public string AutomaticStringField { get; set; }
+
+
 
         #region non visible fields
+
+        [Field(Name = "PrivateField")]
+        private string PrivateField { get; set; }
 
         [IgnoreField]
         public string IgnoredField { get; set; }

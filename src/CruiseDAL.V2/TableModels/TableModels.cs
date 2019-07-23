@@ -255,8 +255,8 @@ namespace CruiseDAL.DataObjects
 		public string CreatedBy { get;  set; }
 		
 		[XmlIgnore]
-		[InfrastructureFieldAttribute (Name = "CreatedDate",
-		PersistMode = PersistMode.Never)]
+		[Field (Name = "CreatedDate",
+		PersistanceFlags = PersistanceFlags.Never)]
 		public DateTime CreatedDate { get; set; }
 		
 		[XmlIgnore]
@@ -264,8 +264,8 @@ namespace CruiseDAL.DataObjects
 		public string ModifiedBy { get; set; }
 		
 		[XmlIgnore]
-		[InfrastructureFieldAttribute (Name = "ModifiedDate",
-		PersistMode = PersistMode.Never)]
+		[Field (Name = "ModifiedDate",
+        PersistanceFlags = PersistanceFlags.Never)]
 		public string ModifiedDate { get; set; }
 		
 		protected override bool DoValidate()
@@ -481,18 +481,18 @@ namespace CruiseDAL.DataObjects
 		public string CreatedBy { get;  set; }
 		
 		[XmlIgnore]
-		[InfrastructureFieldAttribute (Name = "CreatedDate",
-		PersistMode = PersistMode.Never)]
-		public DateTime CreatedDate { get; set; }
+        [Field(Name = "CreatedDate",
+        PersistanceFlags = PersistanceFlags.Never)]
+        public DateTime CreatedDate { get; set; }
 		
 		[XmlIgnore]
 		[ModifiedByField()]
 		public string ModifiedBy { get; set; }
 		
 		[XmlIgnore]
-		[InfrastructureFieldAttribute (Name = "ModifiedDate",
-		PersistMode = PersistMode.Never)]
-		public string ModifiedDate { get; set; }
+        [Field(Name = "ModifiedDate",
+        PersistanceFlags = PersistanceFlags.Never)]
+        public string ModifiedDate { get; set; }
 		
 		protected override bool DoValidate()
 		{
@@ -805,18 +805,18 @@ namespace CruiseDAL.DataObjects
 		public string CreatedBy { get;  set; }
 		
 		[XmlIgnore]
-		[InfrastructureFieldAttribute (Name = "CreatedDate",
-		PersistMode = PersistMode.Never)]
-		public DateTime CreatedDate { get; set; }
+        [Field(Name = "CreatedDate",
+        PersistanceFlags = PersistanceFlags.Never)]
+        public DateTime CreatedDate { get; set; }
 		
 		[XmlIgnore]
 		[ModifiedByField()]
 		public string ModifiedBy { get; set; }
 		
 		[XmlIgnore]
-		[InfrastructureFieldAttribute (Name = "ModifiedDate",
-		PersistMode = PersistMode.Never)]
-		public string ModifiedDate { get; set; }
+        [Field(Name = "ModifiedDate",
+        PersistanceFlags = PersistanceFlags.Never)]
+        public string ModifiedDate { get; set; }
 		
 		protected override bool DoValidate()
 		{
@@ -1467,18 +1467,18 @@ namespace CruiseDAL.DataObjects
 		public string CreatedBy { get;  set; }
 		
 		[XmlIgnore]
-		[InfrastructureFieldAttribute (Name = "CreatedDate",
-		PersistMode = PersistMode.Never)]
-		public DateTime CreatedDate { get; set; }
+        [Field(Name = "CreatedDate",
+        PersistanceFlags = PersistanceFlags.Never)]
+        public DateTime CreatedDate { get; set; }
 		
 		[XmlIgnore]
 		[ModifiedByField()]
 		public string ModifiedBy { get; set; }
 		
 		[XmlIgnore]
-		[InfrastructureFieldAttribute (Name = "ModifiedDate",
-		PersistMode = PersistMode.Never)]
-		public string ModifiedDate { get; set; }
+        [Field(Name = "ModifiedDate",
+        PersistanceFlags = PersistanceFlags.Never)]
+        public string ModifiedDate { get; set; }
 		
 		protected override bool DoValidate()
 		{
@@ -1890,18 +1890,18 @@ namespace CruiseDAL.DataObjects
 		public string CreatedBy { get;  set; }
 		
 		[XmlIgnore]
-		[InfrastructureFieldAttribute (Name = "CreatedDate",
-		PersistMode = PersistMode.Never)]
-		public DateTime CreatedDate { get; set; }
+        [Field(Name = "CreatedDate",
+        PersistanceFlags = PersistanceFlags.Never)]
+        public DateTime CreatedDate { get; set; }
 		
 		[XmlIgnore]
 		[ModifiedByField()]
 		public string ModifiedBy { get; set; }
 		
 		[XmlIgnore]
-		[InfrastructureFieldAttribute (Name = "ModifiedDate",
-		PersistMode = PersistMode.Never)]
-		public string ModifiedDate { get; set; }
+        [Field(Name = "ModifiedDate",
+        PersistanceFlags = PersistanceFlags.Never)]
+        public string ModifiedDate { get; set; }
 		
 		protected override bool DoValidate()
 		{
@@ -2498,18 +2498,18 @@ namespace CruiseDAL.DataObjects
 		public string CreatedBy { get;  set; }
 		
 		[XmlIgnore]
-		[InfrastructureFieldAttribute (Name = "CreatedDate",
-		PersistMode = PersistMode.Never)]
-		public DateTime CreatedDate { get; set; }
+        [Field(Name = "CreatedDate",
+        PersistanceFlags = PersistanceFlags.Never)]
+        public DateTime CreatedDate { get; set; }
 		
 		[XmlIgnore]
 		[ModifiedByField()]
 		public string ModifiedBy { get; set; }
 		
 		[XmlIgnore]
-		[InfrastructureFieldAttribute (Name = "ModifiedDate",
-		PersistMode = PersistMode.Never)]
-		public string ModifiedDate { get; set; }
+        [Field(Name = "ModifiedDate",
+        PersistanceFlags = PersistanceFlags.Never)]
+        public string ModifiedDate { get; set; }
 		
 		protected override bool DoValidate()
 		{
@@ -3594,18 +3594,18 @@ namespace CruiseDAL.DataObjects
 		public string CreatedBy { get;  set; }
 		
 		[XmlIgnore]
-		[InfrastructureFieldAttribute (Name = "CreatedDate",
-		PersistMode = PersistMode.Never)]
-		public DateTime CreatedDate { get; set; }
+        [Field(Name = "CreatedDate",
+        PersistanceFlags = PersistanceFlags.Never)]
+        public DateTime CreatedDate { get; set; }
 		
 		[XmlIgnore]
 		[ModifiedByField()]
 		public string ModifiedBy { get; set; }
 		
 		[XmlIgnore]
-		[InfrastructureFieldAttribute (Name = "ModifiedDate",
-		PersistMode = PersistMode.Never)]
-		public string ModifiedDate { get; set; }
+        [Field(Name = "ModifiedDate",
+        PersistanceFlags = PersistanceFlags.Never)]
+        public string ModifiedDate { get; set; }
 		
 		protected override bool DoValidate()
 		{
@@ -4109,18 +4109,18 @@ namespace CruiseDAL.DataObjects
 		public string CreatedBy { get;  set; }
 		
 		[XmlIgnore]
-		[InfrastructureFieldAttribute (Name = "CreatedDate",
-		PersistMode = PersistMode.Never)]
-		public DateTime CreatedDate { get; set; }
+        [Field(Name = "CreatedDate",
+        PersistanceFlags = PersistanceFlags.Never)]
+        public DateTime CreatedDate { get; set; }
 		
 		[XmlIgnore]
 		[ModifiedByField()]
 		public string ModifiedBy { get; set; }
 		
 		[XmlIgnore]
-		[InfrastructureFieldAttribute (Name = "ModifiedDate",
-		PersistMode = PersistMode.Never)]
-		public string ModifiedDate { get; set; }
+        [Field(Name = "ModifiedDate",
+        PersistanceFlags = PersistanceFlags.Never)]
+        public string ModifiedDate { get; set; }
 		
 		protected override bool DoValidate()
 		{
@@ -4328,18 +4328,18 @@ namespace CruiseDAL.DataObjects
 		public string CreatedBy { get;  set; }
 		
 		[XmlIgnore]
-		[InfrastructureFieldAttribute (Name = "CreatedDate",
-		PersistMode = PersistMode.Never)]
-		public DateTime CreatedDate { get; set; }
+        [Field(Name = "CreatedDate",
+        PersistanceFlags = PersistanceFlags.Never)]
+        public DateTime CreatedDate { get; set; }
 		
 		[XmlIgnore]
 		[ModifiedByField()]
 		public string ModifiedBy { get; set; }
 		
 		[XmlIgnore]
-		[InfrastructureFieldAttribute (Name = "ModifiedDate",
-		PersistMode = PersistMode.Never)]
-		public string ModifiedDate { get; set; }
+        [Field(Name = "ModifiedDate",
+        PersistanceFlags = PersistanceFlags.Never)]
+        public string ModifiedDate { get; set; }
 		
 		protected override bool DoValidate()
 		{
@@ -4704,18 +4704,18 @@ namespace CruiseDAL.DataObjects
 		public string CreatedBy { get;  set; }
 		
 		[XmlIgnore]
-		[InfrastructureFieldAttribute (Name = "CreatedDate",
-		PersistMode = PersistMode.Never)]
-		public DateTime CreatedDate { get; set; }
+        [Field(Name = "CreatedDate",
+        PersistanceFlags = PersistanceFlags.Never)]
+        public DateTime CreatedDate { get; set; }
 		
 		[XmlIgnore]
 		[ModifiedByField()]
 		public string ModifiedBy { get; set; }
 		
 		[XmlIgnore]
-		[InfrastructureFieldAttribute (Name = "ModifiedDate",
-		PersistMode = PersistMode.Never)]
-		public string ModifiedDate { get; set; }
+        [Field(Name = "ModifiedDate",
+        PersistanceFlags = PersistanceFlags.Never)]
+        public string ModifiedDate { get; set; }
 		
 		protected override bool DoValidate()
 		{
@@ -5024,18 +5024,18 @@ namespace CruiseDAL.DataObjects
 		public string CreatedBy { get;  set; }
 		
 		[XmlIgnore]
-		[InfrastructureFieldAttribute (Name = "CreatedDate",
-		PersistMode = PersistMode.Never)]
-		public DateTime CreatedDate { get; set; }
+        [Field(Name = "CreatedDate",
+        PersistanceFlags = PersistanceFlags.Never)]
+        public DateTime CreatedDate { get; set; }
 		
 		[XmlIgnore]
 		[ModifiedByField()]
 		public string ModifiedBy { get; set; }
 		
 		[XmlIgnore]
-		[InfrastructureFieldAttribute (Name = "ModifiedDate",
-		PersistMode = PersistMode.Never)]
-		public string ModifiedDate { get; set; }
+        [Field(Name = "ModifiedDate",
+        PersistanceFlags = PersistanceFlags.Never)]
+        public string ModifiedDate { get; set; }
 		
 		protected override bool DoValidate()
 		{
@@ -10492,18 +10492,18 @@ namespace CruiseDAL.DataObjects
 		public string CreatedBy { get;  set; }
 		
 		[XmlIgnore]
-		[InfrastructureFieldAttribute (Name = "CreatedDate",
-		PersistMode = PersistMode.Never)]
-		public DateTime CreatedDate { get; set; }
+        [Field(Name = "CreatedDate",
+        PersistanceFlags = PersistanceFlags.Never)]
+        public DateTime CreatedDate { get; set; }
 		
 		[XmlIgnore]
 		[ModifiedByField()]
 		public string ModifiedBy { get; set; }
 		
 		[XmlIgnore]
-		[InfrastructureFieldAttribute (Name = "ModifiedDate",
-		PersistMode = PersistMode.Never)]
-		public string ModifiedDate { get; set; }
+        [Field(Name = "ModifiedDate",
+        PersistanceFlags = PersistanceFlags.Never)]
+        public string ModifiedDate { get; set; }
 		
 		protected override bool DoValidate()
 		{

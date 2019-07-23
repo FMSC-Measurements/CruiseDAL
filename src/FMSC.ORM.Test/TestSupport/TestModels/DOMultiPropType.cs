@@ -201,7 +201,9 @@ namespace FMSC.ORM.TestSupport.TestModels
 
         #region automatic fields
 
-        //TODO test automatic fields
+        public string AutomaticStringField { get; set; }
+
+        public string PartialyPublicAutomaticField { get; protected set; }
 
         #endregion automatic fields
 
@@ -213,7 +215,6 @@ namespace FMSC.ORM.TestSupport.TestModels
         [IgnoreField]
         private string PrivateIgnoredField { get; set; }
 
-        public string PartialyPublicAutomaticField { get; protected set; }
 
         private string PrivateAutomaticField { get; set; }
 

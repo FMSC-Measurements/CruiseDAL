@@ -21,15 +21,6 @@ namespace FMSC.ORM.EntityModel.Support
             var doi = new EntityDescription(t);
             VerifyDataObjectInfo(t, doi);
         }
-
-        [Fact]
-        public void Test_DOMultiPropType()
-        {
-            var t = typeof(DOMultiPropType);
-            var doi = new EntityDescription(t);
-            VerifyDataObjectInfo(t, doi);
-        }
-
         
 
         private void VerifyDataObjectInfo(Type dataType, EntityDescription doi)
@@ -43,71 +34,62 @@ namespace FMSC.ORM.EntityModel.Support
 
         private void VerifyDataObjectInfoFields(EntityDescription doi)
         {
-            Assert.NotNull(doi.Fields.PrimaryKeyField);
-            //Assert.NotNull(doi.Fields.PrimaryKeyField.Property.Getter);
-            //Assert.NotNull(doi.Fields.PrimaryKeyField.Property.Setter);
+            var primaryKeyField = doi.Fields.PrimaryKeyField;
+            primaryKeyField.Should().NotBeNull();
+            primaryKeyField.Name.Should().NotBeNullOrEmpty();
 
-            VerifyField(doi, "ID");
-            VerifyField(doi, "StringField");
-            VerifyField(doi, "IntField");
-            VerifyField(doi, "NIntField");
-            VerifyField(doi, "LongField");
-            VerifyField(doi, "NLongField");
-            VerifyField(doi, "BoolField");
-            VerifyField(doi, "NBoolField");
-            VerifyField(doi, "FloatField");
-            VerifyField(doi, "NFloatField");
-            VerifyField(doi, "DoubleField");
-            VerifyField(doi, "NDoubleField");
-            VerifyField(doi, "GuidField");
-            VerifyField(doi, "DateTimeField");
+            doi.Fields.PrimaryKeyField.Property.Getter.Should().NotBeNull();
+            doi.Fields.PrimaryKeyField.Property.Setter.Should().NotBeNull();
 
-            VerifyField(doi, "PartialyPublicField");
+            VerifyField(doi, nameof(POCOMultiTypeObject.ID));
+            VerifyField(doi, nameof(POCOMultiTypeObject.StringField));
+            VerifyField(doi, nameof(POCOMultiTypeObject.IntField));
+            VerifyField(doi, nameof(POCOMultiTypeObject.NIntField));
+            VerifyField(doi, nameof(POCOMultiTypeObject.LongField));
+            VerifyField(doi, nameof(POCOMultiTypeObject.NLongField));
+            VerifyField(doi, nameof(POCOMultiTypeObject.BoolField));
+            VerifyField(doi, nameof(POCOMultiTypeObject.NBoolField));
+            VerifyField(doi, nameof(POCOMultiTypeObject.FloatField));
+            VerifyField(doi, nameof(POCOMultiTypeObject.NFloatField));
+            VerifyField(doi, nameof(POCOMultiTypeObject.DoubleField));
+            VerifyField(doi, nameof(POCOMultiTypeObject.NDoubleField));
+            VerifyField(doi, nameof(POCOMultiTypeObject.GuidField));
+            VerifyField(doi, nameof(POCOMultiTypeObject.DateTimeField));
+
+            VerifyField(doi, nameof(POCOMultiTypeObject.PartialyPublicField));
+            VerifyField(doi, nameof(POCOMultiTypeObject.PartialyPublicAutomaticField));
+            VerifyField(doi, nameof(POCOMultiTypeObject.AutomaticStringField));
+
             //VerifyField(doi, "PrivateField");
 
             //verify non visible field
-            VerifyNonvisableField(doi, "IgnoredField");
-            VerifyNonvisableField(doi, "PartialyPublicAutomaticField");
+            VerifyNonvisableField(doi, nameof(POCOMultiTypeObject.IgnoredField));
 
-            VerifyNonvisableField(doi, "PrivateIgnoredField", true);
-            VerifyNonvisableField(doi, "PrivateAutomaticField", true);
-            VerifyNonvisableField(doi, "IInterface.InterfaceProperty", true);
-            VerifyNonvisableField(doi, "InterfaceProperty", true);
+            VerifyNonvisableField(doi, "PrivateField");
+            VerifyNonvisableField(doi, "PrivateIgnoredField");
+            VerifyNonvisableField(doi, "PrivateAutomaticField");
+            VerifyNonvisableField(doi, "IInterface.InterfaceProperty");
+            VerifyNonvisableField(doi, "InterfaceProperty");
         }
 
         private void VerifyField(EntityDescription doi, string fieldName)
         {
-            Output.WriteLine("Verifying " + fieldName);
-            Assert.Contains(doi.Fields, x => x.Name == fieldName);
+            doi.Fields.Should().Contain(x => x.Name == fieldName);
 
-            var field = doi.Fields[fieldName];
-            Assert.NotNull(field);
-            //Assert.NotNull(field.Property.Getter);
-            //Assert.NotNull(field.Property.Setter);
-            //Assert.NotNull(field.RunTimeType);
-            Assert.True(field.PersistanceFlags.HasFlag(PersistanceFlags.OnUpdate));
-            Assert.True(field.PersistanceFlags.HasFlag(PersistanceFlags.OnInsert));
+            var field = doi.Fields.Where(x => x.Name == fieldName).Single();
 
-            Output.WriteLine("done");
+            field.RunTimeType.Should().NotBeNull();
+            field.Property.Getter.Should().NotBeNull();
+            field.Property.Setter.Should().NotBeNull();
+
+            field.PersistanceFlags.Should().HaveFlag(PersistanceFlags.OnUpdate);
+            field.PersistanceFlags.Should().HaveFlag(PersistanceFlags.OnInsert);
+
         }
 
         private void VerifyNonvisableField(EntityDescription doi, string fieldName)
         {
-            VerifyNonvisableField(doi, fieldName, false);
-        }
-
-        private void VerifyNonvisableField(EntityDescription doi, string fieldName, bool isPrivate)
-        {
-            Assert.DoesNotContain(doi.Fields, x => x.Name == fieldName);
-
-            if (isPrivate)
-            {
-                Assert.DoesNotContain(doi.Properties, x => x.Key == fieldName);
-            }
-            else
-            {
-                Assert.Contains(doi.Properties, x => x.Key == fieldName);
-            }
+            doi.Fields.Should().NotContain(x => x.Name == fieldName);
         }
     }
 }

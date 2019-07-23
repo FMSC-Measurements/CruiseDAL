@@ -57,7 +57,7 @@ namespace CruiseDAL.DataObjects.Tests
             Output.WriteLine("Verifying " + fieldName);
             doi.Fields.Should().Contain(x => x.Name == fieldName, $"expected {doi.SourceName} to contain {fieldName}");
 
-            var field = doi.Fields[fieldName];
+            var field = doi.Fields.Where(x => x.Name == fieldName).Single();
             Assert.NotNull(field);
             //Assert.NotNull(field.Property.Getter);
             //Assert.NotNull(field.Property.Setter);
@@ -77,14 +77,14 @@ namespace CruiseDAL.DataObjects.Tests
         {
             Assert.DoesNotContain(doi.Fields, x => x.Name == fieldName);
 
-            if (isPrivate)
-            {
-                Assert.DoesNotContain(doi.Properties, x => x.Key == fieldName);
-            }
-            else
-            {
-                Assert.Contains(doi.Properties, x => x.Key == fieldName);
-            }
+            //if (isPrivate)
+            //{
+            //    Assert.DoesNotContain(doi.Properties, x => x.Key == fieldName);
+            //}
+            //else
+            //{
+            //    Assert.Contains(doi.Properties, x => x.Key == fieldName);
+            //}
         }
     }
 }

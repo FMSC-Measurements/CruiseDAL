@@ -120,7 +120,10 @@ namespace FMSC.ORM.EntityModel.Support
         {
             var ed = new EntityDescription(typeof(POCOMultiTypeObject));
 
-            var data = new POCOMultiTypeObject();
+            var data = new POCOMultiTypeObject()
+            {
+                ID = 1,
+            };
 
             var commandBuilder = ed.CommandBuilder;
             using (var command = DbProvider.CreateCommand())
@@ -131,8 +134,6 @@ namespace FMSC.ORM.EntityModel.Support
                 ValidateCommand(command);
 
                 command.Parameters.Should().HaveCount(1);
-                command.Parameters.OfType<DbParameter>().Where(x => x.ParameterName == "@keyValue")
-                    .Should().HaveCount(1);
 
                 VerifyCommandSyntex(commandText);
                 Output.WriteLine(command.CommandText);

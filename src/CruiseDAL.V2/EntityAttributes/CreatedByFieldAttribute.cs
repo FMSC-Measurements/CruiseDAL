@@ -8,26 +8,14 @@ namespace CruiseDAL.EntityAttributes
         public CreatedByFieldAttribute()
             : base("CreatedBy")
         {
-            PersistMode = PersistMode.OnInsert;
+            PersistanceFlags = PersistanceFlags.OnInsert;
         }
 
-        private static string _userInfo;
-
-        public override object DefaultValue
+        public static string GetUserID()
         {
-            get
-            {
-                if (_userInfo == null)
-                {
-                    _userInfo = UserInfoProvider.Instance.UserInfo;
-                }
-                return _userInfo;
-            }
-
-            set
-            {
-                throw new NotSupportedException();
-            }
+            return UserInfoProvider.Instance.UserInfo;
         }
+
+        public override Func<object> DefaultValueProvider => new Func<object>(GetUserID);
     }
 }

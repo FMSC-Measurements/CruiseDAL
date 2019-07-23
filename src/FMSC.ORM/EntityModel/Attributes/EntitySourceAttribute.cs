@@ -1,22 +1,22 @@
+using System;
+
 namespace FMSC.ORM.EntityModel.Attributes
 {
-    //public enum SQLSourceType { Table, View, Query }
-
-    public class EntitySourceAttribute : EntityAttributeBase
+    [Obsolete("Use Table intead")]
+    public class EntitySourceAttribute : TableAttribute
     {
         public EntitySourceAttribute()
         {
         }
 
-        public EntitySourceAttribute(string sourceName)
-        {
-            SourceName = sourceName;
-        }
+        public EntitySourceAttribute(string sourceName) : base(sourceName)
+        { }
+        
 
         public string SourceName
         {
-            get;
-            set;
+            get { return base.Name; }
+            set { base.Name = value; }
         }
 
         public string JoinCommands { get; set; }

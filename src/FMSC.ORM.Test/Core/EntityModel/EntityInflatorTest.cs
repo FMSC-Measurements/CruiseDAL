@@ -1,10 +1,5 @@
 ﻿using FluentAssertions;
-using FMSC.ORM.Core;
-using FMSC.ORM.SQLite;
 using FMSC.ORM.TestSupport.TestModels;
-using System;
-using System.Data;
-using System.Data.Common;
 using Xunit;
 using Xunit.Abstractions;
 
@@ -39,23 +34,7 @@ namespace FMSC.ORM.EntityModel.Support
         [Fact]
         public void ReadDataTest()
         {
-            var rand = new Random();
-
-            var poco = new POCOMultiTypeObject()
-            {
-                ID = rand.Next(),
-                StringField = "1",
-                IntField = rand.Next(),
-                NIntField = rand.Next(),
-                BoolField = (rand.Next() & 1) == 1,
-                NBoolField = (rand.Next() & 1) == 1,
-                FloatField = (float)rand.NextDouble(),
-                NFloatField = (float)rand.NextDouble(),
-                DoubleField = rand.NextDouble(),
-                NDoubleField = rand.NextDouble(),
-                GuidField = Guid.NewGuid(),
-                DateTimeField = DateTime.Now,
-            };
+            var poco = AutoBogus.AutoFaker.Generate<POCOMultiTypeObject>();
 
             var reader = new TestSupport.ObjectDataReader<POCOMultiTypeObject>(new POCOMultiTypeObject[] { poco });
             Assert.True(reader.Read());
@@ -66,31 +45,33 @@ namespace FMSC.ORM.EntityModel.Support
             inflator.CheckOrdinals(reader);
             inflator.ReadData(reader, data);
 
-            data.Should().BeEquivalentTo(poco);
+            data.Should().BeEquivalentTo(poco, x => x.Excluding(y => y.IgnoredField));
         }
 
-        [Fact]
-        public void ReadDataTest_with_defaultValues()
-        {
-            
+        //default value not supported
+        //[Fact]
+        //public void ReadDataTest_with_defaultValues()
+        //{
+        //    var poco = new POCOMultiTypeObject()
+        //    {
+        //        ID = 1,
+        //    };
+        //    //var poco = AutoBogus.AutoFaker.Generate<POCOMultiTypeObject>();
 
-            var poco = new POCOMultiTypeObject()
-            {
+        //    var reader = new TestSupport.ObjectDataReader<POCOMultiTypeObject>(new POCOMultiTypeObject[] { poco });
+        //    reader.Read().Should().BeTrue();
 
-            };
+        //    var inflator = new EntityInflator(new EntityDescription(typeof(POCOMultiTypeObject)));
 
-            var reader = new TestSupport.ObjectDataReader<POCOMultiTypeObject>(new POCOMultiTypeObject[] { poco });
-            reader.Read().Should().BeTrue();
+        //    var data = new POCOMultiTypeObject();
+        //    inflator.CheckOrdinals(reader);
+        //    inflator.ReadData(reader, data);
 
-            var inflator = new EntityInflator(new EntityDescription(typeof(POCOMultiTypeObject)));
+        //    data.Should().BeEquivalentTo(poco);
 
-            var data = new POCOMultiTypeObject();
-            inflator.CheckOrdinals(reader);
-            inflator.ReadData(reader, data);
-
-            data.StringField.Should().BeNull();
-            data.ID.Should().Be(0);
-        }
+        //    data.StringField.Should().BeNull();
+        //    data.ID.Should().Be(0);
+        //}
 
         [Fact]
         public void ReadPrimaryKeyTest()
