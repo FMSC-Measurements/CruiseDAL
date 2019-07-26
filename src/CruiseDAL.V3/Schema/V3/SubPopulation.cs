@@ -39,7 +39,7 @@
                     "Species, " +
                     "LiveDead " +
                 ") " +
-                "SELECT " +
+                "SELECT DISTINCT " +
                     "sg.StratumCode, " +
                     "sg.SampleGroupCode, " +
                     "tdv.Species, " +
