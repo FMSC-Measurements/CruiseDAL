@@ -29,7 +29,7 @@
                 "ModifiedBy TEXT, " +
                 "ModifiedDate DateTime , " +
                 "UNIQUE(Tree_CN, LogNumber), " +
-                "FOREIGN KEY (Tree_CN) REFERENCES Tree (Tree_CN) ON DELETE CASCADE" +
+                "FOREIGN KEY (Tree_CN) REFERENCES Tree_V3 (Tree_CN) ON DELETE CASCADE" +
             ");";
 
         //public const string CREATE_TRIGGER_LOGSTOCK_ONUPDATE =
