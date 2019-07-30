@@ -1,5 +1,7 @@
 ﻿using CruiseDAL.V3.Tests;
 using FluentAssertions;
+using FMSC.ORM.SQLite;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -105,11 +107,63 @@ namespace CruiseDAL.Tests.Schema
         [InlineData("7Wolf.cruise")]
         [InlineData("MultiTest.2014.10.31.cruise")]
         [InlineData("test_FixCNT.cruise")]
+        [InlineData("0432 C53East TS.cruise")]
+        [InlineData("Whipple Timbersale.cruise")]
         public void Migrate(string fileName)
         {
             var (origFile, testFile) = SetUpTestFile(fileName);
         }
 
+        [Fact]
+        public void Migrate_LogAuditRules()
+        {
+            var fromFile = GetTempFilePath(".cruise");
+            var toFile = GetTempFilePath(".crz3");
+
+            RegesterFileForCleanUp(fromFile);
+            RegesterFileForCleanUp(toFile);
+
+            using (var fromDb = new CruiseDatastore(fromFile, true, null, null))
+            using (var toDb = new CruiseDatastore_V3(toFile, true))
+            {
+                fromDb.Execute(@"CREATE TABLE LogGradeAuditRule (
+				Species TEXT,
+				DefectMax REAL Default 0.0,
+				ValidGrades TEXT);");
+
+                var testLGARValues = new[]
+                {
+                    new {Sp = "ANY", DefectMax = 1.0, ValidGrades = "1"},
+                    new {Sp = "ANY", DefectMax = 2.0, ValidGrades = "1,2"},
+                    new {Sp = "ANY", DefectMax = 3.0, ValidGrades = "1,2, "},
+                    new {Sp = "ANY", DefectMax = 4.0, ValidGrades = ",1 ,2"},
+                };
+
+                foreach (var value in testLGARValues)
+                {
+                    fromDb.Execute2("INSERT INTO LogGradeAuditRule (Species, DefectMax, ValidGrades) VALUES (@Sp, @DefectMax, @ValidGrades);",
+                        value);
+                }
+
+
+                toDb.AttachDB(fromDb, "v2");
+                toDb.Execute(String.Format(CruiseDAL.Schema.Migrations.MIGRATE_LOGGRADEAUDITRULE_V3, "main", "v2"));
+
+                var results = toDb.From<CruiseDAL.V3.Models.LogGradeAuditRule_V3>().Query().ToArray();
+                results.Should().NotBeEmpty();
+
+                foreach(var value in testLGARValues)
+                {
+                    var grades = value.ValidGrades.Trim().Split(',', StringSplitOptions.RemoveEmptyEntries);
+                    foreach(var g in grades)
+                    {
+                        results.Should().Contain(x => x.DefectMax == value.DefectMax && x.Grade == g.Trim());
+                    }
+                }
+
+            }
+        
+        }
 
         [Theory]
         [InlineData("7Wolf.cruise")]
@@ -184,7 +238,7 @@ namespace CruiseDAL.Tests.Schema
                     "ORDER BY CuttingUnit_CN, Plot_CN, TreeNumber; ");
 
                 var ignore = new string[] { "Tree_GUID", "TreeID", "ModifiedDate", "ExpansionFactor", "TreeFactor", "PointFactor", "TreeMeasurment_CN" };
-                if(fileName == "7Wolf.cruise")
+                if (fileName == "7Wolf.cruise")
                 { ignore = ignore.Prepend("Species").ToArray(); }
 
                 Compare(treeAfter, treeOrig, ignore: ignore);

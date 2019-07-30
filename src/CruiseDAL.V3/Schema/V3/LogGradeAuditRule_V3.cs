@@ -33,8 +33,8 @@
                 "UNION ALL " +
                 "SELECT " +
                         "Species, DefectMax, " +
-                        "substr(ValidGrades, 0, instr(ValidGrades, ','))," + // grab value upto the next comma
-                        "substr(ValidGrades, instr(ValidGrades, ',')+1) " + // send rest of the original text after our comma to next itteration
+                        "substr(ValidGrades, 0, ifnull(nullif(instr(ValidGrades, ','), 0), length(ValidGrades) + 1)), " + // grab value upto the next comma, if no comma return whole string
+                        "substr(ValidGrades, ifnull(nullif(instr(ValidGrades, ','), 0), length(ValidGrades) + 1)+1) " + // send rest of the original text after our comma to next itteration
                 "   FROM splitGrades " +
                     "WHERE length(ValidGrades) > 0" + // end loop when length of remaining text is 0
             ") " +

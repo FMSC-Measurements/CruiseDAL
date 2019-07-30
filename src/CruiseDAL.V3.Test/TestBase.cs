@@ -52,6 +52,11 @@ namespace CruiseDAL.V3.Tests
         public string ResourceDirectory => Path.Combine(TestExecutionDirectory, "Resources");
 
         
+        public string GetTempFilePath(string extention, string fileName = null)
+        {
+            return Path.Combine(TestTempPath, (fileName ?? Guid.NewGuid().ToString()) + extention);
+        }
+
 
         public void RegesterFileForCleanUp(string path)
         {

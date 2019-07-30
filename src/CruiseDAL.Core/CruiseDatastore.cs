@@ -29,6 +29,11 @@ namespace CruiseDAL
             }
         }
 
+        public CruiseDatastore()
+            : this(SQLiteDatastore.IN_MEMORY_DB_PATH, false, (IDatastoreBuilder)null, (IUpdater)null)
+        {
+        }
+
         public CruiseDatastore(string path)
             : this(path, false, (IDatastoreBuilder)null, (IUpdater)null)
         { }
@@ -55,31 +60,43 @@ namespace CruiseDAL
         {
             if (IsInMemory)
             {
+                // HACK we need to open a connection when we start using a in memory db
+                // and keep it open because our database will die if we close the connection
                 OpenConnection();
-                if (builder == null) { throw new ArgumentNullException("builder"); }
-                builder.CreateDatastore(this);
+                if (builder != null)
+                {
+                    builder.CreateDatastore(this);
+                }
             }
             else if (makeNew)
             {
-                if (builder == null) { throw new ArgumentNullException("builder"); }
-                builder.CreateDatastore(this);
+                if (builder != null)
+                {
+                    builder.CreateDatastore(this);
+                }
             }
             else if (!makeNew && !Exists)
             {
                 throw new FileNotFoundException();
             }
-
-            if (updater != null)
+            else
             {
-                updater.Update(this);
+                // only run updater if db is not in memory and not new
+                if (updater != null)
+                {
+                    updater.Update(this);
+                }
             }
 
             try
             {
                 LogMessage("File Opened", "normal");
             }
+            
             catch (FMSC.ORM.ReadOnlyException)
             {/*ignore, in case we want to allow access to a read-only DB*/}
+            catch (FMSC.ORM.SQLException)
+            { }
         }
 
         protected virtual bool IsExtentionValid(string path)
@@ -95,6 +112,7 @@ namespace CruiseDAL
 
             if (Exists)
             {
+
                 Execute("INSERT INTO MessageLog (Program, Message, Level, Date, Time) " +
                     "VALUES " +
                     "(@p1, @p2, @p3, @p4, @p5)",
@@ -105,6 +123,7 @@ namespace CruiseDAL
                         DateTime.Now.ToString("yyyy/MM/dd"),
                         DateTime.Now.ToString("HH:mm") }
                     );
+
             }
         }
 
