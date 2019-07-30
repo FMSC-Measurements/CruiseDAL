@@ -1,4 +1,5 @@
 ﻿using CruiseDAL.V3.Tests;
+using FluentAssertions;
 using FMSC.ORM;
 using System;
 using System.Collections.Generic;
@@ -17,9 +18,9 @@ namespace CruiseDAL.Tests.Schema
 
         }
 
-        public DAL CreateDatastore()
+        public CruiseDatastore_V3 CreateDatastore()
         {
-            var datastore = new DAL();
+            var datastore = new CruiseDatastore_V3();
             return datastore;
         }
 
@@ -62,6 +63,16 @@ namespace CruiseDAL.Tests.Schema
                         { throw; }
                     }
                 }
+            }
+        }
+
+        [Fact]
+        public void RunForeignKeysCheck()
+        {
+            using (var database = CreateDatastore())
+            {
+                // calling foreign key check will expose any DDL errors related to foreign keys 
+                database.Invoking(x => x.Execute("PRAGMA foreign_key_check;")).Should().NotThrow();
             }
         }
     }
