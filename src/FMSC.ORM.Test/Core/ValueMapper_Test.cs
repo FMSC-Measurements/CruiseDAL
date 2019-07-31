@@ -2,6 +2,7 @@
 using FMSC.ORM.Core;
 using System;
 using System.Linq;
+using System.Text;
 using Xunit;
 using Xunit.Abstractions;
 
@@ -33,6 +34,18 @@ namespace FMSC.ORM.Test.Core
             var expected = Guid.NewGuid();
 
             var value = expected.ToByteArray();
+
+            ValueMapper.ProcessValue(targetType, value).Should().Be(expected);
+        }
+
+        [Fact]
+        public void ProcessValue_byteArray_to_string()
+        {
+            var targetType = typeof(string);
+            var expected = "something";
+
+            
+            var value = Encoding.Default.GetBytes(expected);
 
             ValueMapper.ProcessValue(targetType, value).Should().Be(expected);
         }
@@ -70,6 +83,8 @@ namespace FMSC.ORM.Test.Core
         }
 
         [Theory]
+        [InlineData(typeof(string), 1, "1")]
+        [InlineData(typeof(string), 1.1d, "1.1")]
         [InlineData(typeof(int?), 1)]
         [InlineData(typeof(int?), 1L)]
         [InlineData(typeof(int?), null)]
@@ -82,11 +97,11 @@ namespace FMSC.ORM.Test.Core
         {
             var result = ValueMapper.ProcessValue(targetType, value);
 
-            var prop = typeof(NullableMultiPropType).GetProperties()
+            var prop = typeof(MultiPropType).GetProperties()
                 .Where(x => x.PropertyType == targetType)
                 .Single();
 
-            var instance = new NullableMultiPropType();
+            var instance = new MultiPropType();
             prop.SetMethod.Invoke(instance, new[] { result });
             prop.GetMethod.Invoke(instance, null).Should().Be(result);
             //result.Should().BeAssignableTo(targetType);
@@ -104,24 +119,34 @@ namespace FMSC.ORM.Test.Core
         {
             var result = ValueMapper.ProcessValue(targetType, DBNull.Value);
 
-            var prop = typeof(NullableMultiPropType).GetProperties()
+            var prop = typeof(MultiPropType).GetProperties()
                 .Where(x => x.PropertyType == targetType)
                 .Single();
 
-            var instance = new NullableMultiPropType();
+            var instance = new MultiPropType();
             prop.SetMethod.Invoke(instance, new[] { result });
             //result.Should().BeAssignableTo(targetType);
 
             result.Should().Be(null);
         }
 
-        private class NullableMultiPropType
+        [Fact]
+        public void ProcessValue_DBNull_to_string()
+        {
+            var result = ValueMapper.ProcessValue(typeof(string), DBNull.Value);
+
+            result.Should().Be(null);
+        }
+
+        private class MultiPropType
         {
             public int? Integer { get; set; }
             public DateTime? DT { get; set; }
             public Guid? Guid { get; set; }
 
             public MyEnum? ME { get; set; }
+
+            public string Str { get; set; }
         }
     }
 }

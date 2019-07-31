@@ -36,7 +36,7 @@ namespace FMSC.ORM.Core
                 if (value is string str) { return new Guid((str)); }
                 if (value is byte[] aByte) { return new Guid(aByte); }
             }
-            if (targetType.IsEnum)
+            else if (targetType.IsEnum)
             {
                 var valStr = (value is string) ? (string)value : value.ToString();
 
@@ -50,9 +50,23 @@ namespace FMSC.ORM.Core
                     //targetType = Enum.GetUnderlyingType(targetType);
                 }
             }
+            else if (targetType == typeof(string)
+                && value is byte[] aByte)
+            {
+                return System.Text.Encoding.Default.GetString(aByte);
+            }
 
-            return Convert.ChangeType(value, targetType
-                , System.Globalization.CultureInfo.CurrentCulture);
+            try
+            {
+                return Convert.ChangeType(value, targetType
+                    , System.Globalization.CultureInfo.CurrentCulture);
+            }
+            catch(Exception e)
+            {
+                throw new ORMException(
+                    string.Format("unable to process value: {0} to {1}", value?.ToString() ?? "null", targetType.Name), 
+                    e);
+            }
         }
     }
 }
