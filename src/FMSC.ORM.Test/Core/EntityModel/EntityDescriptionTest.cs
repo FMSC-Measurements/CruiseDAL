@@ -55,6 +55,7 @@ namespace FMSC.ORM.EntityModel.Support
             VerifyField(doi, nameof(POCOMultiTypeObject.NDoubleField));
             VerifyField(doi, nameof(POCOMultiTypeObject.GuidField));
             VerifyField(doi, nameof(POCOMultiTypeObject.DateTimeField));
+            VerifyField(doi, nameof(POCOMultiTypeObject.EnumField));
 
             VerifyField(doi, nameof(POCOMultiTypeObject.PartialyPublicField));
             VerifyField(doi, nameof(POCOMultiTypeObject.PartialyPublicAutomaticField));
@@ -64,6 +65,9 @@ namespace FMSC.ORM.EntityModel.Support
 
             //verify non visible field
             VerifyNonvisableField(doi, nameof(POCOMultiTypeObject.IgnoredField));
+            VerifyNonvisableField(doi, nameof(POCOMultiTypeObject.ListField));
+            VerifyNonvisableField(doi, nameof(POCOMultiTypeObject.ArrayField));
+            VerifyNonvisableField(doi, nameof(POCOMultiTypeObject.ObjectField));
 
             VerifyNonvisableField(doi, "PrivateField");
             VerifyNonvisableField(doi, "PrivateIgnoredField");
@@ -74,7 +78,7 @@ namespace FMSC.ORM.EntityModel.Support
 
         private void VerifyField(EntityDescription doi, string fieldName)
         {
-            doi.Fields.Should().Contain(x => x.Name == fieldName);
+            doi.Fields.Should().Contain(x => x.Name == fieldName, because: fieldName);
 
             var field = doi.Fields.Where(x => x.Name == fieldName).Single();
 

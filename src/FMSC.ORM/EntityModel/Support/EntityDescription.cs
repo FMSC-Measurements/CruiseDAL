@@ -79,6 +79,13 @@ namespace FMSC.ORM.EntityModel.Support
             //find public properties
             foreach (PropertyInfo p in entityType.GetProperties(BindingFlags.Public | BindingFlags.Instance))
             {
+                if(p.CanWrite == false) { continue; }
+
+                var propType = p.PropertyType;
+                propType = Nullable.GetUnderlyingType(propType) ?? propType;
+                var typeCode = Type.GetTypeCode(propType);
+                if(typeCode == TypeCode.Object && propType != typeof(Guid)) { continue; }
+
                 var attr = Attribute.GetCustomAttribute(p, typeof(BaseFieldAttribute))
                     as BaseFieldAttribute;
 

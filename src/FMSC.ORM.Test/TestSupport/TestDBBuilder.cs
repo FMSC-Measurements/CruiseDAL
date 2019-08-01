@@ -23,6 +23,7 @@ namespace FMSC.ORM.TestSupport
 	NBoolField BOOLEAN,
 	GuidField TEXT,
 	DateTimeField DATETIME,
+    EnumField TEXT,
 	PartialyPublicField TEXT,
     AutomaticStringField TEXT,
     PartialyPublicAutomaticField TEXT,

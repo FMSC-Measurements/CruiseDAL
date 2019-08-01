@@ -1,5 +1,6 @@
 ﻿using FMSC.ORM.EntityModel.Attributes;
 using System;
+using System.Collections.Generic;
 
 namespace FMSC.ORM.TestSupport.TestModels
 {
@@ -54,11 +55,22 @@ namespace FMSC.ORM.TestSupport.TestModels
         [Field(Name = "PartialyPublicField")]
         public string PartialyPublicField { get; protected set; }
 
+        [Field("EnumField")]
+        public TypeCode EnumField { get; set; }
+
         public string AutomaticStringField { get; set; }
 
 
 
+
+
         #region non visible fields
+
+        public object ObjectField { get; set; }
+
+        public List<object> ListField { get; set; }
+
+        public object[] ArrayField { get; set; }
 
         [Field(Name = "PrivateField")]
         private string PrivateField { get; set; }

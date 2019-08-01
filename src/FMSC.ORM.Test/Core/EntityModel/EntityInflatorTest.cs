@@ -1,7 +1,10 @@
 ﻿using FluentAssertions;
+using System.Linq;
 using FMSC.ORM.TestSupport.TestModels;
+using System.Reflection;
 using Xunit;
 using Xunit.Abstractions;
+using FluentAssertions.Equivalency;
 
 namespace FMSC.ORM.EntityModel.Support
 {
@@ -45,7 +48,11 @@ namespace FMSC.ORM.EntityModel.Support
             inflator.CheckOrdinals(reader);
             inflator.ReadData(reader, data);
 
-            data.Should().BeEquivalentTo(poco, x => x.Excluding(y => y.IgnoredField));
+            data.Should().BeEquivalentTo(poco, x=>
+            x.Excluding(y => y.IgnoredField)
+            .Excluding(y => y.ListField)
+            .Excluding(y => y.ArrayField)
+            .Excluding(y => y.ObjectField));
         }
 
         //default value not supported
