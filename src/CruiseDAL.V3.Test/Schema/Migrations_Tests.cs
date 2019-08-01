@@ -1,4 +1,5 @@
-﻿using CruiseDAL.V3.Tests;
+﻿using CruiseDAL.DataObjects;
+using CruiseDAL.V3.Tests;
 using FluentAssertions;
 using FMSC.ORM.SQLite;
 using System;
@@ -242,6 +243,55 @@ namespace CruiseDAL.Tests.Schema
                 { ignore = ignore.Prepend("Species").ToArray(); }
 
                 Compare(treeAfter, treeOrig, ignore: ignore);
+            }
+        }
+
+        [Fact]
+        public void Migrate_Tree_With_byteArray_treeid()
+        {
+            // in the old cruise files tree_guid would sometimes be stored as a blob
+            // we need to make sure that when migrated that the value of treeid is always a string
+
+
+            var v2File = GetTempFilePath(".cruise");
+            //RegesterFileForCleanUp(v2File);
+
+            using(var v2db = new DAL(v2File, true))
+            {
+                var unit = new CuttingUnitDO()
+                {
+                    Code = "u1"
+                };
+                v2db.Insert(unit);
+                var stratum = new StratumDO()
+                {
+                    Code = "s1",
+                    Method = "100",
+                };
+                v2db.Insert(stratum);
+                var sg = new SampleGroupDO()
+                {
+                    Code = "sg1",
+                    CutLeave = "",
+                    UOM = "",
+                    PrimaryProduct = "",
+                    Stratum_CN = stratum.Stratum_CN,
+                };
+                v2db.Insert(sg);
+
+                v2db.Execute("INSERT INTO Tree (CuttingUnit_CN, Stratum_CN, SampleGroup_CN, Tree_GUID, TreeNumber) " +
+                    "VALUES (1, 1, 1, randomblob(16), 1);");
+            }
+
+            var v3File = GetTempFilePath(".crz3");
+            RegesterFileForCleanUp(v3File);
+
+            Migrator.MigrateFromV2ToV3(v2File, v3File);
+
+            using(var v3db = new CruiseDatastore(v3File))
+            {
+                var treeid = v3db.ExecuteScalar("SELECT TreeID FROM Tree_V3 LIMIT 1;");
+                treeid.Should().BeOfType<string>();
             }
         }
 

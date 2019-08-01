@@ -5,12 +5,12 @@
     <!--and i want dotnet cli to run test in the cli to test all target frameworks-->
     <TargetFrameworks>net40;netstandard20</TargetFrameworks>
     
-    <FMSCORMversion>2.4.1</FMSCORMversion>
+    <FMSCORMversion>2.4.2</FMSCORMversion>
     
     
     <CruiseDALv2SchemaVersion>2.5.0</CruiseDALv2SchemaVersion>
     <CruiseDALv3SchemaVersion>3.0.0</CruiseDALv3SchemaVersion>
-    <CruiseDALIncrementalVersion>26</CruiseDALIncrementalVersion>
+    <CruiseDALIncrementalVersion>28</CruiseDALIncrementalVersion>
     <CruiseDALCoreVersion>$(CruiseDALv3SchemaVersion).$(CruiseDALIncrementalVersion)</CruiseDALCoreVersion>
     <CruiseDALV2Version>$(CruiseDALv2SchemaVersion).$(CruiseDALIncrementalVersion)</CruiseDALV2Version>
     <CruiseDALV3Version>$(CruiseDALv3SchemaVersion).$(CruiseDALIncrementalVersion)</CruiseDALV3Version>

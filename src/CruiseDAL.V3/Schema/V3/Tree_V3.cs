@@ -108,7 +108,7 @@
                 ") " +
                 "SELECT " +
                     "t.Tree_CN, " +
-                    "ifnull(t.Tree_GUID, 'migrateTree-' || t.Tree_CN) AS TreeID, " +
+                    "ifnull( (CASE typeof(Tree_GUID) COLLATE NOCASE WHEN 'TEXT' THEN Tree_GUID WHEN 'BLOB' THEN lower(hex(Tree_GUID)) ELSE CAST (Tree_GUID AS TEXT) END), 'migrateTree-' || t.Tree_CN) AS TreeID, " +
                     "cu.Code AS CuttingUnitCode, " +
                     "st.Code AS StratumCode, " +
                     "sg.Code AS SampleGroupCode, " +
