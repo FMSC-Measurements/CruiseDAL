@@ -568,7 +568,7 @@ namespace FMSC.ORM.Core
             var entityDiscription = GlobalEntityDescriptionLookup.Instance.LookUpEntityByType(typeof(T));
             var keyField = entityDiscription.Fields.PrimaryKeyField;
 
-            return From<T>().Where(keyField.Name + " = ?").Read(primaryKeyValue).FirstOrDefault();
+            return From<T>().Where(keyField.Name + " = @p1").Read(primaryKeyValue).FirstOrDefault();
             //return ReadSingleRow<T>(null, "WHERE rowID = ?", primaryKeyValue);
         }
 
