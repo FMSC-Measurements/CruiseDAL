@@ -20,6 +20,12 @@ namespace FMSC.ORM.Core
 
         protected int _holdConnection = 0;
 
+        public int ConnectionDepth
+        {
+            get => _holdConnection;
+            protected set => _holdConnection = value;
+        }
+
         protected readonly object _transactionSyncLock = new object();
         protected readonly object _persistentConnectionSyncLock = new object();
 
