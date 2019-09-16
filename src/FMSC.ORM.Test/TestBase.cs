@@ -3,31 +3,70 @@ using System;
 using System.Collections.Generic;
 using System.Data.Common;
 using System.Diagnostics;
-using System.Linq;
+using System.IO;
+using System.Reflection;
 using System.Text;
-using System.Threading.Tasks;
 using Xunit.Abstractions;
 
-namespace Xunit
+namespace FMSC.ORM.Test
 {
     public class TestBase
     {
-        protected ITestOutputHelper Output { get; private set; }
+        public ITestOutputHelper Output { get; }
+        private string _testTempPath;
+        private Stopwatch _stopwatch;
+
         protected DbProviderFactory DbProvider { get; private set; }
-        protected Stopwatch _stopwatch;
+
+        List<string> FilesToBeDeleted { get; } = new List<string>();
 
         public TestBase(ITestOutputHelper output)
         {
             Output = output;
-            Output.WriteLine($"CodeBase: {System.Reflection.Assembly.GetExecutingAssembly().CodeBase}");
 
-#if SYSTEM_DATA_SQLITE
-            DbProvider = System.Data.SQLite.SQLiteFactory.Instance;
-#elif MICROSOFT_DATA_SQLITE
-            DbProvider = Microsoft.Data.Sqlite.SqliteFactory.Instance;
-#else
+            var testTempPath = TestTempPath;
+            if (!Directory.Exists(testTempPath))
+            {
+                Directory.CreateDirectory(testTempPath);
+            }
+        }
 
-#endif
+        ~TestBase()
+        {
+            foreach (var file in FilesToBeDeleted)
+            {
+                try
+                {
+                    File.Delete(file);
+                }
+                catch
+                {
+                    // do nothing
+                }
+            }
+        }
+
+        public string TestExecutionDirectory
+        {
+            get
+            {
+                var codeBase = new Uri(Assembly.GetExecutingAssembly().CodeBase).LocalPath;
+                return Path.GetDirectoryName(codeBase);
+            }
+        }
+
+        public string TestTempPath => _testTempPath ?? (_testTempPath = Path.Combine(Path.GetTempPath(), "TestTemp", this.GetType().FullName));
+        public string TestFilesDirectory => Path.Combine(TestExecutionDirectory, "TestFiles");
+        public string ResourceDirectory => Path.Combine(TestExecutionDirectory, "Resources");
+
+        public string GetTempFilePath(string extention, string fileName = null)
+        {
+            return Path.Combine(TestTempPath, (fileName ?? Guid.NewGuid().ToString()) + extention);
+        }
+
+        public void RegesterFileForCleanUp(string path)
+        {
+            FilesToBeDeleted.Add(path);
         }
 
         public void StartTimer()
@@ -72,7 +111,5 @@ namespace Xunit
                 }
             }
         }
-
-
     }
 }

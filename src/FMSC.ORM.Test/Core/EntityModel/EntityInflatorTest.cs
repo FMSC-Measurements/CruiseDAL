@@ -5,6 +5,7 @@ using System.Reflection;
 using Xunit;
 using Xunit.Abstractions;
 using FluentAssertions.Equivalency;
+using FMSC.ORM.Test;
 
 namespace FMSC.ORM.EntityModel.Support
 {

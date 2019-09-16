@@ -1,4 +1,4 @@
-﻿using Xunit;
+﻿using FMSC.ORM.Test;
 using Xunit.Abstractions;
 
 namespace FMSC.ORM.Core

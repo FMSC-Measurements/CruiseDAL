@@ -5,6 +5,7 @@ using System.Data.Common;
 using System.Linq;
 using Xunit;
 using Xunit.Abstractions;
+using FMSC.ORM.Test;
 
 namespace FMSC.ORM.EntityModel.Support
 {
