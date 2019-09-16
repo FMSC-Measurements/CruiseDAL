@@ -1,6 +1,7 @@
 ﻿using Backpack.SqlBuilder;
 using FluentAssertions;
 using FMSC.ORM.Core;
+using FMSC.ORM.Test;
 using FMSC.ORM.Test.TestSupport.TestModels;
 using FMSC.ORM.TestSupport;
 using FMSC.ORM.TestSupport.TestModels;
@@ -70,6 +71,58 @@ namespace FMSC.ORM.SQLite
                 var db = new SQLiteDatastore("");
             };
             action.Should().Throw<ArgumentException>();
+        }
+
+        [Fact]
+        [Trait("Category", "Connection Management")]
+        public void OpenConnection()
+        {
+
+            var path = GetTempFilePath(".cruise");
+            RegesterFileForCleanUp(path);
+
+            using (var db = new SQLiteDatastore(path))
+            {
+                var conn = db.OpenConnection();
+
+                db.PersistentConnection.Should().BeSameAs(conn);
+                conn.State.Should().Be(ConnectionState.Open);
+
+                db.ReleaseConnection();
+
+                db.PersistentConnection.Should().BeNull();
+                conn.State.Should().Be(ConnectionState.Closed);
+
+                db.ConnectionDepth.Should().Be(0);
+            }
+        }
+
+        [Fact]
+        [Trait("Category", "Connection Management")]
+        public void OpenConnection_stress()
+        {
+            var numConnections = 100;
+
+            var path = GetTempFilePath(".cruise");
+            RegesterFileForCleanUp(path);
+
+            using (var db = new SQLiteDatastore(path))
+            {
+                for (int i = 0; i < numConnections; i++)
+                {
+                    var conn = db.OpenConnection();
+
+                    db.PersistentConnection.Should().BeSameAs(conn);
+                    conn.State.Should().Be(ConnectionState.Open);
+
+                    db.ReleaseConnection();
+
+                    db.PersistentConnection.Should().BeNull();
+                    conn.State.Should().Be(ConnectionState.Closed);
+                }
+
+                db.ConnectionDepth.Should().Be(0);
+            }
         }
 
         [Fact]
@@ -694,6 +747,66 @@ namespace FMSC.ORM.SQLite
                 ds.From<POCOMultiTypeObject>().Invoking(x => x.Query()).Should().NotThrow();
             }
         }
+
+        [Fact]
+        [Trait("Category", "Read methods")]
+        public void ReadSingleRow()
+        {
+            var path = GetTempFilePath(".cruise");
+            RegesterFileForCleanUp(path);
+
+            using(var db = new SQLiteDatastore(path))
+            {
+                db.Execute(TestDBBuilder.CREATE_MULTIPROPTABLE);
+
+                db.Execute(
+"WITH RECURSIVE generate_series(value) AS ( " +
+"  SELECT 1 " +
+"  UNION ALL " +
+"  SELECT value +1 FROM generate_series " +
+$"   WHERE value +1 <={1} " +
+") " +
+"INSERT INTO MultiPropTable (ID) SELECT * FROM generate_series;");
+
+                var row = db.ReadSingleRow<POCOMultiTypeObject>(1);
+                row.Should().NotBeNull();
+            }
+        }
+
+        [Fact]
+        [Trait("Category", "Read methods")]
+        public void ReadSingleRow_stress()
+        {
+            var num = 1000;
+
+            var path = GetTempFilePath(".cruise");
+            RegesterFileForCleanUp(path);
+
+            using (var db = new SQLiteDatastore(path))
+            {
+                db.Execute(TestDBBuilder.CREATE_MULTIPROPTABLE);
+
+                db.Execute(
+"WITH RECURSIVE generate_series(value) AS ( " +
+"  SELECT 1 " +
+"  UNION ALL " +
+"  SELECT value +1 FROM generate_series " +
+$"   WHERE value +1 <={num} " +
+") " +
+"INSERT INTO MultiPropTable (ID) SELECT * FROM generate_series;");
+
+
+                for (var i = 1; i <= num; i++)
+                {
+                    var row = db.ReadSingleRow<POCOMultiTypeObject>(i);
+                    row.Should().NotBeNull();
+                }
+
+                db.ConnectionDepth.Should().Be(0);
+                db.PersistentConnection.Should().BeNull();
+            }
+        }
+
 
         [Fact]
         public void RollBackTransaction_WtihNoTransaction()
