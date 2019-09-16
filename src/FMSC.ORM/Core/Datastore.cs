@@ -444,57 +444,62 @@ namespace FMSC.ORM.Core
                 {
                     EntityInflator inflator = GlobalEntityDescriptionLookup.Instance.GetEntityInflator(typeof(TResult));
                     EntityCache cache = GetEntityCache(typeof(TResult));//TODO delegate access of cach to data context type
-
-                    using (var reader = ExecuteReader(connection, commandText, paramaters, CurrentTransaction))
+                    using (var command = ProviderFactory.CreateCommand())
                     {
-                        inflator.CheckOrdinals(reader);
-                        while (reader.Read())
+                        command.CommandText = commandText;
+                        command.SetParams(paramaters);
+
+                        using (var reader = connection.ExecuteReader(command, CurrentTransaction))
                         {
-                            TResult entity = null;
-                            try
+                            inflator.CheckOrdinals(reader);
+                            while (reader.Read())
                             {
-                                object key = inflator.ReadPrimaryKey(reader);
-                                if (key != null && cache.ContainsKey(key))
+                                TResult entity = null;
+                                try
                                 {
-                                    entity = cache[key] as TResult;
-                                }
-                                else
-                                {
-                                    entity = new TResult();
-                                    if (key != null)
+                                    object key = inflator.ReadPrimaryKey(reader);
+                                    if (key != null && cache.ContainsKey(key))
                                     {
-                                        cache.Add(key, entity);
+                                        entity = cache[key] as TResult;
                                     }
-                                    if (entity is ISupportInitializeFromDatastore)
+                                    else
                                     {
-                                        ((ISupportInitializeFromDatastore)entity).Initialize(this);
-                                    }
-                                    if (entity is ISupportInitialize)
-                                    {
-                                        ((ISupportInitialize)entity).BeginInit();// allow dataobject to suspend property changed notifications or whatever
-                                    }
-                                    try
-                                    {
-                                        inflator.ReadData(reader, entity);
-                                    }
-                                    finally
-                                    {
+                                        entity = new TResult();
+                                        if (key != null)
+                                        {
+                                            cache.Add(key, entity);
+                                        }
+                                        if (entity is ISupportInitializeFromDatastore)
+                                        {
+                                            ((ISupportInitializeFromDatastore)entity).Initialize(this);
+                                        }
                                         if (entity is ISupportInitialize)
                                         {
-                                            ((ISupportInitialize)entity).EndInit();
+                                            ((ISupportInitialize)entity).BeginInit();// allow dataobject to suspend property changed notifications or whatever
+                                        }
+                                        try
+                                        {
+                                            inflator.ReadData(reader, entity);
+                                        }
+                                        finally
+                                        {
+                                            if (entity is ISupportInitialize)
+                                            {
+                                                ((ISupportInitialize)entity).EndInit();
+                                            }
                                         }
                                     }
                                 }
-                            }
-                            catch (Exception e)
-                            {
-                                var exceptionProcessor = ExceptionProcessor;
-                                if (exceptionProcessor != null)
-                                { throw exceptionProcessor.ProcessException(e, connection, commandText, CurrentTransaction); }
-                                else { throw; }
-                            }
+                                catch (Exception e)
+                                {
+                                    var exceptionProcessor = ExceptionProcessor;
+                                    if (exceptionProcessor != null)
+                                    { throw exceptionProcessor.ProcessException(e, connection, commandText, CurrentTransaction); }
+                                    else { throw; }
+                                }
 
-                            yield return entity;
+                                yield return entity;
+                            }
                         }
                     }
                 }
@@ -594,26 +599,33 @@ namespace FMSC.ORM.Core
                 var connection = OpenConnection();
                 try
                 {
-                    using (var reader = ExecuteReader2(connection, commandText, paramaters, CurrentTransaction))
+                    using (var command = ProviderFactory.CreateCommand())
                     {
-                        while (reader.Read())
+                        command.CommandText = commandText;
+                        command.AddParams(paramaters);
+
+
+                        using (var reader = connection.ExecuteReader(command, CurrentTransaction))
                         {
-                            var fieldCount = reader.FieldCount;
-                            var fields = new string[fieldCount];
-                            for (int i = 0; i < fieldCount; i++)
+                            while (reader.Read())
                             {
-                                fields[i] = reader.GetName(i);
+                                var fieldCount = reader.FieldCount;
+                                var fields = new string[fieldCount];
+                                for (int i = 0; i < fieldCount; i++)
+                                {
+                                    fields[i] = reader.GetName(i);
+                                }
+
+                                var data = new GenericEntity(fieldCount);
+
+                                foreach (var x in fields.Select((field, i) => new { field, i }))
+                                {
+                                    var value = reader.GetValue(x.i);
+                                    data.Add(x.field, value);
+                                }
+
+                                yield return data;
                             }
-
-                            var data = new GenericEntity(fieldCount);
-
-                            foreach (var x in fields.Select((field, i) => new { field, i }))
-                            {
-                                var value = reader.GetValue(x.i);
-                                data.Add(x.field, value);
-                            }
-
-                            yield return data;
                         }
                     }
                 }
@@ -633,48 +645,55 @@ namespace FMSC.ORM.Core
                 {
                     FMSC.ORM.EntityModel.Support.EntityInflator inflator = GlobalEntityDescriptionLookup.Instance.GetEntityInflator(typeof(TResult));
 
-                    using (var reader = ExecuteReader(connection, commandText, paramaters, CurrentTransaction))
+                    using (var command = ProviderFactory.CreateCommand())
                     {
-                        //HACK with microsoft.data.sqlite calling GetOrdinal throws exception if reader is empty
-                        //if(reader is DbDataReader && ((DbDataReader)reader).HasRows == false) { yield break; }
-                        inflator.CheckOrdinals(reader);
+                        command.CommandText = commandText;
+                        command.SetParams(paramaters);
 
-                        while (reader.Read())
+
+                        using (var reader = connection.ExecuteReader(command, CurrentTransaction))
                         {
-                            TResult newDO = new TResult();
-                            if (newDO is ISupportInitializeFromDatastore)
+                            //HACK with microsoft.data.sqlite calling GetOrdinal throws exception if reader is empty
+                            //if(reader is DbDataReader && ((DbDataReader)reader).HasRows == false) { yield break; }
+                            inflator.CheckOrdinals(reader);
+
+                            while (reader.Read())
                             {
-                                ((ISupportInitializeFromDatastore)newDO).Initialize(this);
-                            }
-                            if (newDO is ISupportInitialize)
-                            {
-                                ((ISupportInitialize)newDO).BeginInit();// allow dataobject to suspend property changed notifications or whatever
-                            }
-                            try
-                            {
-                                inflator.ReadData(reader, newDO);
-                            }
-                            catch (Exception e)
-                            {
-                                var exceptionProcessor = ExceptionProcessor;
-                                if (exceptionProcessor != null)
+                                TResult newDO = new TResult();
+                                if (newDO is ISupportInitializeFromDatastore)
                                 {
-                                    throw exceptionProcessor.ProcessException(e, connection, commandText, CurrentTransaction);
+                                    ((ISupportInitializeFromDatastore)newDO).Initialize(this);
                                 }
-                                else
-                                {
-                                    throw;
-                                }
-                            }
-                            finally
-                            {
                                 if (newDO is ISupportInitialize)
                                 {
-                                    ((ISupportInitialize)newDO).EndInit();
+                                    ((ISupportInitialize)newDO).BeginInit();// allow dataobject to suspend property changed notifications or whatever
                                 }
-                            }
+                                try
+                                {
+                                    inflator.ReadData(reader, newDO);
+                                }
+                                catch (Exception e)
+                                {
+                                    var exceptionProcessor = ExceptionProcessor;
+                                    if (exceptionProcessor != null)
+                                    {
+                                        throw exceptionProcessor.ProcessException(e, connection, commandText, CurrentTransaction);
+                                    }
+                                    else
+                                    {
+                                        throw;
+                                    }
+                                }
+                                finally
+                                {
+                                    if (newDO is ISupportInitialize)
+                                    {
+                                        ((ISupportInitialize)newDO).EndInit();
+                                    }
+                                }
 
-                            yield return newDO;
+                                yield return newDO;
+                            }
                         }
                     }
                 }
@@ -694,48 +713,54 @@ namespace FMSC.ORM.Core
                 {
                     FMSC.ORM.EntityModel.Support.EntityInflator inflator = GlobalEntityDescriptionLookup.Instance.GetEntityInflator(typeof(TResult));
 
-                    using (var reader = ExecuteReader2(connection, commandText, paramaters, CurrentTransaction))
+                    using (var command = ProviderFactory.CreateCommand())
                     {
-                        //HACK with microsoft.data.sqlite calling GetOrdinal throws exception if reader is empty
-                        //if(reader is DbDataReader && ((DbDataReader)reader).HasRows == false) { yield break; }
-                        inflator.CheckOrdinals(reader);
+                        command.CommandText = commandText;
+                        command.AddParams(paramaters);
 
-                        while (reader.Read())
+                        using (var reader = connection.ExecuteReader(command, CurrentTransaction))
                         {
-                            TResult newDO = new TResult();
-                            if (newDO is ISupportInitializeFromDatastore)
+                            //HACK with microsoft.data.sqlite calling GetOrdinal throws exception if reader is empty
+                            //if(reader is DbDataReader && ((DbDataReader)reader).HasRows == false) { yield break; }
+                            inflator.CheckOrdinals(reader);
+
+                            while (reader.Read())
                             {
-                                ((ISupportInitializeFromDatastore)newDO).Initialize(this);
-                            }
-                            if (newDO is ISupportInitialize)
-                            {
-                                ((ISupportInitialize)newDO).BeginInit();// allow dataobject to suspend property changed notifications or whatever
-                            }
-                            try
-                            {
-                                inflator.ReadData(reader, newDO);
-                            }
-                            catch (Exception e)
-                            {
-                                var exceptionProcessor = ExceptionProcessor;
-                                if (exceptionProcessor != null)
+                                TResult newDO = new TResult();
+                                if (newDO is ISupportInitializeFromDatastore)
                                 {
-                                    throw exceptionProcessor.ProcessException(e, connection, commandText, CurrentTransaction);
+                                    ((ISupportInitializeFromDatastore)newDO).Initialize(this);
                                 }
-                                else
-                                {
-                                    throw;
-                                }
-                            }
-                            finally
-                            {
                                 if (newDO is ISupportInitialize)
                                 {
-                                    ((ISupportInitialize)newDO).EndInit();
+                                    ((ISupportInitialize)newDO).BeginInit();// allow dataobject to suspend property changed notifications or whatever
                                 }
-                            }
+                                try
+                                {
+                                    inflator.ReadData(reader, newDO);
+                                }
+                                catch (Exception e)
+                                {
+                                    var exceptionProcessor = ExceptionProcessor;
+                                    if (exceptionProcessor != null)
+                                    {
+                                        throw exceptionProcessor.ProcessException(e, connection, commandText, CurrentTransaction);
+                                    }
+                                    else
+                                    {
+                                        throw;
+                                    }
+                                }
+                                finally
+                                {
+                                    if (newDO is ISupportInitialize)
+                                    {
+                                        ((ISupportInitialize)newDO).EndInit();
+                                    }
+                                }
 
-                            yield return newDO;
+                                yield return newDO;
+                            }
                         }
                     }
                 }
@@ -945,29 +970,6 @@ namespace FMSC.ORM.Core
         //    }
         //}
 
-        protected DbDataReader ExecuteReader(DbConnection connection, string commandText, object[] paramaters, DbTransaction transaction)
-        {
-            try
-            {
-                return connection.ExecuteReader(commandText, paramaters, transaction);
-            }
-            catch (Exception ex)
-            {
-                throw ExceptionProcessor.ProcessException(ex, connection, commandText, CurrentTransaction);
-            }
-        }
-
-        protected DbDataReader ExecuteReader2(DbConnection connection, string commandText, object paramaterData, DbTransaction transaction)
-        {
-            try
-            {
-                return connection.ExecuteReader2(commandText, paramaterData, transaction);
-            }
-            catch (Exception ex)
-            {
-                throw ExceptionProcessor.ProcessException(ex, connection, commandText, CurrentTransaction);
-            }
-        }
 
         //protected int ExecuteNonQuery(DbConnection connection, string commandText, object[] parameters, DbTransaction transaction)
         //{

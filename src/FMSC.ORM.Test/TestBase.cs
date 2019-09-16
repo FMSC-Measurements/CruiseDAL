@@ -16,13 +16,19 @@ namespace FMSC.ORM.Test
         private string _testTempPath;
         private Stopwatch _stopwatch;
 
-        protected DbProviderFactory DbProvider { get; private set; }
+        protected DbProviderFactory DbProvider { get; }
 
         List<string> FilesToBeDeleted { get; } = new List<string>();
 
         public TestBase(ITestOutputHelper output)
         {
             Output = output;
+
+#if MICROSOFT_DATA_SQLITE
+            DbProvider = Microsoft.Data.Sqlite.SqliteFactory.Instance;
+#elif SYSTEM_DATA_SQLITE
+            DbProvider = System.Data.SQLite.SQLiteFactory.Instance;
+#endif
 
             var testTempPath = TestTempPath;
             if (!Directory.Exists(testTempPath))

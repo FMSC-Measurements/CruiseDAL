@@ -191,34 +191,37 @@ namespace FMSC.ORM.SQLite
 
                 try
                 {
-                    var commandText = "PRAGMA table_info(" + tableName + ");";
-
-                    using (var reader = ExecuteReader(conn, commandText, (object[])null, CurrentTransaction))
+                    using (var command = ProviderFactory.CreateCommand())
                     {
-                        int nameOrd = reader.GetOrdinal("name");
-                        int dbTypeOrd = reader.GetOrdinal("type");
-                        int pkOrd = reader.GetOrdinal("pk");
-                        int notNullOrd = reader.GetOrdinal("notnull");
-                        int defaultValOrd = reader.GetOrdinal("dflt_value");
+                        var commandText = command.CommandText = "PRAGMA table_info(" + tableName + ");";
 
-                        try
+                        using (var reader = conn.ExecuteReader(command, CurrentTransaction))
                         {
-                            while (reader.Read())
+                            int nameOrd = reader.GetOrdinal("name");
+                            int dbTypeOrd = reader.GetOrdinal("type");
+                            int pkOrd = reader.GetOrdinal("pk");
+                            int notNullOrd = reader.GetOrdinal("notnull");
+                            int defaultValOrd = reader.GetOrdinal("dflt_value");
+
+                            try
                             {
-                                var colInfo = new ColumnInfo()
+                                while (reader.Read())
                                 {
-                                    Name = reader.GetString(nameOrd),
-                                    Type = reader.GetString(dbTypeOrd),
-                                    IsPK = reader.GetBoolean(pkOrd),
-                                    NotNull = reader.GetBoolean(notNullOrd),
-                                    Default = (!reader.IsDBNull(defaultValOrd)) ? reader.GetString(defaultValOrd) : null
-                                };
-                                colList.Add(colInfo);
+                                    var colInfo = new ColumnInfo()
+                                    {
+                                        Name = reader.GetString(nameOrd),
+                                        Type = reader.GetString(dbTypeOrd),
+                                        IsPK = reader.GetBoolean(pkOrd),
+                                        NotNull = reader.GetBoolean(notNullOrd),
+                                        Default = (!reader.IsDBNull(defaultValOrd)) ? reader.GetString(defaultValOrd) : null
+                                    };
+                                    colList.Add(colInfo);
+                                }
                             }
-                        }
-                        catch (Exception e)
-                        {
-                            throw ExceptionProcessor.ProcessException(e, conn, commandText, (IDbTransaction)null);
+                            catch (Exception e)
+                            {
+                                throw ExceptionProcessor.ProcessException(e, conn, commandText, (IDbTransaction)null);
+                            }
                         }
                     }
                 }
@@ -289,19 +292,25 @@ namespace FMSC.ORM.SQLite
             lock (_persistentConnectionSyncLock)
             {
                 var connection = OpenConnection();
-                try
-                {
-                    using (var reader = ExecuteReader(connection, commandText, (object[])null, CurrentTransaction))
-                    {
-                        hasErrors = reader.Read();
-                    }
-                }
-                finally
-                {
-                    ReleaseConnection();
-                }
 
-                return hasErrors;
+                using (var command = ProviderFactory.CreateCommand())
+                {
+                    command.CommandText = commandText;
+
+                    try
+                    {
+                        using (var reader = connection.ExecuteReader(command, CurrentTransaction))
+                        {
+                            hasErrors = reader.Read();
+                        }
+                    }
+                    finally
+                    {
+                        ReleaseConnection();
+                    }
+
+                    return hasErrors;
+                }
             }
         }
 
