@@ -30,6 +30,8 @@
                 "ModifiedDate DATETIME, " +
                 "RowVersion INTEGER DEFAULT 0, " +
 
+                "CHECK (length(SampleGroupCode) > 0)" +
+
                 "UNIQUE (StratumCode, SampleGroupCode), " +
 
                 "FOREIGN KEY (StratumCode) REFERENCES Stratum (Code) ON DELETE CASCADE ON UPDATE CASCADE" +

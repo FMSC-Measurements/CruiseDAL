@@ -23,7 +23,8 @@
                 "ModifiedBy TEXT, " +
                 "ModifiedDate DateTime , " +
                 "RowVersion INTEGER DEFAULT 0, " +
-                "UNIQUE(Code) " +
+                "UNIQUE(Code), " +
+                "CHECK (length(Code) > 0) " +
             ");";
 
         public const string CREATE_TRIGGER_STRATUM_ONUPDATE =
