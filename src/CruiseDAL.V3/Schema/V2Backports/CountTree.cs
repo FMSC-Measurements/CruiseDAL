@@ -39,7 +39,7 @@
                 "tptl.TreeCount, " +
                 "tptl.SumKPI, " +
                 "'' AS CreatedBy, " +
-                "'' AS CreatedDate, " +
+                "date('0001-01-01') AS CreatedDate, " +
                 "null AS ModifiedBy, " +
                 "null AS ModifiedDate, " +
                 "0 AS RowVersion " +
