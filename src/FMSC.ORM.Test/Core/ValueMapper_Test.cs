@@ -44,7 +44,6 @@ namespace FMSC.ORM.Test.Core
             var targetType = typeof(string);
             var expected = "something";
 
-            
             var value = Encoding.Default.GetBytes(expected);
 
             ValueMapper.ProcessValue(targetType, value).Should().Be(expected);
@@ -57,6 +56,20 @@ namespace FMSC.ORM.Test.Core
             var expected = DateTime.Now;
 
             var value = expected.ToString();
+
+            var result = ValueMapper.ProcessValue(targetType, value);
+            result.Should().BeOfType<DateTime>();
+
+            ((DateTime)result).Should().BeCloseTo(expected, 1000);
+        }
+
+        [Fact]
+        public void ProcessValue_empty_string_to_DateTime()
+        {
+            var targetType = typeof(DateTime);
+            var expected = default(DateTime);
+
+            var value = "";
 
             var result = ValueMapper.ProcessValue(targetType, value);
             result.Should().BeOfType<DateTime>();
@@ -97,21 +110,84 @@ namespace FMSC.ORM.Test.Core
         {
             var result = ValueMapper.ProcessValue(targetType, value);
 
-            var prop = typeof(MultiPropType).GetProperties()
-                .Where(x => x.PropertyType == targetType)
-                .Single();
-
-            var instance = new MultiPropType();
-            prop.SetMethod.Invoke(instance, new[] { result });
-            prop.GetMethod.Invoke(instance, null).Should().Be(result);
-            //result.Should().BeAssignableTo(targetType);
-
-            if(expected == null) { expected = value; }
+            if (expected == null) { expected = value; }
             result.Should().Be(expected);
+
+            ValidateIsAssignable(targetType, result);
+        }
+
+        [Theory]
+        [InlineData(typeof(int))]
+        [InlineData(typeof(float))]
+        [InlineData(typeof(double))]
+        [InlineData(typeof(bool))]
+        [InlineData(typeof(char))]
+        [InlineData(typeof(DateTime))]
+        //[InlineData(typeof(Guid), Skip = "initializing an guid with an empty string throws an exception, not sure if I want to override that behavior")]
+        [InlineData(typeof(MyEnum))]
+        public void ProcessValue_empty_string_to_valueType(Type targetType)
+        {
+            var value = "";
+            var expected = Activator.CreateInstance(targetType);
+            var result = ValueMapper.ProcessValue(targetType, value);
+
+            ValidateIsAssignable(targetType, result);
+
+            if (expected == null) { expected = value; }
+            result.Should().Be(expected);
+            Output.WriteLine(result?.ToString() ?? "<null>");
+        }
+
+        [Theory]
+        [InlineData(typeof(int))]
+        [InlineData(typeof(float))]
+        [InlineData(typeof(double))]
+        [InlineData(typeof(bool))]
+        [InlineData(typeof(char))]
+        [InlineData(typeof(DateTime))]
+        [InlineData(typeof(Guid))]
+        [InlineData(typeof(MyEnum))]
+        public void ProcessValue_null_to_valueType(Type targetType)
+        {
+            var value = (object)null;
+            var expected = Activator.CreateInstance(targetType);
+            var result = ValueMapper.ProcessValue(targetType, value);
+
+            ValidateIsAssignable(targetType, result);
+
+            if (expected == null) { expected = value; }
+            result.Should().Be(expected);
+            Output.WriteLine(result?.ToString() ?? "<null>");
+        }
+
+        [Theory]
+        [InlineData(typeof(int))]
+        [InlineData(typeof(float))]
+        [InlineData(typeof(double))]
+        [InlineData(typeof(bool))]
+        [InlineData(typeof(char))]
+        [InlineData(typeof(DateTime))]
+        [InlineData(typeof(Guid))]
+        [InlineData(typeof(MyEnum))]
+        public void ProcessValue_DBnull_to_valueType(Type targetType)
+        {
+            var value = DBNull.Value;
+            var expected = Activator.CreateInstance(targetType);
+            var result = ValueMapper.ProcessValue(targetType, value);
+
+            ValidateIsAssignable(targetType, result);
+
+            if (expected == null) { expected = value; }
+            result.Should().Be(expected);
+            Output.WriteLine(result?.ToString() ?? "<null>");
         }
 
         [Theory]
         [InlineData(typeof(int?))]
+        [InlineData(typeof(float?))]
+        [InlineData(typeof(double?))]
+        [InlineData(typeof(bool?))]
+        [InlineData(typeof(char?))]
         [InlineData(typeof(Guid?))]
         [InlineData(typeof(DateTime?))]
         [InlineData(typeof(MyEnum?))]
@@ -119,15 +195,8 @@ namespace FMSC.ORM.Test.Core
         {
             var result = ValueMapper.ProcessValue(targetType, DBNull.Value);
 
-            var prop = typeof(MultiPropType).GetProperties()
-                .Where(x => x.PropertyType == targetType)
-                .Single();
-
-            var instance = new MultiPropType();
-            prop.SetMethod.Invoke(instance, new[] { result });
-            //result.Should().BeAssignableTo(targetType);
-
             result.Should().Be(null);
+            ValidateIsAssignable(targetType, result);
         }
 
         [Fact]
@@ -138,15 +207,63 @@ namespace FMSC.ORM.Test.Core
             result.Should().Be(null);
         }
 
+        [Fact]
+        public void ProcessValue_DBNull_to_DateTime()
+        {
+            var result = ValueMapper.ProcessValue(typeof(DateTime), DBNull.Value);
+
+            result.Should().Be(default(DateTime));
+        }
+
+        [Fact]
+        public void ProcessValue_Null_to_DateTime()
+        {
+            var result = ValueMapper.ProcessValue(typeof(DateTime), null);
+
+            result.Should().Be(default(DateTime));
+            var date = default(DateTime);
+        }
+
+        private static void ValidateIsAssignable(Type targetType, object value)
+        {
+            var prop = typeof(MultiPropType).GetProperties()
+                            .Where(x => x.PropertyType == targetType)
+                            .Single();
+
+            var instance = new MultiPropType();
+            prop.SetMethod.Invoke(instance, new[] { value });
+            prop.GetMethod.Invoke(instance, null).Should().Be(value);
+            //result.Should().BeAssignableTo(targetType);
+        }
+
+        // use this class with ValidateIsAssignable to validate that
+        // values can be assigned to properties matching a target type
+        // since reflection is used to assign values to propertys in the orm
+        // I just want to be extra sure that values returned from the ValueMapper
+        // can be set to properties using reflection
         private class MultiPropType
         {
-            public int? Integer { get; set; }
-            public DateTime? DT { get; set; }
-            public Guid? Guid { get; set; }
+            public int Integer { get; set; }
+            public float Float { get; set; }
+            public double Double { get; set; }
+            public bool Bool { get; set; }
+            public char Char { get; set; }
+            public DateTime DateTime { get; set; }
+            public Guid Guid { get; set; }
 
-            public MyEnum? ME { get; set; }
+            public MyEnum MyEnum { get; set; }
 
-            public string Str { get; set; }
+            public int? NInteger { get; set; }
+            public float? NFloat { get; set; }
+            public bool? NBool { get; set; }
+            public double? NDouble { get; set; }
+            public char? NChar { get; set; }
+            public DateTime? NDateTime { get; set; }
+            public Guid? NGuid { get; set; }
+
+            public MyEnum? NMyEnume { get; set; }
+
+            public string String { get; set; }
         }
     }
 }

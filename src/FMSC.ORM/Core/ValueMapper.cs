@@ -53,6 +53,7 @@ namespace FMSC.ORM.Core
             else if (targetType == typeof(string)
                 && value is byte[] aByte)
             {
+
                 return System.Text.Encoding.Default.GetString(aByte);
             }
 
@@ -61,10 +62,22 @@ namespace FMSC.ORM.Core
                 return Convert.ChangeType(value, targetType
                     , System.Globalization.CultureInfo.CurrentCulture);
             }
-            catch(Exception e)
+            catch (Exception e)
             {
+                if (value is String str && str == "")
+                {
+                    if (targetType.IsValueType)
+                    {
+                        return Activator.CreateInstance(targetType);
+                    }
+                    else
+                    {
+                        return null;
+                    }
+                }
+
                 throw new ORMException(
-                    string.Format("unable to process value: {0} to {1}", value?.ToString() ?? "null", targetType.Name), 
+                    string.Format("unable to process value: {0} to {1}", value?.ToString() ?? "null", targetType.Name),
                     e);
             }
         }
