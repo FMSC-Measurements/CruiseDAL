@@ -52,12 +52,18 @@ namespace FMSC.ORM.EntityModel.Support
                 if (eAttr != null)
                 {
                     var source = Source = new TableOrSubQuery(eAttr.Name);
-                    if(eAttr is EntitySourceAttribute )
+
+                    // to provide backwards compatibility 
+                    // check if it is a EntitySourceAttr
+#pragma warning disable CS0618 // Type or member is obsolete
+                    if (eAttr is EntitySourceAttribute)
+
                     {
                         var esa = (EntitySourceAttribute)eAttr;
                         source.Alias = esa.Alias;
                         source.Joins = esa.JoinCommands;
                     }
+#pragma warning restore CS0618 // Type or member is obsolete
                 }
                 else
                 {
