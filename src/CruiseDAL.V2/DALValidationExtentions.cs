@@ -1,8 +1,5 @@
-﻿using System;
+﻿using CruiseDAL.Schema;
 using System.Collections.Generic;
-
-using CruiseDAL.DataObjects;
-using CruiseDAL.Schema;
 
 namespace CruiseDAL
 {
@@ -119,8 +116,8 @@ namespace CruiseDAL
 SET [Species] =
         (SELECT [Species]
         FROM TreeDefaultValue AS tdv
-        WHERE tdv.TreeDefaultValue_CN = Tree.TreeDefaultValue_CN), 
-    LiveDead = 
+        WHERE tdv.TreeDefaultValue_CN = Tree.TreeDefaultValue_CN),
+    LiveDead =
         (SELECT [LiveDead]
         FROM TreeDefaultValue AS tdv
         WHERE tdv.TreeDefaultValue_CN = Tree.TreeDefaultValue_CN)
