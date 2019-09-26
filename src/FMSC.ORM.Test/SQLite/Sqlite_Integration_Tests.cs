@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 using Xunit;
 using Xunit.Abstractions;
 
-namespace FMSC.ORM.Test.SQLite
+namespace FMSC.ORM.SQLite
 {
     public class Sqlite_Integration_Test : TestBase
     {

@@ -8,7 +8,7 @@ using FMSC.ORM.EntityModel;
 
 namespace FMSC.ORM.TestSupport.TestModels
 {
-    [EntitySource(SourceName = FMSC.ORM.TestSupport.TestSQLConstants.MULTI_PROP_TABLE_NAME)]
+    [Table(FMSC.ORM.TestSupport.TestSQLConstants.MULTI_PROP_TABLE_NAME)]
     public class DOMultiPropType : INPC_Base, IInterface
     {
         int _id;

@@ -6,7 +6,7 @@ using System.Text;
 using Xunit;
 using Xunit.Abstractions;
 
-namespace FMSC.ORM.Test.Core
+namespace FMSC.ORM.Core
 {
     public class ValueMapper_Test : TestBase
     {

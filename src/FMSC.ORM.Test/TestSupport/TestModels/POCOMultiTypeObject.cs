@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace FMSC.ORM.TestSupport.TestModels
 {
-    [EntitySource(FMSC.ORM.TestSupport.TestSQLConstants.MULTI_PROP_TABLE_NAME)]
+    [Table(FMSC.ORM.TestSupport.TestSQLConstants.MULTI_PROP_TABLE_NAME)]
     public class POCOMultiTypeObject : IInterface
     {
         [PrimaryKeyField(Name = "ID")]

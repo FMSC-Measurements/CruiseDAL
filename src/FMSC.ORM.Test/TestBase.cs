@@ -8,7 +8,7 @@ using System.Reflection;
 using System.Text;
 using Xunit.Abstractions;
 
-namespace FMSC.ORM.Test
+namespace FMSC.ORM
 {
     public class TestBase
     {
