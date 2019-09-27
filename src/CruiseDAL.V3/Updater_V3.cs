@@ -13,7 +13,7 @@
 
                 // use back up rutine to replace old database with 
                 // migrated contents
-                newDatastore.BackupDatabase(datastore.Path);
+                newDatastore.BackupDatabase(datastore);
             }
         }
     }

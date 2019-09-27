@@ -310,6 +310,42 @@ namespace FMSC.ORM.SQLite
         }
 
         [Fact]
+        public void BackupDatabase_into_existing()
+        {
+            using (var ds = new SQLiteDatastore())
+            {
+                var dbbuilder = new TestDBBuilder();
+                dbbuilder.BuildDatabase(ds);
+
+                var orgTableInfo = ds.QueryGeneric("SELECT * FROM Sqlite_Master;").ToArray();
+                orgTableInfo.Should().NotBeEmpty();
+
+                var backupTarget = base.GetTempFilePath(".db");
+                RegesterFileForCleanUp(backupTarget);
+
+                // create database file
+                using(var targetds = new SQLiteDatastore(backupTarget))
+                {
+                    dbbuilder.BuildDatabase(targetds);
+                    targetds.Execute("CREATE TABLE Something (" +
+                        "col1 text" +
+                        ");");
+
+                    targetds.CheckTableExists("Something").Should().BeTrue();
+
+                    targetds.Execute("ALTER Table MultiPropTable ADD COLUMN justanothercolumn text;");
+                    targetds.CheckFieldExists("MultiPropTable", "justanothercolumn").Should().BeTrue();
+
+                    ds.BackupDatabase(targetds);
+
+                    targetds.CheckTableExists("something").Should().BeFalse();
+                    targetds.CheckFieldExists("MultiPropTable", "justanothercolumn").Should().BeFalse();
+
+                }
+            }
+        }
+
+        [Fact]
         public void CheckTableExistsTest()
         {
             using (var ds = new SQLiteDatastore())
