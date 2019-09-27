@@ -1,4 +1,5 @@
-﻿using CruiseDAL.V3.Tests;
+﻿using CruiseDAL.Schema;
+using CruiseDAL.V3.Tests;
 using FluentAssertions;
 using System;
 using System.Collections;
@@ -96,6 +97,12 @@ namespace CruiseDAL.Tests.Schema
             }
 
             commandsLookup.Count().Should().Be(fields.Count());
+        }
+
+        [Fact]
+        public void DATABASE_VERSION()
+        {
+            Output.WriteLine(DDL.DATABASE_VERSION.ToString());
         }
 
         //[Fact]

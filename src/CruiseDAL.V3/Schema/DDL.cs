@@ -1,9 +1,13 @@
-﻿namespace CruiseDAL.Schema
+﻿using System;
+
+namespace CruiseDAL.Schema
 {
     public static partial class DDL
     {
+        public static Version DATABASE_VERSION = new Version("3.0.1");
+
         public static string SET_DBVERSION =
-            "INSERT INTO Globals (Block, Key, Value) VALUES ('Database', 'Version', '3.0.0'); ";
+            $"INSERT INTO Globals (Block, Key, Value) VALUES ('Database', 'Version', '{DATABASE_VERSION.ToString()}'); ";
 
         public static string[] CREATE_COMMANDS = new string[]
         {
@@ -152,6 +156,8 @@
             //views
             CREATE_VIEW_TALLYPOPULATION,
             CREATE_VIEW_TallyLedger_Totals,
+            CREATE_VIEW_TallyLedger_Plot_Totals,
+            CREATE_VIEW_TallyLedger_Tree_Totals,
             CREATE_VIEW_TreeFieldValue_TreeMeasurment,
             CREATE_VIEW_TreeFieldValue_TreeMeasurment_Filtered,
             CREATE_VIEW_TREEERROR,

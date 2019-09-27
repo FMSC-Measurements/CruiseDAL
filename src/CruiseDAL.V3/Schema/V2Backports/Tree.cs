@@ -42,7 +42,7 @@
                         "tdv.Species = t.Species " +
                         "AND tdv.LiveDead = t.LiveDead " +
                         "AND tdv.PrimaryProduct = sg.PrimaryProduct " +
-            "LEFT JOIN TallyLedger AS tl ON tl.TreeID = t.TreeID " +
+            "LEFT JOIN TallyLedger_Tree_Totals AS tl ON tl.TreeID = t.TreeID " +
             "LEFT JOIN TreeMeasurment AS tm ON t.TreeID = tm.TreeID " +
             ";";
 
