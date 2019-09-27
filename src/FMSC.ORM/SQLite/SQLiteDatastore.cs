@@ -96,13 +96,26 @@ namespace FMSC.ORM.SQLite
 
         protected override string BuildConnectionString()
         {
-            if (Path == null) { throw new InvalidOperationException("Path can not be null"); }
+            return BuildConnectionString(Path);
+        }
+
+        protected static string BuildConnectionString(string path)
+        {
+            if (path == null) { throw new InvalidOperationException("Path can not be null"); }
 
 #if SYSTEM_DATA_SQLITE
-            return string.Format("Data Source={0};Version=3;", Path);
+            return string.Format("Data Source={0};Version=3;", path);
 #else
-            return string.Format("Data Source={0};", Path);
+            return string.Format("Data Source={0};", path);
 #endif
+        }
+
+        protected DbConnection CreateConnection(string path)
+        {
+            var conn = ProviderFactory.CreateConnection();
+            conn.ConnectionString = BuildConnectionString(path);
+
+            return conn;
         }
 
         /// <summary>
@@ -135,6 +148,12 @@ namespace FMSC.ORM.SQLite
         public bool CheckTableExists(string tableName)
         {
             return GetRowCount("sqlite_master", "WHERE (type = 'table' OR type = 'view') AND name = @p1", tableName) > 0;
+        }
+
+        public IEnumerable<string> GetTableNames()
+        {
+            return ExecuteScalar<string>($"SELECT group_concat(name) FROM main.sqlite_master WHERE type='table' AND name NOT LIKE 'sqlite^_%' ESCAPE '^';")
+                .Split(',');
         }
 
         /// <summary>
@@ -365,6 +384,46 @@ namespace FMSC.ORM.SQLite
         //    Context.ReleaseAllConnections(true);
         //    System.IO.File.Copy(this.Path, destPath, overwrite);
         //}
+
+        public void BackupDatabase(string path)
+        {
+            SQLiteDatabaseBuilder.CreateEmptyFile(path);
+
+            var targetConnection = CreateConnection(path);
+            BackupDatabase(targetConnection);
+        }
+
+        public void BackupDatabase(SQLiteDatastore targetDatabase)
+        {
+            var targetConn = targetDatabase.OpenConnection();
+            try
+            {
+                BackupDatabase(targetConn);
+            }
+            finally
+            {
+                targetDatabase.ReleaseConnection();
+            }
+        }
+
+        public void BackupDatabase(DbConnection targetConnection)
+        {
+            var connection = OpenConnection();
+            try
+            {
+#if SYSTEM_DATA_SQLITE
+                ((System.Data.SQLite.SQLiteConnection)connection)
+                    .BackupDatabase((System.Data.SQLite.SQLiteConnection)targetConnection, "main", "main", -1, null, 25);
+#elif MICROSOFT_DATA_SQLITE
+                ((Microsoft.Data.Sqlite.SqliteConnection)connection)
+                    .BackupDatabase((Microsoft.Data.Sqlite.SqliteConnection)targetConnection);
+#endif
+            }
+            finally
+            {
+                ReleaseConnection();
+            }
+        }
 
         public bool MoveTo(string path)
         {

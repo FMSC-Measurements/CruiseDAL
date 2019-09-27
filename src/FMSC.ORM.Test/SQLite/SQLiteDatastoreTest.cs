@@ -77,7 +77,6 @@ namespace FMSC.ORM.SQLite
         [Trait("Category", "Connection Management")]
         public void OpenConnection()
         {
-
             var path = GetTempFilePath(".cruise");
             RegesterFileForCleanUp(path);
 
@@ -210,6 +209,103 @@ namespace FMSC.ORM.SQLite
                 Assert.True(ds.CheckFieldExists("TABLEA", "Data"));
 
                 Assert.Throws<SQLException>(() => ds.AddField("TableA", new ColumnInfo() { Name = "Data", DBType = System.Data.DbType.AnsiString }));
+            }
+        }
+
+        [Fact]
+        public void BackupDatabase_inmemory()
+        {
+            using (var ds = new SQLiteDatastore())
+            {
+                var dbbuilder = new TestDBBuilder();
+                dbbuilder.BuildDatabase(ds);
+
+                var orgTableInfo = ds.QueryGeneric("SELECT * FROM Sqlite_Master;").ToArray();
+                orgTableInfo.Should().NotBeEmpty();
+
+                var backupTarget = base.GetTempFilePath(".db");
+                RegesterFileForCleanUp(backupTarget);
+
+                File.Exists(backupTarget).Should().BeFalse();
+
+                ds.BackupDatabase(backupTarget);
+
+                File.Exists(backupTarget).Should().BeTrue();
+
+                using (var newds = new SQLiteDatastore(backupTarget))
+                {
+                    var newTableInfo = ds.QueryGeneric("SELECT * FROM Sqlite_Master;");
+
+                    newTableInfo.Should().BeEquivalentTo(orgTableInfo);
+                }
+            }
+        }
+
+        [Fact]
+        public void BackupDatabase_overwrite_existing()
+        {
+            using (var ds = new SQLiteDatastore())
+            {
+                var dbbuilder = new TestDBBuilder();
+                dbbuilder.BuildDatabase(ds);
+
+                var orgTableInfo = ds.QueryGeneric("SELECT * FROM Sqlite_Master;").ToArray();
+                orgTableInfo.Should().NotBeEmpty();
+
+                var backupTarget = base.GetTempFilePath(".db");
+                RegesterFileForCleanUp(backupTarget);
+
+                // create a file to overwrite
+                // this doesn't need to be an actual db file
+                File.WriteAllText(backupTarget, "something");
+                File.Exists(backupTarget).Should().BeTrue();
+
+                // backup the database to the location of the file we just created
+                
+                ds.BackupDatabase(backupTarget);
+                File.Exists(backupTarget).Should().BeTrue();
+
+                // and conferm that it did overwrite the old file
+                using (var newds = new SQLiteDatastore(backupTarget))
+                {
+                    var newTableInfo = ds.QueryGeneric("SELECT * FROM Sqlite_Master;");
+
+                    newTableInfo.Should().BeEquivalentTo(orgTableInfo);
+                }
+            }
+        }
+
+        [Fact]
+        public void BackupDatabase_overwrite_openfile_with_inmemory()
+        {
+            var tempPath = GetTempFilePath(".crz3");
+            RegesterFileForCleanUp(tempPath);
+
+            using (var ds = new SQLiteDatastore(tempPath))
+            {
+                var dbbuilder = new TestDBBuilder();
+                dbbuilder.BuildDatabase(ds);
+
+                var orgTableInfo = ds.QueryGeneric("SELECT * FROM Sqlite_Master;").ToArray();
+                orgTableInfo.Should().NotBeEmpty();
+
+                ds.From<POCOMultiTypeObject>().Query().Should().BeEmpty();
+
+                using (var newds = new SQLiteDatastore())
+                {
+                    dbbuilder.BuildDatabase(newds);
+
+                    newds.Insert(new POCOMultiTypeObject()
+                    {
+                        ID = 1,
+                    });
+
+                    newds.From<POCOMultiTypeObject>().Query().Should().NotBeEmpty();
+
+                    newds.BackupDatabase(tempPath);
+                }
+
+                ds.From<POCOMultiTypeObject>().Query().Should().NotBeEmpty();
             }
         }
 
@@ -755,7 +851,7 @@ namespace FMSC.ORM.SQLite
             var path = GetTempFilePath(".cruise");
             RegesterFileForCleanUp(path);
 
-            using(var db = new SQLiteDatastore(path))
+            using (var db = new SQLiteDatastore(path))
             {
                 db.Execute(TestDBBuilder.CREATE_MULTIPROPTABLE);
 
@@ -795,7 +891,6 @@ $"   WHERE value +1 <={num} " +
 ") " +
 "INSERT INTO MultiPropTable (ID) SELECT * FROM generate_series;");
 
-
                 for (var i = 1; i <= num; i++)
                 {
                     var row = db.ReadSingleRow<POCOMultiTypeObject>(i);
@@ -806,7 +901,6 @@ $"   WHERE value +1 <={num} " +
                 db.PersistentConnection.Should().BeNull();
             }
         }
-
 
         [Fact]
         public void RollBackTransaction_WtihNoTransaction()
