@@ -22,6 +22,7 @@ dotnet pack -c %build_config% --include-source -o %packageOutputDir% %parent%Cru
 dotnet pack -c %build_config% --include-source -o %packageOutputDir% %parent%CruiseDAL.V2\CruiseDAL.V2.csproj
 dotnet pack -c %build_config% --include-source -o %packageOutputDir% %parent%CruiseDAL.V3\CruiseDAL.V3.csproj
 dotnet pack -c %build_config% --include-source -o %packageOutputDir% %parent%CruiseDAL.V3.Models\CruiseDAL.V3.Models.csproj
+dotnet pack -c %build_config% --include-source -o %packageOutputDir% %parent%CruiseDAL.V2.Models\CruiseDAL.V2.Models.csproj
 
 ::if invoked from windows explorer, pause
 IF "%interactive%"=="0" PAUSE
