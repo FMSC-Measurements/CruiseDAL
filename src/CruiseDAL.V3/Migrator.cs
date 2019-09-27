@@ -8,6 +8,8 @@ namespace CruiseDAL
 {
     public class Migrator
     {
+        public static FMSC.ORM.Core.Logger Logger { get; set; } = new FMSC.ORM.Core.Logger();
+
         public static string GetConvertedPath(string v2Path)
         {
             // get path, directory and filename of original file
@@ -57,6 +59,7 @@ namespace CruiseDAL
             finally
             {
                 v3db.ReleaseConnection();
+                v3db.DetachDB(oldDbAlias);
             }
         }
 
@@ -73,11 +76,76 @@ namespace CruiseDAL
                     }
                     catch (Exception e)
                     {
+                        Logger.LogException(e);
                         throw;
                     }
                 }
 
                 transaction.Commit();
+            }
+        }
+
+        public static void Migrate(CruiseDatastore sourceDS, CruiseDatastore destinationDS)
+        {
+            var connection = destinationDS.OpenConnection();
+
+            var fromAlias = "fromdb";
+            destinationDS.AttachDB(sourceDS, fromAlias);
+            try
+            {
+                Migrate(connection, fromAlias);
+            }
+            finally
+            {
+                destinationDS.ReleaseConnection();
+                destinationDS.DetachDB(fromAlias);
+            }
+        }
+
+        public static void Migrate(DbConnection connection, string from)
+        {
+            var to = "main";
+
+            var foreignKeys = connection.ExecuteScalar<string>("PRAGMA foreign_keys;", null, null);
+            connection.ExecuteNonQuery("PRAGMA foreign_keys = off;");
+
+            using (var transaction = connection.BeginTransaction())
+            {
+                var tables = connection.ExecuteScalar<string>(
+                    "SELECT group_concat(name) FROM ( " +
+                    $"SELECT name FROM {from}.sqlite_master WHERE type='table' " +
+                    "UNION  " +
+                    $"SELECT name FROM {from}.sqlite_master WHERE type='table' )" +
+                    "WHERE name NOT LIKE 'sqlite^_%' ESCAPE '^';", (object[])null, transaction)
+                .Split(',');
+                try
+                {
+                    foreach (var table in tables)
+                    {
+                        if (table == "Globals")
+                        {
+                            connection.ExecuteNonQuery(
+                                $"INSERT OR IGNORE INTO {to}.{table} " +
+                                $"SELECT * FROM {from}.{table} " +
+                                "WHERE Block != 'Database' AND Key != 'Version';", null, transaction);
+                            continue;
+                        }
+
+                        connection.ExecuteNonQuery($"INSERT OR IGNORE INTO {to}.{table} SELECT * FROM {from}.{table};", null, transaction);
+                    }
+
+                    transaction.Commit();
+                }
+                catch (Exception e)
+                {
+                    transaction.Rollback();
+                    Logger.LogException(e);
+                    throw;
+                }
+                finally
+                {
+                    connection.ExecuteNonQuery($"PRAGMA foreign_keys = {foreignKeys};");
+                }
             }
         }
     }
