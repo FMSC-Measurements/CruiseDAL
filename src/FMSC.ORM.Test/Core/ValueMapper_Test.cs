@@ -27,6 +27,33 @@ namespace FMSC.ORM.Core
             ValueMapper.ProcessValue(targetType, value).Should().Be(expected);
         }
 
+        [Fact(Skip = "not supported")]
+        public void ProcessValue_byteArrayString_to_Guid()
+        {
+            var targetType = typeof(Guid);
+            var expected = Guid.NewGuid();
+
+            var value = Encoding.UTF8.GetString(expected.ToByteArray());
+
+            ValueMapper.ProcessValue(targetType, value).Should().Be(expected);
+        }
+
+        [Theory(Skip = "not supported right now. ")]
+        [InlineData(typeof(int?))]
+        [InlineData(typeof(float?))]
+        [InlineData(typeof(double?))]
+        [InlineData(typeof(bool?))]
+        [InlineData(typeof(char?))]
+        [InlineData(typeof(Guid?))]
+        [InlineData(typeof(DateTime?))]
+        [InlineData(typeof(MyEnum?))]
+        public void ProcessValue_jiberrishString_to_NullableValue(Type targetType)
+        {
+            var value = "jibberish";
+
+            ValueMapper.ProcessValue(targetType, value).Should().BeNull();
+        }
+
         [Fact]
         public void ProcessValue_byteArray_to_Guid()
         {
@@ -96,22 +123,31 @@ namespace FMSC.ORM.Core
         }
 
         [Theory]
-        [InlineData(typeof(string), 1, "1")]
-        [InlineData(typeof(string), 1.1d, "1.1")]
-        [InlineData(typeof(int?), 1)]
-        [InlineData(typeof(int?), 1L)]
-        [InlineData(typeof(int?), null)]
-        [InlineData(typeof(Guid?), null)]
-        [InlineData(typeof(DateTime?), null)]
-        [InlineData(typeof(MyEnum?), null)]
-        [InlineData(typeof(MyEnum?), MyEnum.One)]
+        [InlineData(typeof(string), 1, "1")] // integer to string
+        [InlineData(typeof(string), 1.1d, "1.1")] // float to string
+        [InlineData(typeof(int), 1, 1)] // int to int
+        [InlineData(typeof(int), "1", 1)] // string to int
+        [InlineData(typeof(int?), 1, 1)] // int to nullable int
+        [InlineData(typeof(int?), 1L, 1)] // long to int
+        [InlineData(typeof(int?), "1", 1)] // string to int
+        [InlineData(typeof(int?), null, null)]
+        [InlineData(typeof(float), 1.1f, 1.1f)]
+        [InlineData(typeof(float), 1.1d, 1.1f)]
+        [InlineData(typeof(Guid?), null, null)]
+        [InlineData(typeof(DateTime?), null, null)]
+        [InlineData(typeof(MyEnum?), null, null)]
+        [InlineData(typeof(MyEnum?), MyEnum.One, MyEnum.One)]
         [InlineData(typeof(MyEnum?), "one", MyEnum.One)]
-        public void ProcessValue_value_to_Type(Type targetType, object value, object expected = null)
+        public void ProcessValue_value_to_Type(Type targetType, object value, object expected)
         {
             var result = ValueMapper.ProcessValue(targetType, value);
 
-            if (expected == null) { expected = value; }
             result.Should().Be(expected);
+
+            if (result != null)
+            {
+                result.GetType().Should().Be(Nullable.GetUnderlyingType(targetType) ?? targetType);
+            }
 
             ValidateIsAssignable(targetType, result);
         }
@@ -136,6 +172,25 @@ namespace FMSC.ORM.Core
             if (expected == null) { expected = value; }
             result.Should().Be(expected);
             Output.WriteLine(result?.ToString() ?? "<null>");
+        }
+
+        [Theory]
+        [InlineData(typeof(int?))]
+        [InlineData(typeof(float?))]
+        [InlineData(typeof(double?))]
+        [InlineData(typeof(bool?))]
+        [InlineData(typeof(char?))]
+        [InlineData(typeof(DateTime?))]
+        [InlineData(typeof(Guid?), Skip = "initializing an guid with an empty string throws an exception, not sure if I want to override that behavior")]
+        [InlineData(typeof(MyEnum?))]
+        public void ProcessValue_empty_string_to_NullableType(Type targetType)
+        {
+            var value = "";
+            var result = ValueMapper.ProcessValue(targetType, value);
+
+            Output.WriteLine(result?.ToString() ?? "<null>");
+            result.Should().BeNull();
+            ValidateIsAssignable(targetType, result);
         }
 
         [Theory]

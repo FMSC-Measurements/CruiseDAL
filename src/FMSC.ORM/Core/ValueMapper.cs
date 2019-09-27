@@ -23,12 +23,15 @@ namespace FMSC.ORM.Core
 
         public static object ProcessValue(Type targetType, object value)
         {
+            
             if (value == null || value == DBNull.Value)
             {
-                if (targetType.IsValueType) { return Activator.CreateInstance(targetType); }
+                if (targetType.IsValueType)
+                { return Activator.CreateInstance(targetType); }
                 else { return null; }
             }
 
+            var origTargetType = targetType;
             targetType = Nullable.GetUnderlyingType(targetType) ?? targetType;
 
             if (targetType == typeof(Guid))
@@ -66,9 +69,9 @@ namespace FMSC.ORM.Core
             {
                 if (value is String str && str == "")
                 {
-                    if (targetType.IsValueType)
+                    if (origTargetType.IsValueType)
                     {
-                        return Activator.CreateInstance(targetType);
+                        return Activator.CreateInstance(origTargetType);
                     }
                     else
                     {

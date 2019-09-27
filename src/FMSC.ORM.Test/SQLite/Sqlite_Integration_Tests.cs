@@ -150,7 +150,7 @@ namespace FMSC.ORM.SQLite
                 var guid_str = Encoding.Default.GetString(guid_byteArr);
                 guid_str.Should().Be(result_str);
 
-
+                // try to convert the result string to a byte array then to a guid
                 ////var result_byteArr = result_str.Select(x => (Byte)x).ToArray();
                 //var result_byteArr = Encoding.Default.GetBytes(result_str);
                 //var result_guid = new Guid(result_byteArr);
