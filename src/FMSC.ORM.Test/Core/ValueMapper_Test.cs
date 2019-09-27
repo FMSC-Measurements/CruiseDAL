@@ -38,7 +38,7 @@ namespace FMSC.ORM.Core
             ValueMapper.ProcessValue(targetType, value).Should().Be(expected);
         }
 
-        [Theory(Skip = "not supported right now. ")]
+        [Theory]
         [InlineData(typeof(int?))]
         [InlineData(typeof(float?))]
         [InlineData(typeof(double?))]

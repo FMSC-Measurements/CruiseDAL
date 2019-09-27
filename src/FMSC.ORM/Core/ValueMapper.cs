@@ -23,21 +23,34 @@ namespace FMSC.ORM.Core
 
         public static object ProcessValue(Type targetType, object value)
         {
+            var underlyingType = Nullable.GetUnderlyingType(targetType);
+            var isNullable = underlyingType != null;
+            targetType = underlyingType ?? targetType;
             
+
             if (value == null || value == DBNull.Value)
             {
-                if (targetType.IsValueType)
+                if (targetType.IsValueType && !isNullable)
                 { return Activator.CreateInstance(targetType); }
                 else { return null; }
             }
 
-            var origTargetType = targetType;
-            targetType = Nullable.GetUnderlyingType(targetType) ?? targetType;
-
             if (targetType == typeof(Guid))
             {
-                if (value is string str) { return new Guid((str)); }
-                if (value is byte[] aByte) { return new Guid(aByte); }
+                try
+                {
+
+                    if (value is string str) { return new Guid((str)); }
+                    if (value is byte[] aByte) { return new Guid(aByte); }
+                }
+                catch
+                {
+                    if(isNullable)
+                    {
+                        return null;
+                    }
+                    throw;
+                }
             }
             else if (targetType.IsEnum)
             {
@@ -69,15 +82,23 @@ namespace FMSC.ORM.Core
             {
                 if (value is String str && str == "")
                 {
-                    if (origTargetType.IsValueType)
+                    if (targetType.IsValueType && !isNullable)
                     {
-                        return Activator.CreateInstance(origTargetType);
+                        return Activator.CreateInstance(targetType);
                     }
                     else
                     {
                         return null;
                     }
                 }
+                else
+                {
+                    if(isNullable)
+                    {
+                        return null;
+                    }
+                }
+
 
                 throw new ORMException(
                     string.Format("unable to process value: {0} to {1}", value?.ToString() ?? "null", targetType.Name),
