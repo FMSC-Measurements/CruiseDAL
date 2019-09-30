@@ -2271,10 +2271,10 @@ namespace CruiseDAL.DataObjects
 		        CuttingUnit_CN = (value != null) ? value.CuttingUnit_CN : null;
 		    }
 		}
-		private Guid _plot_guid ;
+		private Guid? _plot_guid ;
 		[XmlElement]
 		[Field(Name = "Plot_GUID")]
-		public virtual Guid Plot_GUID
+		public virtual Guid? Plot_GUID
 		{
 		    get 
 		    { 
@@ -2857,10 +2857,10 @@ namespace CruiseDAL.DataObjects
 		        Plot_CN = (value != null) ? value.Plot_CN : null;
 		    }
 		}
-		private Guid _tree_guid ;
+		private Guid? _tree_guid ;
 		[XmlElement]
 		[Field(Name = "Tree_GUID")]
-		public virtual Guid Tree_GUID
+		public virtual Guid? Tree_GUID
 		{
 		    get 
 		    { 
@@ -3814,10 +3814,10 @@ namespace CruiseDAL.DataObjects
 		        Tree_CN = (value != null) ? value.Tree_CN : null;
 		    }
 		}
-		private Guid _log_guid ;
+		private Guid? _log_guid ;
 		[XmlElement]
 		[Field(Name = "Log_GUID")]
-		public virtual Guid Log_GUID
+		public virtual Guid? Log_GUID
 		{
 		    get 
 		    { 
@@ -4271,10 +4271,10 @@ namespace CruiseDAL.DataObjects
 		        Tree_CN = (value != null) ? value.Tree_CN : null;
 		    }
 		}
-		private Guid _stem_guid ;
+		private Guid? _stem_guid ;
 		[XmlElement]
 		[Field(Name = "Stem_GUID")]
-		public virtual Guid Stem_GUID
+		public virtual Guid? Stem_GUID
 		{
 		    get 
 		    { 
@@ -4984,10 +4984,10 @@ namespace CruiseDAL.DataObjects
 		        CountTree_CN = (value != null) ? value.CountTree_CN : null;
 		    }
 		}
-		private Guid _treeestimate_guid ;
+		private Guid? _treeestimate_guid ;
 		[XmlElement]
 		[Field(Name = "TreeEstimate_GUID")]
-		public virtual Guid TreeEstimate_GUID
+		public virtual Guid? TreeEstimate_GUID
 		{
 		    get 
 		    { 
@@ -15148,10 +15148,10 @@ namespace CruiseDAL.DataObjects
 			get{ return base.rowID; }
 			set{ base.rowID = value; }
 		}
-		private Guid _guid ;
+		private Guid? _guid ;
 		[XmlElement]
 		[Field(Name = "GUID")]
-		public virtual Guid GUID
+		public virtual Guid? GUID
 		{
 		    get 
 		    { 
