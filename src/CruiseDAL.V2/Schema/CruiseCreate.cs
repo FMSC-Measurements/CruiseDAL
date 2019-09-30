@@ -818,7 +818,7 @@ JOIN CuttingUnit USING (CuttingUnit_CN)
 JOIN Stratum USING (Stratum_CN);" +
 
 @"
-INSERT INTO Globals (Block, Key, Value) VALUES ('Database', 'Version', '2.5.0');
+INSERT INTO Globals (Block, Key, Value) VALUES ('Database', 'Version', '2.5.1');
 PRAGMA user_version = 5;";
 
     }//END CLASS

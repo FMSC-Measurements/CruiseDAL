@@ -1,7 +1,6 @@
 ﻿using Backpack.SqlBuilder;
 using FMSC.ORM;
 using FMSC.ORM.Core;
-using FMSC.ORM.EntityModel.Attributes;
 using System;
 using System.Data.Common;
 
@@ -99,9 +98,13 @@ namespace CruiseDAL
             {
                 UpdateTo_2_2_0(db);
             }
+            if(db.DatabaseVersion.StartsWith("2.5.0"))
+            {
+                FixVersion_2_5_0(db);
+            }
             if (db.DatabaseVersion.StartsWith("2.2."))
             {
-                UpdateTo_2_5_0(db);
+                UpdateTo_2_5_1(db);
             }
 
             CleanupErrorLog(db);
@@ -529,9 +532,33 @@ ValidGrades TEXT);");
             }
         }
 
-        private static void UpdateTo_2_5_0(CruiseDatastore db)
+        private static void FixVersion_2_5_0(CruiseDatastore db)
         {
             var startVersion = db.DatabaseVersion;
+            var targetVersion = "2.5.1.1";
+            db.BeginTransaction();
+            try
+            {
+                db.Execute("UPDATE Tree SET Tree_GUID = NULL WHERE typeof(Tree_GUID) = 'text' AND Tree_GUID NOT LIKE '________-____-____-____-____________';");
+                db.Execute("UPDATE Log SET Log_GUID = NULL WHERE typeof(Log_GUID) = 'text' AND Log_GUID NOT LIKE '________-____-____-____-____________';");
+                db.Execute("UPDATE Stem SET Stem_GUID = NULL WHERE typeof(Stem_GUID) = 'text' AND Stem_GUID NOT LIKE '________-____-____-____-____________';");
+                db.Execute("UPDATE Plot SET Plot_GUID = NULL WHERE typeof(Plot_GUID) = 'text' AND Plot_GUID NOT LIKE '________-____-____-____-____________';");
+                db.Execute("UPDATE Component SET GUID = NULL WHERE typeof(GUID) = 'text' AND GUID NOT LIKE '________-____-____-____-____________';");
+
+                SetDatabaseVersion(db, targetVersion);
+                db.CommitTransaction();
+            }
+            catch (Exception e)
+            {
+                db.RollbackTransaction();
+                throw new SchemaUpdateException(startVersion, targetVersion, e);
+            }
+        }
+
+        private static void UpdateTo_2_5_1(CruiseDatastore db)
+        {
+            var startVersion = db.DatabaseVersion;
+            var targetVersion = "2.5.1";
 
             db.BeginTransaction();
             try
@@ -543,13 +570,13 @@ ValidGrades TEXT);");
                 db.Execute("ALTER TABLE Stratum ADD COLUMN VolumeFactor REAL Default 0.333;");
                 db.Execute("ALTER TABLE Plot ADD COLUMN ThreePRandomValue INTEGER Default 0;");
 
-                SetDatabaseVersion(db, "2.5.0");
+                SetDatabaseVersion(db, targetVersion);
                 db.CommitTransaction();
             }
             catch (Exception e)
             {
                 db.RollbackTransaction();
-                throw new SchemaUpdateException(startVersion, "2.5.0", e);
+                throw new SchemaUpdateException(startVersion, targetVersion, e);
             }
         }
 
@@ -624,7 +651,5 @@ ValidGrades TEXT);");
             var getTriggers = String.Format("SELECT group_concat(sql,';\r\n') FROM sqlite_master WHERE tbl_name LIKE '{0}' and type LIKE 'trigger';", tableName);
             return db.ExecuteScalar(getTriggers) as string;
         }
-
-        
     }
 }

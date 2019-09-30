@@ -10,7 +10,7 @@ namespace CruiseDAL.Tests
     {
         protected readonly ITestOutputHelper Output;
         private string _testTempPath;
-        List<string> FilesToBeDeleted { get; } = new List<string>();
+        private List<string> FilesToBeDeleted { get; } = new List<string>();
 
         public TestBase(ITestOutputHelper output)
         {
@@ -51,8 +51,6 @@ namespace CruiseDAL.Tests
         public string TestFilesDirectory => Path.Combine(TestExecutionDirectory, "TestFiles");
         public string ResourceDirectory => Path.Combine(TestExecutionDirectory, "Resources");
 
-        
-
         public void RegesterFileForCleanUp(string path)
         {
             FilesToBeDeleted.Add(path);
@@ -61,11 +59,21 @@ namespace CruiseDAL.Tests
         public void WriteDictionary<tKey, tValue>(IDictionary<tKey, tValue> dict)
         {
             Output.WriteLine("{");
-            foreach(var entry in dict)
+            foreach (var entry in dict)
             {
                 Output.WriteLine($"{{{entry.Key.ToString()} : {entry.Value.ToString()} }}");
             }
             Output.WriteLine("}");
+        }
+
+        public string InitializeTestFile(string fileName)
+        {
+            var sourcePath = Path.Combine(TestFilesDirectory, fileName);
+            var targetPath = Path.Combine(TestTempPath, fileName);
+
+            RegesterFileForCleanUp(targetPath);
+            File.Copy(sourcePath, targetPath, true);
+            return targetPath;
         }
 
         //public static async Task<int> RunProcessAsync(string fileName, string args)
