@@ -10,7 +10,7 @@ namespace CruiseDAL.V3.Tests
     {
         protected readonly ITestOutputHelper Output;
         private string _testTempPath;
-        List<string> FilesToBeDeleted { get; } = new List<string>();
+        private List<string> FilesToBeDeleted { get; } = new List<string>();
 
         public TestBase(ITestOutputHelper output)
         {
@@ -51,12 +51,20 @@ namespace CruiseDAL.V3.Tests
         public string TestFilesDirectory => Path.Combine(TestExecutionDirectory, "TestFiles");
         public string ResourceDirectory => Path.Combine(TestExecutionDirectory, "Resources");
 
-        
         public string GetTempFilePath(string extention, string fileName = null)
         {
             return Path.Combine(TestTempPath, (fileName ?? Guid.NewGuid().ToString()) + extention);
         }
 
+        public string InitializeTestFile(string fileName)
+        {
+            var sourcePath = Path.Combine(TestFilesDirectory, fileName);
+            var targetPath = Path.Combine(TestTempPath, fileName);
+
+            RegesterFileForCleanUp(targetPath);
+            File.Copy(sourcePath, targetPath, true);
+            return targetPath;
+        }
 
         public void RegesterFileForCleanUp(string path)
         {
@@ -66,7 +74,7 @@ namespace CruiseDAL.V3.Tests
         public void WriteDictionary<tKey, tValue>(IDictionary<tKey, tValue> dict)
         {
             Output.WriteLine("{");
-            foreach(var entry in dict)
+            foreach (var entry in dict)
             {
                 Output.WriteLine($"{{{entry.Key.ToString()} : {entry.Value.ToString()} }}");
             }
