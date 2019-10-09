@@ -17,4 +17,11 @@
                 "UNIQUE (Species, PrimaryProduct, ValueEquationNumber)" +
             ");";
     }
+
+    public partial class Migrations
+    {
+        public const string MIGRATE_TABLE_VALUEEQUATION =
+            "INSERT INTO {0}.ValueEquation " +
+            "SELECT * FROM {1}.ValueEquation;";
+    }
 }

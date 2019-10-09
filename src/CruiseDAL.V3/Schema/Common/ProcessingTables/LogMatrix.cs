@@ -19,4 +19,11 @@
                 "SEDmaximum DOUBLE Default 0.0" +
             ");";
     }
+
+    public partial class Migrations
+    {
+        public const string MIGRATE_TABLE_LOGMATRIX =
+            "INSERT INTO {0}.LogMatrix " +
+            "SELECT * FROM {1}.LogMatrix;";
+    }
 }

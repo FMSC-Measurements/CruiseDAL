@@ -10,4 +10,11 @@
                 "UNIQUE (ReportID)" +
             ");";
     }
+
+    public partial class Migrations
+    {
+        public const string MIGRATE_TABLE_Reports =
+            "INSERT INTO {0}.Reports " +
+            "SELECT * FROM {1}.Reports;";
+    }
 }

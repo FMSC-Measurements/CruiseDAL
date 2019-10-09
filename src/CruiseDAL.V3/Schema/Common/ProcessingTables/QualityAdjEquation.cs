@@ -17,4 +17,11 @@
                 "UNIQUE (Species, QualityAdjEq)" +
             ");";
     }
+
+    public partial class Migrations
+    {
+        public const string MIGRATE_TABLE_QUALITYADJEQUATION =
+            "INSERT INTO {0}.QualityAdjEquation " +
+            "SELECT * FROM {1}.QualityAdjEquation;";
+    }
 }

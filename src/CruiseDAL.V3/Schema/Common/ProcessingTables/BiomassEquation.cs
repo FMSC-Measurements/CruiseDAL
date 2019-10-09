@@ -18,4 +18,11 @@
                 "UNIQUE (Species, Product, Component, LiveDead)" +
             ");";
     }
+
+    public partial class Migrations
+    {
+        public const string MIGRATE_TABLE_BIOMASSEQUATION =
+            "INSERT INTO {0}.BiomassEquation " +
+            "SELECT * FROM {1}.BiomassEquation;";
+    }
 }

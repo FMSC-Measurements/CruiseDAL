@@ -3,7 +3,7 @@
     public partial class DDL
     {
         public const string CREATE_TABLE_VOLUMEEQUATION =
-            "CREATE TABLE VolumeEquation( " +
+            "CREATE TABLE VolumeEquation ( " +
                 "Species TEXT NOT NULL, " +
                 "PrimaryProduct TEXT NOT NULL, " +
                 "VolumeEquationNumber TEXT NOT NULL, " +
@@ -29,5 +29,12 @@
                 "EvenOddSegment INTEGER Default 0, " +
                 "UNIQUE (Species, PrimaryProduct, VolumeEquationNumber)" +
             ");";
+    }
+
+    public partial class Migrations
+    {
+        public const string MIGRATE_TABLE_VOLUMEEQUATION =
+            "INSERT INTO {0}.VolumeEquation " +
+            "SELECT * FROM {1}.VolumeEquation;";
     }
 }
