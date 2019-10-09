@@ -31,6 +31,8 @@
 
                 "UNIQUE (TreeID, LogNumber), " +
 
+                "CHECK (LogID LIKE '________-____-____-____-____________'), " +
+
                 "FOREIGN KEY (TreeID) REFERENCES Tree_V3 (TreeID) ON DELETE CASCADE " +
             ");";
 
@@ -95,7 +97,17 @@
                 ") " +
                 "SELECT " +
                     "l.Log_CN, " +
-                    "l.Log_GUID AS LogID, " +
+                    "ifnull( " +
+                        "(CASE typeof(l.Log_GUID) COLLATE NOCASE " + // ckeck the type of Log_GUID
+                            "WHEN 'TEXT' THEN " + // if text
+                                "(CASE WHEN l.Log_GUID LIKE '________-____-____-____-____________' " + // check to see if it is a properly formated guid
+                                    "THEN nullif(l.Log_GUID, '00000000-0000-0000-0000-000000000000') " + // if not a empty guid return that value otherwise return null for now
+                                    "ELSE NULL END) " + // if it is not a properly formatted guid return Log_GUID
+                            "ELSE NULL END)" + // if value is not a string return null
+                        ", (hex( randomblob(4)) || '-' || hex( randomblob(2)) " +
+                             "|| '-' || '4' || substr(hex(randomblob(2)), 2) || '-' " +
+                             "|| substr('AB89', 1 + (abs(random()) % 4), 1) || " +
+                             "substr(hex(randomblob(2)), 2) || '-' || hex(randomblob(6)))) AS LogID, " +
                     "t.TreeID AS TreeID, " +
                     "l.LogNumber, " +
                     "l.Grade, " +

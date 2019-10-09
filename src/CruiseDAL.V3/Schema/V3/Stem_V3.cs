@@ -21,6 +21,8 @@ namespace CruiseDAL.Schema
         ModifiedDate DateTime ,
         RowVersion INTEGER DEFAULT 0,
         
+        CHECK(StemID LIKE '________-____-____-____-____________'),        
+
         UNIQUE (StemID), 
         FOREIGN KEY (TreeID) REFERENCES Tree_V3 (TreeID) ON DELETE CASCADE 
         

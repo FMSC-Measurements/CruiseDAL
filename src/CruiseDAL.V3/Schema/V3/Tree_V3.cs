@@ -28,6 +28,7 @@
 
                 "UNIQUE (TreeID), " +
 
+                "CHECK (TreeID LIKE '________-____-____-____-____________'), " +
                 "CHECK (CountOrMeasure IN ('C', 'M', 'I')), " +
                 "CHECK (LiveDead IN ('L', 'D') OR LiveDead IS NULL)," +
 
@@ -89,6 +90,11 @@
     public partial class Migrations
     {
         public const string MIGRATE_TREE_V3_FROM_TREE =
+            //@"WITH generate_guid AS ( SELECT hex( randomblob(4)) || '-' || hex( randomblob(2)) 
+            // || '-' || '4' || substr(hex(randomblob(2)), 2) || '-'
+            // || substr('AB89', 1 + (abs(random()) % 4), 1) ||
+            // substr(hex(randomblob(2)), 2) || '-' || hex(randomblob(6)) AS guid ) " +
+
             "INSERT INTO {0}.Tree_V3 ( " +
                     "Tree_CN, " +
                     "TreeID, " +
@@ -108,7 +114,17 @@
                 ") " +
                 "SELECT " +
                     "t.Tree_CN, " +
-                    "ifnull( (CASE typeof(Tree_GUID) COLLATE NOCASE WHEN 'TEXT' THEN Tree_GUID WHEN 'BLOB' THEN lower(hex(Tree_GUID)) ELSE CAST (Tree_GUID AS TEXT) END), 'migrateTree-' || t.Tree_CN) AS TreeID, " +
+                    "ifnull( " +
+                        "(CASE typeof(Tree_GUID) COLLATE NOCASE " + // ckeck the type of Tree_GUID
+                            "WHEN 'TEXT' THEN " + // if text
+                                "(CASE WHEN Tree_GUID LIKE '________-____-____-____-____________' " + // check to see if it is a properly formated guid
+                                    "THEN nullif(Tree_GUID, '00000000-0000-0000-0000-000000000000') " + // if not a empty guid return that value otherwise return null for now
+                                    "ELSE NULL END) " + // if it is not a properly formatted guid return Tree_GUID
+                            "ELSE NULL END)" + // if value is not a string return null
+                        ", (hex( randomblob(4)) || '-' || hex( randomblob(2)) " +
+                             "|| '-' || '4' || substr(hex(randomblob(2)), 2) || '-' " +
+                             "|| substr('AB89', 1 + (abs(random()) % 4), 1) || " +
+                             "substr(hex(randomblob(2)), 2) || '-' || hex(randomblob(6)))) AS TreeID, " + // if value is null sofar generate guid
                     "cu.Code AS CuttingUnitCode, " +
                     "st.Code AS StratumCode, " +
                     "sg.Code AS SampleGroupCode, " +

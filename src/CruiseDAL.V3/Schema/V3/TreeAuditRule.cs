@@ -10,7 +10,10 @@
     Min REAL,
     Max REAL,
     UNIQUE (TreeAuditRuleID),
+
     CHECK ((Min IS NULL OR Max IS NULL) OR (Min < Max)),
+    CHECK (TreeAuditRuleID LIKE '________-____-____-____-____________'),
+
     FOREIGN KEY (Field) REFERENCES TreeField (Field)
 );";
 
@@ -30,7 +33,10 @@
 )
 SELECT
     TreeAuditValue_CN,
-    'migrateTreeAuditValue-' || TreeAuditValue_CN,
+    (hex( randomblob(4)) || '-' || hex( randomblob(2)) 
+        || '-' || '4' || substr(hex(randomblob(2)), 2) || '-' 
+        || substr('AB89', 1 + (abs(random()) % 4), 1) || 
+        substr(hex(randomblob(2)), 2) || '-' || hex(randomblob(6))),
     Field,
     nullif(Min,0) AS Min,
     nullif(Max,0) AS Max

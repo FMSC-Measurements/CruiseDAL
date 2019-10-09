@@ -20,6 +20,8 @@
                 "ModifiedDate DATETIME, " +
                 "RowVersion INTEGER DEFAULT 0, " +
 
+                "CHECK (PlotID LIKE '________-____-____-____-____________'), " +
+
                 "UNIQUE (PlotID), " +
                 "UNIQUE (PlotNumber, CuttingUnitCode)," +
 
@@ -69,7 +71,17 @@
                 ") " +
                 "SELECT " +
                     "p.Plot_CN, " +
-                    "ifnull(Plot_GUID, 'migrateFormPlot-' || p.Plot_CN) AS PlotID, " +
+                    "ifnull( " +
+                        "(CASE typeof(Plot_GUID) COLLATE NOCASE " + // ckeck the type of Plot_GUID
+                            "WHEN 'TEXT' THEN " + // if text
+                                "(CASE WHEN Plot_GUID LIKE '________-____-____-____-____________' " + // check to see if it is a properly formated guid
+                                    "THEN nullif(Plot_GUID, '00000000-0000-0000-0000-000000000000') " + // if not a empty guid return that value otherwise return null for now
+                                    "ELSE NULL END) " + // if it is not a properly formatted guid return Tree_GUID
+                            "ELSE NULL END)" + // if value is not a string return null
+                        ", (hex( randomblob(4)) || '-' || hex( randomblob(2)) " +
+                            "|| '-' || '4' || substr(hex(randomblob(2)), 2) || '-' " +
+                            "|| substr('AB89', 1 + (abs(random()) % 4), 1) || " +
+                            "substr(hex(randomblob(2)), 2) || '-' || hex(randomblob(6)))) AS PlotID, " +
                     "p.PlotNumber, " +
                     "cu.Code AS CuttingUnitCode, " +
                     "p.Slope, " +
