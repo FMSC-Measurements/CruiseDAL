@@ -5,6 +5,7 @@
         public const string CREATE_VIEW_PLOT =
             "CREATE VIEW Plot AS " +
             "SELECT " +
+                "null AS Plot_GUID, " +
                 "ps.Plot_Stratum_CN AS Plot_CN, " +
                 "st.Stratum_CN, " +
                 "cu.CuttingUnit_CN, " +
@@ -23,6 +24,7 @@
                 "ps.CreatedBy, " +
                 "ps.CreatedDate, " +
                 "ps.ModifiedBy, " +
+                "ps.ModifiedDate, " +
                 "ps.RowVersion " +
             "FROM Plot_Stratum AS ps " +
             "JOIN Plot_V3 AS p  USING (PlotNumber, CuttingUnitCode)" +
