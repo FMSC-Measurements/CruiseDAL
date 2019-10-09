@@ -51,7 +51,7 @@ with treeError_species AS (
         'UpperStemHeight' AS Field
     FROM TreeMeasurment AS tm 
     JOIN Tree_V3 AS t USING (TreeID)
-    WHERE t.CountOrMeasure = 'M' AND tm.UpperStemHeight > 0 AND tm.UpperStemHeight <= tm.MerchHeightPrimary),
+    WHERE t.CountOrMeasure = 'M' AND tm.UpperStemHeight > 0 AND tm.UpperStemHeight < tm.MerchHeightPrimary),
 
     treeError_upperStemDiameter AS (
     SELECT 
