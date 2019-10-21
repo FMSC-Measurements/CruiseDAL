@@ -1,8 +1,10 @@
 ﻿using FMSC.ORM;
 using FMSC.ORM.Core;
 using System;
+using System.Collections.Generic;
 using System.Data.Common;
 using System.IO;
+using System.Linq;
 
 namespace CruiseDAL
 {
@@ -85,7 +87,7 @@ namespace CruiseDAL
             }
         }
 
-        public static void Migrate(CruiseDatastore sourceDS, CruiseDatastore destinationDS)
+        public static void Migrate(CruiseDatastore sourceDS, CruiseDatastore destinationDS, IEnumerable<string> excluding = null)
         {
             var connection = destinationDS.OpenConnection();
 
@@ -93,7 +95,7 @@ namespace CruiseDAL
             destinationDS.AttachDB(sourceDS, fromAlias);
             try
             {
-                Migrate(connection, fromAlias);
+                Migrate(connection, fromAlias, excluding);
             }
             finally
             {
@@ -102,7 +104,7 @@ namespace CruiseDAL
             }
         }
 
-        public static void Migrate(DbConnection connection, string from)
+        public static void Migrate(DbConnection connection, string from, IEnumerable<string> excluding = null)
         {
             var to = "main";
 
@@ -122,6 +124,9 @@ namespace CruiseDAL
                 {
                     foreach (var table in tables)
                     {
+                        if(excluding?.Contains(table) ?? false)
+                        { continue; }
+
                         if (table == "Globals")
                         {
                             connection.ExecuteNonQuery(

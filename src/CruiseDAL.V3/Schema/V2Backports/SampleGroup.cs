@@ -21,8 +21,8 @@
                 "sg.TallyBySubPop, " +
                 "sg.TallyMethod, " +
                 "sg.Description, " +
-                "ss.SampleSelectorType, " +
-                "ss.SampleSelectorState, " +
+                "NULL AS SampleSelectorType, " +
+                "NULL AS SampleSelectorState, " +
                 "sg.MinKPI, " +
                 "sg.MaxKPI, " +
                 "sg.SmallFPS, " +
@@ -33,7 +33,6 @@
                 "sg.RowVersion " +
             "FROM SampleGroup_V3 AS sg " +
             "JOIN Stratum AS st ON sg.StratumCode = st.Code " +
-            "LEFT JOIN SamplerState AS ss USING (StratumCode, SampleGroupCode) " +
             ";";
     }
 }

@@ -4,7 +4,7 @@ namespace CruiseDAL.Schema
 {
     public static partial class DDL
     {
-        public static Version DATABASE_VERSION = new Version("3.0.1");
+        public static Version DATABASE_VERSION = new Version("3.0.2");
 
         public static string SET_DBVERSION =
             $"INSERT INTO Globals (Block, Key, Value) VALUES ('Database', 'Version', '{DATABASE_VERSION.ToString()}'); ";
@@ -39,7 +39,10 @@ namespace CruiseDAL.Schema
 
             CREATE_TABLE_SAMPLEGROUP_V3,
             CREATE_TRIGGER_SAMPLEGROUP_V3_ONUPDATE,
+
+            CREATE_TABLE_DEVICE,
             CREATE_TALBE_SAMPLERSTATE,
+            CREATE_TRIGGER_SAMPLERSTATE_ONUPDATE,
 
             CREATE_TABLE_SpeciesCode,
 
@@ -58,6 +61,7 @@ namespace CruiseDAL.Schema
 
             CREATE_TABLE_PLOT_V3,
             CREATE_INDEX_Plot_V3_CuttingUnitCode,
+            CREATE_INDEX_Plot_V3_PlotNumber,
             CREATE_TRIGGER_PLOT_V3_ONUPDATE,
 
             CREATE_TABLE_PLOT_STRATUM,
@@ -68,6 +72,7 @@ namespace CruiseDAL.Schema
             CREATE_INDEX_Tree_V3_CuttingUnitCode,
             CREATE_INDEX_Tree_V3_PlotNumber_CuttingUnitCode,
             CREATE_INDEX_Tree_V3_SampleGroupCode_StratumCode,
+            CREATE_INDEX_Tree_V3_TreeNumber,
             CREATE_INDEX_Tree_V3_Species,
             CREATE_INDEX_Tree_V3_StratumCode,
             CREATE_INDEX_Tree_V3_TreeID_CuttingUnitCode_SampleGroupCode_StratumCode,
@@ -85,6 +90,7 @@ namespace CruiseDAL.Schema
 
             CREATE_TABLE_LOG_V3,
             CREATE_INDEX_Log_V3_TreeID,
+            CREATE_INDEX_Log_V3_LogNumber,
             CREATE_TRIGGER_LOG_V3_ONUPDATE,
 
             CREATE_TABLE_Stem_V3,

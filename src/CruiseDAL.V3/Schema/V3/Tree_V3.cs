@@ -40,6 +40,9 @@
                 "FOREIGN KEY (Species) REFERENCES SpeciesCode (Species) " +
             ")";
 
+        public const string CREATE_INDEX_Tree_V3_TreeNumber =
+            "CREATE INDEX Tree_V3_TreeNumber ON Tree_V3 (TreeNumber);";
+
         public const string CREATE_INDEX_Tree_V3_Species =
             @"CREATE INDEX 'Tree_V3_Species' ON 'Tree_V3'('Species');";
 
@@ -129,7 +132,7 @@
                     "st.Code AS StratumCode, " +
                     "sg.Code AS SampleGroupCode, " +
                     "tdv.Species, " +
-                    "tdv.LiveDead, " +
+                    "t.LiveDead, " + // use livedead from tree instead of tdv, because that is the value used by cruise processing
                     "p.PlotNumber, " +
                     "t.TreeNumber, " +
                     "t.CountOrMeasure, " +

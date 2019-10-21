@@ -36,7 +36,7 @@
             "JOIN SampleGroup_V3 AS sg ON t.StratumCode = sg.StratumCode AND t.SampleGroupCode = sg.SampleGroupCode  " +
             "JOIN Stratum AS st ON t.StratumCode = st.Code " +
             "JOIN CuttingUnit AS cu ON t.CuttingUnitCode = cu.Code " +
-            "LEFT JOIN Plot_Stratum AS plt USING (StratumCode, PlotNumber) " +
+            "LEFT JOIN Plot_Stratum AS plt USING (CuttingUnitCode, StratumCode, PlotNumber) " +
             "LEFT JOIN TreeCalculatedValues AS tcv USING (Tree_CN) " +
             "LEFT JOIN TreeDefaultValue AS tdv ON " +
                         "tdv.Species = t.Species " +

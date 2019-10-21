@@ -36,6 +36,9 @@
                 "FOREIGN KEY (TreeID) REFERENCES Tree_V3 (TreeID) ON DELETE CASCADE " +
             ");";
 
+        public const string CREATE_INDEX_Log_V3_LogNumber =
+            "CREATE INDEX Log_V3_LogNumber ON Log_V3 (LogNumber);";
+
         public const string CREATE_INDEX_Log_V3_TreeID =
             @"CREATE INDEX Log_V3_TreeID ON Log_V3 (TreeID);";
 

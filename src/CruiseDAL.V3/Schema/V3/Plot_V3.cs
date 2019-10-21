@@ -29,7 +29,10 @@
             ");";
 
         public const string CREATE_INDEX_Plot_V3_CuttingUnitCode =
-            @"CREATE INDEX 'Plot_V3_CuttingUnitCode' ON 'Plot_V3'('CuttingUnitCode');";
+            "CREATE INDEX Plot_V3_CuttingUnitCode ON Plot_V3 (CuttingUnitCode);";
+
+        public const string CREATE_INDEX_Plot_V3_PlotNumber =
+            "CREATE INDEX Plot_V3_PlotNumber ON Plot_V3 (PlotNumber);";
 
         public const string CREATE_TRIGGER_PLOT_V3_ONUPDATE =
             "CREATE TRIGGER Plot_V3_OnUpdate " +

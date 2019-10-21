@@ -35,7 +35,7 @@ namespace CruiseDAL.V3.Test
                 var treeCountAfter = ds.ExecuteScalar<int>("SELECT count(*) FROM Tree_V3;");
                 treeCountAfter.Should().Be(treeCount);
 
-                ds.DatabaseVersion.Should().Be("3.0.1");
+                ds.DatabaseVersion.Should().Be("3.0.2");
                 ds.CheckTableExists("TallyLedger_Tree_Totals");
             }
         }

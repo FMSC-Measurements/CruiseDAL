@@ -8,7 +8,7 @@
                 "StratumCode TEXT NOT NULL, " +
                 "Field TEXT NOT NULL, " +
 
-                "UNIQUE (StratumCode) " +
+                "UNIQUE (StratumCode), " +
 
                 "FOREIGN KEY (StratumCode) REFERENCES Stratum (Code) ON DELETE CASCADE, " +
                 "FOREIGN KEY (Field) REFERENCES TreeField (Field) " +
