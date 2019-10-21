@@ -110,6 +110,8 @@ namespace CruiseDAL.Tests.Schema
         [InlineData("test_FixCNT.cruise")]
         [InlineData("0432 C53East TS.cruise")]
         [InlineData("Whipple Timbersale.cruise")]
+        [InlineData("Albee.M_20151014_1758.cruise")]
+        [InlineData("dupTallyHotkey.cruise")]
         public void Migrate(string fileName)
         {
             var (origFile, testFile) = SetUpTestFile(fileName);

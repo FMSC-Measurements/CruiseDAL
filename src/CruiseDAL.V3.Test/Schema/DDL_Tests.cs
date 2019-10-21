@@ -18,6 +18,9 @@ namespace CruiseDAL.Tests.Schema
 
         private void TestSyntax(string commandText)
         {
+            var results = TSQL.TSQLTokenizer.ParseTokens(commandText).ToArray(); ;
+
+
             using (var database = new FMSC.ORM.SQLite.SQLiteDatastore())
             {
                 database.Invoking(x => x.Execute("EXPLAIN " + commandText)).Should().NotThrow();

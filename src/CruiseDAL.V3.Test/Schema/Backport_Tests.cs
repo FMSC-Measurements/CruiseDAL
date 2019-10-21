@@ -74,7 +74,9 @@ namespace CruiseDAL.V3.Test.Schema
                 var sgv2 = dbv2.From<SampleGroup>()
                     .Query();
 
-                sgv3.Should().BeEquivalentTo(sgv2);
+                sgv3.Should().BeEquivalentTo(sgv2, x =>
+                    x.Excluding(y => y.SampleSelectorState)
+                    .Excluding(y => y.SampleSelectorType));
             }
         }
 
