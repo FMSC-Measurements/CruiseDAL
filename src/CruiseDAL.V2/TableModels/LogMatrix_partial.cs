@@ -9,7 +9,7 @@ namespace CruiseDAL.DataObjects
     public partial class LogMatrixDO
     {
 
-        public static Dictionary<String, List<LogMatrixDO>> GetByRowNumberGroupBySpecies(DAL cruiseDAL, string reportNum)
+        public static Dictionary<String, List<LogMatrixDO>> GetByRowNumberGroupBySpecies(CruiseDatastore cruiseDAL, string reportNum)
         {
             var dict = new Dictionary<string, List<LogMatrixDO>>();
             var list = cruiseDAL.From<LogMatrixDO>()

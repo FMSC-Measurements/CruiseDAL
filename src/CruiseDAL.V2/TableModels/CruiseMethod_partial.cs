@@ -5,7 +5,7 @@ namespace CruiseDAL.DataObjects
 {
     public partial class CruiseMethodsDO
     {
-        public static List<T> ReadCruiseMethods<T>(DAL db, bool reconMethodsOnly) where T : CruiseMethodsDO, new()
+        public static List<T> ReadCruiseMethods<T>(CruiseDatastore db, bool reconMethodsOnly) where T : CruiseMethodsDO, new()
         {
             if (reconMethodsOnly)
             {
@@ -19,12 +19,12 @@ namespace CruiseDAL.DataObjects
             }
         }
 
-        public static List<CruiseMethodsDO> ReadCruiseMethods(DAL db, bool reconMethodsOnly)
+        public static List<CruiseMethodsDO> ReadCruiseMethods(CruiseDatastore db, bool reconMethodsOnly)
         {
             return ReadCruiseMethods<CruiseMethodsDO>(db, reconMethodsOnly);
         }
 
-        public static string[] ReadCruiseMethodStr(DAL db, bool reconMethodsOnly)
+        public static string[] ReadCruiseMethodStr(CruiseDatastore db, bool reconMethodsOnly)
         {
             var format = "Select group_concat(Code,',') FROM CruiseMethods {0};";
 

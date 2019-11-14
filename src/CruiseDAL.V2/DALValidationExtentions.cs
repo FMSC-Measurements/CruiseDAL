@@ -5,7 +5,7 @@ namespace CruiseDAL
 {
     public static class DALValidationExtentions
     {
-        public static bool HasCruiseErrors(this DAL dal, out string[] errors)
+        public static bool HasCruiseErrors(this CruiseDatastore dal, out string[] errors)
         {
             bool hasErrors = false;
             var errorList = new List<string>();
@@ -78,38 +78,38 @@ namespace CruiseDAL
             return hasErrors;
         }
 
-        public static bool HasCruiseErrors(this DAL dal)
+        public static bool HasCruiseErrors(this CruiseDatastore dal)
         {
             string[] errors;
             return dal.HasCruiseErrors(out errors);
         }
 
-        private static bool HasBlankSpeciesCodes(this DAL dal)
+        private static bool HasBlankSpeciesCodes(this CruiseDatastore dal)
         {
             return dal.GetRowCount(TREE._NAME, "WHERE ifnull(Species, '') = ''") > 0;
         }
 
-        private static bool HasBlankLiveDead(this DAL dal)
+        private static bool HasBlankLiveDead(this CruiseDatastore dal)
         {
             return dal.GetRowCount(TREE._NAME, "WHERE ifnull(LiveDead, '') = ''") > 0;
         }
 
-        private static bool HasBlankCountOrMeasure(this DAL dal)
+        private static bool HasBlankCountOrMeasure(this CruiseDatastore dal)
         {
             return dal.GetRowCount(TREE._NAME, "WHERE ifnull(CountOrMeasure, '') = ''") > 0;
         }
 
-        private static bool HasBlankDefaultLiveDead(this DAL dal)
+        private static bool HasBlankDefaultLiveDead(this CruiseDatastore dal)
         {
             return dal.GetRowCount(SAMPLEGROUP._NAME, "WHERE ifnull(DefaultLiveDead, '') = ''") > 0;
         }
 
-        private static bool HasMismatchSpeciesOrLiveDead(DAL dal)
+        private static bool HasMismatchSpeciesOrLiveDead(CruiseDatastore dal)
         {
             return dal.GetRowCount("Tree", "JOIN TreeDefaultValue AS tdv USING (TreeDefaultValue_CN) WHERE Tree.Species != tdv.Species OR Tree.LiveDead != tdv.LiveDead;") > 0;
         }
 
-        private static void FixMismatchSpecies(DAL dal)
+        private static void FixMismatchSpecies(CruiseDatastore dal)
         {
             dal.Execute(
 @"UPDATE Tree
@@ -128,18 +128,18 @@ WHERE Tree_CN IN
         AND tree.LiveDead != tdv.LiveDead);");
         }
 
-        private static bool HasSampleGroupUOMErrors(this DAL dal)
+        private static bool HasSampleGroupUOMErrors(this CruiseDatastore dal)
         {
             return (dal.ExecuteScalar<long>("Select Count(DISTINCT UOM) FROM SampleGroup WHERE UOM != '04';")) > 1L;
             //return this.GetRowCount("SampleGroup", "WHERE UOM != '04' GROUP BY UOM") > 1;
         }
 
-        private static bool HasOrphanedStrata(this DAL dal)
+        private static bool HasOrphanedStrata(this CruiseDatastore dal)
         {
             return dal.GetRowCount("Stratum", "LEFT JOIN CuttingUnitStratum USING (Stratum_CN) WHERE CuttingUnitStratum.Stratum_CN IS NULL") > 0;
         }
 
-        private static bool HasStrataWithNoSampleGroups(this DAL dal)
+        private static bool HasStrataWithNoSampleGroups(this CruiseDatastore dal)
         {
             return dal.GetRowCount("Stratum", "LEFT JOIN SampleGroup USING (Stratum_CN) WHERE SampleGroup.Stratum_CN IS NULL") > 0;
         }
