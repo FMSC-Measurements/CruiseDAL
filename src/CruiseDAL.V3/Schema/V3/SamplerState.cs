@@ -16,7 +16,7 @@
                 "InsuranceCounter DEFAULT -1, " +
                 "ModifiedDate DateTime, " +
 
-                "UNIQUE (StratumCode, SampleGroupCode), " +
+                "UNIQUE (DeviceID, StratumCode, SampleGroupCode), " +
 
                 "FOREIGN KEY (DeviceID) REFERENCES Device (DeviceID) ON DELETE CASCADE, " +
                 "FOREIGN KEY (StratumCode, SampleGroupCode) REFERENCES SampleGroup_V3 (StratumCode, SampleGroupCode) ON DELETE CASCADE " +
@@ -25,8 +25,9 @@
         public const string CREATE_TRIGGER_SAMPLERSTATE_ONUPDATE =
             "CREATE TRIGGER SamplerState_OnUpdate " +
             "AFTER UPDATE OF " +
-                "SampleSelectorState, " +
-                "SampleSelectorType " +
+                "BlockState, " +
+                "Counter, " +
+                "InsuranceCounter " +
             "ON SamplerState " +
             "FOR EACH ROW " +
             "BEGIN " +
