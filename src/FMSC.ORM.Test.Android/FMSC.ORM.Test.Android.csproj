@@ -26,8 +26,8 @@
   <ItemGroup>
     <!--<PackageReference Include="MSBuild.Sdk.Extras" Version="1.5.4" PrivateAssets="All" />-->
 
-    <PackageReference Include="xunit" Version="2.4.0" />
-    <PackageReference Include="xunit.runner.devices" Version="2.4.0" />
+    <PackageReference Include="xunit" Version="2.4.1" />
+    <PackageReference Include="xunit.runner.devices" Version="2.5.25" />
     <ProjectReference Include="..\FMSC.ORM.Test\FMSC.ORM.Test.csproj" Properties="TargetFramework=netstandard2.0" />
   </ItemGroup>
 </Project>

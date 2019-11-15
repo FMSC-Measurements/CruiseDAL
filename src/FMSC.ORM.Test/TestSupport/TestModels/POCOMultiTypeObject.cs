@@ -1,20 +1,17 @@
-﻿using System;
+﻿using FMSC.ORM.EntityModel.Attributes;
+using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using FMSC.ORM.Core.SQL;
-using FMSC.ORM.EntityModel.Attributes;
 
 namespace FMSC.ORM.TestSupport.TestModels
 {
-    [EntitySource(FMSC.ORM.TestSupport.TestSQLConstants.MULTI_PROP_TABLE_NAME)]
+    [Table(FMSC.ORM.TestSupport.TestSQLConstants.MULTI_PROP_TABLE_NAME)]
     public class POCOMultiTypeObject : IInterface
     {
         [PrimaryKeyField(Name = "ID")]
-        public int ID { get; set; }
+        public int? ID { get; set; }
 
-        [Field(Name = "RowID")]
-        public int RowID { get; set; }
+        //[Field(Name = "RowID")]
+        //public int RowID { get; set; }
 
         [Field(Name = "StringField")]
         public string StringField { get; set; }
@@ -58,10 +55,25 @@ namespace FMSC.ORM.TestSupport.TestModels
         [Field(Name = "PartialyPublicField")]
         public string PartialyPublicField { get; protected set; }
 
-        [Field(Name = "PrivateField")]
-        private string PrivateField { get; set; }
+        [Field("EnumField")]
+        public TypeCode EnumField { get; set; }
+
+        public string AutomaticStringField { get; set; }
+
+
+
+
 
         #region non visible fields
+
+        public object ObjectField { get; set; }
+
+        public List<object> ListField { get; set; }
+
+        public object[] ArrayField { get; set; }
+
+        [Field(Name = "PrivateField")]
+        private string PrivateField { get; set; }
 
         [IgnoreField]
         public string IgnoredField { get; set; }

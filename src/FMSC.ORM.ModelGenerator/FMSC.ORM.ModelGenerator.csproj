@@ -1,0 +1,26 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFrameworks>net461</TargetFrameworks>
+    <StartupObject>FMSC.ORM.ModelGenerator.Program</StartupObject>
+    <AssemblyName>ModelGen</AssemblyName>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Content Include="FMSC.ORM.ModelGenerator.targets">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Backpack.SqlBuilder" Version="1.1.2.32" />
+    <PackageReference Include="CommandLineParser" Version="2.5.0" />
+    <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="3.1.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\FMSC.ORM\FMSC.ORM.csproj" />
+  </ItemGroup>
+
+</Project>

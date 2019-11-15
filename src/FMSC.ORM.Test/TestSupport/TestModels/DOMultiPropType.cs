@@ -8,8 +8,8 @@ using FMSC.ORM.EntityModel;
 
 namespace FMSC.ORM.TestSupport.TestModels
 {
-    [EntitySource(SourceName = FMSC.ORM.TestSupport.TestSQLConstants.MULTI_PROP_TABLE_NAME)]
-    public class DOMultiPropType : DataObject_Base, IInterface
+    [Table(FMSC.ORM.TestSupport.TestSQLConstants.MULTI_PROP_TABLE_NAME)]
+    public class DOMultiPropType : INPC_Base, IInterface
     {
         int _id;
 
@@ -201,7 +201,9 @@ namespace FMSC.ORM.TestSupport.TestModels
 
         #region automatic fields
 
-        //TODO test automatic fields
+        public string AutomaticStringField { get; set; }
+
+        public string PartialyPublicAutomaticField { get; protected set; }
 
         #endregion automatic fields
 
@@ -213,7 +215,6 @@ namespace FMSC.ORM.TestSupport.TestModels
         [IgnoreField]
         private string PrivateIgnoredField { get; set; }
 
-        public string PartialyPublicAutomaticField { get; protected set; }
 
         private string PrivateAutomaticField { get; set; }
 

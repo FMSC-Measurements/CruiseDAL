@@ -17,6 +17,9 @@ With the addition of the TallyLedger table as well as accompanying  changes in t
  - older cruise applications are in consistent in how GUID fields are stored and may change their representation when updating records, unintentionally breaking foreign keys. Although the addition of the TallyLedger table doesn't directly require this breaking change, it does mean that older apps have the ability to significantly break the new schema. 
  - with the changes to how tree counts are stored. There is a potential for errors if a older cruise application attempts to modify count data. Therefor newer applications should only attempt to modify count data through the TallyLedger table.   
 
+# Replacement to the CountTree table
+Another purpose to the the TallyLedger table is as a replacement to the CountTree table for storing the TreeCount values
+
 # Fields
  - TallyLedgerID (TEXT - GUID or semantic value, PRIMARY KEY)
  - UnitCode (TEXT) //could be foreign key to CuttingUnit.Code

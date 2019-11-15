@@ -1,0 +1,12 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <RootNamespace>CruiseDAL</RootNamespace>
+    <Version>$(CruiseDALV3Version)</Version>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\CruiseDAL.Core\CruiseDAL.Core.csproj" />
+  </ItemGroup>
+
+</Project>

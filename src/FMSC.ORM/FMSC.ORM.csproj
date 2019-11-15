@@ -1,17 +1,14 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <!--we could probably target net35 but im using net40 as the minimum because 'dotnet' cli only supports down to net40-->
-    <!--and i want dotnet cli to run test in the cli to test all target frameworks-->
-    <TargetFrameworks>net40;netstandard2.0</TargetFrameworks>
-    <Version>2.1.2</Version>
+    <Version>$(FMSCORMversion)</Version>
   </PropertyGroup>
 
-  <PropertyGroup Condition="'$(TargetFramework)' == 'net40'">
+  <PropertyGroup Condition="$(TargetFramework.StartsWith('net4'))">
     <DefineConstants>SYSTEM_DATA_SQLITE</DefineConstants>
   </PropertyGroup>
 
-  <PropertyGroup Condition="'$(TargetFramework)' == 'netstandard2.0'">
+  <PropertyGroup Condition="$(TargetFramework.StartsWith('netstandard'))">
     <DefineConstants>MICROSOFT_DATA_SQLITE</DefineConstants>
   </PropertyGroup>
 
@@ -24,14 +21,14 @@
   </PropertyGroup>
 
   <ItemGroup Condition="$(DefineConstants.Contains(SYSTEM_DATA_SQLITE))">
-    <PackageReference Include="System.Data.SQLite.Core" Version="1.0.108" />
+    <PackageReference Include="System.Data.SQLite.Core" Version="1.0.110" />
   </ItemGroup>
 
   <ItemGroup Condition="$(DefineConstants.Contains(MICROSOFT_DATA_SQLITE))">
-    <PackageReference Include="Microsoft.Data.Sqlite" Version="2.1.0" />
+    <PackageReference Include="Microsoft.Data.Sqlite" Version="2.2.3" />
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Backpack.SqlBuilder" Version="1.0.23" />
+    <PackageReference Include="Backpack.SqlBuilder" Version="1.1.1.31" />
   </ItemGroup>
 </Project>

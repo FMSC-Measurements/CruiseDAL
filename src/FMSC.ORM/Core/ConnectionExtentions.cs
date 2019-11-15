@@ -14,6 +14,16 @@ namespace FMSC.ORM.Core
 
         #region ExecuteNonQuery
 
+        public static int ExecuteNonQuery(this DbConnection connection, string commandText)
+        {
+            return ExecuteNonQuery(connection, commandText, (object[])null, (DbTransaction)null);
+        }
+
+        public static int ExecuteNonQuery(this DbConnection connection, string commandText, object[] parameters)
+        {
+            return ExecuteNonQuery(connection, commandText, parameters, (DbTransaction)null);
+        }
+
         public static int ExecuteNonQuery(this DbConnection connection, string commandText, object[] parameters, DbTransaction transaction)
         {
             if (string.IsNullOrEmpty(commandText)) { throw new ArgumentException("command can't be null or empty", "command"); }
@@ -42,6 +52,11 @@ namespace FMSC.ORM.Core
             }
         }
 
+        public static int ExecuteNonQuery(this DbConnection connection, DbCommand command)
+        {
+            return ExecuteNonQuery(connection, command);
+        }
+
         public static int ExecuteNonQuery(this DbConnection connection, DbCommand command, DbTransaction transaction)
         {
             if (connection == null) { throw new ArgumentNullException("connection"); }
@@ -58,32 +73,6 @@ namespace FMSC.ORM.Core
         #endregion ExecuteNonQuery
 
         #region ExecuteReader
-
-        public static DbDataReader ExecuteReader(this DbConnection connection, string commandText, object[] paramaters, DbTransaction transaction)
-        {
-            if (string.IsNullOrEmpty(commandText)) { throw new ArgumentException("command can't be null or empty", "command"); }
-            if (connection == null) { throw new ArgumentNullException("connection"); }
-
-            var command = connection.CreateCommand();
-
-            command.CommandText = commandText;
-            command.SetParams(paramaters);
-
-            return ExecuteReader(connection, command, transaction);
-        }
-
-        public static DbDataReader ExecuteReader2(this DbConnection connection, string commandText, object paramaterData, DbTransaction transaction)
-        {
-            if (string.IsNullOrEmpty(commandText)) { throw new ArgumentException("command can't be null or empty", "command"); }
-            if (connection == null) { throw new ArgumentNullException("connection"); }
-
-            var command = connection.CreateCommand();
-
-            command.CommandText = commandText;
-            command.AddParams(paramaterData);
-
-            return ExecuteReader(connection, command, transaction);
-        }
 
         public static DbDataReader ExecuteReader(this DbConnection connection, DbCommand command, DbTransaction transaction)
         {
@@ -132,6 +121,18 @@ namespace FMSC.ORM.Core
         {
             var result = ExecuteScalar(connection, commandText, parameters, transaction);
 
+            return ValueMapper.ProcessValue<T>(result);
+        }
+
+        public static T ExecuteScalar2<T>(this DbConnection connection, string commandText, object parameters, DbTransaction transaction)
+        {
+            var result = ExecuteScalar2(connection, commandText, parameters, transaction);
+
+            return ValueMapper.ProcessValue<T>(result);
+        }
+
+        private static T ProcessResult<T>(object result)
+        {
             if (result == null || result is DBNull)
             {
                 return default(T);
@@ -143,27 +144,32 @@ namespace FMSC.ORM.Core
             else
             {
                 Type targetType = typeof(T);
-                targetType = Nullable.GetUnderlyingType(targetType) ?? targetType;
+                return (T)ProcessResult(targetType, result);
+            }
+        }
 
-                if (result is IConvertible)
+        private static object ProcessResult(Type targetType, object result)
+        {
+            targetType = Nullable.GetUnderlyingType(targetType) ?? targetType;
+
+            if (result is IConvertible)
+            {
+                return Convert.ChangeType(result, targetType
+                    , System.Globalization.CultureInfo.CurrentCulture);
+            }
+            else
+            {
+                try
                 {
-                    return (T)Convert.ChangeType(result, targetType
-                        , System.Globalization.CultureInfo.CurrentCulture);
+                    return result;
                 }
-                else
+                catch (InvalidCastException)
                 {
-                    try
-                    {
-                        return (T)result;
-                    }
-                    catch (InvalidCastException)
-                    {
 #if NetCF
                         throw;
 #else
-                        return (T)Activator.CreateInstance(targetType, result);
+                    return Activator.CreateInstance(targetType, result);
 #endif
-                    }
                 }
             }
         }
@@ -177,7 +183,7 @@ namespace FMSC.ORM.Core
             if (data == null) { throw new ArgumentNullException("data"); }
 
             EntityDescription entityDescription = GlobalEntityDescriptionLookup.Instance.LookUpEntityByType(data.GetType());
-            PrimaryKeyFieldAttribute keyFieldInfo = entityDescription.Fields.PrimaryKeyField;
+            var keyFieldInfo = entityDescription.Fields.PrimaryKeyField;
 
             if (keyFieldInfo == null) { throw new InvalidOperationException("type doesn't have primary key field"); }
 

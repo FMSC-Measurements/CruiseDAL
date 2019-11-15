@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace FMSC.ORM.Test.TestSupport.TestModels
 {
-    [EntitySource(SourceName =nameof(RowIDAsPrimaryKey))]
+    [Table(nameof(RowIDAsPrimaryKey))]
     public class RowIDAsPrimaryKey
     {
         public const string CREATE_TABLE_COMMAND = "CREATE TABLE " + nameof(RowIDAsPrimaryKey) + " (StringField TEXT)";

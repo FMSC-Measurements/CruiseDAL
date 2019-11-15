@@ -1,4 +1,5 @@
-﻿using System.Data;
+﻿using System;
+using System.Data;
 using System.Diagnostics;
 
 namespace FMSC.ORM.Core
@@ -24,6 +25,11 @@ namespace FMSC.ORM.Core
         public void LogConnection(string message)
         {
             Debug.WriteLine(message, DS_EVENT);
+        }
+
+        public void LogException(Exception ex)
+        {
+            Debug.WriteLine(ex.ToString());
         }
 
         public void WriteLine(string message, string catagory)

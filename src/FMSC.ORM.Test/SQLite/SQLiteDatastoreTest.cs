@@ -1,9 +1,10 @@
-﻿using FluentAssertions;
+﻿using Backpack.SqlBuilder;
+using FluentAssertions;
 using FMSC.ORM.Core;
-using FMSC.ORM.Core.SQL;
+using FMSC.ORM.Test;
+using FMSC.ORM.Test.TestSupport.TestModels;
 using FMSC.ORM.TestSupport;
 using FMSC.ORM.TestSupport.TestModels;
-using Backpack.SqlBuilder;
 using System;
 using System.Data;
 using System.Data.Common;
@@ -11,11 +12,10 @@ using System.IO;
 using System.Linq;
 using Xunit;
 using Xunit.Abstractions;
-using FMSC.ORM.Test.TestSupport.TestModels;
 
 namespace FMSC.ORM.SQLite
 {
-    public class SQLiteDatastoreTest : TestBase , IDisposable
+    public class SQLiteDatastoreTest : TestBase, IDisposable
     {
         private readonly string _tempDir;
         private readonly string _testCreatePath;
@@ -43,7 +43,6 @@ namespace FMSC.ORM.SQLite
             }
         }
 
-
         [Fact]
         public void Ctor_with_null_path()
         {
@@ -52,7 +51,6 @@ namespace FMSC.ORM.SQLite
                 var db = new SQLiteDatastore(null);
             };
             action.Should().Throw<ArgumentException>();
-
         }
 
         [Fact]
@@ -63,7 +61,6 @@ namespace FMSC.ORM.SQLite
                 db.Path.Should().NotBeNullOrWhiteSpace();
                 db.Execute("Select 1;");
             }
-
         }
 
         [Fact]
@@ -74,7 +71,57 @@ namespace FMSC.ORM.SQLite
                 var db = new SQLiteDatastore("");
             };
             action.Should().Throw<ArgumentException>();
-            
+        }
+
+        [Fact]
+        [Trait("Category", "Connection Management")]
+        public void OpenConnection()
+        {
+            var path = GetTempFilePath(".cruise");
+            RegesterFileForCleanUp(path);
+
+            using (var db = new SQLiteDatastore(path))
+            {
+                var conn = db.OpenConnection();
+
+                db.PersistentConnection.Should().BeSameAs(conn);
+                conn.State.Should().Be(ConnectionState.Open);
+
+                db.ReleaseConnection();
+
+                db.PersistentConnection.Should().BeNull();
+                conn.State.Should().Be(ConnectionState.Closed);
+
+                db.ConnectionDepth.Should().Be(0);
+            }
+        }
+
+        [Fact]
+        [Trait("Category", "Connection Management")]
+        public void OpenConnection_stress()
+        {
+            var numConnections = 100;
+
+            var path = GetTempFilePath(".cruise");
+            RegesterFileForCleanUp(path);
+
+            using (var db = new SQLiteDatastore(path))
+            {
+                for (int i = 0; i < numConnections; i++)
+                {
+                    var conn = db.OpenConnection();
+
+                    db.PersistentConnection.Should().BeSameAs(conn);
+                    conn.State.Should().Be(ConnectionState.Open);
+
+                    db.ReleaseConnection();
+
+                    db.PersistentConnection.Should().BeNull();
+                    conn.State.Should().Be(ConnectionState.Closed);
+                }
+
+                db.ConnectionDepth.Should().Be(0);
+            }
         }
 
         [Fact]
@@ -83,7 +130,7 @@ namespace FMSC.ORM.SQLite
             using (var db = new SQLiteDatastore())
             {
                 var connection = db.OpenConnection();
-                
+
                 var trans = connection.BeginTransaction();
                 var result = connection.ExecuteScalar("SELECT 1;", null, trans);
                 //trans.Commit();
@@ -162,6 +209,139 @@ namespace FMSC.ORM.SQLite
                 Assert.True(ds.CheckFieldExists("TABLEA", "Data"));
 
                 Assert.Throws<SQLException>(() => ds.AddField("TableA", new ColumnInfo() { Name = "Data", DBType = System.Data.DbType.AnsiString }));
+            }
+        }
+
+        [Fact]
+        public void BackupDatabase_inmemory()
+        {
+            using (var ds = new SQLiteDatastore())
+            {
+                var dbbuilder = new TestDBBuilder();
+                dbbuilder.BuildDatabase(ds);
+
+                var orgTableInfo = ds.QueryGeneric("SELECT * FROM Sqlite_Master;").ToArray();
+                orgTableInfo.Should().NotBeEmpty();
+
+                var backupTarget = base.GetTempFilePath(".db");
+                RegesterFileForCleanUp(backupTarget);
+
+                File.Exists(backupTarget).Should().BeFalse();
+
+                ds.BackupDatabase(backupTarget);
+
+                File.Exists(backupTarget).Should().BeTrue();
+
+                using (var newds = new SQLiteDatastore(backupTarget))
+                {
+                    var newTableInfo = ds.QueryGeneric("SELECT * FROM Sqlite_Master;");
+
+                    newTableInfo.Should().BeEquivalentTo(orgTableInfo);
+                }
+            }
+        }
+
+        [Fact]
+        public void BackupDatabase_overwrite_existing()
+        {
+            using (var ds = new SQLiteDatastore())
+            {
+                var dbbuilder = new TestDBBuilder();
+                dbbuilder.BuildDatabase(ds);
+
+                var orgTableInfo = ds.QueryGeneric("SELECT * FROM Sqlite_Master;").ToArray();
+                orgTableInfo.Should().NotBeEmpty();
+
+                var backupTarget = base.GetTempFilePath(".db");
+                RegesterFileForCleanUp(backupTarget);
+
+                // create a file to overwrite
+                // this doesn't need to be an actual db file
+                File.WriteAllText(backupTarget, "something");
+                File.Exists(backupTarget).Should().BeTrue();
+
+                // backup the database to the location of the file we just created
+                
+                ds.BackupDatabase(backupTarget);
+                File.Exists(backupTarget).Should().BeTrue();
+
+                // and conferm that it did overwrite the old file
+                using (var newds = new SQLiteDatastore(backupTarget))
+                {
+                    var newTableInfo = ds.QueryGeneric("SELECT * FROM Sqlite_Master;");
+
+                    newTableInfo.Should().BeEquivalentTo(orgTableInfo);
+                }
+            }
+        }
+
+        [Fact]
+        public void BackupDatabase_overwrite_openfile_with_inmemory()
+        {
+            var tempPath = GetTempFilePath(".crz3");
+            RegesterFileForCleanUp(tempPath);
+
+            using (var ds = new SQLiteDatastore(tempPath))
+            {
+                var dbbuilder = new TestDBBuilder();
+                dbbuilder.BuildDatabase(ds);
+
+                var orgTableInfo = ds.QueryGeneric("SELECT * FROM Sqlite_Master;").ToArray();
+                orgTableInfo.Should().NotBeEmpty();
+
+                ds.From<POCOMultiTypeObject>().Query().Should().BeEmpty();
+
+                using (var newds = new SQLiteDatastore())
+                {
+                    dbbuilder.BuildDatabase(newds);
+
+                    newds.Insert(new POCOMultiTypeObject()
+                    {
+                        ID = 1,
+                    });
+
+                    newds.From<POCOMultiTypeObject>().Query().Should().NotBeEmpty();
+
+                    newds.BackupDatabase(tempPath);
+                }
+
+                ds.From<POCOMultiTypeObject>().Query().Should().NotBeEmpty();
+            }
+        }
+
+        [Fact]
+        public void BackupDatabase_into_existing()
+        {
+            using (var ds = new SQLiteDatastore())
+            {
+                var dbbuilder = new TestDBBuilder();
+                dbbuilder.BuildDatabase(ds);
+
+                var orgTableInfo = ds.QueryGeneric("SELECT * FROM Sqlite_Master;").ToArray();
+                orgTableInfo.Should().NotBeEmpty();
+
+                var backupTarget = base.GetTempFilePath(".db");
+                RegesterFileForCleanUp(backupTarget);
+
+                // create database file
+                using(var targetds = new SQLiteDatastore(backupTarget))
+                {
+                    dbbuilder.BuildDatabase(targetds);
+                    targetds.Execute("CREATE TABLE Something (" +
+                        "col1 text" +
+                        ");");
+
+                    targetds.CheckTableExists("Something").Should().BeTrue();
+
+                    targetds.Execute("ALTER Table MultiPropTable ADD COLUMN justanothercolumn text;");
+                    targetds.CheckFieldExists("MultiPropTable", "justanothercolumn").Should().BeTrue();
+
+                    ds.BackupDatabase(targetds);
+
+                    targetds.CheckTableExists("something").Should().BeFalse();
+                    targetds.CheckFieldExists("MultiPropTable", "justanothercolumn").Should().BeFalse();
+
+                }
             }
         }
 
@@ -299,10 +479,13 @@ namespace FMSC.ORM.SQLite
             {
                 using (var connection = ds.OpenConnection())
                 {
+                    var keyValue = "something";
+
                     connection.ExecuteNonQuery("CREATE TABLE tbl (id TEXT PRIMARY KEY);", null, null);
 
-                    connection.ExecuteNonQuery("INSERT INTO tbl (id) VALUES ('something');", null, null);
-                    ds.GetLastInsertKeyValue(connection, "tbl", "id", null);
+                    connection.ExecuteNonQuery($"INSERT INTO tbl (id) VALUES ('{keyValue}');", null, null);
+                    var result = ds.GetLastInsertKeyValue(connection, "tbl", "id", null);
+                    result.Should().Be(keyValue);
                 }
             }
         }
@@ -374,7 +557,6 @@ namespace FMSC.ORM.SQLite
             {
                 ds.Execute(TestDBBuilder.CREATE_AUTOINCREMENT_TABLE);
                 ds.CreateTable("Tbl", new ColumnInfo[] { new ColumnInfo() { Name = "Data", DBType = System.Data.DbType.String } }, false);
-
 
                 System.IO.File.Exists(path).Should().BeTrue();
                 System.IO.File.SetAttributes(path, System.IO.FileAttributes.ReadOnly);
@@ -567,7 +749,7 @@ namespace FMSC.ORM.SQLite
                 ds.BeginTransaction();
                 for (int i = 1; i <= recordsToCreate; i++)
                 {
-                    ds.Execute(string.Format(" INSERT INTO MultiPropTable (IntField) VALUES ({0});\r\n", i));
+                    ds.Execute(string.Format(" INSERT INTO MultiPropTable (IntField, NIntField) VALUES ({0}, {0});\r\n", i));
                 }
                 ds.CommitTransaction();
 
@@ -584,8 +766,54 @@ namespace FMSC.ORM.SQLite
                     ds.From<DOMultiPropType>().Read())
                 {
                     item.FloatField = 1.0F;
-                    item.Save();
+                    ds.Update(item);
                 }
+            }
+        }
+
+        private POCOMultiTypeObject CreateRandomPoco(bool nullableSetNull = false)
+        {
+            var randomizer = new Bogus.Randomizer();
+
+            var poco = new POCOMultiTypeObject()
+            {
+                BoolField = randomizer.Bool(),
+                DateTimeField = DateTime.Now,
+                DoubleField = randomizer.Double(),
+                FloatField = randomizer.Float(),
+                GuidField = randomizer.Guid(),
+                ID = randomizer.Int(),
+                IntField = randomizer.Int(),
+                LongField = randomizer.Long(),
+                NBoolField = (nullableSetNull) ? (bool?)null : randomizer.Bool(),
+                NDoubleField = (nullableSetNull) ? (double?)null : randomizer.Double(),
+                NFloatField = (nullableSetNull) ? (float?)null : randomizer.Float(),
+                NIntField = (nullableSetNull) ? (int?)null : randomizer.Int(),
+                NLongField = (nullableSetNull) ? (long?)null : randomizer.Long(),
+                //RowID = randomizer.Int(),
+                StringField = randomizer.String2(16),
+            };
+            return poco;
+        }
+
+        [Theory]
+        [InlineData(true)]
+        [InlineData(false)]
+        public void Query_Test(bool nulls)
+        {
+            using (var ds = new SQLiteDatastore())
+            {
+                ds.Execute(TestDBBuilder.CREATE_MULTIPROPTABLE);
+
+                var poco = CreateRandomPoco(nulls);
+                ds.Insert(poco);
+
+                var result = ds.Query<POCOMultiTypeObject>("SELECT * FROM MultiPropTable;")
+                    .SingleOrDefault();
+
+                result.Should().NotBeNull();
+
+                result.Should().BeEquivalentTo(poco);
             }
         }
 
@@ -649,6 +877,64 @@ namespace FMSC.ORM.SQLite
                 ds.CheckTableExists("MultiPropTable").Should().BeTrue();
 
                 ds.From<POCOMultiTypeObject>().Invoking(x => x.Query()).Should().NotThrow();
+            }
+        }
+
+        [Fact]
+        [Trait("Category", "Read methods")]
+        public void ReadSingleRow()
+        {
+            var path = GetTempFilePath(".cruise");
+            RegesterFileForCleanUp(path);
+
+            using (var db = new SQLiteDatastore(path))
+            {
+                db.Execute(TestDBBuilder.CREATE_MULTIPROPTABLE);
+
+                db.Execute(
+"WITH RECURSIVE generate_series(value) AS ( " +
+"  SELECT 1 " +
+"  UNION ALL " +
+"  SELECT value +1 FROM generate_series " +
+$"   WHERE value +1 <={1} " +
+") " +
+"INSERT INTO MultiPropTable (ID) SELECT * FROM generate_series;");
+
+                var row = db.ReadSingleRow<POCOMultiTypeObject>(1);
+                row.Should().NotBeNull();
+            }
+        }
+
+        [Fact]
+        [Trait("Category", "Read methods")]
+        public void ReadSingleRow_stress()
+        {
+            var num = 1000;
+
+            var path = GetTempFilePath(".cruise");
+            RegesterFileForCleanUp(path);
+
+            using (var db = new SQLiteDatastore(path))
+            {
+                db.Execute(TestDBBuilder.CREATE_MULTIPROPTABLE);
+
+                db.Execute(
+"WITH RECURSIVE generate_series(value) AS ( " +
+"  SELECT 1 " +
+"  UNION ALL " +
+"  SELECT value +1 FROM generate_series " +
+$"   WHERE value +1 <={num} " +
+") " +
+"INSERT INTO MultiPropTable (ID) SELECT * FROM generate_series;");
+
+                for (var i = 1; i <= num; i++)
+                {
+                    var row = db.ReadSingleRow<POCOMultiTypeObject>(i);
+                    row.Should().NotBeNull();
+                }
+
+                db.ConnectionDepth.Should().Be(0);
+                db.PersistentConnection.Should().BeNull();
             }
         }
 
@@ -775,7 +1061,5 @@ namespace FMSC.ORM.SQLite
                 ds.TransactionDepth.Should().Be(0);
             }
         }
-
-        
     }
 }

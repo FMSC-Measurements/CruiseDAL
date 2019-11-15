@@ -2,6 +2,8 @@
 
 PackageOutput/
 
+src/tools/ModelGen/
+
 /InnoSetupFiles/Output/
 /CruiseSystemManager/STPinfo/
 

@@ -23,7 +23,10 @@ namespace FMSC.ORM.TestSupport
 	NBoolField BOOLEAN,
 	GuidField TEXT,
 	DateTimeField DATETIME,
+    EnumField TEXT,
 	PartialyPublicField TEXT,
+    AutomaticStringField TEXT,
+    PartialyPublicAutomaticField TEXT,
 	PrivateField TEXT,
 	CreatedBy TEXT,
 	ModifiedBy TEXT
@@ -36,18 +39,10 @@ namespace FMSC.ORM.TestSupport
     Data TEXT
 );";
 
-        public override void CreateTables(DatastoreRedux datastore)
+        public override void BuildDatabase(Datastore datastore)
         {
             datastore.Execute(CREATE_MULTIPROPTABLE);
             datastore.Execute(CREATE_AUTOINCREMENT_TABLE);
-        }
-
-        public override void CreateTriggers(DatastoreRedux datastore)
-        {
-        }
-
-        public override void UpdateDatastore(DatastoreRedux datastore)
-        {
         }
     }
 }

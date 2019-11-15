@@ -2,11 +2,7 @@
 
 namespace FMSC.ORM.EntityModel.Attributes
 {
-    //public enum InfrastructureFieldType { RowVersion, CreatedBy, CreatedDate, ModifiedBy, ModifiedDate }
-    [Flags]
-    public enum PersistMode { Undefinded = 0, Never, OnInsert, OnUpdate }
-
-    public class InfrastructureFieldAttribute : FieldAttribute
+    public abstract class InfrastructureFieldAttribute : FieldAttribute
     {
         public InfrastructureFieldAttribute() : base()
         { }
@@ -14,12 +10,6 @@ namespace FMSC.ORM.EntityModel.Attributes
         public InfrastructureFieldAttribute(string fieldName) : base(fieldName)
         { }
 
-        public PersistMode PersistMode { get; set; }
-
-        //public InfrastructureFieldType FieldType { get; set; }
-
-        public bool ReadOnly { get; set; }
-
-        //public object DefaultValue { get; set; }
+        public abstract Func<object> DefaultValueProvider { get; }
     }
 }

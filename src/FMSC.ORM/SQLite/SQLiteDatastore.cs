@@ -1,7 +1,6 @@
-﻿using FMSC.ORM.Core;
-using FMSC.ORM.Core.SQL;
-using Backpack.SqlBuilder;
-using Backpack.SqlBuilder.Dialects;
+﻿using Backpack.SqlBuilder;
+using Backpack.SqlBuilder.Sqlite;
+using FMSC.ORM.Core;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -68,6 +67,7 @@ namespace FMSC.ORM.SQLite
 #if MICROSOFT_DATA_SQLITE
         public SQLiteDatastore(string path) : base(new SqliteDialect(), new SqliteExceptionProcessor(), Microsoft.Data.Sqlite.SqliteFactory.Instance)
 #elif SYSTEM_DATA_SQLITE
+
         public SQLiteDatastore(string path) : base(new SqliteDialect(), new SqliteExceptionProcessor(), System.Data.SQLite.SQLiteFactory.Instance)
 #endif
         {
@@ -75,7 +75,7 @@ namespace FMSC.ORM.SQLite
             Path = path;
         }
 
-#region SavePoints
+        #region SavePoints
 
         public void StartSavePoint(String name)
         {
@@ -92,17 +92,30 @@ namespace FMSC.ORM.SQLite
             this.Execute("ROLLBACK TO SAVEPOINT " + name + ";");
         }
 
-#endregion SavePoints
+        #endregion SavePoints
 
         protected override string BuildConnectionString()
         {
-            if(Path == null) { throw new InvalidOperationException("Path can not be null"); }
+            return BuildConnectionString(Path);
+        }
+
+        protected static string BuildConnectionString(string path)
+        {
+            if (path == null) { throw new InvalidOperationException("Path can not be null"); }
 
 #if SYSTEM_DATA_SQLITE
-            return string.Format("Data Source={0};Version=3;", Path);
+            return string.Format("Data Source={0};Version=3;", path);
 #else
-            return string.Format("Data Source={0};", Path);
+            return string.Format("Data Source={0};", path);
 #endif
+        }
+
+        protected DbConnection CreateConnection(string path)
+        {
+            var conn = ProviderFactory.CreateConnection();
+            conn.ConnectionString = BuildConnectionString(path);
+
+            return conn;
         }
 
         /// <summary>
@@ -134,7 +147,13 @@ namespace FMSC.ORM.SQLite
         /// <returns></returns>
         public bool CheckTableExists(string tableName)
         {
-            return GetRowCount("sqlite_master", "WHERE type = 'table' AND name = @p1", tableName) > 0;
+            return GetRowCount("sqlite_master", "WHERE (type = 'table' OR type = 'view') AND name = @p1", tableName) > 0;
+        }
+
+        public IEnumerable<string> GetTableNames()
+        {
+            return ExecuteScalar<string>($"SELECT group_concat(name) FROM main.sqlite_master WHERE type='table' AND name NOT LIKE 'sqlite^_%' ESCAPE '^';")
+                .Split(',');
         }
 
         /// <summary>
@@ -191,34 +210,37 @@ namespace FMSC.ORM.SQLite
 
                 try
                 {
-                    var commandText = "PRAGMA table_info(" + tableName + ");";
-
-                    using (var reader = ExecuteReader(conn, commandText, (object[])null, CurrentTransaction))
+                    using (var command = ProviderFactory.CreateCommand())
                     {
-                        int nameOrd = reader.GetOrdinal("name");
-                        int dbTypeOrd = reader.GetOrdinal("type");
-                        int pkOrd = reader.GetOrdinal("pk");
-                        int notNullOrd = reader.GetOrdinal("notnull");
-                        int defaultValOrd = reader.GetOrdinal("dflt_value");
+                        var commandText = command.CommandText = "PRAGMA table_info(" + tableName + ");";
 
-                        try
+                        using (var reader = conn.ExecuteReader(command, CurrentTransaction))
                         {
-                            while (reader.Read())
+                            int nameOrd = reader.GetOrdinal("name");
+                            int dbTypeOrd = reader.GetOrdinal("type");
+                            int pkOrd = reader.GetOrdinal("pk");
+                            int notNullOrd = reader.GetOrdinal("notnull");
+                            int defaultValOrd = reader.GetOrdinal("dflt_value");
+
+                            try
                             {
-                                var colInfo = new ColumnInfo()
+                                while (reader.Read())
                                 {
-                                    Name = reader.GetString(nameOrd),
-                                    Type = reader.GetString(dbTypeOrd),
-                                    IsPK = reader.GetBoolean(pkOrd),
-                                    NotNull = reader.GetBoolean(notNullOrd),
-                                    Default = (!reader.IsDBNull(defaultValOrd)) ? reader.GetString(defaultValOrd) : null
-                                };
-                                colList.Add(colInfo);
+                                    var colInfo = new ColumnInfo()
+                                    {
+                                        Name = reader.GetString(nameOrd),
+                                        Type = reader.GetString(dbTypeOrd),
+                                        IsPK = reader.GetBoolean(pkOrd),
+                                        NotNull = reader.GetBoolean(notNullOrd),
+                                        Default = (!reader.IsDBNull(defaultValOrd)) ? reader.GetString(defaultValOrd) : null
+                                    };
+                                    colList.Add(colInfo);
+                                }
                             }
-                        }
-                        catch (Exception e)
-                        {
-                            throw ExceptionProcessor.ProcessException(e, conn, commandText, (IDbTransaction)null);
+                            catch (Exception e)
+                            {
+                                throw ExceptionProcessor.ProcessException(e, conn, commandText, (IDbTransaction)null);
+                            }
                         }
                     }
                 }
@@ -243,17 +265,15 @@ namespace FMSC.ORM.SQLite
             }
         }
 
-        public override object GetLastInsertKeyValue(DbConnection connection, String tableName, String fieldName, DbTransaction transaction)
+        public override object GetLastInsertKeyValue(DbConnection connection, String tableName, string fieldName, DbTransaction transaction)
         {
-            var ident = GetLastInsertRowID(connection, transaction);
-
-            var query = "SELECT " + fieldName + " FROM " + tableName + " WHERE rowid = @p1;";
+            var query = "SELECT " + fieldName + " FROM " + tableName + " WHERE rowid = last_insert_rowid();";
 
             try
             {
-                return connection.ExecuteScalar(query, new object[] { ident }, transaction);
+                return connection.ExecuteScalar(query, (object[])null, transaction);
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 throw ExceptionProcessor.ProcessException(e, connection, query, transaction);
             }
@@ -291,19 +311,25 @@ namespace FMSC.ORM.SQLite
             lock (_persistentConnectionSyncLock)
             {
                 var connection = OpenConnection();
-                try
-                {
-                    using (var reader = ExecuteReader(connection, commandText, (object[])null, CurrentTransaction))
-                    {
-                        hasErrors = reader.Read();
-                    }
-                }
-                finally
-                {
-                    ReleaseConnection();
-                }
 
-                return hasErrors;
+                using (var command = ProviderFactory.CreateCommand())
+                {
+                    command.CommandText = commandText;
+
+                    try
+                    {
+                        using (var reader = connection.ExecuteReader(command, CurrentTransaction))
+                        {
+                            hasErrors = reader.Read();
+                        }
+                    }
+                    finally
+                    {
+                        ReleaseConnection();
+                    }
+
+                    return hasErrors;
+                }
             }
         }
 
@@ -342,7 +368,7 @@ namespace FMSC.ORM.SQLite
             }
         }
 
-#region File utility methods
+        #region File utility methods
 
         ///// <summary>
         ///// Copies entire file to <paramref name="path"/> Overwriting any existing file
@@ -358,6 +384,46 @@ namespace FMSC.ORM.SQLite
         //    Context.ReleaseAllConnections(true);
         //    System.IO.File.Copy(this.Path, destPath, overwrite);
         //}
+
+        public void BackupDatabase(string path)
+        {
+            SQLiteDatabaseBuilder.CreateEmptyFile(path);
+
+            var targetConnection = CreateConnection(path);
+            BackupDatabase(targetConnection);
+        }
+
+        public void BackupDatabase(SQLiteDatastore targetDatabase)
+        {
+            var targetConn = targetDatabase.OpenConnection();
+            try
+            {
+                BackupDatabase(targetConn);
+            }
+            finally
+            {
+                targetDatabase.ReleaseConnection();
+            }
+        }
+
+        public void BackupDatabase(DbConnection targetConnection)
+        {
+            var connection = OpenConnection();
+            try
+            {
+#if SYSTEM_DATA_SQLITE
+                ((System.Data.SQLite.SQLiteConnection)connection)
+                    .BackupDatabase((System.Data.SQLite.SQLiteConnection)targetConnection, "main", "main", -1, null, 25);
+#elif MICROSOFT_DATA_SQLITE
+                ((Microsoft.Data.Sqlite.SqliteConnection)connection)
+                    .BackupDatabase((Microsoft.Data.Sqlite.SqliteConnection)targetConnection);
+#endif
+            }
+            finally
+            {
+                ReleaseConnection();
+            }
+        }
 
         public bool MoveTo(string path)
         {
@@ -377,6 +443,6 @@ namespace FMSC.ORM.SQLite
             return true;
         }
 
-#endregion File utility methods
+        #endregion File utility methods
     }
 }

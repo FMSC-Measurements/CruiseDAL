@@ -1,9 +1,7 @@
-using FMSC.ORM.Core.SQL;
-using FMSC.ORM.EntityModel.Attributes;
 using Backpack.SqlBuilder;
+using FMSC.ORM.EntityModel.Attributes;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 using System.Reflection;
 
@@ -20,7 +18,7 @@ namespace FMSC.ORM.EntityModel.Support
 
         public TableOrSubQuery Source { get; set; }
 
-        public FieldAttributeCollection Fields { get; set; }
+        public FieldInfoCollection Fields { get; set; }
 
         public Dictionary<string, PropertyAccessor> Properties { get; set; }
 
@@ -30,8 +28,8 @@ namespace FMSC.ORM.EntityModel.Support
 
         protected EntityDescription()
         {
-            Fields = new FieldAttributeCollection();
-            Properties = new Dictionary<string, PropertyAccessor>();
+            Fields = new FieldInfoCollection();
+            //Properties = new Dictionary<string, PropertyAccessor>();
         }
 
         public EntityDescription(Type type) : this()
@@ -47,20 +45,32 @@ namespace FMSC.ORM.EntityModel.Support
             try
             {
                 //read Entity attribute
-                object[] eAttrs = EntityType.GetCustomAttributes(typeof(EntitySourceAttribute), true);
-                var eAttr = eAttrs.FirstOrDefault() as EntitySourceAttribute;
+                var eAttr = EntityType.GetCustomAttributes(typeof(TableAttribute), true)
+                    .OfType<TableAttribute>()
+                    .FirstOrDefault();
 
                 if (eAttr != null)
                 {
-                    this.Source = new TableOrSubQuery(
-                        eAttr.SourceName
-                        , eAttr.Alias)
+                    var source = Source = new TableOrSubQuery(eAttr.Name);
+
+                    // to provide backwards compatibility 
+                    // check if it is a EntitySourceAttr
+#pragma warning disable CS0618 // Type or member is obsolete
+                    if (eAttr is EntitySourceAttribute)
+
                     {
-                        Joins = eAttr.JoinCommands
-                    };
+                        var esa = (EntitySourceAttribute)eAttr;
+                        source.Alias = esa.Alias;
+                        source.Joins = esa.JoinCommands;
+                    }
+#pragma warning restore CS0618 // Type or member is obsolete
+                }
+                else
+                {
+                    Source = new TableOrSubQuery(EntityType.Name);
                 }
 
-                RegesterFields();
+                Fields = CreateFieldInfoCollection(EntityType);
             }
             catch (Exception e)
             {
@@ -68,78 +78,39 @@ namespace FMSC.ORM.EntityModel.Support
             }
         }
 
-        protected void RegesterFields()
+        public static FieldInfoCollection CreateFieldInfoCollection(Type entityType)
         {
+            var fields = new FieldInfoCollection();
+
             //find public properties
-            foreach (PropertyInfo p in EntityType.GetProperties(BindingFlags.Public | BindingFlags.Instance))
+            foreach (PropertyInfo p in entityType.GetProperties(BindingFlags.Public | BindingFlags.Instance))
             {
-                RegesterProperty(p, true);
-            }
+                if(p.CanWrite == false) { continue; }
 
-            //find private properties
-            //foreach (PropertyInfo p in EntityType.GetProperties(BindingFlags.NonPublic | BindingFlags.Instance))
-            //{
-            //    RegesterProperty(p, false);
-            //}
-        }
+                var propType = p.PropertyType;
+                propType = Nullable.GetUnderlyingType(propType) ?? propType;
+                var typeCode = Type.GetTypeCode(propType);
+                if(typeCode == TypeCode.Object && propType != typeof(Guid)) { continue; }
 
-        protected void RegesterProperty(PropertyInfo property, bool isPublic)
-        {
-            var accessor = new PropertyAccessor(property);
-            AddPropertyAccessor(accessor);
+                var attr = Attribute.GetCustomAttribute(p, typeof(BaseFieldAttribute))
+                    as BaseFieldAttribute;
 
-            var attr = Attribute.GetCustomAttribute(property, typeof(BaseFieldAttribute)) as BaseFieldAttribute;
-            if (attr == null) { return; }
-
-            attr.Property = accessor;
-
-            var fieldAttr = attr as FieldAttribute;
-            if (fieldAttr != null)
-            {
-                if (string.IsNullOrEmpty(fieldAttr.SourceName))
+                if (attr == null)
                 {
-                    fieldAttr.SourceName = this.SourceName;
+                    var fieldInfo = new FieldInfo(new PropertyAccessor(p))
+                    {
+                        Name = p.Name,
+                    };
+                    fields.AddField(fieldInfo);
                 }
-                try
+                else if (attr is FieldAttribute)
                 {
-                    Fields.AddField(fieldAttr);
-                }
-                catch (Exception e)
-                {
-                    throw new ORMException("Unable to register property: " + property.Name, e);
+                    var fieldInfo = new FieldInfo((FieldAttribute)attr, new PropertyAccessor(p));
+                    fields.AddField(fieldInfo);
                 }
             }
-        }
 
-        protected void AddPropertyAccessor(PropertyAccessor prop)
-        {
-            if (this.Properties.ContainsKey(prop.Name) == false)
-            {
-                this.Properties.Add(prop.Name, prop);
-            }
-            else
-            {
-                Debug.WriteLine("Property hidden:" + prop.ToString());
-                //Debug.Fail("property already registered: " + accessor.Name);
-            }
+            return fields;
         }
-
-        //protected void RegesterNonPublicProperty(PropertyInfo property)
-        //{
-        //    BaseFieldAttribute fieldAttr = (BaseFieldAttribute)Attribute.GetCustomAttribute(property, typeof(BaseFieldAttribute));
-        //    try
-        //    {
-        //        if (fieldAttr == null) { return; } //don't allow non public properties to be automatic fields
-        //        if (fieldAttr is IgnoreFieldAttribute) { return; }
-        //        if (fieldAttr is FieldAttribute)
-        //        {
-        //            Fields.AddField(property, (FieldAttribute)fieldAttr);
-        //        }
-        //    }
-        //    catch (Exception e)
-        //    {
-        //        throw new ORMException("Unable to register property: " + property.Name, e);
-        //    }
-        //}
     }
 }
