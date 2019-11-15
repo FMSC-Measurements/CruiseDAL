@@ -19,6 +19,10 @@ Table stores description of tally.
 ### TallyHotKey
 Table stores hotkey values for tallies. HotKey values must be unique per stratum value. I did consider consolidating TallyHotKey and TallyDescription tables however to enforce the unique constraint per stratum as well as to allow for unique HotKey configuration per file I decided to separate out these two fields.
 
+### Device 
+Table for saving information specific to each device that is using the cruise. 
+This table is reference by the samplerState to allow each device to have its own sampling states.
+
 ### SamplerState
 Table for storing the state of samplers. This data was moved to a separate table from sampleGroup because it changes often. Because sampler state is specific to a single file and shouldn't be merged it should be kept separate  from other sample group data, as well keeping is separate will help ensure sample group data is protected from undesired modification. 
 
@@ -49,6 +53,20 @@ A view for the connivance of accessing a list of populations that are being tall
 ### TreeFieldValue_TreeMeasurment, TreeFieldValue_All
 TreeFieldValue_TreeMeasurment is a view that provides data from the treeMeasurment table in the same format as TreeFieldValue
 TreeFieldValue_All combines TreeFieldValue and TreeFieldValue_TreeMeasurment allowing both to be accessed as a single source. 
+
+### TallyLedger_Totals, TallyLedger_Plot_Totals, TallyLeddger_Tree_Totals views
+The purpose of these views is to provide treecount and KPI totals from the tallyLeddger table and provide a single dependency to filter deleted records
+
+#### TallyLedger_Totals 
+provides tree count and kpi sums at the tally population level.
+used by the CountTree view
+
+#### TallyLedger_Plot_Totals 
+provides tree counts and kpi sums at the plot level
+
+#### TallyLeddger_Tree_Totals
+provides tree counts at the tree level. because trees can have multiple tally ledger records this is useful.
+used by the Tree view
 
 
 # Modified Tables
@@ -300,13 +318,13 @@ Initially this table made it hard to define tally populations using the CountTre
  - [86] change PlotNumber references to PlotID to prevent issues when merging
 
 ## Tree_V3
- - create index on tree number
+ - [x] create index on tree number
 
 ## Log_V3
- - create index on log number
+ - [x] create index on log number
 
 ## Plot_V3
- - create index on PlotNumber
+ - [x] create index on PlotNumber
 
 #Recomended Changes
  - remove duplicated fields from StratumStats
