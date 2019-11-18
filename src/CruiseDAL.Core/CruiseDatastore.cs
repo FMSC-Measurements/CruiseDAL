@@ -129,7 +129,7 @@ namespace CruiseDAL
 
         private static string GetCallingProgram()
         {
-#if !NetCF
+#if !WindowsCE
             try
             {
                 return System.Reflection.Assembly.GetEntryAssembly().FullName;
@@ -143,23 +143,6 @@ namespace CruiseDAL
             return AppDomain.CurrentDomain.FriendlyName;
 
 #endif
-        }
-
-        public static string GetUserInformation()
-        {
-#if NetCF
-
-            return FMSC.Util.DeviceInfo.GetMachineDescription() + "|" + FMSC.Util.DeviceInfo.GetMachineName();
-            //FMSC.Utility.MobileDeviceInfo di = new FMSC.Utility.MobileDeviceInfo();
-            //return di.GetModelAndSerialNumber();
-            //return "Mobile User";
-
-#elif ANDROID
-			return "AndroidUser";
-#else
-            return Environment.UserName + " on " + System.Environment.MachineName;
-#endif
-            //return Environment.UserName + " on " + System.Windows.Forms.SystemInformation.ComputerName;
         }
 
         #region Overridden Methods

@@ -4,24 +4,31 @@
     <Version>$(FMSCORMversion)</Version>
   </PropertyGroup>
 
-  <PropertyGroup Condition="$(TargetFramework.StartsWith('net4'))">
-    <DefineConstants>SYSTEM_DATA_SQLITE</DefineConstants>
+  <PropertyGroup Condition="$(TargetFramework.StartsWith('net4')) Or $(TargetFramework.StartsWith('net35'))">
+    <DefineConstants>$(DefineConstants);SYSTEM_DATA_SQLITE</DefineConstants>
   </PropertyGroup>
 
   <PropertyGroup Condition="$(TargetFramework.StartsWith('netstandard'))">
-    <DefineConstants>MICROSOFT_DATA_SQLITE</DefineConstants>
+    <DefineConstants>$(DefineConstants);MICROSOFT_DATA_SQLITE</DefineConstants>
   </PropertyGroup>
 
   <!--Required for System.Data.Sqlite See: https://stackoverflow.com/questions/32639630/sqlite-interop-dll-files-does-not-copy-to-project-output-path-when-required-by-r/32639631#32639631-->
-  <PropertyGroup Condition="$(DefineConstants.Contains(SYSTEM_DATA_SQLITE))">
+  <PropertyGroup Condition="$(DefineConstants.Contains(SYSTEM_DATA_SQLITE)) And $(TargetFramework) != 'net35-cf'">
     <ContentSQLiteInteropFiles>true</ContentSQLiteInteropFiles>
     <CopySQLiteInteropFiles>false</CopySQLiteInteropFiles>
     <CleanSQLiteInteropFiles>false</CleanSQLiteInteropFiles>
     <CollectSQLiteInteropFiles>false</CollectSQLiteInteropFiles>
   </PropertyGroup>
 
-  <ItemGroup Condition="$(DefineConstants.Contains(SYSTEM_DATA_SQLITE))">
+  <ItemGroup Condition="$(DefineConstants.Contains(SYSTEM_DATA_SQLITE)) And $(TargetFramework) != 'net35-cf'">
     <PackageReference Include="System.Data.SQLite.Core" Version="1.0.110" />
+  </ItemGroup>
+
+  <ItemGroup Condition="$(DefineConstants.Contains(SYSTEM_DATA_SQLITE)) And $(TargetFramework) == 'net35-cf'">
+    <Reference Include="System.Data.SQLite, Version=1.0.94.0, Culture=neutral, PublicKeyToken=1fdb50b1b62b4c84, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\libs\SQLite\Mobile_CF20\System.Data.SQLite.dll</HintPath>
+    </Reference>
   </ItemGroup>
 
   <ItemGroup Condition="$(DefineConstants.Contains(MICROSOFT_DATA_SQLITE))">
@@ -29,6 +36,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Backpack.SqlBuilder" Version="1.1.1.31" />
+    <PackageReference Include="Backpack.SqlBuilder" Version="1.1.3" />
   </ItemGroup>
 </Project>

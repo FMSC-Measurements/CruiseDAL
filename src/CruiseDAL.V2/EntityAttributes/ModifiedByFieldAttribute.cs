@@ -1,4 +1,5 @@
-﻿using FMSC.ORM.EntityModel.Attributes;
+﻿using CruiseDAL.Util;
+using FMSC.ORM.EntityModel.Attributes;
 using System;
 
 
@@ -13,7 +14,7 @@ namespace CruiseDAL.EntityAttributes
 
         public static string GetUserID()
         {
-            return UserInfoProvider.Instance.UserInfo;
+            return EnvironmentInfoProvider.Instance.UserInfo;
         }
 
         public override Func<object> DefaultValueProvider => new Func<object>(GetUserID);

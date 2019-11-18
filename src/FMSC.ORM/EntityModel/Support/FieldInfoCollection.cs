@@ -1,19 +1,14 @@
 ﻿using FMSC.ORM.EntityModel.Attributes;
-using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System;
 
 namespace FMSC.ORM.EntityModel.Support
 {
     public class FieldInfoCollection : IEnumerable<FieldInfo>
     {
-        List<FieldInfo> _fields = new List<FieldInfo>();
+        private List<FieldInfo> _fields = new List<FieldInfo>();
 
         public FieldInfo PrimaryKeyField { get; set; }
-
 
         public void AddField(FieldInfo field)
         {

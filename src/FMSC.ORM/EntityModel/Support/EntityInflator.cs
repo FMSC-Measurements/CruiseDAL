@@ -35,7 +35,7 @@ namespace FMSC.ORM.EntityModel.Support
 
             for (int i = 0; i < fieldCount; i++)
             {
-                var fieldName = reader.GetName(i).ToLowerInvariant();
+                var fieldName = reader.GetName(i).ToLower(System.Globalization.CultureInfo.InvariantCulture);
                 try
                 {
                     ordinalMapping.Add(fieldName, i);
@@ -89,7 +89,7 @@ namespace FMSC.ORM.EntityModel.Support
         {
             try
             {
-                var fieldName = (field.Name ?? field.Alias).ToLowerInvariant();
+                var fieldName = (field.Name ?? field.Alias).ToLower(System.Globalization.CultureInfo.InvariantCulture);
                 int ordinal = -1;
 
                 if (ordinalMapping.TryGetValue(fieldName, out ordinal))

@@ -3,7 +3,7 @@
 
     <!--we could probably target net35 but im using net40 as the minimum because 'dotnet' cli only supports down to net40-->
     <!--and i want dotnet cli to run test in the cli to test all target frameworks-->
-    <TargetFrameworks>net40;netstandard20</TargetFrameworks>
+    <TargetFrameworks>net40;netstandard20;net35-cf</TargetFrameworks>
     
     <FMSCORMversion>2.4.7</FMSCORMversion>
     
@@ -29,4 +29,35 @@
     <RepositoryType>git</RepositoryType>
     <RepositoryUrl>https://github.com/FMSC-Measurements/CruiseDAL.git</RepositoryUrl>
   </PropertyGroup>
+  
+  
+    <PropertyGroup>
+    <TargetFrameworks>netstandard2.0;net35-cf</TargetFrameworks>
+    <GenerateAssemblyFileVersionAttribute>false</GenerateAssemblyFileVersionAttribute>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(TargetFramework)' == 'net35-cf'">
+    <TargetFrameworkIdentifier>.NETFramework</TargetFrameworkIdentifier>
+    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+    <TargetFrameworkProfile>CompactFramework</TargetFrameworkProfile>
+    <DefineConstants>$(DefineConstants);NET35_CF;WindowsCE;</DefineConstants>
+    <DisableImplicitFrameworkReferences>True</DisableImplicitFrameworkReferences>
+    <NoStdLib>True</NoStdLib>
+    <NoConfig>true</NoConfig>
+    <FileAlignment>512</FileAlignment>
+    <GenerateSerializationAssemblies>Off</GenerateSerializationAssemblies>
+    <PlatformID>E2BECB1F-8C8C-41ba-B736-9BE7D946A398</PlatformID>
+    <Optimize>False</Optimize>
+  </PropertyGroup>
+
+  <ItemGroup Condition="'$(TargetFramework)' == 'net35-cf'">
+    <Reference Include="mscorlib, Version=3.5.0.0, Culture=neutral, PublicKeyToken=969db8053d3322ac" />
+    <Reference Include="System, Version=3.5.0.0, Culture=neutral, PublicKeyToken=969db8053d3322ac" />
+    <Reference Include="System.Core, Version=3.5.0.0, Culture=neutral, PublicKeyToken=969db8053d3322ac" />
+    <Reference Include="System.Data, Version=3.5.0.0, Culture=neutral, PublicKeyToken=969db8053d3322ac" />
+    <Reference Include="System.Runtime.Serialization, Version=3.5.0.0, Culture=neutral, PublicKeyToken=969db8053d3322ac" />
+    <Reference Include="System.Xml, Version=3.5.0.0, Culture=neutral, PublicKeyToken=969db8053d3322ac" />
+    <Reference Include="System.Xml.Linq, Version=3.5.0.0, Culture=neutral, PublicKeyToken=969db8053d3322ac" />
+  </ItemGroup>
+  
 </Project>

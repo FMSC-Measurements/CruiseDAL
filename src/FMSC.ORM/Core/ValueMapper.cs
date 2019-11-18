@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Text;
 
 namespace FMSC.ORM.Core
 {
@@ -69,8 +70,7 @@ namespace FMSC.ORM.Core
             else if (targetType == typeof(string)
                 && value is byte[] aByte)
             {
-
-                return System.Text.Encoding.Default.GetString(aByte);
+                return Encoding.Default.GetString(aByte, 0, aByte.Length);
             }
 
             try

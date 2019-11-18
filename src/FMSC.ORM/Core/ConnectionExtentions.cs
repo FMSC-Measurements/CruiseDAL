@@ -144,33 +144,7 @@ namespace FMSC.ORM.Core
             else
             {
                 Type targetType = typeof(T);
-                return (T)ProcessResult(targetType, result);
-            }
-        }
-
-        private static object ProcessResult(Type targetType, object result)
-        {
-            targetType = Nullable.GetUnderlyingType(targetType) ?? targetType;
-
-            if (result is IConvertible)
-            {
-                return Convert.ChangeType(result, targetType
-                    , System.Globalization.CultureInfo.CurrentCulture);
-            }
-            else
-            {
-                try
-                {
-                    return result;
-                }
-                catch (InvalidCastException)
-                {
-#if NetCF
-                        throw;
-#else
-                    return Activator.CreateInstance(targetType, result);
-#endif
-                }
+                return ValueMapper.ProcessValue<T>(result);
             }
         }
 

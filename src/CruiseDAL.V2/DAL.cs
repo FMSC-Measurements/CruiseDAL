@@ -1,4 +1,5 @@
-﻿using FMSC.ORM.Core;
+﻿using CruiseDAL.Util;
+using FMSC.ORM.Core;
 using FMSC.ORM.SQLite;
 using System;
 using System.Collections.Generic;
@@ -24,7 +25,7 @@ namespace CruiseDAL
             }
         }
 
-        public string User => EntityAttributes.UserInfoProvider.Instance.UserInfo;
+        public string User => EnvironmentInfoProvider.Instance.UserInfo;
 
         /// <summary>
         /// Initializes a new in memory instance of the <see cref="DAL"/> class.
