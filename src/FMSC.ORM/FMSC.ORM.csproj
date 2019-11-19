@@ -25,9 +25,9 @@
   </ItemGroup>
 
   <ItemGroup Condition="$(DefineConstants.Contains(SYSTEM_DATA_SQLITE)) And $(TargetFramework) == 'net35-cf'">
-    <Reference Include="System.Data.SQLite, Version=1.0.94.0, Culture=neutral, PublicKeyToken=1fdb50b1b62b4c84, processorArchitecture=MSIL">
+    <Reference Include="System.Data.SQLite">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\libs\SQLite\Mobile_CF20\System.Data.SQLite.dll</HintPath>
+      <HintPath>..\libs\SQLite\Mobile_CF35\System.Data.SQLite.dll</HintPath>
     </Reference>
   </ItemGroup>
 
