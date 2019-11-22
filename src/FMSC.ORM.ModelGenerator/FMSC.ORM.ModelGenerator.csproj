@@ -8,7 +8,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Content Include="FMSC.ORM.ModelGenerator.targets">
+    <Content Include="./FMSC.ORM.ModelGenerator.targets">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>

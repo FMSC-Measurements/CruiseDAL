@@ -12,15 +12,16 @@ SET me=%~n0
 ::directory of script
 SET parent=%~dp0
 
+SET msbuild="%parent%tools\msbuild.cmd"
+
 IF NOT DEFINED build_config SET build_config="Release"
 
-dotnet build -c %build_config% %parent%FMSC.ORM\FMSC.ORM.csproj
-::dotnet build -c %build_config% %parent%FMSC.ORM.ModelsGenerator\FMSC.ORM.ModelsGenerator.csproj
-dotnet build -c %build_config% %parent%CruiseDAL.Core\CruiseDAL.Core.csproj
-dotnet build -c %build_config% %parent%CruiseDAL.V2\CruiseDAL.V2.csproj
-dotnet build -c %build_config% %parent%CruiseDAL.V3\CruiseDAL.V3.csproj
-dotnet build -c %build_config% %parent%CruiseDAL.V3.Models\CruiseDAL.V3.Models.csproj
-dotnet build -c %build_config% %parent%CruiseDAL.V2.Models\CruiseDAL.V2.Models.csproj
+call %msbuild% /p:Configuration=%build_config% %parent%FMSC.ORM\FMSC.ORM.csproj
+call %msbuild% /p:Configuration=%build_config% %parent%CruiseDAL.Core\CruiseDAL.Core.csproj
+call %msbuild% /p:Configuration=%build_config% %parent%CruiseDAL.V2\CruiseDAL.V2.csproj
+call %msbuild% /p:Configuration=%build_config% %parent%CruiseDAL.V3\CruiseDAL.V3.csproj
+call %msbuild% /p:Configuration=%build_config% %parent%CruiseDAL.V3.Models\CruiseDAL.V3.Models.csproj
+call %msbuild% /p:Configuration=%build_config% %parent%CruiseDAL.V2.Models\CruiseDAL.V2.Models.csproj
 
 ::if invoked from windows explorer, pause
 IF "%interactive%"=="0" PAUSE

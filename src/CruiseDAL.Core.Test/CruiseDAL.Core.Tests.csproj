@@ -2,7 +2,7 @@
   
   <PropertyGroup>
     <RootNamespace>CruiseDAL.Tests</RootNamespace>
-    <TargetFrameworks>netcoreapp2.0;net472</TargetFrameworks>
+    <TargetFrameworks>netcoreapp2.0;net452</TargetFrameworks>
     <IsTestProject>true</IsTestProject>
   </PropertyGroup>
 
