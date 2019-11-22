@@ -251,7 +251,7 @@ namespace FMSC.ORM.TestSupport
             // PropertyInfo and FieldInfo are subclasses of MemberInfo.
             // Find all the public scalar properties. These are PropertyInfo objects.
             List<MemberInfo> membersOfInterest = (from p in thisType.GetProperties()
-                                                  where IsScalarType(p.PropertyType)
+                                                  where IsScalarType(p.PropertyType) && !p.GetIndexParameters().Any()
                                                   select p).Cast<MemberInfo>().ToList();
 
             // Add the public fields. These are FieldInfo objects.

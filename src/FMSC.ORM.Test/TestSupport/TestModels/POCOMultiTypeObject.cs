@@ -90,6 +90,11 @@ namespace FMSC.ORM.TestSupport.TestModels
             get; set;
         }
 
+        public string this[int index]
+        {
+            get { return ""; }
+        }
+
         #endregion non visible fields
     }
 }

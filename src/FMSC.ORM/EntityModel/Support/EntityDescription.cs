@@ -86,6 +86,8 @@ namespace FMSC.ORM.EntityModel.Support
             foreach (PropertyInfo p in entityType.GetProperties(BindingFlags.Public | BindingFlags.Instance))
             {
                 if(p.CanWrite == false) { continue; }
+                if(p.GetIndexParameters().Any())
+                { continue; } // if property is index property ignore
 
                 var propType = p.PropertyType;
                 propType = Nullable.GetUnderlyingType(propType) ?? propType;
