@@ -97,6 +97,22 @@
 				RowVersion INTEGER DEFAULT 0,
 				UNIQUE (Stratum_CN, Code));
 
+    CREATE TABLE SamplerState (
+                SamplerState_CN INTEGER PRIMARY KEY AUTOINCREMENT, 
+                SampleGroup_CN INTEGER NOT NULL,
+                SampleSelectorType TEXT COLLATE NOCASE, 
+                BlockState TEXT, 
+                SystematicIndex INTEGER DEFAULT 0, 
+                Counter INTEGER DEFAULT 0, 
+                InsuranceIndex DEFAULT -1,
+                InsuranceCounter DEFAULT -1,
+                ModifiedDate DateTime,
+
+                UNIQUE (SampleGroup_CN),
+
+                FOREIGN KEY (SampleGroup_CN) REFERENCES SampleGroup (SampleGroup_CN) ON DELETE CASCADE ON UPDATE CASCADE
+    );
+
     CREATE TABLE TreeDefaultValue (
 				TreeDefaultValue_CN INTEGER PRIMARY KEY AUTOINCREMENT,
 				PrimaryProduct TEXT NOT NULL,
@@ -818,7 +834,7 @@ JOIN CuttingUnit USING (CuttingUnit_CN)
 JOIN Stratum USING (Stratum_CN);" +
 
 @"
-INSERT INTO Globals (Block, Key, Value) VALUES ('Database', 'Version', '2.5.1');
+INSERT INTO Globals (Block, Key, Value) VALUES ('Database', 'Version', '2.6.0');
 PRAGMA user_version = 5;";
 
     }//END CLASS

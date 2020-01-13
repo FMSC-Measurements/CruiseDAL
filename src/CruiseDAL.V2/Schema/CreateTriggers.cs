@@ -154,6 +154,18 @@ BEGIN
 	(OLD.rowID, 'SampleGroup', '(Stratum_CN, Code) VALUES (' || quote(OLD.Stratum_CN) || ',' || quote(OLD.Code) ||')', datetime(current_timestamp, 'localtime'));
 END;
 
+--SamplerState--
+CREATE TRIGGER SamplerState_OnUpdate 
+    AFTER UPDATE OF 
+        BlockState, 
+        Counter, 
+        InsuranceCounter 
+    ON SamplerState 
+    FOR EACH ROW 
+    BEGIN 
+        UPDATE SamplerState SET ModifiedDate = datetime('now', 'localtime') WHERE SamplerState_CN = old.SamplerState_CN;
+    END;
+
 --TreeDefaultValue--
 CREATE TRIGGER OnInsertedTreeDefaultValue
 AFTER INSERT

@@ -10,13 +10,18 @@ namespace CruiseDAL
     {
         public void Update(CruiseDatastore datastore)
         {
-            Updater_V2.Update_Impl(datastore);
+            //PatchSureToMeasure(db);
+
+            Update_Impl(datastore);
+
+            // the following method calls are not nessicary for updating the 
+            // database. They just need to be ran to clean up potential errors. 
+            CleanupErrorLog(datastore);
+            FixTreeAuditValueFKeyErrors(datastore);
         }
 
         public static void Update_Impl(CruiseDatastore db)
         {
-            //PatchSureToMeasure(db);
-
             if (!CheckCanUpdate(db))
             {
                 throw new IncompatibleSchemaException("The version of this cruise file is not compatible with the version of the software you are using." +
@@ -98,18 +103,20 @@ namespace CruiseDAL
             {
                 UpdateTo_2_2_0(db);
             }
-            if(db.DatabaseVersion.StartsWith("2.5.0"))
+            // files updated to 2.5.0 may have corrupted data
+            // attempt to patch them and set version to 2.5.1.1
+            if (db.DatabaseVersion.StartsWith("2.5.0"))
             {
                 FixVersion_2_5_0(db);
             }
-            if (db.DatabaseVersion.StartsWith("2.2."))
+            if (db.DatabaseVersion.StartsWith("2.2.")) 
             {
                 UpdateTo_2_5_1(db);
             }
-
-            CleanupErrorLog(db);
-
-            FixTreeAuditValueFKeyErrors(db);
+            if(db.DatabaseVersion.StartsWith("2.5."))
+            {
+                UpdateTo_2_6_0(db);
+            }
         }
 
         public static void UpdateToVersion2015_04_28(CruiseDatastore db)
@@ -577,6 +584,53 @@ ValidGrades TEXT);");
             {
                 db.RollbackTransaction();
                 throw new SchemaUpdateException(startVersion, targetVersion, e);
+            }
+        }
+
+        private static void UpdateTo_2_6_0(CruiseDatastore db)
+        {
+            var version = db.DatabaseVersion;
+            var targetVersion = "2.6.0";
+
+            db.BeginTransaction();
+            try
+            {
+                db.Execute(
+@"CREATE TABLE SamplerState (
+        SamplerState_CN INTEGER PRIMARY KEY AUTOINCREMENT, 
+        SampleGroup_CN INTEGER NOT NULL,
+        SampleSelectorType TEXT COLLATE NOCASE, 
+        BlockState TEXT, 
+        SystematicIndex INTEGER DEFAULT 0, 
+        Counter INTEGER DEFAULT 0, 
+        InsuranceIndex DEFAULT -1,
+        InsuranceCounter DEFAULT -1,
+        ModifiedDate DateTime,
+
+        UNIQUE (SampleGroup_CN),
+
+        FOREIGN KEY (SampleGroup_CN) REFERENCES SampleGroup (SampleGroup_CN) ON DELETE CASCADE ON UPDATE CASCADE
+);");
+
+                db.Execute(
+@"CREATE TRIGGER SamplerState_OnUpdate 
+    AFTER UPDATE OF 
+        BlockState, 
+        Counter, 
+        InsuranceCounter 
+    ON SamplerState 
+    FOR EACH ROW 
+    BEGIN 
+        UPDATE SamplerState SET ModifiedDate = datetime('now', 'localtime') WHERE SamplerState_CN = old.SamplerState_CN;
+    END;
+");
+                SetDatabaseVersion(db, targetVersion);
+                db.CommitTransaction();
+            }
+            catch(Exception e)
+            {
+                db.RollbackTransaction();
+                throw new SchemaUpdateException(version, targetVersion, e);
             }
         }
 

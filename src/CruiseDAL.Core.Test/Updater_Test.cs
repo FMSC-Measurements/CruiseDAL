@@ -17,6 +17,13 @@ namespace CruiseDAL.Tests
         {
         }
 
+        private void ValidateUpdate(CruiseDatastore database)
+        {
+            VerifyTablesCanDelete(database);
+
+            database.CheckTableExists("SamplerState").Should().BeTrue();
+        }
+
         [Fact]
         public void Update_FROM_05_30_2013()
         {
@@ -29,28 +36,13 @@ namespace CruiseDAL.Tests
                     setup.Execute(CruiseDAL.Tests.SQL.CRUISECREATE_05_30_2013);
                 }
 
-                try
+                using(var database = new CruiseDatastore(filePath))
                 {
                     var dataStore = new CruiseDatastore(filePath);
 
                     var updater = new Updater_V2();
-                    updater.Update(dataStore);
-
-                    Assert.False(true);
+                    updater.Invoking(x => x.Update(dataStore)).Should().Throw<IncompatibleSchemaException>();
                 }
-                catch (Exception e)
-                {
-                    e.Should().BeOfType<IncompatibleSchemaException>();
-                }
-
-                //using (var datastore = new DAL(filePath))
-                //{
-                //    var semVerActual = new Version(datastore.DatabaseVersion);
-                //    var semVerExpected = new Version("2.5.0");
-
-                //    semVerActual.Major.Should().Be(semVerExpected.Major);
-                //    semVerActual.Minor.Should().Be(semVerExpected.Minor);
-                //}
             }
             finally
             {
@@ -78,15 +70,16 @@ namespace CruiseDAL.Tests
                     var dataStore = new CruiseDatastore(filePath);
 
                     var updater = new Updater_V2();
-                    updater.Update(dataStore);
+                    updater.Invoking(x => x.Update(dataStore))
+                        .Should().NotThrow();
 
                     var semVerActual = new Version(datastore.DatabaseVersion);
-                    var semVerExpected = new Version("2.5.0");
+                    var semVerExpected = new Version("2.6.0");
 
                     semVerActual.Major.Should().Be(semVerExpected.Major);
                     semVerActual.Minor.Should().Be(semVerExpected.Minor);
 
-                    VerifyTablesCanDelete(datastore);
+                    ValidateUpdate(datastore);
                 }
             }
             finally
