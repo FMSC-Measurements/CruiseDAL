@@ -51,6 +51,26 @@ namespace FMSC.ORM.SQLite
             }
         }
 
+#if MICROSOFT_DATA_SQLITE
+        [Fact]
+        public void Bind_Fails_with_qMark_param()
+        {
+            using (var connection = DbProvider.CreateConnection())
+            {
+                connection.ConnectionString = "Data Source=:memory:";
+
+                var command = connection.CreateCommand();
+                command.CommandText = $"SELECT ?;";
+
+                connection.Open();
+
+                var result = command.Invoking(x => x.ExecuteScalar())
+                    .Should().Throw<InvalidOperationException>()
+                    .And.Source.Should().Be("Microsoft.Data.Sqlite");
+            }
+        }
+#endif
+
         [Fact]
         public void Echo_value_guid()
         {

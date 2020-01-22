@@ -17,11 +17,9 @@ namespace FMSC.ORM.SQLite
     {
         public Exception ProcessException(Exception innerException, IDbConnection connection, string commandText, IDbTransaction transaction)
         {
-            if (innerException is SqliteException)
+            if (innerException is SqliteException ex)
             {
                 SQLException sqlEx;
-
-                var ex = innerException as SqliteException;
 
 #if MICROSOFT_DATA_SQLITE
                 var errorCode = (SqliteResultCode)ex.SqliteErrorCode;
@@ -88,6 +86,10 @@ namespace FMSC.ORM.SQLite
                 }
 
                 return sqlEx;
+            }
+            else if((innerException is InvalidOperationException ioex) && ioex.Source == "Microsoft.Data.Sqlite")
+            {
+                return new SQLException(null, innerException) { CommandText = commandText };
             }
             else
             {
