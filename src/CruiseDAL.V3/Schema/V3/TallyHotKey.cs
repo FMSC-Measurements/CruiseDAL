@@ -32,29 +32,29 @@ ON TallyHotKey
     public partial class Migrations
     {
         public const string MIGRATE_TALLYHOTKEY_FROM_COUNTTREE_FORMAT_STR =
-            "WITH ctFlattened AS ( " +
-            "SELECT SampleGroup_CN, TreeDefaultValue_CN, max(Tally_CN) AS Tally_CN " +
-            "FROM {1}.CountTree " +
-            "GROUP BY SampleGroup_CN, ifnull(TreeDefaultValue_CN, '')) " +
+@"WITH ctFlattened AS ( 
+SELECT SampleGroup_CN, TreeDefaultValue_CN, max(Tally_CN) AS Tally_CN 
+FROM {1}.CountTree 
+GROUP BY SampleGroup_CN, ifnull(TreeDefaultValue_CN, '')) 
 
-            "INSERT OR REPLACE INTO {0}.TallyHotKey ( " +
-                "StratumCode, " +
-                "SampleGroupCode, " +
-                "Species, " +
-                "LiveDead, " +
-                "HotKey " +
-            ")" +
-            "SELECT " +
-                "st.Code AS StratumCode, " +
-                "sg.Code AS SampleGroupCode, " +
-                "tdv.Species, " +
-                "tdv.LiveDead, " +
-                "t.HotKey " +
-            "FROM ctFlattened " +
-            "JOIN {1}.SampleGroup AS sg USING (SampleGroup_CN) " +
-            "JOIN {1}.Stratum AS st USING (Stratum_CN) " +
-            "JOIN {1}.Tally AS t USING (Tally_CN) " +
-            "LEFT JOIN {1}.TreeDefaultValue AS tdv USING (TreeDefaultValue_CN)" +
-            "; ";
+INSERT OR REPLACE INTO {0}.TallyHotKey ( 
+    StratumCode, 
+    SampleGroupCode, 
+    Species, 
+    LiveDead, 
+    HotKey 
+)
+SELECT 
+    st.Code AS StratumCode, 
+    sg.Code AS SampleGroupCode, 
+    tdv.Species, 
+    tdv.LiveDead, 
+    t.HotKey 
+FROM ctFlattened 
+JOIN {1}.SampleGroup AS sg USING (SampleGroup_CN) 
+JOIN {1}.Stratum AS st USING (Stratum_CN) 
+JOIN {1}.Tally AS t USING (Tally_CN) 
+LEFT JOIN {1}.TreeDefaultValue AS tdv USING (TreeDefaultValue_CN)
+; ";
     }
 }
