@@ -1,16 +1,17 @@
 <Project>
   <PropertyGroup Label="CustomProperties">
 
+    <BuildCF>false</BuildCF>
     <!--we could probably target net35 but im using net40 as the minimum because 'dotnet' cli only supports down to net40-->
     <!--and i want dotnet cli to run test in the cli to test all target frameworks-->
-    <TargetFrameworks>net40;netstandard20;net35-cf</TargetFrameworks>
+    <TargetFrameworks>net40;netstandard20</TargetFrameworks>
     
-    <FMSCORMversion>2.4.8</FMSCORMversion>
+    <FMSCORMversion>2.4.9</FMSCORMversion>
     
     
     <CruiseDALv2SchemaVersion>2.6.0</CruiseDALv2SchemaVersion>
     <CruiseDALv3SchemaVersion>3.0.2</CruiseDALv3SchemaVersion>
-    <CruiseDALIncrementalVersion>48</CruiseDALIncrementalVersion>
+    <CruiseDALIncrementalVersion>49</CruiseDALIncrementalVersion>
     <CruiseDALCoreVersion>3.0.0.$(CruiseDALIncrementalVersion)</CruiseDALCoreVersion>
     <CruiseDALV2Version>$(CruiseDALv2SchemaVersion).$(CruiseDALIncrementalVersion)</CruiseDALV2Version>
     <CruiseDALV3Version>$(CruiseDALv3SchemaVersion).$(CruiseDALIncrementalVersion)</CruiseDALV3Version>
@@ -20,6 +21,10 @@
     
     <FMSCORMToolsDirectory>$(MSBuildThisFileDirectory)tools\</FMSCORMToolsDirectory>
     <ModelGenToolDirectory>$(FMSCORMToolsDirectory)ModelGen\</ModelGenToolDirectory>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(BuildCF)' == 'true'">
+    <TargetFrameworks>$(TargetFrameworks);net35-cf</TargetFrameworks>
   </PropertyGroup>
 
   <PropertyGroup Label="Package Info" >
