@@ -33,7 +33,7 @@ namespace CruiseDAL
             connection.LogMessage("Updated structure version to {0}", newVersion, transaction);
         }
 
-        [EntitySource(SourceName = "ErrorLog")]
+        [Table("ErrorLog")]
         private class ErrorLog
         {
             [PrimaryKeyField(Name = "RowID")]
