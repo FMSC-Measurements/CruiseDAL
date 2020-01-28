@@ -115,7 +115,7 @@ namespace CruiseDAL
             }
             if(db.DatabaseVersion.StartsWith("2.5."))
             {
-                UpdateTo_2_6_0(db);
+                UpdateTo_2_6_1(db);
             }
         }
 
@@ -587,10 +587,10 @@ ValidGrades TEXT);");
             }
         }
 
-        private static void UpdateTo_2_6_0(CruiseDatastore db)
+        private static void UpdateTo_2_6_1(CruiseDatastore db)
         {
             var version = db.DatabaseVersion;
-            var targetVersion = "2.6.0";
+            var targetVersion = "2.6.1";
 
             db.BeginTransaction();
             try
