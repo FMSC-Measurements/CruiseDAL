@@ -87,10 +87,13 @@ namespace FMSC.ORM.SQLite
 
                 return sqlEx;
             }
-            else if((innerException is InvalidOperationException ioex) && ioex.Source == "Microsoft.Data.Sqlite")
+#if MICROSOFT_DATA_SQLITE
+            else if((innerException is InvalidOperationException ioex)
+                && ioex.Source == "Microsoft.Data.Sqlite")
             {
                 return new SQLException(null, innerException) { CommandText = commandText };
             }
+#endif
             else
             {
                 return new ORMException(null, innerException);
