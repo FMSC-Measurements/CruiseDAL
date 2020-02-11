@@ -2,6 +2,9 @@
   
   <PropertyGroup>
     <Version>$(CruiseDALV3ModelsVersion)</Version>
+    <!-- dont target net_cf because this library isn't used on WM-->
+    <TargetFrameworks>net40;netstandard20</TargetFrameworks>
+    
   </PropertyGroup>
 
 

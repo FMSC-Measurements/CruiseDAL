@@ -6,7 +6,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\CruiseDAL.Core\CruiseDAL.Core.csproj" />
+    <ProjectReference Include="..\CruiseDAL.Core\CruiseDAL.Core.csproj" PrivateAssets="none"/>
   </ItemGroup>
 
 </Project>
