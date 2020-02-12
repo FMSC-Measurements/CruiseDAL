@@ -12,11 +12,11 @@
     <CruiseDALv2SchemaVersion>2.6.1</CruiseDALv2SchemaVersion>
     <CruiseDALv3SchemaVersion>3.0.2</CruiseDALv3SchemaVersion>
     <CruiseDALIncrementalVersion>52</CruiseDALIncrementalVersion>
-    <CruiseDALCoreVersion>3.0.0.$(CruiseDALIncrementalVersion)</CruiseDALCoreVersion>
-    <CruiseDALV2Version>$(CruiseDALv2SchemaVersion).$(CruiseDALIncrementalVersion)</CruiseDALV2Version>
-    <CruiseDALV3Version>$(CruiseDALv3SchemaVersion).$(CruiseDALIncrementalVersion)</CruiseDALV3Version>
-    <CruiseDALV3ModelsVersion>$(CruiseDALv3SchemaVersion).$(CruiseDALIncrementalVersion)</CruiseDALV3ModelsVersion>
-    <CruiseDALV2ModelsVersion>$(CruiseDALv2SchemaVersion).$(CruiseDALIncrementalVersion)</CruiseDALV2ModelsVersion>
+    <CruiseDALCoreVersion>3.0.0.52</CruiseDALCoreVersion>
+    <CruiseDALV2Version>$(CruiseDALv2SchemaVersion).53</CruiseDALV2Version>
+    <CruiseDALV3Version>$(CruiseDALv3SchemaVersion).52</CruiseDALV3Version>
+    <CruiseDALV3ModelsVersion>$(CruiseDALv3SchemaVersion).52</CruiseDALV3ModelsVersion>
+    <CruiseDALV2ModelsVersion>$(CruiseDALv2SchemaVersion).52</CruiseDALV2ModelsVersion>
     
     
     <FMSCORMToolsDirectory>$(MSBuildThisFileDirectory)tools\</FMSCORMToolsDirectory>
@@ -29,7 +29,7 @@
 
   <PropertyGroup Label="Package Info" >
     <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
-    <Authors>Ben Campbell</Authors>
+    <Authors>Benjamin Campbell</Authors>
     <PackageProjectUrl>https://github.com/FMSC-Measurements/CruiseDAL</PackageProjectUrl>
     <RepositoryType>git</RepositoryType>
     <RepositoryUrl>https://github.com/FMSC-Measurements/CruiseDAL.git</RepositoryUrl>

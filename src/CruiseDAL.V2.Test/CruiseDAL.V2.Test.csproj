@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <TargetFrameworks>netcoreapp2.1;net461;</TargetFrameworks>
-
+    <RootNamespace>CruiseDAL.V2</RootNamespace>
     <IsPackable>false</IsPackable>
   </PropertyGroup>
 
@@ -29,6 +29,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\CruiseDAL.V2.Models\CruiseDAL.V2.Models.csproj" />
     <ProjectReference Include="..\CruiseDAL.V2\CruiseDAL.V2.csproj" />
   </ItemGroup>
 
