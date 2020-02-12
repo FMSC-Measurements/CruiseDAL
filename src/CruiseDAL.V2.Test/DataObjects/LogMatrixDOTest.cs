@@ -4,7 +4,7 @@ using CruiseDAL;
 using System.Collections.Generic;
 using FluentAssertions;
 
-namespace CruiseDAL.DataObjects.Tests
+namespace CruiseDAL.V2.DataObjects
 {
     public class LogMatrixDOTest
     {

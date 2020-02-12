@@ -8,7 +8,7 @@ using FluentAssertions;
 using FMSC.ORM;
 using System.Linq;
 
-namespace CruiseDAL.DataObjects.Tests
+namespace CruiseDAL.V2.DataObjects
 {
     public class TreeDOTest
     {

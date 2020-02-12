@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 using Xunit;
 using Xunit.Abstractions;
 
-namespace CruiseDAL.DataObjects.Tests
+namespace CruiseDAL.V2.DataObjects
 {
     public class TableModels_Test : TestBase
     {
