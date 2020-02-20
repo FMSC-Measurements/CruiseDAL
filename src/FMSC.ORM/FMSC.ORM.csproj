@@ -12,16 +12,8 @@
     <DefineConstants>$(DefineConstants);MICROSOFT_DATA_SQLITE</DefineConstants>
   </PropertyGroup>
 
-  <!--Required for System.Data.Sqlite See: https://stackoverflow.com/questions/32639630/sqlite-interop-dll-files-does-not-copy-to-project-output-path-when-required-by-r/32639631#32639631-->
-  <!--<PropertyGroup Condition="$(DefineConstants.Contains(SYSTEM_DATA_SQLITE)) And $(TargetFramework) != 'net35-cf'">
-    <ContentSQLiteInteropFiles>true</ContentSQLiteInteropFiles>
-    <CopySQLiteInteropFiles>false</CopySQLiteInteropFiles>
-    <CleanSQLiteInteropFiles>false</CleanSQLiteInteropFiles>
-    <CollectSQLiteInteropFiles>false</CollectSQLiteInteropFiles>
-  </PropertyGroup>-->
-
   <ItemGroup Condition="$(DefineConstants.Contains(SYSTEM_DATA_SQLITE)) And $(TargetFramework) != 'net35-cf'">
-    <PackageReference Include="System.Data.SQLite.Core" Version="1.0.110" PrivateAssets="none"/>
+    <PackageReference Include="System.Data.SQLite.Core" Version="1.0.110" PrivateAssets="none" />
   </ItemGroup>
 
   <ItemGroup Condition="$(DefineConstants.Contains(SYSTEM_DATA_SQLITE)) And $(TargetFramework) == 'net35-cf'">
