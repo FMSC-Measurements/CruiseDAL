@@ -9,7 +9,9 @@ using System.Text;
 
 namespace FMSC.ORM.SQLite
 {
+#pragma warning disable CS0612 // Type or member is obsolete
     public class SQLiteDatastore : DatastoreRedux
+#pragma warning restore CS0612 // Type or member is obsolete
     {
         protected const string IN_MEMORY_DB_PATH = ":memory:";
 
@@ -296,7 +298,7 @@ namespace FMSC.ORM.SQLite
         /// </summary>
         /// <param name="table_name">The table_name.</param>
         /// <returns></returns>
-        public override bool HasForeignKeyErrors(string table_name)
+        public override bool HasForeignKeyErrors(string table_name = null)
         {
             bool hasErrors = false;
             string commandText;
