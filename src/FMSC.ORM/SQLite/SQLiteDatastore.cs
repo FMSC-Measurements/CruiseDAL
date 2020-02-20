@@ -391,8 +391,11 @@ namespace FMSC.ORM.SQLite
         {
             SQLiteDatabaseBuilder.CreateEmptyFile(path);
 
-            var targetConnection = CreateConnection(path);
-            BackupDatabase(targetConnection);
+            using (var targetConnection = CreateConnection(path))
+            {
+                targetConnection.Open();
+                BackupDatabase(targetConnection);
+            }
         }
 
         public void BackupDatabase(SQLiteDatastore targetDatabase)
