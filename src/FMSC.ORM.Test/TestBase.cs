@@ -5,7 +5,6 @@ using System.Data.Common;
 using System.Diagnostics;
 using System.IO;
 using System.Reflection;
-using System.Text;
 using Xunit.Abstractions;
 
 namespace FMSC.ORM
@@ -18,7 +17,7 @@ namespace FMSC.ORM
 
         protected DbProviderFactory DbProvider { get; }
 
-        List<string> FilesToBeDeleted { get; } = new List<string>();
+        private List<string> FilesToBeDeleted { get; } = new List<string>();
 
         public TestBase(ITestOutputHelper output)
         {
@@ -86,6 +85,19 @@ namespace FMSC.ORM
         {
             _stopwatch.Stop();
             Output.WriteLine("Stopwatch Ended:" + _stopwatch.ElapsedMilliseconds.ToString() + "ms");
+        }
+
+        public DbConnection GetOpenConnection()
+        {
+            var conn = DbProvider.CreateConnection();
+            conn.ConnectionString = "Data Source=:memory:";
+            conn.Open();
+
+#if SYSTEM_DATA_SQLITE
+                ((System.Data.SQLite.SQLiteConnection) conn).Flags |= System.Data.SQLite.SQLiteConnectionFlags.NoVerifyTypeAffinity;
+#endif
+
+            return conn;
         }
 
         protected void VerifyCommandSyntex(string commandText)

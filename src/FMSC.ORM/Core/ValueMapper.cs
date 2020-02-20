@@ -38,10 +38,10 @@ namespace FMSC.ORM.Core
 
             if (targetType == typeof(Guid))
             {
+                if (value is string str) { return new Guid((str)); }
+
                 try
                 {
-
-                    if (value is string str) { return new Guid((str)); }
                     if (value is byte[] aByte) { return new Guid(aByte); }
                 }
                 catch

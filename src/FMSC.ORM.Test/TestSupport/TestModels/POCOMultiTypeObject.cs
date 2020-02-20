@@ -49,8 +49,14 @@ namespace FMSC.ORM.TestSupport.TestModels
         [Field(Name = "GuidField")]
         public Guid GuidField { get; set; }
 
+        [Field(Name = "NGuidField")]
+        public Guid? NGuidField { get; set; }
+
         [Field(Name = "DateTimeField")]
         public DateTime DateTimeField { get; set; }
+
+        [Field(Name = "NDateTimeField")]
+        public DateTime? NDateTimeField { get; set; }
 
         [Field(Name = "PartialyPublicField")]
         public string PartialyPublicField { get; protected set; }
@@ -59,10 +65,6 @@ namespace FMSC.ORM.TestSupport.TestModels
         public TypeCode EnumField { get; set; }
 
         public string AutomaticStringField { get; set; }
-
-
-
-
 
         #region non visible fields
 

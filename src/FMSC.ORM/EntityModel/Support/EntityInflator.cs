@@ -1,5 +1,4 @@
 ﻿using FMSC.ORM.Core;
-using FMSC.ORM.EntityModel.Attributes;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -8,19 +7,13 @@ namespace FMSC.ORM.EntityModel.Support
 {
     public class EntityInflator
     {
-        private const int BYTE_READ_LENGTH = 1024;//TODO once we start reading byte data figure out our byte read length... should this be done at runtime?
+        private Dictionary<string, int> OrdinalLookup { get; set; }
 
-        //ConstructorInfo _constructor;
-
-        private Dictionary<string, int> OrdinalMapping { get; set; }
-
-        protected EntityDescription EntityDescription { get; set; }
+        protected EntityDescription EntityDescription { get; }
 
         public EntityInflator(EntityDescription entity)
         {
             EntityDescription = entity;
-
-            //_constructor = EntityDescription.EntityType.GetConstructor(new Type[] { });
         }
 
         /// <summary>
@@ -31,14 +24,14 @@ namespace FMSC.ORM.EntityModel.Support
         public void CheckOrdinals(System.Data.IDataReader reader)
         {
             var fieldCount = reader.FieldCount;
-            var ordinalMapping = new Dictionary<string, int>(fieldCount);
+            var ordinalLookup = new Dictionary<string, int>(fieldCount);
 
             for (int i = 0; i < fieldCount; i++)
             {
                 var fieldName = reader.GetName(i).ToLower(System.Globalization.CultureInfo.InvariantCulture);
                 try
                 {
-                    ordinalMapping.Add(fieldName, i);
+                    ordinalLookup.Add(fieldName, i);
                 }
                 catch
                 {
@@ -46,15 +39,15 @@ namespace FMSC.ORM.EntityModel.Support
                 }
             }
 
-            OrdinalMapping = ordinalMapping;
+            OrdinalLookup = ordinalLookup;
         }
 
         public void ReadData(System.Data.IDataReader reader, Object obj)
         {
-            var ordinalMapping = OrdinalMapping;
+            var ordinalLookup = OrdinalLookup;
             foreach (var field in EntityDescription.Fields)
             {
-                if (ReadField(reader, ordinalMapping, field, out var value))
+                if (ReadField(reader, ordinalLookup, field, out var value))
                 {
                     field.SetFieldValue(obj, value);
                 }
@@ -63,7 +56,7 @@ namespace FMSC.ORM.EntityModel.Support
             var keyField = EntityDescription.Fields.PrimaryKeyField;
             if (keyField != null)
             {
-                if (ReadField(reader, ordinalMapping, keyField, out var value))
+                if (ReadField(reader, ordinalLookup, keyField, out var value))
                 {
                     keyField.SetFieldValue(obj, value);
                 }
@@ -79,7 +72,7 @@ namespace FMSC.ORM.EntityModel.Support
         {
             var keyField = EntityDescription.Fields.PrimaryKeyField;
 
-            if (keyField != null && ReadField(reader, OrdinalMapping, keyField, out var value))
+            if (keyField != null && ReadField(reader, OrdinalLookup, keyField, out var value))
             { return value; }
             else
             { return null; }
@@ -94,7 +87,32 @@ namespace FMSC.ORM.EntityModel.Support
 
                 if (ordinalMapping.TryGetValue(fieldName, out ordinal))
                 {
-                    value = ValueMapper.ProcessValue(field.RunTimeType, reader.GetValue(ordinal));
+                    var runtimeType = field.RunTimeType;
+                    object dbValue = null;
+                    try
+                    {
+                        dbValue = reader.GetValue(ordinal);
+                    }
+                    catch (FormatException) when (runtimeType == typeof(DateTime) || runtimeType == typeof(DateTime?))
+                    {
+                        // HACK if date time is not in ISO8601 then System.Data.Sqlite
+                        // will fail when calling GetValue because it is attempting to convert it to a datetime
+                        // the solution is to attempt to read it as a string and let the conversion in ProcessValue
+                        // convert the string to a DateTime
+                        dbValue = reader.GetString(ordinal);
+                    }
+
+                    try
+                    {
+                        value = ValueMapper.ProcessValue(runtimeType, dbValue);
+                    }
+                    catch (FormatException) when (runtimeType == typeof(Guid) || runtimeType == typeof(Guid?))
+                    {
+                        var bytes = new byte[16];
+                        reader.GetBytes(ordinal, 0, bytes, 0, 16);
+                        value = ValueMapper.ProcessValue(runtimeType, bytes);
+                    }
+
                     return true;
                 }
                 else

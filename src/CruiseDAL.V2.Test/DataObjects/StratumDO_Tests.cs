@@ -42,6 +42,7 @@ namespace CruiseDAL.V2.DataObjects
 
                 var plot = new Plot()
                 {
+                    CuttingUnit_CN = unit.CuttingUnit_CN.Value,
                     Stratum_CN = stratum.Stratum_CN.Value,
                     PlotNumber = 1,
                 };
@@ -63,6 +64,8 @@ namespace CruiseDAL.V2.DataObjects
                     LogNumber = "1",
                 };
                 database.Insert(log);
+
+                database.HasForeignKeyErrors().Should().BeFalse();
 
                 StratumDO.RecursiveDeleteStratum(stDO);
 

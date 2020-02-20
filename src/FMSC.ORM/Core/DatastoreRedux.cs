@@ -10,8 +10,8 @@ namespace FMSC.ORM.Core
     [Obsolete()]
     public abstract class DatastoreRedux : Datastore
     {
-        protected DatastoreRedux(ISqlDialect dialect, IExceptionProcessor exceptionProcessor, DbProviderFactory providerFactory)
-            : base(dialect, exceptionProcessor, providerFactory)
+        protected DatastoreRedux(ISqlDialect dialect, IExceptionProcessor exceptionProcessor)
+            : base(dialect, exceptionProcessor)
         {
         }
 

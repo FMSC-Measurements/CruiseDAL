@@ -1,10 +1,4 @@
 ﻿using FluentAssertions;
-using FMSC.ORM.SQLite;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Xunit;
 using Xunit.Abstractions;
 
@@ -16,13 +10,19 @@ namespace FMSC.ORM.SQLite
         {
         }
 
+#if MICROSOFT_DATA_SQLITE
+
         [Fact]
-        public void Execute_with_missing_param()
+        public void Execute_with_param()
         {
             using var db = new SQLiteDatastore();
-            db.Invoking(x => x.Execute("Select ?;", "'hello world'"))
+            db.Invoking(x => x.ExecuteScalar<string>("Select ?;", "'hello world'"))
                 .Should().Throw<SQLException>()
                 .And.CommandText.Should().NotBeNullOrEmpty();
+
+            // var result = db.ExecuteScalar<string>("Select ?;", "'hello world'");
         }
+
+#endif
     }
 }

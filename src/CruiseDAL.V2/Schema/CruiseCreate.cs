@@ -1,9 +1,9 @@
 ﻿namespace CruiseDAL.Schema
 {
-    public static partial class Schema
-    {
-        public static string CREATE_TABLES =
-        @"
+	public static partial class Schema
+	{
+		public static string CREATE_TABLES =
+		@"
 --Core Tables--
     CREATE TABLE Sale (
 				Sale_CN INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -147,7 +147,7 @@
 
     CREATE TABLE Plot (
 				Plot_CN INTEGER PRIMARY KEY AUTOINCREMENT,
-				Plot_GUID TEXT,
+				Plot_GUID TEXT UNIQUE,
 				Stratum_CN INTEGER REFERENCES Stratum NOT NULL,
 				CuttingUnit_CN INTEGER REFERENCES CuttingUnit NOT NULL,
 				PlotNumber INTEGER NOT NULL,
@@ -171,7 +171,7 @@
 
     CREATE TABLE Tree (
 				Tree_CN INTEGER PRIMARY KEY AUTOINCREMENT,
-				Tree_GUID TEXT,
+				Tree_GUID TEXT UNIQUE,
 				TreeDefaultValue_CN INTEGER REFERENCES TreeDefaultValue,
 				Stratum_CN INTEGER REFERENCES Stratum NOT NULL,
 				SampleGroup_CN INTEGER REFERENCES SampleGroup,
@@ -228,7 +228,7 @@
 
     CREATE TABLE Log (
 				Log_CN INTEGER PRIMARY KEY AUTOINCREMENT,
-				Log_GUID TEXT,
+				Log_GUID TEXT UNIQUE,
 				Tree_CN INTEGER REFERENCES Tree NOT NULL,
 				LogNumber TEXT NOT NULL,
 				Grade TEXT,
@@ -255,7 +255,7 @@
 
     CREATE TABLE Stem (
 				Stem_CN INTEGER PRIMARY KEY AUTOINCREMENT,
-				Stem_GUID TEXT,
+				Stem_GUID TEXT UNIQUE,
 				Tree_CN INTEGER REFERENCES Tree,
 				Diameter REAL Default 0.0,
 				DiameterType TEXT,
@@ -292,7 +292,7 @@
     CREATE TABLE TreeEstimate (
 				TreeEstimate_CN INTEGER PRIMARY KEY AUTOINCREMENT,
 				CountTree_CN INTEGER REFERENCES CountTree,
-				TreeEstimate_GUID TEXT,
+				TreeEstimate_GUID TEXT UNIQUE,
 				KPI REAL NOT NULL,
 				CreatedBy TEXT DEFAULT 'none',
 				CreatedDate DateTime DEFAULT (datetime(current_timestamp, 'localtime')) ,
@@ -834,8 +834,8 @@ JOIN CuttingUnit USING (CuttingUnit_CN)
 JOIN Stratum USING (Stratum_CN);" +
 
 @"
-INSERT INTO Globals (Block, Key, Value) VALUES ('Database', 'Version', '2.6.1');
+INSERT INTO Globals (Block, Key, Value) VALUES ('Database', 'Version', '2.6.0');
 PRAGMA user_version = 5;";
 
-    }//END CLASS
+	}//END CLASS
 }//END NAMESPACE

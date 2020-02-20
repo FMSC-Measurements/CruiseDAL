@@ -10,10 +10,13 @@ using System.Text;
 namespace FMSC.ORM.SQLite
 {
 #pragma warning disable CS0612 // Type or member is obsolete
+
     public class SQLiteDatastore : DatastoreRedux
 #pragma warning restore CS0612 // Type or member is obsolete
     {
         protected const string IN_MEMORY_DB_PATH = ":memory:";
+
+        private DbProviderFactory ProviderFactory { get; }
 
         /// <summary>
         /// Gets value indicating if database file exists
@@ -66,13 +69,14 @@ namespace FMSC.ORM.SQLite
             //TODO find a better way to hold the connection for the life of the DAL
         }
 
-#if MICROSOFT_DATA_SQLITE
-        public SQLiteDatastore(string path) : base(new SqliteDialect(), new SqliteExceptionProcessor(), Microsoft.Data.Sqlite.SqliteFactory.Instance)
-#elif SYSTEM_DATA_SQLITE
-
-        public SQLiteDatastore(string path) : base(new SqliteDialect(), new SqliteExceptionProcessor(), System.Data.SQLite.SQLiteFactory.Instance)
-#endif
+        public SQLiteDatastore(string path) : base(new SqliteDialect(), new SqliteExceptionProcessor())
         {
+#if MICROSOFT_DATA_SQLITE
+            ProviderFactory = Microsoft.Data.Sqlite.SqliteFactory.Instance;
+#elif SYSTEM_DATA_SQLITE
+            ProviderFactory = System.Data.SQLite.SQLiteFactory.Instance;
+#endif
+
             if (path == null) { throw new ArgumentNullException("path"); }
             Path = path;
         }
@@ -96,11 +100,6 @@ namespace FMSC.ORM.SQLite
 
         #endregion SavePoints
 
-        protected override string BuildConnectionString()
-        {
-            return BuildConnectionString(Path);
-        }
-
         protected static string BuildConnectionString(string path)
         {
             if (path == null) { throw new InvalidOperationException("Path can not be null"); }
@@ -117,7 +116,21 @@ namespace FMSC.ORM.SQLite
             var conn = ProviderFactory.CreateConnection();
             conn.ConnectionString = BuildConnectionString(path);
 
+#if SYSTEM_DATA_SQLITE
+            ((System.Data.SQLite.SQLiteConnection)conn).Flags |= System.Data.SQLite.SQLiteConnectionFlags.NoVerifyTypeAffinity;
+#endif
+
             return conn;
+        }
+
+        public override DbConnection CreateConnection()
+        {
+            return CreateConnection(Path);
+        }
+
+        protected override DbCommand CreateCommand()
+        {
+            return ProviderFactory.CreateCommand();
         }
 
         /// <summary>
@@ -212,7 +225,7 @@ namespace FMSC.ORM.SQLite
 
                 try
                 {
-                    using (var command = ProviderFactory.CreateCommand())
+                    using (var command = CreateCommand())
                     {
                         var commandText = command.CommandText = "PRAGMA table_info(" + tableName + ");";
 
@@ -314,7 +327,7 @@ namespace FMSC.ORM.SQLite
             {
                 var connection = OpenConnection();
 
-                using (var command = ProviderFactory.CreateCommand())
+                using (var command = CreateCommand())
                 {
                     command.CommandText = commandText;
 

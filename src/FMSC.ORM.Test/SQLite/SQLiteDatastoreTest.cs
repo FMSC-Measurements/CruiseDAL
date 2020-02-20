@@ -1,7 +1,6 @@
 ﻿using Backpack.SqlBuilder;
 using FluentAssertions;
 using FMSC.ORM.Core;
-using FMSC.ORM.Test;
 using FMSC.ORM.Test.TestSupport.TestModels;
 using FMSC.ORM.TestSupport;
 using FMSC.ORM.TestSupport.TestModels;
@@ -90,7 +89,16 @@ namespace FMSC.ORM.SQLite
                 db.ReleaseConnection();
 
                 db.PersistentConnection.Should().BeNull();
-                conn.State.Should().Be(ConnectionState.Closed);
+                try
+                {
+                    conn.State.Should().Be(ConnectionState.Closed);
+                }
+                catch (ObjectDisposedException)
+                {
+#if !SYSTEM_DATA_SQLITE
+                    throw;
+#endif
+                }
 
                 db.ConnectionDepth.Should().Be(0);
             }
@@ -117,7 +125,16 @@ namespace FMSC.ORM.SQLite
                     db.ReleaseConnection();
 
                     db.PersistentConnection.Should().BeNull();
-                    conn.State.Should().Be(ConnectionState.Closed);
+                    try
+                    {
+                        conn.State.Should().Be(ConnectionState.Closed);
+                    }
+                    catch (ObjectDisposedException)
+                    {
+#if !SYSTEM_DATA_SQLITE
+                        throw;
+#endif
+                    }
                 }
 
                 db.ConnectionDepth.Should().Be(0);
@@ -141,7 +158,12 @@ namespace FMSC.ORM.SQLite
                 {
                     connection.State.Should().Be(ConnectionState.Closed);
                 }
-                catch (ObjectDisposedException) { }
+                catch (ObjectDisposedException)
+                {
+#if !SYSTEM_DATA_SQLITE
+                    throw;
+#endif
+                }
             }
         }
 
@@ -261,7 +283,7 @@ namespace FMSC.ORM.SQLite
                 File.Exists(backupTarget).Should().BeTrue();
 
                 // backup the database to the location of the file we just created
-                
+
                 ds.BackupDatabase(backupTarget);
                 File.Exists(backupTarget).Should().BeTrue();
 
@@ -324,7 +346,7 @@ namespace FMSC.ORM.SQLite
                 RegesterFileForCleanUp(backupTarget);
 
                 // create database file
-                using(var targetds = new SQLiteDatastore(backupTarget))
+                using (var targetds = new SQLiteDatastore(backupTarget))
                 {
                     dbbuilder.BuildDatabase(targetds);
                     targetds.Execute("CREATE TABLE Something (" +
@@ -340,7 +362,6 @@ namespace FMSC.ORM.SQLite
 
                     targetds.CheckTableExists("something").Should().BeFalse();
                     targetds.CheckFieldExists("MultiPropTable", "justanothercolumn").Should().BeFalse();
-
                 }
             }
         }
@@ -622,6 +643,18 @@ namespace FMSC.ORM.SQLite
         //    }
         //}
 
+        [Theory]
+        [InlineData("@missing")]
+        [InlineData("@p2")]
+        [InlineData("?2")]
+        public void Execute_with_missing_param(string paramName)
+        {
+            using var db = new SQLiteDatastore();
+            db.Invoking(x => x.Execute($"Select {paramName};", "'hello world'"))
+                .Should().Throw<SQLException>()
+                .And.CommandText.Should().NotBeNullOrEmpty();
+        }
+
         [Fact]
         public void ExecuteScalar_Generic()
         {
@@ -779,9 +812,11 @@ namespace FMSC.ORM.SQLite
             {
                 BoolField = randomizer.Bool(),
                 DateTimeField = DateTime.Now,
+                NDateTimeField = (nullableSetNull) ? (DateTime?)null : DateTime.Now,
                 DoubleField = randomizer.Double(),
                 FloatField = randomizer.Float(),
                 GuidField = randomizer.Guid(),
+                NGuidField = (nullableSetNull) ? (Guid?)null : randomizer.Guid(),
                 ID = randomizer.Int(),
                 IntField = randomizer.Int(),
                 LongField = randomizer.Long(),
@@ -807,6 +842,8 @@ namespace FMSC.ORM.SQLite
 
                 var poco = CreateRandomPoco(nulls);
                 ds.Insert(poco);
+
+                var stuff = ds.QueryGeneric("SELECT * FROM MultiPropTable;");
 
                 var result = ds.Query<POCOMultiTypeObject>("SELECT * FROM MultiPropTable;")
                     .SingleOrDefault();

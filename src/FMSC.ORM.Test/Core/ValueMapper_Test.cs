@@ -1,5 +1,4 @@
 ﻿using FluentAssertions;
-using FMSC.ORM.Core;
 using System;
 using System.Linq;
 using System.Text;
@@ -23,17 +22,6 @@ namespace FMSC.ORM.Core
             var expected = Guid.NewGuid();
 
             var value = expected.ToString();
-
-            ValueMapper.ProcessValue(targetType, value).Should().Be(expected);
-        }
-
-        [Fact(Skip = "not supported")]
-        public void ProcessValue_byteArrayString_to_Guid()
-        {
-            var targetType = typeof(Guid);
-            var expected = Guid.NewGuid();
-
-            var value = Encoding.UTF8.GetString(expected.ToByteArray());
 
             ValueMapper.ProcessValue(targetType, value).Should().Be(expected);
         }
@@ -71,18 +59,17 @@ namespace FMSC.ORM.Core
             var targetType = typeof(string);
             var expected = "something";
 
-            var value = Encoding.Default.GetBytes(expected);
+            var value = Encoding.UTF8.GetBytes(expected);
 
             ValueMapper.ProcessValue(targetType, value).Should().Be(expected);
         }
 
-        [Fact]
-        public void ProcessValue_string_to_DateTime()
+        [Theory]
+        [InlineData("6/22/2015 4:20 PM")]
+        public void ProcessValue_string_to_DateTime(string value)
         {
             var targetType = typeof(DateTime);
-            var expected = DateTime.Now;
-
-            var value = expected.ToString();
+            var expected = DateTime.Parse(value);
 
             var result = ValueMapper.ProcessValue(targetType, value);
             result.Should().BeOfType<DateTime>();

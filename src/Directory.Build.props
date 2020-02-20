@@ -6,17 +6,17 @@
     <!--and i want dotnet cli to run test in the cli to test all target frameworks-->
     <TargetFrameworks>net40;netstandard20</TargetFrameworks>
     
-    <FMSCORMversion>2.4.12</FMSCORMversion>
+    <FMSCORMversion>2.5.0</FMSCORMversion>
     
     
     <CruiseDALv2SchemaVersion>2.6.1</CruiseDALv2SchemaVersion>
     <CruiseDALv3SchemaVersion>3.0.2</CruiseDALv3SchemaVersion>
-    <CruiseDALIncrementalVersion>52</CruiseDALIncrementalVersion>
+    <CruiseDALIncrementalVersion>53</CruiseDALIncrementalVersion>
     <CruiseDALCoreVersion>3.0.0.52</CruiseDALCoreVersion>
-    <CruiseDALV2Version>$(CruiseDALv2SchemaVersion).53</CruiseDALV2Version>
-    <CruiseDALV3Version>$(CruiseDALv3SchemaVersion).52</CruiseDALV3Version>
-    <CruiseDALV3ModelsVersion>$(CruiseDALv3SchemaVersion).52</CruiseDALV3ModelsVersion>
-    <CruiseDALV2ModelsVersion>$(CruiseDALv2SchemaVersion).52</CruiseDALV2ModelsVersion>
+    <CruiseDALV2Version>$(CruiseDALv2SchemaVersion).$(CruiseDALIncrementalVersion)</CruiseDALV2Version>
+    <CruiseDALV3Version>$(CruiseDALv3SchemaVersion).$(CruiseDALIncrementalVersion)</CruiseDALV3Version>
+    <CruiseDALV3ModelsVersion>$(CruiseDALv3SchemaVersion).$(CruiseDALIncrementalVersion)</CruiseDALV3ModelsVersion>
+    <CruiseDALV2ModelsVersion>$(CruiseDALv2SchemaVersion).$(CruiseDALIncrementalVersion)</CruiseDALV2ModelsVersion>
     
     
     <FMSCORMToolsDirectory>$(MSBuildThisFileDirectory)tools\</FMSCORMToolsDirectory>

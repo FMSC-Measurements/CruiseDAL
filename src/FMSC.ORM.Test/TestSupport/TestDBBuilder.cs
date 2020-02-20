@@ -1,10 +1,9 @@
 ﻿using FMSC.ORM.Core;
 using FMSC.ORM.SQLite;
-using System.Data;
 
 namespace FMSC.ORM.TestSupport
 {
-    public class TestDBBuilder : SQLiteDatabaseBuilder
+	public class TestDBBuilder : SQLiteDatabaseBuilder
     {
         public const string CREATE_MULTIPROPTABLE =
 @"CREATE TABLE MultiPropTable
@@ -22,7 +21,9 @@ namespace FMSC.ORM.TestSupport
 	BoolField BOOLEAN,
 	NBoolField BOOLEAN,
 	GuidField TEXT,
+	NGuidField TEXT,
 	DateTimeField DATETIME,
+	NDateTimeField DATETIME,
     EnumField TEXT,
 	PartialyPublicField TEXT,
     AutomaticStringField TEXT,

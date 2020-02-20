@@ -39,7 +39,6 @@ namespace FMSC.ORM.Core
 
         protected ISqlDialect SqlDialect { get; set; }
         protected IExceptionProcessor ExceptionProcessor { get; set; }
-        protected DbProviderFactory ProviderFactory { get; set; }
 
         public IDatastoreBuilder DatabaseBuilder { get; set; }
 
@@ -57,11 +56,10 @@ namespace FMSC.ORM.Core
 
         public object TransactionSyncLock { get { return _transactionSyncLock; } }
 
-        protected Datastore(ISqlDialect dialect, IExceptionProcessor exceptionProcessor, DbProviderFactory providerFactory)
+        protected Datastore(ISqlDialect dialect, IExceptionProcessor exceptionProcessor)
         {
             SqlDialect = dialect;
             ExceptionProcessor = exceptionProcessor;
-            ProviderFactory = providerFactory;
         }
 
         #region Entity Info
@@ -444,7 +442,7 @@ namespace FMSC.ORM.Core
                 {
                     EntityInflator inflator = GlobalEntityDescriptionLookup.Instance.GetEntityInflator(typeof(TResult));
                     EntityCache cache = GetEntityCache(typeof(TResult));//TODO delegate access of cach to data context type
-                    using (var command = ProviderFactory.CreateCommand())
+                    using (var command = CreateCommand())
                     {
                         command.CommandText = commandText;
                         command.SetParams(paramaters);
@@ -599,7 +597,7 @@ namespace FMSC.ORM.Core
                 var connection = OpenConnection();
                 try
                 {
-                    using (var command = ProviderFactory.CreateCommand())
+                    using (var command = CreateCommand())
                     {
                         command.CommandText = commandText;
                         command.AddParams(paramaters);
@@ -645,7 +643,7 @@ namespace FMSC.ORM.Core
                 {
                     FMSC.ORM.EntityModel.Support.EntityInflator inflator = GlobalEntityDescriptionLookup.Instance.GetEntityInflator(typeof(TResult));
 
-                    using (var command = ProviderFactory.CreateCommand())
+                    using (var command = CreateCommand())
                     {
                         command.CommandText = commandText;
                         command.SetParams(paramaters);
@@ -713,7 +711,7 @@ namespace FMSC.ORM.Core
                 {
                     FMSC.ORM.EntityModel.Support.EntityInflator inflator = GlobalEntityDescriptionLookup.Instance.GetEntityInflator(typeof(TResult));
 
-                    using (var command = ProviderFactory.CreateCommand())
+                    using (var command = CreateCommand())
                     {
                         command.CommandText = commandText;
                         command.AddParams(paramaters);
@@ -1246,15 +1244,9 @@ namespace FMSC.ORM.Core
             System.Threading.Interlocked.Decrement(ref this._holdConnection);
         }
 
-        public DbConnection CreateConnection()
-        {
-            var conn = ProviderFactory.CreateConnection();
-            conn.ConnectionString = BuildConnectionString();
+        public abstract DbConnection CreateConnection();
 
-            return conn;
-        }
-
-        protected abstract string BuildConnectionString();
+        protected abstract DbCommand CreateCommand();
 
         /// <summary>
         /// if _holdConnection > 0 returns PersistentConnection
