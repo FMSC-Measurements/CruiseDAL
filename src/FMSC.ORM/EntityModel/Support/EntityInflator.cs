@@ -93,6 +93,8 @@ namespace FMSC.ORM.EntityModel.Support
                     {
                         dbValue = reader.GetValue(ordinal);
                     }
+                    catch (FormatException) when (runtimeType == typeof(string))
+                    { dbValue = reader.GetString(ordinal); }
                     catch (FormatException) when (runtimeType == typeof(DateTime) || runtimeType == typeof(DateTime?))
                     {
                         // HACK if date time is not in ISO8601 then System.Data.Sqlite

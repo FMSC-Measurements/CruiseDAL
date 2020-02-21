@@ -813,6 +813,7 @@ namespace FMSC.ORM.SQLite
                 BoolField = randomizer.Bool(),
                 DateTimeField = DateTime.Now,
                 NDateTimeField = (nullableSetNull) ? (DateTime?)null : DateTime.Now,
+                StrDateTime = (nullableSetNull) ? (string)null : DateTime.Now.ToShortTimeString(),
                 DoubleField = randomizer.Double(),
                 FloatField = randomizer.Float(),
                 GuidField = randomizer.Guid(),

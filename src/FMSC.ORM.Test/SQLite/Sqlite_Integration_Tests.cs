@@ -283,10 +283,6 @@ namespace FMSC.ORM.SQLite
             {
                 var command = connection.CreateCommand();
                 //command.CommandText = $"SELECT CAST({pName} as DATETIME);";
-                //var parm = command.CreateParameter();
-                //parm.ParameterName = pName;
-                //parm.Value = strValue;
-                //command.Parameters.Add(parm);
 
                 command.CommandText =
                     $"CREATE TABLE IF NOT EXISTS tbl1 (dt_field DATETIME);" +
@@ -316,15 +312,80 @@ namespace FMSC.ORM.SQLite
                     var result = reader.GetDateTime(0);
 #endif
                 }
-
-                //var result = command.ExecuteScalar();
-                //Output.WriteLine(result.ToString());
-
-                //result.Should().BeOfType(typeof(string));
-                //var resultDT = DateTime.Parse(result as string);
-                //expectedValue.Should().Be(resultDT);
             }
         }
+
+        [Fact]
+        public void Echo_datetime_as_str_2()
+        {
+            var pName = "@p1";
+            var strValue = "6/22/2015 4:20 PM";
+
+            using (var connection = GetOpenConnection())
+            {
+                var command = connection.CreateCommand();
+                //command.CommandText = $"SELECT CAST({pName} as DATETIME);";                
+
+                command.CommandText =
+                    $"CREATE TABLE IF NOT EXISTS tbl1 (dt_field DATETIME);" +
+                    $"INSERT INTO tbl1 VALUES ({pName});" +
+                    $"SELECT dt_field FROM tbl1 WHERE rowid = last_insert_rowid();";
+                var parm = command.CreateParameter();
+                parm.ParameterName = pName;
+                parm.Value = strValue;
+                command.Parameters.Add(parm);
+
+                using (var reader = command.ExecuteReader())
+                {
+                    reader.Read().Should().BeTrue();
+
+#if SYSTEM_DATA_SQLITE
+                    reader.Invoking(x => x.GetValue(0)).Should().Throw<FormatException>();
+#elif MICROSOFT_DATA_SQLITE
+                    var value = reader.GetValue(0);
+                    value.Should().Be(strValue);
+#endif
+
+                    var str = reader.GetString(0);
+                    str.Should().Be(strValue);
+                }
+            }
+        }
+
+        [Fact]
+        public void Echo_datetime_as_str()
+        {
+            var pName = "@p1";
+            var datetime = DateTime.Now;
+
+            using (var connection = GetOpenConnection())
+            {
+                var command = connection.CreateCommand();
+                //command.CommandText = $"SELECT CAST({pName} as DATETIME);";                
+
+                command.CommandText =
+                    $"CREATE TABLE IF NOT EXISTS tbl1 (dt_field DATETIME);" +
+                    $"INSERT INTO tbl1 VALUES ({pName});" +
+                    $"SELECT dt_field FROM tbl1 WHERE rowid = last_insert_rowid();";
+                var parm = command.CreateParameter();
+                parm.ParameterName = pName;
+                parm.Value = datetime;
+                command.Parameters.Add(parm);
+
+                using (var reader = command.ExecuteReader())
+                {
+                    reader.Read().Should().BeTrue();
+
+                    var value = reader.GetValue(0);
+                    value.Should().NotBeNull();
+
+                    var str = reader.GetString(0);
+                    str.Should().Be(datetime.ToString(@"yyyy\-MM\-dd HH\:mm\:ss.FFFFFFF", CultureInfo.InvariantCulture));
+                }
+            }
+        }
+
+
 
         [Fact]
         // the guid is converted to a byte array when add to a command as a paramiter.

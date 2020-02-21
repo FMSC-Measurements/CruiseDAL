@@ -24,6 +24,7 @@ namespace FMSC.ORM.TestSupport
 	NGuidField TEXT,
 	DateTimeField DATETIME,
 	NDateTimeField DATETIME,
+	StrDateTimeField DATETIME,
     EnumField TEXT,
 	PartialyPublicField TEXT,
     AutomaticStringField TEXT,

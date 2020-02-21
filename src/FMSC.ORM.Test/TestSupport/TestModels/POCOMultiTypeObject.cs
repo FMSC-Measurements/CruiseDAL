@@ -58,6 +58,9 @@ namespace FMSC.ORM.TestSupport.TestModels
         [Field(Name = "NDateTimeField")]
         public DateTime? NDateTimeField { get; set; }
 
+        [Field(Name = "StrDateTimeField")]
+        public string StrDateTime { get; set; }
+
         [Field(Name = "PartialyPublicField")]
         public string PartialyPublicField { get; protected set; }
 
