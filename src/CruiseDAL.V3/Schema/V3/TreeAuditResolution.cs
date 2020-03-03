@@ -7,8 +7,8 @@
     TreeAuditResolution_CN INTEGER PRIMARY KEY AUTOINCREMENT, 
     TreeID TEXT NOT NULL,
     TreeAuditRuleID TEXT NOT NULL,
-    Resolution TEXT,
-    Initials TEXT NOT NULL,
+    Resolution TEXT,    -- description indicating the reason of the resolution. optional
+    Initials TEXT NOT NULL, -- initials of the cruiser that resolved the error. 
 
     UNIQUE (TreeID, TreeAuditRuleID),
 
