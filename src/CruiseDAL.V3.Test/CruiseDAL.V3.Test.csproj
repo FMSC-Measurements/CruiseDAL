@@ -1,8 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>netcoreapp2.1</TargetFrameworks>
-
+    <TargetFrameworks>$(TestsTargetFrameworks)</TargetFrameworks>
     <IsPackable>false</IsPackable>
   </PropertyGroup>
 
@@ -17,6 +16,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="morelinq" Version="3.3.2" Condition="$(TargetFramework) == 'net452' OR $(TargetFramework) == 'net461' " />
     <PackageReference Include="FluentAssertions" Version="5.6.0" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="15.9.0" />
     <PackageReference Include="TSQL.Parser" Version="1.2.8" />

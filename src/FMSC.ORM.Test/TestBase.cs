@@ -25,8 +25,10 @@ namespace FMSC.ORM
 
 #if MICROSOFT_DATA_SQLITE
             DbProvider = Microsoft.Data.Sqlite.SqliteFactory.Instance;
+            Output.WriteLine("using Microsoft.Data.Sqlite");
 #elif SYSTEM_DATA_SQLITE
             DbProvider = System.Data.SQLite.SQLiteFactory.Instance;
+            Output.WriteLine("using System.Data.Sqlite");
 #endif
 
             var testTempPath = TestTempPath;

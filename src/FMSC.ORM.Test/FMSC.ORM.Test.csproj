@@ -3,42 +3,17 @@
   <PropertyGroup>
     <!--targeting netstandard2.0 so that the FMSC.ORM.Test can be referenced by FMSC.ORM.Test.Android-->
     <!--<TargetFrameworks>netcoreapp2.0;net472;netstandard2.0</TargetFrameworks>-->
-    <TargetFrameworks>netcoreapp2.0;net461;</TargetFrameworks>
+    <TargetFrameworks>$(TestsTargetFrameworks)</TargetFrameworks>
     <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
     <LangVersion>8.0</LangVersion>
     <RootNamespace>FMSC.ORM</RootNamespace>
+    <Platform>x64</Platform>
+    <IsPackable>false</IsPackable>
   </PropertyGroup>
-
-  <PropertyGroup Condition="$(TargetFramework.Contains(netcoreapp)) OR $(TargetFramework.Contains(net4))">
-    <IsTestProject>true</IsTestProject>
-  </PropertyGroup>
-
-  <PropertyGroup Condition="$(TargetFramework.StartsWith(net4))">
-    <DefineConstants>$(DefineConstants);SYSTEM_DATA_SQLITE</DefineConstants>
-  </PropertyGroup>
-
-  <PropertyGroup Condition="$(TargetFramework.StartsWith('netstandard')) OR $(TargetFramework.StartsWith('netcoreapp'))">
-    <DefineConstants>$(DefineConstants);MICROSOFT_DATA_SQLITE</DefineConstants>
-  </PropertyGroup>
-
-
-  <PropertyGroup Condition="$(DefineConstants.Contains(SYSTEM_DATA_SQLITE))">
-  </PropertyGroup>
-
-  <!--<ItemGroup Condition="'$(TargetFramework)' == 'net461'">
-    <PackageReference Include="xunit.runner.visualstudio" Version="2.3.1" />
-  </ItemGroup>-->
-
-  <ItemGroup Condition="$(TargetFramework.Contains(netcoreapp)) OR $(TargetFramework.Contains(net461))">
-    <PackageReference Include="xunit.runner.visualstudio" Version="2.4.1" />
-    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.1.1" />
-  </ItemGroup>
-
-  <!--<ItemGroup Condition="'$(TargetFramework)' == 'netstandard2.0'">
-    <PackageReference Include="SQLitePCLRaw.bundle_green" Version="1.1.9" />
-  </ItemGroup>-->
 
   <ItemGroup>
+    <PackageReference Include="xunit.runner.visualstudio" Version="2.4.1" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.1.1" />
     <ProjectReference Include="..\FMSC.ORM\FMSC.ORM.csproj" />
     <PackageReference Include="AutoBogus" Version="2.6.0" />
     <PackageReference Include="Bogus" Version="28.0.2" />

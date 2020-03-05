@@ -1,30 +1,13 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
+    <TargetFrameworks>$(LibTargetFrameworks)</TargetFrameworks>
     <Version>$(FMSCORMversion)</Version>
   </PropertyGroup>
 
-  <PropertyGroup Condition="$(TargetFramework.StartsWith('net4')) Or $(TargetFramework.StartsWith('net35'))">
-    <DefineConstants>$(DefineConstants);SYSTEM_DATA_SQLITE</DefineConstants>
-  </PropertyGroup>
-
-  <PropertyGroup Condition="$(TargetFramework.StartsWith('netstandard'))">
-    <DefineConstants>$(DefineConstants);MICROSOFT_DATA_SQLITE</DefineConstants>
-  </PropertyGroup>
-
-  <ItemGroup Condition="$(DefineConstants.Contains(SYSTEM_DATA_SQLITE)) And $(TargetFramework) != 'net35-cf'">
-    <PackageReference Include="System.Data.SQLite.Core" Version="1.0.110" PrivateAssets="none" />
-  </ItemGroup>
-
-  <ItemGroup Condition="$(DefineConstants.Contains(SYSTEM_DATA_SQLITE)) And $(TargetFramework) == 'net35-cf'">
-    <Reference Include="System.Data.SQLite">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\libs\SQLite\Mobile_CF35\System.Data.SQLite.dll</HintPath>
-    </Reference>
-  </ItemGroup>
-
-  <ItemGroup Condition="$(DefineConstants.Contains(MICROSOFT_DATA_SQLITE))">
-    <PackageReference Include="Microsoft.Data.Sqlite" Version="2.2.3" />
+  
+  <ItemGroup Condition="$(MicrosoftDataSqlite) == 'true'">
+    <PackageReference Include="Microsoft.Data.Sqlite" Version="3.1.2" />
   </ItemGroup>
 
   <ItemGroup>

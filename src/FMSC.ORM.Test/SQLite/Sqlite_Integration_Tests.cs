@@ -84,12 +84,18 @@ namespace FMSC.ORM.SQLite
 
                 var result = command.ExecuteScalar();
 
+#if SYSTEM_DATA_SQLITE
                 result.Should().BeOfType(typeof(Byte[]));
                 var result_byteA = result as Byte[];
                 result_byteA.Should().BeEquivalentTo(guid.ToByteArray());
 
                 var result_guid = new Guid(result_byteA);
                 result_guid.Should().Be(guid);
+#elif MICROSOFT_DATA_SQLITE
+                result.Should().BeOfType(typeof(string));
+                var result_guid = new Guid(result as string);
+                result_guid.Should().Be(guid);
+#endif
             }
         }
 
@@ -413,6 +419,7 @@ namespace FMSC.ORM.SQLite
 
                 var result = command.ExecuteScalar();
 
+#if SYSTEM_DATA_SQLITE
                 result.Should().BeOfType(typeof(string));
                 var result_str = result as string;
 
@@ -434,6 +441,12 @@ namespace FMSC.ORM.SQLite
 
                 var result_guid = new Guid(result_bArray);
                 Output.WriteLine(result_guid.ToString());
+
+#elif MICROSOFT_DATA_SQLITE
+                result.Should().BeOfType(typeof(string));
+                var result_guid = new Guid(result as string);
+                result_guid.Should().Be(guid);
+#endif
             }
         }
 
@@ -447,7 +460,9 @@ namespace FMSC.ORM.SQLite
             Output.WriteLine($"encoding {encoding}");
         }
 
+#if SYSTEM_DATA_SQLITE
         [Fact]
+#endif
         // when a raw guid is inserted into the database it is converted
         // to binary. Unfortuanatly
         // when read back as a string it will be a jiberish string.
@@ -499,8 +514,6 @@ namespace FMSC.ORM.SQLite
                         var value = reader.GetValue(0);
 #if SYSTEM_DATA_SQLITE
                         value.Should().BeOfType<string>();
-#elif MICROSOFT_DATA_SQLITE
-                        value.Should().BeOfType<byte[]>();
 #endif
 
                         var bbuffer = new byte[16];

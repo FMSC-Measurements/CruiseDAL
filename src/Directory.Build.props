@@ -1,39 +1,68 @@
 <Project>
-  <PropertyGroup Label="CustomProperties">
-
-    <BuildCF>true</BuildCF>
-    <!--we could probably target net35 but im using net40 as the minimum because 'dotnet' cli only supports down to net40-->
-    <!--and i want dotnet cli to run test in the cli to test all target frameworks-->
-    <TargetFrameworks>net40;netstandard20</TargetFrameworks>
-    
-    <FMSCORMversion>2.5.1</FMSCORMversion>
-    
-    
-    <CruiseDALv2SchemaVersion>2.6.1</CruiseDALv2SchemaVersion>
-    <CruiseDALv3SchemaVersion>3.0.2</CruiseDALv3SchemaVersion>
-    <CruiseDALIncrementalVersion>55</CruiseDALIncrementalVersion>
-    <CruiseDALCoreVersion>3.0.0.$(CruiseDALIncrementalVersion)</CruiseDALCoreVersion>
-    <CruiseDALV2Version>$(CruiseDALv2SchemaVersion).$(CruiseDALIncrementalVersion)</CruiseDALV2Version>
-    <CruiseDALV3Version>$(CruiseDALv3SchemaVersion).$(CruiseDALIncrementalVersion)</CruiseDALV3Version>
-    <CruiseDALV3ModelsVersion>$(CruiseDALv3SchemaVersion).$(CruiseDALIncrementalVersion)</CruiseDALV3ModelsVersion>
-    <CruiseDALV2ModelsVersion>$(CruiseDALv2SchemaVersion).$(CruiseDALIncrementalVersion)</CruiseDALV2ModelsVersion>
-    
-    
-    <FMSCORMToolsDirectory>$(MSBuildThisFileDirectory)tools\</FMSCORMToolsDirectory>
-    <ModelGenToolDirectory>$(FMSCORMToolsDirectory)ModelGen\</ModelGenToolDirectory>
-  </PropertyGroup>
-
-  <PropertyGroup Condition="'$(BuildCF)' == 'true'">
-    <TargetFrameworks>$(TargetFrameworks);net35-cf</TargetFrameworks>
-  </PropertyGroup>
-
-  <PropertyGroup Label="Package Info" >
+  <PropertyGroup Label="Package Info">
     <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
     <Authors>Benjamin Campbell</Authors>
     <PackageProjectUrl>https://github.com/FMSC-Measurements/CruiseDAL</PackageProjectUrl>
     <RepositoryType>git</RepositoryType>
     <RepositoryUrl>https://github.com/FMSC-Measurements/CruiseDAL.git</RepositoryUrl>
   </PropertyGroup>
+  
+  <PropertyGroup Label="CustomProperties">
+
+    <BuildCF>true</BuildCF>
+    <LibTargetFrameworks>net40;net461;netstandard20;</LibTargetFrameworks>
+    <LibTargetFrameworks Condition="'$(BuildCF)' == 'true'">$(LibTargetFrameworks)net35-cf;</LibTargetFrameworks>
+    <!--<TargetFrameworks>$(LibTargetFrameworks)</TargetFrameworks>-->
+
+    <TestsTargetFrameworks>net452;net461;netcoreapp2.0;</TestsTargetFrameworks>
+
+    <FMSCORMversion>2.5.2</FMSCORMversion>
+
+    <CruiseDALv2SchemaVersion>2.6.1</CruiseDALv2SchemaVersion>
+    <CruiseDALv3SchemaVersion>3.0.2</CruiseDALv3SchemaVersion>
+    <CruiseDALIncrementalVersion>56</CruiseDALIncrementalVersion>
+    <CruiseDALCoreVersion>3.0.0.$(CruiseDALIncrementalVersion)</CruiseDALCoreVersion>
+    <CruiseDALV2Version>$(CruiseDALv2SchemaVersion).$(CruiseDALIncrementalVersion)</CruiseDALV2Version>
+    <CruiseDALV3Version>$(CruiseDALv3SchemaVersion).$(CruiseDALIncrementalVersion)</CruiseDALV3Version>
+    <CruiseDALV3ModelsVersion>$(CruiseDALv3SchemaVersion).$(CruiseDALIncrementalVersion)</CruiseDALV3ModelsVersion>
+    <CruiseDALV2ModelsVersion>$(CruiseDALv2SchemaVersion).$(CruiseDALIncrementalVersion)</CruiseDALV2ModelsVersion>
+
+    <FMSCORMToolsDirectory>$(MSBuildThisFileDirectory)tools\</FMSCORMToolsDirectory>
+    <ModelGenToolDirectory>$(FMSCORMToolsDirectory)ModelGen\</ModelGenToolDirectory>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="$(TargetFramework) == 'net35-cf' OR $(TargetFramework) == 'net40' OR $(TargetFramework.StartsWith('net45'))">
+    <SystemDataSqlite>true</SystemDataSqlite>
+    <DefineConstants>$(DefineConstants);SYSTEM_DATA_SQLITE</DefineConstants>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="$(TargetFramework.StartsWith('netstandard')) OR $(TargetFramework.StartsWith('netcoreapp')) OR $(TargetFramework.StartsWith('net46'))">
+    <MicrosoftDataSqlite>true</MicrosoftDataSqlite>
+    <DefineConstants>$(DefineConstants);MICROSOFT_DATA_SQLITE</DefineConstants>
+  </PropertyGroup>
+
+  <ItemGroup Condition="$(SystemDataSqlite) == 'true' And '$(TargetFramework)' != 'net35-cf'">
+    <PackageReference Include="System.Data.SQLite.Core" Version="1.0.110" PrivateAssets="none" />
+  </ItemGroup>
+
+  <ItemGroup Condition="$(SystemDataSqlite) == 'true' And $(TargetFramework) == 'net35-cf'">
+    <Reference Include="System.Data.SQLite">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\libs\SQLite\Mobile_CF35\System.Data.SQLite.dll</HintPath>
+    </Reference>
+    <Content Include="..\libs\SQLite\Mobile_CF35\System.Data.SQLite.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\libs\SQLite\Mobile_CF35\SQLite.Interop.112.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\libs\SQLite\Mobile_CF35\System.Data.SQLite.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+
+
+
 
   <PropertyGroup Condition="'$(TargetFramework)' == 'net35-cf'">
     <TargetFrameworkIdentifier>.NETFramework</TargetFrameworkIdentifier>
@@ -58,5 +87,4 @@
     <Reference Include="System.Xml, Version=3.5.0.0, Culture=neutral, PublicKeyToken=969db8053d3322ac" />
     <Reference Include="System.Xml.Linq, Version=3.5.0.0, Culture=neutral, PublicKeyToken=969db8053d3322ac" />
   </ItemGroup>
-  
 </Project>

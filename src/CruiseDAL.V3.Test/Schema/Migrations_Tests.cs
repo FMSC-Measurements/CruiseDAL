@@ -2,12 +2,17 @@
 using CruiseDAL.V3.Tests;
 using FluentAssertions;
 using FMSC.ORM.SQLite;
+
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using Xunit;
 using Xunit.Abstractions;
+
+#if NET452 || NET461
+using MoreLinq;
+#endif
 
 namespace CruiseDAL.Tests.Schema
 {
@@ -157,7 +162,8 @@ namespace CruiseDAL.Tests.Schema
 
                 foreach(var value in testLGARValues)
                 {
-                    var grades = value.ValidGrades.Trim().Split(',', StringSplitOptions.RemoveEmptyEntries);
+                    var grades = value.ValidGrades.Trim().Split(',').Where(x => string.IsNullOrEmpty(x) == false)
+                                                  .ToArray();
                     foreach(var g in grades)
                     {
                         results.Should().Contain(x => x.DefectMax == value.DefectMax && x.Grade == g.Trim());
@@ -242,7 +248,8 @@ namespace CruiseDAL.Tests.Schema
 
                 var ignore = new string[] { "Tree_GUID", "TreeID", "ModifiedDate", "ExpansionFactor", "TreeFactor", "PointFactor", "TreeMeasurment_CN" };
                 if (fileName == "7Wolf.cruise")
-                { ignore = ignore.Prepend("Species").ToArray(); }
+                { ignore = ignore.Prepend("Species")
+                                 .ToArray(); }
 
                 Compare(treeAfter, treeOrig, ignore: ignore);
             }
@@ -328,7 +335,7 @@ namespace CruiseDAL.Tests.Schema
                 // note: program and message may be different so we wont read those fields
 
                 var erroLogOrig = origDatastore.QueryGeneric(
-                    "SELECT TableName, CN_Number, ColumnName, Level, Suppress FROM ErrorLog " +
+                    "SELECT TableName, CN_Number, ColumnName, Level, cast (Suppress as bool) FROM ErrorLog " +
                     "ORDER BY TableName, CN_Number, ColumnName;").ToArray();
 
                 //var treeAuditErrors = newDatastore.QueryGeneric(
@@ -338,7 +345,7 @@ namespace CruiseDAL.Tests.Schema
                 //    "SELECT * FROM TreeError;").ToArray();
 
                 var errorLogAfter = newDatastore.QueryGeneric(
-                    "SELECT TableName, CN_Number, ColumnName, Level, Suppress FROM ErrorLog " +
+                    "SELECT TableName, CN_Number, ColumnName, Level, cast (Suppress as bool) FROM ErrorLog " +
                     "ORDER BY TableName, CN_Number, ColumnName;").ToArray();
 
                 Compare(errorLogAfter, erroLogOrig);

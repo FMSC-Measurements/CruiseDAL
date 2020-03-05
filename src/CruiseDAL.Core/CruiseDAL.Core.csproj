@@ -3,6 +3,7 @@
   <PropertyGroup Label="Assembily Info">
     <AssemblyName>CruiseDAL.Core</AssemblyName>
     <RootNamespace>CruiseDAL</RootNamespace>
+    <TargetFrameworks>$(LibTargetFrameworks)</TargetFrameworks>
     <Version>$(CruiseDALCoreVersion)</Version>    
   </PropertyGroup>
 

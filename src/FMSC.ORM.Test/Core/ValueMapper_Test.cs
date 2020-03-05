@@ -32,7 +32,7 @@ namespace FMSC.ORM.Core
         [InlineData(typeof(double?))]
         [InlineData(typeof(bool?))]
         [InlineData(typeof(char?))]
-        [InlineData(typeof(Guid?))]
+        //[InlineData(typeof(Guid?))]// see ProcessValue_jiberrishString_to_NullableGuid
         [InlineData(typeof(DateTime?))]
         [InlineData(typeof(MyEnum?))]
         public void ProcessValue_jiberrishString_to_NullableValue(Type targetType)
@@ -40,6 +40,19 @@ namespace FMSC.ORM.Core
             var value = "jibberish";
 
             ValueMapper.ProcessValue(targetType, value).Should().BeNull();
+        }
+
+        [Fact]
+        // ReadData depends on this behavior
+        public void ProcessValue_jiberrishString_to_NullableGuid()
+        {
+            var value = "jibberish";
+
+            Action a = () =>
+            {
+                ValueMapper.ProcessValue(typeof(Guid?), value).Should().BeNull();
+            };
+            a.Should().Throw<FormatException>();
         }
 
         [Fact]
@@ -168,7 +181,7 @@ namespace FMSC.ORM.Core
         [InlineData(typeof(bool?))]
         [InlineData(typeof(char?))]
         [InlineData(typeof(DateTime?))]
-        [InlineData(typeof(Guid?), Skip = "initializing an guid with an empty string throws an exception, not sure if I want to override that behavior")]
+        //[InlineData(typeof(Guid?), Skip = "initializing an guid with an empty string throws an exception, not sure if I want to override that behavior")]
         [InlineData(typeof(MyEnum?))]
         public void ProcessValue_empty_string_to_NullableType(Type targetType)
         {

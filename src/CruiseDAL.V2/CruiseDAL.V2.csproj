@@ -2,6 +2,7 @@
 
   <PropertyGroup>
     <Version>$(CruiseDALV2Version)</Version>
+    <TargetFrameworks>$(LibTargetFrameworks)</TargetFrameworks>
   </PropertyGroup>
 
   <ItemGroup>
