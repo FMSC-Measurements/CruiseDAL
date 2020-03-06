@@ -18,6 +18,7 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{297B19EA-5FA9-4EB1-8638-519B5EDA1EC1}"
 	ProjectSection(SolutionItems) = preProject
 		Directory.Build.props = Directory.Build.props
+		xunit.runner.json = xunit.runner.json
 	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FMSC.ORM.ModelGenerator.Test", "FMSC.ORM.ModelGenerator.Test\FMSC.ORM.ModelGenerator.Test.csproj", "{E4D58DE4-25B5-4FC4-8D72-860BD5B9D4B7}"
@@ -32,7 +33,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CruiseDAL.V3", "CruiseDAL.V
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CruiseDAL.V3.Test", "CruiseDAL.V3.Test\CruiseDAL.V3.Test.csproj", "{73D6BED5-4A9E-4AE8-BEAD-1CF43EEF9BE1}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CruiseDAL.V2.Models", "CruiseDAL.V2.Models\CruiseDAL.V2.Models.csproj", "{F0253C27-E167-419B-994E-CEA20608CA01}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CruiseDAL.V2.Models", "CruiseDAL.V2.Models\CruiseDAL.V2.Models.csproj", "{F0253C27-E167-419B-994E-CEA20608CA01}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

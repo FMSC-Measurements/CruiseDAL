@@ -6,13 +6,12 @@
     <RepositoryType>git</RepositoryType>
     <RepositoryUrl>https://github.com/FMSC-Measurements/CruiseDAL.git</RepositoryUrl>
   </PropertyGroup>
-  
+
   <PropertyGroup Label="CustomProperties">
 
     <BuildCF>true</BuildCF>
     <LibTargetFrameworks>net40;net461;netstandard20;</LibTargetFrameworks>
     <LibTargetFrameworks Condition="'$(BuildCF)' == 'true'">$(LibTargetFrameworks)net35-cf;</LibTargetFrameworks>
-    <!--<TargetFrameworks>$(LibTargetFrameworks)</TargetFrameworks>-->
 
     <TestsTargetFrameworks>net452;net461;netcoreapp2.0;</TestsTargetFrameworks>
 
@@ -30,6 +29,12 @@
     <FMSCORMToolsDirectory>$(MSBuildThisFileDirectory)tools\</FMSCORMToolsDirectory>
     <ModelGenToolDirectory>$(FMSCORMToolsDirectory)ModelGen\</ModelGenToolDirectory>
   </PropertyGroup>
+
+  <!-- when targeting net461 SqlitePCL.Raw cant find e_sqlite3 becuase of xunit's shadow coppy feature
+  see https://github.com/reactiveui/Akavache/pull/496 and https://github.com/xunit/xunit/issues/1198 -->
+  <ItemGroup Condition="$(IsTestProject) == 'true' AND $(TargetFramework) == 'net461'">
+    <Content Include="$(MSBuildThisFileDirectory)xunit.runner.json" CopyToOutputDirectory="PreserveNewest" />
+  </ItemGroup>
 
   <PropertyGroup Condition="$(TargetFramework) == 'net35-cf' OR $(TargetFramework) == 'net40' OR $(TargetFramework.StartsWith('net45'))">
     <SystemDataSqlite>true</SystemDataSqlite>
@@ -60,9 +65,6 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
-
-
-
 
   <PropertyGroup Condition="'$(TargetFramework)' == 'net35-cf'">
     <TargetFrameworkIdentifier>.NETFramework</TargetFrameworkIdentifier>

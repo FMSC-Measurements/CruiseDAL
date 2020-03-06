@@ -5,7 +5,6 @@
     <Version>$(FMSCORMversion)</Version>
   </PropertyGroup>
 
-  
   <ItemGroup Condition="$(MicrosoftDataSqlite) == 'true'">
     <PackageReference Include="Microsoft.Data.Sqlite" Version="3.1.2" />
   </ItemGroup>
