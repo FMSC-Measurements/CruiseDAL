@@ -120,6 +120,37 @@ namespace CruiseDAL.Tests
             }
         }
 
+        [Fact]
+        public void update_from_2_5_to_2_7()
+        {
+            var fileName = "v2_5_0.cruise"; ;
+            var path = InitializeTestFile(fileName);
+            Output.WriteLine(path);
+
+            using (var db = new CruiseDatastore(path))
+            {
+                var updater = new Updater_V2();
+                updater.Update(db);
+
+                db.CurrentTransaction.Should().BeNull();
+
+                // insert multiple trees with the same guid to make sure that the tree guid uniqe constraint is removed
+                //for (var i = 0; i < 2; i++)
+                //{
+                //    db.Insert(new V2.Models.Tree()
+                //    {
+                //        Tree_GUID = "something",
+                //        CuttingUnit_CN = 1,
+                //        Stratum_CN = 1,
+                //        SampleGroup_CN = 1,
+                //        TreeDefaultValue_CN = 1,
+                //    });
+                //}
+
+                db.DatabaseVersion.Should().StartWith("2.7.");
+            }
+        }
+
         protected void VerifyTablesCanDelete(CruiseDatastore datastore)
         {
             var tableNames = datastore.ExecuteScalar<string>("SELECT group_concat(Name) FROM sqlite_master WHERE Type = 'table';").Split(',');

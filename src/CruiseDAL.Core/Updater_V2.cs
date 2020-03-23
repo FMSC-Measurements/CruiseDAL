@@ -117,7 +117,14 @@ namespace CruiseDAL
             {
                 UpdateTo_2_6_1(db);
             }
+            if(db.DatabaseVersion.StartsWith("2.6."))
+            {
+                UpdateTo_2_7_0(db);
+            }
+
         }
+
+        
 
         public static void UpdateToVersion2015_04_28(CruiseDatastore db)
         {
@@ -630,6 +637,440 @@ ValidGrades TEXT);");
             catch(Exception e)
             {
                 db.RollbackTransaction();
+                throw new SchemaUpdateException(version, targetVersion, e);
+            }
+        }
+
+        private static void UpdateTo_2_7_0(CruiseDatastore db)
+        {
+            var version = db.DatabaseVersion;
+            var targetVersion = "2.7.0";
+
+            try
+            {
+                var treeTriggerDDL = GetTriggerDDL(db, "Tree");
+                var plotTriggerDDL = GetTriggerDDL(db, "Plot");
+                var stemTriggerDDL = GetTriggerDDL(db, "Stem");
+                var logTriggerDDL = GetTriggerDDL(db, "Log");
+                var treeEstimateDDL = GetTriggerDDL(db, "TreeEstimate");
+
+                if (db.GetTableSQL("Tree").Contains("Tree_GUID TEXT UNIQUE"))
+                {
+                    db.OpenConnection();
+                    db.Execute(
+@"PRAGMA foreign_keys = off;
+BEGIN;
+CREATE TABLE new_tree (
+    Tree_CN INTEGER PRIMARY KEY AUTOINCREMENT,
+    Tree_GUID TEXT,
+    TreeDefaultValue_CN INTEGER REFERENCES TreeDefaultValue,
+    Stratum_CN INTEGER REFERENCES Stratum NOT NULL,
+    SampleGroup_CN INTEGER REFERENCES SampleGroup,
+    CuttingUnit_CN INTEGER REFERENCES CuttingUnit NOT NULL,
+    Plot_CN INTEGER REFERENCES Plot,
+    TreeNumber INTEGER NOT NULL,
+    Species TEXT,
+    CountOrMeasure TEXT,
+    TreeCount REAL Default 0.0,
+    KPI REAL Default 0.0,
+    STM TEXT Default 'N',
+    SeenDefectPrimary REAL Default 0.0,
+    SeenDefectSecondary REAL Default 0.0,
+    RecoverablePrimary REAL Default 0.0,
+    HiddenPrimary REAL Default 0.0,
+    Initials TEXT,
+    LiveDead TEXT,
+    Grade TEXT,
+    HeightToFirstLiveLimb REAL Default 0.0,
+    PoleLength REAL Default 0.0,
+    ClearFace TEXT,
+    CrownRatio REAL Default 0.0,
+    DBH REAL Default 0.0,
+    DRC REAL Default 0.0,
+    TotalHeight REAL Default 0.0,
+    MerchHeightPrimary REAL Default 0.0,
+    MerchHeightSecondary REAL Default 0.0,
+    FormClass REAL Default 0.0,
+    UpperStemDOB REAL Default 0.0,
+    UpperStemDiameter REAL Default 0.0,
+    UpperStemHeight REAL Default 0.0,
+    DBHDoubleBarkThickness REAL Default 0.0,
+    TopDIBPrimary REAL Default 0.0,
+    TopDIBSecondary REAL Default 0.0,
+    DefectCode TEXT,
+    DiameterAtDefect REAL Default 0.0,
+    VoidPercent REAL Default 0.0,
+    Slope REAL Default 0.0,
+    Aspect REAL Default 0.0,
+    Remarks TEXT,
+    XCoordinate DOUBLE Default 0.0,
+    YCoordinate DOUBLE Default 0.0,
+    ZCoordinate DOUBLE Default 0.0,
+    MetaData TEXT,
+    IsFallBuckScale INTEGER Default 0,
+    ExpansionFactor REAL Default 0.0,
+    TreeFactor REAL Default 0.0,
+    PointFactor REAL Default 0.0,
+    CreatedBy TEXT DEFAULT 'none',
+    CreatedDate DateTime DEFAULT(datetime(current_timestamp, 'localtime')),
+    ModifiedBy TEXT,
+    ModifiedDate DateTime,
+    somtthing text,
+    RowVersion INTEGER DEFAULT 0);
+INSERT INTO new_Tree (
+    Tree_CN,
+    Tree_GUID,
+    TreeDefaultValue_CN,
+    Stratum_CN,
+    SampleGroup_CN,
+    CuttingUnit_CN,
+    Plot_CN,
+    TreeNumber,
+    Species,
+    CountOrMeasure,
+    TreeCount,
+    KPI,
+    STM,
+    SeenDefectPrimary,
+    SeenDefectSecondary,
+    RecoverablePrimary,
+    HiddenPrimary,
+    Initials,
+    LiveDead,
+    Grade,
+    HeightToFirstLiveLimb,
+    PoleLength,
+    ClearFace,
+    CrownRatio,
+    DBH,
+    DRC,
+    TotalHeight,
+    MerchHeightPrimary,
+    MerchHeightSecondary,
+    FormClass,
+    UpperStemDOB,
+    UpperStemDiameter,
+    UpperStemHeight,
+    DBHDoubleBarkThickness,
+    TopDIBPrimary,
+    TopDIBSecondary,
+    DefectCode,
+    DiameterAtDefect,
+    VoidPercent,
+    Slope,
+    Aspect,
+    Remarks,
+    XCoordinate,
+    YCoordinate,
+    ZCoordinate,
+    MetaData,
+    IsFallBuckScale,
+    ExpansionFactor,
+    TreeFactor,
+    PointFactor,
+    CreatedBy,
+    CreatedDate,
+    ModifiedBy,
+    ModifiedDate,
+    RowVersion)
+ SELECT 
+    Tree_CN,
+    Tree_GUID,
+    TreeDefaultValue_CN,
+    Stratum_CN,
+    SampleGroup_CN,
+    CuttingUnit_CN,
+    Plot_CN,
+    TreeNumber,
+    Species,
+    CountOrMeasure,
+    TreeCount,
+    KPI,
+    STM,
+    SeenDefectPrimary,
+    SeenDefectSecondary,
+    RecoverablePrimary,
+    HiddenPrimary,
+    Initials,
+    LiveDead,
+    Grade,
+    HeightToFirstLiveLimb,
+    PoleLength,
+    ClearFace,
+    CrownRatio,
+    DBH,
+    DRC,
+    TotalHeight,
+    MerchHeightPrimary,
+    MerchHeightSecondary,
+    FormClass,
+    UpperStemDOB,
+    UpperStemDiameter,
+    UpperStemHeight,
+    DBHDoubleBarkThickness,
+    TopDIBPrimary,
+    TopDIBSecondary,
+    DefectCode,
+    DiameterAtDefect,
+    VoidPercent,
+    Slope,
+    Aspect,
+    Remarks,
+    XCoordinate,
+    YCoordinate,
+    ZCoordinate,
+    MetaData,
+    IsFallBuckScale,
+    ExpansionFactor,
+    TreeFactor,
+    PointFactor,
+    CreatedBy,
+    CreatedDate,
+    ModifiedBy,
+    ModifiedDate,
+    RowVersion
+FROM Tree;
+DROP Table Tree;
+ALTER TABLE new_Tree RENAME TO Tree;
+
+CREATE TABLE new_plot (
+    Plot_CN INTEGER PRIMARY KEY AUTOINCREMENT,
+    Plot_GUID TEXT,
+    Stratum_CN INTEGER REFERENCES Stratum NOT NULL,
+    CuttingUnit_CN INTEGER REFERENCES CuttingUnit NOT NULL,
+    PlotNumber INTEGER NOT NULL,
+    IsEmpty TEXT,
+    Slope REAL Default 0.0,
+    KPI REAL Default 0.0,
+    Aspect REAL Default 0.0,
+    Remarks TEXT,
+    XCoordinate REAL Default 0.0,
+    YCoordinate REAL Default 0.0,
+    ZCoordinate REAL Default 0.0,
+    MetaData TEXT,
+    Blob BLOB,
+    ThreePRandomValue INTEGER Default 0,
+    CreatedBy TEXT DEFAULT 'none',
+    CreatedDate DateTime DEFAULT (datetime(current_timestamp, 'localtime')) ,
+    ModifiedBy TEXT ,
+    ModifiedDate DateTime ,
+    RowVersion INTEGER DEFAULT 0,
+    UNIQUE (Stratum_CN, CuttingUnit_CN, PlotNumber));
+INSERT INTO new_plot (
+    Plot_CN,
+    Plot_GUID,
+    Stratum_CN,
+    CuttingUnit_CN,
+    PlotNumber,
+    IsEmpty,
+    Slope,
+    KPI,
+    Aspect,
+    Remarks,
+    XCoordinate,
+    YCoordinate,
+    ZCoordinate,
+    MetaData,
+    Blob,
+    ThreePRandomValue,
+    CreatedBy,
+    CreatedDate,
+    ModifiedBy,
+    ModifiedDate,
+    RowVersion)
+SELECT 
+    Plot_CN,
+    Plot_GUID,
+    Stratum_CN,
+    CuttingUnit_CN,
+    PlotNumber,
+    IsEmpty,
+    Slope,
+    KPI,
+    Aspect,
+    Remarks,
+    XCoordinate,
+    YCoordinate,
+    ZCoordinate,
+    MetaData,
+    Blob,
+    ThreePRandomValue,
+    CreatedBy,
+    CreatedDate,
+    ModifiedBy,
+    ModifiedDate,
+    RowVersion
+FROM Plot;
+DROP TABLE Plot;
+ALTER TABLE new_plot RENAME TO Plot;
+
+CREATE TABLE new_log (
+	Log_CN INTEGER PRIMARY KEY AUTOINCREMENT,
+	Log_GUID TEXT,
+	Tree_CN INTEGER REFERENCES Tree NOT NULL,
+	LogNumber TEXT NOT NULL,
+	Grade TEXT,
+	SeenDefect REAL Default 0.0,
+	PercentRecoverable REAL Default 0.0,
+	Length INTEGER Default 0,
+	ExportGrade TEXT,
+	SmallEndDiameter REAL Default 0.0,
+	LargeEndDiameter REAL Default 0.0,
+	GrossBoardFoot REAL Default 0.0,
+	NetBoardFoot REAL Default 0.0,
+	GrossCubicFoot REAL Default 0.0,
+	NetCubicFoot REAL Default 0.0,
+	BoardFootRemoved REAL Default 0.0,
+	CubicFootRemoved REAL Default 0.0,
+	DIBClass REAL Default 0.0,
+	BarkThickness REAL Default 0.0,
+	CreatedBy TEXT DEFAULT 'none',
+	CreatedDate DateTime DEFAULT (datetime(current_timestamp, 'localtime')) ,
+	ModifiedBy TEXT,
+	ModifiedDate DateTime,
+	RowVersion INTEGER DEFAULT 0,
+	UNIQUE (Tree_CN, LogNumber));
+INSERT INTO new_log (
+    Log_CN,
+	Log_GUID,
+	Tree_CN,
+	LogNumber,
+	Grade,
+	SeenDefect,
+	PercentRecoverable,
+	Length,
+	ExportGrade,
+	SmallEndDiameter,
+	LargeEndDiameter,
+	GrossBoardFoot,
+	NetBoardFoot,
+	GrossCubicFoot,
+	NetCubicFoot,
+	BoardFootRemoved,
+	CubicFootRemoved,
+	DIBClass,
+	BarkThickness,
+	CreatedBy,
+	CreatedDate,
+	ModifiedBy,
+	ModifiedDate,
+	RowVersion)
+SELECT 
+    Log_CN,
+	Log_GUID,
+	Tree_CN,
+	LogNumber,
+	Grade,
+	SeenDefect,
+	PercentRecoverable,
+	Length,
+	ExportGrade,
+	SmallEndDiameter,
+	LargeEndDiameter,
+	GrossBoardFoot,
+	NetBoardFoot,
+	GrossCubicFoot,
+	NetCubicFoot,
+	BoardFootRemoved,
+	CubicFootRemoved,
+	DIBClass,
+	BarkThickness,
+	CreatedBy,
+	CreatedDate,
+	ModifiedBy,
+	ModifiedDate,
+	RowVersion
+FROM Log;
+DROP TABLE Log;
+ALTER TABLE new_log RENAME TO Log;
+
+CREATE TABLE new_stem (
+    Stem_CN INTEGER PRIMARY KEY AUTOINCREMENT,
+	Stem_GUID TEXT UNIQUE,
+	Tree_CN INTEGER REFERENCES Tree,
+	Diameter REAL Default 0.0,
+	DiameterType TEXT,
+	CreatedBy TEXT DEFAULT 'none',
+	CreatedDate DateTime DEFAULT (datetime(current_timestamp, 'localtime')) ,
+	ModifiedBy TEXT ,
+	ModifiedDate DateTime ,
+	RowVersion INTEGER DEFAULT 0,
+	UNIQUE (Tree_CN));
+INSERT INTO new_stem (
+    Stem_CN,
+    Stem_GUID,
+    Tree_CN,
+    Diameter,
+    DiameterType,
+    CreatedBy,
+    CreatedDate,
+    ModifiedBy,
+    ModifiedDate,
+    RowVersion)
+SELECT 
+    Stem_CN,
+    Stem_GUID,
+    Tree_CN,
+    Diameter,
+    DiameterType,
+    CreatedBy,
+    CreatedDate,
+    ModifiedBy,
+    ModifiedDate,
+    RowVersion
+FROM Stem;
+DROP TABLE Stem;
+ALTER TABLE new_stem RENAME TO Stem;
+
+CREATE TABLE new_treeEstimate (
+    TreeEstimate_CN INTEGER PRIMARY KEY AUTOINCREMENT,
+	CountTree_CN INTEGER REFERENCES CountTree,
+	TreeEstimate_GUID TEXT UNIQUE,
+	KPI REAL NOT NULL,
+	CreatedBy TEXT DEFAULT 'none',
+	CreatedDate DateTime DEFAULT (datetime(current_timestamp, 'localtime')) ,
+	ModifiedBy TEXT ,
+	ModifiedDate DateTime);
+INSERT INTO new_treeEstimate (
+    TreeEstimate_CN,
+	CountTree_CN,
+	TreeEstimate_GUID,
+	KPI,
+	CreatedBy,
+	CreatedDate,
+	ModifiedBy,
+	ModifiedDate)
+SELECT 
+    TreeEstimate_CN,
+	CountTree_CN,
+	TreeEstimate_GUID,
+	KPI,
+	CreatedBy,
+	CreatedDate,
+	ModifiedBy,
+	ModifiedDate
+FROM TreeEstimate;
+DROP TABLE TreeEstimate;
+ALTER TABLE new_treeEstimate RENAME TO TreeEstimate;
+" +
+ treeTriggerDDL + ";\r\n" +
+plotTriggerDDL + ";\r\n" +
+logTriggerDDL + ";\r\n" +
+stemTriggerDDL + ";\r\n" +
+treeEstimateDDL + ";\r\n" +
+@"PRAGMA primary_keys = on;
+COMMIT;");
+
+
+
+                    //db.Execute();
+                    db.ReleaseConnection();
+                }
+
+                SetDatabaseVersion(db, targetVersion);
+            }
+            catch (Exception e)
+            {
                 throw new SchemaUpdateException(version, targetVersion, e);
             }
         }

@@ -4,10 +4,11 @@ namespace CruiseDAL.Schema
 {
     public static partial class DDL
     {
-        public static Version DATABASE_VERSION = new Version("3.0.2");
+        public static Version DATABASE_VERSION = new Version("3.0.3");
 
         public static string SET_DBVERSION =
-            $"INSERT INTO Globals (Block, Key, Value) VALUES ('Database', 'Version', '{DATABASE_VERSION.ToString()}'); ";
+$@"INSERT INTO Globals (Block, Key, Value) VALUES ('Database', 'Version', '{DATABASE_VERSION.ToString()}'); 
+INSERT INTO Globals (Block, Key, Value) VALUES ('Database', 'CreateVersion', '{DATABASE_VERSION.ToString()}');";
 
         public static string[] CREATE_COMMANDS = new string[]
         {

@@ -29,6 +29,21 @@ namespace CruiseDAL
             }
         }
 
+        public string CreatedVersion
+        {
+            get
+            {
+                try
+                {
+                    return ReadGlobalValue("Database", "CreateVersion");
+                }
+                catch
+                {
+                    return "";
+                }
+            }
+        }
+
         public CruiseDatastore()
             : this(SQLiteDatastore.IN_MEMORY_DB_PATH, false, (IDatastoreBuilder)null, (IUpdater)null)
         {

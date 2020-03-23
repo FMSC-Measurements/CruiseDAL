@@ -71,6 +71,11 @@ namespace CruiseDAL.V3.Tests
             version.Should().NotBeNull();
             Version.TryParse(version, out var versionParsed).Should().BeTrue(version);
 
+            var createdVersion = db.CreatedVersion;
+            createdVersion.Should().NotBeNullOrEmpty();
+            // validate that created version in in valid format
+            Version.TryParse(version, out var createdVersionParsed).Should().BeTrue(createdVersion);
+
             db.ExecuteScalar<int>("SELECT count(*) FROM MessageLog WHERE Program IS NULL or Program = '';")
                 .Should().Be(0);
 

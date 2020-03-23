@@ -26,6 +26,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\CruiseDAL.Core\CruiseDAL.Core.csproj" />
+    <ProjectReference Include="..\CruiseDAL.V2.Models\CruiseDAL.V2.Models.csproj" />
     <ProjectReference Include="..\CruiseDAL.V2\CruiseDAL.V2.csproj" />
   </ItemGroup>
 
