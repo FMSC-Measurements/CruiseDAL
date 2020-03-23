@@ -63,8 +63,7 @@ namespace FMSC.ORM.Core
                 }
                 catch
                 {
-                    // change target type to enum underlying type so that the converter can have a chance to convert it
-                    //targetType = Enum.GetUnderlyingType(targetType);
+                    return Activator.CreateInstance(targetType);
                 }
             }
             else if (targetType == typeof(string)

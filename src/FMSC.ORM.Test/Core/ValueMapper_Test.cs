@@ -10,6 +10,7 @@ namespace FMSC.ORM.Core
     public class ValueMapper_Test : TestBase
     {
         public enum MyEnum { Zero, One, Two, Three };
+        public enum MyEnum2 { A = 1, B, C};
 
         public ValueMapper_Test(ITestOutputHelper output) : base(output)
         {
@@ -105,21 +106,23 @@ namespace FMSC.ORM.Core
         }
 
         [Theory]
-        [InlineData(MyEnum.One, "one")]
-        [InlineData(MyEnum.One, "ONE")]
-        [InlineData(MyEnum.One, "One")]
-        [InlineData(MyEnum.One, "1")]
-        [InlineData(MyEnum.One, 1)]
-        [InlineData(MyEnum.Zero, 0)]
+        [InlineData(typeof(MyEnum), MyEnum.One, "one")]
+        [InlineData(typeof(MyEnum), MyEnum.One, "ONE")]
+        [InlineData(typeof(MyEnum), MyEnum.One, "One")]
+        [InlineData(typeof(MyEnum), MyEnum.One, "1")]
+        [InlineData(typeof(MyEnum), MyEnum.One, 1)]
+        [InlineData(typeof(MyEnum), MyEnum.Zero, 0)]
+        [InlineData(typeof(MyEnum), MyEnum.Zero, "invalid")]
+        [InlineData(typeof(MyEnum), MyEnum.Zero, "")]
+
+        [InlineData(typeof(MyEnum2), (MyEnum2)0, "")]
+        [InlineData(typeof(MyEnum2), (MyEnum2)0, "invalid")]
         //[InlineData(MyEnum.One, "1.0")]
-        public void ProcessValue_value_to_Enum(MyEnum expected, object value)
+        public void ProcessValue_value_to_Enum(Type targetType, object expected, object value)
         {
-            var targetType = typeof(MyEnum);
-
             var result = ValueMapper.ProcessValue(targetType, value);
-            result.Should().BeOfType<MyEnum>();
-
-            ((MyEnum)result).Should().Be(expected);
+            result.Should().BeOfType(targetType);
+            result.Should().Be(expected);
         }
 
         [Theory]
@@ -138,6 +141,8 @@ namespace FMSC.ORM.Core
         [InlineData(typeof(MyEnum?), null, null)]
         [InlineData(typeof(MyEnum?), MyEnum.One, MyEnum.One)]
         [InlineData(typeof(MyEnum?), "one", MyEnum.One)]
+        [InlineData(typeof(MyEnum), MyEnum.One, MyEnum.One)]
+        [InlineData(typeof(MyEnum), "one", MyEnum.One)]
         public void ProcessValue_value_to_Type(Type targetType, object value, object expected)
         {
             var result = ValueMapper.ProcessValue(targetType, value);
