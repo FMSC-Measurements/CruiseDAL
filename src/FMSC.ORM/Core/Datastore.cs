@@ -1280,9 +1280,8 @@ namespace FMSC.ORM.Core
                     if (conn.State == System.Data.ConnectionState.Closed)
                     {
                         conn.Open();
-                        //conn.ExecuteNonQuery("PRAGMA foreign_keys=off;", (object[])null, null);
                         PersistentConnection = conn;
-                        OnConnectionOpened();
+                        OnConnectionOpened(conn);
                     }
 
                     EnterConnectionHold();
@@ -1369,7 +1368,7 @@ namespace FMSC.ORM.Core
         /// called when connection is in use
         /// </summary>
 
-        protected virtual void OnConnectionOpened()
+        protected virtual void OnConnectionOpened(DbConnection connection)
         {
             _logger.WriteLine("Connection opened", Logger.DB_CONTROL);
         }

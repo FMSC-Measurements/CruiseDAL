@@ -57,9 +57,14 @@ namespace FMSC.ORM.SQLite
         {
             using (var db = new SQLiteDatastore())
             {
-                db.Path.Should().NotBeNullOrWhiteSpace();
-                db.Execute("Select 1;");
+                ValidateDatastore(db);
             }
+        }
+
+        void ValidateDatastore(SQLiteDatastore db)
+        {
+            db.Execute("Select 1;");
+            db.Path.Should().NotBeNullOrWhiteSpace();
         }
 
         [Fact]

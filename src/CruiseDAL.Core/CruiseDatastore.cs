@@ -168,13 +168,13 @@ namespace CruiseDAL
 
         #region Overridden Methods
 
-        protected override void OnConnectionOpened()
+        protected override void OnConnectionOpened(DbConnection connection)
         {
-            base.OnConnectionOpened();
+            base.OnConnectionOpened(connection);
 
             foreach (var ds in _attachedDataStores)
             {
-                AttachDBInternal(ds);
+                AttachDBInternal(connection, ds);
             }
         }
 
@@ -194,7 +194,8 @@ namespace CruiseDAL
             };
 
             _attachedDataStores.Add(externalDS);
-            AttachDBInternal(externalDS);
+            var conn = PersistentConnection;
+            AttachDBInternal(conn, externalDS);
         }
 
         public void AttachDB(string dbPath, string alias)
@@ -209,26 +210,26 @@ namespace CruiseDAL
             };
 
             _attachedDataStores.Add(externalDS);
-            AttachDBInternal(externalDS);
+            var conn = PersistentConnection;
+            lock (_persistentConnectionSyncLock)
+            {
+                AttachDBInternal(conn, externalDS);
+            }
         }
 
         //TODO test
-        protected void AttachDBInternal(ExternalDatastore externalDB)
+        protected void AttachDBInternal(DbConnection connection, ExternalDatastore externalDB)
         {
-            lock (_persistentConnectionSyncLock)
+            if (connection != null)
             {
-                var connection = PersistentConnection;
-                if (connection != null)
+                var commandText = "ATTACH DATABASE \"" + externalDB.DbPath + "\" AS " + externalDB.Alias + ";";
+                try
                 {
-                    var commandText = "ATTACH DATABASE \"" + externalDB.DbPath + "\" AS " + externalDB.Alias + ";";
-                    try
-                    {
-                        connection.ExecuteNonQuery(commandText, (object[])null, CurrentTransaction);
-                    }
-                    catch (Exception e)
-                    {
-                        throw ExceptionProcessor.ProcessException(e, connection, commandText, CurrentTransaction);
-                    }
+                    connection.ExecuteNonQuery(commandText, (object[])null, CurrentTransaction);
+                }
+                catch (Exception e)
+                {
+                    throw ExceptionProcessor.ProcessException(e, connection, commandText, CurrentTransaction);
                 }
             }
         }

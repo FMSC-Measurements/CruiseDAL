@@ -79,6 +79,9 @@ namespace CruiseDAL.Tests
 
         private void ValidateDAL(DAL db)
         {
+            var f_keys = db.ExecuteScalar<string>("PRAGMA foreign_keys;");
+            f_keys.Should().BeOneOf("off", "0", "no", "false");
+
             var version = db.DatabaseVersion;
             version.Should().NotBeNullOrEmpty();
             Version.TryParse(version, out var versionParsed).Should().BeTrue(version);

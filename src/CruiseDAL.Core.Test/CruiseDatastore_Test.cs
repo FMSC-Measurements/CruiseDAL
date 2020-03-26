@@ -1,4 +1,5 @@
 ﻿using FluentAssertions;
+using FMSC.ORM;
 using System;
 using System.IO;
 using Xunit;
@@ -69,6 +70,25 @@ namespace CruiseDAL.Tests
             ////assert that file opened message was within the last 30 seconds
             //DateTime.Parse(timeStamp).Subtract(DateTime.Now).TotalSeconds.Should().BeLessThan(30);
         }
+
+        [Fact]
+        public void AttachDB_DetachDB_inmemory()
+        {
+            using(var maindb = new CruiseDatastore())
+            using(var db2 = new CruiseDatastore())
+            {
+                maindb.AttachDB(db2, "db2");
+
+                maindb.Invoking(x => x.Execute("SELECT count(*) FROM db2.sqlite_master"))
+                    .Should().NotThrow();
+
+                maindb.DetachDB("db2");
+
+                maindb.Invoking(x => x.Execute("SELECT count(*) FROM db2.sqlite_master"))
+                   .Should().Throw<SQLException>();
+            }
+        }
+
 
         //[Fact]
         //public void ReadGlobalValue()

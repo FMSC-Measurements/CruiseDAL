@@ -67,6 +67,9 @@ namespace CruiseDAL.V3.Tests
 
         void ValidateDAL(CruiseDatastore_V3 db)
         {
+            var f_keys = db.ExecuteScalar<string>("PRAGMA foreign_keys;");
+            f_keys.Should().BeOneOf("on","1","yes","true");
+
             var version = db.DatabaseVersion;
             version.Should().NotBeNull();
             Version.TryParse(version, out var versionParsed).Should().BeTrue(version);

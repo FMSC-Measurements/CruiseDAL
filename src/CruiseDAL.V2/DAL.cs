@@ -3,6 +3,7 @@ using FMSC.ORM.Core;
 using FMSC.ORM.SQLite;
 using System;
 using System.Collections.Generic;
+using System.Data.Common;
 using System.Diagnostics;
 using System.IO;
 
@@ -47,6 +48,12 @@ namespace CruiseDAL
         public DAL(string path, bool makeNew)
             : base(path, makeNew, new CruiseDatastoreBuilder_V2(), (IUpdater)new Updater_V2())
         {
+        }
+
+        protected override void OnConnectionOpened(DbConnection connection)
+        {
+            base.OnConnectionOpened(connection);
+            connection.ExecuteNonQuery("PRAGMA foreign_keys=off");
         }
 
         protected override bool IsExtentionValid(string path)
