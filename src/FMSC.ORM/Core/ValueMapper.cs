@@ -63,6 +63,7 @@ namespace FMSC.ORM.Core
                 }
                 catch
                 {
+                    if (isNullable) { return null; }
                     return Activator.CreateInstance(targetType);
                 }
             }
