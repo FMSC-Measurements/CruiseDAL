@@ -2,8 +2,10 @@
 using FMSC.ORM.SQLite;
 using System;
 using System.Collections.Generic;
+using System.Data.Common;
 using System.Diagnostics;
 using System.IO;
+using System.Reflection;
 
 namespace CruiseDAL
 {
@@ -107,7 +109,6 @@ namespace CruiseDAL
             {
                 LogMessage("File Opened", "normal");
             }
-            
             catch (FMSC.ORM.ReadOnlyException)
             {/*ignore, in case we want to allow access to a read-only DB*/}
             catch (FMSC.ORM.SQLException)
@@ -127,7 +128,6 @@ namespace CruiseDAL
 
             if (Exists)
             {
-
                 Execute("INSERT INTO MessageLog (Program, Message, Level, Date, Time) " +
                     "VALUES " +
                     "(@p1, @p2, @p3, @p4, @p5)",
@@ -138,7 +138,6 @@ namespace CruiseDAL
                         DateTime.Now.ToString("yyyy/MM/dd"),
                         DateTime.Now.ToString("HH:mm") }
                     );
-
             }
         }
 
@@ -147,7 +146,15 @@ namespace CruiseDAL
 #if !WindowsCE
             try
             {
-                return System.Reflection.Assembly.GetEntryAssembly().FullName;
+                var assm = Assembly.GetEntryAssembly();
+                if (assm != null)
+                {
+                    return assm.FullName;
+                }
+                else
+                {
+                    return AppDomain.CurrentDomain.FriendlyName;
+                }
             }
             catch
             {
@@ -156,7 +163,6 @@ namespace CruiseDAL
             }
 #else
             return AppDomain.CurrentDomain.FriendlyName;
-
 #endif
         }
 
