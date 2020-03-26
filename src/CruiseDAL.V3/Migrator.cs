@@ -106,13 +106,15 @@ namespace CruiseDAL
 
         public static void Migrate(DbConnection connection, string from, IEnumerable<string> excluding = null)
         {
-            var to = "main";
+            var to = "main"; // alias used by the source database
 
+            // get the initial state of foreign keys, used to restore foreign key setting at end of merge process
             var foreignKeys = connection.ExecuteScalar<string>("PRAGMA foreign_keys;", null, null);
             connection.ExecuteNonQuery("PRAGMA foreign_keys = off;");
 
             using (var transaction = connection.BeginTransaction())
             {
+                // get a list of all the tables in the database
                 var tables = connection.ExecuteScalar<string>(
                     "SELECT group_concat(name) FROM ( " +
                     $"SELECT name FROM {from}.sqlite_master WHERE type='table' " +
@@ -124,19 +126,37 @@ namespace CruiseDAL
                 {
                     foreach (var table in tables)
                     {
-                        if(excluding?.Contains(table) ?? false)
+                        if (excluding?.Contains(table) ?? false)
                         { continue; }
 
                         if (table == "Globals")
                         {
                             connection.ExecuteNonQuery(
-                                $"INSERT OR IGNORE INTO {to}.{table} " +
-                                $"SELECT * FROM {from}.{table} " +
-                                "WHERE Block != 'Database' AND Key != 'Version';", null, transaction);
+$@"INSERT OR IGNORE INTO {to}.{table} (""Block"", ""Key"", ""Value"")
+SELECT ""Block"", ""Key"", ""Value""
+FROM {from}.{table} 
+WHERE ""Block"" != 'Database' AND ""Key"" != 'Version';", null, transaction);
                             continue;
                         }
+                        else
+                        {
 
-                        connection.ExecuteNonQuery($"INSERT OR IGNORE INTO {to}.{table} SELECT * FROM {from}.{table};", null, transaction);
+                            // get the union of fields in table from both databases as a comma seperated list
+                            // field names are encased in double quotes just incase any field names are sql keywords
+                            var fields = connection.ExecuteScalar<string>(
+$@"SELECT group_concat('""' || Name || '""', ', ') FROM
+(
+    SELECT Name FROM {to}.pragma_table_info('{table}') 
+    UNION
+    SELECT Name FROM {from}.pragma_table_info('{table}')
+);", null, transaction);
+
+                            connection.ExecuteNonQuery(
+$@"INSERT OR IGNORE INTO {to}.{table} ({fields})
+SELECT {fields} FROM {from}.{table};"
+                                , null, transaction);
+
+                        }
                     }
 
                     transaction.Commit();

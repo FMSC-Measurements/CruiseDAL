@@ -1,5 +1,7 @@
-﻿using CruiseDAL.V3.Tests;
+﻿using CruiseDAL.Schema;
+using CruiseDAL.V3.Tests;
 using FluentAssertions;
+using System;
 using Xunit;
 using Xunit.Abstractions;
 
@@ -35,7 +37,7 @@ namespace CruiseDAL.V3.Test
                 var treeCountAfter = ds.ExecuteScalar<int>("SELECT count(*) FROM Tree_V3;");
                 treeCountAfter.Should().Be(treeCount);
 
-                ds.DatabaseVersion.Should().Be("3.0.2");
+                ds.DatabaseVersion.Should().Be(DDL.DATABASE_VERSION.ToString());
                 ds.CheckTableExists("TallyLedger_Tree_Totals");
             }
         }
