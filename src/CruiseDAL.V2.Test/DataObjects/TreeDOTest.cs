@@ -13,7 +13,7 @@ namespace CruiseDAL.V2.DataObjects
     public class TreeDOTest
     {
         [Fact]
-        public void Tree_GUID_Unique_Test_Blocks_Dupes()
+        public void Tree_GUID_no_unique_constraint()
         {
             using (var ds = new DAL())
             {
@@ -39,7 +39,7 @@ namespace CruiseDAL.V2.DataObjects
                     SampleGroup_CN = 1,
                     TreeNumber = 1,
                     Tree_GUID = tree_guid_1
-                })).Should().Throw<UniqueConstraintException>();
+                })).Should().NotThrow();
             }
         }
 
@@ -63,8 +63,8 @@ namespace CruiseDAL.V2.DataObjects
                     Tree_GUID = tree_guid_1
                 });
 
-                var types = ds.QueryGeneric("SELECT typeof(Tree_GUID) FROM Tree WHERE typeof(Tree_guid) = 'blob';");
-                types.Should().NotBeEmpty();
+                //var types = ds.QueryGeneric("SELECT typeof(Tree_GUID) FROM Tree WHERE typeof(Tree_guid) = 'blob';");
+                //types.Should().NotBeEmpty();
 
                 var trees = ds.From<TreeDO>().Query().ToArray();
 
