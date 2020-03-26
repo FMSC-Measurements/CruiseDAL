@@ -74,7 +74,7 @@ namespace CruiseDAL.Tests
                         .Should().NotThrow();
 
                     var semVerActual = new Version(datastore.DatabaseVersion);
-                    var semVerExpected = new Version("2.6.0");
+                    var semVerExpected = new Version("2.7.0");
 
                     semVerActual.Major.Should().Be(semVerExpected.Major);
                     semVerActual.Minor.Should().Be(semVerExpected.Minor);
