@@ -3,7 +3,6 @@ using Backpack.SqlBuilder.Sqlite;
 using FMSC.ORM.Core;
 using System;
 using System.Collections.Generic;
-using System.Data;
 using System.Data.Common;
 using System.Text;
 
@@ -14,6 +13,8 @@ namespace FMSC.ORM.SQLite
     public class SQLiteDatastore : DatastoreRedux
 #pragma warning restore CS0612 // Type or member is obsolete
     {
+        protected ICollection<ExternalDatastore> AttachedDataStores { get; } = new List<ExternalDatastore>();
+
         protected const string IN_MEMORY_DB_PATH = ":memory:";
 
         private DbProviderFactory ProviderFactory { get; }
@@ -132,6 +133,116 @@ namespace FMSC.ORM.SQLite
         {
             return ProviderFactory.CreateCommand();
         }
+
+        protected override void OnConnectionOpened(DbConnection connection)
+        {
+            base.OnConnectionOpened(connection);
+
+            foreach (var ds in AttachedDataStores)
+            {
+                AttachDBInternal(connection, ds);
+            }
+        }
+
+        #region Attach/Detach
+
+        public void AttachDB(Datastore dataStore, string alias)
+        {
+            if (dataStore == null) { throw new ArgumentNullException("dataStore"); }
+            if (String.IsNullOrEmpty(alias)) { throw new ArgumentException("alias can't be null or empty", "alias"); }
+
+            var externalDS = new ExternalDatastore()
+            {
+                DS = dataStore,
+                Alias = alias
+            };
+
+            AttachedDataStores.Add(externalDS);
+            var conn = PersistentConnection;
+            AttachDBInternal(conn, externalDS);
+        }
+
+        public void AttachDB(string dbPath, string alias)
+        {
+            if (dbPath == null) { throw new ArgumentNullException("dbPath"); }
+            if (String.IsNullOrEmpty(alias)) { throw new ArgumentException("alias can't be null or empty", "alias"); }
+
+            var externalDS = new ExternalDatastore()
+            {
+                DbPath = dbPath,
+                Alias = alias
+            };
+
+            AttachedDataStores.Add(externalDS);
+            var conn = PersistentConnection;
+            lock (_persistentConnectionSyncLock)
+            {
+                AttachDBInternal(conn, externalDS);
+            }
+        }
+
+        //TODO test
+        protected void AttachDBInternal(DbConnection connection, ExternalDatastore externalDB)
+        {
+            if (connection != null)
+            {
+                var commandText = "ATTACH DATABASE \"" + externalDB.DbPath + "\" AS " + externalDB.Alias + ";";
+                try
+                {
+                    connection.ExecuteNonQuery(commandText, (object[])null, CurrentTransaction);
+                }
+                catch (Exception e)
+                {
+                    throw ExceptionProcessor.ProcessException(e, connection, commandText, CurrentTransaction);
+                }
+            }
+        }
+
+        public void DetachDB(string alias)
+        {
+            if (String.IsNullOrEmpty(alias)) { throw new ArgumentException("alias can't be null or empty", "alias"); }
+
+            ExternalDatastore exDS = null;
+
+            var attachedDataStores = AttachedDataStores;
+            foreach (var ds in attachedDataStores)
+            {
+                if (ds.Alias == alias)
+                {
+                    exDS = ds;
+                    break;
+                }
+            }
+
+            if (exDS != null)
+            {
+                attachedDataStores.Remove(exDS);
+                DetachDBInternal(exDS);
+            }
+        }
+
+        //TODO test
+        protected void DetachDBInternal(ExternalDatastore externalDB)
+        {
+            lock (_persistentConnectionSyncLock)
+            {
+                var connection = PersistentConnection;
+                if (connection != null)
+                {
+                    var commandText = "DETACH DATABASE \"" + externalDB.Alias + "\";";
+                    try
+                    {
+                        connection.ExecuteNonQuery(commandText, (object[])null, CurrentTransaction);
+                    }
+                    catch (Exception e)
+                    {
+                        throw ExceptionProcessor.ProcessException(e, connection, commandText, CurrentTransaction);
+                    }
+                }
+            }
+        }
+
+        #endregion Attach/Detach
 
         /// <summary>
         /// Sets the starting value of a AutoIncrement field for a table
@@ -254,7 +365,7 @@ namespace FMSC.ORM.SQLite
                             }
                             catch (Exception e)
                             {
-                                throw ExceptionProcessor.ProcessException(e, conn, commandText, (IDbTransaction)null);
+                                throw ExceptionProcessor.ProcessException(e, conn, commandText, (DbTransaction)null);
                             }
                         }
                     }
@@ -462,5 +573,30 @@ namespace FMSC.ORM.SQLite
         }
 
         #endregion File utility methods
+
+        protected override void Dispose(bool disposing)
+        {
+            base.Dispose(disposing);
+            if (isDisposed) { return; }
+
+            if(disposing)
+            {
+                AttachedDataStores.Clear();
+            }
+        }
+
+        protected class ExternalDatastore
+        {
+            private string _dbPath;
+            public Datastore DS;
+
+            public string DbPath
+            {
+                get => _dbPath ?? DS.Path;
+                set => _dbPath = value;
+            }
+
+            public string Alias;
+        }
     }
 }

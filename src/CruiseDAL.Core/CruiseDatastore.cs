@@ -1,9 +1,7 @@
 ﻿using FMSC.ORM.Core;
+using FMSC.ORM.Logging;
 using FMSC.ORM.SQLite;
 using System;
-using System.Collections.Generic;
-using System.Data.Common;
-using System.Diagnostics;
 using System.IO;
 using System.Reflection;
 
@@ -11,8 +9,6 @@ namespace CruiseDAL
 {
     public class CruiseDatastore : SQLiteDatastore
     {
-        private ICollection<ExternalDatastore> _attachedDataStores = new List<ExternalDatastore>();
-
         /// <summary>
         /// Get the database version
         /// </summary>
@@ -70,12 +66,15 @@ namespace CruiseDAL
             Path = path;
 
             Initialize(makeNew, builder, updater);
-            Logger.Log.V(String.Format("Created DAL instance. Path = {0}\r\n", Path));
+            Logger.Log($"Created DAL instance. Path = {Path}", LogCategory.Datastore, LogLevel.Info);
         }
 
         protected void Initialize(bool makeNew, IDatastoreBuilder builder, IUpdater updater)
         {
-            if (IsInMemory)
+            var isInMemory = IsInMemory;
+            var exists = Exists;
+
+            if (isInMemory)
             {
                 // HACK we need to open a connection when we start using a in memory db
                 // and keep it open because our database will die if we close the connection
@@ -92,17 +91,9 @@ namespace CruiseDAL
                     builder.CreateDatastore(this);
                 }
             }
-            else if (!makeNew && !Exists)
+            else if (!makeNew && !exists)
             {
                 throw new FileNotFoundException();
-            }
-            else
-            {
-                // only run updater if db is not in memory and not new
-                if (updater != null)
-                {
-                    updater.Update(this);
-                }
             }
 
             try
@@ -113,6 +104,16 @@ namespace CruiseDAL
             {/*ignore, in case we want to allow access to a read-only DB*/}
             catch (FMSC.ORM.SQLException)
             { }
+
+            if (isInMemory == false
+                && makeNew == false)
+            {
+                // only run updater if db is not in memory and not new
+                if (updater != null)
+                {
+                    updater.Update(this);
+                }
+            }
         }
 
         protected virtual bool IsExtentionValid(string path)
@@ -120,11 +121,11 @@ namespace CruiseDAL
             return true;
         }
 
-        public void LogMessage(string message, string level)
+        public void LogMessage(string message, string level = "I")
         {
             string program = GetCallingProgram();
 
-            Logger.Log.L(message);
+            Logger.Log(message, "MessageLog", LogLevel.Info);
 
             if (Exists)
             {
@@ -141,7 +142,7 @@ namespace CruiseDAL
             }
         }
 
-        private static string GetCallingProgram()
+        internal static string GetCallingProgram()
         {
 #if !WindowsCE
             try
@@ -159,126 +160,26 @@ namespace CruiseDAL
             catch
             {
                 //TODO add error report message so we know when we encounter this exception and what platforms
-                return AppDomain.CurrentDomain.FriendlyName;
-            }
-#else
-            return AppDomain.CurrentDomain.FriendlyName;
-#endif
-        }
-
-        #region Overridden Methods
-
-        protected override void OnConnectionOpened(DbConnection connection)
-        {
-            base.OnConnectionOpened(connection);
-
-            foreach (var ds in _attachedDataStores)
-            {
-                AttachDBInternal(connection, ds);
-            }
-        }
-
-        #endregion Overridden Methods
-
-        #region Attach/Detach
-
-        public void AttachDB(Datastore dataStore, string alias)
-        {
-            if (dataStore == null) { throw new ArgumentNullException("dataStore"); }
-            if (String.IsNullOrEmpty(alias)) { throw new ArgumentException("alias can't be null or empty", "alias"); }
-
-            var externalDS = new ExternalDatastore()
-            {
-                DS = dataStore,
-                Alias = alias
-            };
-
-            _attachedDataStores.Add(externalDS);
-            var conn = PersistentConnection;
-            AttachDBInternal(conn, externalDS);
-        }
-
-        public void AttachDB(string dbPath, string alias)
-        {
-            if (dbPath == null) { throw new ArgumentNullException("dbPath"); }
-            if (String.IsNullOrEmpty(alias)) { throw new ArgumentException("alias can't be null or empty", "alias"); }
-
-            var externalDS = new ExternalDatastore()
-            {
-                DbPath = dbPath,
-                Alias = alias
-            };
-
-            _attachedDataStores.Add(externalDS);
-            var conn = PersistentConnection;
-            lock (_persistentConnectionSyncLock)
-            {
-                AttachDBInternal(conn, externalDS);
-            }
-        }
-
-        //TODO test
-        protected void AttachDBInternal(DbConnection connection, ExternalDatastore externalDB)
-        {
-            if (connection != null)
-            {
-                var commandText = "ATTACH DATABASE \"" + externalDB.DbPath + "\" AS " + externalDB.Alias + ";";
                 try
                 {
-                    connection.ExecuteNonQuery(commandText, (object[])null, CurrentTransaction);
+                    return AppDomain.CurrentDomain.FriendlyName;
                 }
-                catch (Exception e)
+                catch
                 {
-                    throw ExceptionProcessor.ProcessException(e, connection, commandText, CurrentTransaction);
+                    return "Unknown";
                 }
             }
-        }
-
-        public void DetachDB(string alias)
-        {
-            if (String.IsNullOrEmpty(alias)) { throw new ArgumentException("alias can't be null or empty", "alias"); }
-            Debug.Assert(_attachedDataStores != null);
-
-            ExternalDatastore exDS = null;
-
-            foreach (var ds in _attachedDataStores)
+#else
+            try
             {
-                if (ds.Alias == alias)
-                {
-                    exDS = ds;
-                    break;
-                }
+                return AppDomain.CurrentDomain.FriendlyName;
             }
-
-            if (exDS != null)
+            catch
             {
-                _attachedDataStores.Remove(exDS);
-                DetachDBInternal(exDS);
+                return "Unknown";
             }
+#endif
         }
-
-        //TODO test
-        protected void DetachDBInternal(ExternalDatastore externalDB)
-        {
-            lock (_persistentConnectionSyncLock)
-            {
-                var connection = PersistentConnection;
-                if (connection != null)
-                {
-                    var commandText = "DETACH DATABASE \"" + externalDB.Alias + "\";";
-                    try
-                    {
-                        connection.ExecuteNonQuery(commandText, (object[])null, CurrentTransaction);
-                    }
-                    catch (Exception e)
-                    {
-                        throw ExceptionProcessor.ProcessException(e, connection, commandText, CurrentTransaction);
-                    }
-                }
-            }
-        }
-
-        #endregion Attach/Detach
 
         #region cruise/cut specific stuff
 
@@ -324,19 +225,5 @@ namespace CruiseDAL
         }
 
         #endregion file utility
-
-        protected class ExternalDatastore
-        {
-            private string _dbPath;
-            public Datastore DS;
-
-            public string DbPath
-            {
-                get => _dbPath ?? DS.Path;
-                set => _dbPath = value;
-            }
-
-            public string Alias;
-        }
     }
 }
