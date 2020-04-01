@@ -1,8 +1,9 @@
 ﻿using Backpack.SqlBuilder;
 using FMSC.ORM.EntityModel;
-using FMSC.ORM.EntityModel.Attributes;
 using FMSC.ORM.EntityModel.Support;
+using FMSC.ORM.Logging;
 using System;
+using System.Collections.Generic;
 using System.Data.Common;
 using System.Diagnostics;
 
@@ -10,21 +11,11 @@ namespace FMSC.ORM.Core
 {
     public static class ConnectionExtentions
     {
-        private static Logger _logger = new Logger();
+        private static ILogger _logger = LoggerProvider.Get();
 
         #region ExecuteNonQuery
 
-        public static int ExecuteNonQuery(this DbConnection connection, string commandText)
-        {
-            return ExecuteNonQuery(connection, commandText, (object[])null, (DbTransaction)null);
-        }
-
-        public static int ExecuteNonQuery(this DbConnection connection, string commandText, object[] parameters)
-        {
-            return ExecuteNonQuery(connection, commandText, parameters, (DbTransaction)null);
-        }
-
-        public static int ExecuteNonQuery(this DbConnection connection, string commandText, object[] parameters, DbTransaction transaction)
+        public static int ExecuteNonQuery(this DbConnection connection, string commandText, object[] parameters = null, DbTransaction transaction = null)
         {
             if (string.IsNullOrEmpty(commandText)) { throw new ArgumentException("command can't be null or empty", "command"); }
             if (connection == null) { throw new ArgumentNullException("connection"); }
@@ -38,7 +29,7 @@ namespace FMSC.ORM.Core
             }
         }
 
-        public static int ExecuteNonQuery2(this DbConnection connection, string commandText, object parameterData, DbTransaction transaction)
+        public static int ExecuteNonQuery2(this DbConnection connection, string commandText, object parameterData = null, DbTransaction transaction = null)
         {
             if (string.IsNullOrEmpty(commandText)) { throw new ArgumentException("command can't be null or empty", "command"); }
             if (connection == null) { throw new ArgumentNullException("connection"); }
@@ -52,18 +43,16 @@ namespace FMSC.ORM.Core
             }
         }
 
-        public static int ExecuteNonQuery(this DbConnection connection, DbCommand command)
-        {
-            return ExecuteNonQuery(connection, command);
-        }
-
-        public static int ExecuteNonQuery(this DbConnection connection, DbCommand command, DbTransaction transaction)
+        public static int ExecuteNonQuery(this DbConnection connection, DbCommand command, DbTransaction transaction = null)
         {
             if (connection == null) { throw new ArgumentNullException("connection"); }
             if (command == null) { throw new ArgumentNullException("command"); }
 
             command.Connection = connection;
-            command.Transaction = transaction;
+            if (transaction != null)
+            {
+                command.Transaction = transaction;
+            }
 
             _logger.LogCommand(command);
 
@@ -74,13 +63,16 @@ namespace FMSC.ORM.Core
 
         #region ExecuteReader
 
-        public static DbDataReader ExecuteReader(this DbConnection connection, DbCommand command, DbTransaction transaction)
+        public static DbDataReader ExecuteReader(this DbConnection connection, DbCommand command, DbTransaction transaction = null)
         {
             if (connection == null) { throw new ArgumentNullException("connection"); }
             if (command == null) { throw new ArgumentNullException("command"); }
 
             command.Connection = connection;
-            command.Transaction = transaction;
+            if (transaction != null)
+            {
+                command.Transaction = transaction;
+            }
 
             _logger.LogCommand(command);
 
@@ -91,8 +83,11 @@ namespace FMSC.ORM.Core
 
         #region ExecuteScalar
 
-        public static object ExecuteScalar(this DbConnection connection, string commandText, object[] parameters, DbTransaction transaction)
+        public static object ExecuteScalar(this DbConnection connection, string commandText, object[] parameters = null, DbTransaction transaction = null)
         {
+            if (connection is null) { throw new ArgumentNullException(nameof(connection)); }
+            if (commandText is null) { throw new ArgumentNullException(nameof(commandText)); }
+
             using (var command = connection.CreateCommand())
             {
                 command.CommandText = commandText;
@@ -104,57 +99,125 @@ namespace FMSC.ORM.Core
             }
         }
 
-        public static object ExecuteScalar2(this DbConnection connection, string commandText, object parameterData, DbTransaction transaction)
+        public static object ExecuteScalar2(this DbConnection connection, string commandText, object parameterData = null, DbTransaction transaction = null)
         {
+            if (connection is null) { throw new ArgumentNullException(nameof(connection)); }
+            if (string.IsNullOrEmpty(commandText)) { throw new ArgumentException("commandText can not be null or empty", nameof(commandText)); }
+
             using (var command = connection.CreateCommand())
             {
                 command.CommandText = commandText;
                 command.AddParams(parameterData);
 
-                command.Transaction = transaction;
+                if (transaction != null)
+                {
+                    command.Transaction = transaction;
+                }
 
                 return command.ExecuteScalar();
             }
         }
 
-        public static T ExecuteScalar<T>(this DbConnection connection, string commandText, object[] parameters, DbTransaction transaction)
+        public static T ExecuteScalar<T>(this DbConnection connection, string commandText, object[] parameters = null, DbTransaction transaction = null)
         {
             var result = ExecuteScalar(connection, commandText, parameters, transaction);
 
             return ValueMapper.ProcessValue<T>(result);
         }
 
-        public static T ExecuteScalar2<T>(this DbConnection connection, string commandText, object parameters, DbTransaction transaction)
+        public static T ExecuteScalar2<T>(this DbConnection connection, string commandText, object parameters = null, DbTransaction transaction = null)
         {
             var result = ExecuteScalar2(connection, commandText, parameters, transaction);
 
             return ValueMapper.ProcessValue<T>(result);
         }
 
-        private static T ProcessResult<T>(object result)
-        {
-            if (result == null || result is DBNull)
-            {
-                return default(T);
-            }
-            else if (result is T)
-            {
-                return (T)result;
-            }
-            else
-            {
-                Type targetType = typeof(T);
-                return ValueMapper.ProcessValue<T>(result);
-            }
-        }
-
         #endregion ExecuteScalar
 
         #region CRUD
 
+        #region QueryScalar
+
+        public static IEnumerable<TResult> QueryScalar<TResult>(this DbConnection connection, string commandText, object[] paramaters = null, DbTransaction transaction = null, IExceptionProcessor exceptionProcessor = null)
+        {
+            var targetType = typeof(TResult);
+
+            using (var command = connection.CreateCommand())
+            {
+                command.CommandText = commandText;
+                command.SetParams(paramaters);
+
+                using (var reader = connection.ExecuteReader(command, transaction))
+                {
+                    while (reader.Read())
+                    {
+                        TResult value = default(TResult);
+                        try
+                        {
+                            var dbValue = reader.GetValue(0);
+                            value = (TResult)ValueMapper.ProcessValue(targetType, dbValue);
+                        }
+                        catch (Exception e)
+                        {
+                            if (exceptionProcessor != null)
+                            {
+                                throw exceptionProcessor.ProcessException(e, connection, commandText, transaction);
+                            }
+                            else
+                            {
+                                throw;
+                            }
+                        }
+
+                        yield return value;
+                    }
+                }
+            }
+        }
+
+        public static IEnumerable<TResult> QueryScalar2<TResult>(this DbConnection connection, string commandText, object paramaters = null, DbTransaction transaction = null, IExceptionProcessor exceptionProcessor = null)
+        {
+            var targetType = typeof(TResult);
+
+            using (var command = connection.CreateCommand())
+            {
+                command.CommandText = commandText;
+                command.AddParams(paramaters);
+
+                using (var reader = connection.ExecuteReader(command, transaction))
+                {
+                    while (reader.Read())
+                    {
+                        TResult value = default(TResult);
+                        try
+                        {
+                            var dbValue = reader.GetValue(0);
+                            value = (TResult)ValueMapper.ProcessValue(targetType, dbValue);
+                        }
+                        catch (Exception e)
+                        {
+                            if (exceptionProcessor != null)
+                            {
+                                throw exceptionProcessor.ProcessException(e, connection, commandText, transaction);
+                            }
+                            else
+                            {
+                                throw;
+                            }
+                        }
+
+                        yield return value;
+                    }
+                }
+            }
+        }
+
+        #endregion QueryScalar
+
         public static void Delete(this DbConnection connection, object data, DbTransaction transaction = null)
         {
-            if (data == null) { throw new ArgumentNullException("data"); }
+            if (connection is null) { throw new ArgumentNullException(nameof(connection)); }
+            if (data is null) { throw new ArgumentNullException("data"); }
 
             EntityDescription entityDescription = GlobalEntityDescriptionLookup.Instance.LookUpEntityByType(data.GetType());
             var keyFieldInfo = entityDescription.Fields.PrimaryKeyField;
@@ -242,21 +305,21 @@ namespace FMSC.ORM.Core
         //    }
         //}
 
-        public static void Update(this DbConnection connection, object data, DbTransaction transaction, OnConflictOption option)
+        public static void Update(this DbConnection connection, object data, OnConflictOption option, DbTransaction transaction = null)
         {
-            if (data == null) { throw new ArgumentNullException("data"); }
+            if (data is null) { throw new ArgumentNullException("data"); }
 
             EntityDescription entityDescription = GlobalEntityDescriptionLookup.Instance.LookUpEntityByType(data.GetType());
             EntityCommandBuilder builder = entityDescription.CommandBuilder;
             var keyField = entityDescription.Fields.PrimaryKeyField;
             object keyData = keyField.GetFieldValue(data);
 
-            Update(connection, data, keyData, transaction, option);
+            Update(connection, data, keyData, option, transaction);
         }
 
-        public static void Update(this DbConnection connection, object data, object keyData, DbTransaction transaction, OnConflictOption option)
+        public static void Update(this DbConnection connection, object data, object keyData, OnConflictOption option, DbTransaction transaction = null)
         {
-            if (data == null) { throw new ArgumentNullException("data"); }
+            if (data is null) { throw new ArgumentNullException("data"); }
 
             EntityDescription entityDescription = GlobalEntityDescriptionLookup.Instance.LookUpEntityByType(data.GetType());
             EntityCommandBuilder builder = entityDescription.CommandBuilder;
