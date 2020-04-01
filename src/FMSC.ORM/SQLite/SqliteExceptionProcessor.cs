@@ -1,6 +1,8 @@
 ﻿using FMSC.ORM.Core;
+using FMSC.ORM.Logging;
 using System;
 using System.Data;
+using System.Data.Common;
 
 
 #if SYSTEM_DATA_SQLITE
@@ -8,15 +10,19 @@ using SqliteException = System.Data.SQLite.SQLiteException;
 #elif MICROSOFT_DATA_SQLITE
 using Microsoft.Data.Sqlite;
 #else
-#warning " " 
+#warning "either SYSTEM_DATA_SQLITE OR MICROSOFT_DATA_SQLITE should be defined" 
 #endif
 
 namespace FMSC.ORM.SQLite
 {
     public class SqliteExceptionProcessor : IExceptionProcessor
     {
-        public Exception ProcessException(Exception innerException, IDbConnection connection, string commandText, IDbTransaction transaction)
+        protected ILogger Logger { get; set; } = LoggerProvider.Get();
+
+        public Exception ProcessException(Exception innerException, DbConnection connection, string commandText, DbTransaction transaction)
         {
+            Logger.LogException(innerException);
+
             if (innerException is SqliteException ex)
             {
                 SQLException sqlEx;
@@ -84,6 +90,8 @@ namespace FMSC.ORM.SQLite
                     sqlEx.CommandText = commandText;
                     //newEx.Data.Add("CommandText", comm.CommandText);
                 }
+
+                
 
                 return sqlEx;
             }

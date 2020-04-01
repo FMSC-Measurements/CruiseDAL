@@ -1,10 +1,10 @@
 ﻿using System;
-using System.Data;
+using System.Data.Common;
 
 namespace FMSC.ORM.Core
 {
     public interface IExceptionProcessor
     {
-        Exception ProcessException(Exception innerException, IDbConnection connection, string commandText, IDbTransaction transaction);
+        Exception ProcessException(Exception innerException, DbConnection connection, string commandText, DbTransaction transaction);
     }
 }
