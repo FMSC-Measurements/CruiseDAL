@@ -1,5 +1,6 @@
 ﻿using FluentAssertions;
 using FMSC.ORM.SQLite;
+using FMSC.ORM.Core;
 using System;
 using System.IO;
 using System.Linq;
@@ -77,36 +78,32 @@ namespace CruiseDAL.V3.Tests
 
             var newFilePath = Migrator.MigrateFromV2ToV3(filePath, true);
 
-            using (var tempdb = new CruiseDatastore_V3())
-            using (var database = new CruiseDatastore_V3(newFilePath))
+            using (var destDB = new CruiseDatastore_V3())
+            using (var srcDB = new CruiseDatastore_V3(newFilePath))
             {
-                var from = "fromdb";
-                tempdb.AttachDB(database, from);
-
                 try
                 {
-                    var conn = tempdb.OpenConnection();
-                    Migrator.Migrate(conn, from);
+                    var destConn = destDB.OpenConnection();
+                    Migrator.Migrate(srcDB, destDB);
 
                     var dumpPath = newFilePath + ".dump.crz3";
                     RegesterFileForCleanUp(dumpPath);
-                    tempdb.BackupDatabase(dumpPath);
-                    tempdb.DetachDB(from);
+                    destDB.BackupDatabase(dumpPath);
                     File.Exists(dumpPath).Should().BeTrue();
 
                     using (var newdb = new CruiseDatastore_V3(dumpPath))
                     {
                         var tables = newdb.GetTableNames();
 
-                        newdb.AttachDB(database, "olddb");
+                        newdb.AttachDB(srcDB, "olddb");
 
-                        foreach(var t in tables)
+                        foreach (var t in tables)
                         {
 
                             var stuff = newdb.QueryGeneric($"SELECT * FROM main.{t} EXCEPT SELECT * FROM olddb.{t};")
                                 .ToArray();
 
-                            if(t == "MessageLog")
+                            if (t == "MessageLog")
                             {
                                 stuff.Should().NotBeEmpty();
                                 continue;
@@ -118,7 +115,47 @@ namespace CruiseDAL.V3.Tests
                 }
                 finally
                 {
-                    tempdb.ReleaseConnection();
+                    destDB.ReleaseConnection();
+                }
+            }
+        }
+
+        [Fact]
+        public void ListTablesIntersect()
+        {
+            using (var srcDB = new SQLiteDatastore())
+            using (var destDB = new SQLiteDatastore())
+            {
+                using (var srcConn = srcDB.OpenConnection())
+                using (var destCon = destDB.OpenConnection())
+                {
+                    srcConn.ExecuteNonQuery("CREATE TABLE A ( f1 TEXT );");
+                    srcConn.ExecuteNonQuery("CREATE TABLE B ( f1 TEXT );");
+
+                    destCon.ExecuteNonQuery("CREATE TABLE B ( f1 TEXT );");
+                    destCon.ExecuteNonQuery("CREATE TABLE C ( f1 TEXT );");
+
+                    var tables = Migrator.ListTablesIntersect(destCon, srcConn);
+                    tables.Single().Should().Be("B");
+                }
+            }
+        }
+
+        [Fact]
+        public void ListFieldsIntersect()
+        {
+            using (var srcDB = new SQLiteDatastore())
+            using (var destDB = new SQLiteDatastore())
+            {
+                using (var srcConn = srcDB.OpenConnection())
+                using (var destCon = destDB.OpenConnection())
+                {
+                    srcConn.ExecuteNonQuery("CREATE TABLE A ( f1 TEXT, f2 TEXT );");
+
+                    destCon.ExecuteNonQuery("CREATE TABLE A ( f2 TEXT, f3 TEXT );");
+
+                    var tables = Migrator.ListFieldsIntersect(destCon, srcConn, "A");
+                    tables.Single().Should().Be("\"f2\"");
                 }
             }
         }

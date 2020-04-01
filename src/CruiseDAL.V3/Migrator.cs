@@ -1,5 +1,6 @@
 ﻿using FMSC.ORM;
 using FMSC.ORM.Core;
+using FMSC.ORM.Logging;
 using System;
 using System.Collections.Generic;
 using System.Data.Common;
@@ -8,9 +9,9 @@ using System.Linq;
 
 namespace CruiseDAL
 {
-    public class Migrator
+    public static class Migrator
     {
-        public static FMSC.ORM.Core.Logger Logger { get; set; } = new FMSC.ORM.Core.Logger();
+        public static ILogger Logger { get; set; } = LoggerProvider.Get();
 
         public static string GetConvertedPath(string v2Path)
         {
@@ -34,7 +35,7 @@ namespace CruiseDAL
             var fileAlreadyExists = File.Exists(newFilePath);
             if (fileAlreadyExists && !overwrite) { throw new UpdateException(newFileName + " already exists"); }
 
-            Migrator.MigrateFromV2ToV3(v2Path, newFilePath);
+            MigrateFromV2ToV3(v2Path, newFilePath);
 
             return newFilePath;
         }
@@ -74,11 +75,11 @@ namespace CruiseDAL
                 {
                     try
                     {
-                        connection.ExecuteNonQuery(command, (object[])null, transaction);
+                        connection.ExecuteNonQuery(command, transaction: transaction);
                     }
                     catch (Exception e)
                     {
-                        Logger.LogException(e);
+                        Logger.LogException(e, new { Command = command });
                         throw;
                     }
                 }
@@ -89,89 +90,109 @@ namespace CruiseDAL
 
         public static void Migrate(CruiseDatastore sourceDS, CruiseDatastore destinationDS, IEnumerable<string> excluding = null)
         {
-            var connection = destinationDS.OpenConnection();
+            var destConn = destinationDS.OpenConnection();
+            var sourceConn = sourceDS.OpenConnection();
 
-            var fromAlias = "fromdb";
-            destinationDS.AttachDB(sourceDS, fromAlias);
+            
             try
             {
-                Migrate(connection, fromAlias, excluding);
+                Migrate(sourceConn, destConn, excluding);
             }
             finally
             {
                 destinationDS.ReleaseConnection();
-                destinationDS.DetachDB(fromAlias);
+                sourceDS.ReleaseConnection();
             }
         }
 
-        public static void Migrate(DbConnection connection, string from, IEnumerable<string> excluding = null)
+        public static void Migrate(DbConnection sourceConn, DbConnection destConn, IEnumerable<string> excluding = null)
         {
             var to = "main"; // alias used by the source database
+            var from = "fromdb";
 
             // get the initial state of foreign keys, used to restore foreign key setting at end of merge process
-            var foreignKeys = connection.ExecuteScalar<string>("PRAGMA foreign_keys;", null, null);
-            connection.ExecuteNonQuery("PRAGMA foreign_keys = off;");
+            var foreignKeys = destConn.ExecuteScalar<string>("PRAGMA foreign_keys;", null, null);
+            destConn.ExecuteNonQuery("PRAGMA foreign_keys = off;");
 
-            using (var transaction = connection.BeginTransaction())
+
+            var srcDataSource = sourceConn.DataSource;
+            destConn.ExecuteNonQuery($"ATTACH DATABASE \"{srcDataSource}\" AS {from};");
+            try
             {
-                // get a list of all the tables in the database
-                var tables = connection.ExecuteScalar<string>(
-                    "SELECT group_concat(name) FROM ( " +
-                    $"SELECT name FROM {from}.sqlite_master WHERE type='table' " +
-                    "UNION  " +
-                    $"SELECT name FROM {from}.sqlite_master WHERE type='table' )" +
-                    "WHERE name NOT LIKE 'sqlite^_%' ESCAPE '^';", (object[])null, transaction)
-                .Split(',');
-                try
+                using (var transaction = destConn.BeginTransaction())
                 {
-                    foreach (var table in tables)
+                    // get list of all tables that are in both databases
+                    IEnumerable<string> tables = ListTablesIntersect(destConn, sourceConn);
+                    try
                     {
-                        if (excluding?.Contains(table) ?? false)
-                        { continue; }
-
-                        if (table == "Globals")
+                        foreach (var table in tables)
                         {
-                            connection.ExecuteNonQuery(
-$@"INSERT OR IGNORE INTO {to}.{table} (""Block"", ""Key"", ""Value"")
+                            if (excluding?.Contains(table) ?? false)
+                            { continue; }
+
+                            if (table == "Globals")
+                            {
+                                destConn.ExecuteNonQuery(
+    $@"INSERT OR IGNORE INTO {to}.{table} (""Block"", ""Key"", ""Value"")
 SELECT ""Block"", ""Key"", ""Value""
 FROM {from}.{table} 
 WHERE ""Block"" != 'Database' AND ""Key"" != 'Version';", null, transaction);
-                            continue;
-                        }
-                        else
-                        {
+                                continue;
+                            }
+                            else
+                            {
+                                // get the interscetion of fields in table from both databases 
+                                // encased in double quotes just incase any field names are sql keywords
+                                string[] both = ListFieldsIntersect(sourceConn, destConn, table);
+                                var fields = string.Join(",", both);
 
-                            // get the union of fields in table from both databases as a comma seperated list
-                            // field names are encased in double quotes just incase any field names are sql keywords
-                            var fields = connection.ExecuteScalar<string>(
-$@"SELECT group_concat('""' || Name || '""', ', ') FROM
-(
-    SELECT Name FROM {to}.pragma_table_info('{table}') 
-    UNION
-    SELECT Name FROM {from}.pragma_table_info('{table}')
-);", null, transaction);
-
-                            connection.ExecuteNonQuery(
-$@"INSERT OR IGNORE INTO {to}.{table} ({fields})
+                                destConn.ExecuteNonQuery(
+    $@"INSERT OR IGNORE INTO {to}.{table} ({fields})
 SELECT {fields} FROM {from}.{table};"
-                                , null, transaction);
+                                    , null, transaction);
 
+                            }
                         }
-                    }
 
-                    transaction.Commit();
-                }
-                catch (Exception e)
-                {
-                    transaction.Rollback();
-                    Logger.LogException(e);
-                    throw;
-                }
-                finally
-                {
-                    connection.ExecuteNonQuery($"PRAGMA foreign_keys = {foreignKeys};");
+                        transaction.Commit();
+                    }
+                    catch (Exception e)
+                    {
+                        transaction.Rollback();
+                        Logger.LogException(e);
+                        throw;
+                    }
+                    finally
+                    {
+                        sourceConn.ExecuteNonQuery($"PRAGMA foreign_keys = {foreignKeys};");
+                    }
                 }
             }
+            finally
+            {
+                destConn.ExecuteNonQuery($"DETACH DATABASE {from};");
+            }
+        }
+
+        public static string[] ListFieldsIntersect(DbConnection sourceConn, DbConnection destConn, string table)
+        {
+            var sourceFields = sourceConn.QueryScalar2<string>($@"SELECT '""' || Name || '""' FROM pragma_table_info('{table}');");
+
+            var destFields = destConn.QueryScalar2<string>($@"SELECT '""' || Name || '""' FROM pragma_table_info('{table}');");
+
+            var both = sourceFields.Intersect(destFields).ToArray();
+            return both;
+        }
+
+        public static string[] ListTablesIntersect(DbConnection conn1, DbConnection conn2)
+        {
+            var query = "SELECT name FROM sqlite_master WHERE type='table' AND name NOT LIKE 'sqlite^_%' ESCAPE '^';";
+
+            var tables1 = conn1.QueryScalar2<string>(query);
+
+            var tables2 = conn2.QueryScalar2<string>(query);
+
+            return tables1.Intersect(tables2).ToArray();
         }
     }
 }
