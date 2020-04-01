@@ -22,15 +22,15 @@ namespace CruiseDAL
         {
             string command = String.Format("UPDATE Globals SET Value = '{0}' WHERE Block = 'Database' AND Key = 'Version';", newVersion);
             db.Execute(command);
-            db.LogMessage(String.Format("Updated structure version to {0}", newVersion), "I");
+            db.LogMessage($"Updated structure version to {newVersion}");
         }
 
-        public static void SetDatabaseVersion(DbConnection connection, string newVersion, DbTransaction transaction)
+        public static void SetDatabaseVersion(DbConnection connection, string newVersion, DbTransaction transaction = null)
         {
             string command = String.Format("UPDATE Globals SET Value = '{0}' WHERE Block = 'Database' AND Key = 'Version';", newVersion);
-            connection.ExecuteNonQuery(command, null, transaction);
+            connection.ExecuteNonQuery(command, transaction: transaction);
 
-            connection.LogMessage("Updated structure version to {0}", newVersion, transaction);
+            connection.LogMessage($"Updated structure version to {newVersion}", transaction: transaction);
         }
 
         [Table("ErrorLog")]
