@@ -1,5 +1,6 @@
 ﻿using CruiseDAL.Schema;
 using FMSC.ORM.Core;
+using FMSC.ORM.Logging;
 using FMSC.ORM.SQLite;
 using System;
 using System.Data.Common;
@@ -8,6 +9,8 @@ namespace CruiseDAL
 {
     public class CruiseDatastoreBuilder_V3 : SQLiteDatabaseBuilder
     {
+        private ILogger Logger { get; } = LoggerProvider.Get();
+
         public override void BuildDatabase(Datastore datastore)
         {
             var conn = datastore.OpenConnection();
@@ -32,11 +35,11 @@ namespace CruiseDAL
             {
                 try
                 {
-                    connection.ExecuteNonQuery(cmd, (object[])null, transaction);
+                    connection.ExecuteNonQuery(cmd, transaction: transaction);
                 }
                 catch (Exception e)
                 {
-                    Logger.Log.E(e);
+                    Logger.LogException(e, new { Command = cmd });
                     throw;
                 }
             }
