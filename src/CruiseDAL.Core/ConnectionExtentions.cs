@@ -1,26 +1,25 @@
 ﻿using FMSC.ORM.Core;
+using FMSC.ORM.Logging;
 using System;
 using System.Data.Common;
 
 namespace CruiseDAL
 {
-    public static class CommandExtentions
+    public static class ConnectionExtentions
     {
-        public static void LogMessage(this DbConnection connection, string message, string level)
-        {
-            LogMessage(connection, message, level, null);
-        }
+        private static ILogger Logger = LoggerProvider.Get();
 
-        public static void LogMessage(this DbConnection connection, string message, string level, DbTransaction transaction)
+        public static void LogMessage(this DbConnection connection,  string message, string level = "I", string program = null, DbTransaction transaction = null)
         {
-            string appStr = GetCallingProgram();
+            if (connection is null) { throw new ArgumentNullException(nameof(connection)); }
+            if (message is null) { throw new ArgumentNullException(nameof(message)); }
 
-            LogMessage(connection, appStr, message, level, transaction);
-        }
+            if(program == null)
+            {
+                program = CruiseDatastore.GetCallingProgram();
+            }
 
-        public static void LogMessage(this DbConnection connection, string program, string message, string level, DbTransaction transaction)
-        {
-            Logger.Log.L(message);
+            Logger.Log(message, "LogMessage", LogLevel.Info);
 
             connection.ExecuteNonQuery("INSERT INTO MessageLog (Program, Message, Level, Date, Time) " +
                     "VALUES " +
@@ -33,24 +32,6 @@ namespace CruiseDAL
                         DateTime.Now.ToString("HH:mm") }
                     , transaction
                     );
-        }
-
-        private static string GetCallingProgram()
-        {
-#if !WindowsCE
-            try
-            {
-                return System.Reflection.Assembly.GetEntryAssembly().FullName;
-            }
-            catch
-            {
-                //TODO add error report message so we know when we encounter this exception and what platforms
-                return AppDomain.CurrentDomain.FriendlyName;
-            }
-#else
-            return AppDomain.CurrentDomain.FriendlyName;
-
-#endif
         }
 
         public static string ReadDatabaseVersion(this DbConnection connection)
