@@ -3,6 +3,7 @@ using FMSC.ORM.Core.SQL.QueryBuilder;
 using FMSC.ORM.EntityModel;
 using FMSC.ORM.EntityModel.Attributes;
 using FMSC.ORM.EntityModel.Support;
+using FMSC.ORM.Logging;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -16,7 +17,7 @@ namespace FMSC.ORM.Core
 {
     public abstract partial class Datastore : IDisposable
     {
-        protected static Logger _logger = new Logger();
+        protected ILogger Logger = LoggerProvider.Get();
 
         protected int _holdConnection = 0;
 
@@ -283,7 +284,7 @@ namespace FMSC.ORM.Core
                 var connection = OpenConnection();
                 try
                 {
-                    connection.Update(data, CurrentTransaction, option);
+                    connection.Update(data, option, CurrentTransaction);
                 }
                 catch (Exception ex)
                 {
@@ -303,7 +304,7 @@ namespace FMSC.ORM.Core
                 var connection = OpenConnection();
                 try
                 {
-                    connection.Update(data, keyData, CurrentTransaction, option);
+                    connection.Update(data, keyData, option, CurrentTransaction);
                 }
                 catch (Exception ex)
                 {
@@ -361,7 +362,7 @@ namespace FMSC.ORM.Core
             if (data is System.ComponentModel.IChangeTracking
                 && ((System.ComponentModel.IChangeTracking)data).IsChanged == false)
             {
-                _logger.WriteLine("save skipped because data has no changes", Logger.DS_DATA);
+                Logger.Log("save skipped because data has no changes", LogCategory.CRUD, LogLevel.Verbose);
                 return;
             }
 
@@ -396,7 +397,7 @@ namespace FMSC.ORM.Core
             if (data is System.ComponentModel.IChangeTracking
                 && ((System.ComponentModel.IChangeTracking)data).IsChanged == false)
             {
-                _logger.WriteLine("save skipped because data has no changes", Logger.DS_DATA);
+                Logger.Log("save skipped because data has no changes", LogCategory.CRUD, LogLevel.Verbose);
                 return;
             }
 
@@ -422,7 +423,7 @@ namespace FMSC.ORM.Core
             {
                 try
                 {
-                    connection.Update(data, transaction, option);
+                    connection.Update(data, option, transaction);
                 }
                 catch (Exception ex)
                 {
@@ -626,6 +627,40 @@ namespace FMSC.ORM.Core
                             }
                         }
                     }
+                }
+                finally
+                {
+                    ReleaseConnection();
+                }
+            }
+        }
+
+        public IEnumerable<TResult> QueryScalar<TResult>(string commandText, params object[] paramaters)
+        {
+            lock (_persistentConnectionSyncLock)
+            {
+                var connection = OpenConnection();
+                try
+                {
+                    return connection.QueryScalar<TResult>(commandText, paramaters, CurrentTransaction, ExceptionProcessor)
+                        .ToArray(); // need to force execution of the IEnumerable otherwise connection will be closed before it is executed
+                }
+                finally
+                {
+                    ReleaseConnection();
+                }
+            }
+        }
+
+        public IEnumerable<TResult> QueryScalar2<TResult>(string commandText, object paramaters = null)
+        {
+            lock (_persistentConnectionSyncLock)
+            {
+                var connection = OpenConnection();
+                try
+                {
+                    return connection.QueryScalar2<TResult>(commandText, paramaters, CurrentTransaction, ExceptionProcessor)
+                        .ToArray(); // need to force execution of the IEnumerable otherwise connection will be closed before it is executed
                 }
                 finally
                 {
@@ -1370,27 +1405,27 @@ namespace FMSC.ORM.Core
 
         protected virtual void OnConnectionOpened(DbConnection connection)
         {
-            _logger.WriteLine("Connection opened", Logger.DB_CONTROL);
+            Logger.Log("Connection Oppened", LogCategory.Connection, LogLevel.Verbose);
         }
 
         protected virtual void OnTransactionStarted()
         {
-            _logger.WriteLine("Transaction Started", Logger.DB_CONTROL);
+            Logger.Log("Transaction Started", LogCategory.Connection, LogLevel.Verbose);
         }
 
         protected virtual void OnTransactionEnding()
         {
-            _logger.WriteLine("Transaction Ending", Logger.DB_CONTROL);
+            Logger.Log("Transaction Ending", LogCategory.Connection, LogLevel.Verbose);
         }
 
         protected virtual void OnTransactionCanceling()
         {
-            _logger.WriteLine("Transaction Canceling", Logger.DB_CONTROL);
+            Logger.Log("Transaction Canceling", LogCategory.Connection, LogLevel.Verbose);
         }
 
         protected virtual void OnTransactionReleasing()
         {
-            _logger.WriteLine("Transaction Releasing", Logger.DB_CONTROL);
+            Logger.Log("Transaction Releasing", LogCategory.Connection, LogLevel.Verbose);
         }
 
         #endregion events and logging
@@ -1435,30 +1470,31 @@ namespace FMSC.ORM.Core
 
         #region IDisposable Support
 
-        private bool isDisposed = false; // To detect redundant calls
+        protected bool isDisposed = false; // To detect redundant calls
 
         protected virtual void Dispose(bool disposing)
         {
-            if (!isDisposed)
+            if (isDisposed) { return; }
+
+            var logger = Logger;
+            if (disposing)
             {
-                if (disposing)
-                {
-                    _logger.WriteLine("Datastore Disposing ", Logger.DS_EVENT);
-                }
-                else
-                {
-                    _logger.WriteLine("Datastore Finalized ", Logger.DS_EVENT);
-                }
-
-                //if(this._cache != null)
-                //{
-                //    _cache.Dispose();
-                //}
-
-                ReleaseConnection(true);
-
-                isDisposed = true;
+                logger.Log("Datastore Disposing", LogCategory.Datastore, LogLevel.Info);
+                Logger = null;
             }
+            else
+            {
+                logger?.Log("Datastore Finalized ", LogCategory.Datastore, LogLevel.Info);
+            }
+
+            //if(this._cache != null)
+            //{
+            //    _cache.Dispose();
+            //}
+
+            ReleaseConnection(true);
+
+            isDisposed = true;
         }
 
         ~Datastore()
