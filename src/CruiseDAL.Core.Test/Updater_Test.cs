@@ -8,6 +8,8 @@ using Xunit;
 using Xunit.Abstractions;
 using System.Linq;
 using FMSC.ORM.EntityModel.Attributes;
+using System.Collections.Generic;
+using FMSC.ORM.EntityModel.Support;
 
 namespace CruiseDAL.Tests
 {
@@ -17,11 +19,43 @@ namespace CruiseDAL.Tests
         {
         }
 
-        private void ValidateUpdate(CruiseDatastore database)
+        protected void ValidateUpdate(CruiseDatastore database)
         {
             VerifyTablesCanDelete(database);
+            ValidateCRUD(database);
+
+            using (var fresh = new DAL())
+            {
+                var tDiff = DiffTables(fresh, database);
+                tDiff.Should().BeEmpty();
+
+                var diff = DiffTableInfo(fresh, database);
+                diff.Should().BeEmpty();
+            }
 
             database.CheckTableExists("SamplerState").Should().BeTrue();
+        }
+
+        void ValidateCRUD(CruiseDatastore ds)
+        {
+            var dataobjects = typeof(TreeDO).Assembly.GetTypes()
+                .Where(x => x.Namespace == "CruiseDAL.DataObjects");
+
+            foreach(var doType in dataobjects)
+            {
+                ValidateCRUD(ds, doType);
+            }
+        }
+
+        void ValidateCRUD(CruiseDatastore ds, Type type)
+        {
+            var entDesc = new EntityDescription(type);
+            var commandBuilder = entDesc.CommandBuilder;
+            var selectBuilder = commandBuilder.MakeSelectCommand(null);
+
+            var selectCommand = selectBuilder.ToString();
+            var selectResult = ds.QueryGeneric(selectCommand);
+
         }
 
         [Fact]
@@ -36,7 +70,7 @@ namespace CruiseDAL.Tests
                     setup.Execute(CruiseDAL.Tests.SQL.CRUISECREATE_05_30_2013);
                 }
 
-                using(var database = new CruiseDatastore(filePath))
+                using (var database = new CruiseDatastore(filePath))
                 {
                     var dataStore = new CruiseDatastore(filePath);
 
@@ -169,6 +203,40 @@ namespace CruiseDAL.Tests
 
                 //datastore.Invoking(x => x.Execute($"DELETE FROM {table};")).Should().NotThrow();
             }
+        }
+
+        IEnumerable<string> DiffTables(CruiseDatastore left, CruiseDatastore right)
+        {
+            var leftTables = left.GetTableNames();
+            var rightTables = right.GetTableNames();
+            return leftTables.Except(rightTables);
+        }
+
+        IEnumerable<IEnumerable<string>> DiffTableInfo(CruiseDatastore left, CruiseDatastore right)
+        {
+            var tables = left.GetTableNames();
+
+            foreach (var t in tables)
+            {
+                var diff = DiffTableInfo(left, right, t);
+
+                if (diff.Any())
+                {
+                    yield return diff;
+                }
+            }
+        }
+
+        IEnumerable<string> DiffTableInfo(CruiseDatastore left, CruiseDatastore right, string table)
+        {
+            var leftValues = left.QueryGeneric(
+$@"SELECT '{table}.' || name  FROM pragma_table_info('{table}') where Name != 'CreatedBy' AND Name != 'CreatedDate'; ").ToArray();
+
+            var rightValues = right.QueryGeneric(
+$@"SELECT '{table}.' || name  FROM pragma_table_info('{table}'); ").ToArray();
+
+            return leftValues.Select(x => x.Values.First().ToString())
+                .Except(rightValues.Select(x => x.Values.First().ToString())).ToArray();
         }
 
         [Table("Tree")]

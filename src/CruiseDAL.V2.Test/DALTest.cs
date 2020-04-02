@@ -1,6 +1,7 @@
 ﻿using CruiseDAL.V2.Test;
 using FluentAssertions;
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using Xunit;
@@ -12,6 +13,52 @@ namespace CruiseDAL.Tests
     {
         public DALTest(ITestOutputHelper output) : base(output)
         {
+        }
+
+        private void ValidateUpdate(CruiseDatastore database)
+        {
+            using (var fresh = new DAL())
+            {
+                var tDiff = DiffTables(fresh, database);
+                tDiff.Should().BeEmpty();
+
+                var diff = DiffTableInfo(fresh, database);
+                diff.Except(new[] { ("TreeDefaultValue", "Chargeable") })
+                    .Should().BeEmpty();
+            }
+        }
+
+        IEnumerable<string> DiffTables(CruiseDatastore left, CruiseDatastore right)
+        {
+            var leftTables = left.GetTableNames();
+            var rightTables = right.GetTableNames();
+            return leftTables.Except(rightTables);
+        }
+
+        IEnumerable<(string, string)> DiffTableInfo(CruiseDatastore left, CruiseDatastore right)
+        {
+            var tables = left.GetTableNames();
+
+            foreach (var t in tables)
+            {
+                var diff = DiffTableInfo(left, right, t);
+
+                foreach(var i in diff)
+                {
+                    yield return i;
+                }
+            }
+        }
+
+        IEnumerable<(string, string)> DiffTableInfo(CruiseDatastore left, CruiseDatastore right, string table)
+        {
+            var leftValues = left.QueryScalar<string>(
+$@"SELECT name  FROM pragma_table_info('{table}') where Name != 'CreatedBy' AND Name != 'CreatedDate'; ").ToArray();
+
+            var rightValues = right.QueryScalar<string>(
+$@"SELECT name  FROM pragma_table_info('{table}'); ").ToArray();
+
+            return leftValues.Except(rightValues).Select((x) => { return (table, x); });
         }
 
         [Fact]
@@ -51,9 +98,13 @@ namespace CruiseDAL.Tests
 
             using (var database = new DAL(testFile))
             {
+                ValidateUpdate(database);
+
                 var strata = database.From<DataObjects.StratumDO>()
                     .Query().ToArray();
 
+                
+                
             }
         }
 

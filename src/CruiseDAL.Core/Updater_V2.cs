@@ -22,15 +22,16 @@ namespace CruiseDAL
 
         public static void Update_Impl(CruiseDatastore db)
         {
-            if (!CheckCanUpdate(db))
+            var dbVersion = db.DatabaseVersion;
+            if (!CheckCanUpdate(dbVersion))
             {
-                throw new IncompatibleSchemaException("The version of this cruise file is not compatible with the version of the software you are using." +
+                throw new IncompatibleSchemaException($"The version of this cruise file ({dbVersion}) is not compatible with the version of the software you are using." +
                     "Go to github.com/FMSC-Measurements to get the latest version of our software.", null);
             }
 
-            if (db.DatabaseVersion.StartsWith("2013") || db.DatabaseVersion == "2014.01.21")
+            if (dbVersion.StartsWith("2013") || dbVersion == "2014.01.21")
             {
-                throw new IncompatibleSchemaException("The version of this cruise file is no longer supported." +
+                throw new IncompatibleSchemaException($"The version of this cruise file ({dbVersion}) is no longer supported." +
                 "Go to github.com/FMSC-Measurements to get archived versions of our software.", null);
             }
 
@@ -1075,24 +1076,8 @@ COMMIT;");
             }
         }
 
-        public static bool CheckNeedsMajorUpdate(CruiseDatastore dal)
+        public static bool CheckCanUpdate(string version)
         {
-            var version = dal.DatabaseVersion;
-
-            if (version.StartsWith("2"))
-            {
-                return true;
-            }
-            else
-            {
-                return false;
-            }
-        }
-
-        public static bool CheckCanUpdate(CruiseDatastore dal)
-        {
-            var version = dal.DatabaseVersion;
-
             if (version.StartsWith("2"))
             {
                 return true;
