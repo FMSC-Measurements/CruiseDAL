@@ -8,10 +8,7 @@ using System.Text;
 
 namespace FMSC.ORM.SQLite
 {
-#pragma warning disable CS0612 // Type or member is obsolete
-
-    public class SQLiteDatastore : DatastoreRedux
-#pragma warning restore CS0612 // Type or member is obsolete
+    public class SQLiteDatastore : Datastore
     {
         protected ICollection<ExternalDatastore> AttachedDataStores { get; } = new List<ExternalDatastore>();
 
