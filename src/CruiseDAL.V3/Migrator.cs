@@ -114,8 +114,11 @@ namespace CruiseDAL
             var foreignKeys = destConn.ExecuteScalar<string>("PRAGMA foreign_keys;", null, null);
             destConn.ExecuteNonQuery("PRAGMA foreign_keys = off;");
 
-
+#if SYSTEM_DATA_SQLITE
+            var srcDataSource = ((System.Data.SQLite.SQLiteConnection)sourceConn).FileName;
+#else
             var srcDataSource = sourceConn.DataSource;
+#endif
             destConn.ExecuteNonQuery($"ATTACH DATABASE \"{srcDataSource}\" AS {from};");
             try
             {
