@@ -121,7 +121,7 @@ namespace FMSC.ORM.SQLite
             return conn;
         }
 
-        public override DbConnection CreateConnection()
+        protected override DbConnection CreateConnection()
         {
             return CreateConnection(Path);
         }
@@ -172,7 +172,7 @@ namespace FMSC.ORM.SQLite
 
             AttachedDataStores.Add(externalDS);
             var conn = PersistentConnection;
-            lock (_persistentConnectionSyncLock)
+            lock (PersistentConnectionSyncLock)
             {
                 AttachDBInternal(conn, externalDS);
             }
@@ -221,7 +221,7 @@ namespace FMSC.ORM.SQLite
         //TODO test
         protected void DetachDBInternal(ExternalDatastore externalDB)
         {
-            lock (_persistentConnectionSyncLock)
+            lock (PersistentConnectionSyncLock)
             {
                 var connection = PersistentConnection;
                 if (connection != null)
@@ -327,7 +327,7 @@ namespace FMSC.ORM.SQLite
         public override IEnumerable<ColumnInfo> GetTableInfo(string tableName)
         {
             var colList = new List<ColumnInfo>();
-            lock (_persistentConnectionSyncLock)
+            lock (PersistentConnectionSyncLock)
             {
                 DbConnection conn = OpenConnection();
 
@@ -376,34 +376,6 @@ namespace FMSC.ORM.SQLite
             }
         }
 
-        public override long GetLastInsertRowID(DbConnection connection, DbTransaction transaction)
-        {
-            try
-            {
-                return connection.ExecuteScalar<long>("SELECT last_insert_rowid()", (object[])null, transaction);
-            }
-            catch (Exception e)
-            {
-                throw ExceptionProcessor.ProcessException(e, connection, "SELECT last_insert_rowid()", transaction);
-            }
-        }
-
-        public override object GetLastInsertKeyValue(DbConnection connection, String tableName, string fieldName, DbTransaction transaction)
-        {
-            var query = "SELECT " + fieldName + " FROM " + tableName + " WHERE rowid = last_insert_rowid();";
-
-            try
-            {
-                return connection.ExecuteScalar(query, (object[])null, transaction);
-            }
-            catch (Exception e)
-            {
-                throw ExceptionProcessor.ProcessException(e, connection, query, transaction);
-            }
-
-            //String query = "Select " + fieldName + " FROM " + tableName + " WHERE rowid = last_insert_rowid();";
-        }
-
         /// <summary>
         /// Gets the raw SQL that defines a given table.
         /// </summary>
@@ -431,7 +403,7 @@ namespace FMSC.ORM.SQLite
             {
                 commandText = "PRAGMA foreign_key_check(" + table_name + ");";
             }
-            lock (_persistentConnectionSyncLock)
+            lock (PersistentConnectionSyncLock)
             {
                 var connection = OpenConnection();
 
