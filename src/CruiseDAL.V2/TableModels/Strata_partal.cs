@@ -164,6 +164,7 @@ DELETE FROM TreeFieldSetup WHERE Stratum_CN = {0};
 DELETE FROM LogFieldSetup WHERE Stratum_CN = {0};
 DELETE FROM FixCNTTallyPopulation WHERE FixCNTTallyClass_CN IN (SELECT FixCNTtallyClass_CN FROM FixCNTTallyClass WHERE Stratum_CN = {0});
 DELETE FROM FixCNTTallyClass WHERE Stratum_CN = {0};
+DELETE FROM SamplerState WHERE SampleGroup_CN IN (SELECT SampleGroup_CN FROM SampleGroup WHERE SampleGroup.Stratum_CN = {0});
 DELETE FROM SampleGroupStatsTreeDefaultValue WHERE SampleGroupStats_CN IN 
     (SELECT SampleGroupStats_CN FROM SampleGroupStats AS sgs 
         JOIN StratumStats AS ss USING (StratumStats_CN) WHERE Stratum_CN = {0});

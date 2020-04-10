@@ -85,7 +85,8 @@ namespace CruiseDAL.DataObjects
             DELETE FROM TreeEstimate WHERE CountTree_CN IN (SELECT CountTree_CN FROM CountTree WHERE SampleGroup_CN = {0});
             DELETE FROM CountTree WHERE SampleGroup_CN = {0};
             DELETE FROM SampleGroupTreeDefaultValue WHERE SampleGroup_CN = {0};
-            DELETE FROM FixCNTTallyPopulation WHERE SampleGroup_CN = {0};", sg.SampleGroup_CN);
+            DELETE FROM FixCNTTallyPopulation WHERE SampleGroup_CN = {0};
+            DELETE FROM SamplerState WHERE SampleGroup_CN = {0};", sg.SampleGroup_CN);
                 db.Execute(command);
                 sg.Delete();
                 db.CommitTransaction();
