@@ -80,7 +80,8 @@ namespace CruiseDAL.Tests.Schema
             var results = new bool[left.Count()];
             foreach (var (leftItem, i) in left.Select((x, i) => (x, i)))
             {
-                var doesHas = comparer.Equals(leftItem, aRight[i]);
+                var rightItem = aRight[i];
+                var doesHas = comparer.Equals(leftItem, rightItem);
                 results[i] = doesHas;
 
                 Output.WriteLine(leftItem.ToString() + " - " + ((doesHas) ? "found" : "not found"));
@@ -238,20 +239,42 @@ namespace CruiseDAL.Tests.Schema
             using (var origDatastore = new DAL(origFile))
             using (var newDatastore = new CruiseDatastore_V3(testFile))
             {
-                var treeOrig = origDatastore.QueryGeneric(
-                    "SELECT * FROM Tree " +
-                    "ORDER BY CuttingUnit_CN, Plot_CN, TreeNumber; ");
+                var query = "SELECT * FROM Tree " +
+                    "ORDER BY CuttingUnit_CN, Plot_CN, TreeNumber; ";
 
-                var treeAfter = newDatastore.QueryGeneric(
-                    "SELECT * FROM Tree " +
-                    "ORDER BY CuttingUnit_CN, Plot_CN, TreeNumber; ");
+                var treesOrig = origDatastore.Query<TreeDO>(query).ToArray();
 
-                var ignore = new string[] { "Tree_GUID", "TreeID", "ModifiedDate", "ExpansionFactor", "TreeFactor", "PointFactor", "TreeMeasurment_CN" };
-                if (fileName == "7Wolf.cruise")
-                { ignore = ignore.Prepend("Species")
-                                 .ToArray(); }
+                var treesAfter = newDatastore.Query<TreeDO>(query).ToArray();
 
-                Compare(treeAfter, treeOrig, ignore: ignore);
+                treesAfter.Should().HaveSameCount(treesOrig);
+
+                int len = treesAfter.Length;
+                for(int i = 0; i < len; i++)
+                {
+                    var before = treesOrig[i];
+                    var after = treesAfter[i];
+
+                    after.Should().BeEquivalentTo(before, conf => 
+                    conf.ExcludingNestedObjects()
+                    .ExcludingFields()
+                    .Excluding(x => x.Self)
+                    .Excluding(x => x.DAL)
+                    .Excluding(x => x.TreeDefaultValue)
+                    .Excluding(x => x.CuttingUnit)
+                    .Excluding(x => x.Stratum)
+                    .Excluding(x => x.SampleGroup)
+                    .Excluding(x => x.Plot)
+                    .Excluding(x => x.TreeValidator)
+                    .Excluding(x => x.Error)
+                    .Excluding(x => x.IsValidated)
+                    .Excluding(x => x.Validator)
+                    .Excluding(x => x.Tree_GUID)
+                    .Excluding(x => x.ModifiedBy)
+                    .Excluding(x => x.ExpansionFactor)
+                    .Excluding(x => x.TreeFactor)
+                    .Excluding(x => x.PointFactor)
+                    );
+                }
             }
         }
 
