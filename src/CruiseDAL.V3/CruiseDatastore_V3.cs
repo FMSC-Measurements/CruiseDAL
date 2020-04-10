@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.Common;
 using System.Linq;
 using System.Text;
 using FMSC.ORM.Core;
@@ -25,6 +26,15 @@ namespace CruiseDAL
         {
             var extension = System.IO.Path.GetExtension(path).ToLower();
             return extension == ".crz3" || extension == ".crz3t";
+        }
+
+        protected override void OnConnectionOpened(DbConnection connection)
+        {
+            base.OnConnectionOpened(connection);
+
+#if SYSTEM_DATA_SQLITE
+            connection.ExecuteNonQuery("PRAGMA foreign_keys=on;", exceptionProcessor: ExceptionProcessor);
+#endif
         }
     }
 }
