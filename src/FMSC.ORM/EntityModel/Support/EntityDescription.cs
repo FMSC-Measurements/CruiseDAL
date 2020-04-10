@@ -9,72 +9,54 @@ namespace FMSC.ORM.EntityModel.Support
 {
     public class EntityDescription
     {
-        public Type EntityType { get; private set; }
+        public Type EntityType { get; }
 
-        public String SourceName
-        {
-            get { return (Source != null) ? Source.SourceName : null; }
-        }
+        public String SourceName => Source?.SourceName;
 
         public TableOrSubQuery Source { get; set; }
+        public FieldInfoCollection Fields { get; set; } = new FieldInfoCollection();
 
-        public FieldInfoCollection Fields { get; set; }
-
-        public Dictionary<string, PropertyAccessor> Properties { get; set; }
-
-        //public Dictionary<String, ReferenceAttribute> ReferenceFields { get; set; }
-
-        public EntityCommandBuilder CommandBuilder { get; set; }
-
-        protected EntityDescription()
-        {
-            Fields = new FieldInfoCollection();
-            //Properties = new Dictionary<string, PropertyAccessor>();
-        }
-
-        public EntityDescription(Type type) : this()
+        public EntityDescription(Type type)
         {
             EntityType = type;
-            Initialize();
-
-            this.CommandBuilder = new EntityCommandBuilder(this);
+            Fields = new FieldInfoCollection(type);
+            Source = InitializeSource(type);
         }
 
-        protected void Initialize()
+        protected static TableOrSubQuery InitializeSource(Type type)
         {
             try
             {
                 //read Entity attribute
-                var eAttr = EntityType.GetCustomAttributes(typeof(TableAttribute), true)
+                var eAttr = type.GetCustomAttributes(typeof(TableAttribute), true)
                     .OfType<TableAttribute>()
                     .FirstOrDefault();
 
-                if (eAttr != null)
+                if (eAttr is null)
                 {
-                    var source = Source = new TableOrSubQuery(eAttr.Name);
+                    return new TableOrSubQuery(type.Name);
+                }
+                else
+                {
+                    var source = new TableOrSubQuery(eAttr.Name);
 
                     // to provide backwards compatibility 
                     // check if it is a EntitySourceAttr
 #pragma warning disable CS0618 // Type or member is obsolete
                     if (eAttr is EntitySourceAttribute)
-
                     {
                         var esa = (EntitySourceAttribute)eAttr;
                         source.Alias = esa.Alias;
                         source.Joins = esa.JoinCommands;
                     }
 #pragma warning restore CS0618 // Type or member is obsolete
-                }
-                else
-                {
-                    Source = new TableOrSubQuery(EntityType.Name);
-                }
 
-                Fields = CreateFieldInfoCollection(EntityType);
+                    return source;
+                }
             }
             catch (Exception e)
             {
-                throw new ORMException("Unable to initialize EntityDescription for " + EntityType.Name, e);
+                throw new ORMException("Unable to initialize EntityDescription for " + type.Name, e);
             }
         }
 

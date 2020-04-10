@@ -10,6 +10,7 @@ using System.Linq;
 using FMSC.ORM.EntityModel.Attributes;
 using System.Collections.Generic;
 using FMSC.ORM.EntityModel.Support;
+using FMSC.ORM.Sql;
 
 namespace CruiseDAL.Tests
 {
@@ -50,8 +51,8 @@ namespace CruiseDAL.Tests
         void ValidateCRUD(CruiseDatastore ds, Type type)
         {
             var entDesc = new EntityDescription(type);
-            var commandBuilder = entDesc.CommandBuilder;
-            var selectBuilder = commandBuilder.MakeSelectCommand(null);
+            var commandBuilder = new CommandBuilder();
+            var selectBuilder = commandBuilder.BuildSelect(entDesc.Source, entDesc.Fields);
 
             var selectCommand = selectBuilder.ToString();
             var selectResult = ds.QueryGeneric(selectCommand);

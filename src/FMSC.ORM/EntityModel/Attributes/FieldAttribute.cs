@@ -8,14 +8,11 @@ namespace FMSC.ORM.EntityModel.Attributes
     public class FieldAttribute : BaseFieldAttribute
     {
         public string Name { get; set; }
-        public PersistanceFlags PersistanceFlags { get; set; }
+        public PersistanceFlags PersistanceFlags { get; set; } = PersistanceFlags.Always;
         public string Alias { get; set; }
         public string SQLExpression { get; set; }
 
-        public FieldAttribute()
-        {
-            PersistanceFlags = PersistanceFlags.Always;
-        }
+        public FieldAttribute() { }
 
         public FieldAttribute(string fieldName) : this()
         {

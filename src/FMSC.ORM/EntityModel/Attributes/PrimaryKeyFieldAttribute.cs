@@ -1,16 +1,15 @@
 ﻿namespace FMSC.ORM.EntityModel.Attributes
 {
-    public enum KeyType { None = 0, RowID, GUID }
-
     public class PrimaryKeyFieldAttribute : FieldAttribute
     {
         public PrimaryKeyFieldAttribute() : base()
-        { }
+        { 
+            PersistanceFlags = PersistanceFlags.Never; 
+        }
 
         public PrimaryKeyFieldAttribute(string fieldName) : base(fieldName)
         {
+            PersistanceFlags = PersistanceFlags.Never;
         }
-
-        public KeyType KeyType { get; set; }
     }
 }

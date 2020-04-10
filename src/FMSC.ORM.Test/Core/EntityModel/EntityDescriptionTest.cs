@@ -36,13 +36,9 @@ namespace FMSC.ORM.EntityModel.Support
         private void VerifyDataObjectInfoFields(EntityDescription doi)
         {
             var primaryKeyField = doi.Fields.PrimaryKeyField;
-            primaryKeyField.Should().NotBeNull();
-            primaryKeyField.Name.Should().NotBeNullOrEmpty();
+            
 
-            doi.Fields.PrimaryKeyField.Property.Getter.Should().NotBeNull();
-            doi.Fields.PrimaryKeyField.Property.Setter.Should().NotBeNull();
-
-            VerifyField(doi, nameof(POCOMultiTypeObject.ID));
+            VerifyPKField(doi, nameof(POCOMultiTypeObject.ID));
             VerifyField(doi, nameof(POCOMultiTypeObject.StringField));
             VerifyField(doi, nameof(POCOMultiTypeObject.IntField));
             VerifyField(doi, nameof(POCOMultiTypeObject.NIntField));
@@ -75,6 +71,20 @@ namespace FMSC.ORM.EntityModel.Support
             VerifyNonvisableField(doi, "PrivateAutomaticField");
             VerifyNonvisableField(doi, "IInterface.InterfaceProperty");
             VerifyNonvisableField(doi, "InterfaceProperty");
+        }
+
+        private void VerifyPKField(EntityDescription doi, string fieldName)
+        {
+            var pkField = doi.Fields.PrimaryKeyField;
+            pkField.Should().NotBeNull();
+            pkField.Name.Should().Be(fieldName);
+            fieldName.Should().NotBeNullOrWhiteSpace();
+
+            pkField.Property.Getter.Should().NotBeNull();
+            pkField.Property.Setter.Should().NotBeNull();
+            pkField.PersistanceFlags.Should().Be(PersistanceFlags.Never);
+
+            doi.Fields.Should().Contain(pkField);
         }
 
         private void VerifyField(EntityDescription doi, string fieldName)

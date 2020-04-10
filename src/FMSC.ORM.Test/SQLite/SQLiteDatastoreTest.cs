@@ -482,39 +482,7 @@ namespace FMSC.ORM.SQLite
             }
         }
 
-        [Fact]
-        public void GetLastInsertRowID()
-        {
-            using (var ds = new SQLiteDatastore())
-            {
-                using (var connection = ds.OpenConnection())
-                {
-                    connection.ExecuteNonQuery("CREATE TABLE tbl (id INTEGER PRIMARY KEY AUTOINCREMENT, col1 TEXT);", null, null);
-
-                    connection.ExecuteNonQuery("INSERT INTO tbl (col1) VALUES ('something');", null, null);
-
-                    ds.GetLastInsertRowID(connection, (DbTransaction)null).Should().Be(1);
-                }
-            }
-        }
-
-        [Fact]
-        public void GetLastInsertKeyValue()
-        {
-            using (var ds = new SQLiteDatastore())
-            {
-                using (var connection = ds.OpenConnection())
-                {
-                    var keyValue = "something";
-
-                    connection.ExecuteNonQuery("CREATE TABLE tbl (id TEXT PRIMARY KEY);", null, null);
-
-                    connection.ExecuteNonQuery($"INSERT INTO tbl (id) VALUES ('{keyValue}');", null, null);
-                    var result = ds.GetLastInsertKeyValue(connection, "tbl", "id", null);
-                    result.Should().Be(keyValue);
-                }
-            }
-        }
+        
 
         [Fact]
         public void SetTableAutoIncrementStartTest()
@@ -856,7 +824,7 @@ namespace FMSC.ORM.SQLite
 
                 result.Should().NotBeNull();
 
-                result.Should().BeEquivalentTo(poco);
+                result.Should().BeEquivalentTo(poco, config => config.Excluding(y => y.ID));
             }
         }
 

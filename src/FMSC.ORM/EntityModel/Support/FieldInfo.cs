@@ -21,15 +21,14 @@ namespace FMSC.ORM.EntityModel.Support
             Alias = fieldAttribute.Alias;
             SQLExpression = fieldAttribute.SQLExpression;
 
-            if (fieldAttribute is PrimaryKeyFieldAttribute)
+            if (fieldAttribute is PrimaryKeyFieldAttribute pkFieldAttr)
             {
                 IsKeyField = true;
-                KeyType = ((PrimaryKeyFieldAttribute)fieldAttribute).KeyType;
             }
 
-            if (fieldAttribute is InfrastructureFieldAttribute)
+            if (fieldAttribute is InfrastructureFieldAttribute iAttr)
             {
-                DefaultValueProvider = ((InfrastructureFieldAttribute)fieldAttribute).DefaultValueProvider;
+                DefaultValueProvider = iAttr.DefaultValueProvider;
             }
         }
 
@@ -40,7 +39,7 @@ namespace FMSC.ORM.EntityModel.Support
         public PersistanceFlags PersistanceFlags { get; set; } = PersistanceFlags.Always;
 
         public bool IsKeyField { get; set; }
-        public KeyType KeyType { get; set; }
+        public bool IsAutoGenerate { get; set; }
 
         public Func<object> DefaultValueProvider { get; set; }
 
@@ -55,8 +54,7 @@ namespace FMSC.ORM.EntityModel.Support
 
         public object GetFieldValueOrDefault(Object obj)
         {
-            var defaultValue = DefaultValueProvider?.Invoke();
-            return GetFieldValue(obj) ?? defaultValue;
+            return GetFieldValue(obj) ?? DefaultValueProvider?.Invoke();
         }
 
         public void SetFieldValue(Object dataObject, object value)

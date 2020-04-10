@@ -6,6 +6,7 @@ using System.Linq;
 using Xunit;
 using Xunit.Abstractions;
 using FMSC.ORM.Test;
+using FMSC.ORM.Sql;
 
 namespace FMSC.ORM.EntityModel.Support
 {
@@ -31,9 +32,9 @@ namespace FMSC.ORM.EntityModel.Support
         public void MakeSelectCommandTest()
         {
             var ed = new EntityDescription(typeof(POCOMultiTypeObject));
-            var commandBuilder = ed.CommandBuilder;
+            var commandBuilder = new CommandBuilder();
 
-            var selectBuilder = commandBuilder.MakeSelectCommand(null);
+            var selectBuilder = commandBuilder.BuildSelect(ed.Source, ed.Fields);
             var commandText = selectBuilder.ToString();
 
             Output.WriteLine(commandText);
@@ -49,11 +50,11 @@ namespace FMSC.ORM.EntityModel.Support
             var data = new POCOMultiTypeObject();
 
             var ed = new EntityDescription(typeof(POCOMultiTypeObject));
-            var commandBuilder = ed.CommandBuilder;
+            var commandBuilder = new CommandBuilder();
 
             using (var command = DbProvider.CreateCommand())
             {
-                commandBuilder.BuildInsertCommand(command, data, null, OnConflictOption.Default);
+                commandBuilder.BuildInsert(command, data, ed.SourceName, ed.Fields, OnConflictOption.Default);
 
                 ValidateCommand(command);
 
@@ -72,11 +73,11 @@ namespace FMSC.ORM.EntityModel.Support
             var data = new POCOMultiTypeObject();
 
             var ed = new EntityDescription(typeof(POCOMultiTypeObject));
-            var commandBuilder = ed.CommandBuilder;
+            var commandBuilder = new CommandBuilder();
 
             using (var command = DbProvider.CreateCommand())
             {
-                commandBuilder.BuildInsertCommand(command, data, 1, OnConflictOption.Default);
+                commandBuilder.BuildInsert(command, data, ed.SourceName, ed.Fields, OnConflictOption.Default, keyValue: 1 );
                 var commandText = command.CommandText;
                 Output.WriteLine(commandText);
 
@@ -91,13 +92,16 @@ namespace FMSC.ORM.EntityModel.Support
         public void BuildUpdateTest()
         {
             var ed = new EntityDescription(typeof(POCOMultiTypeObject));
-            var commandBuilder = ed.CommandBuilder;
+            var commandBuilder = new CommandBuilder();
 
-            var data = new POCOMultiTypeObject();
+            var data = new POCOMultiTypeObject()
+            {
+                ID = 1,
+            };
 
             using (var command = DbProvider.CreateCommand())
             {
-                commandBuilder.BuildUpdateCommand(command, data, 1, OnConflictOption.Default);
+                commandBuilder.BuildUpdate(command, data, ed.SourceName, ed.Fields, OnConflictOption.Default);
                 var commandText = command.CommandText;
 
                 ValidateCommand(command);
@@ -119,17 +123,16 @@ namespace FMSC.ORM.EntityModel.Support
         [Fact]
         public void BuildDeleteTest()
         {
-            var ed = new EntityDescription(typeof(POCOMultiTypeObject));
-
             var data = new POCOMultiTypeObject()
             {
                 ID = 1,
             };
 
-            var commandBuilder = ed.CommandBuilder;
+            var ed = new EntityDescription(typeof(POCOMultiTypeObject));
+            var commandBuilder = new CommandBuilder();
             using (var command = DbProvider.CreateCommand())
             {
-                commandBuilder.BuildSQLDeleteCommand(command, data);
+                commandBuilder.BuildDelete(command, data, ed.SourceName, ed.Fields);
                 var commandText = command.CommandText;
 
                 ValidateCommand(command);

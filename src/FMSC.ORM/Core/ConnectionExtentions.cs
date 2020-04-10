@@ -1,21 +1,28 @@
 ﻿using Backpack.SqlBuilder;
 using FMSC.ORM.EntityModel;
+using FMSC.ORM.EntityModel.Attributes;
 using FMSC.ORM.EntityModel.Support;
 using FMSC.ORM.Logging;
+using FMSC.ORM.Sql;
 using System;
 using System.Collections.Generic;
 using System.Data.Common;
 using System.Diagnostics;
+using System.Linq;
 
 namespace FMSC.ORM.Core
 {
     public static class ConnectionExtentions
     {
-        private static ILogger _logger = LoggerProvider.Get();
+        private static ILogger Logger { get; } = LoggerProvider.Get();
+        private static ICommandBuilder DefaultCommandBuilder { get; set; } = new CommandBuilder();
+        private static IEntityDescriptionLookup DescriptionLookup { get; set; } = GlobalEntityDescriptionLookup.Instance;
 
         #region ExecuteNonQuery
 
-        public static int ExecuteNonQuery(this DbConnection connection, string commandText, object[] parameters = null, DbTransaction transaction = null)
+        public static int ExecuteNonQuery(this DbConnection connection, string commandText, object[] parameters = null,
+                                          DbTransaction transaction = null,
+                                          IExceptionProcessor exceptionProcessor = null)
         {
             if (string.IsNullOrEmpty(commandText)) { throw new ArgumentException("command can't be null or empty", "command"); }
             if (connection == null) { throw new ArgumentNullException("connection"); }
@@ -25,11 +32,24 @@ namespace FMSC.ORM.Core
                 command.CommandText = commandText;
                 command.SetParams(parameters);
 
-                return ConnectionExtentions.ExecuteNonQuery(connection, command, transaction);
+                try
+                {
+                    return ConnectionExtentions.ExecuteNonQuery(connection, command, transaction);
+                }
+                catch (Exception e)
+                {
+                    if (exceptionProcessor is null) { throw; }
+                    else
+                    {
+                        throw exceptionProcessor.ProcessException(e, connection, commandText, transaction);
+                    }
+                }
             }
         }
 
-        public static int ExecuteNonQuery2(this DbConnection connection, string commandText, object parameterData = null, DbTransaction transaction = null)
+        public static int ExecuteNonQuery2(this DbConnection connection, string commandText, object parameterData = null,
+                                           DbTransaction transaction = null,
+                                           IExceptionProcessor exceptionProcessor = null)
         {
             if (string.IsNullOrEmpty(commandText)) { throw new ArgumentException("command can't be null or empty", "command"); }
             if (connection == null) { throw new ArgumentNullException("connection"); }
@@ -39,11 +59,22 @@ namespace FMSC.ORM.Core
                 command.CommandText = commandText;
                 command.AddParams(parameterData);
 
-                return ConnectionExtentions.ExecuteNonQuery(connection, command, transaction);
+                try
+                {
+                    return ConnectionExtentions.ExecuteNonQuery(connection, command, transaction);
+                }
+                catch (Exception e)
+                {
+                    if (exceptionProcessor is null) { throw; }
+                    else
+                    { throw exceptionProcessor.ProcessException(e, connection, commandText, transaction); }
+                }
             }
         }
 
-        public static int ExecuteNonQuery(this DbConnection connection, DbCommand command, DbTransaction transaction = null)
+        public static int ExecuteNonQuery(this DbConnection connection, DbCommand command,
+                                          DbTransaction transaction = null,
+                                          IExceptionProcessor exceptionProcessor = null)
         {
             if (connection == null) { throw new ArgumentNullException("connection"); }
             if (command == null) { throw new ArgumentNullException("command"); }
@@ -54,16 +85,26 @@ namespace FMSC.ORM.Core
                 command.Transaction = transaction;
             }
 
-            _logger.LogCommand(command);
+            Logger.LogCommand(command);
 
-            return command.ExecuteNonQuery();
+            try
+            {
+                return command.ExecuteNonQuery();
+            }
+            catch (Exception e)
+            {
+                if (exceptionProcessor is null) { throw; }
+                else { throw exceptionProcessor.ProcessException(e, connection, command.CommandText, transaction); }
+            }
         }
 
         #endregion ExecuteNonQuery
 
         #region ExecuteReader
 
-        public static DbDataReader ExecuteReader(this DbConnection connection, DbCommand command, DbTransaction transaction = null)
+        public static DbDataReader ExecuteReader(this DbConnection connection, DbCommand command,
+                                                 DbTransaction transaction = null,
+                                                 IExceptionProcessor exceptionProcessor = null)
         {
             if (connection == null) { throw new ArgumentNullException("connection"); }
             if (command == null) { throw new ArgumentNullException("command"); }
@@ -74,16 +115,26 @@ namespace FMSC.ORM.Core
                 command.Transaction = transaction;
             }
 
-            _logger.LogCommand(command);
+            Logger.LogCommand(command);
 
-            return command.ExecuteReader();
+            try
+            {
+                return command.ExecuteReader();
+            }
+            catch (Exception e)
+            {
+                if (exceptionProcessor is null) { throw; }
+                else { throw exceptionProcessor.ProcessException(e, connection, command.CommandText, transaction); }
+            }
         }
 
         #endregion ExecuteReader
 
         #region ExecuteScalar
 
-        public static object ExecuteScalar(this DbConnection connection, string commandText, object[] parameters = null, DbTransaction transaction = null)
+        public static object ExecuteScalar(this DbConnection connection, string commandText, object[] parameters = null,
+                                           DbTransaction transaction = null,
+                                           IExceptionProcessor exceptionProcessor = null)
         {
             if (connection is null) { throw new ArgumentNullException(nameof(connection)); }
             if (commandText is null) { throw new ArgumentNullException(nameof(commandText)); }
@@ -93,13 +144,27 @@ namespace FMSC.ORM.Core
                 command.CommandText = commandText;
                 command.SetParams(parameters);
 
-                command.Transaction = transaction;
+                if (transaction != null)
+                {
+                    command.Transaction = transaction;
+                }
 
-                return command.ExecuteScalar();
+                try
+                {
+                    return command.ExecuteScalar();
+                }
+                catch (Exception e)
+                {
+                    if (exceptionProcessor is null) { throw; }
+                    else
+                    { throw exceptionProcessor.ProcessException(e, connection, commandText, transaction); }
+                }
             }
         }
 
-        public static object ExecuteScalar2(this DbConnection connection, string commandText, object parameterData = null, DbTransaction transaction = null)
+        public static object ExecuteScalar2(this DbConnection connection, string commandText,
+                                            object parameterData = null, DbTransaction transaction = null,
+                                            IExceptionProcessor exceptionProcessor = null)
         {
             if (connection is null) { throw new ArgumentNullException(nameof(connection)); }
             if (string.IsNullOrEmpty(commandText)) { throw new ArgumentException("commandText can not be null or empty", nameof(commandText)); }
@@ -114,20 +179,32 @@ namespace FMSC.ORM.Core
                     command.Transaction = transaction;
                 }
 
-                return command.ExecuteScalar();
+                try
+                {
+                    return command.ExecuteScalar();
+                }
+                catch (Exception e)
+                {
+                    if (exceptionProcessor is null) { throw; }
+                    else
+                    { throw exceptionProcessor.ProcessException(e, connection, commandText, transaction); }
+                }
             }
         }
 
-        public static T ExecuteScalar<T>(this DbConnection connection, string commandText, object[] parameters = null, DbTransaction transaction = null)
+        public static T ExecuteScalar<T>(this DbConnection connection, string commandText, object[] parameters = null,
+                                         DbTransaction transaction = null, IExceptionProcessor exceptionProcessor = null)
         {
-            var result = ExecuteScalar(connection, commandText, parameters, transaction);
+            var result = ExecuteScalar(connection, commandText, parameters, transaction, exceptionProcessor);
 
             return ValueMapper.ProcessValue<T>(result);
         }
 
-        public static T ExecuteScalar2<T>(this DbConnection connection, string commandText, object parameters = null, DbTransaction transaction = null)
+        public static T ExecuteScalar2<T>(this DbConnection connection, string commandText, object parameters = null,
+                                          DbTransaction transaction = null,
+                                          IExceptionProcessor exceptionProcessor = null)
         {
-            var result = ExecuteScalar2(connection, commandText, parameters, transaction);
+            var result = ExecuteScalar2(connection, commandText, parameters, transaction, exceptionProcessor);
 
             return ValueMapper.ProcessValue<T>(result);
         }
@@ -138,7 +215,10 @@ namespace FMSC.ORM.Core
 
         #region QueryScalar
 
-        public static IEnumerable<TResult> QueryScalar<TResult>(this DbConnection connection, string commandText, object[] paramaters = null, DbTransaction transaction = null, IExceptionProcessor exceptionProcessor = null)
+        public static IEnumerable<TResult> QueryScalar<TResult>(this DbConnection connection, string commandText,
+                                                                object[] paramaters = null,
+                                                                DbTransaction transaction = null,
+                                                                IExceptionProcessor exceptionProcessor = null)
         {
             var targetType = typeof(TResult);
 
@@ -175,7 +255,10 @@ namespace FMSC.ORM.Core
             }
         }
 
-        public static IEnumerable<TResult> QueryScalar2<TResult>(this DbConnection connection, string commandText, object paramaters = null, DbTransaction transaction = null, IExceptionProcessor exceptionProcessor = null)
+        public static IEnumerable<TResult> QueryScalar2<TResult>(this DbConnection connection, string commandText,
+                                                                 object paramaters = null,
+                                                                 DbTransaction transaction = null,
+                                                                 IExceptionProcessor exceptionProcessor = null)
         {
             var targetType = typeof(TResult);
 
@@ -184,7 +267,7 @@ namespace FMSC.ORM.Core
                 command.CommandText = commandText;
                 command.AddParams(paramaters);
 
-                using (var reader = connection.ExecuteReader(command, transaction))
+                using (var reader = connection.ExecuteReader(command, transaction: transaction, exceptionProcessor: exceptionProcessor))
                 {
                     while (reader.Read())
                     {
@@ -214,17 +297,198 @@ namespace FMSC.ORM.Core
 
         #endregion QueryScalar
 
-        public static void Delete(this DbConnection connection, object data, DbTransaction transaction = null)
+        #region QueryGeneric
+        public static IEnumerable<GenericEntity> QueryGeneric(this DbConnection connection, string commandText, DbTransaction transaction = null, IExceptionProcessor exceptionProcessor = null)
+        {
+            return connection.QueryGeneric2(commandText, (object)null, transaction: transaction, exceptionProcessor: exceptionProcessor);
+        }
+
+        public static IEnumerable<GenericEntity> QueryGeneric2(this DbConnection connection, string commandText, object paramaters, DbTransaction transaction = null, IExceptionProcessor exceptionProcessor = null)
+        {
+
+            using (var command = connection.CreateCommand())
+            {
+                command.CommandText = commandText;
+                command.AddParams(paramaters);
+
+                using (var reader = connection.ExecuteReader(command, transaction: transaction, exceptionProcessor: exceptionProcessor))
+                {
+                    while (reader.Read())
+                    {
+                        var fieldCount = reader.FieldCount;
+                        var fields = new string[fieldCount];
+                        for (int i = 0; i < fieldCount; i++)
+                        {
+                            fields[i] = reader.GetName(i);
+                        }
+
+                        var data = new GenericEntity(fieldCount);
+
+                        try
+                        {
+                            foreach (var x in fields.Select((field, i) => new { field, i }))
+                            {
+
+                                var value = reader.GetValue(x.i);
+                                data.Add(x.field, value);
+                            }
+                        }
+                        catch (Exception e)
+                        {
+                            if (exceptionProcessor is null) { throw; }
+                            else
+                            { throw exceptionProcessor.ProcessException(e, connection, commandText, transaction); }
+                        }
+
+                        yield return data;
+
+                    }
+                }
+            }
+
+
+        }
+        #endregion 
+
+        public static object Insert(this DbConnection connection, object data, string tableName = null,
+                                    EntityDescription entityDescription = null, DbTransaction transaction = null,
+                                    OnConflictOption option = OnConflictOption.Default,
+                                    ICommandBuilder commandBuilder = null, IExceptionProcessor exceptionProcessor = null,
+                                    object keyValue = null)
+        {
+            if (data is null) { throw new ArgumentNullException(nameof(data)); }
+
+            entityDescription = entityDescription ?? DescriptionLookup.LookUpEntityByType(data.GetType());
+            tableName = tableName ?? entityDescription.SourceName;
+
+            return Insert(connection, data, tableName, entityDescription.Fields,
+                transaction: transaction,
+                option: option,
+                commandBuilder: commandBuilder,
+                exceptionProcessor: exceptionProcessor,
+                keyValue: keyValue);
+        }
+
+        internal static object Insert(this DbConnection connection, object data, string tableName,
+                                      IFieldInfoCollection fields, DbTransaction transaction = null,
+                                      OnConflictOption option = OnConflictOption.Default,
+                                      ICommandBuilder commandBuilder = null,
+                                      IExceptionProcessor exceptionProcessor = null, object keyValue = null)
+        {
+            if (data == null) { throw new ArgumentNullException("data"); }
+
+            commandBuilder = commandBuilder ?? DefaultCommandBuilder;
+
+            if (data is IPersistanceTracking ptData) { ptData.OnInserting(); }
+
+
+            using (var command = connection.CreateCommand())
+            {
+                commandBuilder.BuildInsert(command, data, tableName, fields,
+                    option: option,
+                    keyValue: keyValue);
+
+                try
+                {
+                    var id = command.ExecuteScalar();
+
+                    var pkField = fields.PrimaryKeyField;
+                    if (pkField != null)
+                    {
+                        var value = ValueMapper.ProcessValue(pkField.RunTimeType, id);
+                        pkField.SetFieldValue(data, value);
+
+                        return value;
+                    }
+                    else
+                    { return id; }
+                }
+                catch (Exception ex)
+                {
+                    if (exceptionProcessor is null)
+                    { throw; }
+                    else { throw exceptionProcessor.ProcessException(ex, connection, (string)null, transaction); }
+                }
+            }
+        }
+
+        public static void Update(this DbConnection connection, object data, string tableName = null,
+                                  EntityDescription entityDescription = null,
+                                  OnConflictOption option = OnConflictOption.Default, DbTransaction transaction = null,
+                                  IExceptionProcessor exceptionProcessor = null, object keyValue = null)
+        {
+            if (data is null) { throw new ArgumentNullException("data"); }
+
+            entityDescription = entityDescription ?? DescriptionLookup.LookUpEntityByType(data.GetType());
+            tableName = tableName ?? entityDescription.SourceName;
+
+            Update(connection, data, tableName, entityDescription.Fields,
+                option: option,
+                transaction: transaction,
+                exceptionProcessor: exceptionProcessor,
+                keyValue: keyValue);
+        }
+
+        internal static void Update(this DbConnection connection, object data, string tableName,
+                                  IFieldInfoCollection fields, OnConflictOption option = OnConflictOption.Default,
+                                  DbTransaction transaction = null, ICommandBuilder commandBuilder = null,
+                                  IExceptionProcessor exceptionProcessor = null, object keyValue = null)
+        {
+            if (data is null) { throw new ArgumentNullException("data"); }
+
+            commandBuilder = commandBuilder ?? DefaultCommandBuilder;
+
+            if (data is IPersistanceTracking)
+            {
+                ((IPersistanceTracking)data).OnUpdating();
+            }
+
+            using (var command = connection.CreateCommand())
+            {
+                commandBuilder.BuildUpdate(command, data, tableName, fields, option, keyValue);
+
+                try
+                {
+                    var changes = ExecuteNonQuery(connection, command, transaction);
+                    if (option != OnConflictOption.Ignore)
+                    {
+                        Debug.Assert(changes > 0, "update command resulted in no changes");
+                    }
+                }
+                catch (Exception e)
+                {
+                    if (exceptionProcessor != null)
+                    { exceptionProcessor.ProcessException(e, connection, command.CommandText, transaction); }
+                    else { throw; }
+                }
+            }
+
+            if (data is IPersistanceTracking)
+            {
+                ((IPersistanceTracking)data).OnUpdated();
+            }
+        }
+
+        public static void Delete(this DbConnection connection, object data, string tableName = null,
+                                  EntityDescription entityDescription = null, DbTransaction transaction = null,
+                                  ICommandBuilder commandBuilder = null, IExceptionProcessor exceptionProcessor = null)
+        {
+            if (data is null) { throw new ArgumentNullException(nameof(data)); }
+
+            entityDescription = entityDescription ?? DescriptionLookup.LookUpEntityByType(data.GetType());
+            tableName = tableName ?? entityDescription.SourceName;
+
+            Delete(connection, data, tableName, entityDescription.Fields, transaction, commandBuilder);
+        }
+
+        internal static void Delete(this DbConnection connection, object data, string tableName,
+                                  IFieldInfoCollection fields, DbTransaction transaction = null,
+                                  ICommandBuilder commandBuilder = null, IExceptionProcessor exceptionProcessor = null)
         {
             if (connection is null) { throw new ArgumentNullException(nameof(connection)); }
             if (data is null) { throw new ArgumentNullException("data"); }
 
-            EntityDescription entityDescription = GlobalEntityDescriptionLookup.Instance.LookUpEntityByType(data.GetType());
-            var keyFieldInfo = entityDescription.Fields.PrimaryKeyField;
-
-            if (keyFieldInfo == null) { throw new InvalidOperationException("type doesn't have primary key field"); }
-
-            EntityCommandBuilder builder = entityDescription.CommandBuilder;
+            commandBuilder = commandBuilder ?? DefaultCommandBuilder;
 
             lock (data)
             {
@@ -235,9 +499,18 @@ namespace FMSC.ORM.Core
 
                 using (var command = connection.CreateCommand())
                 {
-                    builder.BuildSQLDeleteCommand(command, data);
+                    commandBuilder.BuildDelete(command, data, tableName, fields);
 
-                    ExecuteNonQuery(connection, command, transaction);
+                    try
+                    {
+                        ExecuteNonQuery(connection, command, transaction);
+                    }
+                    catch (Exception e)
+                    {
+                        if (exceptionProcessor is null) throw;
+                        else
+                        { exceptionProcessor.ProcessException(e, connection, command.CommandText, transaction); }
+                    }
                 }
 
                 if (data is IPersistanceTracking)
@@ -247,105 +520,25 @@ namespace FMSC.ORM.Core
             }
         }
 
-        //public static object Insert(this DbConnection connection, object data, DbTransaction transaction, OnConflictOption option)
-        //{
-        //    if (data == null) { throw new ArgumentNullException("data"); }
-
-        //    EntityDescription entityDescription = GlobalEntityDescriptionLookup.Instance.LookUpEntityByType(data.GetType());
-        //    var keyField = entityDescription.Fields.PrimaryKeyField;
-        //    object keyData = (keyField != null) ? keyField.GetFieldValue(data) : null;
-        //    return Insert(connection, data, keyData, transaction, option);
-        //}
-
-        //public static object Insert(this DbConnection connection, object data, object keyData, DbTransaction transaction, OnConflictOption option)
-        //{
-        //    if (data == null) { throw new ArgumentNullException("data"); }
-
-        //    EntityDescription entityDescription = GlobalEntityDescriptionLookup.Instance.LookUpEntityByType(data.GetType());
-        //    EntityCommandBuilder builder = entityDescription.CommandBuilder;
-
-        //    if (data is IPersistanceTracking)
-        //    {
-        //        ((IPersistanceTracking)data).OnInserting();
-        //    }
-
-        //    using (var command = connection.CreateCommand())
-        //    {
-        //        builder.BuildInsertCommand(command, data, keyData, option);
-
-        //        var changes = ExecuteNonQuery(connection, command, transaction);
-        //        if (changes == 0)   //command did not result in any changes to the database
-        //        {
-        //            return null;    //so do not try to get the rowid or call OnInsertedData
-        //        }
-        //        else
-        //        {
-        //            var primaryKeyField = entityDescription.Fields.PrimaryKeyField;
-        //            if (primaryKeyField != null)
-        //            {
-        //                if (primaryKeyField.KeyType == KeyType.RowID)
-        //                {
-        //                    keyData = GetLastInsertRowID(connection, transaction);
-        //                }
-        //                else
-        //                {
-        //                    keyData = GetLastInsertKeyValue(connection, entityDescription.SourceName, primaryKeyField.Name, transaction);
-        //                }
-
-        //                primaryKeyField.SetFieldValue(data, keyData);
-        //            }
-
-        //            if (data is IPersistanceTracking)
-        //            {
-        //                ((IPersistanceTracking)data).OnInserted();
-        //            }
-
-        //            return keyData;
-        //        }
-        //    }
-        //}
-
-        public static void Update(this DbConnection connection, object data, OnConflictOption option, DbTransaction transaction = null)
-        {
-            if (data is null) { throw new ArgumentNullException("data"); }
-
-            EntityDescription entityDescription = GlobalEntityDescriptionLookup.Instance.LookUpEntityByType(data.GetType());
-            EntityCommandBuilder builder = entityDescription.CommandBuilder;
-            var keyField = entityDescription.Fields.PrimaryKeyField;
-            object keyData = keyField.GetFieldValue(data);
-
-            Update(connection, data, keyData, option, transaction);
-        }
-
-        public static void Update(this DbConnection connection, object data, object keyData, OnConflictOption option, DbTransaction transaction = null)
-        {
-            if (data is null) { throw new ArgumentNullException("data"); }
-
-            EntityDescription entityDescription = GlobalEntityDescriptionLookup.Instance.LookUpEntityByType(data.GetType());
-            EntityCommandBuilder builder = entityDescription.CommandBuilder;
-
-            if (data is IPersistanceTracking)
-            {
-                ((IPersistanceTracking)data).OnUpdating();
-            }
-
-            using (var command = connection.CreateCommand())
-            {
-                builder.BuildUpdateCommand(command, data, keyData, option);
-
-                var changes = ExecuteNonQuery(connection, command, transaction);
-                if (option != OnConflictOption.Ignore)
-                {
-                    Debug.Assert(changes > 0, "update command resulted in no changes");
-                }
-            }
-
-            if (data is IPersistanceTracking)
-            {
-                ((IPersistanceTracking)data).OnUpdated();
-            }
-        }
-
         #endregion CRUD
+
+        public static long GetLastInsertRowID(this DbConnection connection, DbTransaction transaction = null,
+                                              IExceptionProcessor exceptionProcessor = null)
+        {
+            if (connection is null) { throw new ArgumentNullException(nameof(connection)); }
+
+            var cmdText = "SELECT last_insert_rowid();";
+            try
+            {
+                return connection.ExecuteScalar<long>(cmdText, (object[])null, transaction);
+            }
+            catch (Exception e)
+            {
+                if (exceptionProcessor != null)
+                { throw exceptionProcessor.ProcessException(e, connection, cmdText, transaction); }
+                else { throw; }
+            }
+        }
+
     }
 }
