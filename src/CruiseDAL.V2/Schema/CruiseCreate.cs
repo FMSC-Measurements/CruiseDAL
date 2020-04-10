@@ -110,6 +110,7 @@
 
                 UNIQUE (SampleGroup_CN),
 
+				--note cascading updates and deletes may not function because foreign keys is typicly off for V2
                 FOREIGN KEY (SampleGroup_CN) REFERENCES SampleGroup (SampleGroup_CN) ON DELETE CASCADE ON UPDATE CASCADE
     );
 
