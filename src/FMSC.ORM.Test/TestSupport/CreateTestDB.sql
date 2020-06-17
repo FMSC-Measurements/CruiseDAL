@@ -15,6 +15,7 @@
 	GuidField TEXT,
 	DateTimeField DATETIME
 	PartialyPublicField TEXT,
+	ImplicitNamedField TEXT,
 	AutomaticStringField TEXT,
 	PrivateField TEXT,
 	CreatedBy TEXT,

@@ -67,6 +67,11 @@ namespace FMSC.ORM.TestSupport.TestModels
         [Field("EnumField")]
         public TypeCode EnumField { get; set; }
 
+        [Field]
+        // test field mapped without needing to explicitly provide field name
+        public string ImplicitNamedField { get; set; }
+
+        // test field mapped without a [Field] attribute
         public string AutomaticStringField { get; set; }
 
         #region non visible fields

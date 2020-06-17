@@ -27,6 +27,7 @@ namespace FMSC.ORM.TestSupport
 	StrDateTimeField DATETIME,
     EnumField TEXT,
 	PartialyPublicField TEXT,
+	ImplicitNamedField TEXT,
     AutomaticStringField TEXT,
     PartialyPublicAutomaticField TEXT,
 	PrivateField TEXT,

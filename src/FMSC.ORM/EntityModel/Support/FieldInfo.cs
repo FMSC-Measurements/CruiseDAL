@@ -16,7 +16,7 @@ namespace FMSC.ORM.EntityModel.Support
 
         public FieldInfo(FieldAttribute fieldAttribute, PropertyAccessor propertyAccessor) : this(propertyAccessor)
         {
-            Name = fieldAttribute.Name;
+            Name = fieldAttribute.Name ?? propertyAccessor.Name;
             PersistanceFlags = fieldAttribute.PersistanceFlags;
             Alias = fieldAttribute.Alias;
             SQLExpression = fieldAttribute.SQLExpression;

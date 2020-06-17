@@ -199,6 +199,10 @@ namespace FMSC.ORM.TestSupport.TestModels
         [Field(Name = "PrivateField")]
         private string PrivateField { get; set; }
 
+        [Field]
+        // test field mapped without needing to explicitly provide field name
+        public string ImplicitNamedField { get; set; }
+
         #region automatic fields
 
         public string AutomaticStringField { get; set; }
