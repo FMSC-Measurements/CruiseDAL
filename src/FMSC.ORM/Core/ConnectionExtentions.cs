@@ -328,9 +328,19 @@ namespace FMSC.ORM.Core
                         {
                             foreach (var x in fields.Select((field, i) => new { field, i }))
                             {
+                                try
+                                {
+                                    var value = reader.GetValue(x.i);
+                                    data.Add(x.field, value);
+                                }
+                                catch(FormatException)
+                                {
+                                    // if a value is saved as a string 
+                                    // but the column type of different 
 
-                                var value = reader.GetValue(x.i);
-                                data.Add(x.field, value);
+                                    var value = reader.GetString(x.i);
+                                    data.Add(x.field, value);
+                                }
                             }
                         }
                         catch (Exception e)

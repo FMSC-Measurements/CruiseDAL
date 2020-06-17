@@ -817,14 +817,28 @@ namespace FMSC.ORM.SQLite
                 var poco = CreateRandomPoco(nulls);
                 ds.Insert(poco);
 
-                var stuff = ds.QueryGeneric("SELECT * FROM MultiPropTable;");
-
                 var result = ds.Query<POCOMultiTypeObject>("SELECT * FROM MultiPropTable;")
                     .SingleOrDefault();
 
                 result.Should().NotBeNull();
 
                 result.Should().BeEquivalentTo(poco, config => config.Excluding(y => y.ID));
+            }
+        }
+
+        [Theory]
+        [InlineData(true)]
+        [InlineData(false)]
+        public void QueryGeneric_Test(bool nulls)
+        {
+            using (var ds = new SQLiteDatastore())
+            {
+                ds.Execute(TestDBBuilder.CREATE_MULTIPROPTABLE);
+
+                var poco = CreateRandomPoco(nulls);
+                ds.Insert(poco);
+
+                var stuff = ds.QueryGeneric("SELECT * FROM MultiPropTable;").ToArray();
             }
         }
 
