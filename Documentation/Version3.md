@@ -412,6 +412,13 @@ It may be possible that some files have tree field setups that use invalid or no
 in the previous database it is possible for species and live dead values to not match up with the tree default value on a tree. This could cause a tree to be moved into a different population during the migration process. This is why we audit the database before hand and see that is free of errors. 
 
 
-
+ # ongoing considerations
+ - custom fields for cutting unit
+ - remove unit code length constraint and add separate field for TIM unit code
+ - species codes
+ - device specific hotkeys 
+ - de-duplicate fields across tree and tally ledger
+ - remove foreign key reference to tree default value in treeAuditRule_treeDefaultValue table
+ - translate guids coming from the old database, or use generated ids, or just generate a fresh new guid because I think a backwards translation is out. 
 
 
