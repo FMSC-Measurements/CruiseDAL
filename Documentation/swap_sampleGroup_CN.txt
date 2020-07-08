@@ -1,0 +1,32 @@
+
+BEGIN;
+PRAGMA defer_foreign_keys = true;
+
+update samplegroup set SampleGroup_CN = @target1 + 10000000 where SampleGroup_CN = @target1;
+
+update CountTree SET SampleGroup_CN = @target1 + 10000000 where SampleGroup_CN = @target1;
+
+Update Tree SET SampleGroup_CN = @target1 + 10000000 where SampleGroup_CN = @target1;
+
+Update SampleGroupTreeDefaultValue SET SampleGroup_CN = @target1 + 10000000 where SampleGroup_CN = @target1;
+
+--Swap step 2
+
+UPDATE SampleGroup SET SampleGroup_CN = @target1 WHERE SampleGroup_CN = @target2;
+
+UPDATE CountTree SET SampleGroup_CN = @target1 WHERE SampleGroup_CN = @target2;
+
+UPDATE Tree SET SampleGroup_CN = @target1 WHERE SampleGroup_CN = @target2;
+
+UPDATE SampleGroupTreeDefaultValue SET SampleGroup_CN = @target1 WHERE SampleGroup_CN = @target2;
+
+--Swap step 3
+UPDATE SampleGroup SET SampleGroup_CN = @target2 WHERE SampleGroup_CN = @target1 + 10000000;
+
+UPDATE CountTree SET SampleGroup_CN = @target2 WHERE SampleGroup_CN = @target1 + 10000000;
+
+UPDATE Tree SET SampleGroup_CN = @target2 WHERE SampleGroup_CN = @target1 + 10000000;
+
+UPDATE SampleGroupTreeDefaultValue SET SampleGroup_CN = @target2 WHERE SampleGroup_CN = @target1 + 10000000;
+
+COMMIT;

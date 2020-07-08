@@ -1,0 +1,23 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <!--targeting netstandard2.0 so that the FMSC.ORM.Test can be referenced by FMSC.ORM.Test.Android-->
+    <!--<TargetFrameworks>netcoreapp2.0;net472;netstandard2.0</TargetFrameworks>-->
+    <TargetFrameworks>$(TestsTargetFrameworks)</TargetFrameworks>
+    <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
+    <LangVersion>8.0</LangVersion>
+    <RootNamespace>FMSC.ORM</RootNamespace>
+    <Platform>x64</Platform>
+    <IsPackable>false</IsPackable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="xunit.runner.visualstudio" Version="2.4.1" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.1.1" />
+    <ProjectReference Include="..\FMSC.ORM\FMSC.ORM.csproj" />
+    <PackageReference Include="AutoBogus" Version="2.6.0" />
+    <PackageReference Include="Bogus" Version="28.0.2" />
+    <PackageReference Include="FluentAssertions" Version="5.6.0" />
+    <PackageReference Include="xunit" Version="2.4.1" />
+  </ItemGroup>
+</Project>

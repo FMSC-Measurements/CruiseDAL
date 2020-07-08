@@ -1,0 +1,14 @@
+﻿<Project>
+  <Target Name ="CopyOutputToTools"
+          AfterTargets="Build">
+
+    <ItemGroup>
+      <ModelGenFiles Include="$(MSBuildProjectDirectory)\$(OutPutPath)**\*.*" />
+    </ItemGroup>
+    
+     <Message Importance="high" Text="Coping output files to $(ModelGenToolDirectory)"/>
+    
+    <Copy SourceFiles="@(ModelGenFiles)"
+        DestinationFiles="@(ModelGenFiles->'$(ModelGenToolDirectory)%(RecursiveDir)%(Filename)%(Extension)')"/>
+  </Target>
+</Project>

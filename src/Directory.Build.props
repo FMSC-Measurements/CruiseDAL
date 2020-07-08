@@ -1,0 +1,92 @@
+<Project>
+  <PropertyGroup Label="Package Info">
+    <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
+    <Authors>Benjamin Campbell</Authors>
+    <PackageProjectUrl>https://github.com/FMSC-Measurements/CruiseDAL</PackageProjectUrl>
+    <RepositoryType>git</RepositoryType>
+    <RepositoryUrl>https://github.com/FMSC-Measurements/CruiseDAL.git</RepositoryUrl>
+  </PropertyGroup>
+
+  <PropertyGroup Label="CustomProperties">
+
+    <BuildCF>true</BuildCF>
+    <LibTargetFrameworks>net40;net461;netstandard20;</LibTargetFrameworks>
+    <LibTargetFrameworks Condition="'$(BuildCF)' == 'true'">$(LibTargetFrameworks)net35-cf;</LibTargetFrameworks>
+
+    <TestsTargetFrameworks>net452;net461;netcoreapp2.0;</TestsTargetFrameworks>
+
+    <FMSCORMversion>2.6.2</FMSCORMversion>
+
+    <CruiseDALv2SchemaVersion>2.7.0</CruiseDALv2SchemaVersion>
+    <CruiseDALv3SchemaVersion>3.0.3</CruiseDALv3SchemaVersion>
+    <CruiseDALIncrementalVersion>64</CruiseDALIncrementalVersion>
+    <CruiseDALCoreVersion>3.0.0.$(CruiseDALIncrementalVersion)</CruiseDALCoreVersion>
+    <CruiseDALV2Version>$(CruiseDALv2SchemaVersion).$(CruiseDALIncrementalVersion)</CruiseDALV2Version>
+    <CruiseDALV3Version>$(CruiseDALv3SchemaVersion).$(CruiseDALIncrementalVersion)</CruiseDALV3Version>
+    <CruiseDALV3ModelsVersion>$(CruiseDALv3SchemaVersion).$(CruiseDALIncrementalVersion)</CruiseDALV3ModelsVersion>
+    <CruiseDALV2ModelsVersion>$(CruiseDALv2SchemaVersion).$(CruiseDALIncrementalVersion)</CruiseDALV2ModelsVersion>
+
+    <FMSCORMToolsDirectory>$(MSBuildThisFileDirectory)tools\</FMSCORMToolsDirectory>
+    <ModelGenToolDirectory>$(FMSCORMToolsDirectory)ModelGen\</ModelGenToolDirectory>
+  </PropertyGroup>
+
+  <!-- when targeting net461 SqlitePCL.Raw cant find e_sqlite3 becuase of xunit's shadow coppy feature
+  see https://github.com/reactiveui/Akavache/pull/496 and https://github.com/xunit/xunit/issues/1198 -->
+  <ItemGroup Condition="$(IsTestProject) == 'true' AND $(TargetFramework) == 'net461'">
+    <Content Include="$(MSBuildThisFileDirectory)xunit.runner.json" CopyToOutputDirectory="PreserveNewest" />
+  </ItemGroup>
+
+  <PropertyGroup Condition="$(TargetFramework) == 'net35-cf' OR $(TargetFramework) == 'net40' OR $(TargetFramework.StartsWith('net45'))">
+    <SystemDataSqlite>true</SystemDataSqlite>
+    <DefineConstants>$(DefineConstants);SYSTEM_DATA_SQLITE</DefineConstants>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="$(TargetFramework.StartsWith('netstandard')) OR $(TargetFramework.StartsWith('netcoreapp')) OR $(TargetFramework.StartsWith('net46'))">
+    <MicrosoftDataSqlite>true</MicrosoftDataSqlite>
+    <DefineConstants>$(DefineConstants);MICROSOFT_DATA_SQLITE</DefineConstants>
+  </PropertyGroup>
+
+  <ItemGroup Condition="$(SystemDataSqlite) == 'true' And '$(TargetFramework)' != 'net35-cf'">
+    <PackageReference Include="System.Data.SQLite.Core" Version="1.0.110" PrivateAssets="none" />
+  </ItemGroup>
+
+  <ItemGroup Condition="$(SystemDataSqlite) == 'true' And $(TargetFramework) == 'net35-cf'">
+    <Reference Include="System.Data.SQLite">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\libs\SQLite\Mobile_CF35\System.Data.SQLite.dll</HintPath>
+    </Reference>
+    <Content Include="..\libs\SQLite\Mobile_CF35\System.Data.SQLite.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\libs\SQLite\Mobile_CF35\SQLite.Interop.112.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\libs\SQLite\Mobile_CF35\System.Data.SQLite.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+
+  <PropertyGroup Condition="'$(TargetFramework)' == 'net35-cf'">
+    <TargetFrameworkIdentifier>.NETFramework</TargetFrameworkIdentifier>
+    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+    <TargetFrameworkProfile>CompactFramework</TargetFrameworkProfile>
+    <DefineConstants>$(DefineConstants);NET35_CF;WindowsCE;</DefineConstants>
+    <DisableImplicitFrameworkReferences>True</DisableImplicitFrameworkReferences>
+    <NoStdLib>True</NoStdLib>
+    <NoConfig>true</NoConfig>
+    <FileAlignment>512</FileAlignment>
+    <GenerateSerializationAssemblies>Off</GenerateSerializationAssemblies>
+    <PlatformID>E2BECB1F-8C8C-41ba-B736-9BE7D946A398</PlatformID>
+    <Optimize>False</Optimize>
+  </PropertyGroup>
+
+  <ItemGroup Condition="'$(TargetFramework)' == 'net35-cf'">
+    <Reference Include="mscorlib, Version=3.5.0.0, Culture=neutral, PublicKeyToken=969db8053d3322ac" />
+    <Reference Include="System, Version=3.5.0.0, Culture=neutral, PublicKeyToken=969db8053d3322ac" />
+    <Reference Include="System.Core, Version=3.5.0.0, Culture=neutral, PublicKeyToken=969db8053d3322ac" />
+    <Reference Include="System.Data, Version=3.5.0.0, Culture=neutral, PublicKeyToken=969db8053d3322ac" />
+    <Reference Include="System.Runtime.Serialization, Version=3.5.0.0, Culture=neutral, PublicKeyToken=969db8053d3322ac" />
+    <Reference Include="System.Xml, Version=3.5.0.0, Culture=neutral, PublicKeyToken=969db8053d3322ac" />
+    <Reference Include="System.Xml.Linq, Version=3.5.0.0, Culture=neutral, PublicKeyToken=969db8053d3322ac" />
+  </ItemGroup>
+</Project>

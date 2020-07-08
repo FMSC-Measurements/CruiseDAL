@@ -1,0 +1,32 @@
+PRAGMA FOREIGN_KEYS = OFF; --turn off foreign key checks for now
+BEGIN;
+
+UPDATE CountTree SET Component_CN = @compNum;
+
+UPDATE TreeEstimate SET TreeEstimate_CN = (@compNum * 200000 + (TreeEstimate_CN % 200000));
+
+UPDATE Stem set Stem_CN = (@compNum * 200000 + (Stem_CN % 200000));
+
+UPDATE Log set Log_CN = (@compNum * 200000 + (Log_CN % 200000));
+
+DELETE FROM TreeCalculatedValues;
+DELETE FROM LogStock;
+UPDATE Log set Tree_CN = (@compNum * 200000 + (Tree_CN % 200000));
+UPDATE Stem set Tree_CN = (@compNum * 200000 + (Tree_CN % 200000));
+UPDATE Tree set Tree_CN = (@compNum * 200000 + (Tree_CN % 200000));
+
+UPDATE Tree SET Plot_CN = (@compNum * 1000 + (Plot_CN % 1000)) WHERE Plot_CN IS NOT NULL;
+UPDATE Plot SET Plot_CN = (@compNum * 1000 + (Plot_CN % 1000));
+
+PRAGMA FOREIGN_KEYS = ON; --resume foreign key checks
+PRAGMA FOREIGN_KEY_CHECK; --check for any foreign key errors
+
+UPDATE sqlite_sequence SET seq = (SELECT ifnull(max(Tree_CN), @compNum * 200000)  FROM Tree) WHERE name == 'Tree';
+UPDATE sqlite_sequence SET seq = (SELECT ifnull(max(Plot_CN),  @compNum * 1000) FROM Plot) WHERE name == 'Plot';
+UPDATE sqlite_sequence SET seq = (SELECT ifnull(max(Log_CN), @compNum * 200000) FROM Log) WHERE name == 'Log';
+UPDATE sqlite_sequence SET seq = (SELECT ifnull(max(TreeEstimate_CN), @compNum * 200000) FROM TreeEstimate) WHERE name == 'TreeEstimate';
+UPDATE sqlite_sequence SET seq = (SELECT ifnull(max(Stem_CN), @compNum * 200000) FROM Stem) WHERE name == 'Stem';
+
+--select * from sqlite_sequence;
+
+--COMMIT;

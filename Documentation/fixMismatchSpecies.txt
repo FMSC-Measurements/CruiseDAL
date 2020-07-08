@@ -1,0 +1,9 @@
+update tree as t 
+set species = (select species from treedefaultvalue as tdv where t.treedefaultvalue_cn = tdv.treedefaultvalue_cn) 
+where tree_cn in (
+	select tree_cn from tree as t 
+	join treedefaultvalue as tdv using (treedefaultvalue_cn)
+	where t.species != tdv.species);
+
+select tree_cn from tree as t join treedefaultvalue as tdv using (treedefaultvalue_cn)
+where t.species != tdv.species;

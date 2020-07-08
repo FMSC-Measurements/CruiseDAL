@@ -1,1 +1,0 @@
-nuget pack CruiseDAL.VS15.csproj -Build -IncludeReferencedProjects -properties Configuration=Release;Platform=AnyCPU

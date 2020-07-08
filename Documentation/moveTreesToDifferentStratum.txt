@@ -1,0 +1,22 @@
+--make sure that new sample groups line up with old samplegroups
+
+
+
+update tree 
+set stratum_CN = @destStratum,
+sampleGroup_CN = (select result.SampleGroup_CN FROM samplegroup as result WHERE result.Stratum_CN = @destStratum AND result.Code =(select Code FROM SampleGroup AS t1 WHERE t1.SampleGroup_CN = Tree.SampleGroup_CN))
+where tree.CuttingUnit_CN = @srcUnit
+AND tree.Stratum_CN = @scrcStratum
+AND EXISTS (select result.SampleGroup_CN FROM samplegroup as result WHERE result.Stratum_CN = @destStratum AND result.Code = (select Code FROM SampleGroup AS t1 WHERE t1.SampleGroup_CN = Tree.SampleGroup_CN));
+
+update plot
+set stratum_CN = @destStratum
+where @scrcStratum
+and CuttingUnit_CN = @srcUnit;
+
+--pragma foreign_key_check;
+
+--select SampleGroup.Code, cuttingUnit_CN, tree.Stratum_CN from tree 
+--join SampleGroup using (SampleGroup_CN)
+--where SampleGroup.Stratum_CN = 1
+--group by SampleGroup.code, Tree.Stratum_CN;

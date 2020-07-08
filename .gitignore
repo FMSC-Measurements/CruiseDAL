@@ -1,4 +1,8 @@
+.vs/
 
+PackageOutput/
+
+src/tools/ModelGen/
 
 /InnoSetupFiles/Output/
 /CruiseSystemManager/STPinfo/
@@ -140,6 +144,7 @@ publish/
 *.nupkg
 # The packages folder can be ignored because of Package Restore
 **/packages/*
+!**/local-packages/*.nupkg
 # except build/, which is used as an MSBuild target.
 !**/packages/build/
 # If using the old MSBuild-Integrated Package Restore, uncomment this:
