@@ -1059,7 +1059,7 @@ plotTriggerDDL + ";\r\n" +
 logTriggerDDL + ";\r\n" +
 stemTriggerDDL + ";\r\n" +
 treeEstimateDDL + ";\r\n" +
-@"PRAGMA primary_keys = on;
+@"PRAGMA foreign_keys = on;
 COMMIT;");
 
 
