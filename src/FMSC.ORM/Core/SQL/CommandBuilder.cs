@@ -36,16 +36,10 @@ namespace FMSC.ORM.Sql
 
         protected static string MakeResultColumnExpression(FieldInfo field, TableOrSubQuery source)
         {
-            var sqlExpression = field.SQLExpression;
             var alias = field.Alias;
-            if (!string.IsNullOrEmpty(sqlExpression))
+            if (alias != null)
             {
-                System.Diagnostics.Debug.Assert(!string.IsNullOrEmpty(alias));
-                return sqlExpression + " AS " + alias;
-            }
-            else if (alias != null)
-            {
-                return alias;
+                return field.SQLExpression + " AS " + alias;
             }
             else
             {

@@ -744,8 +744,33 @@ namespace FMSC.ORM.SQLite
         //    }
         //}
 
+        [Theory]
+        [InlineData(true)]
+        [InlineData(false)]
+        public void FluentInterfaceTest_Single_Record(bool nulls)
+        {
+            using (var ds = new SQLiteDatastore())
+            {
+                ds.Execute(TestDBBuilder.CREATE_MULTIPROPTABLE);
+
+                var poco = CreateRandomPoco(nulls);
+                ds.Insert(poco);
+
+                var result = ds.From<POCOMultiTypeObject>().Query()
+                    .SingleOrDefault();
+
+                result.Should().NotBeNull();
+
+                result.Should().BeEquivalentTo(poco, config => config
+                .Excluding(y => y.ID)
+                .Excluding(y => y.AliasForStringField));
+
+                result.AliasForStringField.Should().Be(result.StringField);
+            }
+        }
+
         [Fact]
-        public void FluentInterfaceTest()
+        public void FluentInterfaceTest_With_Many()
         {
             int recordsToCreate = 1000;
 
@@ -822,7 +847,9 @@ namespace FMSC.ORM.SQLite
 
                 result.Should().NotBeNull();
 
-                result.Should().BeEquivalentTo(poco, config => config.Excluding(y => y.ID));
+                result.Should().BeEquivalentTo(poco, config => config
+                .Excluding(y => y.ID)
+                .Excluding(y => y.AliasForStringField));
             }
         }
 

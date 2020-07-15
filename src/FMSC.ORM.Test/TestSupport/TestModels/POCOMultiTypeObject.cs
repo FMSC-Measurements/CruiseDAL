@@ -74,6 +74,9 @@ namespace FMSC.ORM.TestSupport.TestModels
         // test field mapped without a [Field] attribute
         public string AutomaticStringField { get; set; }
 
+        [Field(Alias = "AliasForStringField", SQLExpression = "StringField")]
+        public string AliasForStringField { get; set; }
+
         #region non visible fields
 
         public object ObjectField { get; set; }
