@@ -82,7 +82,7 @@ namespace FMSC.ORM.EntityModel.Support
         {
             try
             {
-                var fieldName = (field.Name ?? field.Alias).ToLower(System.Globalization.CultureInfo.InvariantCulture);
+                var fieldName = (field.Alias ?? field.Name).ToLower(System.Globalization.CultureInfo.InvariantCulture);
                 int ordinal = -1;
 
                 if (ordinalMapping.TryGetValue(fieldName, out ordinal))

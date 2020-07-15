@@ -12,7 +12,9 @@ namespace FMSC.ORM.EntityModel.Support
 
         public FieldInfo PrimaryKeyField { get; set; }
 
-        public FieldInfoCollection() { }
+        public FieldInfoCollection()
+        {
+        }
 
         public FieldInfoCollection(Type type)
         {
@@ -35,10 +37,7 @@ namespace FMSC.ORM.EntityModel.Support
 
                     if (attr == null)
                     {
-                        var fieldInfo = new FieldInfo(new PropertyAccessor(p))
-                        {
-                            Name = p.Name,
-                        };
+                        var fieldInfo = new FieldInfo(new PropertyAccessor(p));
                         AddField(fieldInfo);
                     }
                     else if (attr is FieldAttribute fAttr)

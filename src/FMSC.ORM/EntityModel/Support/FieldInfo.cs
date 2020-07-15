@@ -9,26 +9,46 @@ namespace FMSC.ORM.EntityModel.Support
         {
         }
 
-        public FieldInfo(PropertyAccessor propertyAccessor)
+        public FieldInfo(PropertyAccessor propertyAccessor) : this((FieldAttribute)null, propertyAccessor)
         {
-            Property = propertyAccessor ?? throw new ArgumentNullException("propertyAccessor");
         }
 
-        public FieldInfo(FieldAttribute fieldAttribute, PropertyAccessor propertyAccessor) : this(propertyAccessor)
+        public FieldInfo(FieldAttribute fieldAttribute, PropertyAccessor propertyAccessor)
         {
-            Name = fieldAttribute.Name ?? propertyAccessor.Name;
-            PersistanceFlags = fieldAttribute.PersistanceFlags;
-            Alias = fieldAttribute.Alias;
-            SQLExpression = fieldAttribute.SQLExpression;
+            Property = propertyAccessor ?? throw new ArgumentNullException("propertyAccessor");
 
-            if (fieldAttribute is PrimaryKeyFieldAttribute pkFieldAttr)
+            if (fieldAttribute != null)
             {
-                IsKeyField = true;
+                var alias = fieldAttribute.Alias;
+                if (string.IsNullOrEmpty(alias) == false)
+                {
+                    Alias = alias;
+                    var expression = fieldAttribute.SQLExpression;
+                    if (string.IsNullOrEmpty(expression))
+                    { throw new InvalidOperationException("If Field Alias is set SQLExpression must be set too"); }
+
+                    SQLExpression = expression;
+                    PersistanceFlags = PersistanceFlags.Never;
+                }
+                else
+                {
+                    Name = fieldAttribute.Name ?? propertyAccessor.Name;
+                    PersistanceFlags = fieldAttribute.PersistanceFlags;
+                }
+
+                if (fieldAttribute is PrimaryKeyFieldAttribute pkFieldAttr)
+                {
+                    IsKeyField = true;
+                }
+
+                if (fieldAttribute is InfrastructureFieldAttribute iAttr)
+                {
+                    DefaultValueProvider = iAttr.DefaultValueProvider;
+                }
             }
-
-            if (fieldAttribute is InfrastructureFieldAttribute iAttr)
+            else
             {
-                DefaultValueProvider = iAttr.DefaultValueProvider;
+                Name = propertyAccessor.Name;
             }
         }
 
@@ -71,8 +91,16 @@ namespace FMSC.ORM.EntityModel.Support
 
         public override string ToString()
         {
-            return String.Format("EntityFieldInfo RunTimeType({0}), FieldName({1}), Expression({2})",
-                 RunTimeType, Name ?? "null", SQLExpression ?? "null");
+            var alias = Alias;
+            if(alias != null)
+            {
+                return $"EntityFieldInfo RunTimeType({RunTimeType}), Alias({alias}), Expression({SQLExpression})";
+            }
+            else
+            {
+                return String.Format("EntityFieldInfo RunTimeType({0}), FieldName({1})",
+                 RunTimeType, Name ?? "null");
+            }
         }
     }
 }
