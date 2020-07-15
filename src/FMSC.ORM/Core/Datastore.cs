@@ -209,40 +209,7 @@ namespace FMSC.ORM.Core
             }
         }
 
-        public void Save(IPersistanceTracking data, OnConflictOption option = OnConflictOption.Default, bool cache = true)
-        {
-            if (data == null) { throw new ArgumentNullException("data"); }
-
-            if (data is System.ComponentModel.IChangeTracking
-                && ((System.ComponentModel.IChangeTracking)data).IsChanged == false)
-            {
-                Logger.Log("save skipped because data has no changes", LogCategory.CRUD, LogLevel.Verbose);
-                return;
-            }
-
-            if (!data.IsPersisted)
-            {
-                object primaryKey = Insert(data, option: option);
-                if (cache && primaryKey != null)
-                {
-                    EntityCache cacheStore = GetEntityCache(data.GetType());
-
-                    Debug.Assert(cacheStore.ContainsKey(primaryKey) == false, "Cache already contains entity, existing entity will be replaced");
-                    if (cacheStore.ContainsKey(primaryKey))
-                    {
-                        cacheStore[primaryKey] = data;
-                    }
-                    else
-                    {
-                        cacheStore.Add(primaryKey, data);
-                    }
-                }
-            }
-            else
-            {
-                Update(data, option: option);
-            }
-        }
+        
 
         #region read methods
 

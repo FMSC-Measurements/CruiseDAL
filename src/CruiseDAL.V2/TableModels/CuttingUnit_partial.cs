@@ -25,7 +25,7 @@ namespace CruiseDAL.DataObjects
             
         }
 
-        protected override void OnDALChanged(Datastore newDAL)
+        protected override void OnDALChanged(DAL newDAL)
         {
             base.OnDALChanged(newDAL);
             if (_Strata != null)

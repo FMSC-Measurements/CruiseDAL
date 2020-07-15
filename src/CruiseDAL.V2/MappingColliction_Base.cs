@@ -1,4 +1,5 @@
-﻿using FMSC.ORM.Core;
+﻿using CruiseDAL;
+using FMSC.ORM.Core;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -32,9 +33,9 @@ namespace FMSC.ORM.EntityModel
             protected set;
         }
 
-        private Datastore _DAL;
+        private DAL _DAL;
 
-        public Datastore DAL
+        public DAL DAL
         {
             get { return _DAL; }
             set

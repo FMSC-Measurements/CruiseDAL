@@ -74,5 +74,97 @@ namespace CruiseDAL.V2.DataObjects
                 tree.Tree_GUID.Should().Be(tree_guid_1);
             }
         }
+
+        [Fact]
+        public void Save()
+        {
+            using (var ds = new DAL())
+            {
+                ds.Insert(new CuttingUnitDO() { Code = "u1", CuttingUnit_CN = 1 });
+                ds.Insert(new StratumDO() { Code = "st1", Stratum_CN = 1, Method = "something" });
+                ds.Insert(new SampleGroupDO() { Code = "sg1", SampleGroup_CN = 1, Stratum_CN = 1, CutLeave = "Something", UOM = "bla", PrimaryProduct = "wha" });
+
+                var tree_guid_1 = Guid.NewGuid();
+
+                var tree = new TreeDO(ds)
+                {
+                    CuttingUnit_CN = 1,
+                    Stratum_CN = 1,
+                    SampleGroup_CN = 1,
+                    TreeNumber = 1,
+                    Tree_GUID = tree_guid_1
+                };
+                tree.Save();
+
+                var trees = ds.From<TreeDO>().Query().ToArray();
+                trees.Should().HaveCount(1);
+                var treeAgain = trees.Single();
+                treeAgain.Should().BeEquivalentTo(tree, config => config
+                    .Excluding(x => x.CreatedBy)
+                    .Excluding(x => x.CreatedDate)
+                    .Excluding(x => x.ModifiedBy)
+                    .Excluding(x => x.ModifiedDate)
+                    .Excluding(x => x.Self));
+
+                tree.DBH = 101;
+                tree.Save();
+
+                trees = ds.From<TreeDO>().Query().ToArray();
+                trees.Should().HaveCount(1);
+                treeAgain = trees.Single();
+                treeAgain.Should().BeEquivalentTo(tree, config => config
+                    .Excluding(x => x.CreatedBy)
+                    .Excluding(x => x.CreatedDate)
+                    .Excluding(x => x.ModifiedBy)
+                    .Excluding(x => x.ModifiedDate)
+                    .Excluding(x => x.Self));
+            }
+        }
+
+        [Fact]
+        public void Save_with_Datastore()
+        {
+            using (var ds = new DAL())
+            {
+                ds.Insert(new CuttingUnitDO() { Code = "u1", CuttingUnit_CN = 1 });
+                ds.Insert(new StratumDO() { Code = "st1", Stratum_CN = 1, Method = "something" });
+                ds.Insert(new SampleGroupDO() { Code = "sg1", SampleGroup_CN = 1, Stratum_CN = 1, CutLeave = "Something", UOM = "bla", PrimaryProduct = "wha" });
+
+                var tree_guid_1 = Guid.NewGuid();
+
+                var tree = new TreeDO(ds)
+                {
+                    CuttingUnit_CN = 1,
+                    Stratum_CN = 1,
+                    SampleGroup_CN = 1,
+                    TreeNumber = 1,
+                    Tree_GUID = tree_guid_1
+                };
+                ds.Save(tree);
+
+                var trees = ds.From<TreeDO>().Query().ToArray();
+                trees.Should().HaveCount(1);
+                var treeAgain = trees.Single();
+                treeAgain.Should().BeEquivalentTo(tree, config => config
+                    .Excluding(x => x.CreatedBy)
+                    .Excluding(x => x.CreatedDate)
+                    .Excluding(x => x.ModifiedBy)
+                    .Excluding(x => x.ModifiedDate)
+                    .Excluding(x => x.Self));
+
+                tree.DBH = 101;
+                ds.Save(tree);
+
+                trees = ds.From<TreeDO>().Query().ToArray();
+                trees.Should().HaveCount(1);
+                treeAgain = trees.Single();
+                treeAgain.Should().BeEquivalentTo(tree, config => config
+                    .Excluding(x => x.CreatedBy)
+                    .Excluding(x => x.CreatedDate)
+                    .Excluding(x => x.ModifiedBy)
+                    .Excluding(x => x.ModifiedDate)
+                    .Excluding(x => x.Self));
+            }
+        }
     }
 }

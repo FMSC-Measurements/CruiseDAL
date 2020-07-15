@@ -1,6 +1,5 @@
 ﻿using Backpack.SqlBuilder;
 using FMSC.ORM.EntityModel;
-using FMSC.ORM.EntityModel.Attributes;
 using FMSC.ORM.EntityModel.Support;
 using FMSC.ORM.Logging;
 using FMSC.ORM.Sql;
@@ -298,6 +297,7 @@ namespace FMSC.ORM.Core
         #endregion QueryScalar
 
         #region QueryGeneric
+
         public static IEnumerable<GenericEntity> QueryGeneric(this DbConnection connection, string commandText, DbTransaction transaction = null, IExceptionProcessor exceptionProcessor = null)
         {
             return connection.QueryGeneric2(commandText, (object)null, transaction: transaction, exceptionProcessor: exceptionProcessor);
@@ -305,7 +305,6 @@ namespace FMSC.ORM.Core
 
         public static IEnumerable<GenericEntity> QueryGeneric2(this DbConnection connection, string commandText, object paramaters, DbTransaction transaction = null, IExceptionProcessor exceptionProcessor = null)
         {
-
             using (var command = connection.CreateCommand())
             {
                 command.CommandText = commandText;
@@ -333,10 +332,10 @@ namespace FMSC.ORM.Core
                                     var value = reader.GetValue(x.i);
                                     data.Add(x.field, value);
                                 }
-                                catch(FormatException)
+                                catch (FormatException)
                                 {
-                                    // if a value is saved as a string 
-                                    // but the column type of different 
+                                    // if a value is saved as a string
+                                    // but the column type of different
 
                                     var value = reader.GetString(x.i);
                                     data.Add(x.field, value);
@@ -351,14 +350,14 @@ namespace FMSC.ORM.Core
                         }
 
                         yield return data;
-
                     }
                 }
             }
-
-
         }
-        #endregion 
+
+        #endregion QueryGeneric
+
+
 
         public static object Insert(this DbConnection connection, object data, string tableName = null,
                                     EntityDescription entityDescription = null, DbTransaction transaction = null,
@@ -389,9 +388,6 @@ namespace FMSC.ORM.Core
 
             commandBuilder = commandBuilder ?? DefaultCommandBuilder;
 
-            if (data is IPersistanceTracking ptData) { ptData.OnInserting(); }
-
-
             using (var command = connection.CreateCommand())
             {
                 commandBuilder.BuildInsert(command, data, tableName, fields,
@@ -400,7 +396,11 @@ namespace FMSC.ORM.Core
 
                 try
                 {
+                    var ptData = data as IPersistanceTracking;
+
+                    ptData?.OnInserting();
                     var id = command.ExecuteScalar();
+                    ptData?.OnInserted();
 
                     var pkField = fields.PrimaryKeyField;
                     if (pkField != null)
@@ -549,6 +549,5 @@ namespace FMSC.ORM.Core
                 else { throw; }
             }
         }
-
     }
 }
