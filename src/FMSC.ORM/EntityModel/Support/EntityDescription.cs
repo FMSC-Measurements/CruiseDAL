@@ -1,9 +1,7 @@
 using Backpack.SqlBuilder;
 using FMSC.ORM.EntityModel.Attributes;
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Reflection;
 
 namespace FMSC.ORM.EntityModel.Support
 {
@@ -40,7 +38,7 @@ namespace FMSC.ORM.EntityModel.Support
                 {
                     var source = new TableOrSubQuery(eAttr.Name);
 
-                    // to provide backwards compatibility 
+                    // to provide backwards compatibility
                     // check if it is a EntitySourceAttr
 #pragma warning disable CS0618 // Type or member is obsolete
                     if (eAttr is EntitySourceAttribute)
@@ -58,43 +56,6 @@ namespace FMSC.ORM.EntityModel.Support
             {
                 throw new ORMException("Unable to initialize EntityDescription for " + type.Name, e);
             }
-        }
-
-        public static FieldInfoCollection CreateFieldInfoCollection(Type entityType)
-        {
-            var fields = new FieldInfoCollection();
-
-            //find public properties
-            foreach (PropertyInfo p in entityType.GetProperties(BindingFlags.Public | BindingFlags.Instance))
-            {
-                if(p.CanWrite == false) { continue; }
-                if(p.GetIndexParameters().Any())
-                { continue; } // if property is index property ignore
-
-                var propType = p.PropertyType;
-                propType = Nullable.GetUnderlyingType(propType) ?? propType;
-                var typeCode = Type.GetTypeCode(propType);
-                if(typeCode == TypeCode.Object && propType != typeof(Guid)) { continue; }
-
-                var attr = Attribute.GetCustomAttribute(p, typeof(BaseFieldAttribute))
-                    as BaseFieldAttribute;
-
-                if (attr == null)
-                {
-                    var fieldInfo = new FieldInfo(new PropertyAccessor(p))
-                    {
-                        Name = p.Name,
-                    };
-                    fields.AddField(fieldInfo);
-                }
-                else if (attr is FieldAttribute)
-                {
-                    var fieldInfo = new FieldInfo((FieldAttribute)attr, new PropertyAccessor(p));
-                    fields.AddField(fieldInfo);
-                }
-            }
-
-            return fields;
         }
     }
 }
