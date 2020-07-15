@@ -18,7 +18,7 @@ namespace CruiseDAL
             : this(null)
         { }
 
-        protected DataObject(Datastore ds)
+        protected DataObject(DAL ds)
             : base(ds)
         {
             string tableName = GlobalEntityDescriptionLookup.Instance.LookUpEntityByType(this.GetType()).SourceName;

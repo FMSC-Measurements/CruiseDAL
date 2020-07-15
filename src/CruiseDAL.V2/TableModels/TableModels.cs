@@ -46,7 +46,7 @@ namespace CruiseDAL.DataObjects
             SetValues(obj);
         }
 
-        public SaleDO(Datastore DAL) : base(DAL)
+        public SaleDO(DAL DAL) : base(DAL)
         { }
         #endregion
         [XmlIgnore]
@@ -334,7 +334,7 @@ namespace CruiseDAL.DataObjects
             SetValues(obj);
         }
 
-        public CuttingUnitDO(Datastore DAL) : base(DAL)
+        public CuttingUnitDO(DAL DAL) : base(DAL)
         { }
         #endregion
         [XmlIgnore]
@@ -550,7 +550,7 @@ namespace CruiseDAL.DataObjects
             SetValues(obj);
         }
 
-        public StratumDO(Datastore DAL) : base(DAL)
+        public StratumDO(DAL DAL) : base(DAL)
         { }
         #endregion
         [XmlIgnore]
@@ -876,7 +876,7 @@ namespace CruiseDAL.DataObjects
             SetValues(obj);
         }
 
-        public CuttingUnitStratumDO(Datastore DAL) : base(DAL)
+        public CuttingUnitStratumDO(DAL DAL) : base(DAL)
         { }
         #endregion
         [XmlIgnore]
@@ -1065,7 +1065,7 @@ namespace CruiseDAL.DataObjects
             SetValues(obj);
         }
 
-        public SampleGroupDO(Datastore DAL) : base(DAL)
+        public SampleGroupDO(DAL DAL) : base(DAL)
         { }
         #endregion
         [XmlIgnore]
@@ -1549,7 +1549,7 @@ namespace CruiseDAL.DataObjects
             SetValues(obj);
         }
 
-        public TreeDefaultValueDO(Datastore DAL) : base(DAL)
+        public TreeDefaultValueDO(DAL DAL) : base(DAL)
         { }
         #endregion
         [XmlIgnore]
@@ -1949,7 +1949,7 @@ namespace CruiseDAL.DataObjects
             SetValues(obj);
         }
 
-        public SampleGroupTreeDefaultValueDO(Datastore DAL) : base(DAL)
+        public SampleGroupTreeDefaultValueDO(DAL DAL) : base(DAL)
         { }
         #endregion
         [XmlIgnore]
@@ -2113,7 +2113,7 @@ namespace CruiseDAL.DataObjects
             SetValues(obj);
         }
 
-        public PlotDO(Datastore DAL) : base(DAL)
+        public PlotDO(DAL DAL) : base(DAL)
         { }
         #endregion
         [XmlIgnore]
@@ -2543,7 +2543,7 @@ namespace CruiseDAL.DataObjects
             SetValues(obj);
         }
 
-        public TreeDO(Datastore DAL) : base(DAL)
+        public TreeDO(DAL DAL) : base(DAL)
         { }
         #endregion
         [XmlIgnore]
@@ -3694,7 +3694,7 @@ namespace CruiseDAL.DataObjects
             SetValues(obj);
         }
 
-        public LogDO(Datastore DAL) : base(DAL)
+        public LogDO(DAL DAL) : base(DAL)
         { }
         #endregion
         [XmlIgnore]
@@ -4145,7 +4145,7 @@ namespace CruiseDAL.DataObjects
             SetValues(obj);
         }
 
-        public StemDO(Datastore DAL) : base(DAL)
+        public StemDO(DAL DAL) : base(DAL)
         { }
         #endregion
         [XmlIgnore]
@@ -4332,7 +4332,7 @@ namespace CruiseDAL.DataObjects
             SetValues(obj);
         }
 
-        public CountTreeDO(Datastore DAL) : base(DAL)
+        public CountTreeDO(DAL DAL) : base(DAL)
         { }
         #endregion
         [XmlIgnore]
@@ -4704,7 +4704,7 @@ namespace CruiseDAL.DataObjects
             SetValues(obj);
         }
 
-        public TallyDO(Datastore DAL) : base(DAL)
+        public TallyDO(DAL DAL) : base(DAL)
         { }
         #endregion
         [XmlIgnore]
@@ -4840,7 +4840,7 @@ namespace CruiseDAL.DataObjects
             SetValues(obj);
         }
 
-        public TreeEstimateDO(Datastore DAL) : base(DAL)
+        public TreeEstimateDO(DAL DAL) : base(DAL)
         { }
         #endregion
         [XmlIgnore]
@@ -5007,7 +5007,7 @@ namespace CruiseDAL.DataObjects
             SetValues(obj);
         }
 
-        public FixCNTTallyClassDO(Datastore DAL) : base(DAL)
+        public FixCNTTallyClassDO(DAL DAL) : base(DAL)
         { }
         #endregion
         [XmlIgnore]
@@ -5139,7 +5139,7 @@ namespace CruiseDAL.DataObjects
             SetValues(obj);
         }
 
-        public FixCNTTallyPopulationDO(Datastore DAL) : base(DAL)
+        public FixCNTTallyPopulationDO(DAL DAL) : base(DAL)
         { }
         #endregion
         [XmlIgnore]
@@ -5413,7 +5413,7 @@ namespace CruiseDAL.DataObjects
             SetValues(obj);
         }
 
-        public VolumeEquationDO(Datastore DAL) : base(DAL)
+        public VolumeEquationDO(DAL DAL) : base(DAL)
         { }
         #endregion
         [XmlIgnore]
@@ -5876,7 +5876,7 @@ namespace CruiseDAL.DataObjects
             SetValues(obj);
         }
 
-        public BiomassEquationDO(Datastore DAL) : base(DAL)
+        public BiomassEquationDO(DAL DAL) : base(DAL)
         { }
         #endregion
         [XmlIgnore]
@@ -6146,7 +6146,7 @@ namespace CruiseDAL.DataObjects
             SetValues(obj);
         }
 
-        public ValueEquationDO(Datastore DAL) : base(DAL)
+        public ValueEquationDO(DAL DAL) : base(DAL)
         { }
         #endregion
         [XmlIgnore]
@@ -6396,7 +6396,7 @@ namespace CruiseDAL.DataObjects
             SetValues(obj);
         }
 
-        public QualityAdjEquationDO(Datastore DAL) : base(DAL)
+        public QualityAdjEquationDO(DAL DAL) : base(DAL)
         { }
         #endregion
         [XmlIgnore]
@@ -6646,7 +6646,7 @@ namespace CruiseDAL.DataObjects
             SetValues(obj);
         }
 
-        public ReportsDO(Datastore DAL) : base(DAL)
+        public ReportsDO(DAL DAL) : base(DAL)
         { }
         #endregion
         [XmlIgnore]
@@ -6763,7 +6763,7 @@ namespace CruiseDAL.DataObjects
             SetValues(obj);
         }
 
-        public TreeCalculatedValuesDO(Datastore DAL) : base(DAL)
+        public TreeCalculatedValuesDO(DAL DAL) : base(DAL)
         { }
         #endregion
         [XmlIgnore]
@@ -7511,7 +7511,7 @@ namespace CruiseDAL.DataObjects
             SetValues(obj);
         }
 
-        public LCDDO(Datastore DAL) : base(DAL)
+        public LCDDO(DAL DAL) : base(DAL)
         { }
         #endregion
         [XmlIgnore]
@@ -8602,7 +8602,7 @@ namespace CruiseDAL.DataObjects
             SetValues(obj);
         }
 
-        public POPDO(Datastore DAL) : base(DAL)
+        public POPDO(DAL DAL) : base(DAL)
         { }
         #endregion
         [XmlIgnore]
@@ -9618,7 +9618,7 @@ namespace CruiseDAL.DataObjects
             SetValues(obj);
         }
 
-        public PRODO(Datastore DAL) : base(DAL)
+        public PRODO(DAL DAL) : base(DAL)
         { }
         #endregion
         [XmlIgnore]
@@ -9964,7 +9964,7 @@ namespace CruiseDAL.DataObjects
             SetValues(obj);
         }
 
-        public LogStockDO(Datastore DAL) : base(DAL)
+        public LogStockDO(DAL DAL) : base(DAL)
         { }
         #endregion
         [XmlIgnore]
@@ -10434,7 +10434,7 @@ namespace CruiseDAL.DataObjects
             SetValues(obj);
         }
 
-        public SampleGroupStatsDO(Datastore DAL) : base(DAL)
+        public SampleGroupStatsDO(DAL DAL) : base(DAL)
         { }
         #endregion
         [XmlIgnore]
@@ -11114,7 +11114,7 @@ namespace CruiseDAL.DataObjects
             SetValues(obj);
         }
 
-        public SampleGroupStatsTreeDefaultValueDO(Datastore DAL) : base(DAL)
+        public SampleGroupStatsTreeDefaultValueDO(DAL DAL) : base(DAL)
         { }
         #endregion
         [XmlIgnore]
@@ -11275,7 +11275,7 @@ namespace CruiseDAL.DataObjects
             SetValues(obj);
         }
 
-        public StratumStatsDO(Datastore DAL) : base(DAL)
+        public StratumStatsDO(DAL DAL) : base(DAL)
         { }
         #endregion
         [XmlIgnore]
@@ -11727,7 +11727,7 @@ namespace CruiseDAL.DataObjects
             SetValues(obj);
         }
 
-        public RegressionDO(Datastore DAL) : base(DAL)
+        public RegressionDO(DAL DAL) : base(DAL)
         { }
         #endregion
         [XmlIgnore]
@@ -12052,7 +12052,7 @@ namespace CruiseDAL.DataObjects
             SetValues(obj);
         }
 
-        public LogMatrixDO(Datastore DAL) : base(DAL)
+        public LogMatrixDO(DAL DAL) : base(DAL)
         { }
         #endregion
         [XmlIgnore]
@@ -12362,7 +12362,7 @@ namespace CruiseDAL.DataObjects
             SetValues(obj);
         }
 
-        public TreeDefaultValueTreeAuditValueDO(Datastore DAL) : base(DAL)
+        public TreeDefaultValueTreeAuditValueDO(DAL DAL) : base(DAL)
         { }
         #endregion
         [XmlIgnore]
@@ -12524,7 +12524,7 @@ namespace CruiseDAL.DataObjects
             SetValues(obj);
         }
 
-        public TreeAuditValueDO(Datastore DAL) : base(DAL)
+        public TreeAuditValueDO(DAL DAL) : base(DAL)
         { }
         #endregion
         [XmlIgnore]
@@ -12678,7 +12678,7 @@ namespace CruiseDAL.DataObjects
             SetValues(obj);
         }
 
-        public LogGradeAuditRuleDO(Datastore DAL) : base(DAL)
+        public LogGradeAuditRuleDO(DAL DAL) : base(DAL)
         { }
         #endregion
         [XmlIgnore]
@@ -12796,7 +12796,7 @@ namespace CruiseDAL.DataObjects
             SetValues(obj);
         }
 
-        public LogFieldSetupDO(Datastore DAL) : base(DAL)
+        public LogFieldSetupDO(DAL DAL) : base(DAL)
         { }
         #endregion
         [XmlIgnore]
@@ -13040,7 +13040,7 @@ namespace CruiseDAL.DataObjects
             SetValues(obj);
         }
 
-        public TreeFieldSetupDO(Datastore DAL) : base(DAL)
+        public TreeFieldSetupDO(DAL DAL) : base(DAL)
         { }
         #endregion
         [XmlIgnore]
@@ -13284,7 +13284,7 @@ namespace CruiseDAL.DataObjects
             SetValues(obj);
         }
 
-        public LogFieldSetupDefaultDO(Datastore DAL) : base(DAL)
+        public LogFieldSetupDefaultDO(DAL DAL) : base(DAL)
         { }
         #endregion
         [XmlIgnore]
@@ -13497,7 +13497,7 @@ namespace CruiseDAL.DataObjects
             SetValues(obj);
         }
 
-        public TreeFieldSetupDefaultDO(Datastore DAL) : base(DAL)
+        public TreeFieldSetupDefaultDO(DAL DAL) : base(DAL)
         { }
         #endregion
         [XmlIgnore]
@@ -13729,7 +13729,7 @@ namespace CruiseDAL.DataObjects
             SetValues(obj);
         }
 
-        public CruiseMethodsDO(Datastore DAL) : base(DAL)
+        public CruiseMethodsDO(DAL DAL) : base(DAL)
         { }
         #endregion
         [XmlIgnore]
@@ -13826,7 +13826,7 @@ namespace CruiseDAL.DataObjects
             SetValues(obj);
         }
 
-        public LoggingMethodsDO(Datastore DAL) : base(DAL)
+        public LoggingMethodsDO(DAL DAL) : base(DAL)
         { }
         #endregion
         [XmlIgnore]
@@ -13923,7 +13923,7 @@ namespace CruiseDAL.DataObjects
             SetValues(obj);
         }
 
-        public ProductCodesDO(Datastore DAL) : base(DAL)
+        public ProductCodesDO(DAL DAL) : base(DAL)
         { }
         #endregion
         [XmlIgnore]
@@ -14020,7 +14020,7 @@ namespace CruiseDAL.DataObjects
             SetValues(obj);
         }
 
-        public UOMCodesDO(Datastore DAL) : base(DAL)
+        public UOMCodesDO(DAL DAL) : base(DAL)
         { }
         #endregion
         [XmlIgnore]
@@ -14117,7 +14117,7 @@ namespace CruiseDAL.DataObjects
             SetValues(obj);
         }
 
-        public RegionsDO(Datastore DAL) : base(DAL)
+        public RegionsDO(DAL DAL) : base(DAL)
         { }
         #endregion
         [XmlIgnore]
@@ -14214,7 +14214,7 @@ namespace CruiseDAL.DataObjects
             SetValues(obj);
         }
 
-        public ForestsDO(Datastore DAL) : base(DAL)
+        public ForestsDO(DAL DAL) : base(DAL)
         { }
         #endregion
         [XmlIgnore]
@@ -14387,7 +14387,7 @@ namespace CruiseDAL.DataObjects
             SetValues(obj);
         }
 
-        public ErrorLogDO(Datastore DAL) : base(DAL)
+        public ErrorLogDO(DAL DAL) : base(DAL)
         { }
         #endregion
         [XmlIgnore]
@@ -14579,7 +14579,7 @@ namespace CruiseDAL.DataObjects
             SetValues(obj);
         }
 
-        public MessageLogDO(Datastore DAL) : base(DAL)
+        public MessageLogDO(DAL DAL) : base(DAL)
         { }
         #endregion
         [XmlIgnore]
@@ -14733,7 +14733,7 @@ namespace CruiseDAL.DataObjects
             SetValues(obj);
         }
 
-        public GlobalsDO(Datastore DAL) : base(DAL)
+        public GlobalsDO(DAL DAL) : base(DAL)
         { }
         #endregion
         [XmlIgnore]
@@ -14849,7 +14849,7 @@ namespace CruiseDAL.DataObjects
             SetValues(obj);
         }
 
-        public ComponentDO(Datastore DAL) : base(DAL)
+        public ComponentDO(DAL DAL) : base(DAL)
         { }
         #endregion
         [XmlIgnore]

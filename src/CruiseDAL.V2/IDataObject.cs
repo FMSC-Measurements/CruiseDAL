@@ -2,12 +2,13 @@
 using FMSC.ORM.Core.SQL;
 using Backpack.SqlBuilder;
 using System.ComponentModel;
+using CruiseDAL;
 
 namespace FMSC.ORM.EntityModel
 {
     public interface IDataObject : ISupportInitializeFromDatastore, IPersistanceTracking, IChangeTracking, ISupportInitialize
     {
-        Datastore DAL { get; set; }
+        DAL DAL { get; set; }
 
         void Save();
 

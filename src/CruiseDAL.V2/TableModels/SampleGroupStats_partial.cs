@@ -20,7 +20,7 @@ namespace CruiseDAL.DataObjects
                 return _TreeDefaultValueStats;
             }
         }
-        protected override void OnDALChanged(Datastore newDAL)
+        protected override void OnDALChanged(DAL newDAL)
         {
             base.OnDALChanged(newDAL);
             if (_TreeDefaultValueStats != null)

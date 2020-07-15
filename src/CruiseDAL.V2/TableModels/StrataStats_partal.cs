@@ -9,7 +9,7 @@ namespace CruiseDAL.DataObjects
     public partial class StratumStatsDO
     {
 
-        protected override void OnDALChanged(Datastore newDAL)
+        protected override void OnDALChanged(DAL newDAL)
         {
             base.OnDALChanged(newDAL);
         }

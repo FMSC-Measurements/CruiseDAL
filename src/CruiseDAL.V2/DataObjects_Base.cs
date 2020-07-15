@@ -1,8 +1,8 @@
-﻿using FMSC.ORM.Core;
-using FMSC.ORM.Core.SQL;
+﻿using Backpack.SqlBuilder;
+using CruiseDAL;
+using FMSC.ORM.Core;
 using FMSC.ORM.EntityModel.Attributes;
 using FMSC.ORM.EntityModel.Support;
-using Backpack.SqlBuilder;
 using System;
 using System.ComponentModel;
 using System.Diagnostics;
@@ -26,7 +26,7 @@ namespace FMSC.ORM.EntityModel
         IFormattable,
         IDataObject
     {
-        protected Datastore _ds;
+        protected DAL _ds;
         protected RecordState _recordState = RecordState.Detached;
 
         private bool _isDeleted;
@@ -37,7 +37,7 @@ namespace FMSC.ORM.EntityModel
 
         [XmlIgnore]
         [IgnoreField]
-        public Datastore DAL
+        public DAL DAL
         {
             get
             {
@@ -63,7 +63,7 @@ namespace FMSC.ORM.EntityModel
         {
         }
 
-        protected DataObject_Base(Datastore ds)
+        protected DataObject_Base(DAL ds)
         {
             this.DAL = ds;
         }
@@ -72,7 +72,7 @@ namespace FMSC.ORM.EntityModel
 
         void ISupportInitializeFromDatastore.Initialize(Datastore datastore)
         {
-            DAL = datastore ?? throw new ArgumentNullException("datastore");
+            DAL = (DAL)datastore ?? throw new ArgumentNullException("datastore");
         }
 
         public virtual void Save()
@@ -92,13 +92,13 @@ namespace FMSC.ORM.EntityModel
             DAL.Delete(this);
         }
 
-        protected virtual void OnDALChanged(Datastore newDAL)
+        protected virtual void OnDALChanged(DAL newDAL)
         {
             IsPersisted = false;
             _isChanged = true;
         }
 
-        internal void InternalSetDAL(Datastore newDAL)
+        internal void InternalSetDAL(DAL newDAL)
         {
             _ds = newDAL;
         }
@@ -259,8 +259,6 @@ namespace FMSC.ORM.EntityModel
                 return base.ToString();
             }
         }
-
-        
 
         #endregion IFormattable Members
     }

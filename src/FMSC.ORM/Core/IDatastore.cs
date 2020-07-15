@@ -39,7 +39,6 @@ namespace FMSC.ORM.Core
         void ReleaseConnection();
         void ReleaseConnection(bool force);
         void RollbackTransaction();
-        void Save(IPersistanceTracking data, OnConflictOption option = OnConflictOption.Default, bool cache = true);
         void Update(object data, string tableName = null, OnConflictOption option = OnConflictOption.Default, object keyValue = null);
     }
 }
