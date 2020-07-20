@@ -112,7 +112,12 @@ namespace CruiseDAL
             }
         }
 
-        public void Save(DataObject_Base data, OnConflictOption option = OnConflictOption.Default, bool cache = true)
+        public void Save(DataObject_Base data)
+        {
+            Save(data, OnConflictOption.Default);
+        }
+
+        public void Save(DataObject_Base data, OnConflictOption option, bool cache = true)
         {
             if (data == null) { throw new ArgumentNullException("data"); }
 

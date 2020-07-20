@@ -129,6 +129,11 @@ namespace FMSC.ORM.Core
             return new QueryBuilder<T>(this, builder);
         }
 
+        public QueryBuilder<T> From<T>() where T : class, new()
+        {
+            return From<T>((TableOrSubQuery)null);
+        }
+
         #endregion fluent interface
 
         #region CRUD
