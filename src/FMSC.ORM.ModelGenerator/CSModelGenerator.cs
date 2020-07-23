@@ -1,10 +1,13 @@
-﻿using System;
+﻿using Backpack.SqlBuilder;
+using Backpack.SqlBuilder.Sqlite;
+using System;
 using System.Text;
 
 namespace FMSC.ORM.ModelGenerator
 {
-    public class ModelGenerator
+    public class CSModelGenerator : IGenerator
     {
+        public static ISqlDialect Dialect { get; } = new SqliteDialect();
         private int TAB_SIZE = 4;
 
         public void GenerateFiles(ISchemaInfoProvider provider, string @namespace, string directory)
@@ -15,7 +18,7 @@ namespace FMSC.ORM.ModelGenerator
             }
         }
 
-        public void GenerateFile(TableInfo tableInfo, string @namespace, string directory)
+        public static void GenerateFile(TableInfo tableInfo, string @namespace, string directory)
         {
             var fileContent = GenerateFileContent(tableInfo, @namespace);
 
@@ -26,7 +29,7 @@ namespace FMSC.ORM.ModelGenerator
             System.IO.File.WriteAllText(filePath, fileContent);
         }
 
-        public string GenerateFileContent(TableInfo tableInfo, string @namespace)
+        public static string GenerateFileContent(TableInfo tableInfo, string @namespace)
         {
             var sb = new StringBuilder();
             sb.AppendLine("using System;");
@@ -42,7 +45,7 @@ namespace FMSC.ORM.ModelGenerator
             return sb.ToString();
         }
 
-        public string GenerateClass(TableInfo tableInfo,
+        public static string GenerateClass(TableInfo tableInfo,
             int tabIndex = 0,
             string tableAttr = "Table",
             string fieldAttr = "Field",
@@ -66,9 +69,10 @@ namespace FMSC.ORM.ModelGenerator
 
                 sb.Append(Tab(tabIndex)).AppendLine(attr);
 
-                var typeName = fi.RuntimeTimeType.Name;
+                var runtypeType = DbTypeToRuntimeType(fi.DbType);
+                var typeName = runtypeType.Name;
 
-                if(fi.RuntimeTimeType.IsValueType && fi.NotNull == false)
+                if(runtypeType.IsValueType && fi.NotNull == false)
                 { typeName = typeName + "?"; }
 
                 sb.Append(Tab(tabIndex)).AppendLine($"public {typeName} {fi.FieldName} {{ get; set; }}");
@@ -82,7 +86,7 @@ namespace FMSC.ORM.ModelGenerator
             return sb.ToString();
         }
 
-        private string Tab(int tabCount)
+        private static string Tab(int tabCount)
         {
             var sb = new StringBuilder();
             for (int i = 0; i < tabCount; i++)
@@ -90,6 +94,28 @@ namespace FMSC.ORM.ModelGenerator
                 sb.Append(" ");
             }
             return sb.ToString();
+        }
+
+        public static Type DbTypeToRuntimeType(string dbType)
+        {
+            return Dialect.Try(
+                                y => y.MapSQLtypeToSystemType(dbType),
+                                (z, e) => { Console.WriteLine($"{dbType}| {e.Message}"); return typeof(string); });
+        }
+    }
+
+    public static class ObjectExtentions
+    {
+        public static TReturn Try<TTarget, TReturn>(this TTarget target, Func<TTarget, TReturn> @try, Func<TTarget, Exception, TReturn> @catch)
+        {
+            try
+            {
+                return @try(target);
+            }
+            catch (Exception e)
+            {
+                return @catch(target, e);
+            }
         }
     }
 }

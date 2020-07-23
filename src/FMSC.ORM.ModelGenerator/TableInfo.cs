@@ -13,5 +13,7 @@ namespace FMSC.ORM.ModelGenerator
         public FieldInfo PrimaryKeyField { get; set; }
 
         public IEnumerable<FieldInfo> Fields { get; set; }
+
+        public IEnumerable<ForeignKeyInfo> ForeignKeys { get; set; }
     }
 }
