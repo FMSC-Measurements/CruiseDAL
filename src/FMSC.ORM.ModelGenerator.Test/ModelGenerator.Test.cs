@@ -11,32 +11,28 @@ namespace FMSC.ORM.ModelGenerator.Test
         [Fact]
         public void GenerateClass_Test()
         {
-            var modelGenerator = new ModelGenerator();
             var tableinfo = new TableInfo()
             {
                 TableName = "MyTable",
                 Fields = new[]
                 {
-                    new FieldInfo { FieldName = "col1", RuntimeTimeType = typeof(int)},
-                    new FieldInfo { FieldName = "col2", RuntimeTimeType = typeof(string)},
-                    new FieldInfo { FieldName = "col3", RuntimeTimeType = typeof(double)},
+                    new FieldInfo { FieldName = "col1", DbType = "INTEGER"},
+                    new FieldInfo { FieldName = "col2", DbType = "TEXT"},
+                    new FieldInfo { FieldName = "col3", DbType = "DOUBLE"},
                 },
             };
 
-
-            var generatedCode = modelGenerator.GenerateClass(tableinfo);
+            var generatedCode = CSModelGenerator.GenerateClass(tableinfo);
 
             var root = CSharpSyntaxTree.ParseText(generatedCode).GetRoot() as CompilationUnitSyntax;
             root.Should().NotBeNull();
 
             var @class = root.Members.Single() as ClassDeclarationSyntax;
-            @class.AttributeLists.Should().NotBeEmpty(); // class should have EntitySource attr 
+            @class.AttributeLists.Should().NotBeEmpty(); // class should have EntitySource attr
             @class.Should().NotBeNull();
 
             var properties = @class.Members.OfType<PropertyDeclarationSyntax>().ToArray();
             properties.Should().HaveSameCount(tableinfo.Fields);
-            
-            
         }
     }
 }

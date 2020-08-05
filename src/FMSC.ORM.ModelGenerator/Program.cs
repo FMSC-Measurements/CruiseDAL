@@ -52,8 +52,11 @@ namespace FMSC.ORM.ModelGenerator
 
                             var schemaProvider = new SqliteDatastoreSchemaInfoProvider(datastore, ignoreColmns);
 
-                            var modelGenerator = new ModelGenerator();
+                            var modelGenerator = new CSModelGenerator();
                             modelGenerator.GenerateFiles(schemaProvider, o.Namespace, o.OutputDirectory);
+
+                            var plantUMLGenerator = new PlantUMLGenerator();
+                            plantUMLGenerator.GenerateFiles(schemaProvider, o.Namespace, o.OutputDirectory);
                         }
                     }
                 });
