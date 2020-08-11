@@ -20,6 +20,7 @@
         public const string CREATE_VIEW_TALLYPOPULATION =
             "CREATE VIEW TallyPopulation AS " +
             "SELECT " +
+                "sp.CruiseID" +
                 "sp.StratumCode, " +
                 "sp.SampleGroupCode, " +
                 "sp.Species, " +
@@ -27,12 +28,13 @@
                 "ifnull(td.Description, '') AS Description, " +
                 "ifnull(thk.HotKey, '') AS HotKey " +
             "FROM SubPopulation AS sp " +
-            "JOIN SampleGroup_V3 AS sg USING (StratumCode, SampleGroupCode) " +
-            "LEFT JOIN TallyHotKey AS thk USING (StratumCode, SampleGroupCode, Species, LiveDead) " +
-            "LEFT JOIN TallyDescription AS td USING (StratumCode, SampleGroupCode, Species, LiveDead) " +
+            "JOIN SampleGroup_V3 AS sg USING (StratumCode, SampleGroupCode, CruiseID) " +
+            "LEFT JOIN TallyHotKey AS thk USING (StratumCode, SampleGroupCode, Species, LiveDead, CruiseID) " +
+            "LEFT JOIN TallyDescription AS td USING (StratumCode, SampleGroupCode, Species, LiveDead, CruiseID) " +
             "WHERE sg.TallyBySubPop != 0 " +
             "UNION ALL " +
             "SELECT " +
+                "sp.CruiseID" +
                 "sg.StratumCode, " +
                 "sg.SampleGroupCode, " +
                 "null AS Species, " +
@@ -41,12 +43,14 @@
                 "ifnull(thk.HotKey, '') AS HotKey " +
             "FROM SampleGroup_V3 AS sg " +
             "LEFT JOIN TallyHotKey AS thk ON " +
-                    "thk.StratumCode = sg.StratumCode " +
+                    "thk.CruiseID = sg.CruiseID " +
+                    "AND thk.StratumCode = sg.StratumCode " +
                     "AND thk.SampleGroupCode = sg.SampleGroupCode " +
                     "AND ifnull(thk.Species, '') = '' " +
                     "AND ifnull(thk.LiveDead, '') = '' " +
             "LEFT JOIN TallyDescription AS td ON " +
-                    "td.StratumCode = sg.StratumCode " +
+                    "thk.CruiseID = sg.CruiseID " +
+                    "AND td.StratumCode = sg.StratumCode " +
                     "AND td.SampleGroupCode = sg.SampleGroupCode " +
                     "AND ifnull(td.Species, '') = '' " +
                     "AND ifnull(td.LiveDead, '') = '' " +

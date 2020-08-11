@@ -7,6 +7,7 @@
                 "Plot_CN INTEGER PRIMARY KEY AUTOINCREMENT, " +
                 "PlotID TEXT NOT NULL, " +
                 "PlotNumber INTEGER NOT NULL, " +
+                "CruiseID TEXT NOT NULL COLLATE NOCASE, " +
                 "CuttingUnitCode TEXT NOT NULL COLLATE NOCASE, " +
                 "Slope REAL Default 0.0, " +
                 "Aspect REAL Default 0.0, " +
@@ -23,16 +24,16 @@
                 "CHECK (PlotID LIKE '________-____-____-____-____________'), " +
 
                 "UNIQUE (PlotID), " +
-                "UNIQUE (PlotNumber, CuttingUnitCode)," +
+                "UNIQUE (PlotNumber, CuttingUnitCode, CruiseID)," +
 
-                "FOREIGN KEY (CuttingUnitCode) REFERENCES CuttingUnit (Code) ON DELETE CASCADE ON UPDATE CASCADE " +
+                "FOREIGN KEY (CuttingUnitCode, CruiseID) REFERENCES CuttingUnit (Code, CruiseID) ON DELETE CASCADE ON UPDATE CASCADE " +
             ");";
 
-        public const string CREATE_INDEX_Plot_V3_CuttingUnitCode =
-            "CREATE INDEX Plot_V3_CuttingUnitCode ON Plot_V3 (CuttingUnitCode);";
+        public const string CREATE_INDEX_Plot_V3_CuttingUnitCode_CruiseID =
+            "CREATE INDEX Plot_V3_CuttingUnitCode_CruiseID ON Plot_V3 (CuttingUnitCode, CruiseID);";
 
-        public const string CREATE_INDEX_Plot_V3_PlotNumber =
-            "CREATE INDEX Plot_V3_PlotNumber ON Plot_V3 (PlotNumber);";
+        public const string CREATE_INDEX_Plot_V3_PlotNumber_CruiseID =
+            "CREATE INDEX Plot_V3_PlotNumber_CruiseID ON Plot_V3 (PlotNumber, CruiseID);";
 
         public const string CREATE_TRIGGER_PLOT_V3_ONUPDATE =
             "CREATE TRIGGER Plot_V3_OnUpdate " +
@@ -59,6 +60,7 @@
                     "Plot_CN, " +
                     "PlotID, " +
                     "PlotNumber, " +
+                    "CruiseID, " +
                     "CuttingUnitCode, " +
                     "Slope, " +
                     "Aspect, " +
@@ -86,6 +88,7 @@
                             "|| substr('AB89', 1 + (abs(random()) % 4), 1) || " +
                             "substr(hex(randomblob(2)), 2) || '-' || hex(randomblob(6)))) AS PlotID, " +
                     "p.PlotNumber, " +
+                    "'{4}', " +
                     "cu.Code AS CuttingUnitCode, " +
                     "p.Slope, " +
                     "p.Aspect, " +

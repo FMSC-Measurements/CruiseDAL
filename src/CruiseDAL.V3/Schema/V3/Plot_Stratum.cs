@@ -6,6 +6,7 @@
             "CREATE TABLE Plot_Stratum (" +
                 "Plot_Stratum_CN INTEGER PRIMARY KEY AUTOINCREMENT, " +
                 "PlotNumber INTEGER NOT NULL, " +
+                "CruiseID TEXT NOT NULL COLLATE NOCASE, " +
                 "CuttingUnitCode TEXT NOT NULL COLLATE NOCASE, " +
                 "StratumCode TEXT NOT NULL COLLATE NOCASE, " +
                 "IsEmpty BOOLEAN DEFAULT 0, " +
@@ -17,15 +18,17 @@
                 "ModifiedDate DATETIME, " +
                 "RowVersion INTEGER DEFAULT 0, " +
 
-                "UNIQUE (PlotNumber, CuttingUnitCode, StratumCode), " +
+                "UNIQUE (PlotNumber, CuttingUnitCode, StratumCode, CruiseID), " +
 
-                //"FOREIGN KEY (CuttingUnitCode) REFERENCES CuttingUnit (Code) ON DELETE CASCADE ON UPDATE CASCADE, " +
-                "FOREIGN KEY (StratumCode) REFERENCES Stratum (Code) ON DELETE CASCADE ON UPDATE CASCADE, " +
-                "FOREIGN KEY (PlotNumber, CuttingUnitCode) REFERENCES Plot_V3 (PlotNumber, CuttingUnitCode) ON DELETE CASCADE ON UPDATE CASCADE " +
+                "FOREIGN KEY (StratumCode,  CruiseID) REFERENCES Stratum (Code, CruiseID) ON DELETE CASCADE ON UPDATE CASCADE, " +
+                "FOREIGN KEY (PlotNumber, CuttingUnitCode, CruiseID) REFERENCES Plot_V3 (PlotNumber, CuttingUnitCode, CruiseID) ON DELETE CASCADE ON UPDATE CASCADE " +
             ");";
 
-        public const string CREATE_INDEX_Plot_Stratum_StratumCode =
-            @"CREATE INDEX 'Plot_Stratum_StratumCode' ON 'Plot_Stratum'('StratumCode');";
+        public const string CREATE_INDEX_Plot_Stratum_StratumCode_CruiseID =
+            @"CREATE INDEX 'Plot_Stratum_StratumCode_CruiseID' ON 'Plot_Stratum'('StratumCode', 'CruiseID');";
+
+        public const string CREATE_INDEX_Plot_Stratum_PlotNumber_CuttingUnitCode_CruiseID =
+            @"CREATE INDEX 'Plot_Stratum_PlotNumber_CuttingUnitCode_CruiseID' ON 'Plot_Stratum' ('PlotNumber', 'CuttingUnitCode', 'CruiseID');";
 
         public const string CREATE_TRIGGER_PLOT_STRATUM_ONUPDATE =
             "CREATE TRIGGER Plot_Stratum_OnUpdate " +
@@ -49,6 +52,7 @@
         public const string MIGRATE_PLOT_STRATUM_FROM_PLOT_FORMAT_STR =
             "INSERT INTO {0}.Plot_Stratum ( " +
                     "Plot_Stratum_CN, " +
+                    "CruiseID, " +
                     "CuttingUnitCode, " +
                     "PlotNumber, " +
                     "StratumCode, " +
@@ -63,6 +67,7 @@
                 ") " +
                 "SELECT " +
                     "p.Plot_CN AS Plot_Stratum_CN, " +
+                    "'{4}', " +
                     "cu.Code AS CuttingUnitCode, " +
                     "p.PlotNumber, " +
                     "st.Code AS StratumCode, " +

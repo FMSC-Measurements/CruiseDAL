@@ -6,6 +6,7 @@
             "CREATE TABLE SamplerState ( " +
                 "SamplerState_CN INTEGER PRIMARY KEY AUTOINCREMENT, " +
                 "DeviceID TEXT NOT NULL COLLATE NOCASE, " +
+                "CruiseID TEXT NOT NULL COLLATE NOCASE, " +
                 "StratumCode TEXT NOT NULL COLLATE NOCASE, " +
                 "SampleGroupCode TEXT NOT NULL COLLATE NOCASE, " +
                 "SampleSelectorType TEXT COLLATE NOCASE, " +
@@ -16,10 +17,10 @@
                 "InsuranceCounter DEFAULT -1, " +
                 "ModifiedDate DateTime, " +
 
-                "UNIQUE (DeviceID, StratumCode, SampleGroupCode), " +
+                "UNIQUE (CruiseID, DeviceID, StratumCode, SampleGroupCode), " +
 
                 "FOREIGN KEY (DeviceID) REFERENCES Device (DeviceID) ON DELETE CASCADE, " +
-                "FOREIGN KEY (StratumCode, SampleGroupCode) REFERENCES SampleGroup_V3 (StratumCode, SampleGroupCode) ON DELETE CASCADE " +
+                "FOREIGN KEY (StratumCode, SampleGroupCode, CruiseID) REFERENCES SampleGroup_V3 (StratumCode, SampleGroupCode, CruiseID) ON DELETE CASCADE ON UPDATE CASCADE " +
             ");";
 
         public const string CREATE_TRIGGER_SAMPLERSTATE_ONUPDATE =

@@ -5,16 +5,19 @@
         public const string CREATE_TABLE_LOGGRADEAUDITRULE_V3 =
             "CREATE TABLE LogGradeAuditRule_V3 ( " +
                 "LogGradeAuditRule_CN INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                "CruiseID TEXT NOT NULL COLLATE NOCASE, " +
                 "Species TEXT COLLATE NOCASE, " +
                 "DefectMax REAL Default 0.0, " +
                 "Grade TEXT NOT NULL COLLATE NOCASE CHECK (length(Grade) > 0), " +
-                "FOREIGN KEY (Species) REFERENCES SpeciesCode (Species) ON DELETE CASCADE ON UPDATE CASCADE" +
+
+                "FOREIGN KEY (Species) REFERENCES SpeciesCode (Species) ON DELETE CASCADE ON UPDATE CASCADE," +
+                "FOREIGN KEY (CruiseID) REFERENCES Cruise (CruiseID) ON DELETE CASCADE" +
             ");";
 
-        public const string CREATE_INDEX_LogGradeAuditRule_V3_Species_DefectMax_Grade =
-            "CREATE UNIQUE INDEX LogGradeAuditRule_V3_Species_DefectMax_Grade " +
+        public const string CREATE_INDEX_LogGradeAuditRule_V3_Species_DefectMax_Grade_CruiseID =
+            "CREATE UNIQUE INDEX LogGradeAuditRule_V3_Species_DefectMax_Grade_CruiseID " +
             "ON LogGradeAuditRule_V3 " +
-            "( ifnull(Species, ''), DefectMax, Grade );";
+            "(ifnull(Species, ''), round(DefectMax, 2), Grade, CruiseID);";
 
         public const string CREATE_INDEX_LogGradeAuditRule_V3_Species =
             @"CREATE INDEX 'LogGradeAuditRule_V3_Species' ON 'LogGradeAuditRule_V3'('Species');";

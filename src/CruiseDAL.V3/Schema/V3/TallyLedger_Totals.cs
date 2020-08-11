@@ -10,6 +10,7 @@ namespace CruiseDAL.Schema
         public const string CREATE_VIEW_TallyLedger_Totals =
 @"CREATE VIEW TallyLedger_Totals AS
 SELECT 
+    tl.CruiseID,
     tl.StratumCode,
     tl.SampleGroupCode,
     tl.Species,
@@ -19,6 +20,7 @@ SELECT
 FROM TallyLedger AS tl
 WHERE IsDeleted = 0
 GROUP BY 
+    CruiseID, 
     CuttingUnitCode,
     StratumCode,
     SampleGroupCode,
@@ -28,6 +30,7 @@ GROUP BY
         public const string CREATE_VIEW_TallyLedger_Plot_Totals =
 @"CREATE VIEW TallyLedger_Plot_Totals AS
 SELECT 
+    tl.CruiseID,
     tl.StratumCode,
     tl.SampleGroupCode,
     tl.Species,
@@ -38,6 +41,7 @@ SELECT
 FROM TallyLedger AS tl
 WHERE IsDeleted = 0
 GROUP BY 
+    CruiseID,
     CuttingUnitCode,
     StratumCode,
     SampleGroupCode,
@@ -48,6 +52,7 @@ GROUP BY
         public const string CREATE_VIEW_TallyLedger_Tree_Totals =
 @"CREATE VIEW TallyLedger_Tree_Totals AS
 SELECT 
+    tl.CruiseID,
     tl.TreeID,
     sum(tl.STM) AS STM, 
     sum(tl.TreeCount) AS TreeCount,
@@ -56,6 +61,7 @@ FROM TallyLedger AS tl
 WHERE IsDeleted = 0
     AND TreeID IS NOT NULL
 GROUP BY 
+    CruiseID,
     TreeID;";
     }
 }

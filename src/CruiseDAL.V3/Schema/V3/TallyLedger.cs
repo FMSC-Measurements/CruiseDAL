@@ -6,6 +6,7 @@
         "CREATE TABLE TallyLedger ( " +
             "TallyLedger_CN INTEGER PRIMARY KEY AUTOINCREMENT, " +
             "TallyLedgerID TEXT NOT NULL, " +
+            "CruiseID TEXT NOT NULL COLLATE NOCASE," +
             "TreeID TEXT, " +
             "CuttingUnitCode TEXT NOT NULL COLLATE NOCASE, " +
             "StratumCode TEXT NOT NULL COLLATE NOCASE, " +
@@ -30,15 +31,15 @@
 
             "UNIQUE (TallyLedgerID)," +
 
-            "FOREIGN KEY (CuttingUnitCode) REFERENCES CuttingUnit (Code) " +
+            "FOREIGN KEY (CuttingUnitCode, CruiseID) REFERENCES CuttingUnit (Code, CruiseID) " +
             //"FOREIGN KEY (CuttingUnitCode, StratumCode) REFERENCES CuttingUnit_Stratum (CuttingUnitCode, StratumCode), " +
-            "FOREIGN KEY (StratumCode) REFERENCES Stratum (Code) , " +
-            "FOREIGN KEY (SampleGroupCode, StratumCode) REFERENCES SampleGroup_V3 (SampleGroupCode, StratumCode), " +
+            "FOREIGN KEY (StratumCode, CruiseID) REFERENCES Stratum (Code, CruiseID) , " +
+            "FOREIGN KEY (SampleGroupCode, StratumCode, CruiseID) REFERENCES SampleGroup_V3 (SampleGroupCode, StratumCode, CruiseID), " +
             "FOREIGN KEY (Species) REFERENCES SpeciesCode (Species) " +
             //"FOREIGN KEY (StratumCode, SampleGroupCode, Species, LiveDead) REFERENCES TallyPopulation (StratumCode, SampleGroupCode, Species, LiveDead), " +
             //"FOREIGN KEY (CuttingUnitCode, StratumCode, PlotNumber) REFERENCES Plot_Stratum (CuttingUnitCode, StratumCode, PlotNumber), " +
             
-            "FOREIGN KEY (PlotNumber, CuttingUnitCode) REFERENCES Plot_V3 (PlotNumber, CuttingUnitCode) ON DELETE CASCADE ON UPDATE CASCADE, " +
+            "FOREIGN KEY (PlotNumber, CuttingUnitCode, CruiseID) REFERENCES Plot_V3 (PlotNumber, CuttingUnitCode, CruiseID) ON DELETE CASCADE ON UPDATE CASCADE, " +
             // everything below are tree fKey references. there are a few, but because some tree values can be null we need to have them as seperate references
             "FOREIGN KEY (TreeID) REFERENCES Tree_V3 (TreeID) ON DELETE CASCADE, " +
             "FOREIGN KEY (TreeID, CuttingUnitCode, StratumCode, SampleGroupCode) REFERENCES Tree_V3 (TreeID, CuttingUnitCode, StratumCode, SampleGroupCode) ON UPDATE CASCADE, " +
@@ -50,14 +51,14 @@
         public const string CREATE_INDEX_TallyLedger_TreeID =
             @"CREATE INDEX 'TallyLedger_TreeID' ON 'TallyLedger'('TreeID');";
 
-        public const string CREATE_INDEX_TallyLedger_SampleGroupCode_StratumCode =
-            @"CREATE INDEX 'TallyLedger_SampleGroupCode_StratumCode' ON 'TallyLedger'('SampleGroupCode', 'StratumCode');";
+        public const string CREATE_INDEX_TallyLedger_SampleGroupCode_StratumCode_CruiseID =
+            @"CREATE INDEX 'TallyLedger_SampleGroupCode_StratumCode_CruiseID' ON 'TallyLedger'('SampleGroupCode', 'StratumCode', 'CruiseID');";
 
-        public const string CREATE_INDEX_TallyLedger_StratumCode =
-            @"CREATE INDEX 'TallyLedger_StratumCode' ON 'TallyLedger'('StratumCode');";
+        public const string CREATE_INDEX_TallyLedger_StratumCode_CruiseID =
+            @"CREATE INDEX 'TallyLedger_StratumCode_CruiseID' ON 'TallyLedger'('StratumCode', 'CruiseID');";
 
-        public const string CREATE_INDEX_TallyLedger_CuttingUnitCode =
-            @"CREATE INDEX 'TallyLedger_CuttingUnitCode' ON 'TallyLedger'('CuttingUnitCode');";
+        public const string CREATE_INDEX_TallyLedger_CuttingUnitCode_CruiseID =
+            @"CREATE INDEX 'TallyLedger_CuttingUnitCode_CruiseID' ON 'TallyLedger'('CuttingUnitCode', 'CruiseID');";
     }
 
     public partial class Migrations
@@ -65,6 +66,7 @@
         public const string MIGRATE_TALLYLEDGER_FROM_COUNTTREE_FORMAT_STR =
             "INSERT INTO {0}.TallyLedger ( " +
                     "TallyLedgerID, " +
+                    "CruiseID, " +
                     "CuttingUnitCode, " +
                     "StratumCode, " +
                     "SampleGroupCode, " +
@@ -76,6 +78,7 @@
                 ") " +
                 "SELECT " +
                     "'initFromCountTree-' || cu.Code || ',' || st.Code || ',' || sg.Code || ',' || ifnull(tdv.Species, 'null') || ',' || ifnull(tdv.LiveDead, 'null') || ',' || ifnull(Component_CN, 'master'), " +
+                    "'{4}'," +
                     "cu.Code AS CuttingUnitCode, " +
                     "st.Code AS StratumCode, " +
                     "sg.Code AS SampleGroupCode, " +
@@ -101,6 +104,7 @@
         public const string MIGRATE_TALLYLEDGER_FROM_TREE =
             "INSERT INTO {0}.TallyLedger ( " +
                     "TallyLedgerID, " +
+                    "CruiseID, " +
                     "TreeID, " +
                     "CuttingUnitCode, " +
                     "StratumCode, " +
@@ -114,6 +118,7 @@
                 ") " +
             "SELECT " +
                 "'migrateFromTree-' || t.Tree_CN, " +
+                "'{4}'," +
                 "t3.TreeID, " +
                 "cu.Code AS CuttingUnitCode, " +
                 "st.Code AS StratumCode, " +

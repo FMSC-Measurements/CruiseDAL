@@ -5,32 +5,36 @@
         public const string CREATE_TABLE_CUTTINGUNIT_STRATUM =
             "CREATE TABLE CuttingUnit_Stratum (" +
                 "CuttingUnit_Stratum_CN INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                "CruiseID TEXT NOT NULL COLLATE NOCASE, " +
                 "CuttingUnitCode TEXT NOT NULL COLLATE NOCASE, " +
                 "StratumCode TEXT NOT NULL COLLATE NOCASE, " +
                 "StratumArea REAL, " + // can be null of user hasn't subdevided area
 
-                "UNIQUE (CuttingUnitCode, StratumCode), " +
+                "UNIQUE (CuttingUnitCode, StratumCode, CruiseID), " +
 
-                "FOREIGN KEY (CuttingUnitCode) REFERENCES CuttingUnit (Code) ON DELETE CASCADE ON UPDATE CASCADE, " +
-                "FOREIGN KEY (StratumCode) REFERENCES Stratum (Code) ON DELETE CASCADE ON UPDATE CASCADE " +
+                "FOREIGN KEY (CruiseID) REFERENCES Cruise (CruiseID) ON DELETE CASCADE, " +
+                "FOREIGN KEY (CuttingUnitCode, CruiseID) REFERENCES CuttingUnit (Code, CruiseID) ON DELETE CASCADE ON UPDATE CASCADE, " +
+                "FOREIGN KEY (StratumCode, CruiseID) REFERENCES Stratum (Code, CruiseID) ON DELETE CASCADE ON UPDATE CASCADE " +
             ");";
 
-        public const string CREATE_INDEX_CUTTINGUNIT_STRATUM_STRATUMCODE =
-            @"CREATE INDEX CuttingUnit_Stratum_StratumCode ON CuttingUnit_Stratum (StratumCode COLLATE NOCASE);";
+        public const string CREATE_INDEX_CUTTINGUNIT_STRATUM_StratumCode_CruiseID =
+            @"CREATE INDEX CuttingUnit_Stratum_StratumCode_CruiseID ON CuttingUnit_Stratum (StratumCode, CruiseID);";
 
-        public const string CREATE_INDEX_CuttingUnit_Stratum_CuttingUnitCode =
-            @"CREATE INDEX CuttingUnit_Stratum_CuttingUnitCode ON CuttingUnit_Stratum (CuttingUnitCode COLLATE NOCASE);";
+        public const string CREATE_INDEX_CuttingUnit_Stratum_CuttingUnitCode_CruiseID =
+            @"CREATE INDEX CuttingUnit_Stratum_CuttingUnitCode_CruiseID ON CuttingUnit_Stratum (CuttingUnitCode, CruiseID);";
     }
 
     public partial class Migrations
     {
         public const string MIGRATE_CUTTINGUNIT_STRATUM_FROM_CUTTINGUNITSTRATUM =
                 "INSERT INTO {0}.CuttingUnit_Stratum ( " +
+                    "CruiseID, " +
                     "CuttingUnitCode, " +
                     "StratumCode, " +
                     "StratumArea " +
                 ") " +
                 "SELECT " +
+                    "'{4}', " +
                     "cu.Code, " +
                     "st.Code, " +
                     "cust.StratumArea " +

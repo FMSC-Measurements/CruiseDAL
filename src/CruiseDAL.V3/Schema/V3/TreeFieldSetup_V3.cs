@@ -4,13 +4,14 @@
     {
         public const string CREATE_TABLE_TREEFIELDSETUP_V3 =
             "CREATE TABLE TreeFieldSetup_V3 ( " +
+                "CruiseID TEXT NOT NULL COLLATE NOCASE," +
                 "StratumCode TEXT NOT NULL, " +
                 "Field TEXT NOT NULL, " +
                 "FieldOrder INTEGER Default 0, " +
                 "Heading TEXT, " +
                 "Width REAL Default 0.0, " +
-                "UNIQUE(StratumCode, Field), " +
-                "FOREIGN KEY (StratumCode) REFERENCES Stratum (Code) ON DELETE CASCADE ON UPDATE CASCADE," +
+                "UNIQUE(StratumCode, Field, CruiseID), " +
+                "FOREIGN KEY (StratumCode, CruiseID) REFERENCES Stratum (Code, CruiseID) ON DELETE CASCADE ON UPDATE CASCADE," +
                 "FOREIGN KEY (Field) REFERENCES TreeField (Field) " +
             ");";
 
@@ -25,6 +26,7 @@
     {
         public const string MIGRATE_TREEFIELDSETUP_V3_FROM_TREEFIELDSETUP_FORMAT_STR =
             "INSERT INTO {0}.TreeFieldSetup_V3 ( " +
+                    "CruiseID," +
                     "StratumCode, " +
                     "Field, " +
                     "FieldOrder, " +
@@ -32,6 +34,7 @@
                     "Width " +
                 ") " +
                 "SELECT " +
+                    "'{4}', " +
                     "st.Code AS StratumCode, " +
                     "tfs.Field, " +
                     "tfs.FieldOrder, " +

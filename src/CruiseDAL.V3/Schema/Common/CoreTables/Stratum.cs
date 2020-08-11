@@ -6,6 +6,7 @@
             "CREATE TABLE Stratum ( " +
                 "Stratum_CN INTEGER PRIMARY KEY AUTOINCREMENT, " +
                 "Code TEXT NOT NULL COLLATE NOCASE, " +
+                "CruiseID TEXT NOT NULL COLLATE NOCASE," +
                 "Description TEXT, " +
                 "Method TEXT DEFAULT '' COLLATE NOCASE, " +
                 "BasalAreaFactor REAL DEFAULT 0.0, " +
@@ -23,6 +24,7 @@
                 "ModifiedBy TEXT, " +
                 "ModifiedDate DateTime , " +
                 "RowVersion INTEGER DEFAULT 0, " +
+                "FOREIGN KEY (CruiseID) REFERENCES Cruise (CruiseID) ON DELETE CASCADE, " +
                 "UNIQUE(Code), " +
                 "CHECK (length(Code) > 0) " +
             ");";
@@ -56,6 +58,7 @@
         public const string MIGRATE_STRATUM_FORMAT_STR =
             "INSERT INTO {0}.Stratum ( " +
                     "Code, " +
+                    "CruiseID, " +
                     "Description, " +
                     "Method, " +
                     "BasalAreaFactor, " +
@@ -76,6 +79,7 @@
                 ") " +
                 "SELECT " +
                     "Code, " +
+                    "{4}, " +
                     "Description, " +
                     "Method, " +
                     "BasalAreaFactor, " +
