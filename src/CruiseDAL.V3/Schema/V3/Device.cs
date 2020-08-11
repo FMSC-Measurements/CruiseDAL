@@ -9,7 +9,7 @@ namespace CruiseDAL.Schema
     {
         public const string CREATE_TABLE_DEVICE =
 @"CREATE TABLE Device ( 
-    DeviceID TEXT, 
+    DeviceID TEXT NOT NULL COLLATE NOCASE, 
     Name TEXT, 
 
     UNIQUE (DeviceID)
