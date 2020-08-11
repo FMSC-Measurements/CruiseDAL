@@ -15,7 +15,8 @@ SELECT
 FROM Log_V3 AS l
 JOIN Tree_V3 AS t USING (TreeID)
 JOIN LogGradeAuditRule_V3 AS lgar ON
-    ifnull(lgar.Species, '') = '' OR t.Species = lgar.Species
+    t.CruiseID = lgar.CruiseID
+    AND ifnull(lgar.Species, '') IN  (t.Species, '')
     AND ifnull(l.Grade, '') = lgar.Grade
     AND round(l.SeenDefect, 2) > round(lgar.DefectMax, 2);";
     }

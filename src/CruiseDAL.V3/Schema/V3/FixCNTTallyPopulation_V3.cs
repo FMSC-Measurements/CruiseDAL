@@ -5,6 +5,7 @@
         public const string CREATE_TABLE_FIXCNTTALLYPOPULATION_V3 =
             "CREATE TABLE FixCNTTallyPopulation_V3 ( " +
                 "FixCNTTallyPopulation_CN INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                "CruiseID TEXT NOT NULL COLLATE NOCASE, " +
                 "StratumCode TEXT NOT NULL COLLATE NOCASE, " +
                 "SampleGroupCode TEXT NOT NULL COLLATE NOCASE, " +
                 "Species TEXT NOT NULL COLLATE NOCASE, " +
@@ -13,19 +14,19 @@
                 "Min INTEGER Default 0, " +
                 "Max INTEGER Default 0, " +
 
-                "UNIQUE (StratumCode, SampleGroupCode, Species, LiveDead), " +
+                "UNIQUE (CruiseID, StratumCode, SampleGroupCode, Species, LiveDead), " +
 
-                "FOREIGN KEY (StratumCode, SampleGroupCode) REFERENCES SampleGroup_V3 (StratumCode, SampleGroupCode) ON DELETE CASCADE ON UPDATE CASCADE, " +
-                "FOREIGN KEY (StratumCode, SampleGroupCode, Species, LiveDead) REFERENCES SubPopulation (StratumCode, SampleGroupCode, Species, LiveDead) ON DELETE CASCADE ON UPDATE CASCADE " +
-                "FOREIGN KEY (StratumCode) REFERENCES FixCNTTallyClass_V3 (StratumCode) ON DELETE CASCADE, " +
-                "FOREIGN KEY (Species) REFERENCES SpeciesCode (Species) ON DELETE CASCADE ON UPDATE CASCADE" +
+                "FOREIGN KEY (StratumCode, SampleGroupCode, Species, LiveDead, CruiseID) REFERENCES SubPopulation (StratumCode, SampleGroupCode, Species, LiveDead, CruiseID) ON DELETE CASCADE ON UPDATE CASCADE " +
             ");";
 
         public const string CREATE_INDEX_FixCNTTallyPopulation_V3_Species =
-            @"CREATE INDEX FixCNTTallyPopulation_V3_Species ON FixCNTTallyPopulation_V3 (Species COLLATE NOCASE);";
+            @"CREATE INDEX FixCNTTallyPopulation_V3_Species ON FixCNTTallyPopulation_V3 (Species);";
 
-        public const string CREATE_INDEX_FixCNTTallyPopulation_V3_StratumCode =
-            @"CREATE INDEX FixCNTTallyPopulation_V3_StratumCode ON FixCNTTallyPopulation_V3 (StratumCode COLLATE NOCASE);";
+        public const string CREATE_INDEX_FixCNTTallyPopulation_V3_StratumCode_CruiseID =
+            @"CREATE INDEX FixCNTTallyPopulation_V3_StratumCode_CruiseID ON FixCNTTallyPopulation_V3 (StratumCode, CruiseID);";
+
+        public const string CREATE_INDEX_FixCNTTallyPopulation_V3_StratumCode_SampleGroupCode_Species_LiveDead_CruiseID =
+            @"CREATE INDEX 'FixCNTTallyPopulation_V3_StratumCode_SampleGroupCode_Species_LiveDead_CruiseID' ON FixCNTTallyPopulation_V3 (StratumCode, SampleGroupCode, Species, LiveDead, CruiseID);";
     }
 
     public partial class Migrations
@@ -33,6 +34,7 @@
         public const string MIGRATE_FIXCNTTALLYPOPULATION_V3 =
             "INSERT INTO {0}.FixCNTTallyPopulation_V3 ( " +
                     "FixCNTTallyPopulation_CN, " +
+                    "CruiseID, " +
                     "StratumCode, " +
                     "SampleGroupCode, " +
                     "Species, " +
@@ -43,6 +45,7 @@
                 ") " +
                 "SELECT " +
                     "fixTP.FixCNTTallyPopulation_CN, " +
+                    "'{4}', " +
                     "st.Code AS StratumCode, " +
                     "sg.Code AS SampleGroupCode, " +
                     "tdv.Species, " +

@@ -11,6 +11,7 @@ namespace CruiseDAL.Schema
 @"CREATE TABLE Stem_V3 (
         Stem_CN INTEGER PRIMARY KEY AUTOINCREMENT,
         StemID TEXT NOT NULL COLLATE NOCASE,
+        CruiseID TEXT NOT NULL COLLATE NOCASE,
         TreeID TEXT NOT NULL COLLATE NOCASE,
         Diameter REAL Default 0.0,
         DiameterType TEXT,
@@ -24,7 +25,6 @@ namespace CruiseDAL.Schema
 
         UNIQUE (StemID), 
         FOREIGN KEY (TreeID) REFERENCES Tree_V3 (TreeID) ON DELETE CASCADE 
-        
 );";
 
         public const string CREATE_TRIGGER_Stem_V3_ON_UPDATE =

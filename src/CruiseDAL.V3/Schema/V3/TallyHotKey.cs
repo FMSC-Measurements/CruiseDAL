@@ -5,6 +5,7 @@
         public const string CREATE_TABLE_TALLYHOTKEY =
 @"CREATE TABLE TallyHotKey (
     TallyHotKey_CN INTEGER PRIMARY KEY AUTOINCREMENT,
+    CruiseID TEXT NOT NULL COLLATE NOCASE,
     StratumCode TEXT NOT NULL COLLATE NOCASE,
     SampleGroupCode TEXT NOT NULL COLLATE NOCASE,
     Species TEXT COLLATE NOCASE,
@@ -16,17 +17,17 @@
 
     CHECK(LiveDead IN ('L', 'D') OR LiveDead IS NULL),
 
-    FOREIGN KEY (StratumCode, SampleGroupCode) REFERENCES SampleGroup_V3 (StratumCode, SampleGroupCode) ON DELETE CASCADE,
+    FOREIGN KEY (StratumCode, SampleGroupCode, CruiseID) REFERENCES SampleGroup_V3 (StratumCode, SampleGroupCode, CruiseID) ON DELETE CASCADE ON UPDATE CASCADE,
     FOREIGN KEY (Species) REFERENCES SpeciesCode (Species) ON DELETE CASCADE ON UPDATE CASCADE
 );";
 
         public const string CREATE_INDEX_TallyHotKey_Species =
             @"CREATE INDEX 'TallyHotKey_Species' ON 'TallyHotKey'('Species');";
 
-        public const string CREATE_INDEX_TallyHotKey_StratumCode_SampleGroupCode_Species_LiveDead =
-@"CREATE UNIQUE INDEX TallyHotKey_StratumCode_SampleGroupCode_Species_LiveDead
+        public const string CREATE_INDEX_TallyHotKey_StratumCode_SampleGroupCode_Species_LiveDead_CruiseID =
+@"CREATE UNIQUE INDEX TallyHotKey_StratumCode_SampleGroupCode_Species_LiveDead_CruiseID
 ON TallyHotKey
-(StratumCode, SampleGroupCode, ifnull(Species, '') COLLATE NOCASE, ifnull(LiveDead, '') COLLATE NOCASE);";
+(CruiseID, StratumCode, SampleGroupCode, ifnull(Species, '') COLLATE NOCASE, ifnull(LiveDead, '') COLLATE NOCASE);";
     }
 
     public partial class Migrations
@@ -38,6 +39,7 @@ FROM {1}.CountTree
 GROUP BY SampleGroup_CN, ifnull(TreeDefaultValue_CN, '')) 
 
 INSERT OR REPLACE INTO {0}.TallyHotKey ( 
+    CruiseID,
     StratumCode, 
     SampleGroupCode, 
     Species, 
@@ -45,6 +47,7 @@ INSERT OR REPLACE INTO {0}.TallyHotKey (
     HotKey 
 )
 SELECT 
+    '{4}',
     st.Code AS StratumCode, 
     sg.Code AS SampleGroupCode, 
     tdv.Species, 

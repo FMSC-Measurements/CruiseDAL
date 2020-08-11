@@ -6,6 +6,7 @@
             "CREATE TABLE CuttingUnit( " +
                 "CuttingUnit_CN INTEGER PRIMARY KEY AUTOINCREMENT, " +
                 "Code TEXT NOT NULL COLLATE NOCASE, " +
+                "CruiseID TEXT NOT NULL COLLATE NOCASE, " +
                 "Area REAL DEFAULT 0.0, " +
                 "TallyHistory TEXT, " + // although tally history is no longer used it is being kept for backwards compatibility
                 "Description TEXT, " +
@@ -18,6 +19,7 @@
                 "ModifiedDate DateTime , " +
                 "RowVersion INTEGER DEFAULT 0, " +
                 "UNIQUE(Code), " +
+                "FOREIGN KEY (CruiseID) REFERENCES Cruise (CruiseID) ON DELETE CASCADE, " +
                 "CHECK (length(Code) > 0)" +
             ");";
 
@@ -43,6 +45,7 @@
         public const string MIGRATE_CUTTINGUNIT_FORMAT_STR =
             "INSERT INTO {0}.CuttingUnit ( " +
                     "CuttingUnit_CN, " +
+                    "CruiseID, " +
                     "Code, " +
                     "Area, " +
                     "Description, " +
@@ -52,6 +55,7 @@
                 ") " +
                 "SELECT " +
                     "CuttingUnit_CN, " +
+                    "{4}, " +
                     "Code, " +
                     "Area, " +
                     "Description, " +

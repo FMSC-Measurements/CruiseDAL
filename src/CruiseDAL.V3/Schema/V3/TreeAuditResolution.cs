@@ -5,6 +5,7 @@
         public const string CREATE_TABLE_TREEAUDITRESOLUTION =
 @"CREATE TABLE TreeAuditResolution (
     TreeAuditResolution_CN INTEGER PRIMARY KEY AUTOINCREMENT, 
+    CruiseID TEXT NOT NULL COLLATE NOCASE,
     TreeID TEXT NOT NULL,
     TreeAuditRuleID TEXT NOT NULL,
     Resolution TEXT,    -- description indicating the reason of the resolution. optional
@@ -12,6 +13,7 @@
 
     UNIQUE (TreeID, TreeAuditRuleID),
 
+    FOREIGN KEY (CruiseID) REFERENCES Cruise (CruiseID) ON DELETE CASCADE,
     FOREIGN KEY (TreeID) REFERENCES Tree_V3 (TreeID) ON DELETE CASCADE,
     FOREIGN KEY (TreeAuditRuleID) REFERENCES TreeAuditRule (TreeAuditRuleID) ON DELETE CASCADE
 );";

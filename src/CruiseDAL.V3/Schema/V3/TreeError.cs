@@ -8,6 +8,7 @@ namespace CruiseDAL.Schema
 with treeError_species AS (
     SELECT 
         t.TreeID,
+        t.CruiseID,
         'e' AS Level,
         'Species Is Missing' AS Message,
         'Species' AS Field
@@ -26,6 +27,7 @@ with treeError_species AS (
     treeError_heights AS (
     SELECT 
         tm.TreeID,
+        t.TreeID,
         'e' AS Level,
         'Aleast One Height Parameter Must Be Greater Than 0' AS Message,
         '*' AS Field
@@ -36,6 +38,7 @@ with treeError_species AS (
     treeError_merchHeightSecondary AS (
     SELECT 
         tm.TreeID,
+        t.CruiseID,
         'e' AS Level,
         'Merch Height Secondary Must Be Greater Than or Equal Merch Height Primary' AS Message,
         'MerchHeightSecondary' AS Field
@@ -46,6 +49,7 @@ with treeError_species AS (
     treeError_upperStemHeight AS (
     SELECT 
         tm.TreeID,
+        t.CruiseID,
         'e' AS Level,
         'Upper Stem Height Must Be Greater Than or Equal Merch Height Primary' AS Message,
         'UpperStemHeight' AS Field
@@ -56,6 +60,7 @@ with treeError_species AS (
     treeError_upperStemDiameter AS (
     SELECT 
         tm.TreeID,
+        t.CruiseID
         'e' AS Level,
         'Upper Stem Diameter Must Be Smaller Than DBH' AS Message,
         'UpperStemDiameter' AS Field
@@ -66,6 +71,7 @@ with treeError_species AS (
     treeError_topDIBSecondary AS (
     SELECT 
         tm.TreeID,
+        t.CruiseID,
         'e' AS Level,
         'Top DIB Secondary must be less Top DIB Primary' AS Message,
         'TopDIBSecondary' AS Field
@@ -76,6 +82,7 @@ with treeError_species AS (
     treeError_seenDefectPrimary AS (
     SELECT 
         tm.TreeID,
+        t.CruiseID,
         'e' AS Level,
         'Seen Defect Primary must be greater than Recoverable Primary' AS Message,
         'SeenDefectPrimary' AS Field
@@ -85,6 +92,7 @@ with treeError_species AS (
 
 SELECT
 	tae.TreeID,
+    tae.CruiseID,
 	tae.TreeAuditRuleID,
 	'W' AS Level,
 	tae.Message,
@@ -97,6 +105,7 @@ LEFT JOIN TreeAuditResolution AS tar USING (TreeAuditRuleID, TreeID)
 UNION ALL 
 SELECT 
     te.TreeID,
+    te.CruiseID,
     null AS TreeAuditRuleID,
     'E' AS Level,
     te.Message,

@@ -9,6 +9,7 @@ WITH
 measureTrees AS (
     SELECT
         t.Tree_CN,
+        t.CruiseID,
         t.TreeID,
         t.StratumCode,
         t.Species,
@@ -21,6 +22,7 @@ measureTrees AS (
 -- expands treedefaultValue_TreeAuditValue to include Field, Min, Max
 treeDefaultValue_TreeAuditRule_Epanded AS (
     SELECT
+        tar.CruiseID,
         Species,
         LiveDead,
         PrimaryProduct,
@@ -33,6 +35,7 @@ treeDefaultValue_TreeAuditRule_Epanded AS (
 
 SELECT
     Tree_CN,
+    t.CruiseID,
     TreeID,
     TreeAuditRuleID,
     tdvtar.Field AS Field,
@@ -43,7 +46,7 @@ SELECT
     ELSE 'Validation Error' END) AS Message,
     res.Resolution
 FROM measureTrees AS t
-JOIN TreeFieldSetup_V3 AS tfs USING (StratumCode)
+JOIN TreeFieldSetup_V3 AS tfs USING (StratumCode, CruiseID)
 JOIN TreeFieldValue_All AS tfv USING (TreeID, Field)
 -- get audit rule
 JOIN treeDefaultValue_TreeAuditRule_Epanded tdvtar
@@ -51,6 +54,7 @@ JOIN treeDefaultValue_TreeAuditRule_Epanded tdvtar
         AND (tdvtar.LiveDead IS NULL OR tdvtar.LiveDead = t.LiveDead)
         AND (tdvtar.PrimaryProduct IS NULL OR tdvtar.PrimaryProduct = t.PrimaryProduct)
         AND tdvtar.Field = tfs.Field
+        AND tdvtar.CruiseID = t.CruiseID
 LEFT JOIN TreeAuditResolution AS res USING (TreeAuditRuleID, TreeID)
 WHERE
     (tfv.ValueReal IS NOT NULL AND

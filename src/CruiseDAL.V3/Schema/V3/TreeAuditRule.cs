@@ -6,6 +6,7 @@
 @"CREATE TABLE TreeAuditRule (
     TreeAuditRule_CN INTEGER PRIMARY KEY AUTOINCREMENT,
     TreeAuditRuleID TEXT NOT NULL,
+    CruiseID TEXT NOT NULL COLLATE NOCASE,
     Field TEXT NOT NULL COLLATE NOCASE,
     Min REAL,
     Max REAL,
@@ -14,6 +15,7 @@
     CHECK ((Min IS NULL OR Max IS NULL) OR (Min < Max)),
     CHECK (TreeAuditRuleID LIKE '________-____-____-____-____________'),
 
+    FOREIGN KEY (CruiseID) REFERENCES Cruise (CruiseID) ON DELETE CASCADE,
     FOREIGN KEY (Field) REFERENCES TreeField (Field)
 );";
 

@@ -5,22 +5,23 @@
         public const string CREATE_TABLE_LOGFIELDSETUP_V3 =
             "CREATE TABLE LogFieldSetup_V3 (" +
                 "StratumCode TEXT NOT NULL, " +
+                "CruiseID TEXT NOT NULL COLLATE NOCASE," +
                 "Field TEXT NOT NULL, " +
                 "FieldOrder INTEGER Default 0, " +
                 "Heading TEXT, " +
                 "Width REAL Default 0.0, " +
 
-                "UNIQUE (StratumCode, Field), " +
+                "UNIQUE (CruiseID, StratumCode, Field), " +
 
-                "FOREIGN KEY (StratumCode) REFERENCES Stratum (Code) ON DELETE CASCADE ON UPDATE CASCADE," +
+                "FOREIGN KEY (StratumCode, CruiseID) REFERENCES Stratum (Code, CruiseID) ON DELETE CASCADE ON UPDATE CASCADE," +
                 "FOREIGN KEY (Field) REFERENCES LogField (Field) " +
             ");";
 
         public const string CREATE_INDEX_LogFieldSetup_V3_Field =
             @"CREATE INDEX 'LogFieldSetup_V3_Field' ON 'LogFieldSetup_V3'('Field' COLLATE NOCASE);";
 
-        public const string CREATE_INDEX_LogFieldSetup_V3_StratumCode =
-            @"CREATE INDEX 'LogFieldSetup_V3_StratumCode' ON 'LogFieldSetup_V3'('StratumCode' COLLATE NOCASE);";
+        public const string CREATE_INDEX_LogFieldSetup_V3_StratumCode_CruiseID =
+            @"CREATE INDEX 'LogFieldSetup_V3_StratumCode_CruiseID' ON 'LogFieldSetup_V3'('StratumCode', 'CruiseID');";
     }
 
     public partial class Migrations
@@ -28,6 +29,7 @@
         public const string MIGRATE_LOGFIELDSETUP_V3_FROM_LOGFIELDSETUP =
             "INSERT INTO {0}.LogFieldSetup_V3 ( " +
                     "StratumCode, " +
+                    "CruiseID, " +
                     "Field, " +
                     "FieldOrder, " +
                     "Heading, " +
@@ -35,6 +37,7 @@
                 ") " +
                 "SELECT " +
                     "st.Code AS StratumCode, " +
+                    "'{4}'," +
                     "lfs.Field, " +
                     "lfs.FieldOrder, " +
                     "lfs.Heading, " +

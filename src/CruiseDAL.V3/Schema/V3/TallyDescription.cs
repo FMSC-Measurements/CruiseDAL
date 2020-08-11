@@ -4,6 +4,8 @@
     {
         public const string CREATE_TABLE_TALLYDESCRIPTION =
             "CREATE TABLE TallyDescription ( " +
+                "TallyDescription_CN INTEGER PRIMARY KEY AUTOINCREMENT" +
+                "CruiseID TEXT NOT NULL COLLATE NOCASE, " +
                 "StratumCode TEXT NOT NULL COLLATE NOCASE, " +
                 "SampleGroupCode TEXT NOT NULL COLLATE NOCASE, " +
                 "Species TEXT COLLATE NOCASE, " +
@@ -14,15 +16,14 @@
 
                 //"UNIQUE (StratumCode, SampleGroupCode, Species, LiveDead)  ON CONFLICT REPLACE, " +
                 //"UNIQUE (StratumCode, Description), " +
-
-                "FOREIGN KEY (StratumCode, SampleGroupCode) REFERENCES SampleGroup_V3 (StratumCode, SampleGroupCode) ON DELETE CASCADE, " +
+                "FOREIGN KEY (StratumCode, SampleGroupCode, CruiseID) REFERENCES SampleGroup_V3 (StratumCode, SampleGroupCode, CruiseID) ON DELETE CASCADE ON UPDATE CASCADE, " +
                 "FOREIGN KEY (Species) REFERENCES SpeciesCode (Species) ON DELETE CASCADE ON UPDATE CASCADE " +
             ");";
 
-        public const string CREATE_INDEX_TallyDescription_StratumCode_SampleGroupCode_Species_LiveDead =
-            "CREATE UNIQUE INDEX TallyDescription_StratumCode_SampleGroupCode_Species_LiveDead " +
+        public const string CREATE_INDEX_TallyDescription_StratumCode_SampleGroupCode_Species_LiveDead_CruiseID =
+            "CREATE UNIQUE INDEX TallyDescription_StratumCode_SampleGroupCode_Species_LiveDead_CruiseID " +
             "ON TallyDescription " +
-            "(StratumCode, SampleGroupCode, ifnull(Species, '') COLLATE NOCASE, ifnull(LiveDead, '') COLLATE NOCASE);";
+            "(CruiseID, StratumCode, SampleGroupCode, ifnull(Species, '') COLLATE NOCASE, ifnull(LiveDead, '') COLLATE NOCASE);";
 
         public const string CREATE_INDEX_TallyDescription_Species =
             @"CREATE INDEX 'TallyDescription_Species' ON 'TallyDescription'('Species');";
@@ -37,6 +38,7 @@
             "GROUP BY SampleGroup_CN, ifnull(TreeDefaultValue_CN, '')) " +
 
             "INSERT OR REPLACE INTO {0}.TallyDescription ( " +
+                "CruiseID, " +
                 "StratumCode, " +
                 "SampleGroupCode, " +
                 "Species, " +
@@ -44,6 +46,7 @@
                 "Description " +
             ")" +
             "SELECT " +
+                "'{4}', " +
                 "st.Code AS StratumCode, " +
                 "sg.Code AS SampleGroupCode, " +
                 "tdv.Species, " +

@@ -7,6 +7,7 @@
         public const string CREATE_TABLE_TREE_V3 =
             "CREATE TABLE Tree_V3 ( " +
                 "Tree_CN INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                "CruiseID TEXT NOT NULL COLLATE NOCASE, " +
                 "TreeID TEXT NOT NULL , " +
                 "CuttingUnitCode TEXT NOT NULL COLLATE NOCASE, " +
                 "StratumCode TEXT NOT NULL COLLATE NOCASE, " +
@@ -32,31 +33,30 @@
                 "CHECK (CountOrMeasure IN ('C', 'M', 'I')), " +
                 "CHECK (LiveDead IN ('L', 'D') OR LiveDead IS NULL)," +
 
-                "FOREIGN KEY (CuttingUnitCode) REFERENCES CuttingUnit (Code) ON DELETE CASCADE ON UPDATE CASCADE, " +
-                "FOREIGN KEY (StratumCode) REFERENCES Stratum (Code) " +
-                "FOREIGN KEY (SampleGroupCode, StratumCode) REFERENCES SampleGroup_V3 (SampleGroupCode, StratumCode) ON DELETE CASCADE ON UPDATE CASCADE, " +
-                "FOREIGN KEY (PlotNumber, CuttingUnitCode) REFERENCES Plot_V3 (PlotNumber, CuttingUnitCode) ON DELETE CASCADE ON UPDATE CASCADE, " +
+                "FOREIGN KEY (CuttingUnitCode, CruiseID) REFERENCES CuttingUnit (Code, CruiseID) ON DELETE CASCADE ON UPDATE CASCADE, " +
+                "FOREIGN KEY (SampleGroupCode, StratumCode, CruiseID) REFERENCES SampleGroup_V3 (SampleGroupCode, StratumCode, CruiseID) ON DELETE CASCADE ON UPDATE CASCADE, " +
+                "FOREIGN KEY (PlotNumber, CuttingUnitCode, CruiseID) REFERENCES Plot_V3 (PlotNumber, CuttingUnitCode, CruiseID) ON DELETE CASCADE ON UPDATE CASCADE, " +
                 //"FOREIGN KEY (Species, LiveDead, SampleGroupCode, StratumCode) REFERENCES SubPopulation (Species, LiveDead, SampleGroupCode, StratumCode), " +
                 "FOREIGN KEY (Species) REFERENCES SpeciesCode (Species) " +
             ")";
 
-        public const string CREATE_INDEX_Tree_V3_TreeNumber =
-            "CREATE INDEX Tree_V3_TreeNumber ON Tree_V3 (TreeNumber);";
+        public const string CREATE_INDEX_Tree_V3_TreeNumber_CruiseID =
+            "CREATE INDEX Tree_V3_TreeNumber_CruiseID ON Tree_V3 (TreeNumber, CruiseID);";
 
         public const string CREATE_INDEX_Tree_V3_Species =
             @"CREATE INDEX 'Tree_V3_Species' ON 'Tree_V3'('Species');";
 
-        public const string CREATE_INDEX_Tree_V3_PlotNumber_CuttingUnitCode =
-            @"CREATE INDEX 'Tree_V3_PlotNumber_CuttingUnitCode' ON 'Tree_V3'('PlotNumber', 'CuttingUnitCode');";
+        public const string CREATE_INDEX_Tree_V3_PlotNumber_CuttingUnitCode_CruiseID =
+            @"CREATE INDEX 'Tree_V3_PlotNumber_CuttingUnitCode_CruiseID' ON 'Tree_V3'('PlotNumber', 'CuttingUnitCode', 'CruiseID');";
 
-        public const string CREATE_INDEX_Tree_V3_SampleGroupCode_StratumCode =
-            @"CREATE INDEX 'Tree_V3_SampleGroupCode_StratumCode' ON 'Tree_V3'('SampleGroupCode', 'StratumCode');";
+        public const string CREATE_INDEX_Tree_V3_SampleGroupCode_StratumCode_CruiseID =
+            @"CREATE INDEX 'Tree_V3_SampleGroupCode_StratumCode_CruiseID' ON 'Tree_V3'('SampleGroupCode', 'StratumCode', 'CruiseID');";
 
-        public const string CREATE_INDEX_Tree_V3_StratumCode =
-            @"CREATE INDEX 'Tree_V3_StratumCode' ON 'Tree_V3'('StratumCode');";
+        public const string CREATE_INDEX_Tree_V3_StratumCode_CruiseID =
+            @"CREATE INDEX 'Tree_V3_StratumCode_CruiseID' ON 'Tree_V3'('StratumCode', 'CruiseID');";
 
-        public const string CREATE_INDEX_Tree_V3_CuttingUnitCode =
-            @"CREATE INDEX 'Tree_V3_CuttingUnitCode' ON 'Tree_V3'('CuttingUnitCode');";
+        public const string CREATE_INDEX_Tree_V3_CuttingUnitCode_CruiseID =
+            @"CREATE INDEX 'Tree_V3_CuttingUnitCode_CruiseID' ON 'Tree_V3'('CuttingUnitCode', 'CruiseID');";
 
         public const string CREATE_INDEX_Tree_V3_TreeID_CuttingUnitCode_SampleGroupCode_StratumCode =
             @"CREATE UNIQUE INDEX Tree_V3_TreeID_CuttingUnitCode_SampleGroupCode_StratumCode ON Tree_V3 (TreeID, CuttingUnitCode, SampleGroupCode, StratumCode);";
@@ -100,6 +100,7 @@
 
             "INSERT INTO {0}.Tree_V3 ( " +
                     "Tree_CN, " +
+                    "CruiseID, " +
                     "TreeID, " +
                     "CuttingUnitCode, " +
                     "StratumCode, " +
@@ -117,6 +118,7 @@
                 ") " +
                 "SELECT " +
                     "t.Tree_CN, " +
+                    "'{4}'," +
                     "ifnull( " +
                         "(CASE typeof(Tree_GUID) COLLATE NOCASE " + // ckeck the type of Tree_GUID
                             "WHEN 'TEXT' THEN " + // if text

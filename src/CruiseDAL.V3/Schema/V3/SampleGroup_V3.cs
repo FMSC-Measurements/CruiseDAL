@@ -5,6 +5,7 @@
         public const string CREATE_TABLE_SAMPLEGROUP_V3 =
             "CREATE TABLE SampleGroup_V3 (" +
                 "SampleGroup_CN INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                "CruiseID TEXT NOT NULL COLLATE NOCASE, " +
                 "SampleGroupCode TEXT NOT NULL COLLATE NOCASE, " +
                 "StratumCode TEXT NOT NULL COLLATE NOCASE, " +
                 "CutLeave TEXT DEFAULT 'C' COLLATE NOCASE, " +
@@ -32,9 +33,9 @@
 
                 "CHECK (length(SampleGroupCode) > 0)" +
 
-                "UNIQUE (StratumCode, SampleGroupCode), " +
+                "UNIQUE (StratumCode, SampleGroupCode, CruiseID), " +
 
-                "FOREIGN KEY (StratumCode) REFERENCES Stratum (Code) ON DELETE CASCADE ON UPDATE CASCADE" +
+                "FOREIGN KEY (StratumCode, CruiseID) REFERENCES Stratum (Code, CruiseID) ON DELETE CASCADE ON UPDATE CASCADE" +
             ");";
 
         public const string CREATE_TRIGGER_SAMPLEGROUP_V3_ONUPDATE =
@@ -71,6 +72,7 @@
         public const string MIGRATE_SAMPLEGROUP_V3_FROM_SAMPLEGROUP =
             "INSERT INTO {0}.SampleGroup_V3 ( " +
                     "SampleGroup_CN, " +
+                    "CruiseID, " +
                     "SampleGroupCode, " +
                     "StratumCode, " +
                     "CutLeave, " +
@@ -98,6 +100,7 @@
                 ") " +
                 "SELECT " +
                     "sg.SampleGroup_CN, " +
+                    "'{4}', " +
                     "sg.Code AS SampleGroupCode, " +
                     "st.Code AS StratumCode, " +
                     "sg.CutLeave, " +
