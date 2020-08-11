@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace CruiseDAL.Schema
 {
@@ -53,9 +54,11 @@ namespace CruiseDAL.Schema
 
         public static IEnumerable<string> GetMigrateCommands(string to, string from)
         {
+            var saleID = Guid.NewGuid().ToString();
+            var cruiseID = Guid.NewGuid().ToString();
             foreach (var str in MIGRATION_FORMAT_STRINGS)
             {
-                yield return string.Format(str, to, from);
+                yield return string.Format(str, to, from, saleID, cruiseID);
             }
         }
     }
