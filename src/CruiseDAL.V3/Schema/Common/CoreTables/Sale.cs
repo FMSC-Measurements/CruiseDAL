@@ -4,6 +4,7 @@
     {
         public const string CREATE_TABLE_SALE =
             "CREATE TABLE Sale( " +
+                "SaleID TEXT NOT NULL, " +
                 "Sale_CN INTEGER PRIMARY KEY AUTOINCREMENT, " +
                 "SaleNumber TEXT NOT NULL, " +
                 "Name TEXT, " +
@@ -21,6 +22,8 @@
                 "ModifiedBy TEXT, " +
                 "ModifiedDate DateTime , " +
                 "RowVersion INTEGER DEFAULT 0, " +
+                "CHECK (SaleID LIKE '________-____-____-____-____________')," +
+                "UNIQUE(SaleID), " +
                 "UNIQUE(SaleNumber) " +
             ");";
 
@@ -50,6 +53,7 @@
     {
         public const string MIGRATE_SALE_FORMAT_STR =
             "INSERT INTO {0}.Sale ( " +
+                    "SaleID, " +
                     "Sale_CN, " +
                     "SaleNumber, " +
                     "Name, " +
@@ -69,6 +73,7 @@
                     "RowVersion " +
                 ") " +
                 "SELECT " +
+                    "{3}, " +
                     "Sale_CN, " +
                     "SaleNumber, " +
                     "Name, " +
