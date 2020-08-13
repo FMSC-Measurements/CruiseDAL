@@ -19,8 +19,8 @@ measureTrees AS (
     JOIN SampleGroup AS sg USING (SampleGroupCode, StratumCode)
     WHERE t.CountOrMeasure = 'M'),
 
--- expands treedefaultValue_TreeAuditValue to include Field, Min, Max
-treeDefaultValue_TreeAuditRule_Epanded AS (
+-- expands TreeAuditRuleSelector to include Field, Min, Max
+treeAuditRuleSelector_Epanded AS (
     SELECT
         tar.CruiseID,
         Species,
@@ -30,7 +30,7 @@ treeDefaultValue_TreeAuditRule_Epanded AS (
         Min,
         Max,
         tar.TreeAuditRuleID
-    FROM TreeDefaultValue_TreeAuditRule AS tdvtar
+    FROM TreeAuditRuleSelector AS tars
     JOIN TreeAuditRule AS tar USING (TreeAuditRuleID))
 
 SELECT
@@ -49,16 +49,16 @@ FROM measureTrees AS t
 JOIN TreeFieldSetup AS tfs USING (StratumCode, CruiseID)
 JOIN TreeFieldValue_All AS tfv USING (TreeID, Field)
 -- get audit rule
-JOIN treeDefaultValue_TreeAuditRule_Epanded tdvtar
-        ON (tdvtar.Species IS NULL OR tdvtar.Species = t.Species)
-        AND (tdvtar.LiveDead IS NULL OR tdvtar.LiveDead = t.LiveDead)
-        AND (tdvtar.PrimaryProduct IS NULL OR tdvtar.PrimaryProduct = t.PrimaryProduct)
-        AND tdvtar.Field = tfs.Field
-        AND tdvtar.CruiseID = t.CruiseID
+JOIN treeAuditRuleSelector_Epanded tars
+        ON (tars.Species IS NULL OR tars.Species = t.Species)
+        AND (tars.LiveDead IS NULL OR tars.LiveDead = t.LiveDead)
+        AND (tars.PrimaryProduct IS NULL OR tars.PrimaryProduct = t.PrimaryProduct)
+        AND tars.Field = tfs.Field
+        AND tars.CruiseID = t.CruiseID
 LEFT JOIN TreeAuditResolution AS res USING (TreeAuditRuleID, TreeID)
 WHERE
     (tfv.ValueReal IS NOT NULL AND
-    (tdvtar.Min IS NOT NULL AND tfv.ValueReal < tdvtar.Min)
-    OR (tdvtar.Max IS NOT NULL AND tfv.ValueReal > tdvtar.Max));";
+    (tars.Min IS NOT NULL AND tfv.ValueReal < tars.Min)
+    OR (tars.Max IS NOT NULL AND tfv.ValueReal > tars.Max));";
     }
 }

@@ -2,46 +2,50 @@
 {
     public partial class DDL
     {
-        public const string CREATE_TABLE_TREEDEFAULTVALUE_TREEAUDITVALUE =
-            "CREATE TABLE TreeDefaultValue_TreeAuditRule (" +
+        public const string CREATE_TABLE_TreeAuditRuleSelector =
+            "CREATE TABLE TreeAuditRuleSelector (" +
                 "TreeDefaultValue_TreeAuditRule_CN INTEGER PRIMARY KEY AUTOINCREMENT, " +
                 "CruiseID TEXT NOT NULL COLLATE NOCASE," +
-                "Species TEXT NOT NULL COLLATE NOCASE, " +
-                "LiveDead TEXT NOT NULL COLLATE NOCASE, " +
-                "PrimaryProduct TEXT NOT NULL COLLATE NOCASE, " +
+                "Species TEXT COLLATE NOCASE, " +
+                "LiveDead TEXT COLLATE NOCASE, " +
+                "PrimaryProduct TEXT COLLATE NOCASE, " +
                 "TreeAuditRuleID TEXT NOT NULL, " +
 
                 "CHECK (LiveDead IN ('L', 'D') OR LiveDead IS NULL)," +
 
                 "FOREIGN KEY (CruiseID) REFERENCES Cruise (CruiseID) ON DELETE CASCADE," +
-                "FOREIGN KEY (Species, LiveDead, PrimaryProduct, CruiseID) REFERENCES TreeDefaultValue (Species, LiveDead, PrimaryProduct, CruiseID) ON DELETE CASCADE, " +
                 "FOREIGN KEY (TreeAuditRuleID) REFERENCES TreeAuditRule (TreeAuditRuleID) ON DELETE CASCADE, " +
                 "FOREIGN KEY (Species) REFERENCES SpeciesCode (Species) ON UPDATE CASCADE" +
             ");";
 
-        public const string CREATE_INDEX_TreeDefaultValue_TreeAuditRule_Species =
-            @"CREATE INDEX 'TreeDefaultValue_TreeAuditRule_Species' ON 'TreeDefaultValue_TreeAuditRule'('Species');";
+        public const string CREATE_UNIQUE_INDEX_TreeAuditRuleSelector_Species_LiveDead_PrimaryProduct_TreeAuditRuleID_CruiseID =
+    @"CREATE UNIQUE INDEX TreeAuditRuleSelector_Species_LiveDead_PrimaryProduct_TreeAuditRuleID_CruiseID 
+ON TreeAuditRuleSelector (
+    CruiseID, 
+    ifnull(Species, ''), 
+    ifnull(LiveDead, ''), 
+    ifnull(PrimaryProduct, ''), 
+    TreeAuditRuleID
+);";
 
-        public const string CREATE_INDEX_TreeDefaultValue_TreeAuditRule_TreeAuditRuleID =
-            @"CREATE INDEX 'TreeDefaultValue_TreeAuditRule_TreeAuditRuleID' ON 'TreeDefaultValue_TreeAuditRule'('TreeAuditRuleID');";
+        public const string CREATE_INDEX_TreeAuditRuleSelector_Species =
+            @"CREATE INDEX 'TreeAuditRuleSelector_Species' ON 'TreeAuditRuleSelector'('Species');";
 
-        public const string CREATE_INDEX_TreeDefaultValue_TreeAuditRule_Species_LiveDead_PrimaryProduct =
-@"CREATE INDEX 'TreeDefaultValue_TreeAuditRule_Species_LiveDead_PrimaryProduct'
-ON 'TreeDefaultValue_TreeAuditRule'('Species', 'LiveDead', 'PrimaryProduct');";
+        public const string CREATE_INDEX_TreeAuditRuleSelector_TreeAuditRuleID =
+            @"CREATE INDEX 'TreeAuditRuleSelector_TreeAuditRuleID' ON 'TreeAuditRuleSelector'('TreeAuditRuleID');";
+
     }
 
     public partial class Migrations
     {
         public const string MIGRATE_TREEDEFAULTVALUE_TREEAUDITVALUE_FROM_TREEDEFAULTVALUETREEAUDITVALUE =
-            "INSERT INTO {0}.TreeDefaultValue_TreeAuditRule ( " +
-                    "TreeDefaultValue_TreeAuditRule_CN," +
+            "INSERT INTO {0}.TreeAuditRuleSelector ( " +
                     "Species, " +
                     "LiveDead, " +
                     "PrimaryProduct, " +
                     "TreeAuditRuleID " +
                 ") " +
                 "SELECT " +
-                    "tdvtav.RowID AS TreeDefaultValue_TreeAuditValue_CN," +
                     "tdv.Species, " +
                     "tdv.LiveDead, " +
                     "tdv.PrimaryProduct, " +
