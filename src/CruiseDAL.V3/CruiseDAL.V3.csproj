@@ -10,4 +10,8 @@
     <ProjectReference Include="..\CruiseDAL.Core\CruiseDAL.Core.csproj" PrivateAssets="none" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Schema\V3\" />
+  </ItemGroup>
+
 </Project>
