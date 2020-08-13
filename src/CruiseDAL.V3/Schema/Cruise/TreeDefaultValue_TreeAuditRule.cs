@@ -14,7 +14,7 @@
                 "CHECK (LiveDead IN ('L', 'D') OR LiveDead IS NULL)," +
 
                 "FOREIGN KEY (CruiseID) REFERENCES Cruise (CruiseID) ON DELETE CASCADE," +
-                "FOREIGN KEY (Species, LiveDead, PrimaryProduct) REFERENCES TreeDefaultValue (Species, LiveDead, PrimaryProduct) ON DELETE CASCADE, " +
+                "FOREIGN KEY (Species, LiveDead, PrimaryProduct, CruiseID) REFERENCES TreeDefaultValue (Species, LiveDead, PrimaryProduct, CruiseID) ON DELETE CASCADE, " +
                 "FOREIGN KEY (TreeAuditRuleID) REFERENCES TreeAuditRule (TreeAuditRuleID) ON DELETE CASCADE, " +
                 "FOREIGN KEY (Species) REFERENCES SpeciesCode (Species) ON UPDATE CASCADE" +
             ");";
