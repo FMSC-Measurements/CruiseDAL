@@ -3,7 +3,7 @@
     public partial class DDL
     {
         public const string CREATE_VIEW_SAMPLEGROUPTREEDEFAULTVALUE =
-            "CREATE VIEW SampleGroupTreeDefaultValue AS " +
+            "CREATE VIEW SampleGroupTreeDefaultValue_V2 AS " +
             "SELECT " +
                 "sg.SampleGroup_CN, " +
                 "tdv.TreeDefaultValue_CN " +

@@ -157,7 +157,6 @@ INSERT INTO Globals (Block, Key, Value) VALUES ('Database', 'CreateVersion', '{D
             CREATE_INDEX_TreeDefaultValue_TreeAuditRule_Species,
             CREATE_INDEX_TreeDefaultValue_TreeAuditRule_Species_LiveDead_PrimaryProduct,
             CREATE_INDEX_TreeDefaultValue_TreeAuditRule_TreeAuditRuleID,
-            CREATE_TABLE_ERRORLOG_LEGACY,
             CREATE_TABLE_TREEAUDITRESOLUTION,
             CREATE_INDEX_TreeAuditResolution_TreeAuditRuleID,
             CREATE_INDEX_TreeAuditResolution_TreeID,
@@ -187,9 +186,6 @@ INSERT INTO Globals (Block, Key, Value) VALUES ('Database', 'CreateVersion', '{D
             CREATE_VIEW_TREEDEFAULTVALUETREEAUDITVALUE,
             CREATE_VIEW_TREEESTIMATE,
             CREATE_VIEW_ERRORLOG,
-            CREATE_TRIGGER_ERRORLOG_INSERT,
-            CREATE_TRIGGER_ERRORLOG_UPDATE,
-            CREATE_TRIGGER_ERRORLOG_DELETE,
 
             SET_DBVERSION,
         };

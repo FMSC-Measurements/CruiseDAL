@@ -3,7 +3,7 @@
     public partial class DDL
     {
         public const string CREATE_VIEW_SAMPLEGROUP =
-            "CREATE VIEW SampleGroup AS " +
+            "CREATE VIEW SampleGroup_V2 AS " +
             "SELECT " +
                 "sg.SampleGroup_CN, " +
                 "sg.SampleGroupCode AS Code, " +
@@ -31,7 +31,7 @@
                 "sg.ModifiedBy, " +
                 "sg.ModifiedDate, " +
                 "sg.RowVersion " +
-            "FROM SampleGroup_V3 AS sg " +
+            "FROM SampleGroup AS sg " +
             "JOIN Stratum AS st ON sg.StratumCode = st.Code " +
             ";";
     }

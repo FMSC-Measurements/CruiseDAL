@@ -3,7 +3,7 @@
     public partial class DDL
     {
         public const string CREATE_VIEW_TREEESTIMATE =
-            "CREATE VIEW TreeEstimate AS " +
+            "CREATE VIEW TreeEstimate_V2 AS " +
             "SELECT " +
             "0 AS TreeEstimate_CN, " +
             "0 AS CountTree_CN, " +

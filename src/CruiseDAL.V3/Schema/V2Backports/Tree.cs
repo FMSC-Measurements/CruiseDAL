@@ -3,7 +3,7 @@
     public partial class DDL
     {
         public const string CREATE_VIEW_TREE =
-            "CREATE VIEW Tree AS " +
+            "CREATE VIEW Tree_V2 AS " +
 
             "SELECT " +
                 "t.Tree_CN, " +
@@ -32,7 +32,7 @@
                 "ifnull(t.YCoordinate, 0.0) AS YCoordinate," +
                 "ifnull(t.ZCoordinate, 0.0) AS ZCoordinate, " +
                 "tm.* " +
-            "FROM Tree_V3 AS t " +
+            "FROM Tree AS t " +
             "JOIN SampleGroup_V3 AS sg ON t.StratumCode = sg.StratumCode AND t.SampleGroupCode = sg.SampleGroupCode  " +
             "JOIN Stratum AS st ON t.StratumCode = st.Code " +
             "JOIN CuttingUnit AS cu ON t.CuttingUnitCode = cu.Code " +
@@ -45,13 +45,5 @@
             "LEFT JOIN TallyLedger_Tree_Totals AS tl ON tl.TreeID = t.TreeID " +
             "LEFT JOIN TreeMeasurment AS tm ON t.TreeID = tm.TreeID " +
             ";";
-
-        public const string CTEATE_TRIGGER_TREE_ONUPDATE =
-            "CREATE TRIGGER TREE_ONUPDATE_PROCESSING " +
-            "INSTEAD OF UPDATE OF ExpansionFactor, TreeFactor, PointFactor ON Tree " +
-            "FOR EACH ROW " +
-            "BEGIN " +
-            "UPDATE TreeCalculatedValues SET ExpansionFactor = new.ExpansionFactor, TreeFactor = new.TreeFactor, PointFactor = new.PointFactor WHERE Tree_CN = new.Tree_CN; " +
-            "END;";
     }
 }

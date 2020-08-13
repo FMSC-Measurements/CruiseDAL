@@ -3,7 +3,7 @@
     public partial class DDL
     {
         public const string CREATE_VIEW_COUNTTREE =
-            "CREATE VIEW CountTree AS " +
+            "CREATE VIEW CountTree_V2 AS " +
             "WITH tallyLedgerGrouped AS (" +
                 "SELECT CuttingUnitCode, StratumCode, SampleGroupCode, ifnull(Species, '') AS Species, ifnull(LiveDead, '') AS LiveDead, " +
                 "sum(TreeCount) AS TreeCount, sum(KPI) AS SumKPI, " +
@@ -45,7 +45,7 @@
                 "0 AS RowVersion " +
             "FROM tallyPopulationTallyLedger AS tptl " +
             "JOIN CuttingUnit AS cu ON tptl.CuttingUnitCode = cu.Code " +
-            "JOIN SampleGroup_V3 AS sg USING (SampleGroupCode, StratumCode) " +
+            "JOIN SampleGroup AS sg USING (SampleGroupCode, StratumCode) " +
             "LEFT JOIN TreeDefaultValue AS tdv ON tptl.Species = tdv.Species AND tptl.LiveDead = tdv.LiveDead AND tdv.PrimaryProduct = sg.PrimaryProduct " +
             "; ";
     }

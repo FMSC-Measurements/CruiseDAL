@@ -3,7 +3,7 @@
     public partial class DDL
     {
         public const string CREATE_VIEW_TREEDEFAULTVALUETREEAUDITVALUE =
-            "CREATE VIEW TreeDefaultValueTreeAuditValue AS " +
+            "CREATE VIEW TreeDefaultValueTreeAuditValue_V2 AS " +
             "SELECT " +
                 "tdv.TreeDefaultValue_CN, " +
                 "tar.TreeAuditRule_CN AS TreeAuditValue_CN " +
