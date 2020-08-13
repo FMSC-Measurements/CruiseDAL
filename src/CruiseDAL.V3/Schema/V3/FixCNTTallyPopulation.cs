@@ -2,8 +2,8 @@
 {
     public partial class DDL
     {
-        public const string CREATE_TABLE_FIXCNTTALLYPOPULATION_V3 =
-            "CREATE TABLE FixCNTTallyPopulation_V3 ( " +
+        public const string CREATE_TABLE_FIXCNTTALLYPOPULATION =
+            "CREATE TABLE FixCNTTallyPopulation ( " +
                 "FixCNTTallyPopulation_CN INTEGER PRIMARY KEY AUTOINCREMENT, " +
                 "CruiseID TEXT NOT NULL COLLATE NOCASE, " +
                 "StratumCode TEXT NOT NULL COLLATE NOCASE, " +
@@ -19,20 +19,20 @@
                 "FOREIGN KEY (StratumCode, SampleGroupCode, Species, LiveDead, CruiseID) REFERENCES SubPopulation (StratumCode, SampleGroupCode, Species, LiveDead, CruiseID) ON DELETE CASCADE ON UPDATE CASCADE " +
             ");";
 
-        public const string CREATE_INDEX_FixCNTTallyPopulation_V3_Species =
-            @"CREATE INDEX FixCNTTallyPopulation_V3_Species ON FixCNTTallyPopulation_V3 (Species);";
+        public const string CREATE_INDEX_FixCNTTallyPopulation_Species =
+            @"CREATE INDEX FixCNTTallyPopulation_Species ON FixCNTTallyPopulation (Species);";
 
-        public const string CREATE_INDEX_FixCNTTallyPopulation_V3_StratumCode_CruiseID =
-            @"CREATE INDEX FixCNTTallyPopulation_V3_StratumCode_CruiseID ON FixCNTTallyPopulation_V3 (StratumCode, CruiseID);";
+        public const string CREATE_INDEX_FixCNTTallyPopulation_StratumCode_CruiseID =
+            @"CREATE INDEX FixCNTTallyPopulation_StratumCode_CruiseID ON FixCNTTallyPopulation (StratumCode, CruiseID);";
 
-        public const string CREATE_INDEX_FixCNTTallyPopulation_V3_StratumCode_SampleGroupCode_Species_LiveDead_CruiseID =
-            @"CREATE INDEX 'FixCNTTallyPopulation_V3_StratumCode_SampleGroupCode_Species_LiveDead_CruiseID' ON FixCNTTallyPopulation_V3 (StratumCode, SampleGroupCode, Species, LiveDead, CruiseID);";
+        public const string CREATE_INDEX_FixCNTTallyPopulation_StratumCode_SampleGroupCode_Species_LiveDead_CruiseID =
+            @"CREATE INDEX 'FixCNTTallyPopulation_StratumCode_SampleGroupCode_Species_LiveDead_CruiseID' ON FixCNTTallyPopulation (StratumCode, SampleGroupCode, Species, LiveDead, CruiseID);";
     }
 
     public partial class Migrations
     {
-        public const string MIGRATE_FIXCNTTALLYPOPULATION_V3 =
-            "INSERT INTO {0}.FixCNTTallyPopulation_V3 ( " +
+        public const string MIGRATE_FIXCNTTALLYPOPULATION =
+            "INSERT INTO {0}.FixCNTTallyPopulation ( " +
                     "FixCNTTallyPopulation_CN, " +
                     "CruiseID, " +
                     "StratumCode, " +

@@ -20,7 +20,7 @@
                 "UNIQUE (CruiseID, DeviceID, StratumCode, SampleGroupCode), " +
 
                 "FOREIGN KEY (DeviceID) REFERENCES Device (DeviceID) ON DELETE CASCADE, " +
-                "FOREIGN KEY (StratumCode, SampleGroupCode, CruiseID) REFERENCES SampleGroup_V3 (StratumCode, SampleGroupCode, CruiseID) ON DELETE CASCADE ON UPDATE CASCADE " +
+                "FOREIGN KEY (StratumCode, SampleGroupCode, CruiseID) REFERENCES SampleGroup (StratumCode, SampleGroupCode, CruiseID) ON DELETE CASCADE ON UPDATE CASCADE " +
             ");";
 
         public const string CREATE_TRIGGER_SAMPLERSTATE_ONUPDATE =

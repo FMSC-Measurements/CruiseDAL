@@ -16,7 +16,7 @@
                 "CHECK (LiveDead IN ('L', 'D'))," +
 
                 //"FOREIGN KEY (StratumCode) REFERENCES Stratum (Code), " +
-                "FOREIGN KEY (StratumCode, SampleGroupCode, CruiseID) REFERENCES SampleGroup_V3 (StratumCode, SampleGroupCode, CruiseID) ON DELETE CASCADE ON UPDATE CASCADE," +
+                "FOREIGN KEY (StratumCode, SampleGroupCode, CruiseID) REFERENCES SampleGroup (StratumCode, SampleGroupCode, CruiseID) ON DELETE CASCADE ON UPDATE CASCADE," +
                 "FOREIGN KEY (Species) REFERENCES SpeciesCode (Species) ON UPDATE CASCADE " +
             ");";
 
@@ -48,7 +48,7 @@
                     "tdv.Species, " +
                     "tdv.LiveDead " +
                 "FROM {1}.SampleGroupTreeDefaultValue as sgtdv " +
-                "JOIN {0}.SampleGroup_V3 AS sg USING (SampleGroup_CN) " +
+                "JOIN {0}.SampleGroup AS sg USING (SampleGroup_CN) " +
                 "JOIN {1}.TreeDefaultValue AS tdv USING (TreeDefaultValue_CN);";
     }
 

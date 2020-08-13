@@ -12,9 +12,9 @@ SELECT
     0 AS IsResolved,
     null AS Resolution,
     null AS ResolutionInitials
-FROM Log_V3 AS l
-JOIN Tree_V3 AS t USING (TreeID)
-JOIN LogGradeAuditRule_V3 AS lgar ON
+FROM Log AS l
+JOIN Tree AS t USING (TreeID)
+JOIN LogGradeAuditRule AS lgar ON
     t.CruiseID = lgar.CruiseID
     AND ifnull(lgar.Species, '') IN  (t.Species, '')
     AND ifnull(l.Grade, '') = lgar.Grade

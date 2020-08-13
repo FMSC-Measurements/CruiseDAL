@@ -12,7 +12,7 @@ with treeError_species AS (
         'e' AS Level,
         'Species Is Missing' AS Message,
         'Species' AS Field
-    FROM Tree_V3 AS t
+    FROM Tree AS t
     WHERE t.Species IS NULL OR t.Species = ''),
 
     treeError_liveDead AS (
@@ -21,7 +21,7 @@ with treeError_species AS (
         'e' AS Level,
         'Live/Dead Value Is Missing' AS Message,
         'LiveDead' AS Field
-    FROM Tree_V3 AS t
+    FROM Tree AS t
     WHERE t.LiveDead IS NULL OR t.LiveDead = ''),
 
     treeError_heights AS (
@@ -32,7 +32,7 @@ with treeError_species AS (
         'Aleast One Height Parameter Must Be Greater Than 0' AS Message,
         '*' AS Field
     FROM TreeMeasurment AS tm 
-    JOIN Tree_V3 AS t USING (TreeID)
+    JOIN Tree AS t USING (TreeID)
     WHERE t.CountOrMeasure = 'M' AND tm.TotalHeight <=0 AND tm.MerchHeightPrimary <= 0 AND tm.MerchHeightSecondary <= 0 AND tm.UpperStemHeight <= 0 ),
 
     treeError_merchHeightSecondary AS (
@@ -43,7 +43,7 @@ with treeError_species AS (
         'Merch Height Secondary Must Be Greater Than or Equal Merch Height Primary' AS Message,
         'MerchHeightSecondary' AS Field
     FROM TreeMeasurment AS tm 
-    JOIN Tree_V3 AS t USING (TreeID)
+    JOIN Tree AS t USING (TreeID)
     WHERE t.CountOrMeasure = 'M' AND tm.MerchHeightSecondary > 0 AND tm.MerchHeightSecondary <= tm.MerchHeightPrimary),
 
     treeError_upperStemHeight AS (
@@ -54,7 +54,7 @@ with treeError_species AS (
         'Upper Stem Height Must Be Greater Than or Equal Merch Height Primary' AS Message,
         'UpperStemHeight' AS Field
     FROM TreeMeasurment AS tm 
-    JOIN Tree_V3 AS t USING (TreeID)
+    JOIN Tree AS t USING (TreeID)
     WHERE t.CountOrMeasure = 'M' AND tm.UpperStemHeight > 0 AND tm.UpperStemHeight < tm.MerchHeightPrimary),
 
     treeError_upperStemDiameter AS (
@@ -65,7 +65,7 @@ with treeError_species AS (
         'Upper Stem Diameter Must Be Smaller Than DBH' AS Message,
         'UpperStemDiameter' AS Field
     FROM TreeMeasurment AS tm 
-    JOIN Tree_V3 AS t USING (TreeID)
+    JOIN Tree AS t USING (TreeID)
     WHERE t.CountOrMeasure = 'M' AND tm.UpperStemDiameter > 0 AND tm.UpperStemDiameter >= tm.DBH),
 
     treeError_topDIBSecondary AS (
@@ -76,7 +76,7 @@ with treeError_species AS (
         'Top DIB Secondary must be less Top DIB Primary' AS Message,
         'TopDIBSecondary' AS Field
     FROM TreeMeasurment AS tm 
-    JOIN Tree_V3 AS t USING (TreeID)
+    JOIN Tree AS t USING (TreeID)
     WHERE t.CountOrMeasure = 'M' AND tm.TopDIBSecondary > 0 AND tm.TopDIBSecondary > tm.TopDIBPrimary),
 
     treeError_seenDefectPrimary AS (
@@ -87,7 +87,7 @@ with treeError_species AS (
         'Seen Defect Primary must be greater than Recoverable Primary' AS Message,
         'SeenDefectPrimary' AS Field
     FROM TreeMeasurment AS tm 
-    JOIN Tree_V3 AS t USING (TreeID)
+    JOIN Tree AS t USING (TreeID)
     WHERE t.CountOrMeasure = 'M' AND tm.SeenDefectPrimary > 0 AND tm.SeenDefectPrimary < tm.RecoverablePrimary)
 
 SELECT

@@ -2,8 +2,8 @@
 {
     public partial class DDL
     {
-        public const string CREATE_TABLE_SAMPLEGROUP_V3 =
-            "CREATE TABLE SampleGroup_V3 (" +
+        public const string CREATE_TABLE_SAMPLEGROUP =
+            "CREATE TABLE SampleGroup (" +
                 "SampleGroup_CN INTEGER PRIMARY KEY AUTOINCREMENT, " +
                 "CruiseID TEXT NOT NULL COLLATE NOCASE, " +
                 "SampleGroupCode TEXT NOT NULL COLLATE NOCASE, " +
@@ -38,8 +38,8 @@
                 "FOREIGN KEY (StratumCode, CruiseID) REFERENCES Stratum (Code, CruiseID) ON DELETE CASCADE ON UPDATE CASCADE" +
             ");";
 
-        public const string CREATE_TRIGGER_SAMPLEGROUP_V3_ONUPDATE =
-            "CREATE TRIGGER SampleGroup_V3_OnUpdate " +
+        public const string CREATE_TRIGGER_SAMPLEGROUP_ONUPDATE =
+            "CREATE TRIGGER SampleGroup_OnUpdate " +
             "AFTER UPDATE OF " +
                 "SampleGroupCode, " +
                 "StratumCode, " +
@@ -59,18 +59,18 @@
                 "MinKPI, " +
                 "MaxKPI, " +
                 "SmallFPS " +
-            "ON SampleGroup_V3 " +
+            "ON SampleGroup " +
             "FOR EACH ROW " +
             "BEGIN " +
-                "UPDATE SampleGroup_V3 SET ModifiedDate = datetime('now', 'localtime') WHERE SampleGroup_CN = old.SampleGroup_CN;" +
-                "UPDATE SampleGroup_V3 SET RowVersion = old.RowVersion WHERE SampleGroup_CN = old.SampleGroup_CN; " +
+                "UPDATE SampleGroup SET ModifiedDate = datetime('now', 'localtime') WHERE SampleGroup_CN = old.SampleGroup_CN;" +
+                "UPDATE SampleGroup SET RowVersion = old.RowVersion WHERE SampleGroup_CN = old.SampleGroup_CN; " +
             "END;";
     }
 
     public partial class Migrations
     {
-        public const string MIGRATE_SAMPLEGROUP_V3_FROM_SAMPLEGROUP =
-            "INSERT INTO {0}.SampleGroup_V3 ( " +
+        public const string MIGRATE_SAMPLEGROUP_FROM_SAMPLEGROUP =
+            "INSERT INTO {0}.SampleGroup ( " +
                     "SampleGroup_CN, " +
                     "CruiseID, " +
                     "SampleGroupCode, " +

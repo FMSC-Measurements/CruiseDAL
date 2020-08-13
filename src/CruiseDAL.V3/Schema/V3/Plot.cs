@@ -2,8 +2,8 @@
 {
     public partial class DDL
     {
-        public const string CREATE_TABLE_PLOT_V3 =
-            "CREATE TABLE Plot_V3 ( " +
+        public const string CREATE_TABLE_PLOT =
+            "CREATE TABLE Plot ( " +
                 "Plot_CN INTEGER PRIMARY KEY AUTOINCREMENT, " +
                 "PlotID TEXT NOT NULL, " +
                 "PlotNumber INTEGER NOT NULL, " +
@@ -29,14 +29,14 @@
                 "FOREIGN KEY (CuttingUnitCode, CruiseID) REFERENCES CuttingUnit (Code, CruiseID) ON DELETE CASCADE ON UPDATE CASCADE " +
             ");";
 
-        public const string CREATE_INDEX_Plot_V3_CuttingUnitCode_CruiseID =
-            "CREATE INDEX Plot_V3_CuttingUnitCode_CruiseID ON Plot_V3 (CuttingUnitCode, CruiseID);";
+        public const string CREATE_INDEX_Plot_CuttingUnitCode_CruiseID =
+            "CREATE INDEX Plot_CuttingUnitCode_CruiseID ON Plot (CuttingUnitCode, CruiseID);";
 
-        public const string CREATE_INDEX_Plot_V3_PlotNumber_CruiseID =
-            "CREATE INDEX Plot_V3_PlotNumber_CruiseID ON Plot_V3 (PlotNumber, CruiseID);";
+        public const string CREATE_INDEX_Plot_PlotNumber_CruiseID =
+            "CREATE INDEX Plot_PlotNumber_CruiseID ON Plot (PlotNumber, CruiseID);";
 
-        public const string CREATE_TRIGGER_PLOT_V3_ONUPDATE =
-            "CREATE TRIGGER Plot_V3_OnUpdate " +
+        public const string CREATE_TRIGGER_PLOT_ONUPDATE =
+            "CREATE TRIGGER Plot_OnUpdate " +
             "AFTER UPDATE OF " +
                 "CuttingUnitCode, " +
                 "Slope, " +
@@ -55,8 +55,8 @@
 
     public partial class Migrations
     {
-        public const string MIGRATE_PLOT_V3_FROM_PLOT_FORMAT_STR =
-            "INSERT INTO {0}.Plot_V3 ( " +
+        public const string MIGRATE_PLOT_FROM_PLOT_FORMAT_STR =
+            "INSERT INTO {0}.Plot ( " +
                     "Plot_CN, " +
                     "PlotID, " +
                     "PlotNumber, " +

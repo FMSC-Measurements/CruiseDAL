@@ -15,8 +15,8 @@ measureTrees AS (
         t.Species,
         t.LiveDead,
         sg.PrimaryProduct
-    FROM Tree_V3 AS t
-    JOIN SampleGroup_V3 AS sg USING (SampleGroupCode, StratumCode)
+    FROM Tree AS t
+    JOIN SampleGroup AS sg USING (SampleGroupCode, StratumCode)
     WHERE t.CountOrMeasure = 'M'),
 
 -- expands treedefaultValue_TreeAuditValue to include Field, Min, Max
@@ -46,7 +46,7 @@ SELECT
     ELSE 'Validation Error' END) AS Message,
     res.Resolution
 FROM measureTrees AS t
-JOIN TreeFieldSetup_V3 AS tfs USING (StratumCode, CruiseID)
+JOIN TreeFieldSetup AS tfs USING (StratumCode, CruiseID)
 JOIN TreeFieldValue_All AS tfv USING (TreeID, Field)
 -- get audit rule
 JOIN treeDefaultValue_TreeAuditRule_Epanded tdvtar
