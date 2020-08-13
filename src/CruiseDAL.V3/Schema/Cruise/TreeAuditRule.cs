@@ -10,6 +10,7 @@
     Field TEXT NOT NULL COLLATE NOCASE,
     Min REAL,
     Max REAL,
+    Desctiption TEXT,
     UNIQUE (TreeAuditRuleID),
 
     CHECK ((Min IS NULL OR Max IS NULL) OR (Min < Max)),
