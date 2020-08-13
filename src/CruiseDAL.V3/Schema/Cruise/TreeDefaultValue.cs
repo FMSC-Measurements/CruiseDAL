@@ -3,39 +3,44 @@
     public partial class DDL
     {
         public const string CREATE_TABLE_TREEDEFAULTVALUE =
-            "CREATE TABLE TreeDefaultValue ( " +
-                "TreeDefaultValue_CN INTEGER PRIMARY KEY AUTOINCREMENT, " +
-                "PrimaryProduct TEXT NOT NULL COLLATE NOCASE, " +
-                "Species TEXT NOT NULL COLLATE NOCASE, " +
-                "LiveDead TEXT NOT NULL COLLATE NOCASE, " +
-                "FIAcode INTEGER DEFAULT 0, " +
-                "CullPrimary REAL DEFAULT 0.0, " +
-                "HiddenPrimary REAL DEFAULT 0.0, " +
-                "CullSecondary REAL DEFAULT 0.0, " +
-                "HiddenSecondary REAL DEFAULT 0.0, " +
-                "Recoverable REAL DEFAULT 0.0, " +
-                "ContractSpecies TEXT, " +
-                "TreeGrade TEXT DEFAULT '0' COLLATE NOCASE, " +
-                "MerchHeightLogLength INTEGER DEFAULT 0, " +
-                "MerchHeightType TEXT DEFAULT 'F' , " +
-                "FormClass REAL DEFAULT 0.0, " +
-                "BarkThicknessRatio REAL DEFAULT 0.0, " +
-                "AverageZ REAL DEFAULT 0.0, " +
-                "ReferenceHeightPercent REAL DEFAULT 0.0, " +
-                "CreatedBy TEXT DEFAULT 'none', " +
-                "CreatedDate DateTime DEFAULT (datetime( 'now', 'localtime')), " +
-                "ModifiedBy TEXT, " +
-                "ModifiedDate DateTime, " +
-                "RowVersion INTEGER DEFAULT 0, " +
-                "UNIQUE (PrimaryProduct, Species, LiveDead), " +
+@"CREATE TABLE TreeDefaultValue ( 
+    TreeDefaultValue_CN INTEGER PRIMARY KEY AUTOINCREMENT, 
+    CruiseID TEXT NOT NULL COLLATE NOCASE,
+    PrimaryProduct TEXT NOT NULL COLLATE NOCASE, 
+    Species TEXT NOT NULL COLLATE NOCASE, 
+    LiveDead TEXT NOT NULL COLLATE NOCASE, 
+    FIAcode INTEGER DEFAULT 0, 
+    CullPrimary REAL DEFAULT 0.0, 
+    HiddenPrimary REAL DEFAULT 0.0, 
+    CullSecondary REAL DEFAULT 0.0, 
+    HiddenSecondary REAL DEFAULT 0.0,
+    Recoverable REAL DEFAULT 0.0, 
+    ContractSpecies TEXT, 
+    TreeGrade TEXT DEFAULT '0' COLLATE NOCASE, 
+    MerchHeightLogLength INTEGER DEFAULT 0,
+    MerchHeightType TEXT DEFAULT 'F' , 
+    FormClass REAL DEFAULT 0.0, 
+    BarkThicknessRatio REAL DEFAULT 0.0, 
+    AverageZ REAL DEFAULT 0.0, 
+    ReferenceHeightPercent REAL DEFAULT 0.0, 
+    CreatedBy TEXT DEFAULT 'none', 
+    CreatedDate DateTime DEFAULT (datetime( 'now', 'localtime')), 
+    ModifiedBy TEXT, 
+    ModifiedDate DateTime, 
+    RowVersion INTEGER DEFAULT 0, 
+    UNIQUE (CruiseID, PrimaryProduct, Species, LiveDead), 
 
-                "CHECK (LiveDead IN ('L', 'D'))," +
+    CHECK (LiveDead IN ('L', 'D')),
 
-                "FOREIGN KEY (Species) REFERENCES SpeciesCode (Species) ON UPDATE CASCADE ON DELETE CASCADE" +
-            ");";
+    FOREIGN KEY (CruiseID) REFERENCES Cruise (CruiseID) ON DELETE CASCADE,
+    FOREIGN KEY (Species) REFERENCES SpeciesCode (Species) ON UPDATE CASCADE ON DELETE CASCADE
+);";
 
         public const string CREATE_INDEX_TreeDefaultValue_Species =
-            @"CREATE INDEX 'TreeDefaultValue_Species' ON 'TreeDefaultValue'('Species');";
+            @"CREATE INDEX 'TreeDefaultValue_Species' ON 'TreeDefaultValue' ('Species');";
+
+        public const string CREATE_INDEX_TreeDefaultValue_CruiseID =
+            @"CREATE INDEX 'TreeDefaultValue_CruiseID' ON 'TreeDefaultValue' ('CruiseID');";
 
         public const string CREATE_TRIGGER_TREEDEFAULTVALUE_ONUPDATE =
             "CREATE TRIGGER TreeDefaultValue_OnUpdate " +
