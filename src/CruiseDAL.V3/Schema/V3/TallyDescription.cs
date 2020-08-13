@@ -16,7 +16,7 @@
 
                 //"UNIQUE (StratumCode, SampleGroupCode, Species, LiveDead)  ON CONFLICT REPLACE, " +
                 //"UNIQUE (StratumCode, Description), " +
-                "FOREIGN KEY (StratumCode, SampleGroupCode, CruiseID) REFERENCES SampleGroup_V3 (StratumCode, SampleGroupCode, CruiseID) ON DELETE CASCADE ON UPDATE CASCADE, " +
+                "FOREIGN KEY (StratumCode, SampleGroupCode, CruiseID) REFERENCES SampleGroup (StratumCode, SampleGroupCode, CruiseID) ON DELETE CASCADE ON UPDATE CASCADE, " +
                 "FOREIGN KEY (Species) REFERENCES SpeciesCode (Species) ON DELETE CASCADE ON UPDATE CASCADE " +
             ");";
 

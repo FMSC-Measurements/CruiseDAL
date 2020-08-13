@@ -2,8 +2,8 @@
 {
     public partial class DDL
     {
-        public const string CREATE_TABLE_LOGGRADEAUDITRULE_V3 =
-            "CREATE TABLE LogGradeAuditRule_V3 ( " +
+        public const string CREATE_TABLE_LOGGRADEAUDITRULE =
+            "CREATE TABLE LogGradeAuditRule ( " +
                 "LogGradeAuditRule_CN INTEGER PRIMARY KEY AUTOINCREMENT, " +
                 "CruiseID TEXT NOT NULL COLLATE NOCASE, " +
                 "Species TEXT COLLATE NOCASE, " +
@@ -14,19 +14,19 @@
                 "FOREIGN KEY (CruiseID) REFERENCES Cruise (CruiseID) ON DELETE CASCADE" +
             ");";
 
-        public const string CREATE_INDEX_LogGradeAuditRule_V3_Species_DefectMax_Grade_CruiseID =
-            "CREATE UNIQUE INDEX LogGradeAuditRule_V3_Species_DefectMax_Grade_CruiseID " +
-            "ON LogGradeAuditRule_V3 " +
+        public const string CREATE_INDEX_LogGradeAuditRule_Species_DefectMax_Grade_CruiseID =
+            "CREATE UNIQUE INDEX LogGradeAuditRule_Species_DefectMax_Grade_CruiseID " +
+            "ON LogGradeAuditRule " +
             "(ifnull(Species, ''), round(DefectMax, 2), Grade, CruiseID);";
 
-        public const string CREATE_INDEX_LogGradeAuditRule_V3_Species =
-            @"CREATE INDEX 'LogGradeAuditRule_V3_Species' ON 'LogGradeAuditRule_V3'('Species');";
+        public const string CREATE_INDEX_LogGradeAuditRule_Species =
+            @"CREATE INDEX 'LogGradeAuditRule_Species' ON 'LogGradeAuditRule'('Species');";
     }
 
     public partial class Migrations
     {
-        public const string MIGRATE_LOGGRADEAUDITRULE_V3 =
-            "INSERT INTO {0}.LogGradeAuditRule_V3 ( " +
+        public const string MIGRATE_LOGGRADEAUDITRULE =
+            "INSERT INTO {0}.LogGradeAuditRule ( " +
                 "Species, " +
                 "DefectMax, " +
                 "Grade" +

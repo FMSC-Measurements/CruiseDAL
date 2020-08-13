@@ -21,7 +21,7 @@
                 "UNIQUE (PlotNumber, CuttingUnitCode, StratumCode, CruiseID), " +
 
                 "FOREIGN KEY (StratumCode,  CruiseID) REFERENCES Stratum (Code, CruiseID) ON DELETE CASCADE ON UPDATE CASCADE, " +
-                "FOREIGN KEY (PlotNumber, CuttingUnitCode, CruiseID) REFERENCES Plot_V3 (PlotNumber, CuttingUnitCode, CruiseID) ON DELETE CASCADE ON UPDATE CASCADE " +
+                "FOREIGN KEY (PlotNumber, CuttingUnitCode, CruiseID) REFERENCES Plot (PlotNumber, CuttingUnitCode, CruiseID) ON DELETE CASCADE ON UPDATE CASCADE " +
             ");";
 
         public const string CREATE_INDEX_Plot_Stratum_StratumCode_CruiseID =

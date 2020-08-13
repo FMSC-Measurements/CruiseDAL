@@ -156,7 +156,7 @@ namespace CruiseDAL.Tests.Schema
 
 
                 toDb.AttachDB(fromDb, "v2");
-                toDb.Execute(String.Format(CruiseDAL.Schema.Migrations.MIGRATE_LOGGRADEAUDITRULE_V3, "main", "v2"));
+                toDb.Execute(String.Format(CruiseDAL.Schema.Migrations.MIGRATE_LOGGRADEAUDITRULE, "main", "v2"));
 
                 var results = toDb.From<CruiseDAL.V3.Models.LogGradeAuditRule_V3>().Query().ToArray();
                 results.Should().NotBeEmpty();

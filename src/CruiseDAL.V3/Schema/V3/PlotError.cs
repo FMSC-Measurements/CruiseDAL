@@ -21,9 +21,9 @@ namespace CruiseDAL.Schema
         null AS Resolution,
         null AS ResolutionInitials
     FROM Plot_Stratum AS ps
-    JOIN Plot_V3 AS p USING (CuttingUnitCode, PlotNumber, CruiseID)
+    JOIN Plot AS p USING (CuttingUnitCode, PlotNumber, CruiseID)
     WHERE IsEmpty != 0
-        AND EXISTS (SELECT * FROM Tree_V3
+        AND EXISTS (SELECT * FROM Tree
             WHERE CuttingUnitCode = ps.CuttingUnitCode
             AND PlotNumber = ps.PlotNumber AND StratumCode = ps.StratumCode AND CruiseID = ps.CruiseID);";
     }

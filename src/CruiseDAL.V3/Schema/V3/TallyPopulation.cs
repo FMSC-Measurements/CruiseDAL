@@ -28,7 +28,7 @@
                 "ifnull(td.Description, '') AS Description, " +
                 "ifnull(thk.HotKey, '') AS HotKey " +
             "FROM SubPopulation AS sp " +
-            "JOIN SampleGroup_V3 AS sg USING (StratumCode, SampleGroupCode, CruiseID) " +
+            "JOIN SampleGroup AS sg USING (StratumCode, SampleGroupCode, CruiseID) " +
             "LEFT JOIN TallyHotKey AS thk USING (StratumCode, SampleGroupCode, Species, LiveDead, CruiseID) " +
             "LEFT JOIN TallyDescription AS td USING (StratumCode, SampleGroupCode, Species, LiveDead, CruiseID) " +
             "WHERE sg.TallyBySubPop != 0 " +
@@ -41,7 +41,7 @@
                 "null AS LiveDead, " +
                 "ifnull(td.Description,'') AS Description, " +
                 "ifnull(thk.HotKey, '') AS HotKey " +
-            "FROM SampleGroup_V3 AS sg " +
+            "FROM SampleGroup AS sg " +
             "LEFT JOIN TallyHotKey AS thk ON " +
                     "thk.CruiseID = sg.CruiseID " +
                     "AND thk.StratumCode = sg.StratumCode " +
@@ -58,56 +58,4 @@
             ";";
     }
 
-    public partial class Migrations
-    {
-        //public const string MIGRATE_TALLYPOPULATION_FROM_COUNTTREE_FORMAT_STR =
-        //    "INSERT INTO {0}.TallyPopulation ( " +
-        //            "StratumCode, " +
-        //            "SampleGroupCode, " +
-        //            "Species, " +
-        //            "LiveDead, " +
-        //            "Description, " +
-        //            "HotKey " +
-        //        ") " +
-        //        "SELECT " +
-        //            "st.Code AS StratumCode, " +
-        //            "sg.Code AS SampleGroupCode, " +
-        //            "tdv.Species AS Species, " +
-        //            "tdv.LiveDead AS LiveDead, " +
-        //            "tal.Description, " +
-        //            "tal.HotKey " +
-        //        "FROM {1}.CountTree " +
-        //        "JOIN {1}.CuttingUnit AS cu USING (CuttingUnit_CN) " +
-        //        "JOIN {1}.SampleGroup AS sg USING (SampleGroup_CN) " +
-        //        "JOIN {1}.Stratum as st USING (Stratum_CN) " +
-        //        "LEFT JOIN {1}.TreeDefaultValue AS tdv USING (TreeDefaultValue_CN) " +
-        //        "JOIN {1}.Tally tal USING (Tally_CN) " +
-        //        "GROUP BY " +
-        //            "cu.Code, " +
-        //            "st.Code, " +
-        //            "sg.Code, " +
-        //            "ifnull(tdv.Species, ''), " +
-        //            "ifnull(tdv.LiveDead, '');";
-    }
-
-    //public partial class Updater
-    //{
-    //    public const string INITIALIZE_TALLYPOPULATION_FROM_COUNTTREE =
-    //        "INSERT INTO TallyPopulation " +
-    //        "(StratumCode, SampleGroupCode, Species, LiveDead, Description, HotKey) " +
-    //            "SELECT " +
-    //                "st.Code AS StratumCode, " +
-    //                "sg.Code AS SampleGroupCode, " +
-    //                "tdv.Species AS Species, " +
-    //                "tdv.LiveDead AS LiveDead, " +
-    //                "tal.Description, " +
-    //                "tal.HotKey " +
-    //            "FROM CountTree " +
-    //            "JOIN CuttingUnit AS cu USING (CuttingUnit_CN) " +
-    //            "JOIN SampleGroup AS sg USING (SampleGroup_CN) " +
-    //            "JOIN Stratum as st USING (Stratum_CN) " +
-    //            "LEFT JOIN TreeDefaultValue AS tdv USING (TreeDefaultValue_CN) " +
-    //            "JOIN Tally tal USING (Tally_CN) " +
-    //            "GROUP BY cu.Code, st.Code, sg.Code, ifnull(tdv.Species, ''), ifnull(tdv.LiveDead, '');";
-    //}
 }

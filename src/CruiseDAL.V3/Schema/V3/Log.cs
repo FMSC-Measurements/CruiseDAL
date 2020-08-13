@@ -2,8 +2,8 @@
 {
     public partial class DDL
     {
-        public const string CREATE_TABLE_LOG_V3 =
-            "CREATE TABLE Log_V3 ( " +
+        public const string CREATE_TABLE_LOG =
+            "CREATE TABLE Log ( " +
                 "Log_CN INTEGER PRIMARY KEY AUTOINCREMENT, " +
                 "LogID TEXT NOT NULL, " +
                 "TreeID TEXT NOT NULL, " +
@@ -33,17 +33,17 @@
 
                 "CHECK (LogID LIKE '________-____-____-____-____________'), " +
 
-                "FOREIGN KEY (TreeID) REFERENCES Tree_V3 (TreeID) ON DELETE CASCADE " +
+                "FOREIGN KEY (TreeID) REFERENCES Tree (TreeID) ON DELETE CASCADE " +
             ");";
 
-        public const string CREATE_INDEX_Log_V3_LogNumber =
-            "CREATE INDEX Log_V3_LogNumber ON Log_V3 (LogNumber);";
+        public const string CREATE_INDEX_Log_LogNumber =
+            "CREATE INDEX Log_LogNumber ON Log (LogNumber);";
 
-        public const string CREATE_INDEX_Log_V3_TreeID =
-            @"CREATE INDEX Log_V3_TreeID ON Log_V3 (TreeID);";
+        public const string CREATE_INDEX_Log_TreeID =
+            @"CREATE INDEX Log_TreeID ON Log (TreeID);";
 
-        public const string CREATE_TRIGGER_LOG_V3_ONUPDATE =
-            "CREATE TRIGGER Log_V3_OnUpdate " +
+        public const string CREATE_TRIGGER_LOG_ONUPDATE =
+            "CREATE TRIGGER Log_OnUpdate " +
             "AFTER UPDATE OF " +
                 "LogNumber, " +
                 "Grade, " +
@@ -61,18 +61,18 @@
                 "CubicFootRemoved, " +
                 "DIBClass, " +
                 "BarkThickness " +
-            "ON Log_V3 " +
+            "ON Log " +
             "FOR EACH ROW " +
             "BEGIN " +
-                "UPDATE Log_V3 SET RowVersion = old.RowVersion + 1 WHERE Log_CN = old.Log_CN; " +
-                "UPDATE Log_V3 SET ModifiedDate = datetime('now', 'localtime') WHERE Log_CN = old.Log_CN; " +
+                "UPDATE Log SET RowVersion = old.RowVersion + 1 WHERE Log_CN = old.Log_CN; " +
+                "UPDATE Log SET ModifiedDate = datetime('now', 'localtime') WHERE Log_CN = old.Log_CN; " +
             "END;";
     }
 
     public partial class Migrations
     {
-        public const string MIGRATE_LOG_V3_FROM_LOG =
-            "INSERT INTO {0}.Log_V3 ( " +
+        public const string MIGRATE_LOG_FROM_LOG =
+            "INSERT INTO {0}.Log ( " +
                     "Log_CN, " +
                     "LogID, " +
                     "TreeID, " +
@@ -134,7 +134,7 @@
                     "l.ModifiedDate, " +
                     "l.RowVersion " +
                 "FROM {1}.Log as l " +
-                "JOIN {0}.Tree_V3 AS t USING (Tree_CN);";
+                "JOIN {0}.Tree AS t USING (Tree_CN);";
     }
 
     //public partial class Updater

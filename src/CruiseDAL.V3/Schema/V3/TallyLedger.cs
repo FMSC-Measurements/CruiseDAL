@@ -34,18 +34,18 @@
             "FOREIGN KEY (CuttingUnitCode, CruiseID) REFERENCES CuttingUnit (Code, CruiseID) " +
             //"FOREIGN KEY (CuttingUnitCode, StratumCode) REFERENCES CuttingUnit_Stratum (CuttingUnitCode, StratumCode), " +
             "FOREIGN KEY (StratumCode, CruiseID) REFERENCES Stratum (Code, CruiseID) , " +
-            "FOREIGN KEY (SampleGroupCode, StratumCode, CruiseID) REFERENCES SampleGroup_V3 (SampleGroupCode, StratumCode, CruiseID), " +
+            "FOREIGN KEY (SampleGroupCode, StratumCode, CruiseID) REFERENCES SampleGroup (SampleGroupCode, StratumCode, CruiseID), " +
             "FOREIGN KEY (Species) REFERENCES SpeciesCode (Species) " +
             //"FOREIGN KEY (StratumCode, SampleGroupCode, Species, LiveDead) REFERENCES TallyPopulation (StratumCode, SampleGroupCode, Species, LiveDead), " +
             //"FOREIGN KEY (CuttingUnitCode, StratumCode, PlotNumber) REFERENCES Plot_Stratum (CuttingUnitCode, StratumCode, PlotNumber), " +
             
-            "FOREIGN KEY (PlotNumber, CuttingUnitCode, CruiseID) REFERENCES Plot_V3 (PlotNumber, CuttingUnitCode, CruiseID) ON DELETE CASCADE ON UPDATE CASCADE, " +
+            "FOREIGN KEY (PlotNumber, CuttingUnitCode, CruiseID) REFERENCES Plot (PlotNumber, CuttingUnitCode, CruiseID) ON DELETE CASCADE ON UPDATE CASCADE, " +
             // everything below are tree fKey references. there are a few, but because some tree values can be null we need to have them as seperate references
-            "FOREIGN KEY (TreeID) REFERENCES Tree_V3 (TreeID) ON DELETE CASCADE, " +
-            "FOREIGN KEY (TreeID, CuttingUnitCode, StratumCode, SampleGroupCode) REFERENCES Tree_V3 (TreeID, CuttingUnitCode, StratumCode, SampleGroupCode) ON UPDATE CASCADE, " +
-            "FOREIGN KEY (TreeID, Species) REFERENCES Tree_V3 (TreeID, Species) ON UPDATE CASCADE, " +
-            "FOREIGN KEY (TreeID, LiveDead) REFERENCES Tree_V3 (TreeID, LiveDead) ON UPDATE CASCADE, " +
-            "FOREIGN KEY (TreeID, PlotNumber) REFERENCES Tree_V3 (TreeID, PlotNumber) ON UPDATE CASCADE " +
+            "FOREIGN KEY (TreeID) REFERENCES Tree (TreeID) ON DELETE CASCADE, " +
+            "FOREIGN KEY (TreeID, CuttingUnitCode, StratumCode, SampleGroupCode) REFERENCES Tree (TreeID, CuttingUnitCode, StratumCode, SampleGroupCode) ON UPDATE CASCADE, " +
+            "FOREIGN KEY (TreeID, Species) REFERENCES Tree (TreeID, Species) ON UPDATE CASCADE, " +
+            "FOREIGN KEY (TreeID, LiveDead) REFERENCES Tree (TreeID, LiveDead) ON UPDATE CASCADE, " +
+            "FOREIGN KEY (TreeID, PlotNumber) REFERENCES Tree (TreeID, PlotNumber) ON UPDATE CASCADE " +
         ");";
 
         public const string CREATE_INDEX_TallyLedger_TreeID =
@@ -133,7 +133,7 @@
             "JOIN {1}.CuttingUnit AS cu USING (CuttingUnit_CN) " +
             "JOIN {1}.Stratum AS st USING (Stratum_CN) " +
             "JOIN {1}.SampleGroup AS sg USING (SampleGroup_CN) " +
-            "JOIN {0}.Tree_V3 AS t3 USING (Tree_CN) " +
+            "JOIN {0}.Tree AS t3 USING (Tree_CN) " +
             "LEFT JOIN {0}.Plot_Stratum AS ps ON t.Plot_CN = ps.Plot_Stratum_CN " +
             "LEFT JOIN {1}.TreeDefaultValue AS tdv USING (TreeDefaultValue_CN) " +
             "WHERE t.TreeCount > 0 OR t.KPI > 0 OR t.CountOrMeasure = 'M' OR t.CountOrMeasure = 'I' " +

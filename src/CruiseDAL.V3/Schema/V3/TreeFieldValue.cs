@@ -19,7 +19,7 @@
     ValueText TEXT,
     CreatedDate DateTime DEFAULT(datetime('now', 'localtime')) ,
     FOREIGN KEY (Field) REFERENCES TreeField (Field),
-    FOREIGN KEY (TreeID) REFERENCES Tree_V3 (TreeID) ON DELETE CASCADE
+    FOREIGN KEY (TreeID) REFERENCES Tree (TreeID) ON DELETE CASCADE
 );";
 
         public const string CREATE_VIEW_TreeFieldValue_TreeMeasurment =
@@ -127,8 +127,8 @@ SELECT
     NULL AS CreatedDate
 
 FROM TreeMeasurment AS tm
-JOIN Tree_V3 AS t USING (TreeID)
-CROSS JOIN TreeFieldSetup_V3 AS tfs
+JOIN Tree AS t USING (TreeID)
+CROSS JOIN TreeFieldSetup AS tfs
 JOIN TreeField AS tf USING (Field)
 WHERE tf.IsTreeMeasurmentField = 1;";
 

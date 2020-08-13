@@ -2,8 +2,8 @@
 {
     public partial class DDL
     {
-        public const string CREATE_TABLE_LOGFIELDSETUP_V3 =
-            "CREATE TABLE LogFieldSetup_V3 (" +
+        public const string CREATE_TABLE_LOGFIELDSETUP =
+            "CREATE TABLE LogFieldSetup (" +
                 "StratumCode TEXT NOT NULL, " +
                 "CruiseID TEXT NOT NULL COLLATE NOCASE," +
                 "Field TEXT NOT NULL, " +
@@ -17,17 +17,17 @@
                 "FOREIGN KEY (Field) REFERENCES LogField (Field) " +
             ");";
 
-        public const string CREATE_INDEX_LogFieldSetup_V3_Field =
-            @"CREATE INDEX 'LogFieldSetup_V3_Field' ON 'LogFieldSetup_V3'('Field' COLLATE NOCASE);";
+        public const string CREATE_INDEX_LogFieldSetup_Field =
+            @"CREATE INDEX 'LogFieldSetup_Field' ON 'LogFieldSetup'('Field' COLLATE NOCASE);";
 
-        public const string CREATE_INDEX_LogFieldSetup_V3_StratumCode_CruiseID =
-            @"CREATE INDEX 'LogFieldSetup_V3_StratumCode_CruiseID' ON 'LogFieldSetup_V3'('StratumCode', 'CruiseID');";
+        public const string CREATE_INDEX_LogFieldSetup_StratumCode_CruiseID =
+            @"CREATE INDEX 'LogFieldSetup_StratumCode_CruiseID' ON 'LogFieldSetup'('StratumCode', 'CruiseID');";
     }
 
     public partial class Migrations
     {
-        public const string MIGRATE_LOGFIELDSETUP_V3_FROM_LOGFIELDSETUP =
-            "INSERT INTO {0}.LogFieldSetup_V3 ( " +
+        public const string MIGRATE_LOGFIELDSETUP_FROM_LOGFIELDSETUP =
+            "INSERT INTO {0}.LogFieldSetup ( " +
                     "StratumCode, " +
                     "CruiseID, " +
                     "Field, " +

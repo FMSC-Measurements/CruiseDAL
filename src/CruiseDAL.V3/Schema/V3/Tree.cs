@@ -4,8 +4,8 @@
     {
         // values stored in the tree table are value we don't expect to change after the initial insert of the record
         // for changable values use the treeMeasurments table or treeFieldValue table
-        public const string CREATE_TABLE_TREE_V3 =
-            "CREATE TABLE Tree_V3 ( " +
+        public const string CREATE_TABLE_TREE =
+            "CREATE TABLE Tree ( " +
                 "Tree_CN INTEGER PRIMARY KEY AUTOINCREMENT, " +
                 "CruiseID TEXT NOT NULL COLLATE NOCASE, " +
                 "TreeID TEXT NOT NULL , " +
@@ -34,44 +34,44 @@
                 "CHECK (LiveDead IN ('L', 'D') OR LiveDead IS NULL)," +
 
                 "FOREIGN KEY (CuttingUnitCode, CruiseID) REFERENCES CuttingUnit (Code, CruiseID) ON DELETE CASCADE ON UPDATE CASCADE, " +
-                "FOREIGN KEY (SampleGroupCode, StratumCode, CruiseID) REFERENCES SampleGroup_V3 (SampleGroupCode, StratumCode, CruiseID) ON DELETE CASCADE ON UPDATE CASCADE, " +
-                "FOREIGN KEY (PlotNumber, CuttingUnitCode, CruiseID) REFERENCES Plot_V3 (PlotNumber, CuttingUnitCode, CruiseID) ON DELETE CASCADE ON UPDATE CASCADE, " +
+                "FOREIGN KEY (SampleGroupCode, StratumCode, CruiseID) REFERENCES SampleGroup (SampleGroupCode, StratumCode, CruiseID) ON DELETE CASCADE ON UPDATE CASCADE, " +
+                "FOREIGN KEY (PlotNumber, CuttingUnitCode, CruiseID) REFERENCES Plot (PlotNumber, CuttingUnitCode, CruiseID) ON DELETE CASCADE ON UPDATE CASCADE, " +
                 //"FOREIGN KEY (Species, LiveDead, SampleGroupCode, StratumCode) REFERENCES SubPopulation (Species, LiveDead, SampleGroupCode, StratumCode), " +
                 "FOREIGN KEY (Species) REFERENCES SpeciesCode (Species) " +
             ")";
 
-        public const string CREATE_INDEX_Tree_V3_TreeNumber_CruiseID =
-            "CREATE INDEX Tree_V3_TreeNumber_CruiseID ON Tree_V3 (TreeNumber, CruiseID);";
+        public const string CREATE_INDEX_Tree_TreeNumber_CruiseID =
+            "CREATE INDEX Tree_TreeNumber_CruiseID ON Tree (TreeNumber, CruiseID);";
 
-        public const string CREATE_INDEX_Tree_V3_Species =
-            @"CREATE INDEX 'Tree_V3_Species' ON 'Tree_V3'('Species');";
+        public const string CREATE_INDEX_Tree_Species =
+            @"CREATE INDEX 'Tree_Species' ON 'Tree'('Species');";
 
-        public const string CREATE_INDEX_Tree_V3_PlotNumber_CuttingUnitCode_CruiseID =
-            @"CREATE INDEX 'Tree_V3_PlotNumber_CuttingUnitCode_CruiseID' ON 'Tree_V3'('PlotNumber', 'CuttingUnitCode', 'CruiseID');";
+        public const string CREATE_INDEX_Tree_PlotNumber_CuttingUnitCode_CruiseID =
+            @"CREATE INDEX 'Tree_PlotNumber_CuttingUnitCode_CruiseID' ON 'Tree'('PlotNumber', 'CuttingUnitCode', 'CruiseID');";
 
-        public const string CREATE_INDEX_Tree_V3_SampleGroupCode_StratumCode_CruiseID =
-            @"CREATE INDEX 'Tree_V3_SampleGroupCode_StratumCode_CruiseID' ON 'Tree_V3'('SampleGroupCode', 'StratumCode', 'CruiseID');";
+        public const string CREATE_INDEX_Tree_SampleGroupCode_StratumCode_CruiseID =
+            @"CREATE INDEX 'Tree_SampleGroupCode_StratumCode_CruiseID' ON 'Tree'('SampleGroupCode', 'StratumCode', 'CruiseID');";
 
-        public const string CREATE_INDEX_Tree_V3_StratumCode_CruiseID =
-            @"CREATE INDEX 'Tree_V3_StratumCode_CruiseID' ON 'Tree_V3'('StratumCode', 'CruiseID');";
+        public const string CREATE_INDEX_Tree_StratumCode_CruiseID =
+            @"CREATE INDEX 'Tree_StratumCode_CruiseID' ON 'Tree'('StratumCode', 'CruiseID');";
 
-        public const string CREATE_INDEX_Tree_V3_CuttingUnitCode_CruiseID =
-            @"CREATE INDEX 'Tree_V3_CuttingUnitCode_CruiseID' ON 'Tree_V3'('CuttingUnitCode', 'CruiseID');";
+        public const string CREATE_INDEX_Tree_CuttingUnitCode_CruiseID =
+            @"CREATE INDEX 'Tree_CuttingUnitCode_CruiseID' ON 'Tree'('CuttingUnitCode', 'CruiseID');";
 
-        public const string CREATE_INDEX_Tree_V3_TreeID_CuttingUnitCode_SampleGroupCode_StratumCode =
-            @"CREATE UNIQUE INDEX Tree_V3_TreeID_CuttingUnitCode_SampleGroupCode_StratumCode ON Tree_V3 (TreeID, CuttingUnitCode, SampleGroupCode, StratumCode);";
+        public const string CREATE_INDEX_Tree_TreeID_CuttingUnitCode_SampleGroupCode_StratumCode =
+            @"CREATE UNIQUE INDEX Tree_TreeID_CuttingUnitCode_SampleGroupCode_StratumCode ON Tree (TreeID, CuttingUnitCode, SampleGroupCode, StratumCode);";
 
-        public const string CREATE_INDEX_Tree_V3_TreeID_Species =
-            @"CREATE UNIQUE INDEX Tree_V3_TreeID_Species ON Tree_V3 (TreeID, Species);";
+        public const string CREATE_INDEX_Tree_TreeID_Species =
+            @"CREATE UNIQUE INDEX Tree_TreeID_Species ON Tree (TreeID, Species);";
 
-        public const string CREATE_INDEX_Tree_V3_TreeID_LiveDead =
-            @"CREATE UNIQUE INDEX Tree_V3_TreeID_LiveDead ON Tree_V3 (TreeID, LiveDead);";
+        public const string CREATE_INDEX_Tree_TreeID_LiveDead =
+            @"CREATE UNIQUE INDEX Tree_TreeID_LiveDead ON Tree (TreeID, LiveDead);";
 
-        public const string CREATE_INDEX_Tree_V3_TreeID_PlotNumber =
-            @"CREATE UNIQUE INDEX Tree_V3_TreeID_PlotNumber ON Tree_V3 (TreeID, PlotNumber);";
+        public const string CREATE_INDEX_Tree_TreeID_PlotNumber =
+            @"CREATE UNIQUE INDEX Tree_TreeID_PlotNumber ON Tree (TreeID, PlotNumber);";
 
-        public const string CREATE_TRIGGER_TREE_V3_ONUPDATE =
-            "CREATE TRIGGER Tree_V3_OnUpdate " +
+        public const string CREATE_TRIGGER_TREE_ONUPDATE =
+            "CREATE TRIGGER Tree_OnUpdate " +
             "AFTER UPDATE OF " +
                 "TreeID, " +
                 "CuttingUnitCode, " +
@@ -85,20 +85,20 @@
             "ON Tree_V3 " +
             "FOR EACH ROW " +
             "BEGIN " +
-                "UPDATE Tree_V3 SET ModifiedDate = datetime('now', 'localtime') WHERE Tree_CN = old.Tree_CN; " +
-                "UPDATE Tree_V3 SET RowVersion = old.RowVersion + 1 WHERE Tree_CN = old.Tree_CN; " +
+                "UPDATE Tree SET ModifiedDate = datetime('now', 'localtime') WHERE Tree_CN = old.Tree_CN; " +
+                "UPDATE Tree SET RowVersion = old.RowVersion + 1 WHERE Tree_CN = old.Tree_CN; " +
             "END; ";
     }
 
     public partial class Migrations
     {
-        public const string MIGRATE_TREE_V3_FROM_TREE =
+        public const string MIGRATE_TREE_FROM_TREE =
             //@"WITH generate_guid AS ( SELECT hex( randomblob(4)) || '-' || hex( randomblob(2)) 
             // || '-' || '4' || substr(hex(randomblob(2)), 2) || '-'
             // || substr('AB89', 1 + (abs(random()) % 4), 1) ||
             // substr(hex(randomblob(2)), 2) || '-' || hex(randomblob(6)) AS guid ) " +
 
-            "INSERT INTO {0}.Tree_V3 ( " +
+            "INSERT INTO {0}.Tree ( " +
                     "Tree_CN, " +
                     "CruiseID, " +
                     "TreeID, " +

@@ -2,8 +2,8 @@
 {
     public partial class DDL
     {
-        public const string CREATE_TABLE_TREEFIELDSETUP_V3 =
-            "CREATE TABLE TreeFieldSetup_V3 ( " +
+        public const string CREATE_TABLE_TREEFIELDSETUP =
+            "CREATE TABLE TreeFieldSetup ( " +
                 "CruiseID TEXT NOT NULL COLLATE NOCASE," +
                 "StratumCode TEXT NOT NULL, " +
                 "Field TEXT NOT NULL, " +
@@ -15,17 +15,17 @@
                 "FOREIGN KEY (Field) REFERENCES TreeField (Field) " +
             ");";
 
-        public const string CREATE_INDEX_TreeFieldSetup_V3_Field =
-            @"CREATE INDEX TreeFieldSetup_V3_Field ON TreeFieldSetup_V3 (Field COLLATE NOCASE);";
+        public const string CREATE_INDEX_TreeFieldSetup_Field =
+            @"CREATE INDEX TreeFieldSetup_Field ON TreeFieldSetup (Field COLLATE NOCASE);";
 
-        public const string CREATE_INDEX_TreeFieldSetup_V3_StratumCode =
-            @"CREATE INDEX TreeFieldSetup_V3_StratumCode ON TreeFieldSetup_V3 (StratumCode COLLATE NOCASE);";
+        public const string CREATE_INDEX_TreeFieldSetup_StratumCode =
+            @"CREATE INDEX TreeFieldSetup_StratumCode ON TreeFieldSetup (StratumCode COLLATE NOCASE);";
     }
 
     public partial class Migrations
     {
-        public const string MIGRATE_TREEFIELDSETUP_V3_FROM_TREEFIELDSETUP_FORMAT_STR =
-            "INSERT INTO {0}.TreeFieldSetup_V3 ( " +
+        public const string MIGRATE_TREEFIELDSETUP_FROM_TREEFIELDSETUP_FORMAT_STR =
+            "INSERT INTO {0}.TreeFieldSetup ( " +
                     "CruiseID," +
                     "StratumCode, " +
                     "Field, " +
