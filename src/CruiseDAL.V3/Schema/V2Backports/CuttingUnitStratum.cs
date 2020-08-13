@@ -3,7 +3,7 @@
     public partial class DDL
     {
         public const string CREATE_VIEW_CUTTINGUNITSTRATUM =
-            "CREATE VIEW CuttingUnitStratum " +
+            "CREATE VIEW CuttingUnitStratum_V2 " +
             "AS " +
                 "SELECT cu.CuttingUnit_CN, " +
                 "st.Stratum_CN, " +

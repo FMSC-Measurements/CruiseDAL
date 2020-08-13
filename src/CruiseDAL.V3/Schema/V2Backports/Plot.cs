@@ -3,7 +3,7 @@
     public partial class DDL
     {
         public const string CREATE_VIEW_PLOT =
-            "CREATE VIEW Plot AS " +
+            "CREATE VIEW Plot_V2 AS " +
             "SELECT " +
                 "null AS Plot_GUID, " +
                 "ps.Plot_Stratum_CN AS Plot_CN, " +
@@ -27,7 +27,7 @@
                 "ps.ModifiedDate, " +
                 "ps.RowVersion " +
             "FROM Plot_Stratum AS ps " +
-            "JOIN Plot_V3 AS p  USING (PlotNumber, CuttingUnitCode)" +
+            "JOIN Plot AS p  USING (PlotNumber, CuttingUnitCode)" +
             "JOIN Stratum AS st ON ps.StratumCode = st.Code " +
             "JOIN CuttingUnit AS cu ON p.CuttingUnitCode = cu.Code" +
             ";";

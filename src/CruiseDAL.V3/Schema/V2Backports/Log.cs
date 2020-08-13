@@ -3,7 +3,7 @@
     public partial class DDL
     {
         public const string CREATE_VIEW_LOG =
-            "CREATE VIEW Log AS " +
+            "CREATE VIEW Log_V2 AS " +
             "SELECT " +
             "l.Log_CN, " +
             "l.LogID AS Log_GUID, " +
@@ -29,7 +29,7 @@
             "l.ModifiedBy, " +
             "l.ModifiedDate, " +
             "l.RowVersion " +
-            "FROM Log_V3 AS l " +
-            "JOIN Tree_V3 AS t USING (TreeID);";
+            "FROM Log AS l " +
+            "JOIN Tree AS t USING (TreeID);";
     }
 }
