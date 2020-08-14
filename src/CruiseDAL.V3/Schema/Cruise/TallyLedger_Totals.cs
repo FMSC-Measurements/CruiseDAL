@@ -13,7 +13,7 @@ SELECT
     tl.CruiseID,
     tl.StratumCode,
     tl.SampleGroupCode,
-    tl.Species,
+    tl.SpeciesCode,
     tl.LiveDead,
     sum(tl.TreeCount) AS TreeCount,
     sum(tl.KPI) AS KPI
@@ -24,7 +24,7 @@ GROUP BY
     CuttingUnitCode,
     StratumCode,
     SampleGroupCode,
-    ifnull(Species, ''),
+    ifnull(SpeciesCode, ''),
     ifnull(LiveDead, '');";
 
         public const string CREATE_VIEW_TallyLedger_Plot_Totals =
@@ -33,7 +33,7 @@ SELECT
     tl.CruiseID,
     tl.StratumCode,
     tl.SampleGroupCode,
-    tl.Species,
+    tl.SpeciesCode,
     tl.LiveDead,
     tl.PlotNumber,
     sum(tl.TreeCount) AS TreeCount,
@@ -45,7 +45,7 @@ GROUP BY
     CuttingUnitCode,
     StratumCode,
     SampleGroupCode,
-    ifnull(Species, ''),
+    ifnull(SpeciesCode, ''),
     ifnull(LiveDead, ''),
     ifnull(PlotNumber, -1);";
 

@@ -5,19 +5,21 @@ namespace CruiseDAL.Schema
         public const string CREATE_VIEW_TREEERROR =
 @"CREATE VIEW TreeError AS
 
-with treeError_species AS (
+WITH
+    treeError_speciesCode AS (
     SELECT 
         t.TreeID,
         t.CruiseID,
         'e' AS Level,
-        'Species Is Missing' AS Message,
-        'Species' AS Field
+        'Species Code Is Missing' AS Message,
+        'SpeciesCode' AS Field
     FROM Tree AS t
-    WHERE t.Species IS NULL OR t.Species = ''),
+    WHERE t.SpeciesCode IS NULL OR t.SpeciesCode = ''),
 
     treeError_liveDead AS (
     SELECT 
         t.TreeID,
+        t.CruiseID,
         'e' AS Level,
         'Live/Dead Value Is Missing' AS Message,
         'LiveDead' AS Field
@@ -27,7 +29,7 @@ with treeError_species AS (
     treeError_heights AS (
     SELECT 
         tm.TreeID,
-        t.TreeID,
+        t.CruiseID,
         'e' AS Level,
         'Aleast One Height Parameter Must Be Greater Than 0' AS Message,
         '*' AS Field
@@ -60,7 +62,7 @@ with treeError_species AS (
     treeError_upperStemDiameter AS (
     SELECT 
         tm.TreeID,
-        t.CruiseID
+        t.CruiseID,
         'e' AS Level,
         'Upper Stem Diameter Must Be Smaller Than DBH' AS Message,
         'UpperStemDiameter' AS Field
@@ -114,7 +116,7 @@ SELECT
     null AS Resolution, 
     null AS ResolutionInitials
 FROM (
-    SELECT * FROM treeError_species
+    SELECT * FROM treeError_speciesCode
     UNION ALL 
     SELECT * FROM treeError_liveDead
     UNION ALL 

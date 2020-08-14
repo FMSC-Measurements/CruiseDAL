@@ -7,8 +7,8 @@
             "SELECT " +
                 "tdv.TreeDefaultValue_CN, " +
                 "tar.TreeAuditRule_CN AS TreeAuditValue_CN " +
-            "FROM TreeDefaultValue_TreeAuditRule tdvtar " +
-            "JOIN TreeDefaultValue AS tdv USING (Species, LiveDead, PrimaryProduct) " +
+            "FROM TreeAuditRuleSelector tars " +
+            "JOIN TreeDefaultValue AS tdv USING (SpeciesCode, LiveDead, PrimaryProduct) " +
             "JOIN TreeAuditRule AS tar USING (TreeAuditRuleID)";
     }
 }

@@ -6,43 +6,45 @@
             "CREATE TABLE LogGradeAuditRule ( " +
                 "LogGradeAuditRule_CN INTEGER PRIMARY KEY AUTOINCREMENT, " +
                 "CruiseID TEXT NOT NULL COLLATE NOCASE, " +
-                "Species TEXT COLLATE NOCASE, " +
+                "SpeciesCode TEXT COLLATE NOCASE, " +
                 "DefectMax REAL Default 0.0, " +
                 "Grade TEXT NOT NULL COLLATE NOCASE CHECK (length(Grade) > 0), " +
 
-                "FOREIGN KEY (Species) REFERENCES SpeciesCode (Species) ON DELETE CASCADE ON UPDATE CASCADE," +
+                "FOREIGN KEY (SpeciesCode) REFERENCES Species (SpeciesCode) ON DELETE CASCADE ON UPDATE CASCADE," +
                 "FOREIGN KEY (CruiseID) REFERENCES Cruise (CruiseID) ON DELETE CASCADE" +
             ");";
 
-        public const string CREATE_INDEX_LogGradeAuditRule_Species_DefectMax_Grade_CruiseID =
-            "CREATE UNIQUE INDEX LogGradeAuditRule_Species_DefectMax_Grade_CruiseID " +
+        public const string CREATE_INDEX_LogGradeAuditRule_SpeciesCode_DefectMax_Grade_CruiseID =
+            "CREATE UNIQUE INDEX LogGradeAuditRule_SpeciesCode_DefectMax_Grade_CruiseID " +
             "ON LogGradeAuditRule " +
-            "(ifnull(Species, ''), round(DefectMax, 2), Grade, CruiseID);";
+            "(ifnull(SpeciesCode, ''), round(DefectMax, 2), Grade, CruiseID);";
 
-        public const string CREATE_INDEX_LogGradeAuditRule_Species =
-            @"CREATE INDEX 'LogGradeAuditRule_Species' ON 'LogGradeAuditRule'('Species');";
+        public const string CREATE_INDEX_LogGradeAuditRule_SpeciesCode =
+            @"CREATE INDEX 'LogGradeAuditRule_SpeciesCode' ON 'LogGradeAuditRule' ('SpeciesCode');";
     }
 
     public partial class Migrations
     {
         public const string MIGRATE_LOGGRADEAUDITRULE =
             "INSERT INTO {0}.LogGradeAuditRule ( " +
-                "Species, " +
+                "CruiseID," +
+                "SpeciesCode, " +
                 "DefectMax, " +
                 "Grade" +
             ") " +
-            "WITH RECURSIVE splitGrades(Species, DefectMax, Grade, ValidGrades) AS (" +
-                "SELECT Species, DefectMax, '', replace(ValidGrades, ' ', '') FROM {1}.LogGradeAuditRule " + // select values from original table removing all white space
+            "WITH RECURSIVE splitGrades(SpeciesCode, DefectMax, Grade, ValidGrades) AS (" +
+                "SELECT Species AS SpeciesCode, DefectMax, '', replace(ValidGrades, ' ', '') FROM {1}.LogGradeAuditRule " + // select values from original table removing all white space
                 "UNION ALL " +
                 "SELECT " +
-                        "Species, DefectMax, " +
+                        "SpeciesCode, DefectMax, " +
                         "substr(ValidGrades, 0, ifnull(nullif(instr(ValidGrades, ','), 0), length(ValidGrades) + 1)), " + // grab value upto the next comma, if no comma return whole string
                         "substr(ValidGrades, ifnull(nullif(instr(ValidGrades, ','), 0), length(ValidGrades) + 1)+1) " + // send rest of the original text after our comma to next itteration
                 "   FROM splitGrades " +
                     "WHERE length(ValidGrades) > 0" + // end loop when length of remaining text is 0
             ") " +
             "SELECT " +
-                "nullif(sg.Species, 'ANY') AS Species, " + // in version 2 'ANY' was used to indicate that a rule applied to all species values
+                "'{3}', " +
+                "nullif(sg.SpeciesCode, 'ANY') AS SpeciesCode, " + // in version 2 'ANY' was used to indicate that a rule applied to all species values
                 "sg.DefectMax, " +
                 "sg.Grade " +
             "FROM splitGrades AS sg " +

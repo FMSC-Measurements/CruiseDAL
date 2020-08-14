@@ -4,11 +4,11 @@
     {
         public const string CREATE_TABLE_TALLYDESCRIPTION =
             "CREATE TABLE TallyDescription ( " +
-                "TallyDescription_CN INTEGER PRIMARY KEY AUTOINCREMENT" +
+                "TallyDescription_CN INTEGER PRIMARY KEY AUTOINCREMENT, " +
                 "CruiseID TEXT NOT NULL COLLATE NOCASE, " +
                 "StratumCode TEXT NOT NULL COLLATE NOCASE, " +
                 "SampleGroupCode TEXT NOT NULL COLLATE NOCASE, " +
-                "Species TEXT COLLATE NOCASE, " +
+                "SpeciesCode TEXT COLLATE NOCASE, " +
                 "LiveDead TEXT COLLATE NOCASE, " +
                 "Description TEXT, " +
 
@@ -17,16 +17,16 @@
                 //"UNIQUE (StratumCode, SampleGroupCode, Species, LiveDead)  ON CONFLICT REPLACE, " +
                 //"UNIQUE (StratumCode, Description), " +
                 "FOREIGN KEY (StratumCode, SampleGroupCode, CruiseID) REFERENCES SampleGroup (StratumCode, SampleGroupCode, CruiseID) ON DELETE CASCADE ON UPDATE CASCADE, " +
-                "FOREIGN KEY (Species) REFERENCES SpeciesCode (Species) ON DELETE CASCADE ON UPDATE CASCADE " +
+                "FOREIGN KEY (SpeciesCode) REFERENCES Species (SpeciesCode) ON DELETE CASCADE ON UPDATE CASCADE " +
             ");";
 
-        public const string CREATE_INDEX_TallyDescription_StratumCode_SampleGroupCode_Species_LiveDead_CruiseID =
-            "CREATE UNIQUE INDEX TallyDescription_StratumCode_SampleGroupCode_Species_LiveDead_CruiseID " +
+        public const string CREATE_INDEX_TallyDescription_StratumCode_SampleGroupCode_SpeciesCode_LiveDead_CruiseID =
+            "CREATE UNIQUE INDEX TallyDescription_StratumCode_SampleGroupCode_SpeciesCode_LiveDead_CruiseID " +
             "ON TallyDescription " +
-            "(CruiseID, StratumCode, SampleGroupCode, ifnull(Species, '') COLLATE NOCASE, ifnull(LiveDead, '') COLLATE NOCASE);";
+            "(CruiseID, StratumCode, SampleGroupCode, ifnull(SpeciesCode, '') COLLATE NOCASE, ifnull(LiveDead, '') COLLATE NOCASE);";
 
-        public const string CREATE_INDEX_TallyDescription_Species =
-            @"CREATE INDEX 'TallyDescription_Species' ON 'TallyDescription'('Species');";
+        public const string CREATE_INDEX_TallyDescription_SpeciesCode =
+            @"CREATE INDEX 'TallyDescription_SpeciesCode' ON 'TallyDescription' ('SpeciesCode');";
     }
 
     public partial class Migrations
@@ -41,7 +41,7 @@
                 "CruiseID, " +
                 "StratumCode, " +
                 "SampleGroupCode, " +
-                "Species, " +
+                "SpeciesCode, " +
                 "LiveDead, " +
                 "Description " +
             ")" +
