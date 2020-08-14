@@ -32,9 +32,10 @@ namespace CruiseDAL.Tests.Schema
                 var views = datastore.ExecuteScalar<string>("SELECT group_concat(name) FROM Sqlite_Master WHERE type = 'view';")
                     .Split(',');
 
-                foreach(var view in views)
+                foreach (var view in views)
                 {
-                    datastore.Execute($"SELECT * FROM {view};");
+                    datastore.Invoking(x => x.Execute($"SELECT * FROM {view};"))
+                        .Should().NotThrow(view);
                 }
             }
         }
@@ -49,14 +50,20 @@ namespace CruiseDAL.Tests.Schema
 
                 foreach (var view in views)
                 {
+                    //datastore.Invoking(x => x.Execute($"DELETE FROM {view};"))
+                    //        .Should().NotThrow(view);
+
                     try
                     {
 
                         datastore.Execute($"DELETE FROM {view};");
                     }
-                    catch(SQLException e)
+                    catch (SQLException e)
                     {
-                        if(e.InnerException != null 
+                        // ignore exceptions that are thrown "because it is a view"
+                        // these exceptions are thrown because we are deleteing from a view
+                        // rather than because the delete trigger had an error
+                        if (e.InnerException != null
                             && e.InnerException.Message.Contains("because it is a view"))
                         { }
                         else
