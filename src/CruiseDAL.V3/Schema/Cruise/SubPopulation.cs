@@ -42,7 +42,7 @@
                     "LiveDead " +
                 ") " +
                 "SELECT DISTINCT " +
-                    "'{4}', " +
+                    "'{3}', " +
                     "sg.StratumCode, " +
                     "sg.SampleGroupCode, " +
                     "tdv.Species, " +

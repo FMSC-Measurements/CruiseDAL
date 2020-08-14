@@ -82,7 +82,7 @@
                 "PlotNumber, " +
                 "TreeNumber, " +
                 "CountOrMeasure " +
-            "ON Tree_V3 " +
+            "ON Tree " +
             "FOR EACH ROW " +
             "BEGIN " +
                 "UPDATE Tree SET ModifiedDate = datetime('now', 'localtime') WHERE Tree_CN = old.Tree_CN; " +
@@ -118,7 +118,7 @@
                 ") " +
                 "SELECT " +
                     "t.Tree_CN, " +
-                    "'{4}'," +
+                    "'{3}'," +
                     "ifnull( " +
                         "(CASE typeof(Tree_GUID) COLLATE NOCASE " + // ckeck the type of Tree_GUID
                             "WHEN 'TEXT' THEN " + // if text

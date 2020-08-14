@@ -30,6 +30,7 @@
 @"INSERT INTO {0}.TreeAuditRule (
     TreeAuditRule_CN,
     TreeAuditRuleID,
+    CruiseID, 
     Field,
     Min,
     Max
@@ -40,6 +41,7 @@ SELECT
         || '-' || '4' || substr(hex(randomblob(2)), 2) || '-' 
         || substr('AB89', 1 + (abs(random()) % 4), 1) || 
         substr(hex(randomblob(2)), 2) || '-' || hex(randomblob(6))),
+    '{3}',
     Field,
     nullif(Min,0) AS Min,
     nullif(Max,0) AS Max

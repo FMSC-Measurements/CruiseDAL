@@ -5,17 +5,6 @@
         public const string CREATE_VIEW_ERRORLOG =
 @"CREATE VIEW ErrorLog_V2 AS
 SELECT
-    RowID,
-    TableName,
-    CN_Number,
-    ColumnName,
-    Level,
-    Message,
-    Program,
-    Suppress
-FROM tbl_ErrorLog
-UNION ALL
-SELECT
     -1 * ((((t.Tree_CN << 4) + (tf.TreeField_CN & 15)) << 4) + 1) AS RowID,
     'Tree' AS TableName,
     t.Tree_CN AS CN_Number,

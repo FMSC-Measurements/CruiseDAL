@@ -18,7 +18,7 @@
                 "ModifiedBy TEXT, " +
                 "ModifiedDate DateTime , " +
                 "RowVersion INTEGER DEFAULT 0, " +
-                "UNIQUE(Code), " +
+                "UNIQUE(Code, CruiseID), " +
                 "FOREIGN KEY (CruiseID) REFERENCES Cruise (CruiseID) ON DELETE CASCADE, " +
                 "CHECK (length(Code) > 0)" +
             ");";
@@ -55,7 +55,7 @@
                 ") " +
                 "SELECT " +
                     "CuttingUnit_CN, " +
-                    "{4}, " +
+                    "'{3}', " +
                     "Code, " +
                     "Area, " +
                     "Description, " +

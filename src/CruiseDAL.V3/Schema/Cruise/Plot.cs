@@ -45,11 +45,11 @@
                 "XCoordinate, " +
                 "YCoordinate, " +
                 "ZCoordinate " +
-            "ON Plot_V3 " +
+            "ON Plot " +
             "FOR EACH ROW " +
             "BEGIN " +
-                "UPDATE Plot_V3 SET ModifiedDate = datetime('now', 'localtime') WHERE Plot_CN = old.Plot_CN; " +
-                "UPDATE Plot_V3 SET RowVersion = old.RowVersion WHERE Plot_CN = old.Plot_CN; " +
+                "UPDATE Plot SET ModifiedDate = datetime('now', 'localtime') WHERE Plot_CN = old.Plot_CN; " +
+                "UPDATE Plot SET RowVersion = old.RowVersion WHERE Plot_CN = old.Plot_CN; " +
             "END;";
     }
 
@@ -88,7 +88,7 @@
                             "|| substr('AB89', 1 + (abs(random()) % 4), 1) || " +
                             "substr(hex(randomblob(2)), 2) || '-' || hex(randomblob(6)))) AS PlotID, " +
                     "p.PlotNumber, " +
-                    "'{4}', " +
+                    "'{3}', " +
                     "cu.Code AS CuttingUnitCode, " +
                     "p.Slope, " +
                     "p.Aspect, " +

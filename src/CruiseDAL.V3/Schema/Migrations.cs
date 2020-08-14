@@ -8,6 +8,7 @@ namespace CruiseDAL.Schema
         private static string[] MIGRATION_FORMAT_STRINGS = new string[]
         {
             MIGRATE_SALE_FORMAT_STR,
+            MIGRATE_Cruise_FORMAT_STR,
             MIGRATE_CUTTINGUNIT_FORMAT_STR,
             MIGRATE_STRATUM_FORMAT_STR,
             MIGRATE_CUTTINGUNIT_STRATUM_FROM_CUTTINGUNITSTRATUM,
@@ -48,7 +49,7 @@ namespace CruiseDAL.Schema
 
             MIGRATE_LOGGRADEAUDITRULE,
             MIGRATE_TREEAUDITRULE_FROM_TREEAUDITVALUE_FORMAT_STR,
-            MIGRATE_TREEDEFAULTVALUE_TREEAUDITVALUE_FROM_TREEDEFAULTVALUETREEAUDITVALUE,
+            MIGRATE_TreeAuditRuleSelector_FROM_TREEDEFAULTVALUETREEAUDITVALUE,
         };
 
         public static IEnumerable<string> GetMigrateCommands(string to, string from)

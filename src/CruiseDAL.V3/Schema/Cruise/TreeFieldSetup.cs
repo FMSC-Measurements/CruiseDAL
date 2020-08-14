@@ -5,8 +5,8 @@
         public const string CREATE_TABLE_TREEFIELDSETUP =
             "CREATE TABLE TreeFieldSetup ( " +
                 "CruiseID TEXT NOT NULL COLLATE NOCASE," +
-                "StratumCode TEXT NOT NULL, " +
-                "Field TEXT NOT NULL, " +
+                "StratumCode TEXT NOT NULL COLLATE NOCASE, " +
+                "Field TEXT NOT NULL COLLATE NOCASE, " +
                 "FieldOrder INTEGER Default 0, " +
                 "Heading TEXT, " +
                 "Width REAL Default 0.0, " +
@@ -16,10 +16,10 @@
             ");";
 
         public const string CREATE_INDEX_TreeFieldSetup_Field =
-            @"CREATE INDEX TreeFieldSetup_Field ON TreeFieldSetup (Field COLLATE NOCASE);";
+            @"CREATE INDEX TreeFieldSetup_Field ON TreeFieldSetup (Field);";
 
-        public const string CREATE_INDEX_TreeFieldSetup_StratumCode =
-            @"CREATE INDEX TreeFieldSetup_StratumCode ON TreeFieldSetup (StratumCode COLLATE NOCASE);";
+        public const string CREATE_INDEX_TreeFieldSetup_StratumCode_CruiseID =
+            @"CREATE INDEX TreeFieldSetup_StratumCode_CruiseID ON TreeFieldSetup (StratumCode, CruiseID);";
     }
 
     public partial class Migrations
@@ -34,7 +34,7 @@
                     "Width " +
                 ") " +
                 "SELECT " +
-                    "'{4}', " +
+                    "'{3}', " +
                     "st.Code AS StratumCode, " +
                     "tfs.Field, " +
                     "tfs.FieldOrder, " +
@@ -44,18 +44,4 @@
                 "JOIN {1}.Stratum AS st USING (Stratum_CN)" +
                 "JOIN {0}.TreeField AS tf USING (Field);";
     }
-
-    //public partial class Updater
-    //{
-    //    public const string INITIALIZE_TREEFIELDSETUP_V3_FROM_TREEFIELDSETUP =
-    //        "INSERT INTO TreeFieldSetup_V3 " +
-    //        "SELECT " +
-    //            "st.Code AS StratumCode, " +
-    //            "Field, " +
-    //            "FieldOrder, " +
-    //            "Heading, " +
-    //            "Width " +
-    //        "FROM TreeFieldSetup " +
-    //        "JOIN Stratum AS st USING (Stratum_CN);";
-    //}
 }

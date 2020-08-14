@@ -67,7 +67,7 @@
                 ") " +
                 "SELECT " +
                     "p.Plot_CN AS Plot_Stratum_CN, " +
-                    "'{4}', " +
+                    "'{3}', " +
                     "cu.Code AS CuttingUnitCode, " +
                     "p.PlotNumber, " +
                     "st.Code AS StratumCode, " +

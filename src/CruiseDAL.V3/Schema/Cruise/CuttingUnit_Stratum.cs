@@ -33,7 +33,7 @@
                     "StratumArea " +
                 ") " +
                 "SELECT " +
-                    "'{4}', " +
+                    "'{3}', " +
                     "cu.Code, " +
                     "st.Code, " +
                     "cust.StratumArea " +

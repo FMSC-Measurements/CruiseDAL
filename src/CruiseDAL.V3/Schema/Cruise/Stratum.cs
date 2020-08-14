@@ -25,7 +25,7 @@
                 "ModifiedDate DateTime , " +
                 "RowVersion INTEGER DEFAULT 0, " +
                 "FOREIGN KEY (CruiseID) REFERENCES Cruise (CruiseID) ON DELETE CASCADE, " +
-                "UNIQUE(Code), " +
+                "UNIQUE(Code, CruiseID), " +
                 "CHECK (length(Code) > 0) " +
             ");";
 
@@ -79,7 +79,7 @@
                 ") " +
                 "SELECT " +
                     "Code, " +
-                    "{4}, " +
+                    "'{3}', " +
                     "Description, " +
                     "Method, " +
                     "BasalAreaFactor, " +

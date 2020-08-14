@@ -73,7 +73,7 @@
                     "RowVersion " +
                 ") " +
                 "SELECT " +
-                    "{3}, " +
+                    "'{2}', " +
                     "Sale_CN, " +
                     "SaleNumber, " +
                     "Name, " +

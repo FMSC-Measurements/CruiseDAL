@@ -37,7 +37,7 @@
                 ") " +
                 "SELECT " +
                     "st.Code AS StratumCode, " +
-                    "'{4}'," +
+                    "'{3}'," +
                     "lfs.Field, " +
                     "lfs.FieldOrder, " +
                     "lfs.Heading, " +

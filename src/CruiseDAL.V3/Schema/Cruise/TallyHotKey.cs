@@ -47,7 +47,7 @@ INSERT OR REPLACE INTO {0}.TallyHotKey (
     HotKey 
 )
 SELECT 
-    '{4}',
+    '{3}',
     st.Code AS StratumCode, 
     sg.Code AS SampleGroupCode, 
     tdv.Species, 

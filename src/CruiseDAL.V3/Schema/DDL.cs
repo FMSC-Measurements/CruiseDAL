@@ -16,6 +16,9 @@ INSERT INTO Globals (Block, Key, Value) VALUES ('Database', 'CreateVersion', '{D
             CREATE_TABLE_SALE,
             CREATE_TRIGGER_SALE_ONUPDATE,
 
+            CREATE_TABLE_Cruise,
+            CREATE_TRIGGER_CRUISE_ONUPDATE,
+
             CREATE_TABLE_CUTTINGUNIT,
             CREATE_TRIGGER_CUTTINGUNIT_ONUPDATE,
 
@@ -30,7 +33,7 @@ INSERT INTO Globals (Block, Key, Value) VALUES ('Database', 'CreateVersion', '{D
             INITIALIZE_TABLE_TREEFIELD,
             CREATE_TABLE_TREEFIELDSETUP,
             CREATE_INDEX_TreeFieldSetup_Field,
-            CREATE_INDEX_TreeFieldSetup_StratumCode,
+            CREATE_INDEX_TreeFieldSetup_StratumCode_CruiseID,
 
             CREATE_TABLE_LOGFIELD,
             INITIALIZE_TABLE_LOGFIELD,
