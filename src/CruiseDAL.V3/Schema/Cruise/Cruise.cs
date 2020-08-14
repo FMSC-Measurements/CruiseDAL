@@ -2,16 +2,15 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 
-namespace CruiseDAL.Schema.V3
+namespace CruiseDAL.Schema
 {
     public partial class DDL
     {
-        public const string CREATE_TABLE_DEVICE =
+        public const string CREATE_TABLE_Cruise =
 @"CREATE TABLE Cruise ( 
-    CruiseID TEXT NOT NULL COLLATE NO CASE, 
-    SaleID TEXT COLLATE NO CASE, 
+    CruiseID TEXT NOT NULL COLLATE NOCASE, 
+    SaleID TEXT NOT NULL COLLATE NOCASE, 
     Purpose TEXT,
     Remarks TEXT,
     DefaultUOM TEXT,
@@ -28,7 +27,7 @@ namespace CruiseDAL.Schema.V3
 );";
 
         public const string CREATE_TRIGGER_CRUISE_ONUPDATE =
-@"CREATE TRIGGER OnUpdateSale 
+@"CREATE TRIGGER OnUpdateCruise 
 AFTER UPDATE OF 
     SaleID, 
     Purpose, 
@@ -45,7 +44,7 @@ END;";
 
     public partial class Migrations
     {
-        public const string MIGRATE_SALE_FORMAT_STR =
+        public const string MIGRATE_Cruise_FORMAT_STR =
 @"INSERT INTO {0}.Cruise ( 
         CruiseID,
         SaleID, 
@@ -58,8 +57,8 @@ END;";
         ModifiedBy 
     ) 
     SELECT 
-        {4},
-        {3},
+        '{3}',
+        '{2}',
         Purpose, 
         DefaultUOM,
         LogGradingEnabled,
