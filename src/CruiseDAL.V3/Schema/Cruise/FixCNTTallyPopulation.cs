@@ -8,25 +8,25 @@
                 "CruiseID TEXT NOT NULL COLLATE NOCASE, " +
                 "StratumCode TEXT NOT NULL COLLATE NOCASE, " +
                 "SampleGroupCode TEXT NOT NULL COLLATE NOCASE, " +
-                "Species TEXT NOT NULL COLLATE NOCASE, " +
+                "SpeciesCode TEXT NOT NULL COLLATE NOCASE, " +
                 "LiveDead TEXT NOT NULL COLLATE NOCASE, " +
                 "IntervalSize INTEGER Default 0, " +
                 "Min INTEGER Default 0, " +
                 "Max INTEGER Default 0, " +
 
-                "UNIQUE (CruiseID, StratumCode, SampleGroupCode, Species, LiveDead), " +
+                "UNIQUE (CruiseID, StratumCode, SampleGroupCode, SpeciesCode, LiveDead), " +
 
-                "FOREIGN KEY (StratumCode, SampleGroupCode, Species, LiveDead, CruiseID) REFERENCES SubPopulation (StratumCode, SampleGroupCode, Species, LiveDead, CruiseID) ON DELETE CASCADE ON UPDATE CASCADE " +
+                "FOREIGN KEY (StratumCode, SampleGroupCode, SpeciesCode, LiveDead, CruiseID) REFERENCES SubPopulation (StratumCode, SampleGroupCode, SpeciesCode, LiveDead, CruiseID) ON DELETE CASCADE ON UPDATE CASCADE " +
             ");";
 
-        public const string CREATE_INDEX_FixCNTTallyPopulation_Species =
-            @"CREATE INDEX FixCNTTallyPopulation_Species ON FixCNTTallyPopulation (Species);";
+        public const string CREATE_INDEX_FixCNTTallyPopulation_SpeciesCode =
+            @"CREATE INDEX FixCNTTallyPopulation_SpeciesCode ON FixCNTTallyPopulation (SpeciesCode);";
 
         public const string CREATE_INDEX_FixCNTTallyPopulation_StratumCode_CruiseID =
             @"CREATE INDEX FixCNTTallyPopulation_StratumCode_CruiseID ON FixCNTTallyPopulation (StratumCode, CruiseID);";
 
-        public const string CREATE_INDEX_FixCNTTallyPopulation_StratumCode_SampleGroupCode_Species_LiveDead_CruiseID =
-            @"CREATE INDEX 'FixCNTTallyPopulation_StratumCode_SampleGroupCode_Species_LiveDead_CruiseID' ON FixCNTTallyPopulation (StratumCode, SampleGroupCode, Species, LiveDead, CruiseID);";
+        public const string CREATE_INDEX_FixCNTTallyPopulation_StratumCode_SampleGroupCode_SpeciesCode_LiveDead_CruiseID =
+            @"CREATE INDEX 'FixCNTTallyPopulation_StratumCode_SampleGroupCode_SpeciesCode_LiveDead_CruiseID' ON FixCNTTallyPopulation (StratumCode, SampleGroupCode, SpeciesCode, LiveDead, CruiseID);";
     }
 
     public partial class Migrations
@@ -37,7 +37,7 @@
                     "CruiseID, " +
                     "StratumCode, " +
                     "SampleGroupCode, " +
-                    "Species, " +
+                    "SpeciesCode, " +
                     "LiveDead, " +
                     "IntervalSize, " +
                     "Min, " +

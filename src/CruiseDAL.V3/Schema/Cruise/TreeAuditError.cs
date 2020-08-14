@@ -12,7 +12,7 @@ measureTrees AS (
         t.CruiseID,
         t.TreeID,
         t.StratumCode,
-        t.Species,
+        t.SpeciesCode,
         t.LiveDead,
         sg.PrimaryProduct
     FROM Tree AS t
@@ -23,7 +23,7 @@ measureTrees AS (
 treeAuditRuleSelector_Epanded AS (
     SELECT
         tar.CruiseID,
-        Species,
+        SpeciesCode,
         LiveDead,
         PrimaryProduct,
         tar.Field,
@@ -50,7 +50,7 @@ JOIN TreeFieldSetup AS tfs USING (StratumCode, CruiseID)
 JOIN TreeFieldValue_All AS tfv USING (TreeID, Field)
 -- get audit rule
 JOIN treeAuditRuleSelector_Epanded tars
-        ON (tars.Species IS NULL OR tars.Species = t.Species)
+        ON (tars.SpeciesCode IS NULL OR tars.SpeciesCode = t.SpeciesCode)
         AND (tars.LiveDead IS NULL OR tars.LiveDead = t.LiveDead)
         AND (tars.PrimaryProduct IS NULL OR tars.PrimaryProduct = t.PrimaryProduct)
         AND tars.Field = tfs.Field

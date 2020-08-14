@@ -8,27 +8,27 @@
                 "CruiseID TEXT NOT NULL COLLATE NOCASE, " +
                 "StratumCode TEXT NOT NULL COLLATE NOCASE, " +
                 "SampleGroupCode TEXT NOT NULL COLLATE NOCASE, " +
-                "Species TEXT NOT NULL COLLATE NOCASE, " +
+                "SpeciesCode TEXT NOT NULL COLLATE NOCASE, " +
                 "LiveDead TEXT NOT NULL COLLATE NOCASE, " +
 
-                "UNIQUE (CruiseID, StratumCode, SampleGroupCode, Species, LiveDead), " +
+                "UNIQUE (CruiseID, StratumCode, SampleGroupCode, SpeciesCode, LiveDead), " +
 
                 "CHECK (LiveDead IN ('L', 'D'))," +
 
                 //"FOREIGN KEY (StratumCode) REFERENCES Stratum (Code), " +
                 "FOREIGN KEY (StratumCode, SampleGroupCode, CruiseID) REFERENCES SampleGroup (StratumCode, SampleGroupCode, CruiseID) ON DELETE CASCADE ON UPDATE CASCADE," +
-                "FOREIGN KEY (Species) REFERENCES SpeciesCode (Species) ON UPDATE CASCADE " +
+                "FOREIGN KEY (SpeciesCode) REFERENCES Species (SpeciesCode) ON UPDATE CASCADE " +
             ");";
 
-        public const string CREATE_INDEX_Subpopulation_StratumCode_SampleGroupCode_Species_LiveDead =
-@"CREATE INDEX Subpopulation_StratumCode_SampleGroupCode_Species_LiveDead ON Subpopulation 
-(StratumCode COLLATE NOCASE, SampleGroupCode COLLATE NOCASE, ifnull(Species, '') COLLATE NOCASE, ifnull(LiveDead, '') COLLATE NOCASE);";
+        public const string CREATE_INDEX_Subpopulation_StratumCode_SampleGroupCode_SpeciesCode_LiveDead =
+@"CREATE INDEX Subpopulation_StratumCode_SampleGroupCode_SpeciesCode_LiveDead ON Subpopulation 
+(StratumCode, SampleGroupCode, ifnull(SpeciesCode, '') COLLATE NOCASE, ifnull(LiveDead, '') COLLATE NOCASE);";
 
-        public const string CREATE_INDEX_Subpopulation_Species =
-            @"CREATE INDEX Subpopulation_Species ON Subpopulation (Species COLLATE NOCASE);";
+        public const string CREATE_INDEX_Subpopulation_SpeciesCode =
+            @"CREATE INDEX Subpopulation_SpeciesCode ON Subpopulation (SpeciesCode);";
 
         public const string CREATE_INDEX_Subpopulation_StratumCode_SampleGroupCode =
-            @"CREATE INDEX Subpopulation_StratumCode_SampleGroupCode ON Subpopulation (StratumCode COLLATE NOCASE, SampleGroupCode COLLATE NOCASE);";
+            @"CREATE INDEX Subpopulation_StratumCode_SampleGroupCode ON Subpopulation (StratumCode, SampleGroupCode);";
     }
 
     public partial class Migrations
@@ -38,7 +38,7 @@
                     "CruiseID, " +
                     "StratumCode, " +
                     "SampleGroupCode, " +
-                    "Species, " +
+                    "SpeciesCode, " +
                     "LiveDead " +
                 ") " +
                 "SELECT DISTINCT " +

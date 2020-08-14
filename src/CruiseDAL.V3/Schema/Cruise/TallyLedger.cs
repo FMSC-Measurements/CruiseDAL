@@ -12,7 +12,7 @@
             "StratumCode TEXT NOT NULL COLLATE NOCASE, " +
             "SampleGroupCode TEXT NOT NULL COLLATE NOCASE, " +
             "PlotNumber INTEGER, " +
-            "Species TEXT COLLATE NOCASE, " +
+            "SpeciesCode TEXT COLLATE NOCASE, " +
             "LiveDead TEXT COLLATE NOCASE, " +
             "TreeCount INTEGER NOT NULL, " +
             "KPI INTEGER Default 0, " +
@@ -35,7 +35,7 @@
             //"FOREIGN KEY (CuttingUnitCode, StratumCode) REFERENCES CuttingUnit_Stratum (CuttingUnitCode, StratumCode), " +
             "FOREIGN KEY (StratumCode, CruiseID) REFERENCES Stratum (Code, CruiseID) , " +
             "FOREIGN KEY (SampleGroupCode, StratumCode, CruiseID) REFERENCES SampleGroup (SampleGroupCode, StratumCode, CruiseID), " +
-            "FOREIGN KEY (Species) REFERENCES SpeciesCode (Species) " +
+            "FOREIGN KEY (SpeciesCode) REFERENCES Species (SpeciesCode) " +
             //"FOREIGN KEY (StratumCode, SampleGroupCode, Species, LiveDead) REFERENCES TallyPopulation (StratumCode, SampleGroupCode, Species, LiveDead), " +
             //"FOREIGN KEY (CuttingUnitCode, StratumCode, PlotNumber) REFERENCES Plot_Stratum (CuttingUnitCode, StratumCode, PlotNumber), " +
             
@@ -43,7 +43,7 @@
             // everything below are tree fKey references. there are a few, but because some tree values can be null we need to have them as seperate references
             "FOREIGN KEY (TreeID) REFERENCES Tree (TreeID) ON DELETE CASCADE, " +
             "FOREIGN KEY (TreeID, CuttingUnitCode, StratumCode, SampleGroupCode) REFERENCES Tree (TreeID, CuttingUnitCode, StratumCode, SampleGroupCode) ON UPDATE CASCADE, " +
-            "FOREIGN KEY (TreeID, Species) REFERENCES Tree (TreeID, Species) ON UPDATE CASCADE, " +
+            "FOREIGN KEY (TreeID, SpeciesCode) REFERENCES Tree (TreeID, SpeciesCode) ON UPDATE CASCADE, " +
             "FOREIGN KEY (TreeID, LiveDead) REFERENCES Tree (TreeID, LiveDead) ON UPDATE CASCADE, " +
             "FOREIGN KEY (TreeID, PlotNumber) REFERENCES Tree (TreeID, PlotNumber) ON UPDATE CASCADE " +
         ");";
@@ -70,7 +70,7 @@
                     "CuttingUnitCode, " +
                     "StratumCode, " +
                     "SampleGroupCode, " +
-                    "Species, " +
+                    "SpeciesCode, " +
                     "LiveDead, " +
                     "TreeCount, " +
                     "KPI, " +
@@ -82,7 +82,7 @@
                     "cu.Code AS CuttingUnitCode, " +
                     "st.Code AS StratumCode, " +
                     "sg.Code AS SampleGroupCode, " +
-                    "tdv.Species AS Species, " +
+                    "tdv.Species AS SpeciesCode, " +
                     "tdv.LiveDead AS LiveDead, " +
                     "Sum(ct.TreeCount) AS TreeCount, " +
                     "Sum(ct.SumKPI) AS SumKPI, " +
@@ -110,7 +110,7 @@
                     "StratumCode, " +
                     "SampleGroupCode, " +
                     "PlotNumber, " +
-                    "Species, " +
+                    "SpeciesCode, " +
                     "LiveDead, " +
                     "TreeCount, " +
                     "KPI, " +
@@ -118,13 +118,13 @@
                 ") " +
             "SELECT " +
                 "'migrateFromTree-' || t.Tree_CN, " +
-                "'{4}'," +
+                "'{3}'," +
                 "t3.TreeID, " +
                 "cu.Code AS CuttingUnitCode, " +
                 "st.Code AS StratumCode, " +
                 "sg.Code AS SampleGroupCode, " +
                 "ps.PlotNumber AS PlotNumber, " +
-                "tdv.Species AS Species, " +
+                "tdv.Species AS SpeciesCode, " +
                 "tdv.LiveDead AS LiveDead, " +
                 "t.TreeCount, " +
                 "t.KPI AS KPI, " +

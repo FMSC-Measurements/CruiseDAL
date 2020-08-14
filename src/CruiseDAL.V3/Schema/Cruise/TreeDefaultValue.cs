@@ -7,7 +7,7 @@
     TreeDefaultValue_CN INTEGER PRIMARY KEY AUTOINCREMENT, 
     CruiseID TEXT NOT NULL COLLATE NOCASE,
     PrimaryProduct TEXT NOT NULL COLLATE NOCASE, 
-    Species TEXT NOT NULL COLLATE NOCASE, 
+    SpeciesCode TEXT NOT NULL COLLATE NOCASE, 
     LiveDead TEXT NOT NULL COLLATE NOCASE, 
     FIAcode INTEGER DEFAULT 0, 
     CullPrimary REAL DEFAULT 0.0, 
@@ -28,16 +28,16 @@
     ModifiedBy TEXT, 
     ModifiedDate DateTime, 
     RowVersion INTEGER DEFAULT 0, 
-    UNIQUE (CruiseID, PrimaryProduct, Species, LiveDead), 
+    UNIQUE (CruiseID, PrimaryProduct, SpeciesCode, LiveDead), 
 
     CHECK (LiveDead IN ('L', 'D')),
 
     FOREIGN KEY (CruiseID) REFERENCES Cruise (CruiseID) ON DELETE CASCADE,
-    FOREIGN KEY (Species) REFERENCES SpeciesCode (Species) ON UPDATE CASCADE ON DELETE CASCADE
+    FOREIGN KEY (SpeciesCode) REFERENCES Species (SpeciesCode) ON UPDATE CASCADE ON DELETE CASCADE
 );";
 
-        public const string CREATE_INDEX_TreeDefaultValue_Species =
-            @"CREATE INDEX 'TreeDefaultValue_Species' ON 'TreeDefaultValue' ('Species');";
+        public const string CREATE_INDEX_TreeDefaultValue_SpeciesCode =
+            @"CREATE INDEX 'TreeDefaultValue_SpeciesCode' ON 'TreeDefaultValue' ('SpeciesCode');";
 
         public const string CREATE_INDEX_TreeDefaultValue_CruiseID =
             @"CREATE INDEX 'TreeDefaultValue_CruiseID' ON 'TreeDefaultValue' ('CruiseID');";
@@ -46,7 +46,7 @@
             "CREATE TRIGGER TreeDefaultValue_OnUpdate " +
             "AFTER UPDATE OF " +
                 "PrimaryProduct, " +
-                "Species, " +
+                "SpeciesCode, " +
                 "LiveDead, " +
                 "FIAcode, " +
                 "CullPrimary, " +
@@ -77,7 +77,7 @@
                     "TreeDefaultValue_CN, " +
                     "CruiseID," +
                     "PrimaryProduct, " +
-                    "Species, " +
+                    "SpeciesCode, " +
                     "LiveDead, " +
                     "FIAcode, " +
                     "CullPrimary, " +

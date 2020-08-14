@@ -13,7 +13,7 @@
                 "sg.SampleGroup_CN, " +
                 "tdv.TreeDefaultValue_CN,  " +
                 "Plot_Stratum_CN AS Plot_CN, " +
-                "t.Species, " +
+                "t.SpeciesCode AS Species, " +
                 "t.LiveDead, " +
                 "t.TreeNumber, " +
                 "t.CountOrMeasure, " +
@@ -33,13 +33,13 @@
                 "ifnull(t.ZCoordinate, 0.0) AS ZCoordinate, " +
                 "tm.* " +
             "FROM Tree AS t " +
-            "JOIN SampleGroup_V3 AS sg ON t.StratumCode = sg.StratumCode AND t.SampleGroupCode = sg.SampleGroupCode  " +
+            "JOIN SampleGroup AS sg ON t.StratumCode = sg.StratumCode AND t.SampleGroupCode = sg.SampleGroupCode  " +
             "JOIN Stratum AS st ON t.StratumCode = st.Code " +
             "JOIN CuttingUnit AS cu ON t.CuttingUnitCode = cu.Code " +
             "LEFT JOIN Plot_Stratum AS plt USING (CuttingUnitCode, StratumCode, PlotNumber) " +
             "LEFT JOIN TreeCalculatedValues AS tcv USING (Tree_CN) " +
             "LEFT JOIN TreeDefaultValue AS tdv ON " +
-                        "tdv.Species = t.Species " +
+                        "tdv.SpeciesCode = t.SpeciesCode " +
                         "AND tdv.LiveDead = t.LiveDead " +
                         "AND tdv.PrimaryProduct = sg.PrimaryProduct " +
             "LEFT JOIN TallyLedger_Tree_Totals AS tl ON tl.TreeID = t.TreeID " +

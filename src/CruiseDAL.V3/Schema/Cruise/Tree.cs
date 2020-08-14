@@ -12,7 +12,7 @@
                 "CuttingUnitCode TEXT NOT NULL COLLATE NOCASE, " +
                 "StratumCode TEXT NOT NULL COLLATE NOCASE, " +
                 "SampleGroupCode TEXT NOT NULL COLLATE NOCASE, " +
-                "Species TEXT COLLATE NOCASE, " +
+                "SpeciesCode TEXT COLLATE NOCASE, " +
                 "LiveDead TEXT COLLATE NOCASE, " +
                 "PlotNumber INTEGER, " +
                 "TreeNumber INTEGER NOT NULL, " +
@@ -37,14 +37,14 @@
                 "FOREIGN KEY (SampleGroupCode, StratumCode, CruiseID) REFERENCES SampleGroup (SampleGroupCode, StratumCode, CruiseID) ON DELETE CASCADE ON UPDATE CASCADE, " +
                 "FOREIGN KEY (PlotNumber, CuttingUnitCode, CruiseID) REFERENCES Plot (PlotNumber, CuttingUnitCode, CruiseID) ON DELETE CASCADE ON UPDATE CASCADE, " +
                 //"FOREIGN KEY (Species, LiveDead, SampleGroupCode, StratumCode) REFERENCES SubPopulation (Species, LiveDead, SampleGroupCode, StratumCode), " +
-                "FOREIGN KEY (Species) REFERENCES SpeciesCode (Species) " +
+                "FOREIGN KEY (SpeciesCode) REFERENCES Species (SpeciesCode) " +
             ")";
 
         public const string CREATE_INDEX_Tree_TreeNumber_CruiseID =
             "CREATE INDEX Tree_TreeNumber_CruiseID ON Tree (TreeNumber, CruiseID);";
 
-        public const string CREATE_INDEX_Tree_Species =
-            @"CREATE INDEX 'Tree_Species' ON 'Tree'('Species');";
+        public const string CREATE_INDEX_Tree_SpeciesCode =
+            @"CREATE INDEX 'Tree_SpeciesCode' ON 'Tree'('SpeciesCode');";
 
         public const string CREATE_INDEX_Tree_PlotNumber_CuttingUnitCode_CruiseID =
             @"CREATE INDEX 'Tree_PlotNumber_CuttingUnitCode_CruiseID' ON 'Tree'('PlotNumber', 'CuttingUnitCode', 'CruiseID');";
@@ -61,8 +61,8 @@
         public const string CREATE_INDEX_Tree_TreeID_CuttingUnitCode_SampleGroupCode_StratumCode =
             @"CREATE UNIQUE INDEX Tree_TreeID_CuttingUnitCode_SampleGroupCode_StratumCode ON Tree (TreeID, CuttingUnitCode, SampleGroupCode, StratumCode);";
 
-        public const string CREATE_INDEX_Tree_TreeID_Species =
-            @"CREATE UNIQUE INDEX Tree_TreeID_Species ON Tree (TreeID, Species);";
+        public const string CREATE_INDEX_Tree_TreeID_SpeciesCode =
+            @"CREATE UNIQUE INDEX Tree_TreeID_SpeciesCode ON Tree (TreeID, SpeciesCode);";
 
         public const string CREATE_INDEX_Tree_TreeID_LiveDead =
             @"CREATE UNIQUE INDEX Tree_TreeID_LiveDead ON Tree (TreeID, LiveDead);";
@@ -77,7 +77,7 @@
                 "CuttingUnitCode, " +
                 "StratumCode, " +
                 "SampleGroupCode, " +
-                "Species, " +
+                "SpeciesCode, " +
                 "LiveDead, " +
                 "PlotNumber, " +
                 "TreeNumber, " +
@@ -105,7 +105,7 @@
                     "CuttingUnitCode, " +
                     "StratumCode, " +
                     "SampleGroupCode, " +
-                    "Species, " +
+                    "SpeciesCode, " +
                     "LiveDead, " +
                     "PlotNumber, " +
                     "TreeNumber, " +
@@ -133,7 +133,7 @@
                     "cu.Code AS CuttingUnitCode, " +
                     "st.Code AS StratumCode, " +
                     "sg.Code AS SampleGroupCode, " +
-                    "tdv.Species, " +
+                    "tdv.Species AS SpeciesCode, " +
                     "t.LiveDead, " + // use livedead from tree instead of tdv, because that is the value used by cruise processing
                     "p.PlotNumber, " +
                     "t.TreeNumber, " +
