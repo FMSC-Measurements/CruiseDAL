@@ -78,7 +78,7 @@
                 ") " +
                 "SELECT " +
                     "'initFromCountTree-' || cu.Code || ',' || st.Code || ',' || sg.Code || ',' || ifnull(tdv.Species, 'null') || ',' || ifnull(tdv.LiveDead, 'null') || ',' || ifnull(Component_CN, 'master'), " +
-                    "'{4}'," +
+                    "'{3}'," +
                     "cu.Code AS CuttingUnitCode, " +
                     "st.Code AS StratumCode, " +
                     "sg.Code AS SampleGroupCode, " +

@@ -33,7 +33,7 @@
             ") " +
             "SELECT " +
                 "FixCNTTallyClass_CN, " +
-                "'{4}', " +
+                "'{3}', " +
                 "st.Code AS StratumCode, " +
                 "FieldName " +
             "FROM {1}.FixCNTTallyClass " +

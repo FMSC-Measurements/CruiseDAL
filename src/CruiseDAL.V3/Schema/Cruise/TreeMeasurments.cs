@@ -91,7 +91,7 @@
                 "ModifiedDate DateTime , " +
                 "RowVersion INTEGER DEFAULT 0, " +
                 "UNIQUE (TreeID), " +
-                "FOREIGN KEY (TreeID) REFERENCES Tree_V3 (TreeID) ON DELETE CASCADE ON UPDATE CASCADE" +
+                "FOREIGN KEY (TreeID) REFERENCES Tree (TreeID) ON DELETE CASCADE ON UPDATE CASCADE" +
             ")";
 
         public const string CREATE_TRIGGER_TREEMEASURMENTS_ONUPDATE =
@@ -215,7 +215,7 @@
                     "t.ModifiedDate, " +
                     "t.RowVersion " +
                 "FROM {1}.Tree AS t " +
-                "JOIN {0}.Tree_V3 AS t3 USING (Tree_CN);";
+                "JOIN {0}.Tree AS t3 USING (Tree_CN);";
     }
 
     //public partial class Updater

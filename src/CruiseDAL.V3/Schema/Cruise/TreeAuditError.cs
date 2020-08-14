@@ -38,11 +38,11 @@ SELECT
     t.CruiseID,
     TreeID,
     TreeAuditRuleID,
-    tdvtar.Field AS Field,
+    tars.Field AS Field,
     (CASE WHEN res.TreeAuditResolution_CN IS NULL THEN 0 ELSE 1 END)  AS IsResolved, 
     (CASE
-    WHEN tdvtar.Min IS NOT NULL AND (tfv.ValueReal < tdvtar.Min) THEN tdvtar.Field || ' must be greater than ' || tdvtar.Min
-    WHEN tdvtar.Max IS NOT NULL AND (tfv.ValueReal > tdvtar.Max) THEN tdvtar.Field || ' must be less than ' || tdvtar.Max
+    WHEN tars.Min IS NOT NULL AND (tfv.ValueReal < tars.Min) THEN tars.Field || ' must be greater than ' || tars.Min
+    WHEN tars.Max IS NOT NULL AND (tfv.ValueReal > tars.Max) THEN tars.Field || ' must be less than ' || tars.Max
     ELSE 'Validation Error' END) AS Message,
     res.Resolution
 FROM measureTrees AS t

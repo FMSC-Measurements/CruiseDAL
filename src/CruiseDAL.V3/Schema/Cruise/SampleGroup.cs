@@ -100,7 +100,7 @@
                 ") " +
                 "SELECT " +
                     "sg.SampleGroup_CN, " +
-                    "'{4}', " +
+                    "'{3}', " +
                     "sg.Code AS SampleGroupCode, " +
                     "st.Code AS StratumCode, " +
                     "sg.CutLeave, " +

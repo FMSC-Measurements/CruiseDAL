@@ -46,7 +46,7 @@
                 "Description " +
             ")" +
             "SELECT " +
-                "'{4}', " +
+                "'{3}', " +
                 "st.Code AS StratumCode, " +
                 "sg.Code AS SampleGroupCode, " +
                 "tdv.Species, " +

@@ -45,7 +45,7 @@
                 ") " +
                 "SELECT " +
                     "fixTP.FixCNTTallyPopulation_CN, " +
-                    "'{4}', " +
+                    "'{3}', " +
                     "st.Code AS StratumCode, " +
                     "sg.Code AS SampleGroupCode, " +
                     "tdv.Species, " +

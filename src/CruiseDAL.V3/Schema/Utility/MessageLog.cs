@@ -18,7 +18,7 @@
 
     public partial class Migrations
     {
-        public static string MIGRATE_MESSAGELOG_FORMAT_STR =
+        public const string MIGRATE_MESSAGELOG_FORMAT_STR =
             "INSERT INTO {0}.MessageLog ( " +
                     "Program, " +
                     "Date, " +

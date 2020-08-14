@@ -75,6 +75,7 @@
         public const string MIGRATE_TREEDEFAULTVALUE_FORMAT_STR =
             "INSERT INTO {0}.TreeDefaultValue ( " +
                     "TreeDefaultValue_CN, " +
+                    "CruiseID," +
                     "PrimaryProduct, " +
                     "Species, " +
                     "LiveDead, " +
@@ -100,6 +101,7 @@
                 ") " +
                 "SELECT " +
                     "TreeDefaultValue_CN, " +
+                    "'{3}', " +
                     "PrimaryProduct, " +
                     "Species, " +
                     "LiveDead, " +
