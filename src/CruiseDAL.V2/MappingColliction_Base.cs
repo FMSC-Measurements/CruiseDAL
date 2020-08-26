@@ -45,6 +45,16 @@ namespace FMSC.ORM.EntityModel
             }
         }
 
+        public IEnumerable<ChildType> ToBeAdded
+        {
+            get => _unpersistedChildren.ToArray();
+        }
+
+        public IEnumerable<ChildType> ToBeDeleted
+        {
+            get => _toBeDeleted.ToArray();
+        }
+
         #endregion indexer & properties
 
         #region ctor
