@@ -422,3 +422,42 @@ in the previous database it is possible for species and live dead values to not 
  - translate guids coming from the old database, or use generated ids, or just generate a fresh new guid because I think a backwards translation is out. 
 
 
+
+ # Todo 2
+ - [x] generate plantuml ERD
+
+ - [-] add root Cruise entity type
+     - a sale could contain multiple cruises or we could combine cruises
+     - change purpose to int or collate no case
+     - 
+    
+
+ - [ ] cutting unit attributes
+ - [ ] move month and year from stratum to sale *** this change is associated with reconsidering backwards compatibility view and removing the _V3 suffix
+     - remove Stratum.VolumeFactor to a processing table
+ - [x] remove foreign key reference to tree default value in treeAuditRule_treeDefaultValue table to allow for generalized rules
+ - [ ] change table names, removing _V3 and other things done to maintain backwards compatibility
+
+ - [x] remove backwards compatibility views
+ - [x] remove error log table
+ - [ ] move yeald component somewhere else
+ - [ ] add isDeleted flags to tree, log, plot, unit, stratum, sampleGroup. triggers to cascade isDeleted flags?
+ - [ ] remove logMatrix table because the only person who used it has retired.
+ - [ ] look up tables for purpose, methods, forest, regions, uom
+ - [ ] update migrations
+     - pull errorlog.suppressed into TreeAuditRuleResolutions
+ - [ ] move fiaCode, contract species from tdv to species table
+ - [ ] take another look at uniques on LogGradeAuditRule
+ - [ ] change ifnull() to coalesce() in ddl
+ - [ ] common name on species table( currently in volEq)
+ - [ ] clarify stem.diameterType
+ - [ ] logical deletes ?
+     - keep on tally ledger?
+ - [ ] trigger to prevent switching from tally by sg to tally by sp if sg has trees or tree count
+ - [ ] track original device when creating copy of sample state, or use guid id for sample states and track that.
+     - check that there is a modified time stamp on sampler state
+ - [ ] support for multi variable 3p
+ 
+
+
+>>>>>>> Stashed changes
