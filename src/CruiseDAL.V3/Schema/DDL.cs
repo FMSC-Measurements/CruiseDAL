@@ -116,6 +116,7 @@ INSERT INTO Globals (Block, Key, Value) VALUES ('Database', 'CreateVersion', '{D
             CREATE_INDEX_FixCNTTallyPopulation_StratumCode_SampleGroupCode_SpeciesCode_LiveDead_CruiseID,
 
             CREATE_TABLE_TREEDEFAULTVALUE,
+            CREATE_UNIQUE_INDEX_TreeDefaultValue_SpeciesCode_SampleGroupPattern_PrimaryProduct,
             CREATE_INDEX_TreeDefaultValue_CruiseID,
             CREATE_INDEX_TreeDefaultValue_SpeciesCode,
             CREATE_TRIGGER_TREEDEFAULTVALUE_ONUPDATE,

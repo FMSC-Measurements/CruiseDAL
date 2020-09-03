@@ -33,13 +33,19 @@ Score added for each match
  - Primary Product : 1
 
 ## Speration of Species, FIACode, and CommonName into new tables
-FIACode and CommonName have been moved into a static lookup table: FIA. Since these values shouldn't change and are constant across all regions. 
+FIACode and CommonName have been moved into a static look-up table: FIA. Since these values shouldn't change and are constant across all regions. 
 
 SpeciesCode and ContractSpecies have been moved to a new Species table that allows users to customize the Species Codes per-cruise
 
 Another Species table will exist for template data to allow users to customize what species will appear in newly created cruises at the region and forest level. 
 
+
+# need clarification
+ - what type of data is MerchHeightType. Is this true/false. Does this need a look up table. 
+ - what are the range of values cull primary, hidden primary. 0-100 or 0.0-1.0
+
 # ongoing considerations
+
 ## Species Code vs FIACode in Tree Default table
 Would FIACode serve better in the Tree Default table instead of Species Code. This would be better in a larger database design where we might want a standardized value for species across all cruises, but would require more cross walking to get the cruise specific Species Code for data entry and processing, as well, would require more mental cross waling when viewing the raw table data.
 
