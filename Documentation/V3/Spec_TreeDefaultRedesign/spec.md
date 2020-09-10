@@ -9,6 +9,19 @@ We need a way to expand tree default to allow defining with more flexibility.
 ### Defining Tree Defaults using Sample Group Code
 One solution to the issue of misuse of species codes is to allow Tree Defaults to be defined using Sample Group codes. Additionally we could allow for partial matching of sample group codes, such as a suffix. 
 
+## Use Cases
+
+### Defining different tree defaults based on logging method
+In region 6 they use multiple tree defaults with different TopDIB based on the logging method used (Tractor vs Skyline vs Helicopter). As well this requires different strata for each logging method which is unavoidable.  Their workaround in version 2 is to use FIA codes as the species code for Tractor logged trees and a mnemonic of species + logging method for everything else.
+
+### Different Tree Defaults for young growth
+In region 10 they use different tree defaults for young growth. Their workaround is the add a Y to the species code.
+
+### Tree Defaults for different size classes
+In region 10 they would like the ability to define different tree defaults based on size class.  
+
+
+
 ## Removal of LiveDead column 
 In version 2 LiveDead was one of the major key identifiers of tree defaults. However many users find is cumbersome having to deal with LiveDead so frequently. Many users don't even cruise dead trees. As well not all values in are suceptible to being changed based on LiveDead. 
 
