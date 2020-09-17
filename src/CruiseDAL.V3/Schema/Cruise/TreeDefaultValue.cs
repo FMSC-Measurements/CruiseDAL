@@ -7,7 +7,6 @@
     TreeDefaultValue_CN INTEGER PRIMARY KEY AUTOINCREMENT, 
     CruiseID TEXT NOT NULL COLLATE NOCASE,
     SpeciesCode TEXT COLLATE NOCASE,
-    SampleGroupPattern TEXT COLLATE NOCASE,
     PrimaryProduct TEXT COLLATE NOCASE,
     CullPrimary REAL DEFAULT 0.0, 
     CullPrimaryDead REAL DEFAULT 0.0,
@@ -29,16 +28,13 @@
     ModifiedBy TEXT, 
     ModifiedDate DateTime, 
     RowVersion INTEGER DEFAULT 0, 
-    UNIQUE (CruiseID, PrimaryProduct, SpeciesCode), 
-
-    CHECK (LiveDead IN ('L', 'D')),
 
     FOREIGN KEY (CruiseID) REFERENCES Cruise (CruiseID) ON DELETE CASCADE,
     FOREIGN KEY (SpeciesCode, CruiseID) REFERENCES Species (SpeciesCode, CruiseID) ON UPDATE CASCADE ON DELETE CASCADE
 );";
 
-        public const string CREATE_UNIQUE_INDEX_TreeDefaultValue_SpeciesCode_SampleGroupPattern_PrimaryProduct =
-@"CREATE UNIQUE INDEX TreeDefaultValue_SpeciesCode_SampleGroupPattern_PrimaryProduct ON TreeDefaultValue (ifnull(SpeciesCode, ''), ifnull(SampleGroupPattern, ''), ifnull(PrimaryProduct, ''));";
+        public const string CREATE_UNIQUE_INDEX_TreeDefaultValue_SpeciesCode_PrimaryProduct =
+@"CREATE UNIQUE INDEX TreeDefaultValue_SpeciesCode_PrimaryProduct ON TreeDefaultValue (CruiseID, ifnull(SpeciesCode, '') COLLATE NOCASE, ifnull(PrimaryProduct, '') COLLATE NOCASE);";
 
         public const string CREATE_INDEX_TreeDefaultValue_SpeciesCode =
             @"CREATE INDEX 'TreeDefaultValue_SpeciesCode' ON 'TreeDefaultValue' ('SpeciesCode');";
@@ -51,7 +47,6 @@
 AFTER UPDATE OF 
     SpeciesCode, 
     PrimaryProduct, 
-    SampleGroupPattern, 
     CullPrimary,
     CullPrimaryDead,
     HiddenPrimary,
@@ -110,11 +105,11 @@ END; ";
         tdvl.PrimaryProduct,
         tdvl.Species,
         tdvl.CullPrimary,
-        tdvd.CullPrimaryDead,
+        tdvd.CullPrimary,
         tdvl.HiddenPrimary,
-        tdvd.HiddenPrimaryDead,
+        tdvd.HiddenPrimary,
         tdvl.TreeGrade,
-        tdvd.TreeGradeDead,
+        tdvd.TreeGrade,
         tdvl.CullSecondary,
         tdvl.HiddenSecondary,
         tdvl.Recoverable,
@@ -131,9 +126,6 @@ END; ";
         tdvl.RowVersion
     FROM (SELECT * FROM {1}.TreeDefaultValue WHERE LiveDead = 'L') AS tdvl 
     LEFT JOIN (SELECT * FROM {1}.TreeDefaultValue WHERE LiveDead = 'D') AS tdvd USING (Species, PrimaryProduct);
-
-    UPDATE TreeDefaultValue SET 
-    CullPrimaryDead = 
 ";
     }
 

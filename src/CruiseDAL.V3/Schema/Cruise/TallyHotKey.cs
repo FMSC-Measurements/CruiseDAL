@@ -13,21 +13,25 @@
     HotKey TEXT COLLATE NOCASE,
 
     UNIQUE (StratumCode, HotKey) ON CONFLICT REPLACE,
-    --UNIQUE (StratumCode, SampleGroupCode, Species, LiveDead) ON CONFLICT REPLACE,
 
     CHECK(LiveDead IN ('L', 'D') OR LiveDead IS NULL),
+    CHECK ((SpeciesCode IS NOT NULL AND LiveDead IS NOT NULL) OR (SpeciesCode IS NULL AND LiveDead IS NULL)),
 
-    FOREIGN KEY (StratumCode, SampleGroupCode, CruiseID) REFERENCES SampleGroup (StratumCode, SampleGroupCode, CruiseID) ON DELETE CASCADE ON UPDATE CASCADE,
-    FOREIGN KEY (SpeciesCode) REFERENCES Species (SpeciesCode) ON DELETE CASCADE ON UPDATE CASCADE
+    FOREIGN KEY (StratumCode, SampleGroupCode, CruiseID) 
+        REFERENCES SampleGroup (StratumCode, SampleGroupCode, CruiseID) ON DELETE CASCADE ON UPDATE CASCADE,
+    FOREIGN KEY (SpeciesCode, CruiseID) 
+        REFERENCES Species (SpeciesCode, CruiseID) ON DELETE CASCADE ON UPDATE CASCADE,
+    FOREIGN KEY (CruiseID, StratumCode, SampleGroupCode, SpeciesCode, LiveDead) 
+        REFERENCES Subpopulation (CruiseID, StratumCode, SampleGroupCode, SpeciesCode, LiveDead)
 );";
 
-        public const string CREATE_INDEX_TallyHotKey_SpeciesCode =
-            @"CREATE INDEX 'TallyHotKey_SpeciesCode' ON 'TallyHotKey'('SpeciesCode');";
+        public const string CREATE_INDEX_TallyHotKey_SpeciesCode_CruiseID =
+            @"CREATE INDEX 'TallyHotKey_SpeciesCode' ON 'TallyHotKey'('SpeciesCode', 'CruiseID');";
 
         public const string CREATE_INDEX_TallyHotKey_StratumCode_SampleGroupCode_SpeciesCode_LiveDead_CruiseID =
-@"CREATE UNIQUE INDEX TallyHotKey_StratumCode_SampleGroupCode_SpeciesCode_LiveDead_CruiseID
+@"CREATE INDEX TallyHotKey_StratumCode_SampleGroupCode_SpeciesCode_LiveDead_CruiseID
 ON TallyHotKey
-(CruiseID, StratumCode, SampleGroupCode, ifnull(SpeciesCode, '') COLLATE NOCASE, ifnull(LiveDead, '') COLLATE NOCASE);";
+(StratumCode, SampleGroupCode, ifnull(SpeciesCode, '') COLLATE NOCASE, ifnull(LiveDead, '') COLLATE NOCASE);";
     }
 
     public partial class Migrations

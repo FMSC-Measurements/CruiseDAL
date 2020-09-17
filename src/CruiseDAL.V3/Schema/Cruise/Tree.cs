@@ -5,40 +5,42 @@
         // values stored in the tree table are value we don't expect to change after the initial insert of the record
         // for changable values use the treeMeasurments table or treeFieldValue table
         public const string CREATE_TABLE_TREE =
-            "CREATE TABLE Tree ( " +
-                "Tree_CN INTEGER PRIMARY KEY AUTOINCREMENT, " +
-                "CruiseID TEXT NOT NULL COLLATE NOCASE, " +
-                "TreeID TEXT NOT NULL , " +
-                "CuttingUnitCode TEXT NOT NULL COLLATE NOCASE, " +
-                "StratumCode TEXT NOT NULL COLLATE NOCASE, " +
-                "SampleGroupCode TEXT NOT NULL COLLATE NOCASE, " +
-                "SpeciesCode TEXT COLLATE NOCASE, " +
-                "LiveDead TEXT COLLATE NOCASE, " +
-                "PlotNumber INTEGER, " +
-                "TreeNumber INTEGER NOT NULL, " +
-                "CountOrMeasure TEXT DEFAULT 'M' COLLATE NOCASE," + // field is for compatibility with older schema. because plot cruising still requires a tree record to record non measure trees                               // initials of the cruiser taking measurments
-                "XCoordinate REAL, " +
-                "YCoordinate REAL, " +
-                "ZCoordinate REAL, " +
+@"CREATE TABLE Tree ( 
+    Tree_CN INTEGER PRIMARY KEY AUTOINCREMENT, 
+    CruiseID TEXT NOT NULL COLLATE NOCASE, 
+    TreeID TEXT NOT NULL , 
+    CuttingUnitCode TEXT NOT NULL COLLATE NOCASE, 
+    StratumCode TEXT NOT NULL COLLATE NOCASE, 
+    SampleGroupCode TEXT NOT NULL COLLATE NOCASE, 
+    SpeciesCode TEXT COLLATE NOCASE, 
+    LiveDead TEXT COLLATE NOCASE, 
+    PlotNumber INTEGER, 
+    TreeNumber INTEGER NOT NULL, 
+    CountOrMeasure TEXT DEFAULT 'M' COLLATE NOCASE, -- field is for compatibility with older schema. because plot cruising still requires a tree record to record non measure trees                               // initials of the cruiser taking measurments
 
-                "CreatedBy TEXT DEFAULT '', " +
-                "CreatedDate DateTime DEFAULT (datetime('now', 'localtime')), " +
-                "ModifiedBy TEXT, " +
-                "ModifiedDate DateTime , " +
-                "RowVersion INTEGER DEFAULT 0, " +
+    CreatedBy TEXT DEFAULT '', 
+    CreatedDate DateTime DEFAULT (datetime('now', 'localtime')), 
+    ModifiedBy TEXT, 
+    ModifiedDate DateTime, 
+    RowVersion INTEGER DEFAULT 0, 
 
-                "UNIQUE (TreeID), " +
+    UNIQUE (TreeID), 
 
-                "CHECK (TreeID LIKE '________-____-____-____-____________'), " +
-                "CHECK (CountOrMeasure IN ('C', 'M', 'I')), " +
-                "CHECK (LiveDead IN ('L', 'D') OR LiveDead IS NULL)," +
+    CHECK (TreeID LIKE '________-____-____-____-____________'), 
+    CHECK (CountOrMeasure IN ('C', 'M', 'I')), 
+    CHECK (LiveDead IN ('L', 'D') OR LiveDead IS NULL),
 
-                "FOREIGN KEY (CuttingUnitCode, CruiseID) REFERENCES CuttingUnit (Code, CruiseID) ON DELETE CASCADE ON UPDATE CASCADE, " +
-                "FOREIGN KEY (SampleGroupCode, StratumCode, CruiseID) REFERENCES SampleGroup (SampleGroupCode, StratumCode, CruiseID) ON DELETE CASCADE ON UPDATE CASCADE, " +
-                "FOREIGN KEY (PlotNumber, CuttingUnitCode, CruiseID) REFERENCES Plot (PlotNumber, CuttingUnitCode, CruiseID) ON DELETE CASCADE ON UPDATE CASCADE, " +
-                //"FOREIGN KEY (Species, LiveDead, SampleGroupCode, StratumCode) REFERENCES SubPopulation (Species, LiveDead, SampleGroupCode, StratumCode), " +
-                "FOREIGN KEY (SpeciesCode) REFERENCES Species (SpeciesCode) " +
-            ")";
+    FOREIGN KEY (CuttingUnitCode, CruiseID) 
+        REFERENCES CuttingUnit (Code, CruiseID) ON DELETE CASCADE ON UPDATE CASCADE, 
+    FOREIGN KEY (SampleGroupCode, StratumCode, CruiseID) 
+        REFERENCES SampleGroup (SampleGroupCode, StratumCode, CruiseID) ON DELETE CASCADE ON UPDATE CASCADE, 
+    FOREIGN KEY (PlotNumber, CuttingUnitCode, CruiseID) 
+        REFERENCES Plot (PlotNumber, CuttingUnitCode, CruiseID) ON DELETE CASCADE ON UPDATE CASCADE, 
+    --FOREIGN KEY (Species, LiveDead, SampleGroupCode, StratumCode) 
+    --    REFERENCES SubPopulation (Species, LiveDead, SampleGroupCode, StratumCode), 
+    FOREIGN KEY (SpeciesCode, CruiseID) 
+        REFERENCES Species (SpeciesCode, CruiseID) 
+)";
 
         public const string CREATE_INDEX_Tree_TreeNumber_CruiseID =
             "CREATE INDEX Tree_TreeNumber_CruiseID ON Tree (TreeNumber, CruiseID);";
@@ -69,6 +71,14 @@
 
         public const string CREATE_INDEX_Tree_TreeID_PlotNumber =
             @"CREATE UNIQUE INDEX Tree_TreeID_PlotNumber ON Tree (TreeID, PlotNumber);";
+
+        public const string CREATE_UNIQUE_INDEX_Tree_TreeNumber_CuttingUnitCode_PlotNumber_StratumCode_CruiseID =
+@"CREATE UNIQUE INDEX Tree_TreeNumber_CuttingUnitCode_PlotNumber_StratumCode_CruiseID ON Tree
+    (TreeNumber, CuttingUnitCode, PlotNumber, StratumCode, CruiseID) WHERE PlotNumber IS NOT NULL;";
+
+        public const string CREATE_UNIQUE_INDEX_Tree_TreeNumber_CuttingUnitCode_CruiseID =
+@"CREATE UNIQUE INDEX Tree_TreeNumber_CuttingUnitCode_CruiseID ON Tree
+    (TreeNumber, CuttingUnitCode, CruiseID) WHERE PlotNumber IS NULL;";
 
         public const string CREATE_TRIGGER_TREE_ONUPDATE =
             "CREATE TRIGGER Tree_OnUpdate " +
