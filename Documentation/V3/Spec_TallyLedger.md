@@ -17,6 +17,9 @@ Using the tally ledger to store each individual kpi instead of a lump sum will a
 ## Multiple Entry types
 The tally ledger table will have a EntryType field. This will allow us to determine the purpose of an entry. Entries can be added because of Tally, bulk tree counts, user entered tree counts, left over trees....
 
+
+
+
 # Ongoing considerations
 
 ## TreeID vs TreeNumber
@@ -24,14 +27,16 @@ Trees can be identified either by TreeID or TreeNumber + CuttingUnit + PlotNumbe
 
 ## Redundancies between Tree table and Tally Ledger. 
 Tally Ledger has UnitCode, StratumCode, SampleGroupCode, SpeciesCode. These are duplicated in the tree table. 
-They need to be in the Tally Ledger table because a tally can exist with out a tree, but should they be removed from the tree table, because a tree shouldn't exist without a tally ledger entry. 
+The Tally Ledger table need these fields because a tally can exist with out a tree. 
+
+However it is possible to say that a tree can not exist without a ledger entry. With that it is possible to remove the redundancy by saying that these fields are not needed in the tree table. However if we allow multiple ledger entries per tree we need a way to enforce are consistent per tree. To do this we need a table with a unique record per tree with all the identifying fields. 
 
 ## allow single entry per-tree or allow multiple
 ### allow multiple
 Pros: 
  - we get history of edits to tree count on trees
  - allow us to not rely on time stamp to pick latest tree count edit
- - doesn't break idempotentcie on tally ledger
+ - doesn't break idempotency of tally ledger
 Cons:
  - can hide issue where there are two conflicting edits to a tree count
  - we have to have UnitCode, StratumCode, SampleGroupCode, SpeciesCode in tree table to enforce integrity of data

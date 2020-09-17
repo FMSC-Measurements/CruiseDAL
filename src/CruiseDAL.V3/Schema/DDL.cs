@@ -12,6 +12,9 @@ INSERT INTO Globals (Block, Key, Value) VALUES ('Database', 'CreateVersion', '{D
 
         public static string[] CREATE_COMMANDS = new string[]
         {
+            // lookup tables
+            CREATE_TABLE_FIA,
+
             //core tables
             CREATE_TABLE_SALE,
             CREATE_TRIGGER_SALE_ONUPDATE,
@@ -51,17 +54,16 @@ INSERT INTO Globals (Block, Key, Value) VALUES ('Database', 'CreateVersion', '{D
             CREATE_TABLE_Species,
 
             CREATE_TABLE_SUBPOPULATION,
-            CREATE_INDEX_Subpopulation_SpeciesCode,
-            CREATE_INDEX_Subpopulation_StratumCode_SampleGroupCode,
-            CREATE_INDEX_Subpopulation_StratumCode_SampleGroupCode_SpeciesCode_LiveDead,
+            CREATE_INDEX_Subpopulation_SpeciesCode_CruiseID,
+            CREATE_INDEX_Subpopulation_StratumCode_SampleGroupCode_CruiseID,
 
             //CREATE_TABLE_TALLYPOPULATION,
             CREATE_TABLE_TALLYDESCRIPTION,
-            CREATE_INDEX_TallyDescription_SpeciesCode,
-            CREATE_INDEX_TallyDescription_StratumCode_SampleGroupCode_SpeciesCode_LiveDead_CruiseID,
+            CREATE_INDEX_TallyDescription_SpeciesCode_CruiseID,
+            CREATE_UNIQUE_INDEX_TallyDescription_StratumCode_SampleGroupCode_SpeciesCode_LiveDead_CruiseID,
             CREATE_TABLE_TALLYHOTKEY,
             CREATE_INDEX_TallyHotKey_StratumCode_SampleGroupCode_SpeciesCode_LiveDead_CruiseID,
-            CREATE_INDEX_TallyHotKey_SpeciesCode,
+            CREATE_INDEX_TallyHotKey_SpeciesCode_CruiseID,
 
             CREATE_TABLE_PLOT,
             CREATE_INDEX_Plot_CuttingUnitCode_CruiseID,
@@ -75,6 +77,8 @@ INSERT INTO Globals (Block, Key, Value) VALUES ('Database', 'CreateVersion', '{D
 
             CREATE_TABLE_TREE,
             CREATE_INDEX_Tree_CuttingUnitCode_CruiseID,
+            CREATE_UNIQUE_INDEX_Tree_TreeNumber_CuttingUnitCode_PlotNumber_StratumCode_CruiseID,
+            CREATE_UNIQUE_INDEX_Tree_TreeNumber_CuttingUnitCode_CruiseID,
             CREATE_INDEX_Tree_PlotNumber_CuttingUnitCode_CruiseID,
             CREATE_INDEX_Tree_SampleGroupCode_StratumCode_CruiseID,
             CREATE_INDEX_Tree_TreeNumber_CruiseID,
@@ -88,6 +92,9 @@ INSERT INTO Globals (Block, Key, Value) VALUES ('Database', 'CreateVersion', '{D
 
             CREATE_TABLE_TREEMEASURMENT,
             CREATE_TRIGGER_TREEMEASURMENTS_ONUPDATE,
+
+            CREATE_TABLE_TreeLocation,
+            CREATE_TRIGGER_TreeLocation_ONUPDATE,
 
             CREATE_TABLE_TREEFIELDVALUE,
             CREATE_INDEX_TreeFieldValue_Field,
@@ -116,7 +123,7 @@ INSERT INTO Globals (Block, Key, Value) VALUES ('Database', 'CreateVersion', '{D
             CREATE_INDEX_FixCNTTallyPopulation_StratumCode_SampleGroupCode_SpeciesCode_LiveDead_CruiseID,
 
             CREATE_TABLE_TREEDEFAULTVALUE,
-            CREATE_UNIQUE_INDEX_TreeDefaultValue_SpeciesCode_SampleGroupPattern_PrimaryProduct,
+            CREATE_UNIQUE_INDEX_TreeDefaultValue_SpeciesCode_PrimaryProduct,
             CREATE_INDEX_TreeDefaultValue_CruiseID,
             CREATE_INDEX_TreeDefaultValue_SpeciesCode,
             CREATE_TRIGGER_TREEDEFAULTVALUE_ONUPDATE,

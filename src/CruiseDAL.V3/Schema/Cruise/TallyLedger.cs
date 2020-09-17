@@ -35,10 +35,7 @@
             //"FOREIGN KEY (CuttingUnitCode, StratumCode) REFERENCES CuttingUnit_Stratum (CuttingUnitCode, StratumCode), " +
             "FOREIGN KEY (StratumCode, CruiseID) REFERENCES Stratum (Code, CruiseID) , " +
             "FOREIGN KEY (SampleGroupCode, StratumCode, CruiseID) REFERENCES SampleGroup (SampleGroupCode, StratumCode, CruiseID), " +
-            "FOREIGN KEY (SpeciesCode) REFERENCES Species (SpeciesCode) " +
-            //"FOREIGN KEY (StratumCode, SampleGroupCode, Species, LiveDead) REFERENCES TallyPopulation (StratumCode, SampleGroupCode, Species, LiveDead), " +
-            //"FOREIGN KEY (CuttingUnitCode, StratumCode, PlotNumber) REFERENCES Plot_Stratum (CuttingUnitCode, StratumCode, PlotNumber), " +
-            
+            "FOREIGN KEY (SpeciesCode,CruiseID) REFERENCES Species (SpeciesCode, CruiseID) " +
             "FOREIGN KEY (PlotNumber, CuttingUnitCode, CruiseID) REFERENCES Plot (PlotNumber, CuttingUnitCode, CruiseID) ON DELETE CASCADE ON UPDATE CASCADE, " +
             // everything below are tree fKey references. there are a few, but because some tree values can be null we need to have them as seperate references
             "FOREIGN KEY (TreeID) REFERENCES Tree (TreeID) ON DELETE CASCADE, " +

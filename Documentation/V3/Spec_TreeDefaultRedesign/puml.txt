@@ -4,7 +4,7 @@ entity "Species" as sp {
         * SpeciesCode
 	--
         * FIACode
-        * ContractSpecies
+        
 }
 
 entity "FIA" as fia {
@@ -28,6 +28,7 @@ entity "TreeDefaultValue" as tdv {
 	Recoverable
 	TreeGrade
         TreeGradeDead
+	ContractSpecies
 	MerchHeightLogLength
 	MerchHeightType
 	FormClass
