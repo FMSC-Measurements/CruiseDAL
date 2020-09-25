@@ -24,19 +24,28 @@ INSERT INTO Globals (Block, Key, Value) VALUES ('Database', 'CreateVersion', '{D
 
             CREATE_TABLE_CUTTINGUNIT,
             CREATE_TRIGGER_CUTTINGUNIT_ONUPDATE,
+            CREATE_TOMBSTONE_TABLE_CuttingUnit_Tombstone,
+            CTEATE_TRIGGER_CuttingUnit_OnDelete,
+
 
             CREATE_TABLE_STRATUM,
             CREATE_TRIGGER_STRATUM_ONUPDATE,
+            CREATE_TOMBSTONE_TABLE_Stratum_Tombstone,
+            CREATE_TRIGGER_Stratum_OnDelete,
 
             CREATE_TABLE_CUTTINGUNIT_STRATUM,
             CREATE_INDEX_CUTTINGUNIT_STRATUM_StratumCode_CruiseID,
             CREATE_INDEX_CuttingUnit_Stratum_CuttingUnitCode_CruiseID,
+            CREATE_TOMBSTONE_TABLE_CuttingUnitStratum_Tombstone,
+            CREATE_TRIGGER_CuttingUnit_Stratum_OnDelete,
 
             CREATE_TABLE_TREEFIELD,
             INITIALIZE_TABLE_TREEFIELD,
             CREATE_TABLE_TREEFIELDSETUP,
             CREATE_INDEX_TreeFieldSetup_Field,
             CREATE_INDEX_TreeFieldSetup_StratumCode_CruiseID,
+            CREATE_TOMBSTONE_TABLE_TreeFieldSetup_Tombstone,
+            CREATE_TRIGGER_TreeFieldSetup_OnDelete,
 
             CREATE_TABLE_LOGFIELD,
             INITIALIZE_TABLE_LOGFIELD,
@@ -46,6 +55,9 @@ INSERT INTO Globals (Block, Key, Value) VALUES ('Database', 'CreateVersion', '{D
 
             CREATE_TABLE_SAMPLEGROUP,
             CREATE_TRIGGER_SAMPLEGROUP_ONUPDATE,
+            CREATE_INDEX_SampleGroup_StratumCode_CruiseID,
+            CREATE_TOMBSTONE_TABLE_SampleGroup_Tombstone,
+            CREATE_TRIGGER_SampleGoup_OnDelete,
 
             CREATE_TABLE_DEVICE,
             CREATE_TALBE_SAMPLERSTATE,
@@ -56,6 +68,8 @@ INSERT INTO Globals (Block, Key, Value) VALUES ('Database', 'CreateVersion', '{D
             CREATE_TABLE_SUBPOPULATION,
             CREATE_INDEX_Subpopulation_SpeciesCode_CruiseID,
             CREATE_INDEX_Subpopulation_StratumCode_SampleGroupCode_CruiseID,
+            CREATE_TOMBSTONE_TABLE_SubPopulation_Tombstone,
+            CREATE_TRIGGER_SubPopulation_OnDelete,
 
             //CREATE_TABLE_TALLYPOPULATION,
             CREATE_TABLE_TALLYDESCRIPTION,
@@ -69,11 +83,19 @@ INSERT INTO Globals (Block, Key, Value) VALUES ('Database', 'CreateVersion', '{D
             CREATE_INDEX_Plot_CuttingUnitCode_CruiseID,
             CREATE_INDEX_Plot_PlotNumber_CruiseID,
             CREATE_TRIGGER_PLOT_ONUPDATE,
+            CREATE_TOMBSTONE_TABLE_Plot_Tombstone,
+            CREATE_TRIGGER_Plot_OnDelete,
 
             CREATE_TABLE_PLOT_STRATUM,
             CREATE_INDEX_Plot_Stratum_StratumCode_CruiseID,
             CREATE_INDEX_Plot_Stratum_PlotNumber_CuttingUnitCode_CruiseID,
             CREATE_TRIGGER_PLOT_STRATUM_ONUPDATE,
+            CREATE_TROMBSTONE_TABLE_Plot_Stratum_Tombstone,
+            CREATE_TRIGGER_Plot_Stratum_OnDelete,
+
+            CREATE_TABLE_PlotLocation,
+            CREATE_TOMBSTONE_TABLE_PlotLocation_Tombstone,
+            CREATE_TRIGGER_PlotLocation_OnDelete,
 
             CREATE_TABLE_TREE,
             CREATE_INDEX_Tree_CuttingUnitCode_CruiseID,
@@ -89,21 +111,31 @@ INSERT INTO Globals (Block, Key, Value) VALUES ('Database', 'CreateVersion', '{D
             CREATE_INDEX_Tree_TreeID_SpeciesCode,
             CREATE_INDEX_Tree_TreeID_PlotNumber,
             CREATE_TRIGGER_TREE_ONUPDATE,
+            CREATE_TOMBSTONE_TABLE_Tree_Tombstone,
+            CREATE_TRIGGER_Tree_OnDelete,
 
             CREATE_TABLE_TREEMEASURMENT,
             CREATE_TRIGGER_TREEMEASURMENTS_ONUPDATE,
+            CREATE_TOMBSTONE_TABLE_TreeMeasurment_Tombstone,
+            CREATE_TRIGGER_TreeMeasurment_OnDelete,
 
             CREATE_TABLE_TreeLocation,
             CREATE_TRIGGER_TreeLocation_ONUPDATE,
+            CREATE_TOMBSTONE_TABLE_TreeLocation_Tombstone,
+            CREATE_TRIGGER_TreeLocation_OnDelete,
 
             CREATE_TABLE_TREEFIELDVALUE,
             CREATE_INDEX_TreeFieldValue_Field,
             CREATE_INDEX_TreeFieldValue_TreeID,
+            CREATE_TOMBSTONE_TABLE_TreeFieldValue_Tombstone,
+            CREATE_TRIGGER_TreeFieldValue_OnDelete,
 
             CREATE_TABLE_LOG,
             CREATE_INDEX_Log_TreeID,
             CREATE_INDEX_Log_LogNumber,
             CREATE_TRIGGER_LOG_ONUPDATE,
+            CREATE_TOMBSTONE_TABLE_Log_Tombstone,
+            CREATE_TRIGGER_Log_OnDelete,
 
             CREATE_TABLE_Stem,
             CREATE_TRIGGER_Stem_ON_UPDATE,
@@ -127,6 +159,8 @@ INSERT INTO Globals (Block, Key, Value) VALUES ('Database', 'CreateVersion', '{D
             CREATE_INDEX_TreeDefaultValue_CruiseID,
             CREATE_INDEX_TreeDefaultValue_SpeciesCode,
             CREATE_TRIGGER_TREEDEFAULTVALUE_ONUPDATE,
+            CREATE_TOMBSTONE_TABLE_TreeDefaultValue_Tombstone,
+            CREATE_TRIGGER_TreeDefaultValue_OnDelete,
 
             //processing tables
             CREATE_TABLE_BIOMASSEQUATION,
@@ -163,15 +197,26 @@ INSERT INTO Globals (Block, Key, Value) VALUES ('Database', 'CreateVersion', '{D
             CREATE_TABLE_LOGGRADEAUDITRULE,
             CREATE_INDEX_LogGradeAuditRule_SpeciesCode,
             CREATE_INDEX_LogGradeAuditRule_SpeciesCode_DefectMax_Grade_CruiseID,
+            
             CREATE_TABLE_TREEAUDITRULE,
             CREATE_INDEX_TreeAuditRule_Field,
+            CREATE_TOMBSTONE_TABLE_TreeAuditRule_Tombstone,
+            CREATE_TRIGGER_TreeAuditRule_OnDelete,
+
+
             CREATE_TABLE_TreeAuditRuleSelector,
             CREATE_INDEX_TreeAuditRuleSelector_SpeciesCode,
             CREATE_INDEX_TreeAuditRuleSelector_TreeAuditRuleID,
             CREATE_UNIQUE_INDEX_TreeAuditRuleSelector_SpeciesCode_LiveDead_PrimaryProduct_TreeAuditRuleID_CruiseID,
+            CREATE_TOMBSTONE_TABLE_TreeAuditRuleSelector,
+            CREATE_TRIGGER_TreeAuditRuleSelector_OnDelete,
+
+
             CREATE_TABLE_TREEAUDITRESOLUTION,
             CREATE_INDEX_TreeAuditResolution_TreeAuditRuleID,
             CREATE_INDEX_TreeAuditResolution_TreeID,
+            CREATE_TOMBSTONE_TABLE_TreeAuditResolution_Tombstone,
+            CREATE_TRIGGER_TreeAuditResolution_OnDelete,
 
             //views
             CREATE_VIEW_TALLYPOPULATION,

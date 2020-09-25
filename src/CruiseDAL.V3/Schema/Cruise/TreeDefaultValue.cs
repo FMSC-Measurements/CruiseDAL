@@ -68,6 +68,89 @@ BEGIN
     UPDATE TreeDefaultValue SET ModifiedDate = datetime( 'now', 'localtime') WHERE TreeDefaultValue_CN = new.TreeDefaultValue_CN; 
     UPDATE TreeDefaultValue SET RowVersion = old.RowVersion + 1 WHERE TreeDefaultValue_CN = old.TreeDefaultValue_CN; 
 END; ";
+
+        public const string CREATE_TRIGGER_TreeDefaultValue_OnDelete =
+@"CREATE TRIGGER TreeDefaultValue_OnDelete 
+BEFORE DELETE ON TreeDefaultValue 
+FOR EACH ROW 
+BEGIN
+    INSERT OR REPLACE INTO TreeDefaultValue_Tombstone (
+        CruiseID,
+        SpeciesCode,
+        PrimaryProduct,
+        CullPrimary, 
+        CullPrimaryDead,
+        HiddenPrimary,
+        HiddenPrimaryDead,
+        TreeGrade,
+        TreeGradeDead,
+        CullSecondary, 
+        HiddenSecondary,
+        Recoverable, 
+        MerchHeightLogLength,
+        MerchHeightType, 
+        FormClass, 
+        BarkThicknessRatio, 
+        AverageZ, 
+        ReferenceHeightPercent, 
+        CreatedBy, 
+        CreatedDate, 
+        ModifiedBy, 
+        ModifiedDate, 
+        RowVersion
+    ) VALUES (
+        OLD.CruiseID,
+        OLD.SpeciesCode,
+        OLD.PrimaryProduct,
+        OLD.CullPrimary, 
+        OLD.CullPrimaryDead,
+        OLD.HiddenPrimary,
+        OLD.HiddenPrimaryDead,
+        OLD.TreeGrade,
+        OLD.TreeGradeDead,
+        OLD.CullSecondary, 
+        OLD.HiddenSecondary,
+        OLD.Recoverable, 
+        OLD.MerchHeightLogLength,
+        OLD.MerchHeightType, 
+        OLD.FormClass, 
+        OLD.BarkThicknessRatio, 
+        OLD.AverageZ, 
+        OLD.ReferenceHeightPercent, 
+        OLD.CreatedBy, 
+        OLD.CreatedDate, 
+        OLD.ModifiedBy, 
+        OLD.ModifiedDate, 
+        OLD.RowVersion
+    );
+END;";
+
+        public const string CREATE_TOMBSTONE_TABLE_TreeDefaultValue_Tombstone =
+@"CREATE TABLE TreeDefaultValue_Tombstone (
+    CruiseID TEXT NOT NULL COLLATE NOCASE,
+    SpeciesCode TEXT COLLATE NOCASE,
+    PrimaryProduct TEXT COLLATE NOCASE,
+    CullPrimary REAL, 
+    CullPrimaryDead REAL,
+    HiddenPrimary REAL,
+    HiddenPrimaryDead REAL,
+    TreeGrade TEXT COLLATE NOCASE,
+    TreeGradeDead TEXT COLLATE NOCASE,
+    CullSecondary REAL, 
+    HiddenSecondary REAL,
+    Recoverable REAL, 
+    MerchHeightLogLength INTEGER,
+    MerchHeightType TEXT, 
+    FormClass REAL, 
+    BarkThicknessRatio REAL, 
+    AverageZ REAL, 
+    ReferenceHeightPercent REAL, 
+    CreatedBy TEXT, 
+    CreatedDate DateTime, 
+    ModifiedBy TEXT, 
+    ModifiedDate DateTime, 
+    RowVersion INTEGER
+);";
     }
 
     public partial class Migrations

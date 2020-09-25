@@ -98,6 +98,70 @@
                 "UPDATE Tree SET ModifiedDate = datetime('now', 'localtime') WHERE Tree_CN = old.Tree_CN; " +
                 "UPDATE Tree SET RowVersion = old.RowVersion + 1 WHERE Tree_CN = old.Tree_CN; " +
             "END; ";
+
+        public const string CREATE_TRIGGER_Tree_OnDelete =
+@"CREATE TRIGGER Tree_OnDelete 
+BEFORE DELETE ON Tree
+FOR EACH ROW
+BEGIN 
+    INSERT OR REPLACE INTO Tree_Tombstone (
+        CruiseID, 
+        TreeID, 
+        CuttingUnitCode, 
+        StratumCode, 
+        SampleGroupCode, 
+        SpeciesCode, 
+        LiveDead, 
+        PlotNumber, 
+        TreeNumber, 
+        CountOrMeasure,
+
+        CreatedBy, 
+        CreatedDate, 
+        ModifiedBy, 
+        ModifiedDate, 
+        RowVersion
+    ) VALUES (
+        OLD.CruiseID, 
+        OLD.TreeID, 
+        OLD.CuttingUnitCode, 
+        OLD.StratumCode, 
+        OLD.SampleGroupCode, 
+        OLD.SpeciesCode, 
+        OLD.LiveDead, 
+        OLD.PlotNumber, 
+        OLD.TreeNumber, 
+        OLD.CountOrMeasure,
+
+        OLD.CreatedBy, 
+        OLD.CreatedDate, 
+        OLD.ModifiedBy, 
+        OLD.ModifiedDate, 
+        OLD.RowVersion
+    );
+END;";
+
+        public const string CREATE_TOMBSTONE_TABLE_Tree_Tombstone =
+@"CREATE TABLE Tree_Tombstone (
+    CruiseID TEXT NOT NULL COLLATE NOCASE, 
+    TreeID TEXT NOT NULL , 
+    CuttingUnitCode TEXT NOT NULL COLLATE NOCASE, 
+    StratumCode TEXT NOT NULL COLLATE NOCASE, 
+    SampleGroupCode TEXT NOT NULL COLLATE NOCASE, 
+    SpeciesCode TEXT COLLATE NOCASE, 
+    LiveDead TEXT COLLATE NOCASE, 
+    PlotNumber INTEGER, 
+    TreeNumber INTEGER NOT NULL, 
+    CountOrMeasure TEXT DEFAULT COLLATE NOCASE,
+
+    CreatedBy TEXT, 
+    CreatedDate DateTime, 
+    ModifiedBy TEXT, 
+    ModifiedDate DateTime, 
+    RowVersion INTEGER, 
+
+    UNIQUE (TreeID)
+);";
     }
 
     public partial class Migrations

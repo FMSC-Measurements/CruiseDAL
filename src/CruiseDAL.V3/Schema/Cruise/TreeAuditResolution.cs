@@ -23,5 +23,34 @@
 
         public const string CREATE_INDEX_TreeAuditResolution_TreeID =
             @"CREATE INDEX 'TreeAuditResolution_TreeID' ON 'TreeAuditResolution'('TreeID');";
+
+        public const string CREATE_TRIGGER_TreeAuditResolution_OnDelete =
+@"CREATE TRIGGER TreeAuditResolution_OnDelete 
+BEFORE DELETE ON TreeAuditResolution
+FOR EACH ROW 
+BEGIN 
+    INSERT OR REPLACE INTO TreeAuditResolution_Tombstone
+        CruiseID,
+        TreeID,
+        TreeAuditRuleID,
+        Resolution,
+        Initials
+    ) VALUES (
+        OLD.CruiseID,
+        OLD.TreeID,
+        OLD.TreeAuditRuleID,
+        OLD.Resolution,
+        OLD.Initials
+    );
+END;";
+
+        public const string CREATE_TOMBSTONE_TABLE_TreeAuditResolution_Tombstone =
+@"CREATE TABLE TreeAuditResolution_Tombstone (
+    CruiseID TEXT NOT NULL COLLATE NOCASE,
+    TreeID TEXT NOT NULL,
+    TreeAuditRuleID TEXT NOT NULL,
+    Resolution TEXT,
+    Initials TEXT NOT NULL
+);";
     }
 }

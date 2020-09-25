@@ -43,95 +43,245 @@
         //GROUP BY TreeID;";
 
         public const string CREATE_TABLE_TREEMEASURMENT =
-            "CREATE TABLE TreeMeasurment ( " +
-                "TreeMeasurment_CN INTEGER PRIMARY KEY AUTOINCREMENT, " +
-                "TreeID TEXT NOT NULL, " +
+@"CREATE TABLE TreeMeasurment (
+    TreeMeasurment_CN INTEGER PRIMARY KEY AUTOINCREMENT,
+    TreeID TEXT NOT NULL,
 
-                "SeenDefectPrimary REAL Default 0.0, " +
-                "SeenDefectSecondary REAL Default 0.0, " +
-                "RecoverablePrimary REAL Default 0.0, " +
-                "HiddenPrimary REAL Default 0.0, " +
-                "Grade TEXT, " +
+    SeenDefectPrimary REAL Default 0.0,
+    SeenDefectSecondary REAL Default 0.0,
+    RecoverablePrimary REAL Default 0.0,
+    HiddenPrimary REAL Default 0.0,
+    Grade TEXT,
 
-                "HeightToFirstLiveLimb REAL Default 0.0, " +
-                "PoleLength REAL Default 0.0, " +
-                "ClearFace TEXT, " +
-                "CrownRatio REAL Default 0.0, " +
-                "DBH REAL Default 0.0, " +
+    HeightToFirstLiveLimb REAL Default 0.0,
+    PoleLength REAL Default 0.0,
+    ClearFace TEXT,
+    CrownRatio REAL Default 0.0,
+    DBH REAL Default 0.0,
 
-                "DRC REAL Default 0.0, " +
-                "TotalHeight REAL Default 0.0, " +
-                "MerchHeightPrimary REAL Default 0.0, " +
-                "MerchHeightSecondary REAL Default 0.0, " +
-                "FormClass REAL Default 0.0, " +
+    DRC REAL Default 0.0,
+    TotalHeight REAL Default 0.0,
+    MerchHeightPrimary REAL Default 0.0,
+    MerchHeightSecondary REAL Default 0.0,
+    FormClass REAL Default 0.0,
 
-                //"UpperStemDOB REAL Default 0.0, " +
+    --UpperStemDOB REAL Default 0.0,
 
-                "UpperStemDiameter REAL Default 0.0, " +
-                "UpperStemHeight REAL Default 0.0, " +
-                "DBHDoubleBarkThickness REAL Default 0.0, " +
-                "TopDIBPrimary REAL Default 0.0, " +
-                "TopDIBSecondary REAL Default 0.0, " +
+    UpperStemDiameter REAL Default 0.0,
+    UpperStemHeight REAL Default 0.0,
+    DBHDoubleBarkThickness REAL Default 0.0,
+    TopDIBPrimary REAL Default 0.0,
+    TopDIBSecondary REAL Default 0.0,
 
-                "DefectCode TEXT, " +
-                "DiameterAtDefect REAL Default 0.0, " +
-                "VoidPercent REAL Default 0.0, " +
-                "Slope REAL Default 0.0, " +
-                "Aspect REAL Default 0.0, " +
+    DefectCode TEXT,
+    DiameterAtDefect REAL Default 0.0,
+    VoidPercent REAL Default 0.0,
+    Slope REAL Default 0.0,
+    Aspect REAL Default 0.0,
 
-                "Remarks TEXT, " +
-                "IsFallBuckScale BOOLEAN Default 0, " +
+    Remarks TEXT,
+    IsFallBuckScale BOOLEAN Default 0,
 
-                "MetaData TEXT, " +
+    MetaData TEXT,
 
-                "Initials TEXT, " +
-                "CreatedBy TEXT DEFAULT 'none', " +
-                "CreatedDate DateTime DEFAULT (datetime('now', 'localtime')) , " +
-                "ModifiedBy TEXT, " +
-                "ModifiedDate DateTime , " +
-                "RowVersion INTEGER DEFAULT 0, " +
-                "UNIQUE (TreeID), " +
-                "FOREIGN KEY (TreeID) REFERENCES Tree (TreeID) ON DELETE CASCADE ON UPDATE CASCADE" +
-            ")";
+    Initials TEXT,
+    CreatedBy TEXT DEFAULT 'none',
+    CreatedDate DateTime DEFAULT (datetime('now', 'localtime')) ,
+    ModifiedBy TEXT,
+    ModifiedDate DateTime ,
+    RowVersion INTEGER DEFAULT 0,
+    UNIQUE (TreeID),
+    FOREIGN KEY (TreeID) REFERENCES Tree (TreeID) ON DELETE CASCADE ON UPDATE CASCADE
+)";
 
         public const string CREATE_TRIGGER_TREEMEASURMENTS_ONUPDATE =
-            "CREATE TRIGGER TREEMEASURMENT_ONUPDATE " +
-            "AFTER UPDATE OF " +
-                "SeenDefectPrimary, " +
-                "SeenDefectSecondary, " +
-                "RecoverablePrimary, " +
-                "HiddenPrimary, Grade, " +
-                "HeightToFirstLiveLimb, " +
-                "PoleLength, " +
-                "ClearFace, " +
-                "CrownRatio, " +
-                "DBH, " +
-                "DRC, " +
-                "TotalHeight, " +
-                "MerchHeightPrimary, " +
-                "MerchHeightSecondary, " +
-                "FormClass, " +
-                //"UpperStemDOB, " +
-                "UpperStemDiameter, " +
-                "UpperStemHeight, " +
-                "DBHDoubleBarkThickness, " +
-                "TopDIBPrimary, " +
-                "TopDIBSecondary, " +
-                "DefectCode, " +
-                "DiameterAtDefect, " +
-                "VoidPercent, " +
-                "Slope, " +
-                "Aspect, " +
-                "Remarks, " +
-                "MetaData, " +
-                "IsFallBuckScale," +
-                "Initials " +
-            "ON TreeMeasurment " +
-            "FOR EACH ROW " +
-            "BEGIN " +
-                "UPDATE TreeMeasurment SET RowVersion = old.RowVersion + 1 WHERE TreeMeasurment_CN = old.TreeMeasurment_CN; " +
-                "UPDATE TreeMeasurment SET ModifiedDate = datetime('now', 'localtime') WHERE TreeMeasurment_CN = old.TreeMeasurment_CN; " +
-            "END;";
+@"CREATE TRIGGER TREEMEASURMENT_ONUPDATE
+AFTER UPDATE OF
+    SeenDefectPrimary,
+    SeenDefectSecondary,
+    RecoverablePrimary,
+    HiddenPrimary, Grade,
+    HeightToFirstLiveLimb,
+    PoleLength,
+    ClearFace,
+    CrownRatio,
+    DBH,
+    DRC,
+    TotalHeight,
+    MerchHeightPrimary,
+    MerchHeightSecondary,
+    FormClass,
+    --UpperStemDOB,
+    UpperStemDiameter,
+    UpperStemHeight,
+    DBHDoubleBarkThickness,
+    TopDIBPrimary,
+    TopDIBSecondary,
+    DefectCode,
+    DiameterAtDefect,
+    VoidPercent,
+    Slope,
+    Aspect,
+    Remarks,
+    MetaData,
+    IsFallBuckScale,
+    Initials
+ON TreeMeasurment
+FOR EACH ROW
+BEGIN
+    UPDATE TreeMeasurment SET RowVersion = old.RowVersion + 1 WHERE TreeMeasurment_CN = old.TreeMeasurment_CN;
+    UPDATE TreeMeasurment SET ModifiedDate = datetime('now', 'localtime') WHERE TreeMeasurment_CN = old.TreeMeasurment_CN;
+END;";
+
+        public const string CREATE_TRIGGER_TreeMeasurment_OnDelete =
+@"CREATE TRIGGER TreeMeasurment_OnDelete
+BEFORE DELETE ON TreeMeasurment
+FOR EACH ROW
+BEGIN
+    INSERT OR REPLACE INTO TreeMeasurment_Tombstone (
+        TreeID,
+
+        SeenDefectPrimary,
+        SeenDefectSecondary,
+        RecoverablePrimary,
+        HiddenPrimary,
+        Grade,
+
+        HeightToFirstLiveLimb,
+        PoleLength,
+        ClearFace,
+        CrownRatio,
+        DBH,
+
+        DRC,
+        TotalHeight,
+        MerchHeightPrimary,
+        MerchHeightSecondary,
+        FormClass,
+
+        --UpperStemDOB,
+
+        UpperStemDiameter,
+        UpperStemHeight,
+        DBHDoubleBarkThickness,
+        TopDIBPrimary,
+        TopDIBSecondary,
+
+        DefectCode,
+        DiameterAtDefect,
+        VoidPercent,
+        Slope,
+        Aspect,
+
+        Remarks,
+        IsFallBuckScale,
+
+        MetaData,
+
+        Initials,
+        CreatedBy,
+        CreatedDate,
+        ModifiedBy,
+        ModifiedDate ,
+        RowVersion
+    ) VALUES (
+        OLD.TreeID,
+
+        OLD.SeenDefectPrimary,
+        OLD.SeenDefectSecondary,
+        OLD.RecoverablePrimary,
+        OLD.HiddenPrimary,
+        OLD.Grade,
+
+        OLD.HeightToFirstLiveLimb,
+        OLD.PoleLength,
+        OLD.ClearFace,
+        OLD.CrownRatio,
+        OLD.DBH,
+
+        OLD.DRC,
+        OLD.TotalHeight,
+        OLD.MerchHeightPrimary,
+        OLD.MerchHeightSecondary,
+        OLD.FormClass,
+
+        --UpperStemDOB,
+
+        OLD.UpperStemDiameter,
+        OLD.UpperStemHeight,
+        OLD.DBHDoubleBarkThickness,
+        OLD.TopDIBPrimary,
+        OLD.TopDIBSecondary,
+
+        OLD.DefectCode,
+        OLD.DiameterAtDefect,
+        OLD.VoidPercent,
+        OLD.Slope,
+        OLD.Aspect,
+
+        OLD.Remarks,
+        OLD.IsFallBuckScale,
+
+        OLD.MetaData,
+
+        OLD.Initials,
+        OLD.CreatedBy,
+        OLD.CreatedDate,
+        OLD.ModifiedBy,
+        OLD.ModifiedDate ,
+        OLD.RowVersion
+    );
+END;";
+
+        public const string CREATE_TOMBSTONE_TABLE_TreeMeasurment_Tombstone =
+@"CREATE TABLE TreeMeasurment_Tombstone (
+    TreeID TEXT NOT NULL,
+
+    SeenDefectPrimary REAL,
+    SeenDefectSecondary REAL,
+    RecoverablePrimary REAL,
+    HiddenPrimary REAL,
+    Grade TEXT,
+
+    HeightToFirstLiveLimb REAL,
+    PoleLength REAL,
+    ClearFace TEXT,
+    CrownRatio REAL,
+    DBH REAL,
+
+    DRC REAL,
+    TotalHeight REAL,
+    MerchHeightPrimary REAL,
+    MerchHeightSecondary REAL,
+    FormClass REAL,
+
+    --UpperStemDOB REAL,
+
+    UpperStemDiameter REAL,
+    UpperStemHeight REAL,
+    DBHDoubleBarkThickness REAL,
+    TopDIBPrimary REAL,
+    TopDIBSecondary REAL,
+
+    DefectCode TEXT,
+    DiameterAtDefect REAL,
+    VoidPercent REAL,
+    Slope REAL,
+    Aspect REAL,
+
+    Remarks TEXT,
+    IsFallBuckScale BOOLEAN,
+
+    MetaData TEXT,
+
+    Initials TEXT,
+    CreatedBy TEXT,
+    CreatedDate DateTime,
+    ModifiedBy TEXT,
+    ModifiedDate DateTime ,
+    RowVersion INTEGER,
+    UNIQUE (TreeID)
+);";
     }
 
     public partial class Migrations

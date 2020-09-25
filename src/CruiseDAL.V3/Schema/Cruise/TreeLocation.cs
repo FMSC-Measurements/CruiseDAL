@@ -46,5 +46,55 @@ FOR EACH ROW
 BEGIN 
     UPDATE TreeLocation SET ModifiedDate = CURRENT_TIMESTAMP WHERE Tree_CN = old.Tree_CN; 
 END; ";
+
+        public const string CREATE_TRIGGER_TreeLocation_OnDelete =
+@"CREATE TRIGGER TreeLocation_OnDelete
+BEFORE DELETE ON TreeLocation_OnDelete
+FOR EACH ROW
+BEGIN
+    INSERT OR REPLACE INTO TreeLocation_Tombstone (
+        TreeID,
+        Latitude,
+        Longitude,
+        SS_Latatude, --side shot latatude
+        SS_Longitude, --side shot longitude
+        Azimuth,
+        Distance,
+        IsEstimate,
+        CreatedBy,
+        CreatedDate,
+        ModifiedBy,
+        ModifiedDate
+    ) VALUES (
+        OLD.TreeID,
+        OLD.Latitude,
+        OLD.Longitude,
+        OLD.SS_Latatude, --side shot latatude
+        OLD.SS_Longitude, --side shot longitude
+        OLD.Azimuth,
+        OLD.Distance,
+        OLD.IsEstimate,
+        OLD.CreatedBy,
+        OLD.CreatedDate,
+        OLD.ModifiedBy,
+        OLD.ModifiedDate
+    );
+END;";
+
+        public const string CREATE_TOMBSTONE_TABLE_TreeLocation_Tombstone =
+@"CREATE TABLE TreeLocation_Tombstone (
+    TreeID TEXT NOT NULL COLLATE NOCASE,
+    Latitude REAL NOT NULL,
+    Longitude REAL NOT NULL,
+    SS_Latatude REAL, --side shot latatude
+    SS_Longitude REAL, --side shot longitude
+    Azimuth REAL,
+    Distance REAL,
+    IsEstimate BOOLEAN,
+    CreatedBy TEXT,
+    CreatedDate DateTime,
+    ModifiedBy TEXT,
+    ModifiedDate DateTime
+);";
     }
 }

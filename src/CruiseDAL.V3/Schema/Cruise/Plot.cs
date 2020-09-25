@@ -3,31 +3,28 @@
     public partial class DDL
     {
         public const string CREATE_TABLE_PLOT =
-            "CREATE TABLE Plot ( " +
-                "Plot_CN INTEGER PRIMARY KEY AUTOINCREMENT, " +
-                "PlotID TEXT NOT NULL, " +
-                "PlotNumber INTEGER NOT NULL, " +
-                "CruiseID TEXT NOT NULL COLLATE NOCASE, " +
-                "CuttingUnitCode TEXT NOT NULL COLLATE NOCASE, " +
-                "Slope REAL Default 0.0, " +
-                "Aspect REAL Default 0.0, " +
-                "Remarks TEXT, " +
-                "XCoordinate REAL Default 0.0, " +
-                "YCoordinate REAL Default 0.0, " +
-                "ZCoordinate REAL Default 0.0, " +
-                "CreatedBy TEXT DEFAULT '', " +
-                "CreatedDate DATETIME DEFAULT (datetime('now', 'localtime')), " +
-                "ModifiedBy TEXT COLLATE NOCASE, " +
-                "ModifiedDate DATETIME, " +
-                "RowVersion INTEGER DEFAULT 0, " +
+@"CREATE TABLE Plot ( 
+    Plot_CN INTEGER PRIMARY KEY AUTOINCREMENT,
+    PlotID TEXT NOT NULL,
+    PlotNumber INTEGER NOT NULL,
+    CruiseID TEXT NOT NULL COLLATE NOCASE,
+    CuttingUnitCode TEXT NOT NULL COLLATE NOCASE,
+    Slope REAL Default 0.0,
+    Aspect REAL Default 0.0,
+    Remarks TEXT,
+    CreatedBy TEXT DEFAULT '',
+    CreatedDate DATETIME DEFAULT (datetime('now', 'localtime')),
+    ModifiedBy TEXT COLLATE NOCASE,
+    ModifiedDate DATETIME,
+    RowVersion INTEGER DEFAULT 0,
 
-                "CHECK (PlotID LIKE '________-____-____-____-____________'), " +
+    CHECK (PlotID LIKE '________-____-____-____-____________'),
 
-                "UNIQUE (PlotID), " +
-                "UNIQUE (PlotNumber, CuttingUnitCode, CruiseID)," +
+    UNIQUE (PlotID),
+    UNIQUE (PlotNumber, CuttingUnitCode, CruiseID),
 
-                "FOREIGN KEY (CuttingUnitCode, CruiseID) REFERENCES CuttingUnit (Code, CruiseID) ON DELETE CASCADE ON UPDATE CASCADE " +
-            ");";
+    FOREIGN KEY (CuttingUnitCode, CruiseID) REFERENCES CuttingUnit (Code, CruiseID) ON DELETE CASCADE ON UPDATE CASCADE
+);";
 
         public const string CREATE_INDEX_Plot_CuttingUnitCode_CruiseID =
             "CREATE INDEX Plot_CuttingUnitCode_CruiseID ON Plot (CuttingUnitCode, CruiseID);";
@@ -51,6 +48,56 @@
                 "UPDATE Plot SET ModifiedDate = datetime('now', 'localtime') WHERE Plot_CN = old.Plot_CN; " +
                 "UPDATE Plot SET RowVersion = old.RowVersion WHERE Plot_CN = old.Plot_CN; " +
             "END;";
+
+        public const string CREATE_TRIGGER_Plot_OnDelete =
+@"CREATE TRIGGER Plot_OnDelete
+BEFORE DELETE ON Plot
+FOR EACH ROW
+BEGIN
+    INSERT OR REPLACE INTO Plot_Tombstone (
+        PlotID,
+        PlotNumber,
+        CruiseID,
+        CuttingUnitCode,
+        Slope,
+        Aspect,
+        Remarks,
+        CreatedBy,
+        CreatedDate,
+        ModifiedBy,
+        ModifiedDate
+        RowVersion
+    ) VALUES (
+        OLD.PlotID,
+        OLD.PlotNumber,
+        OLD.CruiseID,
+        OLD.CuttingUnitCode,
+        OLD.Slope,
+        OLD.Aspect,
+        OLD.Remarks,
+        OLD.CreatedBy,
+        OLD.CreatedDate,
+        OLD.ModifiedBy,
+        OLD.ModifiedDate
+        OLD.RowVersion
+    );
+END;";
+
+        public const string CREATE_TOMBSTONE_TABLE_Plot_Tombstone =
+@"CREATE TABLE Plot_Tombstone (
+    PlotID,
+    PlotNumber,
+    CruiseID,
+    CuttingUnitCode,
+    Slope,
+    Aspect,
+    Remarks,
+    CreatedBy,
+    CreatedDate,
+    ModifiedBy,
+    ModifiedDate
+    RowVersion
+);";
     }
 
     public partial class Migrations

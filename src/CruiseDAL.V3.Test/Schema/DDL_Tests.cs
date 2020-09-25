@@ -84,6 +84,8 @@ namespace CruiseDAL.Tests.Schema
         [Fact]
         public void CREATE_COMMANDS_Contains_All_Public_Static_String_commands()
         {
+            CruiseDAL.Schema.DDL.CREATE_COMMANDS.Should().OnlyHaveUniqueItems();
+
             var commandsLookup = CruiseDAL.Schema.DDL.CREATE_COMMANDS
                 .Where(x => x != null)
                 .ToDictionary(x => x);
@@ -93,13 +95,20 @@ namespace CruiseDAL.Tests.Schema
             var fields = type.GetFields(System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags.Public)
                 .Where(x => x.FieldType == typeof(string));
 
+            var commands = new List<string>();
             foreach (var field in fields)
             {
                 var command = (string)field.GetValue(null);
+                commands.Add(command);
                 commandsLookup.ContainsKey(command).Should().BeTrue(field.Name);
             }
 
+            CruiseDAL.Schema.DDL.CREATE_COMMANDS.Except(commands).Should().BeEmpty();
+
             commandsLookup.Count().Should().Be(fields.Count());
+
+            
+
         }
 
         [Fact]

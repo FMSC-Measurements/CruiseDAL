@@ -3,20 +3,20 @@
     public partial class DDL
     {
         public const string CREATE_TABLE_TreeAuditRuleSelector =
-            "CREATE TABLE TreeAuditRuleSelector (" +
-                "TreeDefaultValue_TreeAuditRule_CN INTEGER PRIMARY KEY AUTOINCREMENT, " +
-                "CruiseID TEXT NOT NULL COLLATE NOCASE," +
-                "SpeciesCode TEXT COLLATE NOCASE, " +
-                "LiveDead TEXT COLLATE NOCASE, " +
-                "PrimaryProduct TEXT COLLATE NOCASE, " +
-                "TreeAuditRuleID TEXT NOT NULL, " +
+@"CREATE TABLE TreeAuditRuleSelector (
+    TreeDefaultValue_TreeAuditRule_CN INTEGER PRIMARY KEY AUTOINCREMENT,
+    CruiseID TEXT NOT NULL COLLATE NOCASE,
+    SpeciesCode TEXT COLLATE NOCASE,
+    LiveDead TEXT COLLATE NOCASE,
+    PrimaryProduct TEXT COLLATE NOCASE,
+    TreeAuditRuleID TEXT NOT NULL,
 
-                "CHECK (LiveDead IN ('L', 'D') OR LiveDead IS NULL)," +
+    CHECK (LiveDead IN ('L', 'D') OR LiveDead IS NULL),
 
-                "FOREIGN KEY (CruiseID) REFERENCES Cruise (CruiseID) ON DELETE CASCADE," +
-                "FOREIGN KEY (TreeAuditRuleID) REFERENCES TreeAuditRule (TreeAuditRuleID) ON DELETE CASCADE, " +
-                "FOREIGN KEY (SpeciesCode, CruiseID) REFERENCES Species (SpeciesCode, CruiseID) ON UPDATE CASCADE" +
-            ");";
+    FOREIGN KEY (CruiseID) REFERENCES Cruise (CruiseID) ON DELETE CASCADE,
+    FOREIGN KEY (TreeAuditRuleID) REFERENCES TreeAuditRule (TreeAuditRuleID) ON DELETE CASCADE,
+    FOREIGN KEY (SpeciesCode, CruiseID) REFERENCES Species (SpeciesCode, CruiseID) ON UPDATE CASCADE
+);";
 
         public const string CREATE_UNIQUE_INDEX_TreeAuditRuleSelector_SpeciesCode_LiveDead_PrimaryProduct_TreeAuditRuleID_CruiseID =
     @"CREATE UNIQUE INDEX TreeAuditRuleSelector_SpeciesCode_LiveDead_PrimaryProduct_TreeAuditRuleID_CruiseID 
@@ -34,6 +34,33 @@ ON TreeAuditRuleSelector (
         public const string CREATE_INDEX_TreeAuditRuleSelector_TreeAuditRuleID =
             @"CREATE INDEX 'TreeAuditRuleSelector_TreeAuditRuleID' ON 'TreeAuditRuleSelector'('TreeAuditRuleID');";
 
+        public const string CREATE_TRIGGER_TreeAuditRuleSelector_OnDelete =
+@"CREATE TRIGGER TreeAuditRuleSelector_OnDelete
+BEFORE DELETE ON TreeAuditRuleSelector 
+BEGIN
+    INSERT OR REPLACE INTO TreeAuditRuleSelector_Tombstone
+        CruiseID,
+        SpeciesCode,
+        LiveDead,
+        PrimaryProduct,
+        TreeAuditRuleID    
+    ) VALUES (
+        CruiseID,
+        SpeciesCode,
+        LiveDead,
+        PrimaryProduct,
+        TreeAuditRuleID
+    );
+END;";
+
+        public const string CREATE_TOMBSTONE_TABLE_TreeAuditRuleSelector =
+@"CREATE TABLE TreeAuditRuleSelector_Tombstone (
+    CruiseID TEXT NOT NULL COLLATE NOCASE,
+    SpeciesCode TEXT COLLATE NOCASE,
+    LiveDead TEXT COLLATE NOCASE,
+    PrimaryProduct TEXT COLLATE NOCASE,
+    TreeAuditRuleID TEXT NOT NULL
+);";
     }
 
     public partial class Migrations

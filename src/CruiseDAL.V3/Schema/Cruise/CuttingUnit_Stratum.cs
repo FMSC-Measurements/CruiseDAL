@@ -3,24 +3,52 @@
     public partial class DDL
     {
         public const string CREATE_TABLE_CUTTINGUNIT_STRATUM =
-            "CREATE TABLE CuttingUnit_Stratum (" +
-                "CuttingUnit_Stratum_CN INTEGER PRIMARY KEY AUTOINCREMENT, " +
-                "CruiseID TEXT NOT NULL COLLATE NOCASE, " +
-                "CuttingUnitCode TEXT NOT NULL COLLATE NOCASE, " +
-                "StratumCode TEXT NOT NULL COLLATE NOCASE, " +
-                "StratumArea REAL, " + // can be null of user hasn't subdevided area
+@"CREATE TABLE CuttingUnit_Stratum (
+    CuttingUnit_Stratum_CN INTEGER PRIMARY KEY AUTOINCREMENT,
+    CruiseID TEXT NOT NULL COLLATE NOCASE,
+    CuttingUnitCode TEXT NOT NULL COLLATE NOCASE,
+    StratumCode TEXT NOT NULL COLLATE NOCASE,
+    StratumArea REAL, --can be null of user hasn't subdevided area
 
-                "UNIQUE (CuttingUnitCode, StratumCode, CruiseID), " +
+    UNIQUE (CuttingUnitCode, StratumCode, CruiseID),
 
-                "FOREIGN KEY (CuttingUnitCode, CruiseID) REFERENCES CuttingUnit (Code, CruiseID) ON DELETE CASCADE ON UPDATE CASCADE, " +
-                "FOREIGN KEY (StratumCode, CruiseID) REFERENCES Stratum (Code, CruiseID) ON DELETE CASCADE ON UPDATE CASCADE " +
-            ");";
+    FOREIGN KEY (CuttingUnitCode, CruiseID) REFERENCES CuttingUnit (Code, CruiseID) ON DELETE CASCADE ON UPDATE CASCADE,
+    FOREIGN KEY (StratumCode, CruiseID) REFERENCES Stratum (Code, CruiseID) ON DELETE CASCADE ON UPDATE CASCADE
+);";
 
         public const string CREATE_INDEX_CUTTINGUNIT_STRATUM_StratumCode_CruiseID =
             @"CREATE INDEX CuttingUnit_Stratum_StratumCode_CruiseID ON CuttingUnit_Stratum (StratumCode, CruiseID);";
 
         public const string CREATE_INDEX_CuttingUnit_Stratum_CuttingUnitCode_CruiseID =
             @"CREATE INDEX CuttingUnit_Stratum_CuttingUnitCode_CruiseID ON CuttingUnit_Stratum (CuttingUnitCode, CruiseID);";
+
+        public const string CREATE_TRIGGER_CuttingUnit_Stratum_OnDelete =
+@"CREATE TRIGGER CuttingUnit_Stratum_OnDelete
+BEFORE DELETE ON CuttingUnit_Stratum
+FOR EACH ROW
+BEGIN
+    INSERT OR REPLACE INTO CuttingUnit_Stratum_Tombstone (
+        CruiseID,
+        CuttingUnitCode,
+        StratumCode,
+        StratumArea
+    ) VALUES (
+        OLD.CruiseID,
+        OLD.CuttingUnitCode,
+        OLD.StratumCode,
+        OLD.StratumArea
+    );
+END;";
+
+        public const string CREATE_TOMBSTONE_TABLE_CuttingUnitStratum_Tombstone =
+@"CREATE TABLE CuttingUnit_Stratum_Tombstone (
+    CruiseID TEXT NOT NULL COLLATE NOCASE,
+    CuttingUnitCode TEXT NOT NULL COLLATE NOCASE,
+    StratumCode TEXT NOT NULL COLLATE NOCASE,
+    StratumArea REAL,
+
+    UNIQUE (CuttingUnitCode, StratumCode, CruiseID)
+);";
     }
 
     public partial class Migrations

@@ -24,6 +24,37 @@
 
         public const string CREATE_INDEX_Subpopulation_StratumCode_SampleGroupCode_CruiseID =
             @"CREATE INDEX Subpopulation_StratumCode_SampleGroupCode_CruiseID ON Subpopulation (StratumCode, SampleGroupCode,  CruiseID);";
+
+        public const string CREATE_TRIGGER_SubPopulation_OnDelete =
+@"CREATE TRIGGER SubPopulation_OnDelete 
+BEFORE DELETE ON SubPopulation
+FOR EACH ROW
+BEGIN
+    INSERT OR REPLACE INTO SubPopulation_Tomstone (
+        CruiseID,
+        StratumCode,
+        SampleGroupCode,
+        SpeciesCode,
+        LiveDead
+    ) VALUES (
+        OLD.CruiseID,
+        OLD.StratumCode,
+        OLD.SampleGroupCode,
+        OLD.SpeciesCode,
+        OLD.LiveDead
+    );
+END;";
+
+        public const string CREATE_TOMBSTONE_TABLE_SubPopulation_Tombstone =
+@"CREATE TABLE SubPopulation_Tombstone (
+    CruiseID TEXT NOT NULL COLLATE NOCASE,
+    StratumCode TEXT NOT NULL COLLATE NOCASE,
+    SampleGroupCode TEXT NOT NULL COLLATE NOCASE,
+    SpeciesCode TEXT NOT NULL COLLATE NOCASE,
+    LiveDead TEXT NOT NULL COLLATE NOCASE,
+
+    UNIQUE (CruiseID, StratumCode, SampleGroupCode, SpeciesCode, LiveDead)
+);";
     }
 
     public partial class Migrations

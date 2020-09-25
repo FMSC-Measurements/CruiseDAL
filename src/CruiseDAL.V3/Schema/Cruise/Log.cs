@@ -3,38 +3,39 @@
     public partial class DDL
     {
         public const string CREATE_TABLE_LOG =
-            "CREATE TABLE Log ( " +
-                "Log_CN INTEGER PRIMARY KEY AUTOINCREMENT, " +
-                "LogID TEXT NOT NULL, " +
-                "TreeID TEXT NOT NULL, " +
-                "LogNumber TEXT NOT NULL, " +
-                "Grade TEXT COLLATE NOCASE, " +
-                "SeenDefect REAL Default 0.0, " +
-                "PercentRecoverable REAL Default 0.0, " +
-                "Length INTEGER Default 0, " +
-                "ExportGrade TEXT, " +
-                "SmallEndDiameter REAL Default 0.0, " +
-                "LargeEndDiameter REAL Default 0.0, " +
-                "GrossBoardFoot REAL Default 0.0, " +
-                "NetBoardFoot REAL Default 0.0, " +
-                "GrossCubicFoot REAL Default 0.0, " +
-                "NetCubicFoot REAL Default 0.0, " +
-                "BoardFootRemoved REAL Default 0.0, " +
-                "CubicFootRemoved REAL Default 0.0, " +
-                "DIBClass REAL Default 0.0, " +
-                "BarkThickness REAL Default 0.0, " +
-                "CreatedBy TEXT DEFAULT '', " +
-                "CreatedDate DateTime DEFAULT (datetime('now', 'localtime')), " +
-                "ModifiedBy TEXT , " +
-                "ModifiedDate DateTime , " +
-                "RowVersion INTEGER DEFAULT 0, " +
+@"CREATE TABLE Log (
+    Log_CN INTEGER PRIMARY KEY AUTOINCREMENT,
+    LogID TEXT NOT NULL,
+    TreeID TEXT NOT NULL,
+    LogNumber TEXT NOT NULL,
+    Grade TEXT COLLATE NOCASE,
+    SeenDefect REAL Default 0.0,
+    PercentRecoverable REAL Default 0.0,
+    Length INTEGER Default 0,
+    ExportGrade TEXT,
+    SmallEndDiameter REAL Default 0.0,
+    LargeEndDiameter REAL Default 0.0,
+    GrossBoardFoot REAL Default 0.0,
+    NetBoardFoot REAL Default 0.0,
+    GrossCubicFoot REAL Default 0.0,
+    NetCubicFoot REAL Default 0.0,
+    BoardFootRemoved REAL Default 0.0,
+    CubicFootRemoved REAL Default 0.0,
+    DIBClass REAL Default 0.0,
+    BarkThickness REAL Default 0.0,
+    CreatedBy TEXT DEFAULT '',
+    CreatedDate DateTime DEFAULT (datetime('now', 'localtime')),
+    ModifiedBy TEXT ,
+    ModifiedDate DateTime ,
+    RowVersion INTEGER DEFAULT 0,
 
-                "UNIQUE (TreeID, LogNumber), " +
+    UNIQUE (LogID),
+    UNIQUE (TreeID, LogNumber),
 
-                "CHECK (LogID LIKE '________-____-____-____-____________'), " +
+    CHECK (LogID LIKE '________-____-____-____-____________'),
 
-                "FOREIGN KEY (TreeID) REFERENCES Tree (TreeID) ON DELETE CASCADE " +
-            ");";
+    FOREIGN KEY (TreeID) REFERENCES Tree (TreeID) ON DELETE CASCADE
+);";
 
         public const string CREATE_INDEX_Log_LogNumber =
             "CREATE INDEX Log_LogNumber ON Log (LogNumber);";
@@ -67,6 +68,93 @@
                 "UPDATE Log SET RowVersion = old.RowVersion + 1 WHERE Log_CN = old.Log_CN; " +
                 "UPDATE Log SET ModifiedDate = datetime('now', 'localtime') WHERE Log_CN = old.Log_CN; " +
             "END;";
+
+        public const string CREATE_TRIGGER_Log_OnDelete =
+@"CREATE TRIGGER Log_OnDelete 
+BEFORE DELETE ON Log 
+FOR EACH ROW 
+BEGIN
+    INSERT OR REPLACE INTO Log_Tombstone (
+        LogID,
+        TreeID,
+        LogNumber,
+        Grade,
+        SeenDefect,
+        SeenDefect,
+        PercentRecoverable,
+        Length,
+        ExportGrade,
+        SmallEndDiameter,
+        LargeEndDiameter,
+        GrossBoardFoot,
+        NetBoardFoot,
+        GrossCubicFoot
+        NetCubicFoot,
+        BoardFootRemoved,
+        CubicFootRemoved,
+        DIBClass,
+        BarkThickness,
+        CreatedBy,
+        CreatedDate,
+        ModifiedBy,
+        ModifiedDate
+    ) VALUES (
+        OLD.LogID,
+        OLD.TreeID,
+        OLD.LogNumber,
+        OLD.Grade,
+        OLD.SeenDefect,
+        OLD.SeenDefect,
+        OLD.PercentRecoverable,
+        OLD.Length,
+        OLD.ExportGrade,
+        OLD.SmallEndDiameter,
+        OLD.LargeEndDiameter,
+        OLD.GrossBoardFoot,
+        OLD.NetBoardFoot,
+        OLD.GrossCubicFoot
+        OLD.NetCubicFoot,
+        OLD.BoardFootRemoved,
+        OLD.CubicFootRemoved,
+        OLD.DIBClass,
+        OLD.BarkThickness,
+        OLD.CreatedBy,
+        OLD.CreatedDate,
+        OLD.ModifiedBy,
+        OLD.ModifiedDate
+    );
+END;";
+
+        public const string CREATE_TOMBSTONE_TABLE_Log_Tombstone =
+@"CREATE TABLE Log_Tombstone (
+    LogID TEXT NOT NULL,
+    TreeID TEXT NOT NULL,
+    LogNumber TEXT NOT NULL,
+    Grade TEXT COLLATE NOCASE,
+    SeenDefect REAL,
+    PercentRecoverable REAL,
+    Length INTEGER,
+    ExportGrade TEXT,
+    SmallEndDiameter REAL,
+    LargeEndDiameter REAL,
+    GrossBoardFoot REAL,
+    NetBoardFoot REAL,
+    GrossCubicFoot REAL,
+    NetCubicFoot REAL,
+    BoardFootRemoved REAL,
+    CubicFootRemoved REAL,
+    DIBClass REAL,
+    BarkThickness REAL,
+    CreatedBy TEXT,
+    CreatedDate DateTime,
+    ModifiedBy TEXT,
+    ModifiedDate DateTime,
+
+    UNIQUE (LogID),
+    UNIQUE (TreeID, LogNumber),
+
+    CHECK (LogID LIKE '________-____-____-____-____________')
+);";
     }
 
     public partial class Migrations

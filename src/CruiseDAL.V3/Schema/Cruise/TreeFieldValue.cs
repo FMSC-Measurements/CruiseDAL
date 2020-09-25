@@ -2,15 +2,9 @@
 {
     public partial class DDL
     {
-        public static readonly string[] TREEFIELDVALUE = new string[]
-        {
-            CREATE_TABLE_TREEFIELDVALUE,
-            CREATE_VIEW_TreeFieldValue_TreeMeasurment,
-            CREATE_VIEW_TREEFIELDVALUE_ALL,
-        };
 
         public const string CREATE_TABLE_TREEFIELDVALUE =
-    @"CREATE TABLE TreeFieldValue (
+@"CREATE TABLE TreeFieldValue (
     TreeID TEXT NOT NULL,
     Field TEXT NOT NULL COLLATE NOCASE,
     ValueInt INTEGER,
@@ -159,5 +153,39 @@ SELECT
     ValueText,
     CreatedDate
 FROM TreeFieldValue;";
+
+        public const string CREATE_TRIGGER_TreeFieldValue_OnDelete =
+@"CREATE TRIGGER TreeFieldValue_OnDelete 
+BEFORE DELETE ON TreeFieldValue
+BEGIN 
+    INSERT OR REPLACE INTO TreeFieldValue_Tombstone (
+        TreeID,
+        Field,
+        ValueInt,
+        ValueReal,
+        ValueBool,
+        ValueText,
+        CreatedDate
+    ) VALUES (
+        OLD.TreeID,
+        OLD.Field,
+        OLD.ValueInt,
+        OLD.ValueReal,
+        OLD.ValueBool,
+        OLD.ValueText,
+        OLD.CreatedDate
+    );
+END;";
+
+        public const string CREATE_TOMBSTONE_TABLE_TreeFieldValue_Tombstone =
+@"CREATE TABLE TreeFieldValue_Tombstone (
+    TreeID TEXT NOT NULL,
+    Field TEXT NOT NULL COLLATE NOCASE,
+    ValueInt INTEGER,
+    ValueReal REAL,
+    ValueBool BOOLEAN,
+    ValueText TEXT,
+    CreatedDate DateTime
+);";
     }
 }

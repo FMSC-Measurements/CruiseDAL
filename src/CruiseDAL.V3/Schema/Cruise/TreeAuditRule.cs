@@ -22,6 +22,38 @@
 
         public const string CREATE_INDEX_TreeAuditRule_Field =
             @"CREATE INDEX 'TreeAuditRule_Field' ON 'TreeAuditRule'('Field');";
+
+        public const string CREATE_TRIGGER_TreeAuditRule_OnDelete =
+@"CREATE TRIGGER TreeAuditRule_OnDelete
+BEFORE DELETE ON TreeAuditRule
+FOR EACH ROW
+BEGIN
+    INSERT OR REPLACE INTO TreeAuditRule_Tombstone (
+        TreeAuditRuleID,
+        CruiseID,
+        Field,
+        Min,
+        Max,
+        Desctiption
+    ) VALUES (
+        OLD.TreeAuditRuleID,
+        OLD.CruiseID,
+        OLD.Field,
+        OLD.Min,
+        OLD.Max,
+        OLD.Desctiption
+    );
+END;";
+
+        public const string CREATE_TOMBSTONE_TABLE_TreeAuditRule_Tombstone =
+@"CREATE TABLE TreeAuditRule_Tombstone 
+    TreeAuditRuleID TEXT NOT NULL,
+    CruiseID TEXT NOT NULL COLLATE NOCASE,
+    Field TEXT NOT NULL COLLATE NOCASE,
+    Min REAL,
+    Max REAL,
+    Desctiption TEXT
+);";
     }
 
     public partial class Migrations
