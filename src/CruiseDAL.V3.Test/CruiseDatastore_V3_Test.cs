@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 using Xunit;
 using Xunit.Abstractions;
 
-namespace CruiseDAL.V3.Tests
+namespace CruiseDAL.V3.Test
 {
     public class CruiseDatastore_V3_Test : TestBase
     {
@@ -113,7 +113,7 @@ namespace CruiseDAL.V3.Tests
         {
             var cruisedalAssm = System.Reflection.Assembly.GetAssembly(typeof(CruiseDatastore_V3));
             var entityTypes = cruisedalAssm.ExportedTypes
-                .Where(t => t.GetCustomAttributes(typeof(FMSC.ORM.EntityModel.Attributes.EntitySourceAttribute), true).Any())
+                .Where(t => t.GetCustomAttributes(typeof(FMSC.ORM.EntityModel.Attributes.TableAttribute), true).Any())
                 .ToArray();
 
             Output.WriteLine(String.Join(", ", entityTypes.Select(x => x.Name).ToArray()));
