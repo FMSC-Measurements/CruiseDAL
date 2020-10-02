@@ -6,7 +6,6 @@ using FMSC.ORM.TestSupport;
 using FMSC.ORM.TestSupport.TestModels;
 using System;
 using System.Data;
-using System.Data.Common;
 using System.IO;
 using System.Linq;
 using Xunit;
@@ -61,7 +60,7 @@ namespace FMSC.ORM.SQLite
             }
         }
 
-        void ValidateDatastore(SQLiteDatastore db)
+        private void ValidateDatastore(SQLiteDatastore db)
         {
             db.Execute("Select 1;");
             db.Path.Should().NotBeNullOrWhiteSpace();
@@ -182,8 +181,7 @@ namespace FMSC.ORM.SQLite
             {
                 Assert.False(ds.Exists, "Pre-condition failed file already created");
 
-                //TODO hide builder inside dataStore
-                dbBuilder.CreateDatastore(ds);
+                ds.CreateDatastore(dbBuilder);
 
                 ds.Extension.Should().NotBeNullOrWhiteSpace("file must have extention");
                 ds.Path.Should().NotBeNullOrWhiteSpace();
@@ -205,8 +203,7 @@ namespace FMSC.ORM.SQLite
             {
                 Assert.True(ds.Exists);
 
-                //TODO hide builder inside dataStore
-                dbBuilder.CreateDatastore(ds);
+                ds.CreateDatastore(dbBuilder);
 
                 VerifySQLiteDatastore(ds);
             }
@@ -245,7 +242,7 @@ namespace FMSC.ORM.SQLite
             using (var ds = new SQLiteDatastore())
             {
                 var dbbuilder = new TestDBBuilder();
-                dbbuilder.BuildDatabase(ds);
+                ds.CreateDatastore(dbbuilder);
 
                 var orgTableInfo = ds.QueryGeneric("SELECT * FROM Sqlite_Master;").ToArray();
                 orgTableInfo.Should().NotBeEmpty();
@@ -274,7 +271,7 @@ namespace FMSC.ORM.SQLite
             using (var ds = new SQLiteDatastore())
             {
                 var dbbuilder = new TestDBBuilder();
-                dbbuilder.BuildDatabase(ds);
+                ds.CreateDatastore(dbbuilder);
 
                 var orgTableInfo = ds.QueryGeneric("SELECT * FROM Sqlite_Master;").ToArray();
                 orgTableInfo.Should().NotBeEmpty();
@@ -311,7 +308,7 @@ namespace FMSC.ORM.SQLite
             using (var ds = new SQLiteDatastore(tempPath))
             {
                 var dbbuilder = new TestDBBuilder();
-                dbbuilder.BuildDatabase(ds);
+                ds.CreateDatastore(dbbuilder);
 
                 var orgTableInfo = ds.QueryGeneric("SELECT * FROM Sqlite_Master;").ToArray();
                 orgTableInfo.Should().NotBeEmpty();
@@ -320,7 +317,7 @@ namespace FMSC.ORM.SQLite
 
                 using (var newds = new SQLiteDatastore())
                 {
-                    dbbuilder.BuildDatabase(newds);
+                    newds.CreateDatastore(dbbuilder);
 
                     newds.Insert(new POCOMultiTypeObject()
                     {
@@ -342,7 +339,7 @@ namespace FMSC.ORM.SQLite
             using (var ds = new SQLiteDatastore())
             {
                 var dbbuilder = new TestDBBuilder();
-                dbbuilder.BuildDatabase(ds);
+                ds.CreateDatastore(dbbuilder);
 
                 var orgTableInfo = ds.QueryGeneric("SELECT * FROM Sqlite_Master;").ToArray();
                 orgTableInfo.Should().NotBeEmpty();
@@ -353,7 +350,7 @@ namespace FMSC.ORM.SQLite
                 // create database file
                 using (var targetds = new SQLiteDatastore(backupTarget))
                 {
-                    dbbuilder.BuildDatabase(targetds);
+                    targetds.CreateDatastore(dbbuilder);
                     targetds.Execute("CREATE TABLE Something (" +
                         "col1 text" +
                         ");");
@@ -481,8 +478,6 @@ namespace FMSC.ORM.SQLite
                 Output.WriteLine(tableSQL);
             }
         }
-
-        
 
         [Fact]
         public void SetTableAutoIncrementStartTest()

@@ -75,6 +75,27 @@ namespace FMSC.ORM.Core
             CommandBuilder = commandBuilder;
         }
 
+        public virtual void CreateDatastore(IDatastoreBuilder builder)
+        {
+            var conn = OpenConnection();
+            var transaction = conn.BeginTransaction();
+            try
+            {
+                builder.BuildDatabase(conn, transaction, ExceptionProcessor);
+
+                transaction.Commit();
+            }
+            catch
+            {
+                transaction.Rollback();
+                throw;
+            }
+            finally
+            {
+                ReleaseConnection();
+            }
+        }
+
         #region Entity Info
 
         public void ClearCache(Type type)
@@ -213,8 +234,6 @@ namespace FMSC.ORM.Core
                 }
             }
         }
-
-        
 
         #region read methods
 

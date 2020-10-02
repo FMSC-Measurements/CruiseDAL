@@ -4,6 +4,7 @@ using FMSC.ORM.Core;
 using System;
 using System.Collections.Generic;
 using System.Data.Common;
+using System.IO;
 using System.Text;
 
 namespace FMSC.ORM.SQLite
@@ -97,6 +98,58 @@ namespace FMSC.ORM.SQLite
         }
 
         #endregion SavePoints
+
+        public override void CreateDatastore(IDatastoreBuilder builder)
+        {
+            string path = Path;
+            var isInMemory = IsInMemory;
+            if (!isInMemory)
+            {
+                CreateEmptyFile(path);
+            }
+
+            try
+            {
+                base.CreateDatastore(builder);
+            }
+            catch
+            {
+                if (!isInMemory)
+                {
+                    try
+                    {
+                        { File.Delete(path); }
+                    }
+                    catch
+                    {
+                        // don't stomp on original exception
+                    }
+                }
+                throw;
+            }
+        }
+
+        private static void CreateEmptyFile(string path, bool overwrite = true)
+        {
+            if (File.Exists(path))
+            {
+                if (overwrite)
+                {
+                    File.Delete(path);
+                }
+                else
+                {
+                    return;
+                }
+            }
+
+            //This just creates a zero - byte file which SQLite
+            // will turn into a database when the file is opened properly.
+            using (FileStream fs = File.Create(path))
+            {
+                fs.Close();
+            }
+        }
 
         protected static string BuildConnectionString(string path)
         {
@@ -482,7 +535,7 @@ namespace FMSC.ORM.SQLite
 
         public void BackupDatabase(string path)
         {
-            SQLiteDatabaseBuilder.CreateEmptyFile(path);
+            CreateEmptyFile(path);
 
             using (var targetConnection = CreateConnection(path))
             {
@@ -548,7 +601,7 @@ namespace FMSC.ORM.SQLite
             base.Dispose(disposing);
             if (isDisposed) { return; }
 
-            if(disposing)
+            if (disposing)
             {
                 AttachedDataStores.Clear();
             }
