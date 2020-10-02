@@ -1,6 +1,7 @@
 ﻿using Backpack.SqlBuilder;
 using FMSC.ORM.Core.SQL.QueryBuilder;
 using FMSC.ORM.EntityModel;
+using FMSC.ORM.Sql;
 using System.Collections.Generic;
 using System.Data.Common;
 
@@ -9,8 +10,12 @@ namespace FMSC.ORM.Core
     public interface IDatastore
     {
         string Path { get; }
+        IExceptionProcessor ExceptionProcessor { get; }
+        IDatastoreBuilder DatabaseBuilder { get; }
+        ICommandBuilder CommandBuilder { get; }
 
         void AddField(string tableName, ColumnInfo fieldDef);
+        void CreateDatastore(IDatastoreBuilder builder);
         void BeginTransaction();
         void CommitTransaction();
         void Delete(object data, string tableName = null);

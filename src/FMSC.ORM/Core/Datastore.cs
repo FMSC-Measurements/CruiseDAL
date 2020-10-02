@@ -39,12 +39,11 @@ namespace FMSC.ORM.Core
 
         protected IEntityDescriptionLookup EntityDescriptionLookup { get; set; } = GlobalEntityDescriptionLookup.Instance;
 
+        // TODO should dialect be in the commandBuilder
         protected ISqlDialect SqlDialect { get; set; }
-        protected IExceptionProcessor ExceptionProcessor { get; set; }
-
-        protected IDatastoreBuilder DatabaseBuilder { get; set; }
-
-        protected ICommandBuilder CommandBuilder { get; }
+        public IExceptionProcessor ExceptionProcessor { get; }
+        public IDatastoreBuilder DatabaseBuilder { get; }
+        public ICommandBuilder CommandBuilder { get; }
 
         private string _path;
 
