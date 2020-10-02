@@ -1,5 +1,4 @@
-﻿using CruiseDAL.V3.Tests;
-using FluentAssertions;
+﻿using FluentAssertions;
 using FMSC.ORM;
 using System;
 using System.Collections.Generic;
@@ -9,7 +8,7 @@ using System.Threading.Tasks;
 using Xunit;
 using Xunit.Abstractions;
 
-namespace CruiseDAL.Tests.Schema
+namespace CruiseDAL.V3.Test.Schema
 {
     public class DDL_Excersise_Tests : TestBase
     {
