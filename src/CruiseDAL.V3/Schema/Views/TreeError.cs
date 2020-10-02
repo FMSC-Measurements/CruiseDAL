@@ -1,8 +1,10 @@
 namespace CruiseDAL.Schema
 {
-    public partial class DDL
+    public class TreeErrorViewDefinition : IViewDefinition
     {
-        public const string CREATE_VIEW_TREEERROR =
+        public string ViewName => "TreeError";
+
+        public string CreateView => 
 @"CREATE VIEW TreeError AS
 
 WITH
@@ -134,6 +136,5 @@ FROM (
 ) AS te
 ;";
 
-        // union view for creating errors
     }
 }

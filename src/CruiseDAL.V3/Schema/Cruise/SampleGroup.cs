@@ -1,8 +1,12 @@
-﻿namespace CruiseDAL.Schema
+﻿using System.Collections.Generic;
+
+namespace CruiseDAL.Schema
 {
-    public partial class DDL
+    public class SampleGroupTableDefinition : ITableDefinition
     {
-        public const string CREATE_TABLE_SAMPLEGROUP =
+        public string TableName => "SampleGroup";
+
+        public string CreateTable =>
 @"CREATE TABLE SampleGroup (
     SampleGroup_CN INTEGER PRIMARY KEY AUTOINCREMENT,
     CruiseID TEXT NOT NULL COLLATE NOCASE,
@@ -38,8 +42,46 @@
     FOREIGN KEY (StratumCode, CruiseID) REFERENCES Stratum (StratumCode, CruiseID) ON DELETE CASCADE ON UPDATE CASCADE
 );";
 
-        public const string CREATE_INDEX_SampleGroup_StratumCode_CruiseID =
+        public string InitializeTable => null;
+
+        public string CreateIndexes =>
 @"CREATE INDEX SampleGroup_StratumCode_CruiseID ON SampleGroup (StratumCode, CruiseID);";
+
+        public string CreateTombstoneTable =>
+@"CREATE TABLE SampleGroup_Tombstone (
+    CruiseID TEXT NOT NULL COLLATE NOCASE,
+    SampleGroupCode TEXT NOT NULL COLLATE NOCASE,
+    StratumCode TEXT NOT NULL COLLATE NOCASE,
+    CutLeave TEXT COLLATE NOCASE,
+    UOM TEXT COLLATE NOCASE,
+    PrimaryProduct TEXT COLLATE NOCASE,
+    SecondaryProduct TEXT COLLATE NOCASE,
+    BiomassProduct TEXT,
+    DefaultLiveDead TEXT COLLATE NOCASE,
+    SamplingFrequency INTEGER Default 0,
+    InsuranceFrequency INTEGER Default 0,
+    KZ INTEGER,
+    BigBAF INTEGER,
+    TallyBySubPop BOOLEAN,
+    UseExternalSampler BOOLEAN,
+    TallyMethod TEXT COLLATE NOCASE,
+    Description TEXT,
+    MinKPI INTEGER,
+    MaxKPI INTEGER,
+    SmallFPS REAL,
+    CreatedBy TEXT,
+    CreatedDate DATETIME,
+    ModifiedBy TEXT,
+    ModifiedDate DATETIME,
+    RowVersion INTEGER,
+
+    UNIQUE (StratumCode, SampleGroupCode, CruiseID)
+);";
+
+
+        public IEnumerable<string> CreateTriggers => new[] { CREATE_TRIGGER_SAMPLEGROUP_ONUPDATE, CREATE_TRIGGER_SampleGoup_OnDelete };
+
+
 
         public const string CREATE_TRIGGER_SAMPLEGROUP_ONUPDATE =
 @"CREATE TRIGGER SampleGroup_OnUpdate
@@ -128,37 +170,6 @@ BEGIN
         OLD.RowVersion
     );
 END;";
-
-        public const string CREATE_TOMBSTONE_TABLE_SampleGroup_Tombstone =
-@"CREATE TABLE SampleGroup_Tombstone (
-    CruiseID TEXT NOT NULL COLLATE NOCASE,
-    SampleGroupCode TEXT NOT NULL COLLATE NOCASE,
-    StratumCode TEXT NOT NULL COLLATE NOCASE,
-    CutLeave TEXT COLLATE NOCASE,
-    UOM TEXT COLLATE NOCASE,
-    PrimaryProduct TEXT COLLATE NOCASE,
-    SecondaryProduct TEXT COLLATE NOCASE,
-    BiomassProduct TEXT,
-    DefaultLiveDead TEXT COLLATE NOCASE,
-    SamplingFrequency INTEGER Default 0,
-    InsuranceFrequency INTEGER Default 0,
-    KZ INTEGER,
-    BigBAF INTEGER,
-    TallyBySubPop BOOLEAN,
-    UseExternalSampler BOOLEAN,
-    TallyMethod TEXT COLLATE NOCASE,
-    Description TEXT,
-    MinKPI INTEGER,
-    MaxKPI INTEGER,
-    SmallFPS REAL,
-    CreatedBy TEXT,
-    CreatedDate DATETIME,
-    ModifiedBy TEXT,
-    ModifiedDate DATETIME,
-    RowVersion INTEGER,
-
-    UNIQUE (StratumCode, SampleGroupCode, CruiseID)
-);";
     }
 
     public partial class Migrations

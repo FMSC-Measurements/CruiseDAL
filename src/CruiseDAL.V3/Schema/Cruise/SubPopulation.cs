@@ -1,9 +1,13 @@
-﻿namespace CruiseDAL.Schema
+﻿using System.Collections.Generic;
+
+namespace CruiseDAL.Schema
 {
-    public partial class DDL
+    public class SubPopulationTableDefinition : ITableDefinition
     {
-        public const string CREATE_TABLE_SUBPOPULATION =
-@"CREATE TABLE Subpopulation (
+        public string TableName => "SubPopulation";
+
+        public string CreateTable =>
+@"CREATE TABLE SubPopulation (
     Subpopulation_CN INTEGER PRIMARY KEY AUTOINCREMENT,
     CruiseID TEXT NOT NULL COLLATE NOCASE,
     StratumCode TEXT NOT NULL COLLATE NOCASE,
@@ -19,11 +23,26 @@
     FOREIGN KEY (SpeciesCode, CruiseID) REFERENCES Species (SpeciesCode, CruiseID) ON UPDATE CASCADE
 );";
 
-        public const string CREATE_INDEX_Subpopulation_SpeciesCode_CruiseID =
-            @"CREATE INDEX Subpopulation_SpeciesCode_CruiseID ON Subpopulation (SpeciesCode, CruiseID);";
+        public string InitializeTable => null;
 
-        public const string CREATE_INDEX_Subpopulation_StratumCode_SampleGroupCode_CruiseID =
-            @"CREATE INDEX Subpopulation_StratumCode_SampleGroupCode_CruiseID ON Subpopulation (StratumCode, SampleGroupCode,  CruiseID);";
+        public string CreateTombstoneTable =>
+@"CREATE TABLE SubPopulation_Tombstone (
+    CruiseID TEXT NOT NULL COLLATE NOCASE,
+    StratumCode TEXT NOT NULL COLLATE NOCASE,
+    SampleGroupCode TEXT NOT NULL COLLATE NOCASE,
+    SpeciesCode TEXT NOT NULL COLLATE NOCASE,
+    LiveDead TEXT NOT NULL COLLATE NOCASE,
+
+    UNIQUE (CruiseID, StratumCode, SampleGroupCode, SpeciesCode, LiveDead)
+);";
+
+        public string CreateIndexes =>
+@"CREATE INDEX Subpopulation_SpeciesCode_CruiseID ON Subpopulation (SpeciesCode, CruiseID);
+
+CREATE INDEX Subpopulation_StratumCode_SampleGroupCode_CruiseID ON Subpopulation (StratumCode, SampleGroupCode,  CruiseID);";
+
+        public IEnumerable<string> CreateTriggers => new[] { CREATE_TRIGGER_SubPopulation_OnDelete };
+
 
         public const string CREATE_TRIGGER_SubPopulation_OnDelete =
 @"CREATE TRIGGER SubPopulation_OnDelete 
@@ -45,16 +64,6 @@ BEGIN
     );
 END;";
 
-        public const string CREATE_TOMBSTONE_TABLE_SubPopulation_Tombstone =
-@"CREATE TABLE SubPopulation_Tombstone (
-    CruiseID TEXT NOT NULL COLLATE NOCASE,
-    StratumCode TEXT NOT NULL COLLATE NOCASE,
-    SampleGroupCode TEXT NOT NULL COLLATE NOCASE,
-    SpeciesCode TEXT NOT NULL COLLATE NOCASE,
-    LiveDead TEXT NOT NULL COLLATE NOCASE,
-
-    UNIQUE (CruiseID, StratumCode, SampleGroupCode, SpeciesCode, LiveDead)
-);";
     }
 
     public partial class Migrations

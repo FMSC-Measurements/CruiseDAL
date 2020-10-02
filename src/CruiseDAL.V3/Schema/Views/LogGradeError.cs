@@ -1,8 +1,10 @@
 ﻿namespace CruiseDAL.Schema
 {
-    public partial class DDL
+    public class LogGradeErrorViewDefinition : IViewDefinition
     {
-        public const string CREATE_VIEW_LOGGRADEERROR =
+        public string ViewName => "LogGradeError";
+
+        public string CreateView =>
 @"CREATE VIEW LogGradeError AS
 SELECT
     l.Log_CN,
@@ -19,5 +21,7 @@ JOIN LogGradeAuditRule AS lgar ON
     AND ifnull(lgar.SpeciesCode, '') IN  (t.SpeciesCode, '')
     AND ifnull(l.Grade, '') = lgar.Grade
     AND round(l.SeenDefect, 2) > round(lgar.DefectMax, 2);";
+
+
     }
 }

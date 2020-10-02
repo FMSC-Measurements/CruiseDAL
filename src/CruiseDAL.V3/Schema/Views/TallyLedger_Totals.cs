@@ -5,8 +5,12 @@ using System.Text;
 
 namespace CruiseDAL.Schema
 {
-    public partial class DDL
+    public class TallyLedgerViewDefinition : IViewDefinition
     {
+        public string ViewName => "TallyLedger_Totals";
+
+        public string CreateView => CREATE_VIEW_TallyLedger_Totals + CREATE_VIEW_TallyLedger_Tree_Totals + CREATE_VIEW_TallyLedger_Plot_Totals;
+
         public const string CREATE_VIEW_TallyLedger_Totals =
 @"CREATE VIEW TallyLedger_Totals AS
 SELECT 
@@ -25,7 +29,8 @@ GROUP BY
     StratumCode,
     SampleGroupCode,
     ifnull(SpeciesCode, ''),
-    ifnull(LiveDead, '');";
+    ifnull(LiveDead, '')
+;";
 
         public const string CREATE_VIEW_TallyLedger_Plot_Totals =
 @"CREATE VIEW TallyLedger_Plot_Totals AS
@@ -47,7 +52,8 @@ GROUP BY
     SampleGroupCode,
     ifnull(SpeciesCode, ''),
     ifnull(LiveDead, ''),
-    ifnull(PlotNumber, -1);";
+    ifnull(PlotNumber, -1)
+;";
 
         public const string CREATE_VIEW_TallyLedger_Tree_Totals =
 @"CREATE VIEW TallyLedger_Tree_Totals AS
@@ -62,6 +68,9 @@ WHERE IsDeleted = 0
     AND TreeID IS NOT NULL
 GROUP BY 
     CruiseID,
-    TreeID;";
+    TreeID
+;";
+
+
     }
 }

@@ -1,8 +1,12 @@
-﻿namespace CruiseDAL.Schema
+﻿using System.Collections.Generic;
+
+namespace CruiseDAL.Schema
 {
-    public partial class DDL
+    public class StratumTableDefinition : ITableDefinition
     {
-        public const string CREATE_TABLE_STRATUM =
+        public string TableName => "Stratum";
+
+        public string CreateTable =>
 @"CREATE TABLE Stratum (
     Stratum_CN INTEGER PRIMARY KEY AUTOINCREMENT,
     StratumCode TEXT NOT NULL COLLATE NOCASE,
@@ -28,6 +32,38 @@
     UNIQUE(StratumCode, CruiseID),
     CHECK (length(StratumCode) > 0)
 );";
+
+        public string InitializeTable => null;
+
+        public string CreateTombstoneTable =>
+@"CREATE TABLE Stratum_Tombstone (
+    StratumCode TEXT NOT NULL COLLATE NOCASE,
+    CruiseID TEXT NOT NULL COLLATE NOCASE,
+    Description TEXT,
+    Method TEXT COLLATE NOCASE,
+    BasalAreaFactor REAL,
+    FixedPlotSize REAL,
+    KZ3PPNT INTEGER,
+    SamplingFrequency INTEGER,
+    Hotkey TEXT,
+    FBSCode TEXT,
+    YieldComponent TEXT,
+    VolumeFactor REAL,
+    Month INTEGER,
+    Year INTEGER,
+    CreatedBy TEXT,
+    CreatedDate DateTime,
+    ModifiedBy TEXT,
+    ModifiedDate DateTime ,
+    RowVersion INTEGER,
+
+    UNIQUE(StratumCode, CruiseID)
+);";
+
+        public string CreateIndexes => null;
+
+        public IEnumerable<string> CreateTriggers => new[] { CREATE_TRIGGER_STRATUM_ONUPDATE, CREATE_TRIGGER_Stratum_OnDelete };
+
 
         public const string CREATE_TRIGGER_STRATUM_ONUPDATE =
 @"CREATE TRIGGER Stratum_OnUpdate
@@ -100,30 +136,6 @@ BEGIN
     );
 END;";
 
-        public const string CREATE_TOMBSTONE_TABLE_Stratum_Tombstone =
-@"CREATE TABLE Stratum_Tombstone (
-    StratumCode TEXT NOT NULL COLLATE NOCASE,
-    CruiseID TEXT NOT NULL COLLATE NOCASE,
-    Description TEXT,
-    Method TEXT COLLATE NOCASE,
-    BasalAreaFactor REAL,
-    FixedPlotSize REAL,
-    KZ3PPNT INTEGER,
-    SamplingFrequency INTEGER,
-    Hotkey TEXT,
-    FBSCode TEXT,
-    YieldComponent TEXT,
-    VolumeFactor REAL,
-    Month INTEGER,
-    Year INTEGER,
-    CreatedBy TEXT,
-    CreatedDate DateTime,
-    ModifiedBy TEXT,
-    ModifiedDate DateTime ,
-    RowVersion INTEGER,
-
-    UNIQUE(StratumCode, CruiseID)
-);";
     }
 
     public partial class Migrations

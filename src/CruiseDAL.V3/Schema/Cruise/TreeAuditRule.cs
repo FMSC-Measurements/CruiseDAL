@@ -1,8 +1,12 @@
-﻿namespace CruiseDAL.Schema
+﻿using System.Collections.Generic;
+
+namespace CruiseDAL.Schema
 {
-    public partial class DDL
+    public class TreeAuditRuleTableDefinition : ITableDefinition
     {
-        public const string CREATE_TABLE_TREEAUDITRULE =
+        public string TableName => "TreeAuditRule";
+
+        public string CreateTable =>
 @"CREATE TABLE TreeAuditRule (
     TreeAuditRule_CN INTEGER PRIMARY KEY AUTOINCREMENT,
     TreeAuditRuleID TEXT NOT NULL,
@@ -20,8 +24,23 @@
     FOREIGN KEY (Field) REFERENCES TreeField (Field)
 );";
 
-        public const string CREATE_INDEX_TreeAuditRule_Field =
-            @"CREATE INDEX 'TreeAuditRule_Field' ON 'TreeAuditRule'('Field');";
+        public string InitializeTable => null;
+
+        public string CreateTombstoneTable =>
+@"CREATE TABLE TreeAuditRule_Tombstone ( 
+    TreeAuditRuleID TEXT NOT NULL,
+    CruiseID TEXT NOT NULL COLLATE NOCASE,
+    Field TEXT NOT NULL COLLATE NOCASE,
+    Min REAL,
+    Max REAL,
+    Desctiption TEXT
+);";
+
+        public string CreateIndexes =>
+@"CREATE INDEX 'TreeAuditRule_Field' ON 'TreeAuditRule'('Field');";
+
+        public IEnumerable<string> CreateTriggers => new[] { CREATE_TRIGGER_TreeAuditRule_OnDelete };
+
 
         public const string CREATE_TRIGGER_TreeAuditRule_OnDelete =
 @"CREATE TRIGGER TreeAuditRule_OnDelete
@@ -45,38 +64,5 @@ BEGIN
     );
 END;";
 
-        public const string CREATE_TOMBSTONE_TABLE_TreeAuditRule_Tombstone =
-@"CREATE TABLE TreeAuditRule_Tombstone 
-    TreeAuditRuleID TEXT NOT NULL,
-    CruiseID TEXT NOT NULL COLLATE NOCASE,
-    Field TEXT NOT NULL COLLATE NOCASE,
-    Min REAL,
-    Max REAL,
-    Desctiption TEXT
-);";
-    }
-
-    public partial class Migrations
-    {
-        public const string MIGRATE_TREEAUDITRULE_FROM_TREEAUDITVALUE_FORMAT_STR =
-@"INSERT INTO {0}.TreeAuditRule (
-    TreeAuditRule_CN,
-    TreeAuditRuleID,
-    CruiseID, 
-    Field,
-    Min,
-    Max
-)
-SELECT
-    TreeAuditValue_CN,
-    (hex( randomblob(4)) || '-' || hex( randomblob(2)) 
-        || '-' || '4' || substr(hex(randomblob(2)), 2) || '-' 
-        || substr('AB89', 1 + (abs(random()) % 4), 1) || 
-        substr(hex(randomblob(2)), 2) || '-' || hex(randomblob(6))),
-    '{3}',
-    Field,
-    nullif(Min,0) AS Min,
-    nullif(Max,0) AS Max
-FROM {1}.TreeAuditValue;";
     }
 }

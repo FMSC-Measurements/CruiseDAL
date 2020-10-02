@@ -5,9 +5,11 @@ using System.Text;
 
 namespace CruiseDAL.Schema
 {
-    public partial class DDL
+    public class PlotLocationTableDefinition : ITableDefinition
     {
-        public const string CREATE_TABLE_PlotLocation =
+        public string TableName => "PlotLocation";
+
+        public string CreateTable =>
 @"CREATE TABLE PlotLocation (
     PlotLocation_CN INTEGER PRIMARY KEY AUTOINCREMENT,
     PlotID TEXT NOT NULL COLLATE NOCASE, 
@@ -18,6 +20,20 @@ namespace CruiseDAL.Schema
     
     FOREIGN KEY (PlotID) REFERENCES Plot (PlotID) ON DELETE CASCADE
 );";
+
+        public string InitializeTable => null;
+
+        public string CreateTombstoneTable =>
+@"CREATE TABLE PlotLocation_Tombstone (
+    PlotID TEXT NOT NULL COLLATE NOCASE, 
+    Latitude REAL NOT NULL,
+    Longitude REAL NOT NULL
+);";
+
+        public string CreateIndexes => null;
+
+        public IEnumerable<string> CreateTriggers => new[] { CREATE_TRIGGER_PlotLocation_OnDelete };
+
 
         public const string CREATE_TRIGGER_PlotLocation_OnDelete =
 @"CREATE TRIGGER PlotLocation_OnDelete 
@@ -35,11 +51,5 @@ BEGIN
     );
 END;";
 
-        public const string CREATE_TOMBSTONE_TABLE_PlotLocation_Tombstone =
-@"CREATE TABLE PlotLocation_Tombstone (
-    PlotID TEXT NOT NULL COLLATE NOCASE, 
-    Latitude REAL NOT NULL,
-    Longitude REAL NOT NULL
-);";
     }
 }

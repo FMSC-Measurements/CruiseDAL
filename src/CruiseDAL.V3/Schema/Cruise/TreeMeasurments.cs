@@ -1,6 +1,8 @@
-﻿namespace CruiseDAL.Schema
+﻿using System.Collections.Generic;
+
+namespace CruiseDAL.Schema
 {
-    public partial class DDL
+    public class TreeMeasurmentsTableDefinition : ITableDefinition
     {
         //        public const string CREATE_VIEW_TREEMEASURMENT =
         //@"CREATE VIEW TreeMeasurment AS
@@ -42,7 +44,9 @@
         //FROM TreeFieldValue AS tfv
         //GROUP BY TreeID;";
 
-        public const string CREATE_TABLE_TREEMEASURMENT =
+        public string TableName => "TreeMeasurment";
+
+        public string CreateTable =>
 @"CREATE TABLE TreeMeasurment (
     TreeMeasurment_CN INTEGER PRIMARY KEY AUTOINCREMENT,
     TreeID TEXT NOT NULL,
@@ -93,6 +97,62 @@
     UNIQUE (TreeID),
     FOREIGN KEY (TreeID) REFERENCES Tree (TreeID) ON DELETE CASCADE ON UPDATE CASCADE
 )";
+
+        public string InitializeTable => null;
+
+        public string CreateTombstoneTable =>
+@"CREATE TABLE TreeMeasurment_Tombstone (
+    TreeID TEXT NOT NULL,
+
+    SeenDefectPrimary REAL,
+    SeenDefectSecondary REAL,
+    RecoverablePrimary REAL,
+    HiddenPrimary REAL,
+    Grade TEXT,
+
+    HeightToFirstLiveLimb REAL,
+    PoleLength REAL,
+    ClearFace TEXT,
+    CrownRatio REAL,
+    DBH REAL,
+
+    DRC REAL,
+    TotalHeight REAL,
+    MerchHeightPrimary REAL,
+    MerchHeightSecondary REAL,
+    FormClass REAL,
+
+    --UpperStemDOB REAL,
+
+    UpperStemDiameter REAL,
+    UpperStemHeight REAL,
+    DBHDoubleBarkThickness REAL,
+    TopDIBPrimary REAL,
+    TopDIBSecondary REAL,
+
+    DefectCode TEXT,
+    DiameterAtDefect REAL,
+    VoidPercent REAL,
+    Slope REAL,
+    Aspect REAL,
+
+    Remarks TEXT,
+    IsFallBuckScale BOOLEAN,
+
+    MetaData TEXT,
+
+    Initials TEXT,
+    CreatedBy TEXT,
+    CreatedDate DateTime,
+    ModifiedBy TEXT,
+    ModifiedDate DateTime ,
+    RowVersion INTEGER,
+    UNIQUE (TreeID)
+);";
+
+        public string CreateIndexes => null;
+
+        public IEnumerable<string> CreateTriggers => new[] { CREATE_TRIGGER_TREEMEASURMENTS_ONUPDATE, CREATE_TRIGGER_TreeMeasurment_OnDelete };
 
         public const string CREATE_TRIGGER_TREEMEASURMENTS_ONUPDATE =
 @"CREATE TRIGGER TREEMEASURMENT_ONUPDATE
@@ -233,55 +293,6 @@ BEGIN
     );
 END;";
 
-        public const string CREATE_TOMBSTONE_TABLE_TreeMeasurment_Tombstone =
-@"CREATE TABLE TreeMeasurment_Tombstone (
-    TreeID TEXT NOT NULL,
-
-    SeenDefectPrimary REAL,
-    SeenDefectSecondary REAL,
-    RecoverablePrimary REAL,
-    HiddenPrimary REAL,
-    Grade TEXT,
-
-    HeightToFirstLiveLimb REAL,
-    PoleLength REAL,
-    ClearFace TEXT,
-    CrownRatio REAL,
-    DBH REAL,
-
-    DRC REAL,
-    TotalHeight REAL,
-    MerchHeightPrimary REAL,
-    MerchHeightSecondary REAL,
-    FormClass REAL,
-
-    --UpperStemDOB REAL,
-
-    UpperStemDiameter REAL,
-    UpperStemHeight REAL,
-    DBHDoubleBarkThickness REAL,
-    TopDIBPrimary REAL,
-    TopDIBSecondary REAL,
-
-    DefectCode TEXT,
-    DiameterAtDefect REAL,
-    VoidPercent REAL,
-    Slope REAL,
-    Aspect REAL,
-
-    Remarks TEXT,
-    IsFallBuckScale BOOLEAN,
-
-    MetaData TEXT,
-
-    Initials TEXT,
-    CreatedBy TEXT,
-    CreatedDate DateTime,
-    ModifiedBy TEXT,
-    ModifiedDate DateTime ,
-    RowVersion INTEGER,
-    UNIQUE (TreeID)
-);";
     }
 
     public partial class Migrations

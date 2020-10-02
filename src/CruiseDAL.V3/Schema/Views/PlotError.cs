@@ -1,11 +1,13 @@
 namespace CruiseDAL.Schema
 {
-    public partial class DDL
+    public class PlotErrorViewDefinition : IViewDefinition
     {
-        public const string CREATE_VIEW_PLOTERROR =
 // note: if we add anymore log audits you will need to update the RowID 
 // value returned by the ErrorLog view when reading from PlotError
 
+        public string ViewName => "PlotError";
+
+        public string CreateView =>
 @"CREATE VIEW PlotError AS
     SELECT
         p.PlotID, 

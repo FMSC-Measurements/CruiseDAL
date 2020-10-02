@@ -1,43 +1,27 @@
-﻿namespace CruiseDAL.Schema
+﻿using System.Collections.Generic;
+using System.Linq;
+
+namespace CruiseDAL.Schema
 {
-    public partial class DDL
+    public class GlobalsTableDefinition : ITableDefinition
     {
-        public const string CREATE_TABLE_GLOBALS =
-            "CREATE TABLE Globals ( " +
-                "Block TEXT DEFAULT '' COLLATE NOCASE, " +
-                "Key TEXT COLLATE NOCASE, " +
-                "Value TEXT, " +
-                "UNIQUE (Block, Key)" +
-            ");";
-    }
+        public string TableName => "Globals";
 
-    public partial class Migrations
-    {
-        public const string MIGRATE_GLOBALS_FORMAT_STR =
-            "INSERT OR IGNORE INTO {0}.Globals ( " + // dont overwrite existing global valus
-                    "Block, " +
-                    "Key, " +
-                    "Value " +
-                ") " +
-                "SELECT " +
-                    "Block, " +
-                    "Key, " +
-                    "Value " +
-                "FROM {1}.Globals;";
-    }
+        public string CreateTable =>
+@"CREATE TABLE Globals (
+    Block TEXT DEFAULT '' COLLATE NOCASE,
+    Key TEXT COLLATE NOCASE,
+    Value TEXT,
+    UNIQUE (Block, Key)
+);";
 
-    //public partial class Updater
-    //{
-    //    public const string UPDATE_GLOBALS_TO_V3 =
-    //        "CREATE TABLE new_Globals ( " +
-    //            "Block TEXT DEFAULT 'Database' COLLATE NOCASE, " +
-    //            "Key TEXT COLLATE NOCASE, " +
-    //            "Value TEXT, " +
-    //            "UNIQUE (Block, Key)" +
-    //        ");" +
-    //        "INSERT INTO new_Globals " +
-    //        "SELECT * FROM Globals; " +
-    //        "DROP TABLE Globals; " +
-    //        "ALTER TABLE new_Globals RENAME TO Globals;";
-    //}
+        // db version is set in the db builder instead of in the table initializer
+        public string InitializeTable => null;
+
+        public string CreateTombstoneTable => null;
+
+        public string CreateIndexes => null;
+
+        public IEnumerable<string> CreateTriggers => Enumerable.Empty<string>();
+    }
 }

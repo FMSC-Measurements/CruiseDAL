@@ -1,14 +1,13 @@
-﻿namespace CruiseDAL.Schema
-{
-    public partial class DDL
-    {
-        public static readonly string[] TREEFIELD = new string[]
-        {
-            CREATE_TABLE_TREEFIELD,
-            INITIALIZE_TABLE_TREEFIELD,
-        };
+﻿using System.Collections.Generic;
+using System.Linq;
 
-        public const string CREATE_TABLE_TREEFIELD =
+namespace CruiseDAL.Schema
+{
+    public class TreeFieldTableDefinition : ITableDefinition
+    {
+        public string TableName => "TreeField";
+
+        public string CreateTable =>
 @"CREATE TABLE TreeField (
     TreeField_CN INTEGER PRIMARY KEY AUTOINCREMENT,
     Field TEXT COLLATE NOCASE,
@@ -17,7 +16,7 @@
     UNIQUE (Field)
 );";
 
-        public const string INITIALIZE_TABLE_TREEFIELD =
+        public string InitializeTable =>
 @"INSERT INTO TreeField ( Field, DbType, IsTreeMeasurmentField)
 VALUES
     ('SeenDefectPrimary', 'REAL', 1),
@@ -50,5 +49,12 @@ VALUES
     ('IsFallBuckScale', 'BOOLEAN', 1),
     ('Initials', 'TEXT', 1)
 ;";
+
+        public string CreateTombstoneTable => null;
+
+        public string CreateIndexes => null;
+
+        public IEnumerable<string> CreateTriggers => Enumerable.Empty<string>();
+
     }
 }

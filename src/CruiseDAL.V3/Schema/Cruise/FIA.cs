@@ -5,9 +5,11 @@ using System.Text;
 
 namespace CruiseDAL.Schema
 {
-    public partial class DDL
+    public class FIATableDefinition : ITableDefinition
     {
-        public const string CREATE_TABLE_FIA =
+        public string TableName => "FIA";
+
+        public string CreateTable =>
 @"CREATE TABLE FIA (
     FIA_cn INTEGER PRIMARY KEY AUTOINCREMENT,
     FIACode INTEGER NOT NULL,
@@ -15,6 +17,13 @@ namespace CruiseDAL.Schema
 
     UNIQUE (FIACode)
 );";
-            
+
+        public string InitializeTable => null;
+
+        public string CreateTombstoneTable => null;
+
+        public string CreateIndexes => null;
+
+        public IEnumerable<string> CreateTriggers => Enumerable.Empty<string>();
     }
 }

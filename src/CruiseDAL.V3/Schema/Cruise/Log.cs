@@ -1,8 +1,12 @@
-﻿namespace CruiseDAL.Schema
+﻿using System.Collections.Generic;
+
+namespace CruiseDAL.Schema
 {
-    public partial class DDL
+    public class LogTableDefinition : ITableDefinition
     {
-        public const string CREATE_TABLE_LOG =
+        public string TableName => "Log";
+
+        public string CreateTable =>
 @"CREATE TABLE Log (
     Log_CN INTEGER PRIMARY KEY AUTOINCREMENT,
     LogID TEXT NOT NULL,
@@ -37,11 +41,44 @@
     FOREIGN KEY (TreeID) REFERENCES Tree (TreeID) ON DELETE CASCADE
 );";
 
-        public const string CREATE_INDEX_Log_LogNumber =
-            "CREATE INDEX Log_LogNumber ON Log (LogNumber);";
+        public string InitializeTable => null;
 
-        public const string CREATE_INDEX_Log_TreeID =
-            @"CREATE INDEX Log_TreeID ON Log (TreeID);";
+        public string CreateTombstoneTable =>
+@"CREATE TABLE Log_Tombstone (
+    LogID TEXT NOT NULL,
+    TreeID TEXT NOT NULL,
+    LogNumber TEXT NOT NULL,
+    Grade TEXT COLLATE NOCASE,
+    SeenDefect REAL,
+    PercentRecoverable REAL,
+    Length INTEGER,
+    ExportGrade TEXT,
+    SmallEndDiameter REAL,
+    LargeEndDiameter REAL,
+    GrossBoardFoot REAL,
+    NetBoardFoot REAL,
+    GrossCubicFoot REAL,
+    NetCubicFoot REAL,
+    BoardFootRemoved REAL,
+    CubicFootRemoved REAL,
+    DIBClass REAL,
+    BarkThickness REAL,
+    CreatedBy TEXT,
+    CreatedDate DateTime,
+    ModifiedBy TEXT,
+    ModifiedDate DateTime,
+
+    UNIQUE (LogID),
+    UNIQUE (TreeID, LogNumber),
+
+    CHECK (LogID LIKE '________-____-____-____-____________')
+);";
+
+        public string CreateIndexes =>
+@"CREATE INDEX Log_LogNumber ON Log (LogNumber);
+CREATE INDEX Log_TreeID ON Log (TreeID);";
+
+        public IEnumerable<string> CreateTriggers => new[] { CREATE_TRIGGER_LOG_ONUPDATE, CREATE_TRIGGER_Log_OnDelete };
 
         public const string CREATE_TRIGGER_LOG_ONUPDATE =
             "CREATE TRIGGER Log_OnUpdate " +
@@ -88,7 +125,7 @@ BEGIN
         LargeEndDiameter,
         GrossBoardFoot,
         NetBoardFoot,
-        GrossCubicFoot
+        GrossCubicFoot,
         NetCubicFoot,
         BoardFootRemoved,
         CubicFootRemoved,
@@ -112,7 +149,7 @@ BEGIN
         OLD.LargeEndDiameter,
         OLD.GrossBoardFoot,
         OLD.NetBoardFoot,
-        OLD.GrossCubicFoot
+        OLD.GrossCubicFoot,
         OLD.NetCubicFoot,
         OLD.BoardFootRemoved,
         OLD.CubicFootRemoved,
@@ -124,37 +161,6 @@ BEGIN
         OLD.ModifiedDate
     );
 END;";
-
-        public const string CREATE_TOMBSTONE_TABLE_Log_Tombstone =
-@"CREATE TABLE Log_Tombstone (
-    LogID TEXT NOT NULL,
-    TreeID TEXT NOT NULL,
-    LogNumber TEXT NOT NULL,
-    Grade TEXT COLLATE NOCASE,
-    SeenDefect REAL,
-    PercentRecoverable REAL,
-    Length INTEGER,
-    ExportGrade TEXT,
-    SmallEndDiameter REAL,
-    LargeEndDiameter REAL,
-    GrossBoardFoot REAL,
-    NetBoardFoot REAL,
-    GrossCubicFoot REAL,
-    NetCubicFoot REAL,
-    BoardFootRemoved REAL,
-    CubicFootRemoved REAL,
-    DIBClass REAL,
-    BarkThickness REAL,
-    CreatedBy TEXT,
-    CreatedDate DateTime,
-    ModifiedBy TEXT,
-    ModifiedDate DateTime,
-
-    UNIQUE (LogID),
-    UNIQUE (TreeID, LogNumber),
-
-    CHECK (LogID LIKE '________-____-____-____-____________')
-);";
     }
 
     public partial class Migrations

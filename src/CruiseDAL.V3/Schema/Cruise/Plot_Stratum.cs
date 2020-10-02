@@ -1,8 +1,12 @@
-﻿namespace CruiseDAL.Schema
+﻿using System.Collections.Generic;
+
+namespace CruiseDAL.Schema
 {
-    public partial class DDL
+    public class Plot_StratumTableDefinition : ITableDefinition
     {
-        public const string CREATE_TABLE_PLOT_STRATUM =
+        public string TableName => "Plot_Stratum";
+
+        public string CreateTable =>
 @"CREATE TABLE Plot_Stratum (
     Plot_Stratum_CN INTEGER PRIMARY KEY AUTOINCREMENT,
     PlotNumber INTEGER NOT NULL,
@@ -24,11 +28,32 @@
     FOREIGN KEY (PlotNumber, CuttingUnitCode, CruiseID) REFERENCES Plot (PlotNumber, CuttingUnitCode, CruiseID) ON DELETE CASCADE ON UPDATE CASCADE
 );";
 
-        public const string CREATE_INDEX_Plot_Stratum_StratumCode_CruiseID =
-            @"CREATE INDEX 'Plot_Stratum_StratumCode_CruiseID' ON 'Plot_Stratum'('StratumCode', 'CruiseID');";
+        public string InitializeTable => null;
 
-        public const string CREATE_INDEX_Plot_Stratum_PlotNumber_CuttingUnitCode_CruiseID =
-            @"CREATE INDEX 'Plot_Stratum_PlotNumber_CuttingUnitCode_CruiseID' ON 'Plot_Stratum' ('PlotNumber', 'CuttingUnitCode', 'CruiseID');";
+        public string CreateTombstoneTable =>
+@"CREATE TABLE Plot_Stratum_Tombstone (
+    PlotNumber INTEGER NOT NULL,
+    CruiseID TEXT NOT NULL COLLATE NOCASE,
+    CuttingUnitCode TEXT NOT NULL COLLATE NOCASE,
+    StratumCode TEXT NOT NULL COLLATE NOCASE,
+    IsEmpty BOOLEAN,
+    KPI REAL,
+    ThreePRandomValue INTEGER,
+    CreatedBy TEXT,
+    CreatedDate DATETIME,
+    ModifiedBy TEXT,
+    ModifiedDate DATETIME,
+    RowVersion INTEGER DEFAULT 0,
+
+    UNIQUE (PlotNumber, CuttingUnitCode, StratumCode, CruiseID)
+);";
+
+        public string CreateIndexes =>
+@"CREATE INDEX 'Plot_Stratum_StratumCode_CruiseID' ON 'Plot_Stratum'('StratumCode', 'CruiseID');
+
+CREATE INDEX 'Plot_Stratum_PlotNumber_CuttingUnitCode_CruiseID' ON 'Plot_Stratum' ('PlotNumber', 'CuttingUnitCode', 'CruiseID');";
+
+        public IEnumerable<string> CreateTriggers => new[] { CREATE_TRIGGER_PLOT_STRATUM_ONUPDATE, CREATE_TRIGGER_Plot_Stratum_OnDelete };
 
         public const string CREATE_TRIGGER_PLOT_STRATUM_ONUPDATE =
             "CREATE TRIGGER Plot_Stratum_OnUpdate " +
@@ -79,24 +104,6 @@ BEGIN
         OLD.RowVersion
     );
 END;";
-
-        public const string CREATE_TROMBSTONE_TABLE_Plot_Stratum_Tombstone =
-@"CREATE TABLE Plot_Stratum_Tombstone (
-    PlotNumber INTEGER NOT NULL,
-    CruiseID TEXT NOT NULL COLLATE NOCASE,
-    CuttingUnitCode TEXT NOT NULL COLLATE NOCASE,
-    StratumCode TEXT NOT NULL COLLATE NOCASE,
-    IsEmpty BOOLEAN,
-    KPI REAL,
-    ThreePRandomValue INTEGER,
-    CreatedBy TEXT,
-    CreatedDate DATETIME,
-    ModifiedBy TEXT,
-    ModifiedDate DATETIME,
-    RowVersion INTEGER DEFAULT 0,
-
-    UNIQUE (PlotNumber, CuttingUnitCode, StratumCode, CruiseID)
-);";
     }
 
     public partial class Migrations

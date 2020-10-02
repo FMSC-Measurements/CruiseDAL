@@ -1,8 +1,13 @@
-﻿namespace CruiseDAL.Schema
+﻿using System.Collections.Generic;
+using System.Linq;
+
+namespace CruiseDAL.Schema
 {
-    public partial class DDL
+    public class TallyLedgerTableDefinition : ITableDefinition
     {
-        public const string CREATE_TABLE_TALLYLEDGER =
+        public string TableName => "TallyLedger";
+
+        public string CreateTable =>
 @"CREATE TABLE TallyLedger (
     TallyLedger_CN INTEGER PRIMARY KEY AUTOINCREMENT,
     TallyLedgerID TEXT NOT NULL,
@@ -45,17 +50,20 @@
     FOREIGN KEY (TreeID, PlotNumber) REFERENCES Tree (TreeID, PlotNumber) ON UPDATE CASCADE
 );";
 
-        public const string CREATE_INDEX_TallyLedger_TreeID =
-            @"CREATE INDEX 'TallyLedger_TreeID' ON 'TallyLedger'('TreeID');";
+        public string InitializeTable => null;
 
-        public const string CREATE_INDEX_TallyLedger_SampleGroupCode_StratumCode_CruiseID =
-            @"CREATE INDEX 'TallyLedger_SampleGroupCode_StratumCode_CruiseID' ON 'TallyLedger'('SampleGroupCode', 'StratumCode', 'CruiseID');";
+        public string CreateTombstoneTable => null; // TODO
 
-        public const string CREATE_INDEX_TallyLedger_StratumCode_CruiseID =
-            @"CREATE INDEX 'TallyLedger_StratumCode_CruiseID' ON 'TallyLedger'('StratumCode', 'CruiseID');";
+        public string CreateIndexes =>
+@"CREATE INDEX 'TallyLedger_TreeID' ON 'TallyLedger'('TreeID');
 
-        public const string CREATE_INDEX_TallyLedger_CuttingUnitCode_CruiseID =
-            @"CREATE INDEX 'TallyLedger_CuttingUnitCode_CruiseID' ON 'TallyLedger'('CuttingUnitCode', 'CruiseID');";
+CREATE INDEX 'TallyLedger_SampleGroupCode_StratumCode_CruiseID' ON 'TallyLedger'('SampleGroupCode', 'StratumCode', 'CruiseID');
+
+CREATE INDEX 'TallyLedger_StratumCode_CruiseID' ON 'TallyLedger'('StratumCode', 'CruiseID');
+
+CREATE INDEX 'TallyLedger_CuttingUnitCode_CruiseID' ON 'TallyLedger'('CuttingUnitCode', 'CruiseID');";
+
+        public IEnumerable<string> CreateTriggers => Enumerable.Empty<string>();
 
     }
 

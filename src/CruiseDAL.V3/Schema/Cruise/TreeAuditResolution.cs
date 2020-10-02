@@ -1,8 +1,12 @@
-﻿namespace CruiseDAL.Schema
+﻿using System.Collections.Generic;
+
+namespace CruiseDAL.Schema
 {
-    public partial class DDL
+    public class TreeAuditResolutionTableDefinition : ITableDefinition
     {
-        public const string CREATE_TABLE_TREEAUDITRESOLUTION =
+        public string TableName => "TreeAuditResolution";
+
+        public string CreateTable =>
 @"CREATE TABLE TreeAuditResolution (
     TreeAuditResolution_CN INTEGER PRIMARY KEY AUTOINCREMENT, 
     CruiseID TEXT NOT NULL COLLATE NOCASE,
@@ -18,18 +22,30 @@
     FOREIGN KEY (TreeAuditRuleID) REFERENCES TreeAuditRule (TreeAuditRuleID) ON DELETE CASCADE
 );";
 
-        public const string CREATE_INDEX_TreeAuditResolution_TreeAuditRuleID =
-            @"CREATE INDEX 'TreeAuditResolution_TreeAuditRuleID' ON 'TreeAuditResolution'('TreeAuditRuleID');";
+        public string InitializeTable => null;
 
-        public const string CREATE_INDEX_TreeAuditResolution_TreeID =
-            @"CREATE INDEX 'TreeAuditResolution_TreeID' ON 'TreeAuditResolution'('TreeID');";
+        public string CreateTombstoneTable =>
+@"CREATE TABLE TreeAuditResolution_Tombstone (
+    CruiseID TEXT NOT NULL COLLATE NOCASE,
+    TreeID TEXT NOT NULL,
+    TreeAuditRuleID TEXT NOT NULL,
+    Resolution TEXT,
+    Initials TEXT NOT NULL
+);";
+
+        public string CreateIndexes =>
+@"CREATE INDEX 'TreeAuditResolution_TreeAuditRuleID' ON 'TreeAuditResolution'('TreeAuditRuleID');
+
+CREATE INDEX 'TreeAuditResolution_TreeID' ON 'TreeAuditResolution'('TreeID');";
+
+        public IEnumerable<string> CreateTriggers => new[] { CREATE_TRIGGER_TreeAuditResolution_OnDelete };
 
         public const string CREATE_TRIGGER_TreeAuditResolution_OnDelete =
 @"CREATE TRIGGER TreeAuditResolution_OnDelete 
 BEFORE DELETE ON TreeAuditResolution
 FOR EACH ROW 
 BEGIN 
-    INSERT OR REPLACE INTO TreeAuditResolution_Tombstone
+    INSERT OR REPLACE INTO TreeAuditResolution_Tombstone (
         CruiseID,
         TreeID,
         TreeAuditRuleID,
@@ -44,13 +60,5 @@ BEGIN
     );
 END;";
 
-        public const string CREATE_TOMBSTONE_TABLE_TreeAuditResolution_Tombstone =
-@"CREATE TABLE TreeAuditResolution_Tombstone (
-    CruiseID TEXT NOT NULL COLLATE NOCASE,
-    TreeID TEXT NOT NULL,
-    TreeAuditRuleID TEXT NOT NULL,
-    Resolution TEXT,
-    Initials TEXT NOT NULL
-);";
     }
 }

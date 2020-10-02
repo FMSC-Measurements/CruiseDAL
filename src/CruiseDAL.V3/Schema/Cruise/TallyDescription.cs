@@ -1,8 +1,13 @@
-﻿namespace CruiseDAL.Schema
+﻿using System.Collections.Generic;
+using System.Linq;
+
+namespace CruiseDAL.Schema
 {
-    public partial class DDL
+    public class TallyDescriptionTableDefinition : ITableDefinition
     {
-        public const string CREATE_TABLE_TALLYDESCRIPTION =
+        public string TableName => "TallyDescription";
+
+        public string CreateTable =>
 @"CREATE TABLE TallyDescription ( 
     TallyDescription_CN INTEGER PRIMARY KEY AUTOINCREMENT, 
     CruiseID TEXT NOT NULL COLLATE NOCASE, 
@@ -20,13 +25,19 @@
     FOREIGN KEY (CruiseID, StratumCode, SampleGroupCode, SpeciesCode, LiveDead) REFERENCES Subpopulation (CruiseID, StratumCode, SampleGroupCode, SpeciesCode, LiveDead)
 );";
 
-        public const string CREATE_UNIQUE_INDEX_TallyDescription_StratumCode_SampleGroupCode_SpeciesCode_LiveDead_CruiseID =
+        public string InitializeTable => null;
+
+        public string CreateTombstoneTable => null;
+
+        public string CreateIndexes =>
 @"CREATE UNIQUE INDEX TallyDescription_StratumCode_SampleGroupCode_SpeciesCode_LiveDead_CruiseID 
 ON TallyDescription 
-(CruiseID, StratumCode, SampleGroupCode, ifnull(SpeciesCode, '') COLLATE NOCASE, ifnull(LiveDead, '') COLLATE NOCASE);";
+(CruiseID, StratumCode, SampleGroupCode, ifnull(SpeciesCode, '') COLLATE NOCASE, ifnull(LiveDead, '') COLLATE NOCASE);
 
-        public const string CREATE_INDEX_TallyDescription_SpeciesCode_CruiseID =
-            @"CREATE INDEX 'TallyDescription_SpeciesCode_CruiseID' ON 'TallyDescription' ('SpeciesCode', 'CruiseID');";
+CREATE INDEX 'TallyDescription_SpeciesCode_CruiseID' ON 'TallyDescription' ('SpeciesCode', 'CruiseID');";
+
+        public IEnumerable<string> CreateTriggers => Enumerable.Empty<string>();
+
     }
 
     public partial class Migrations

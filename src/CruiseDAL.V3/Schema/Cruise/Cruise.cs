@@ -1,16 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using System.Collections.Generic;
 
 namespace CruiseDAL.Schema
 {
-    public partial class DDL
+    public class CruiseTableDefinition : ITableDefinition
     {
-        public const string CREATE_TABLE_Cruise =
-@"CREATE TABLE Cruise ( 
-    CruiseID TEXT NOT NULL COLLATE NOCASE, 
-    SaleID TEXT NOT NULL COLLATE NOCASE, 
+        public string TableName => "Cruise";
+
+        public string CreateTable =>
+@"CREATE TABLE Cruise (
+    CruiseID TEXT NOT NULL COLLATE NOCASE,
+    SaleID TEXT NOT NULL COLLATE NOCASE,
     Purpose TEXT,
     Remarks TEXT,
     DefaultUOM TEXT,
@@ -19,52 +18,59 @@ namespace CruiseDAL.Schema
     CreatedDate DateTime DEFAULT (datetime('now', 'localtime')),
     ModifiedBy TEXT,
     ModifiedDate DateTime,
-    
+
     CHECK (CruiseID LIKE '________-____-____-____-____________'),
 
     FOREIGN KEY (SaleID) REFERENCES Sale (SaleID) ON DELETE CASCADE,
     UNIQUE (CruiseID)
 );";
 
+        public string InitializeTable => null;
+
+        public string CreateIndexes => null;
+
+        public IEnumerable<string> CreateTriggers => new[] { CREATE_TRIGGER_CRUISE_ONUPDATE };
+
+        public string CreateTombstoneTable => null;
+
         public const string CREATE_TRIGGER_CRUISE_ONUPDATE =
-@"CREATE TRIGGER OnUpdateCruise 
-AFTER UPDATE OF 
-    SaleID, 
-    Purpose, 
-    LogGradingEnabled, 
-    Remarks, 
-    DefaultUOM 
-ON Sale 
-BEGIN 
-    UPDATE Sale SET ModifiedDate = datetime('now', 'localtime') WHERE Sale_CN = old.Sale_CN; 
+@"CREATE TRIGGER OnUpdateCruise
+AFTER UPDATE OF
+    SaleID,
+    Purpose,
+    LogGradingEnabled,
+    Remarks,
+    DefaultUOM
+ON Sale
+BEGIN
+    UPDATE Sale SET ModifiedDate = datetime('now', 'localtime') WHERE Sale_CN = old.Sale_CN;
     UPDATE Sale SET RowVersion = old.RowVersion + 1 WHERE Sale_CN = old.Sale_CN;
 END;";
-
     }
 
     public partial class Migrations
     {
         public const string MIGRATE_Cruise_FORMAT_STR =
-@"INSERT INTO {0}.Cruise ( 
+@"INSERT INTO {0}.Cruise (
         CruiseID,
-        SaleID, 
-        Purpose, 
+        SaleID,
+        Purpose,
         DefaultUOM,
         LogGradingEnabled,
         Remarks,
-        CreatedBy, 
-        CreatedDate, 
-        ModifiedBy 
-    ) 
-    SELECT 
+        CreatedBy,
+        CreatedDate,
+        ModifiedBy
+    )
+    SELECT
         '{3}',
         '{2}',
-        Purpose, 
+        Purpose,
         DefaultUOM,
         LogGradingEnabled,
         Remarks,
-        CreatedBy, 
-        CreatedDate, 
+        CreatedBy,
+        CreatedDate,
         ModifiedBy
     FROM {1}.Sale;";
     }

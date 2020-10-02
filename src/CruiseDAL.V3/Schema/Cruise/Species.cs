@@ -1,8 +1,13 @@
-﻿namespace CruiseDAL.Schema
+﻿using System.Collections.Generic;
+using System.Linq;
+
+namespace CruiseDAL.Schema
 {
-    public partial class DDL
+    public class SpeciesTableDefinition : ITableDefinition
     {
-        public const string CREATE_TABLE_Species =
+        public string TableName => "Species";
+
+        public string CreateTable =>
 @"CREATE TABLE Species (
     Species_cn INTEGER PRIMARY KEY AUTOINCREMENT,
     SpeciesCode TEXT COLLATE NOCASE, 
@@ -12,6 +17,14 @@
     
     UNIQUE (SpeciesCode, CruiseID)
 ); ";
+
+        public string InitializeTable => null;
+
+        public string CreateTombstoneTable => null;
+
+        public string CreateIndexes => null;
+
+        public IEnumerable<string> CreateTriggers => Enumerable.Empty<string>();
     }
 
     public partial class Migrations

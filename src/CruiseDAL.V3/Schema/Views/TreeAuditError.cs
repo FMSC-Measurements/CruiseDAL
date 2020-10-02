@@ -1,8 +1,10 @@
 ﻿namespace CruiseDAL.Schema
 {
-    public partial class DDL
+    public class TreeAuditErrorViewDefinition : IViewDefinition
     {
-        public const string CREATE_VIEW_TREEAUDITERROR =
+        public string ViewName => "TreeAuditError";
+
+        public string CreateView =>
 @"CREATE VIEW TreeAuditError AS
 WITH
 -- return just measure trees
@@ -60,5 +62,6 @@ WHERE
     (tfv.ValueReal IS NOT NULL AND
     (tars.Min IS NOT NULL AND tfv.ValueReal < tars.Min)
     OR (tars.Max IS NOT NULL AND tfv.ValueReal > tars.Max));";
+
     }
 }

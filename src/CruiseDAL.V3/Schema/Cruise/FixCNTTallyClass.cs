@@ -1,25 +1,35 @@
-﻿namespace CruiseDAL.Schema
+﻿using System.Collections.Generic;
+using System.Linq;
+
+namespace CruiseDAL.Schema
 {
-    public partial class DDL
+    public class FixCNTTallyClassTableDefinition : ITableDefinition
     {
-        public const string CREATE_TABLE_FIXCNTTALLYCLASS =
-            "CREATE TABLE FixCNTTallyClass ( " +
-                "FixCNTTallyClass_CN INTEGER PRIMARY KEY AUTOINCREMENT, " +
-                "CruiseID TEXT NOT NULL COLLATE NOCASE, " +
-                "StratumCode TEXT NOT NULL COLLATE NOCASE, " +
-                "Field TEXT NOT NULL COLLATE NOCASE, " +
+        public string TableName => "FixCNTTallyClass";
 
-                "UNIQUE (CruiseID, StratumCode), " +
+        public string CreateTable =>
+@"CREATE TABLE FixCNTTallyClass (
+    FixCNTTallyClass_CN INTEGER PRIMARY KEY AUTOINCREMENT,
+    CruiseID TEXT NOT NULL COLLATE NOCASE,
+    StratumCode TEXT NOT NULL COLLATE NOCASE,
+    Field TEXT NOT NULL COLLATE NOCASE,
 
-                "FOREIGN KEY (StratumCode, CruiseID) REFERENCES Stratum (Code, CruiseID) ON DELETE CASCADE ON UPDATE CASCADE, " +
-                "FOREIGN KEY (Field) REFERENCES TreeField (Field) " +
-            ");";
+    UNIQUE (CruiseID, StratumCode),
 
-        public const string CREATE_INDEX_FixCNTTallyClass_Field =
-            @"CREATE INDEX FixCNTTallyClass_Field ON FixCNTTallyClass (Field);";
+    FOREIGN KEY (StratumCode, CruiseID) REFERENCES Stratum (StratumCode, CruiseID) ON DELETE CASCADE ON UPDATE CASCADE,
+    FOREIGN KEY (Field) REFERENCES TreeField (Field)
+);";
 
-        public const string CREATE_INDEX_FixCNTTallyClass_StratumCode_CruiseID =
-            @"CREATE INDEX FixCNTTallyClass_StratumCode_CruiseID ON FixCNTTallyClass (StratumCode, CruiseID);";
+        public string InitializeTable => null;
+
+        public string CreateTombstoneTable => null;
+
+        public string CreateIndexes =>
+@"CREATE INDEX FixCNTTallyClass_Field ON FixCNTTallyClass (Field);
+
+CREATE INDEX FixCNTTallyClass_StratumCode_CruiseID ON FixCNTTallyClass (StratumCode, CruiseID);";
+
+        public IEnumerable<string> CreateTriggers => Enumerable.Empty<string>();
     }
 
     public partial class Migrations

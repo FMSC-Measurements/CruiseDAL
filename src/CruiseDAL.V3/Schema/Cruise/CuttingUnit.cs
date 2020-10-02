@@ -1,8 +1,12 @@
-﻿namespace CruiseDAL.Schema
+﻿using System.Collections.Generic;
+
+namespace CruiseDAL.Schema
 {
-    public partial class DDL
+    public class CuttingUnitTableDefinition : ITableDefinition
     {
-        public const string CREATE_TABLE_CUTTINGUNIT =
+        public string TableName => "CuttingUnit";
+
+        public string CreateTable =>
 @"CREATE TABLE CuttingUnit( 
     CuttingUnit_CN INTEGER PRIMARY KEY AUTOINCREMENT,
     Code TEXT NOT NULL COLLATE NOCASE, 
@@ -22,6 +26,35 @@
     CHECK (length(Code) > 0)
 );";
 
+        public string InitializeTable => null;
+
+        public string CreateTombstoneTable =>
+@"CREATE TABLE CuttingUnit_Tombstone (
+    Code TEXT NOT NULL COLLATE NOCASE, 
+    CruiseID TEXT NOT NULL COLLATE NOCASE, 
+    Area REAL DEFAULT 0.0, 
+    Description TEXT, 
+    LoggingMethod TEXT, 
+    PaymentUnit TEXT,
+    Rx TEXT, 
+    CreatedBy TEXT,
+    CreatedDate DateTime,
+    ModifiedBy TEXT,
+    ModifiedDate DateTime ,
+    RowVersion INTEGER DEFAULT 0,
+    UNIQUE(Code, CruiseID),
+    CHECK (length(Code) > 0)
+);";
+
+        public string CreateIndexes => null;
+
+        public IEnumerable<string> CreateTriggers => new[]
+        {
+            CREATE_TRIGGER_CUTTINGUNIT_ONUPDATE,
+            CREATE_TRIGGER_CuttingUnit_OnDelete,
+        };
+
+
         public const string CREATE_TRIGGER_CUTTINGUNIT_ONUPDATE =
 @"CREATE TRIGGER CuttingUnit_OnUpdate
 AFTER UPDATE OF
@@ -38,7 +71,7 @@ BEGIN
     UPDATE CuttingUnit SET RowVersion = old.RowVersion + 1 WHERE CuttingUnit_CN = old.CuttingUnit_CN;
 END; ";
 
-        public const string CTEATE_TRIGGER_CuttingUnit_OnDelete =
+        public const string CREATE_TRIGGER_CuttingUnit_OnDelete =
 @"CREATE TRIGGER CuttingUnit_OnDelete
 BEFORE DELETE ON CuttingUnit
 FOR EACH ROW 
@@ -67,24 +100,6 @@ BEGIN
         OLD.ModifiedDate
     );
 END;;";
-
-        public const string CREATE_TOMBSTONE_TABLE_CuttingUnit_Tombstone =
-@"CREATE TABLE CuttingUnit_Tombstone (
-    Code TEXT NOT NULL COLLATE NOCASE, 
-    CruiseID TEXT NOT NULL COLLATE NOCASE, 
-    Area REAL DEFAULT 0.0, 
-    Description TEXT, 
-    LoggingMethod TEXT, 
-    PaymentUnit TEXT,
-    Rx TEXT, 
-    CreatedBy TEXT,
-    CreatedDate DateTime,
-    ModifiedBy TEXT,
-    ModifiedDate DateTime ,
-    RowVersion INTEGER DEFAULT 0,
-    UNIQUE(Code, CruiseID),
-    CHECK (length(Code) > 0)
-;";
     }
 
     public partial class Migrations

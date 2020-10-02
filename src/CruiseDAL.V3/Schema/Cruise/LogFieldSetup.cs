@@ -1,27 +1,37 @@
-﻿namespace CruiseDAL.Schema
+﻿using System.Collections.Generic;
+using System.Linq;
+
+namespace CruiseDAL.Schema
 {
-    public partial class DDL
+    public class LogFieldSetupTableDefinition : ITableDefinition
     {
-        public const string CREATE_TABLE_LOGFIELDSETUP =
-            "CREATE TABLE LogFieldSetup (" +
-                "StratumCode TEXT NOT NULL, " +
-                "CruiseID TEXT NOT NULL COLLATE NOCASE," +
-                "Field TEXT NOT NULL, " +
-                "FieldOrder INTEGER Default 0, " +
-                "Heading TEXT, " +
-                "Width REAL Default 0.0, " +
+        public string TableName => "LogFieldSetup";
 
-                "UNIQUE (CruiseID, StratumCode, Field), " +
+        public string CreateTable =>
+@"CREATE TABLE LogFieldSetup (
+    StratumCode TEXT NOT NULL,
+    CruiseID TEXT NOT NULL COLLATE NOCASE,
+    Field TEXT NOT NULL,
+    FieldOrder INTEGER Default 0,
+    Heading TEXT,
+    Width REAL Default 0.0,
 
-                "FOREIGN KEY (StratumCode, CruiseID) REFERENCES Stratum (Code, CruiseID) ON DELETE CASCADE ON UPDATE CASCADE," +
-                "FOREIGN KEY (Field) REFERENCES LogField (Field) " +
-            ");";
+    UNIQUE (CruiseID, StratumCode, Field),
 
-        public const string CREATE_INDEX_LogFieldSetup_Field =
-            @"CREATE INDEX 'LogFieldSetup_Field' ON 'LogFieldSetup'('Field' COLLATE NOCASE);";
+    FOREIGN KEY (StratumCode, CruiseID) REFERENCES Stratum (StratumCode, CruiseID) ON DELETE CASCADE ON UPDATE CASCADE,
+    FOREIGN KEY (Field) REFERENCES LogField (Field)
+);";
 
-        public const string CREATE_INDEX_LogFieldSetup_StratumCode_CruiseID =
-            @"CREATE INDEX 'LogFieldSetup_StratumCode_CruiseID' ON 'LogFieldSetup'('StratumCode', 'CruiseID');";
+        public string InitializeTable => null;
+
+        public string CreateTombstoneTable => null;// TODO
+
+        public string CreateIndexes =>
+@"CREATE INDEX 'LogFieldSetup_Field' ON 'LogFieldSetup'('Field' COLLATE NOCASE);
+
+CREATE INDEX 'LogFieldSetup_StratumCode_CruiseID' ON 'LogFieldSetup'('StratumCode', 'CruiseID');";
+
+        public IEnumerable<string> CreateTriggers => Enumerable.Empty<string>();
     }
 
     public partial class Migrations

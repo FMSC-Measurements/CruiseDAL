@@ -1,8 +1,12 @@
-﻿namespace CruiseDAL.Schema
+﻿using System.Collections.Generic;
+
+namespace CruiseDAL.Schema
 {
-    public partial class DDL
+    public class PlotTableDefinition : ITableDefinition
     {
-        public const string CREATE_TABLE_PLOT =
+        public string TableName => "Plot";
+
+        public string CreateTable =>
 @"CREATE TABLE Plot ( 
     Plot_CN INTEGER PRIMARY KEY AUTOINCREMENT,
     PlotID TEXT NOT NULL,
@@ -26,28 +30,47 @@
     FOREIGN KEY (CuttingUnitCode, CruiseID) REFERENCES CuttingUnit (Code, CruiseID) ON DELETE CASCADE ON UPDATE CASCADE
 );";
 
-        public const string CREATE_INDEX_Plot_CuttingUnitCode_CruiseID =
-            "CREATE INDEX Plot_CuttingUnitCode_CruiseID ON Plot (CuttingUnitCode, CruiseID);";
+        public string InitializeTable => null;
 
-        public const string CREATE_INDEX_Plot_PlotNumber_CruiseID =
-            "CREATE INDEX Plot_PlotNumber_CruiseID ON Plot (PlotNumber, CruiseID);";
+        public string CreateTombstoneTable =>
+@"CREATE TABLE Plot_Tombstone (
+    PlotID TEXT NOT NULL,
+    PlotNumber INTEGER NOT NULL,
+    CruiseID TEXT NOT NULL COLLATE NOCASE,
+    CuttingUnitCode TEXT NOT NULL COLLATE NOCASE,
+    Slope REAL,
+    Aspect REAL,
+    Remarks TEXT,
+    CreatedBy TEXT,
+    CreatedDate DATETIME,
+    ModifiedBy TEXT COLLATE NOCASE,
+    ModifiedDate DATETIME,
+    RowVersion INTEGER
+);";
+
+        public string CreateIndexes =>
+@"CREATE INDEX Plot_CuttingUnitCode_CruiseID ON Plot (CuttingUnitCode, CruiseID);
+
+CREATE INDEX Plot_PlotNumber_CruiseID ON Plot (PlotNumber, CruiseID);";
+
+        public IEnumerable<string> CreateTriggers => new[] { CREATE_TRIGGER_PLOT_ONUPDATE, CREATE_TRIGGER_Plot_OnDelete };
 
         public const string CREATE_TRIGGER_PLOT_ONUPDATE =
-            "CREATE TRIGGER Plot_OnUpdate " +
-            "AFTER UPDATE OF " +
-                "CuttingUnitCode, " +
-                "Slope, " +
-                "Aspect, " +
-                "Remarks, " +
-                "XCoordinate, " +
-                "YCoordinate, " +
-                "ZCoordinate " +
-            "ON Plot " +
-            "FOR EACH ROW " +
-            "BEGIN " +
-                "UPDATE Plot SET ModifiedDate = datetime('now', 'localtime') WHERE Plot_CN = old.Plot_CN; " +
-                "UPDATE Plot SET RowVersion = old.RowVersion WHERE Plot_CN = old.Plot_CN; " +
-            "END;";
+@"CREATE TRIGGER Plot_OnUpdate
+AFTER UPDATE OF
+    CuttingUnitCode,
+    Slope,
+    Aspect,
+    Remarks,
+    XCoordinate,
+    YCoordinate,
+    ZCoordinate
+ON Plot
+FOR EACH ROW
+BEGIN
+    UPDATE Plot SET ModifiedDate = datetime('now', 'localtime') WHERE Plot_CN = old.Plot_CN;
+    UPDATE Plot SET RowVersion = old.RowVersion WHERE Plot_CN = old.Plot_CN;
+END;";
 
         public const string CREATE_TRIGGER_Plot_OnDelete =
 @"CREATE TRIGGER Plot_OnDelete
@@ -65,7 +88,7 @@ BEGIN
         CreatedBy,
         CreatedDate,
         ModifiedBy,
-        ModifiedDate
+        ModifiedDate,
         RowVersion
     ) VALUES (
         OLD.PlotID,
@@ -78,26 +101,15 @@ BEGIN
         OLD.CreatedBy,
         OLD.CreatedDate,
         OLD.ModifiedBy,
-        OLD.ModifiedDate
+        OLD.ModifiedDate,
         OLD.RowVersion
     );
 END;";
 
-        public const string CREATE_TOMBSTONE_TABLE_Plot_Tombstone =
-@"CREATE TABLE Plot_Tombstone (
-    PlotID,
-    PlotNumber,
-    CruiseID,
-    CuttingUnitCode,
-    Slope,
-    Aspect,
-    Remarks,
-    CreatedBy,
-    CreatedDate,
-    ModifiedBy,
-    ModifiedDate
-    RowVersion
-);";
+
+        
+
+        
     }
 
     public partial class Migrations

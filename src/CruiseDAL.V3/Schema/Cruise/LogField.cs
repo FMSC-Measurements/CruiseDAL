@@ -1,8 +1,13 @@
-﻿namespace CruiseDAL.Schema
+﻿using System.Collections.Generic;
+using System.Linq;
+
+namespace CruiseDAL.Schema
 {
-    public partial class DDL
+    public class LogFieldTableDefinition : ITableDefinition
     {
-        public const string CREATE_TABLE_LOGFIELD =
+        public string TableName => "LogField";
+
+        public string CreateTable =>
 @"CREATE TABLE LogField (
     LogField_CN INTEGER PRIMARY KEY AUTOINCREMENT,
     Field TEXT NOT NULL COLLATE NOCASE,
@@ -11,7 +16,7 @@
     UNIQUE (Field)
 );";
 
-        public const string INITIALIZE_TABLE_LOGFIELD =
+        public string InitializeTable =>
 @"INSERT INTO LogField
     (Field, DbType)
 VALUES
@@ -31,35 +36,10 @@ VALUES
     ('BarkThickness', 'REAL')
 ;";
 
-        //        public const string CREATE_VIEW_UNPIVOTLOG =
-        //@"CREATE VIEW UnpivotLog AS
-        //SELECT
-        //    l.LogID,
-        //    l.TreeID,
-        //    lf.Field,
-        //    lf.DbType,
-        //    (CASE lf.Field
-        //        WHEN 'Grade' THEN l.Grade
-        //        WHEN 'ExportGrade' THEN l.ExportGrade
-        //        ELSE NULL END) AS ValueText,
-        //    (CASE lf.Field
-        //        WHEN 'SeenDefect' THEN l.SeenDefect
-        //        WHEN 'PercentRecoverable' THEN l.PercentRecoverable
-        //        WHEN 'SmallEndDiameter' THEN l.SmallEndDiameter
-        //        WHEN 'LargeEndDiameter' THEN l.LargeEndDiameter
-        //        WHEN 'GrossBoardFoot' THEN l.GrossBoardFoot
-        //        WHEN 'NetBoardFoot' THEN l.NetBoardFoot
-        //        WHEN 'GrossCubicFoot' THEN l.GrossCubicFoot
-        //        WHEN 'NetCubicFoot' THEN l.NetCubicFoot
-        //        WHEN 'BoardFootRemoved' THEN l.BoardFootRemoved
-        //        WHEN 'CubicFootRemoved' THEN l.CubicFootRemoved
-        //        WHEN 'DIBClass' THEN l.DIBClass
-        //        WHEN 'BarkThickness' THEN l.BarkThickness
-        //        ELSE NULL END) AS ValueReal,
-        //    (CASE lf.Field
-        //        WHEN 'Length' THEN l.Length
-        //        ELSE NULL END) AS ValueInt
-        //FROM Log_V3 AS l
-        //CROSS JOIN LogFields AS lf;";
+        public string CreateTombstoneTable => null;
+
+        public string CreateIndexes => null;
+
+        public IEnumerable<string> CreateTriggers => Enumerable.Empty<string>();
     }
 }

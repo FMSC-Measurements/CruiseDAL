@@ -1,0 +1,14 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+
+namespace CruiseDAL.Schema
+{
+    public interface IViewDefinition
+    {
+        string ViewName { get; }
+
+        string CreateView { get; }
+    }
+}

@@ -1,10 +1,14 @@
-﻿namespace CruiseDAL.Schema
+﻿using System.Collections.Generic;
+
+namespace CruiseDAL.Schema
 {
-    public partial class DDL
+    public class TreeTableDefinition : ITableDefinition
     {
+        public string TableName => "Tree";
+
         // values stored in the tree table are value we don't expect to change after the initial insert of the record
         // for changable values use the treeMeasurments table or treeFieldValue table
-        public const string CREATE_TABLE_TREE =
+        public string CreateTable =>
 @"CREATE TABLE Tree ( 
     Tree_CN INTEGER PRIMARY KEY AUTOINCREMENT, 
     CruiseID TEXT NOT NULL COLLATE NOCASE, 
@@ -42,43 +46,58 @@
         REFERENCES Species (SpeciesCode, CruiseID) 
 )";
 
-        public const string CREATE_INDEX_Tree_TreeNumber_CruiseID =
-            "CREATE INDEX Tree_TreeNumber_CruiseID ON Tree (TreeNumber, CruiseID);";
+        public string InitializeTable => null;
 
-        public const string CREATE_INDEX_Tree_SpeciesCode =
-            @"CREATE INDEX 'Tree_SpeciesCode' ON 'Tree'('SpeciesCode');";
+        public string CreateTombstoneTable =>
+@"CREATE TABLE Tree_Tombstone (
+    CruiseID TEXT NOT NULL COLLATE NOCASE, 
+    TreeID TEXT NOT NULL , 
+    CuttingUnitCode TEXT NOT NULL COLLATE NOCASE, 
+    StratumCode TEXT NOT NULL COLLATE NOCASE, 
+    SampleGroupCode TEXT NOT NULL COLLATE NOCASE, 
+    SpeciesCode TEXT COLLATE NOCASE, 
+    LiveDead TEXT COLLATE NOCASE, 
+    PlotNumber INTEGER, 
+    TreeNumber INTEGER NOT NULL, 
+    CountOrMeasure TEXT COLLATE NOCASE,
 
-        public const string CREATE_INDEX_Tree_PlotNumber_CuttingUnitCode_CruiseID =
-            @"CREATE INDEX 'Tree_PlotNumber_CuttingUnitCode_CruiseID' ON 'Tree'('PlotNumber', 'CuttingUnitCode', 'CruiseID');";
+    CreatedBy TEXT, 
+    CreatedDate DateTime, 
+    ModifiedBy TEXT, 
+    ModifiedDate DateTime, 
+    RowVersion INTEGER, 
 
-        public const string CREATE_INDEX_Tree_SampleGroupCode_StratumCode_CruiseID =
-            @"CREATE INDEX 'Tree_SampleGroupCode_StratumCode_CruiseID' ON 'Tree'('SampleGroupCode', 'StratumCode', 'CruiseID');";
+    UNIQUE (TreeID)
+);";
 
-        public const string CREATE_INDEX_Tree_StratumCode_CruiseID =
-            @"CREATE INDEX 'Tree_StratumCode_CruiseID' ON 'Tree'('StratumCode', 'CruiseID');";
+        public string CreateIndexes =>
+@"CREATE INDEX Tree_TreeNumber_CruiseID ON Tree (TreeNumber, CruiseID);
 
-        public const string CREATE_INDEX_Tree_CuttingUnitCode_CruiseID =
-            @"CREATE INDEX 'Tree_CuttingUnitCode_CruiseID' ON 'Tree'('CuttingUnitCode', 'CruiseID');";
+CREATE INDEX 'Tree_SpeciesCode' ON 'Tree'('SpeciesCode');
 
-        public const string CREATE_INDEX_Tree_TreeID_CuttingUnitCode_SampleGroupCode_StratumCode =
-            @"CREATE UNIQUE INDEX Tree_TreeID_CuttingUnitCode_SampleGroupCode_StratumCode ON Tree (TreeID, CuttingUnitCode, SampleGroupCode, StratumCode);";
+CREATE INDEX 'Tree_PlotNumber_CuttingUnitCode_CruiseID' ON 'Tree'('PlotNumber', 'CuttingUnitCode', 'CruiseID');
 
-        public const string CREATE_INDEX_Tree_TreeID_SpeciesCode =
-            @"CREATE UNIQUE INDEX Tree_TreeID_SpeciesCode ON Tree (TreeID, SpeciesCode);";
+CREATE INDEX 'Tree_SampleGroupCode_StratumCode_CruiseID' ON 'Tree'('SampleGroupCode', 'StratumCode', 'CruiseID');
 
-        public const string CREATE_INDEX_Tree_TreeID_LiveDead =
-            @"CREATE UNIQUE INDEX Tree_TreeID_LiveDead ON Tree (TreeID, LiveDead);";
+CREATE INDEX 'Tree_StratumCode_CruiseID' ON 'Tree'('StratumCode', 'CruiseID');
 
-        public const string CREATE_INDEX_Tree_TreeID_PlotNumber =
-            @"CREATE UNIQUE INDEX Tree_TreeID_PlotNumber ON Tree (TreeID, PlotNumber);";
+CREATE INDEX 'Tree_CuttingUnitCode_CruiseID' ON 'Tree'('CuttingUnitCode', 'CruiseID');
 
-        public const string CREATE_UNIQUE_INDEX_Tree_TreeNumber_CuttingUnitCode_PlotNumber_StratumCode_CruiseID =
-@"CREATE UNIQUE INDEX Tree_TreeNumber_CuttingUnitCode_PlotNumber_StratumCode_CruiseID ON Tree
-    (TreeNumber, CuttingUnitCode, PlotNumber, StratumCode, CruiseID) WHERE PlotNumber IS NOT NULL;";
+CREATE UNIQUE INDEX Tree_TreeID_CuttingUnitCode_SampleGroupCode_StratumCode ON Tree (TreeID, CuttingUnitCode, SampleGroupCode, StratumCode);
 
-        public const string CREATE_UNIQUE_INDEX_Tree_TreeNumber_CuttingUnitCode_CruiseID =
-@"CREATE UNIQUE INDEX Tree_TreeNumber_CuttingUnitCode_CruiseID ON Tree
+CREATE UNIQUE INDEX Tree_TreeID_SpeciesCode ON Tree (TreeID, SpeciesCode);
+
+CREATE UNIQUE INDEX Tree_TreeID_LiveDead ON Tree (TreeID, LiveDead);
+
+CREATE UNIQUE INDEX Tree_TreeID_PlotNumber ON Tree (TreeID, PlotNumber);
+
+CREATE UNIQUE INDEX Tree_TreeNumber_CuttingUnitCode_PlotNumber_StratumCode_CruiseID ON Tree
+    (TreeNumber, CuttingUnitCode, PlotNumber, StratumCode, CruiseID) WHERE PlotNumber IS NOT NULL;
+
+CREATE UNIQUE INDEX Tree_TreeNumber_CuttingUnitCode_CruiseID ON Tree
     (TreeNumber, CuttingUnitCode, CruiseID) WHERE PlotNumber IS NULL;";
+
+        public IEnumerable<string> CreateTriggers => new[] { CREATE_TRIGGER_TREE_ONUPDATE, CREATE_TRIGGER_Tree_OnDelete };
 
         public const string CREATE_TRIGGER_TREE_ONUPDATE =
             "CREATE TRIGGER Tree_OnUpdate " +
@@ -141,27 +160,6 @@ BEGIN
     );
 END;";
 
-        public const string CREATE_TOMBSTONE_TABLE_Tree_Tombstone =
-@"CREATE TABLE Tree_Tombstone (
-    CruiseID TEXT NOT NULL COLLATE NOCASE, 
-    TreeID TEXT NOT NULL , 
-    CuttingUnitCode TEXT NOT NULL COLLATE NOCASE, 
-    StratumCode TEXT NOT NULL COLLATE NOCASE, 
-    SampleGroupCode TEXT NOT NULL COLLATE NOCASE, 
-    SpeciesCode TEXT COLLATE NOCASE, 
-    LiveDead TEXT COLLATE NOCASE, 
-    PlotNumber INTEGER, 
-    TreeNumber INTEGER NOT NULL, 
-    CountOrMeasure TEXT DEFAULT COLLATE NOCASE,
-
-    CreatedBy TEXT, 
-    CreatedDate DateTime, 
-    ModifiedBy TEXT, 
-    ModifiedDate DateTime, 
-    RowVersion INTEGER, 
-
-    UNIQUE (TreeID)
-);";
     }
 
     public partial class Migrations

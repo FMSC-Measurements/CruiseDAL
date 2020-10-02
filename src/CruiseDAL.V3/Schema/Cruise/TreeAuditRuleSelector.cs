@@ -1,8 +1,12 @@
-﻿namespace CruiseDAL.Schema
+﻿using System.Collections.Generic;
+
+namespace CruiseDAL.Schema
 {
-    public partial class DDL
+    public class TreeAuditRuleSelectorTableDefinition : ITableDefinition
     {
-        public const string CREATE_TABLE_TreeAuditRuleSelector =
+        public string TableName => "TreeAuditRuleSelector";
+
+        public string CreateTable =>
 @"CREATE TABLE TreeAuditRuleSelector (
     TreeDefaultValue_TreeAuditRule_CN INTEGER PRIMARY KEY AUTOINCREMENT,
     CruiseID TEXT NOT NULL COLLATE NOCASE,
@@ -18,27 +22,38 @@
     FOREIGN KEY (SpeciesCode, CruiseID) REFERENCES Species (SpeciesCode, CruiseID) ON UPDATE CASCADE
 );";
 
-        public const string CREATE_UNIQUE_INDEX_TreeAuditRuleSelector_SpeciesCode_LiveDead_PrimaryProduct_TreeAuditRuleID_CruiseID =
-    @"CREATE UNIQUE INDEX TreeAuditRuleSelector_SpeciesCode_LiveDead_PrimaryProduct_TreeAuditRuleID_CruiseID 
+        public string InitializeTable => null;
+
+        public string CreateTombstoneTable =>
+@"CREATE TABLE TreeAuditRuleSelector_Tombstone (
+    CruiseID TEXT NOT NULL COLLATE NOCASE,
+    SpeciesCode TEXT COLLATE NOCASE,
+    LiveDead TEXT COLLATE NOCASE,
+    PrimaryProduct TEXT COLLATE NOCASE,
+    TreeAuditRuleID TEXT NOT NULL
+);";
+
+        public string CreateIndexes =>
+@"CREATE UNIQUE INDEX TreeAuditRuleSelector_SpeciesCode_LiveDead_PrimaryProduct_TreeAuditRuleID_CruiseID 
 ON TreeAuditRuleSelector (
     CruiseID, 
     ifnull(SpeciesCode, ''), 
     ifnull(LiveDead, ''), 
     ifnull(PrimaryProduct, ''), 
     TreeAuditRuleID
-);";
+);
 
-        public const string CREATE_INDEX_TreeAuditRuleSelector_SpeciesCode =
-            @"CREATE INDEX 'TreeAuditRuleSelector_SpeciesCode' ON 'TreeAuditRuleSelector'('SpeciesCode');";
+CREATE INDEX 'TreeAuditRuleSelector_SpeciesCode' ON 'TreeAuditRuleSelector'('SpeciesCode');
 
-        public const string CREATE_INDEX_TreeAuditRuleSelector_TreeAuditRuleID =
-            @"CREATE INDEX 'TreeAuditRuleSelector_TreeAuditRuleID' ON 'TreeAuditRuleSelector'('TreeAuditRuleID');";
+CREATE INDEX 'TreeAuditRuleSelector_TreeAuditRuleID' ON 'TreeAuditRuleSelector'('TreeAuditRuleID');";
+
+        public IEnumerable<string> CreateTriggers => new[] { CREATE_TRIGGER_TreeAuditRuleSelector_OnDelete };
 
         public const string CREATE_TRIGGER_TreeAuditRuleSelector_OnDelete =
 @"CREATE TRIGGER TreeAuditRuleSelector_OnDelete
 BEFORE DELETE ON TreeAuditRuleSelector 
 BEGIN
-    INSERT OR REPLACE INTO TreeAuditRuleSelector_Tombstone
+    INSERT OR REPLACE INTO TreeAuditRuleSelector_Tombstone (
         CruiseID,
         SpeciesCode,
         LiveDead,
@@ -53,14 +68,6 @@ BEGIN
     );
 END;";
 
-        public const string CREATE_TOMBSTONE_TABLE_TreeAuditRuleSelector =
-@"CREATE TABLE TreeAuditRuleSelector_Tombstone (
-    CruiseID TEXT NOT NULL COLLATE NOCASE,
-    SpeciesCode TEXT COLLATE NOCASE,
-    LiveDead TEXT COLLATE NOCASE,
-    PrimaryProduct TEXT COLLATE NOCASE,
-    TreeAuditRuleID TEXT NOT NULL
-);";
     }
 
     public partial class Migrations

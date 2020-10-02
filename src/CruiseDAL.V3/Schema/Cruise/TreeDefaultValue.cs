@@ -1,8 +1,12 @@
-﻿namespace CruiseDAL.Schema
+﻿using System.Collections.Generic;
+
+namespace CruiseDAL.Schema
 {
-    public partial class DDL
+    public class TreeDefaultValueTableDefinition : ITableDefinition
     {
-        public const string CREATE_TABLE_TREEDEFAULTVALUE =
+        public string TableName => "TreeDefaultValue";
+
+        public string CreateTable => 
 @"CREATE TABLE TreeDefaultValue ( 
     TreeDefaultValue_CN INTEGER PRIMARY KEY AUTOINCREMENT, 
     CruiseID TEXT NOT NULL COLLATE NOCASE,
@@ -33,14 +37,43 @@
     FOREIGN KEY (SpeciesCode, CruiseID) REFERENCES Species (SpeciesCode, CruiseID) ON UPDATE CASCADE ON DELETE CASCADE
 );";
 
-        public const string CREATE_UNIQUE_INDEX_TreeDefaultValue_SpeciesCode_PrimaryProduct =
-@"CREATE UNIQUE INDEX TreeDefaultValue_SpeciesCode_PrimaryProduct ON TreeDefaultValue (CruiseID, ifnull(SpeciesCode, '') COLLATE NOCASE, ifnull(PrimaryProduct, '') COLLATE NOCASE);";
+        public string InitializeTable => null;
 
-        public const string CREATE_INDEX_TreeDefaultValue_SpeciesCode =
-            @"CREATE INDEX 'TreeDefaultValue_SpeciesCode' ON 'TreeDefaultValue' ('SpeciesCode');";
+        public string CreateTombstoneTable =>
+@"CREATE TABLE TreeDefaultValue_Tombstone (
+    CruiseID TEXT NOT NULL COLLATE NOCASE,
+    SpeciesCode TEXT COLLATE NOCASE,
+    PrimaryProduct TEXT COLLATE NOCASE,
+    CullPrimary REAL, 
+    CullPrimaryDead REAL,
+    HiddenPrimary REAL,
+    HiddenPrimaryDead REAL,
+    TreeGrade TEXT COLLATE NOCASE,
+    TreeGradeDead TEXT COLLATE NOCASE,
+    CullSecondary REAL, 
+    HiddenSecondary REAL,
+    Recoverable REAL, 
+    MerchHeightLogLength INTEGER,
+    MerchHeightType TEXT, 
+    FormClass REAL, 
+    BarkThicknessRatio REAL, 
+    AverageZ REAL, 
+    ReferenceHeightPercent REAL, 
+    CreatedBy TEXT, 
+    CreatedDate DateTime, 
+    ModifiedBy TEXT, 
+    ModifiedDate DateTime, 
+    RowVersion INTEGER
+);";
 
-        public const string CREATE_INDEX_TreeDefaultValue_CruiseID =
-            @"CREATE INDEX 'TreeDefaultValue_CruiseID' ON 'TreeDefaultValue' ('CruiseID');";
+        public string CreateIndexes =>
+@"CREATE UNIQUE INDEX TreeDefaultValue_SpeciesCode_PrimaryProduct ON TreeDefaultValue (CruiseID, ifnull(SpeciesCode, '') COLLATE NOCASE, ifnull(PrimaryProduct, '') COLLATE NOCASE);
+
+CREATE INDEX 'TreeDefaultValue_SpeciesCode' ON 'TreeDefaultValue' ('SpeciesCode');
+
+CREATE INDEX 'TreeDefaultValue_CruiseID' ON 'TreeDefaultValue' ('CruiseID');";
+
+        public IEnumerable<string> CreateTriggers => new[] { CREATE_TRIGGER_TREEDEFAULTVALUE_ONUPDATE, CREATE_TRIGGER_TreeDefaultValue_OnDelete };
 
         public const string CREATE_TRIGGER_TREEDEFAULTVALUE_ONUPDATE =
 @"CREATE TRIGGER TreeDefaultValue_OnUpdate 
@@ -125,32 +158,6 @@ BEGIN
     );
 END;";
 
-        public const string CREATE_TOMBSTONE_TABLE_TreeDefaultValue_Tombstone =
-@"CREATE TABLE TreeDefaultValue_Tombstone (
-    CruiseID TEXT NOT NULL COLLATE NOCASE,
-    SpeciesCode TEXT COLLATE NOCASE,
-    PrimaryProduct TEXT COLLATE NOCASE,
-    CullPrimary REAL, 
-    CullPrimaryDead REAL,
-    HiddenPrimary REAL,
-    HiddenPrimaryDead REAL,
-    TreeGrade TEXT COLLATE NOCASE,
-    TreeGradeDead TEXT COLLATE NOCASE,
-    CullSecondary REAL, 
-    HiddenSecondary REAL,
-    Recoverable REAL, 
-    MerchHeightLogLength INTEGER,
-    MerchHeightType TEXT, 
-    FormClass REAL, 
-    BarkThicknessRatio REAL, 
-    AverageZ REAL, 
-    ReferenceHeightPercent REAL, 
-    CreatedBy TEXT, 
-    CreatedDate DateTime, 
-    ModifiedBy TEXT, 
-    ModifiedDate DateTime, 
-    RowVersion INTEGER
-);";
     }
 
     public partial class Migrations

@@ -1,8 +1,13 @@
-﻿namespace CruiseDAL.Schema
+﻿using System.Collections.Generic;
+using System.Linq;
+
+namespace CruiseDAL.Schema
 {
-    public partial class DDL
+    public class TallyHotkeyTableDefinition : ITableDefinition
     {
-        public const string CREATE_TABLE_TALLYHOTKEY =
+        public string TableName => "TallyHotkey";
+
+        public string CreateTable =>
 @"CREATE TABLE TallyHotKey (
     TallyHotKey_CN INTEGER PRIMARY KEY AUTOINCREMENT,
     CruiseID TEXT NOT NULL COLLATE NOCASE,
@@ -25,13 +30,19 @@
         REFERENCES Subpopulation (CruiseID, StratumCode, SampleGroupCode, SpeciesCode, LiveDead)
 );";
 
-        public const string CREATE_INDEX_TallyHotKey_SpeciesCode_CruiseID =
-            @"CREATE INDEX 'TallyHotKey_SpeciesCode' ON 'TallyHotKey'('SpeciesCode', 'CruiseID');";
+        public string InitializeTable => null;
 
-        public const string CREATE_INDEX_TallyHotKey_StratumCode_SampleGroupCode_SpeciesCode_LiveDead_CruiseID =
-@"CREATE INDEX TallyHotKey_StratumCode_SampleGroupCode_SpeciesCode_LiveDead_CruiseID
+        public string CreateTombstoneTable => null;
+
+        public string CreateIndexes =>
+@"CREATE INDEX 'TallyHotKey_SpeciesCode' ON 'TallyHotKey'('SpeciesCode', 'CruiseID');
+
+CREATE INDEX TallyHotKey_StratumCode_SampleGroupCode_SpeciesCode_LiveDead_CruiseID
 ON TallyHotKey
 (StratumCode, SampleGroupCode, ifnull(SpeciesCode, '') COLLATE NOCASE, ifnull(LiveDead, '') COLLATE NOCASE);";
+
+        public IEnumerable<string> CreateTriggers => Enumerable.Empty<string>();
+
     }
 
     public partial class Migrations
