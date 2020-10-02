@@ -47,31 +47,4 @@ BEGIN
     UPDATE Sale SET RowVersion = old.RowVersion + 1 WHERE Sale_CN = old.Sale_CN;
 END;";
     }
-
-    public partial class Migrations
-    {
-        public const string MIGRATE_Cruise_FORMAT_STR =
-@"INSERT INTO {0}.Cruise (
-        CruiseID,
-        SaleID,
-        Purpose,
-        DefaultUOM,
-        LogGradingEnabled,
-        Remarks,
-        CreatedBy,
-        CreatedDate,
-        ModifiedBy
-    )
-    SELECT
-        '{3}',
-        '{2}',
-        Purpose,
-        DefaultUOM,
-        LogGradingEnabled,
-        Remarks,
-        CreatedBy,
-        CreatedDate,
-        ModifiedBy
-    FROM {1}.Sale;";
-    }
 }

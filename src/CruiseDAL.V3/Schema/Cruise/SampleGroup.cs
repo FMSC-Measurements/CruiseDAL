@@ -78,10 +78,7 @@ namespace CruiseDAL.Schema
     UNIQUE (StratumCode, SampleGroupCode, CruiseID)
 );";
 
-
         public IEnumerable<string> CreateTriggers => new[] { CREATE_TRIGGER_SAMPLEGROUP_ONUPDATE, CREATE_TRIGGER_SampleGoup_OnDelete };
-
-
 
         public const string CREATE_TRIGGER_SAMPLEGROUP_ONUPDATE =
 @"CREATE TRIGGER SampleGroup_OnUpdate
@@ -112,7 +109,7 @@ BEGIN
 END;";
 
         public const string CREATE_TRIGGER_SampleGoup_OnDelete =
-@"CREATE TRIGGER SampleGroup_OnDelete 
+@"CREATE TRIGGER SampleGroup_OnDelete
 BEFORE DELETE ON SampleGroup
 FOR EACH ROW
 BEGIN
@@ -171,102 +168,4 @@ BEGIN
     );
 END;";
     }
-
-    public partial class Migrations
-    {
-        public const string MIGRATE_SAMPLEGROUP_FROM_SAMPLEGROUP =
-            "INSERT INTO {0}.SampleGroup ( " +
-                    "SampleGroup_CN, " +
-                    "CruiseID, " +
-                    "SampleGroupCode, " +
-                    "StratumCode, " +
-                    "CutLeave, " +
-                    "UOM, " +
-                    "PrimaryProduct, " +
-                    "SecondaryProduct, " +
-                    "BiomassProduct, " +
-                    "DefaultLiveDead, " +
-                    "SamplingFrequency, " +
-                    "InsuranceFrequency, " +
-                    "KZ, " +
-                    "BigBAF, " +
-                    "TallyBySubPop," +
-                    "UseExternalSampler," +
-                    "TallyMethod, " +
-                    "Description, " +
-                    "MinKPI, " +
-                    "MaxKPI, " +
-                    "SmallFPS, " +
-                    "CreatedBy, " +
-                    "CreatedDate, " +
-                    "ModifiedBy, " +
-                    "ModifiedDate, " +
-                    "RowVersion " +
-                ") " +
-                "SELECT " +
-                    "sg.SampleGroup_CN, " +
-                    "'{3}', " +
-                    "sg.Code AS SampleGroupCode, " +
-                    "st.Code AS StratumCode, " +
-                    "sg.CutLeave, " +
-                    "sg.UOM, " +
-                    "sg.PrimaryProduct, " +
-                    "sg.SecondaryProduct, " +
-                    "sg.BiomassProduct, " +
-                    "sg.DefaultLiveDead, " +
-                    "sg.SamplingFrequency, " +
-                    "sg.InsuranceFrequency, " +
-                    "sg.KZ, " +
-                    "sg.BigBAF, " +
-                    "(EXISTS (" +
-                            "SELECT * FROM {1}.CountTree AS ct " +
-                            "WHERE ct.SampleGroup_CN = sg.SampleGroup_CN AND ct.TreeDefaultValue_CN NOT NULL" +
-                        ")) AS TallyBySubPop, " +
-                    "(CASE WHEN sg.SampleSelectorType = 'ClickerSelecter' THEN 1 ELSE 0 END) AS UseExternalSampler, " +
-                    "sg.TallyMethod, " +
-                    "sg.Description, " +
-                    "sg.MinKPI, " +
-                    "sg.MaxKPI, " +
-                    "sg.SmallFPS, " +
-                    "sg.CreatedBy, " +
-                    "sg.CreatedDate, " +
-                    "sg.ModifiedBy, " +
-                    "sg.ModifiedDate, " +
-                    "sg.RowVersion " +
-                "FROM {1}.SampleGroup AS sg " +
-                "JOIN {1}.Stratum AS st USING (Stratum_CN);";
-    }
-
-    //public partial class Updater
-    //{
-    //    public const string INITIALIZE_SAMPLEGROUP_V3_FROM_SAMPLEGROUP =
-    //        "INSERT INTO SampleGroup_V3 " +
-    //        "SELECT " +
-    //        "sg.SampleGroup_CN, " +
-    //        "sg.Code AS SampleGroupCode, " +
-    //        "st.Code AS StratumCode, " +
-    //        "sg.CutLeave, " +
-    //        "sg.UOM, " +
-    //        "sg.PrimaryProduct, " +
-    //        "sg.SecondaryProduct, " +
-    //        "sg.BiomassProduct, " +
-    //        "sg.DefaultLiveDead, " +
-    //        "sg.SamplingFrequency, " +
-    //        "sg.InsuranceFrequency, " +
-    //        "sg.KZ, " +
-    //        "sg.BigBAF, " +
-    //        "sg.TallyMethod, " +
-    //        "sg.Description, " +
-    //        "sg.SampleSelectorType, " +
-    //        "sg.MinKPI, " +
-    //        "sg.MaxKPI, " +
-    //        "sg.SmallFPS, " +
-    //        "sg.CreatedBy, " +
-    //        "sg.CreatedDate, " +
-    //        "sg.ModifiedBy, " +
-    //        "sg.ModifiedDate, " +
-    //        "sg.RowVersion " +
-    //        "FROM SampleGroup AS sg " +
-    //        "JOIN Stratum AS st USING (Stratum_CN);";
-    //}
 }

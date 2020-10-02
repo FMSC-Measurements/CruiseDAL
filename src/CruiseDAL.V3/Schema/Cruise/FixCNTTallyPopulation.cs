@@ -5,8 +5,6 @@ namespace CruiseDAL.Schema
 {
     public class FixCNTTallyPopulationTableDefinition : ITableDefinition
     {
-
-
         public string TableName => "FixCNTTallyPopulation";
 
         public string CreateTable =>
@@ -30,42 +28,11 @@ namespace CruiseDAL.Schema
 
         public string CreateTombstoneTable => null;
 
-        public string CreateIndexes => 
+        public string CreateIndexes =>
 @"CREATE INDEX FixCNTTallyPopulation_StratumCode_CruiseID ON FixCNTTallyPopulation (StratumCode, CruiseID);
 
 CREATE INDEX 'FixCNTTallyPopulation_StratumCode_SampleGroupCode_SpeciesCode_LiveDead_CruiseID' ON FixCNTTallyPopulation (StratumCode, SampleGroupCode, SpeciesCode, LiveDead, CruiseID);";
 
         public IEnumerable<string> CreateTriggers => Enumerable.Empty<string>();
-    }
-
-    public partial class Migrations
-    {
-        public const string MIGRATE_FIXCNTTALLYPOPULATION =
-            "INSERT INTO {0}.FixCNTTallyPopulation ( " +
-                    "FixCNTTallyPopulation_CN, " +
-                    "CruiseID, " +
-                    "StratumCode, " +
-                    "SampleGroupCode, " +
-                    "SpeciesCode, " +
-                    "LiveDead, " +
-                    "IntervalSize, " +
-                    "Min, " +
-                    "Max " +
-                ") " +
-                "SELECT " +
-                    "fixTP.FixCNTTallyPopulation_CN, " +
-                    "'{3}', " +
-                    "st.Code AS StratumCode, " +
-                    "sg.Code AS SampleGroupCode, " +
-                    "tdv.Species, " +
-                    "tdv.LiveDead, " +
-                    "fixTP.IntervalSize, " +
-                    "fixTP.Min, " +
-                    "fixTP.Max " +
-                "FROM {1}.FixCNTTallyPopulation fixTP " +
-                "JOIN {1}.SampleGroup AS sg USING (SampleGroup_CN) " +
-                "JOIN {1}.Stratum AS st USING (Stratum_CN) " +
-                "JOIN {1}.TreeDefaultValue AS tdv USING (TreeDefaultValue_CN) " +
-            ";";
     }
 }

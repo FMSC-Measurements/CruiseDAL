@@ -31,22 +31,4 @@ CREATE INDEX FixCNTTallyClass_StratumCode_CruiseID ON FixCNTTallyClass (StratumC
 
         public IEnumerable<string> CreateTriggers => Enumerable.Empty<string>();
     }
-
-    public partial class Migrations
-    {
-        public const string MIGRATE_FIXCNTTALLYCLASS_FORMAT_STR =
-            "INSERT INTO {0}.FixCNTTallyClass ( " +
-                "FixCNTTallyClass_CN, " +
-                "CruiseID, " +
-                "StratumCode, " +
-                "Field " +
-            ") " +
-            "SELECT " +
-                "FixCNTTallyClass_CN, " +
-                "'{3}', " +
-                "st.Code AS StratumCode, " +
-                "FieldName " +
-            "FROM {1}.FixCNTTallyClass " +
-            "JOIN {1}.Stratum AS st USING (Stratum_CN);";
-    }
 }

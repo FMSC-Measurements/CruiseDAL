@@ -107,9 +107,9 @@ CREATE INDEX Log_TreeID ON Log (TreeID);";
             "END;";
 
         public const string CREATE_TRIGGER_Log_OnDelete =
-@"CREATE TRIGGER Log_OnDelete 
-BEFORE DELETE ON Log 
-FOR EACH ROW 
+@"CREATE TRIGGER Log_OnDelete
+BEFORE DELETE ON Log
+FOR EACH ROW
 BEGIN
     INSERT OR REPLACE INTO Log_Tombstone (
         LogID,
@@ -162,105 +162,4 @@ BEGIN
     );
 END;";
     }
-
-    public partial class Migrations
-    {
-        public const string MIGRATE_LOG_FROM_LOG =
-            "INSERT INTO {0}.Log ( " +
-                    "Log_CN, " +
-                    "LogID, " +
-                    "TreeID, " +
-                    "LogNumber, " +
-                    "Grade, " +
-                    "SeenDefect, " +
-                    "PercentRecoverable, " +
-                    "Length, " +
-                    "ExportGrade, " +
-                    "SmallEndDiameter, " +
-                    "LargeEndDiameter, " +
-                    "GrossBoardFoot, " +
-                    "NetBoardFoot, " +
-                    "GrossCubicFoot, " +
-                    "NetCubicFoot, " +
-                    "BoardFootRemoved, " +
-                    "CubicFootRemoved, " +
-                    "DIBClass, " +
-                    "BarkThickness, " +
-                    "CreatedBy, " +
-                    "CreatedDate, " +
-                    "ModifiedBy, " +
-                    "ModifiedDate, " +
-                    "RowVersion " +
-                ") " +
-                "SELECT " +
-                    "l.Log_CN, " +
-                    "ifnull( " +
-                        "(CASE typeof(l.Log_GUID) COLLATE NOCASE " + // ckeck the type of Log_GUID
-                            "WHEN 'TEXT' THEN " + // if text
-                                "(CASE WHEN l.Log_GUID LIKE '________-____-____-____-____________' " + // check to see if it is a properly formated guid
-                                    "THEN nullif(l.Log_GUID, '00000000-0000-0000-0000-000000000000') " + // if not a empty guid return that value otherwise return null for now
-                                    "ELSE NULL END) " + // if it is not a properly formatted guid return Log_GUID
-                            "ELSE NULL END)" + // if value is not a string return null
-                        ", (hex( randomblob(4)) || '-' || hex( randomblob(2)) " +
-                             "|| '-' || '4' || substr(hex(randomblob(2)), 2) || '-' " +
-                             "|| substr('AB89', 1 + (abs(random()) % 4), 1) || " +
-                             "substr(hex(randomblob(2)), 2) || '-' || hex(randomblob(6)))) AS LogID, " +
-                    "t.TreeID AS TreeID, " +
-                    "l.LogNumber, " +
-                    "l.Grade, " +
-                    "l.SeenDefect, " +
-                    "l.PercentRecoverable, " +
-                    "l.Length, " +
-                    "l.ExportGrade, " +
-                    "l.SmallEndDiameter, " +
-                    "l.LargeEndDiameter, " +
-                    "l.GrossBoardFoot, " +
-                    "l.NetBoardFoot, " +
-                    "l.GrossCubicFoot, " +
-                    "l.NetCubicFoot, " +
-                    "l.BoardFootRemoved, " +
-                    "l.CubicFootRemoved, " +
-                    "l.DIBClass, " +
-                    "l.BarkThickness, " +
-                    "l.CreatedBy, " +
-                    "l.CreatedDate, " +
-                    "l.ModifiedBy, " +
-                    "l.ModifiedDate, " +
-                    "l.RowVersion " +
-                "FROM {1}.Log as l " +
-                "JOIN {0}.Tree AS t USING (Tree_CN);";
-    }
-
-    //public partial class Updater
-    //{
-    //    public const string INITIALIZE_LOG_V3_FROM_LOG =
-    //        "INSERT INTO LOG_V3 " +
-    //        "SELECT " +
-    //            "l.Log_CN, " +
-    //            "l.Log_GUID AS LogID, " +
-    //            "t.TreeID AS TreeID, " +
-    //            "l.LogNumber, " +
-    //            "l.Grade, " +
-    //            "l.SeenDefect, " +
-    //            "l.PercentRecoverable, " +
-    //            "l.Length, " +
-    //            "l.ExportGrade, " +
-    //            "l.SmallEndDiameter, " +
-    //            "l.LargeEndDiameter, " +
-    //            "l.GrossBoardFoot, " +
-    //            "l.NetBoardFoot, " +
-    //            "l.GrossCubicFoot, " +
-    //            "l.NetCubicFoot, " +
-    //            "l.BoardFootRemoved, " +
-    //            "l.CubicFootRemoved, " +
-    //            "l.DIBClass, " +
-    //            "l.BarkThickness, " +
-    //            "l.CreatedBy, " +
-    //            "l.CreatedDate, " +
-    //            "l.ModifiedBy, " +
-    //            "l.ModifiedDate, " +
-    //            "l.RowVersion " +
-    //        "FROM Log as l " +
-    //        "JOIN Tree_V3 AS t USING (Tree_CN);";
-    //}
 }

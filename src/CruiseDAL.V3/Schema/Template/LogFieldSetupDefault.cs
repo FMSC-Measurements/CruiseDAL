@@ -16,30 +16,4 @@
                 "FOREIGN KEY (Field) REFERENCES LogField (Field) " +
             ");";
     }
-
-    public partial class Migrations
-    {
-        public const string MIGRATE_LOGFIELDSETUPDEFAULT_FORMAT_STR =
-            "INSERT INTO {0}.LogFieldSetupDefault ( " +
-                    "LogFieldSetupDefault_CN, " +
-                    "Field, " +
-                    "FieldOrder, " +
-                    "ColumnType, " +
-                    "Heading, " +
-                    "Width, " +
-                    "Format, " +
-                    "Behavior" +
-                ") " +
-                "SELECT " +
-                    "lfsd.LogFieldSetupDefault_CN, " +
-                    "lfsd.Field, " +
-                    "lfsd.FieldOrder, " +
-                    "lfsd.ColumnType, " +
-                    "lfsd.Heading, " +
-                    "lfsd.Width, " +
-                    "lfsd.Format, " +
-                    "lfsd.Behavior " +
-                "FROM {1}.LogFieldSetupDefault AS lfsd " +
-                "JOIN {0}.TreeField AS tf USING (Field);";
-    }
 }

@@ -41,7 +41,7 @@ namespace CruiseDAL.Schema
         public IEnumerable<string> CreateTriggers => new[] { CREATE_TRIGGER_SALE_ONUPDATE };
 
         public const string CREATE_TRIGGER_SALE_ONUPDATE =
-@"CREATE TRIGGER OnUpdateSale 
+@"CREATE TRIGGER OnUpdateSale
 AFTER UPDATE OF
     Sale_CN,
     SaleNumber,
@@ -60,52 +60,5 @@ BEGIN
     UPDATE Sale SET ModifiedDate = datetime('now', 'localtime') WHERE Sale_CN = old.Sale_CN;
     UPDATE Sale SET RowVersion = old.RowVersion + 1 WHERE Sale_CN = old.Sale_CN;
 END;";
-
-
-    }
-
-    public partial class Migrations
-    {
-        public const string MIGRATE_SALE_FORMAT_STR =
-            "INSERT INTO {0}.Sale ( " +
-                    "SaleID, " +
-                    "Sale_CN, " +
-                    "SaleNumber, " +
-                    "Name, " +
-                    "Purpose, " +
-                    "Region, " +
-                    "Forest, " +
-                    "District, " +
-                    "MeasurementYear, " +
-                    "CalendarYear, " +
-                    "LogGradingEnabled, " +
-                    "Remarks, " +
-                    "DefaultUOM, " +
-                    "CreatedBy, " +
-                    "CreatedDate, " +
-                    "ModifiedBy, " +
-                    "ModifiedDate, " +
-                    "RowVersion " +
-                ") " +
-                "SELECT " +
-                    "'{2}', " +
-                    "Sale_CN, " +
-                    "SaleNumber, " +
-                    "Name, " +
-                    "Purpose, " +
-                    "Region, " +
-                    "Forest, " +
-                    "District, " +
-                    "MeasurementYear, " +
-                    "CalendarYear, " +
-                    "LogGradingEnabled, " +
-                    "Remarks, " +
-                    "DefaultUOM, " +
-                    "CreatedBy, " +
-                    "CreatedDate, " +
-                    "ModifiedBy, " +
-                    "ModifiedDate, " +
-                    "RowVersion " +
-                "FROM {1}.Sale;";
     }
 }

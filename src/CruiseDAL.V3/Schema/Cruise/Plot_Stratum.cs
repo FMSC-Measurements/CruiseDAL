@@ -72,7 +72,7 @@ CREATE INDEX 'Plot_Stratum_PlotNumber_CuttingUnitCode_CruiseID' ON 'Plot_Stratum
             "END;";
 
         public const string CREATE_TRIGGER_Plot_Stratum_OnDelete =
-@"CREATE TRIGGER Plot_Stratum_OnDelete 
+@"CREATE TRIGGER Plot_Stratum_OnDelete
 BEFORE DELETE ON Plot_Stratum
 FOR EACH ROW
 BEGIN
@@ -105,63 +105,4 @@ BEGIN
     );
 END;";
     }
-
-    public partial class Migrations
-    {
-        public const string MIGRATE_PLOT_STRATUM_FROM_PLOT_FORMAT_STR =
-            "INSERT INTO {0}.Plot_Stratum ( " +
-                    "Plot_Stratum_CN, " +
-                    "CruiseID, " +
-                    "CuttingUnitCode, " +
-                    "PlotNumber, " +
-                    "StratumCode, " +
-                    "IsEmpty, " +
-                    "KPI, " +
-                    "ThreePRandomValue, " +
-                    "CreatedBy, " +
-                    "CreatedDate, " +
-                    "ModifiedBy, " +
-                    "ModifiedDate, " +
-                    "RowVersion " +
-                ") " +
-                "SELECT " +
-                    "p.Plot_CN AS Plot_Stratum_CN, " +
-                    "'{3}', " +
-                    "cu.Code AS CuttingUnitCode, " +
-                    "p.PlotNumber, " +
-                    "st.Code AS StratumCode, " +
-                    "(CASE p.IsEmpty WHEN 'True' THEN 1 ELSE 0 END) AS IsEmpty, " +
-                    "p.KPI, " +
-                    "p.ThreePRandomValue, " +
-                    "p.CreatedBy, " +
-                    "p.CreatedDate, " +
-                    "p.ModifiedBy, " +
-                    "p.ModifiedDate, " +
-                    "p.RowVersion " +
-                "FROM {1}.Plot AS p " +
-                "JOIN {1}.CuttingUnit AS cu USING (CuttingUnit_CN) " +
-                "JOIN {1}.Stratum AS st USING (Stratum_CN);";
-    }
-
-    //public partial class Updater
-    //{
-    //    public const string INITIALIZE_PLOT_STRATUM_FROM_PLOT =
-    //        "INSERT INTO Plot_Stratum " +
-    //        "SELECT " +
-    //        "null AS Plot_Stratum_CN," +
-    //        "cu.Code AS CuttingUnitCode, " +
-    //        "p.PlotNumber, " +
-    //        "st.Code AS StratumCode, " +
-    //        "(CASE p.IsEmpty WHEN 'True' THEN 1 ELSE 0 END) AS IsEmpty, " +
-    //        "p.KPI, " +
-    //        "p.ThreePRandomValue, " +
-    //        "p.CreatedBy, " +
-    //        "p.CreatedDate, " +
-    //        "p.ModifiedBy, " +
-    //        "p.ModifiedDate, " +
-    //        "p.RowVersion " +
-    //        "FROM Plot AS p " +
-    //        "JOIN CuttingUnit AS cu USING (CuttingUnit_CN) " +
-    //        "JOIN Stratum AS st USING (Stratum_CN);";
-    //}
 }

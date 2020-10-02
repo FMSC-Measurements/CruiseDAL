@@ -58,29 +58,5 @@ BEGIN
         OLD.Width
     );
 END;";
-
-    }
-
-    public partial class Migrations
-    {
-        public const string MIGRATE_TREEFIELDSETUP_FROM_TREEFIELDSETUP_FORMAT_STR =
-            "INSERT INTO {0}.TreeFieldSetup ( " +
-                    "CruiseID," +
-                    "StratumCode, " +
-                    "Field, " +
-                    "FieldOrder, " +
-                    "Heading, " +
-                    "Width " +
-                ") " +
-                "SELECT " +
-                    "'{3}', " +
-                    "st.Code AS StratumCode, " +
-                    "tfs.Field, " +
-                    "tfs.FieldOrder, " +
-                    "tfs.Heading, " +
-                    "tfs.Width " +
-                "FROM {1}.TreeFieldSetup AS tfs " +
-                "JOIN {1}.Stratum AS st USING (Stratum_CN)" +
-                "JOIN {0}.TreeField AS tf USING (Field);";
     }
 }

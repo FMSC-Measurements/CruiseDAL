@@ -7,7 +7,7 @@ using System.Linq;
 using Xunit;
 using Xunit.Abstractions;
 
-namespace CruiseDAL.V3.Tests
+namespace CruiseDAL.V3.Test
 {
     public class Migrator_Test : TestBase
     {
@@ -69,7 +69,7 @@ namespace CruiseDAL.V3.Tests
         [Theory]
         [InlineData("7Wolf.cruise")]
         [InlineData("MultiTest.2014.10.31.cruise")]
-        public void Migrate(string fileName)
+        public void MigrateFromV2ToV3_testUpdaterMigrate(string fileName)
         {
             var filePath = Path.Combine(TestFilesDirectory, fileName);
             // copy file to test temp dir
@@ -84,7 +84,7 @@ namespace CruiseDAL.V3.Tests
                 try
                 {
                     var destConn = destDB.OpenConnection();
-                    Migrator.Migrate(srcDB, destDB);
+                    Updater_V3.Migrate(srcDB, destDB);
 
                     var dumpPath = newFilePath + ".dump.crz3";
                     RegesterFileForCleanUp(dumpPath);
@@ -120,44 +120,6 @@ namespace CruiseDAL.V3.Tests
             }
         }
 
-        [Fact]
-        public void ListTablesIntersect()
-        {
-            using (var srcDB = new SQLiteDatastore())
-            using (var destDB = new SQLiteDatastore())
-            {
-                using (var srcConn = srcDB.OpenConnection())
-                using (var destCon = destDB.OpenConnection())
-                {
-                    srcConn.ExecuteNonQuery("CREATE TABLE A ( f1 TEXT );");
-                    srcConn.ExecuteNonQuery("CREATE TABLE B ( f1 TEXT );");
-
-                    destCon.ExecuteNonQuery("CREATE TABLE B ( f1 TEXT );");
-                    destCon.ExecuteNonQuery("CREATE TABLE C ( f1 TEXT );");
-
-                    var tables = Migrator.ListTablesIntersect(destCon, srcConn);
-                    tables.Single().Should().Be("B");
-                }
-            }
-        }
-
-        [Fact]
-        public void ListFieldsIntersect()
-        {
-            using (var srcDB = new SQLiteDatastore())
-            using (var destDB = new SQLiteDatastore())
-            {
-                using (var srcConn = srcDB.OpenConnection())
-                using (var destCon = destDB.OpenConnection())
-                {
-                    srcConn.ExecuteNonQuery("CREATE TABLE A ( f1 TEXT, f2 TEXT );");
-
-                    destCon.ExecuteNonQuery("CREATE TABLE A ( f2 TEXT, f3 TEXT );");
-
-                    var tables = Migrator.ListFieldsIntersect(destCon, srcConn, "A");
-                    tables.Single().Should().Be("\"f2\"");
-                }
-            }
-        }
+        
     }
 }

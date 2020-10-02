@@ -7,15 +7,15 @@ namespace CruiseDAL.Schema
         public string TableName => "CuttingUnit";
 
         public string CreateTable =>
-@"CREATE TABLE CuttingUnit( 
+@"CREATE TABLE CuttingUnit(
     CuttingUnit_CN INTEGER PRIMARY KEY AUTOINCREMENT,
-    Code TEXT NOT NULL COLLATE NOCASE, 
-    CruiseID TEXT NOT NULL COLLATE NOCASE, 
-    Area REAL DEFAULT 0.0, 
-    Description TEXT, 
-    LoggingMethod TEXT, 
+    Code TEXT NOT NULL COLLATE NOCASE,
+    CruiseID TEXT NOT NULL COLLATE NOCASE,
+    Area REAL DEFAULT 0.0,
+    Description TEXT,
+    LoggingMethod TEXT,
     PaymentUnit TEXT,
-    Rx TEXT, 
+    Rx TEXT,
     CreatedBy TEXT DEFAULT 'none',
     CreatedDate DateTime DEFAULT (datetime('now', 'localtime')),
     ModifiedBy TEXT,
@@ -30,13 +30,13 @@ namespace CruiseDAL.Schema
 
         public string CreateTombstoneTable =>
 @"CREATE TABLE CuttingUnit_Tombstone (
-    Code TEXT NOT NULL COLLATE NOCASE, 
-    CruiseID TEXT NOT NULL COLLATE NOCASE, 
-    Area REAL DEFAULT 0.0, 
-    Description TEXT, 
-    LoggingMethod TEXT, 
+    Code TEXT NOT NULL COLLATE NOCASE,
+    CruiseID TEXT NOT NULL COLLATE NOCASE,
+    Area REAL DEFAULT 0.0,
+    Description TEXT,
+    LoggingMethod TEXT,
     PaymentUnit TEXT,
-    Rx TEXT, 
+    Rx TEXT,
     CreatedBy TEXT,
     CreatedDate DateTime,
     ModifiedBy TEXT,
@@ -53,7 +53,6 @@ namespace CruiseDAL.Schema
             CREATE_TRIGGER_CUTTINGUNIT_ONUPDATE,
             CREATE_TRIGGER_CuttingUnit_OnDelete,
         };
-
 
         public const string CREATE_TRIGGER_CUTTINGUNIT_ONUPDATE =
 @"CREATE TRIGGER CuttingUnit_OnUpdate
@@ -74,10 +73,10 @@ END; ";
         public const string CREATE_TRIGGER_CuttingUnit_OnDelete =
 @"CREATE TRIGGER CuttingUnit_OnDelete
 BEFORE DELETE ON CuttingUnit
-FOR EACH ROW 
-BEGIN 
+FOR EACH ROW
+BEGIN
     INSERT OR REPLACE INTO CuttingUnit_Tombstone (
-        Code, 
+        Code,
         CruiseID,
         Area,
         LoggingMethod,
@@ -88,7 +87,7 @@ BEGIN
         ModifiedBy,
         ModifiedDate
     ) VALUES (
-        OLD.Code, 
+        OLD.Code,
         OLD.CruiseID,
         OLD.Area,
         OLD.LoggingMethod,
@@ -100,30 +99,5 @@ BEGIN
         OLD.ModifiedDate
     );
 END;;";
-    }
-
-    public partial class Migrations
-    {
-        public const string MIGRATE_CUTTINGUNIT_FORMAT_STR =
-            "INSERT INTO {0}.CuttingUnit ( " +
-                    "CuttingUnit_CN, " +
-                    "CruiseID, " +
-                    "Code, " +
-                    "Area, " +
-                    "Description, " +
-                    "LoggingMethod, " +
-                    "PaymentUnit, " +
-                    "Rx " +
-                ") " +
-                "SELECT " +
-                    "CuttingUnit_CN, " +
-                    "'{3}', " +
-                    "Code, " +
-                    "Area, " +
-                    "Description, " +
-                    "LoggingMethod, " +
-                    "PaymentUnit, " +
-                    "Rx " +
-                "FROM {1}.CuttingUnit; ";
     }
 }

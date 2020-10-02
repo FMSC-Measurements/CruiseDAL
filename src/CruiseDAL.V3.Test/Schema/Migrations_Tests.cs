@@ -1,7 +1,5 @@
 ﻿using CruiseDAL.DataObjects;
-using CruiseDAL.V3.Tests;
 using FluentAssertions;
-using FMSC.ORM.SQLite;
 
 using System;
 using System.Collections.Generic;
@@ -9,12 +7,14 @@ using System.IO;
 using System.Linq;
 using Xunit;
 using Xunit.Abstractions;
+using System.Reflection;
+using CruiseDAL.Migrators;
 
 #if NET452 || NET461
 using MoreLinq;
 #endif
 
-namespace CruiseDAL.Tests.Schema
+namespace CruiseDAL.V3.Test
 {
     public class Migrations_Tests : TestBase
     {
@@ -91,23 +91,12 @@ namespace CruiseDAL.Tests.Schema
         }
 
         [Fact]
-        public void GetMigrateCommands_Contains_All_Public_Static_String_commands()
+        public void ContainsAllMigrators()
         {
-            var commandsLookup = CruiseDAL.Schema.Migrations.GetMigrateCommands("to", "from").ToDictionary(x => x);
+            var allMigratorTypes = Assembly.GetExecutingAssembly()
+                .GetTypes().Where(x => typeof(IMigrator).IsAssignableFrom(x)).ToArray();
 
-            var type = typeof(CruiseDAL.Schema.Migrations);
-
-            var fields = type.GetFields(System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags.Public)
-                .Where(x => x.FieldType == typeof(string));
-
-            foreach (var field in fields)
-            {
-                var commandFormat = (string)field.GetValue(null);
-                var command = string.Format(commandFormat, "to", "from");
-                commandsLookup.ContainsKey(command).Should().BeTrue(field.Name);
-            }
-
-            commandsLookup.Count().Should().Be(fields.Count());
+            Migrator.MIGRATORS.Select(x => x.GetType()).Should().Contain(allMigratorTypes);
         }
 
         [Theory]

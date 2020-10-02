@@ -64,7 +64,6 @@ namespace CruiseDAL.Schema
 
         public IEnumerable<string> CreateTriggers => new[] { CREATE_TRIGGER_STRATUM_ONUPDATE, CREATE_TRIGGER_Stratum_OnDelete };
 
-
         public const string CREATE_TRIGGER_STRATUM_ONUPDATE =
 @"CREATE TRIGGER Stratum_OnUpdate
 AFTER UPDATE OF
@@ -135,53 +134,5 @@ BEGIN
         OLD.RowVersion
     );
 END;";
-
-    }
-
-    public partial class Migrations
-    {
-        public const string MIGRATE_STRATUM_FORMAT_STR =
-            "INSERT INTO {0}.Stratum ( " +
-                    "Code, " +
-                    "CruiseID, " +
-                    "Description, " +
-                    "Method, " +
-                    "BasalAreaFactor, " +
-                    "FixedPlotSize, " +
-                    "KZ3PPNT, " +
-                    "SamplingFrequency, " +
-                    "HotKey, " +
-                    "FBSCode, " +
-                    "YieldComponent, " +
-                    "VolumeFactor, " +
-                    "Month, " +
-                    "Year, " +
-                    "CreatedBy, " +
-                    "CreatedDate, " +
-                    "ModifiedBy, " +
-                    "ModifiedDate, " +
-                    "RowVersion " +
-                ") " +
-                "SELECT " +
-                    "Code, " +
-                    "'{3}', " +
-                    "Description, " +
-                    "Method, " +
-                    "BasalAreaFactor, " +
-                    "FixedPlotSize, " +
-                    "KZ3PPNT, " +
-                    "SamplingFrequency, " +
-                    "HotKey, " +
-                    "FBSCode, " +
-                    "YieldComponent, " +
-                    "VolumeFactor, " +
-                    "Month, " +
-                    "Year, " +
-                    "CreatedBy, " +
-                    "CreatedDate, " +
-                    "ModifiedBy, " +
-                    "ModifiedDate, " +
-                    "RowVersion " +
-                "FROM {1}.Stratum;";
     }
 }
