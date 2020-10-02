@@ -1,7 +1,5 @@
 ﻿using CruiseDAL.DataObjects;
 using CruiseDAL.V2.Models;
-using CruiseDAL.V3.Models;
-using CruiseDAL.V3.Tests;
 using FluentAssertions;
 using System.IO;
 using System.Linq;
