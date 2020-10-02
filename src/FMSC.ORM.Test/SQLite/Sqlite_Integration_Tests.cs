@@ -1,4 +1,5 @@
 ﻿using FluentAssertions;
+using FMSC.ORM.Core;
 using System;
 using System.Data.Common;
 using System.Globalization;
@@ -13,6 +14,23 @@ namespace FMSC.ORM.SQLite
     {
         public Sqlite_Integration_Test(ITestOutputHelper output) : base(output)
         {
+        }
+
+        [Fact]
+        // the official behavior is, if a command is executed without assigning the 
+        // Transaction property an exception should be thrown. However through testing 
+        // it apears this is not so. This test should fail if that behavior is changed
+        // https://docs.microsoft.com/en-us/dotnet/framework/data/adonet/local-transactions
+        public void ExecuteCommandWithOutAssigningTrasaction()
+        {
+            using(var connection = GetOpenConnection())
+            {
+                var transaction = connection.BeginTransaction();
+                var command = connection.CreateCommand();
+                command.CommandText = "CREATE TABLE a (something TEXT);";
+                var result = command.ExecuteScalar();
+                transaction.Commit();
+            }
         }
 
         [Theory]
