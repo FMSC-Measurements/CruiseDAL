@@ -212,6 +212,34 @@ namespace FMSC.ORM.Core
 
         #region CRUD
 
+        #region Query
+        public static IEnumerable<TResult> Query<TResult>(this DbConnection connection, string commandText, object[] paramaters = null, DbTransaction transaction = null, IExceptionProcessor exceptionProcessor = null) where TResult : new()
+        {
+            var discription = GlobalEntityDescriptionLookup.Instance.LookUpEntityByType(typeof(TResult));
+
+            using (var command = connection.CreateCommand())
+            {
+                command.CommandText = commandText;
+                command.SetParams(paramaters);
+
+                return new QueryResult<TResult>(connection, command, transaction, exceptionProcessor);
+            }
+        }
+
+        public static IEnumerable<TResult> Query2<TResult>(this DbConnection connection, string commandText, object paramaters = null, DbTransaction transaction = null, IExceptionProcessor exceptionProcessor = null) where TResult : new()
+        {
+            var discription = GlobalEntityDescriptionLookup.Instance.LookUpEntityByType(typeof(TResult));
+
+            using (var command = connection.CreateCommand())
+            {
+                command.CommandText = commandText;
+                command.AddParams(paramaters);
+
+                return new QueryResult<TResult>(connection, command, transaction, exceptionProcessor);
+            }
+        }
+        #endregion
+
         #region QueryScalar
 
         public static IEnumerable<TResult> QueryScalar<TResult>(this DbConnection connection, string commandText,
