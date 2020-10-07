@@ -30,5 +30,20 @@ namespace FMSC.ORM.Util
             }
             yield return back;
         }
+
+        public static int CombineHashs<T>(this IEnumerable<T> @this)
+        {
+            var combined = 0;
+            foreach(var i in @this)
+            {
+                combined = CombineHash(combined, i.GetHashCode());
+            }
+            return combined;
+        }
+
+        private static int CombineHash(int h1, int h2)
+        {
+            return ((h1 << 5) + h1) ^ h2;
+        }
     }
 }

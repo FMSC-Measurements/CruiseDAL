@@ -43,11 +43,11 @@ namespace FMSC.ORM.EntityModel.Support
             var reader = new TestSupport.ObjectDataReader<POCOMultiTypeObject>(new POCOMultiTypeObject[] { poco });
             Assert.True(reader.Read());
 
-            var inflator = new EntityInflator(new EntityDescription(typeof(POCOMultiTypeObject)));
+            var description = new EntityDescription(typeof(POCOMultiTypeObject));
+            var inflator = new EntityInflator(reader);
 
             var data = new POCOMultiTypeObject();
-            inflator.CheckOrdinals(reader);
-            inflator.ReadData(reader, data);
+            inflator.ReadData(reader, data, description);
 
             data.Should().BeEquivalentTo(poco, x =>
             x.Excluding(y => y.IgnoredField)
@@ -94,10 +94,10 @@ namespace FMSC.ORM.EntityModel.Support
             var reader = new TestSupport.ObjectDataReader<POCOMultiTypeObject>(new POCOMultiTypeObject[] { poco });
             Assert.True(reader.Read());
 
-            var inflator = new EntityInflator(new EntityDescription(typeof(POCOMultiTypeObject)));
+            var description = new EntityDescription(typeof(POCOMultiTypeObject));
+            var inflator = new EntityInflator(reader);
 
-            inflator.CheckOrdinals(reader);
-            inflator.ReadPrimaryKey(reader).Should().Be(1);
+            inflator.ReadPrimaryKey(reader, description).Should().Be(1);
         }
 
         //[Fact]

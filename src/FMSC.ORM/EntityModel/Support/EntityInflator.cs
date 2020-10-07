@@ -1,4 +1,5 @@
 ﻿using FMSC.ORM.Core;
+using FMSC.ORM.Util;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -7,23 +8,20 @@ namespace FMSC.ORM.EntityModel.Support
 {
     public class EntityInflator
     {
-        private Dictionary<string, int> OrdinalLookup { get; set; }
+        private IDictionary<string, int> OrdinalLookup { get; set; }
 
-        protected EntityDescription EntityDescription { get; }
-
-        public EntityInflator(EntityDescription entity)
+        public EntityInflator(IDataReader reader)
         {
-            EntityDescription = entity;
+            OrdinalLookup = GetOrdinalLookup(reader);
         }
 
-        /// <summary>
-        /// Prepares the DataObjectDiscription instance to read data from <paramref name="reader"/>
-        /// use before calling ReadData
-        /// </summary>
-        /// <param name="reader"></param>
-        public void CheckOrdinals(System.Data.IDataReader reader)
+        public static IDictionary<string, int> GetOrdinalLookup(IDataReader reader)
         {
+            //HACK with microsoft.data.sqlite calling GetOrdinal throws exception if reader is empty
+            //if(reader is DbDataReader && ((DbDataReader)reader).HasRows == false) { return; }
+
             var fieldCount = reader.FieldCount;
+            var fields = new string[fieldCount];
             var ordinalLookup = new Dictionary<string, int>(fieldCount);
 
             for (int i = 0; i < fieldCount; i++)
@@ -31,6 +29,7 @@ namespace FMSC.ORM.EntityModel.Support
                 var fieldName = reader.GetName(i).ToLower(System.Globalization.CultureInfo.InvariantCulture);
                 try
                 {
+                    fields[i] = fieldName;
                     ordinalLookup.Add(fieldName, i);
                 }
                 catch
@@ -38,14 +37,19 @@ namespace FMSC.ORM.EntityModel.Support
                     //ignore exception when adding duplicate or null value
                 }
             }
-
-            OrdinalLookup = ordinalLookup;
+            var hash = fields.CombineHashs();
+            return ordinalLookup;
         }
 
-        public void ReadData(System.Data.IDataReader reader, Object obj)
+        public void ReadData(System.Data.IDataReader reader, Object obj, EntityDescription discription)
         {
-            var ordinalLookup = OrdinalLookup;
-            foreach (var field in EntityDescription.Fields)
+            ReadData(reader, obj, discription, OrdinalLookup);
+        }
+
+        public void ReadData(System.Data.IDataReader reader, Object obj, EntityDescription discription, IDictionary<string, int> ordinalLookup)
+        {
+            var fields = discription.Fields;
+            foreach (var field in fields)
             {
                 if (ReadField(reader, ordinalLookup, field, out var value))
                 {
@@ -53,7 +57,7 @@ namespace FMSC.ORM.EntityModel.Support
                 }
             }
 
-            var keyField = EntityDescription.Fields.PrimaryKeyField;
+            var keyField = fields.PrimaryKeyField;
             if (keyField != null)
             {
                 if (ReadField(reader, ordinalLookup, keyField, out var value))
@@ -68,9 +72,14 @@ namespace FMSC.ORM.EntityModel.Support
             }
         }
 
-        public object ReadPrimaryKey(System.Data.IDataReader reader)
+        public object ReadPrimaryKey(System.Data.IDataReader reader, EntityDescription discription)
         {
-            var keyField = EntityDescription.Fields.PrimaryKeyField;
+            return ReadPrimaryKey(reader, OrdinalLookup, discription);
+        }
+
+        public object ReadPrimaryKey(System.Data.IDataReader reader, IDictionary<string, int> ordinalMapping, EntityDescription discription)
+        {
+            var keyField = discription.Fields.PrimaryKeyField;
 
             if (keyField != null && ReadField(reader, OrdinalLookup, keyField, out var value))
             { return value; }
@@ -78,14 +87,13 @@ namespace FMSC.ORM.EntityModel.Support
             { return null; }
         }
 
-        private static bool ReadField(IDataReader reader, Dictionary<string, int> ordinalMapping, FieldInfo field, out object value)
+        private static bool ReadField(IDataReader reader, IDictionary<string, int> ordinalMapping, FieldInfo field, out object value)
         {
             try
             {
                 var fieldName = (field.Alias ?? field.Name).ToLower(System.Globalization.CultureInfo.InvariantCulture);
-                int ordinal = -1;
 
-                if (ordinalMapping.TryGetValue(fieldName, out ordinal))
+                if (ordinalMapping.TryGetValue(fieldName, out var ordinal))
                 {
                     var runtimeType = field.RunTimeType;
                     object dbValue = null;
