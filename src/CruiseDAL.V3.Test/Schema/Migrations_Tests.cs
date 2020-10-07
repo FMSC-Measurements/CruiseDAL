@@ -143,9 +143,9 @@ namespace CruiseDAL.V3.Test
                         value);
                 }
 
-
                 toDb.AttachDB(fromDb, "v2");
-                toDb.Execute(String.Format(CruiseDAL.Schema.Migrations.MIGRATE_LOGGRADEAUDITRULE, "main", "v2"));
+                var command = new LogGradeAuditRuleMigrator().MigrateToV3("main", "v2", Guid.NewGuid().ToString(), Guid.NewGuid().ToString());
+                toDb.Execute(command);
 
                 var results = toDb.From<CruiseDAL.V3.Models.LogGradeAuditRule_V3>().Query().ToArray();
                 results.Should().NotBeEmpty();
