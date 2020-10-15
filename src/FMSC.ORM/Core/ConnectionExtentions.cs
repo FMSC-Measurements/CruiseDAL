@@ -1,4 +1,5 @@
 ﻿using Backpack.SqlBuilder;
+using FMSC.ORM.Core.SQL.QueryBuilder;
 using FMSC.ORM.EntityModel;
 using FMSC.ORM.EntityModel.Support;
 using FMSC.ORM.Logging;
@@ -211,6 +212,22 @@ namespace FMSC.ORM.Core
         #endregion ExecuteScalar
 
         #region CRUD
+
+        #region From
+        //public static QueryBuilder<TResult> From<TResult>(this DbConnection connection, ICommandBuilder commandBuilder = null) where TResult : class, new()
+        //{
+        //    return From<TResult>(connection, (TableOrSubQuery)null, (ICommandBuilder)null);
+        //}
+
+        public static QueryBuilder<TResult> From<TResult>(this DbConnection connection, TableOrSubQuery source = null, ICommandBuilder commandBuilder = null) where TResult : class, new()
+        {
+            commandBuilder = commandBuilder ?? DefaultCommandBuilder;
+            var discription = GlobalEntityDescriptionLookup.Instance.LookUpEntityByType(typeof(TResult));
+            SqlSelectBuilder builder = commandBuilder.BuildSelect(source ?? discription.Source, discription.Fields);
+
+            return new QueryBuilder<TResult>(connection, builder);
+        }
+        #endregion
 
         #region Query
         public static IEnumerable<TResult> Query<TResult>(this DbConnection connection, string commandText, object[] paramaters = null, DbTransaction transaction = null, IExceptionProcessor exceptionProcessor = null) where TResult : new()
