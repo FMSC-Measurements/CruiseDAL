@@ -16,11 +16,10 @@ namespace CruiseDAL.Schema
     TreeID TEXT NOT NULL COLLATE NOCASE,
     Diameter REAL Default 0.0,
     DiameterType TEXT,
-    CreatedBy TEXT DEFAULT '',
-    CreatedDate DateTime DEFAULT (datetime('now', 'localtime')),
-    ModifiedBy TEXT ,
-    ModifiedDate DateTime ,
-    RowVersion INTEGER DEFAULT 0,
+    CreatedBy TEXT DEFAULT 'none',
+    Created_TS DATETIME DEFAULT (CURRENT_TIMESTAMP),
+    ModifiedBy TEXT,
+    Modified_TS DATETIME,
         
     CHECK(StemID LIKE '________-____-____-____-____________'),        
 
@@ -37,10 +36,10 @@ namespace CruiseDAL.Schema
     Diameter REAL,
     DiameterType TEXT,
     CreatedBy TEXT,
-    CreatedDate DateTime,
-    ModifiedBy TEXT ,
-    ModifiedDate DateTime ,
-    RowVersion INTEGER
+    Created_TS DATETIME,
+    ModifiedBy TEXT,
+    Modified_TS DATETIME,
+    Deleted_TS DATETIME
 );";
 
         public string CreateIndexes => @"CREATE INDEX Stem_TreeID ON Stem (TreeID);";
@@ -57,8 +56,7 @@ AFTER UPDATE OF
 ON Stem 
 FOR EACH ROW 
 BEGIN 
-    UPDATE Stem SET ModifiedDate = datetime('now', 'localtime') WHERE Stem_CN = old.Stem_CN; 
-    UPDATE Stem SET RowVersion = RowVersion + 1 WHERE Stem_CN = old.Stem_CN;
+    UPDATE Stem SET Modified_TS = CURRENT_TIMESTAMP WHERE Stem_CN = old.Stem_CN; 
 END;";
 
         public const string CREATE_TRIGGER_Stem_OnDelete =
@@ -72,20 +70,20 @@ BEGIN
         Diameter,
         DiameterType,
         CreatedBy,
-        CreatedDate,
+        Created_TS,
         ModifiedBy,
-        ModifiedDate,
-        RowVersion
+        Modified_TS,
+        Deleted_TS
     ) VALUES (
         OLD.StemID,
         OLD.TreeID,
         OLD.Diameter,
         OLD.DiameterType,
         OLD.CreatedBy,
-        OLD.CreatedDate,
+        OLD.Created_TS,
         OLD.ModifiedBy,
-        OLD.ModifiedDate,
-        OLD.RowVersion
+        OLD.Modified_TS,
+        CURRENT_TIMESTAMP
     );
 END;";
 

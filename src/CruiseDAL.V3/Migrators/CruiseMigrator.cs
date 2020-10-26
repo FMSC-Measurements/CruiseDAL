@@ -17,7 +17,7 @@ return $@"INSERT INTO {toDbName}.Cruise (
     LogGradingEnabled,
     Remarks,
     CreatedBy,
-    CreatedDate,
+    Created_TS,
     ModifiedBy
 )
 SELECT

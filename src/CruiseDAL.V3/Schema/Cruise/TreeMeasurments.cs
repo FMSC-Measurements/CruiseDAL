@@ -87,14 +87,15 @@ namespace CruiseDAL.Schema
     IsFallBuckScale BOOLEAN Default 0,
 
     MetaData TEXT,
-
     Initials TEXT,
+
     CreatedBy TEXT DEFAULT 'none',
-    CreatedDate DateTime DEFAULT (datetime('now', 'localtime')) ,
+    Created_TS DATETIME DEFAULT (CURRENT_TIMESTAMP),
     ModifiedBy TEXT,
-    ModifiedDate DateTime ,
-    RowVersion INTEGER DEFAULT 0,
+    Modified_TS DATETIME,
+
     UNIQUE (TreeID),
+
     FOREIGN KEY (TreeID) REFERENCES Tree (TreeID) ON DELETE CASCADE ON UPDATE CASCADE
 )";
 
@@ -140,19 +141,25 @@ namespace CruiseDAL.Schema
     IsFallBuckScale BOOLEAN,
 
     MetaData TEXT,
-
     Initials TEXT,
+
     CreatedBy TEXT,
-    CreatedDate DateTime,
+    Created_TS DATETIME,
     ModifiedBy TEXT,
-    ModifiedDate DateTime ,
-    RowVersion INTEGER,
-    UNIQUE (TreeID)
-);";
+    Modified_TS DATETIME,
+    Deleted_TS DATETIME
+);
+
+CREATE INDEX TreeMeasurment_Tombstone_TreeID ON TreeMeasurment_Tombstone 
+(TreeID);";
 
         public string CreateIndexes => null;
 
-        public IEnumerable<string> CreateTriggers => new[] { CREATE_TRIGGER_TREEMEASURMENTS_ONUPDATE, CREATE_TRIGGER_TreeMeasurment_OnDelete };
+        public IEnumerable<string> CreateTriggers => new[] 
+        { 
+            CREATE_TRIGGER_TREEMEASURMENTS_ONUPDATE, 
+            CREATE_TRIGGER_TreeMeasurment_OnDelete 
+        };
 
         public const string CREATE_TRIGGER_TREEMEASURMENTS_ONUPDATE =
 @"CREATE TRIGGER TREEMEASURMENT_ONUPDATE
@@ -189,8 +196,7 @@ AFTER UPDATE OF
 ON TreeMeasurment
 FOR EACH ROW
 BEGIN
-    UPDATE TreeMeasurment SET RowVersion = old.RowVersion + 1 WHERE TreeMeasurment_CN = old.TreeMeasurment_CN;
-    UPDATE TreeMeasurment SET ModifiedDate = datetime('now', 'localtime') WHERE TreeMeasurment_CN = old.TreeMeasurment_CN;
+    UPDATE TreeMeasurment SET Modified_TS = CURRENT_TIMESTAMP WHERE TreeMeasurment_CN = old.TreeMeasurment_CN;
 END;";
 
         public const string CREATE_TRIGGER_TreeMeasurment_OnDelete =
@@ -239,11 +245,12 @@ BEGIN
         MetaData,
 
         Initials,
+
         CreatedBy,
-        CreatedDate,
+        Created_TS,
         ModifiedBy,
-        ModifiedDate ,
-        RowVersion
+        Modified_TS,
+        Deleted_TS
     ) VALUES (
         OLD.TreeID,
 
@@ -285,11 +292,12 @@ BEGIN
         OLD.MetaData,
 
         OLD.Initials,
+
         OLD.CreatedBy,
-        OLD.CreatedDate,
+        OLD.Created_TS,
         OLD.ModifiedBy,
-        OLD.ModifiedDate ,
-        OLD.RowVersion
+        OLD.Modified_TS,
+        CURRENT_TIMESTAMP
     );
 END;";
     }

@@ -9,7 +9,7 @@ namespace CruiseDAL.Schema
         public string CreateTable =>
 @"CREATE TABLE CuttingUnit(
     CuttingUnit_CN INTEGER PRIMARY KEY AUTOINCREMENT,
-    Code TEXT NOT NULL COLLATE NOCASE,
+    CuttingUnitCode TEXT NOT NULL COLLATE NOCASE,
     CruiseID TEXT NOT NULL COLLATE NOCASE,
     Area REAL DEFAULT 0.0,
     Description TEXT,
@@ -17,34 +17,37 @@ namespace CruiseDAL.Schema
     PaymentUnit TEXT,
     Rx TEXT,
     CreatedBy TEXT DEFAULT 'none',
-    CreatedDate DateTime DEFAULT (datetime('now', 'localtime')),
+    Created_TS DATETIME DEFAULT (CURRENT_TIMESTAMP),
     ModifiedBy TEXT,
-    ModifiedDate DateTime ,
-    RowVersion INTEGER DEFAULT 0,
-    UNIQUE(Code, CruiseID),
+    Modified_TS DATETIME ,
+
+    UNIQUE(CuttingUnitCode, CruiseID),
+
     FOREIGN KEY (CruiseID) REFERENCES Cruise (CruiseID) ON DELETE CASCADE,
-    CHECK (length(Code) > 0)
+
+    CHECK (length(CuttingUnitCode) > 0)
 );";
 
         public string InitializeTable => null;
 
         public string CreateTombstoneTable =>
 @"CREATE TABLE CuttingUnit_Tombstone (
-    Code TEXT NOT NULL COLLATE NOCASE,
+    CuttingUnitCode TEXT NOT NULL COLLATE NOCASE,
     CruiseID TEXT NOT NULL COLLATE NOCASE,
-    Area REAL DEFAULT 0.0,
+    Area REAL,
     Description TEXT,
     LoggingMethod TEXT,
     PaymentUnit TEXT,
     Rx TEXT,
     CreatedBy TEXT,
-    CreatedDate DateTime,
+    Created_TS DATETIME,
     ModifiedBy TEXT,
-    ModifiedDate DateTime ,
-    RowVersion INTEGER DEFAULT 0,
-    UNIQUE(Code, CruiseID),
-    CHECK (length(Code) > 0)
-);";
+    Modified_TS DATETIME,
+    Deleted_TS DATETIME
+);
+
+CREATE INDEX CuttingUnit_Tombstone_CruiseID_CuttingUnitCode ON CuttingUnit_Tombstone 
+(CruiseID, CuttingUnitCode);";
 
         public string CreateIndexes => null;
 
@@ -57,7 +60,7 @@ namespace CruiseDAL.Schema
         public const string CREATE_TRIGGER_CUTTINGUNIT_ONUPDATE =
 @"CREATE TRIGGER CuttingUnit_OnUpdate
 AFTER UPDATE OF
-    Code,
+    CuttingUnitCode,
     Area,
     Description,
     LoggingMethod,
@@ -66,8 +69,7 @@ AFTER UPDATE OF
 ON CuttingUnit
 FOR EACH ROW
 BEGIN
-    UPDATE CuttingUnit SET ModifiedDate = datetime('now', 'localtime') WHERE CuttingUnit_CN = old.CuttingUnit_CN;
-    UPDATE CuttingUnit SET RowVersion = old.RowVersion + 1 WHERE CuttingUnit_CN = old.CuttingUnit_CN;
+    UPDATE CuttingUnit SET ModifiedDate = CURRENT_TIMESTAMP WHERE CuttingUnit_CN = old.CuttingUnit_CN;
 END; ";
 
         public const string CREATE_TRIGGER_CuttingUnit_OnDelete =
@@ -76,28 +78,30 @@ BEFORE DELETE ON CuttingUnit
 FOR EACH ROW
 BEGIN
     INSERT OR REPLACE INTO CuttingUnit_Tombstone (
-        Code,
+        CuttingUnitCode,
         CruiseID,
         Area,
         LoggingMethod,
         PaymentUnit,
         Rx,
         CreatedBy,
-        CreatedDate,
+        Created_TS,
         ModifiedBy,
-        ModifiedDate
+        Modified_TS,
+        Deleted_TS
     ) VALUES (
-        OLD.Code,
+        OLD.CuttingUnitCode,
         OLD.CruiseID,
         OLD.Area,
         OLD.LoggingMethod,
         OLD.PaymentUnit,
         OLD.Rx,
         OLD.CreatedBy,
-        OLD.CreatedDate,
+        OLD.Created_TS,
         OLD.ModifiedBy,
-        OLD.ModifiedDate
+        OLD.Modified_TS,
+        CURRENT_TIMESTAMP
     );
-END;;";
+END;";
     }
 }

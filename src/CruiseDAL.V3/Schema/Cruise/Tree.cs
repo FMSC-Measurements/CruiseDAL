@@ -22,11 +22,10 @@ namespace CruiseDAL.Schema
     TreeNumber INTEGER NOT NULL,
     CountOrMeasure TEXT DEFAULT 'M' COLLATE NOCASE, -- field is for compatibility with older schema. because plot cruising still requires a tree record to record non measure trees                               // initials of the cruiser taking measurments
 
-    CreatedBy TEXT DEFAULT '',
-    CreatedDate DateTime DEFAULT (datetime('now', 'localtime')),
+    CreatedBy TEXT DEFAULT 'none',
+    Created_TS DATETIME DEFAULT (CURRENT_TIMESTAMP),
     ModifiedBy TEXT,
-    ModifiedDate DateTime,
-    RowVersion INTEGER DEFAULT 0,
+    Modified_TS DATETIME,
 
     UNIQUE (TreeID),
 
@@ -35,7 +34,7 @@ namespace CruiseDAL.Schema
     CHECK (LiveDead IN ('L', 'D') OR LiveDead IS NULL),
 
     FOREIGN KEY (CuttingUnitCode, CruiseID)
-        REFERENCES CuttingUnit (Code, CruiseID) ON DELETE CASCADE ON UPDATE CASCADE,
+        REFERENCES CuttingUnit (CuttingUnitCode, CruiseID) ON DELETE CASCADE ON UPDATE CASCADE,
     FOREIGN KEY (SampleGroupCode, StratumCode, CruiseID)
         REFERENCES SampleGroup (SampleGroupCode, StratumCode, CruiseID) ON DELETE CASCADE ON UPDATE CASCADE,
     FOREIGN KEY (PlotNumber, CuttingUnitCode, CruiseID)
@@ -62,13 +61,17 @@ namespace CruiseDAL.Schema
     CountOrMeasure TEXT COLLATE NOCASE,
 
     CreatedBy TEXT,
-    CreatedDate DateTime,
+    Created_TS DATETIME,
     ModifiedBy TEXT,
-    ModifiedDate DateTime,
-    RowVersion INTEGER,
+    Modified_TS DATETIME,
+    Deleted_TS DATETIME
+);
 
-    UNIQUE (TreeID)
-);";
+CREATE INDEX Tree_Tombstone_TreeID ON Tree_Tombstone 
+(TreeID);
+
+CREATE INDEX Tree_Tombstone_CruiseID_CuttingUnitCode_PlotNumber_TreeNumber ON Tree_Tombstone 
+(CruiseID, CuttingUnitCode, PlotNumber, TreeNumber);";
 
         public string CreateIndexes =>
 @"CREATE INDEX Tree_TreeNumber_CruiseID ON Tree (TreeNumber, CruiseID);
@@ -100,23 +103,22 @@ CREATE UNIQUE INDEX Tree_TreeNumber_CuttingUnitCode_CruiseID ON Tree
         public IEnumerable<string> CreateTriggers => new[] { CREATE_TRIGGER_TREE_ONUPDATE, CREATE_TRIGGER_Tree_OnDelete };
 
         public const string CREATE_TRIGGER_TREE_ONUPDATE =
-            "CREATE TRIGGER Tree_OnUpdate " +
-            "AFTER UPDATE OF " +
-                "TreeID, " +
-                "CuttingUnitCode, " +
-                "StratumCode, " +
-                "SampleGroupCode, " +
-                "SpeciesCode, " +
-                "LiveDead, " +
-                "PlotNumber, " +
-                "TreeNumber, " +
-                "CountOrMeasure " +
-            "ON Tree " +
-            "FOR EACH ROW " +
-            "BEGIN " +
-                "UPDATE Tree SET ModifiedDate = datetime('now', 'localtime') WHERE Tree_CN = old.Tree_CN; " +
-                "UPDATE Tree SET RowVersion = old.RowVersion + 1 WHERE Tree_CN = old.Tree_CN; " +
-            "END; ";
+@"CREATE TRIGGER Tree_OnUpdate
+AFTER UPDATE OF
+    TreeID,
+    CuttingUnitCode,
+    StratumCode,
+    SampleGroupCode,
+    SpeciesCode,
+    LiveDead,
+    PlotNumber,
+    TreeNumber,
+    CountOrMeasure
+ON Tree
+FOR EACH ROW
+BEGIN
+    UPDATE Tree SET Modified_TS = CURRENT_TIMESTAMP WHERE Tree_CN = old.Tree_CN;
+END;";
 
         public const string CREATE_TRIGGER_Tree_OnDelete =
 @"CREATE TRIGGER Tree_OnDelete
@@ -136,10 +138,10 @@ BEGIN
         CountOrMeasure,
 
         CreatedBy,
-        CreatedDate,
+        Created_TS,
         ModifiedBy,
-        ModifiedDate,
-        RowVersion
+        Modified_TS,
+        Deleted_TS
     ) VALUES (
         OLD.CruiseID,
         OLD.TreeID,
@@ -153,10 +155,10 @@ BEGIN
         OLD.CountOrMeasure,
 
         OLD.CreatedBy,
-        OLD.CreatedDate,
+        OLD.Created_TS,
         OLD.ModifiedBy,
-        OLD.ModifiedDate,
-        OLD.RowVersion
+        OLD.Modified_TS,
+        CURRENT_TIMESTAMP
     );
 END;";
     }

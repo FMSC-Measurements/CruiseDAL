@@ -23,10 +23,9 @@ $@"INSERT INTO {toDbName}.Tree (
         TreeNumber,
         CountOrMeasure,
         CreatedBy,
-        CreatedDate,
+        Created_TS,
         ModifiedBy,
-        ModifiedDate,
-        RowVersion
+        Modified_TS
     )
     SELECT
         t.Tree_CN,
@@ -53,8 +52,7 @@ $@"INSERT INTO {toDbName}.Tree (
         t.CreatedBy,
         t.CreatedDate,
         t.ModifiedBy,
-        t.ModifiedDate,
-        t.RowVersion
+        t.ModifiedDate
     FROM {fromDbName}.Tree as t
     JOIN {fromDbName}.CuttingUnit AS cu USING (CuttingUnit_CN)
     JOIN {fromDbName}.Stratum AS st USING (Stratum_CN)

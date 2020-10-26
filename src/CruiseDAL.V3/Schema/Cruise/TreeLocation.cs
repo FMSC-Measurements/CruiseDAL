@@ -20,10 +20,10 @@ namespace CruiseDAL.Schema
     Azimuth REAL,
     Distance REAL,
     IsEstimate BOOLEAN DEFAULT 0,
-    CreatedBy TEXT DEFAULT '',
-    CreatedDate DateTime DEFAULT CURRENT_TIMESTAMP,
+    CreatedBy TEXT DEFAULT 'none',
+    Created_TS DATETIME DEFAULT (CURRENT_TIMESTAMP),
     ModifiedBy TEXT,
-    ModifiedDate DateTime,
+    Modified_TS DATETIME,
 
     CHECK  ((SS_Latatude IS NOT NULL AND SS_Longitude IS NOT NULL AND Azimuth IS NOT NULL AND Distance IS NOT NULL)
         OR (SS_Latatude IS NULL AND SS_Longitude IS NULL AND Azimuth IS NULL AND Distance IS NULL)),
@@ -46,9 +46,11 @@ namespace CruiseDAL.Schema
     Distance REAL,
     IsEstimate BOOLEAN,
     CreatedBy TEXT,
-    CreatedDate DateTime,
+    Created_TS DATETIME,
     ModifiedBy TEXT,
-    ModifiedDate DateTime
+    Modified_TS DATETIME,
+    Deleted_TS DATETIME
+
 );";
 
         public string CreateIndexes => null;
@@ -68,7 +70,7 @@ AFTER UPDATE OF
 ON TreeLocation
 FOR EACH ROW 
 BEGIN 
-    UPDATE TreeLocation SET ModifiedDate = CURRENT_TIMESTAMP WHERE Tree_CN = old.Tree_CN; 
+    UPDATE TreeLocation SET Modified_TS = CURRENT_TIMESTAMP WHERE Tree_CN = old.Tree_CN; 
 END; ";
 
         public const string CREATE_TRIGGER_TreeLocation_OnDelete =
@@ -85,10 +87,12 @@ BEGIN
         Azimuth,
         Distance,
         IsEstimate,
+
         CreatedBy,
-        CreatedDate,
+        Created_TS,
         ModifiedBy,
-        ModifiedDate
+        Modified_TS,
+        Deleted_TS
     ) VALUES (
         OLD.TreeID,
         OLD.Latitude,
@@ -98,10 +102,12 @@ BEGIN
         OLD.Azimuth,
         OLD.Distance,
         OLD.IsEstimate,
+
         OLD.CreatedBy,
-        OLD.CreatedDate,
+        OLD.Created_TS,
         OLD.ModifiedBy,
-        OLD.ModifiedDate
+        OLD.Modified_TS,
+        CURRENT_TIMESTAMP
     );
 END;";
 

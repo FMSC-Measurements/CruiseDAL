@@ -44,10 +44,9 @@ $@"INSERT INTO {toDbName}.TreeMeasurment (
         IsFallBuckScale,
         Initials,
         CreatedBy,
-        CreatedDate,
+        Created_TS,
         ModifiedBy,
-        ModifiedDate,
-        RowVersion
+        Modified_TS
     )
     SELECT
         t.Tree_CN AS TreeMeasurment_CN,
@@ -85,8 +84,7 @@ $@"INSERT INTO {toDbName}.TreeMeasurment (
         t.CreatedBy,
         t.CreatedDate,
         t.ModifiedBy,
-        t.ModifiedDate,
-        t.RowVersion
+        t.ModifiedDate
     FROM {fromDbName}.Tree AS t
     JOIN {toDbName}.Tree AS t3 USING (Tree_CN);";
         }

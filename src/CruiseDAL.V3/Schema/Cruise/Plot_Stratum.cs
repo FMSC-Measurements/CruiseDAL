@@ -16,11 +16,10 @@ namespace CruiseDAL.Schema
     IsEmpty BOOLEAN DEFAULT 0,
     KPI REAL DEFAULT 0.0,
     ThreePRandomValue INTEGER Default 0,
-    CreatedBy TEXT DEFAULT '',
-    CreatedDate DATETIME DEFAULT (datetime('now', 'localtime')),
+    CreatedBy TEXT DEFAULT 'none',
+    Created_TS DATETIME DEFAULT (CURRENT_TIMESTAMP),
     ModifiedBy TEXT,
-    ModifiedDate DATETIME,
-    RowVersion INTEGER DEFAULT 0,
+    Modified_TS DATETIME,
 
     UNIQUE (PlotNumber, CuttingUnitCode, StratumCode, CruiseID),
 
@@ -40,13 +39,14 @@ namespace CruiseDAL.Schema
     KPI REAL,
     ThreePRandomValue INTEGER,
     CreatedBy TEXT,
-    CreatedDate DATETIME,
+    Created_TS DATETIME,
     ModifiedBy TEXT,
-    ModifiedDate DATETIME,
-    RowVersion INTEGER DEFAULT 0,
+    Modified_TS DATETIME,
+    Deleted_TS DATETIME
+);
 
-    UNIQUE (PlotNumber, CuttingUnitCode, StratumCode, CruiseID)
-);";
+CREATE INDEX Plot_Stratum_Tombstone_CruiseID_PlotNumber_CuttingUnitCode_StratumCode ON Plot_Stratum_Tombstone 
+(CruiseID, PlotNumber, CuttingUnitCode, StratumCode);";
 
         public string CreateIndexes =>
 @"CREATE INDEX 'Plot_Stratum_StratumCode_CruiseID' ON 'Plot_Stratum'('StratumCode', 'CruiseID');
@@ -56,20 +56,19 @@ CREATE INDEX 'Plot_Stratum_PlotNumber_CuttingUnitCode_CruiseID' ON 'Plot_Stratum
         public IEnumerable<string> CreateTriggers => new[] { CREATE_TRIGGER_PLOT_STRATUM_ONUPDATE, CREATE_TRIGGER_Plot_Stratum_OnDelete };
 
         public const string CREATE_TRIGGER_PLOT_STRATUM_ONUPDATE =
-            "CREATE TRIGGER Plot_Stratum_OnUpdate " +
-            "AFTER UPDATE OF " +
-                "CuttingUnitCode, " +
-                "PlotNumber, " +
-                "StratumCode, " +
-                "IsEmpty, " +
-                "KPI, " +
-                "ThreePRandomValue " +
-            "ON Plot_Stratum " +
-            "FOR EACH ROW " +
-            "BEGIN " +
-                "UPDATE Plot_Stratum SET ModifiedDate = datetime('now', 'localtime') WHERE Plot_Stratum_CN = old.Plot_Stratum_CN; " +
-                "UPDATE Plot_Stratum SET RowVersion = old.RowVersion + 1 WHERE Plot_Stratum_CN = old.Plot_Stratum_CN; " +
-            "END;";
+@"CREATE TRIGGER Plot_Stratum_OnUpdate
+AFTER UPDATE OF
+    CuttingUnitCode,
+    PlotNumber,
+    StratumCode,
+    IsEmpty,
+    KPI,
+    ThreePRandomValue
+ON Plot_Stratum
+FOR EACH ROW
+BEGIN
+    UPDATE Plot_Stratum SET Modified_TS = CURRENT_TIMESTAMP WHERE Plot_Stratum_CN = old.Plot_Stratum_CN;
+END;";
 
         public const string CREATE_TRIGGER_Plot_Stratum_OnDelete =
 @"CREATE TRIGGER Plot_Stratum_OnDelete
@@ -85,10 +84,10 @@ BEGIN
         KPI,
         ThreePRandomValue,
         CreatedBy,
-        CreatedDate,
+        Created_TS,
         ModifiedBy,
-        ModifiedDate,
-        RowVersion
+        Modified_TS,
+        Deleted_TS
     ) VALUES (
         OLD.PlotNumber,
         OLD.CruiseID,
@@ -98,10 +97,10 @@ BEGIN
         OLD.KPI,
         OLD.ThreePRandomValue,
         OLD.CreatedBy,
-        OLD.CreatedDate,
+        OLD.Created_TS,
         OLD.ModifiedBy,
-        OLD.ModifiedDate,
-        OLD.RowVersion
+        OLD.Modified_TS,
+        CURRENT_TIMESTAMP
     );
 END;";
     }

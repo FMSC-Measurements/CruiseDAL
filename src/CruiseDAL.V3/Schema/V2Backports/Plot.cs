@@ -22,10 +22,10 @@
                 "null AS MetaData, " +
                 "null AS Blob, " +
                 "ps.CreatedBy, " +
-                "ps.CreatedDate, " +
+                "ps.Created_TS AS CreatedDate, " +
                 "ps.ModifiedBy, " +
-                "ps.ModifiedDate, " +
-                "ps.RowVersion " +
+                "ps.Modified_TS AS ModifiedDate, " +
+                "0 AS RowVersion " +
             "FROM Plot_Stratum AS ps " +
             "JOIN Plot AS p  USING (PlotNumber, CuttingUnitCode)" +
             "JOIN Stratum AS st ON ps.StratumCode = st.Code " +

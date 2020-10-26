@@ -31,10 +31,9 @@ $@"INSERT INTO {toDbName}.Log (
     DIBClass,
     BarkThickness,
     CreatedBy,
-    CreatedDate,
+    Created_TS,
     ModifiedBy,
-    ModifiedDate,
-    RowVersion
+    Modified_TS
 )
 SELECT
     l.Log_CN,
@@ -69,8 +68,7 @@ SELECT
     l.CreatedBy,
     l.CreatedDate,
     l.ModifiedBy,
-    l.ModifiedDate,
-    l.RowVersion
+    l.ModifiedDate
 FROM {fromDbName}.Log as l
 JOIN {toDbName}.Tree AS t USING (Tree_CN);";
         }

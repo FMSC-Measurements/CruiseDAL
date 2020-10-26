@@ -24,12 +24,14 @@ namespace CruiseDAL.Schema
     Month INTEGER DEFAULT 0,
     Year INTEGER DEFAULT 0,
     CreatedBy TEXT DEFAULT 'none',
-    CreatedDate DateTime DEFAULT (datetime('now', 'localtime')),
+    Created_TS DATETIME DEFAULT (CURRENT_TIMESTAMP),
     ModifiedBy TEXT,
-    ModifiedDate DateTime ,
-    RowVersion INTEGER DEFAULT 0,
+    Modified_TS DATETIME,
+
     FOREIGN KEY (CruiseID) REFERENCES Cruise (CruiseID) ON DELETE CASCADE,
+
     UNIQUE(StratumCode, CruiseID),
+
     CHECK (length(StratumCode) > 0)
 );";
 
@@ -52,13 +54,14 @@ namespace CruiseDAL.Schema
     Month INTEGER,
     Year INTEGER,
     CreatedBy TEXT,
-    CreatedDate DateTime,
+    Created_TS DATETIME,
     ModifiedBy TEXT,
-    ModifiedDate DateTime ,
-    RowVersion INTEGER,
+    Modified_TS DATETIME,
+    Deleted_TS DATETIME
+);
 
-    UNIQUE(StratumCode, CruiseID)
-);";
+CREATE INDEX Stratum_Tombstone_CruiseID_StratumCode ON Stratum_Tombstone 
+(CruiseID, StratumCode);";
 
         public string CreateIndexes => null;
 
@@ -83,8 +86,7 @@ AFTER UPDATE OF
 ON Stratum
 FOR EACH ROW
 BEGIN
-    UPDATE Stratum SET ModifiedDate = datetime( 'now', 'localtime') WHERE Stratum_CN = old.Stratum_CN;
-    UPDATE Stratum SET RowVersion = datetime( 'now', 'localtime') WHERE Stratum_CN = old.Stratum_CN;
+    UPDATE Stratum SET Modified_TS = CURRENT_TIMESTAMP WHERE Stratum_CN = old.Stratum_CN;
 END; ";
 
         public const string CREATE_TRIGGER_Stratum_OnDelete =
@@ -108,10 +110,10 @@ BEGIN
         Month,
         Year,
         CreatedBy,
-        CreatedDate,
+        Created_TS,
         ModifiedBy,
-        ModifiedDate,
-        RowVersion
+        Modified_TS,
+        Deleted_TS
     ) VALUES (
         OLD.StratumCode,
         OLD.CruiseID,
@@ -128,10 +130,10 @@ BEGIN
         OLD.Month,
         OLD.Year,
         OLD.CreatedBy,
-        OLD.CreatedDate,
+        OLD.Created_TS,
         OLD.ModifiedBy,
-        OLD.ModifiedDate,
-        OLD.RowVersion
+        OLD.Modified_TS,
+        CURRENT_TIMESTAMP
     );
 END;";
     }

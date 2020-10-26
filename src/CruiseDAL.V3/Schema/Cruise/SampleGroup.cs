@@ -29,11 +29,10 @@ namespace CruiseDAL.Schema
     MinKPI INTEGER Default 0,
     MaxKPI INTEGER Default 0,
     SmallFPS REAL DEFAULT 0.0,
-    CreatedBy TEXT DEFAULT '',
-    CreatedDate DATETIME DEFAULT (datetime('now', 'localtime')),
+    CreatedBy TEXT DEFAULT 'none',
+    Created_TS DATETIME DEFAULT (CURRENT_TIMESTAMP),
     ModifiedBy TEXT,
-    ModifiedDate DATETIME,
-    RowVersion INTEGER DEFAULT 0,
+    Modified_TS DATETIME,
 
     CHECK (length(SampleGroupCode) > 0)
 
@@ -70,15 +69,20 @@ namespace CruiseDAL.Schema
     MaxKPI INTEGER,
     SmallFPS REAL,
     CreatedBy TEXT,
-    CreatedDate DATETIME,
+    Created_TS DATETIME,
     ModifiedBy TEXT,
-    ModifiedDate DATETIME,
-    RowVersion INTEGER,
+    Modified_TS DATETIME,
+    Deleted_TS DATETIME
+);
 
-    UNIQUE (StratumCode, SampleGroupCode, CruiseID)
-);";
+CREATE INDEX SampleGroup_Tombstone_CruiseID_SampleGroupCode_StratumCode ON SampleGroup_Tombstone 
+(CruiseID, SampleGroupCode, StratumCode);";
 
-        public IEnumerable<string> CreateTriggers => new[] { CREATE_TRIGGER_SAMPLEGROUP_ONUPDATE, CREATE_TRIGGER_SampleGoup_OnDelete };
+        public IEnumerable<string> CreateTriggers => new[] 
+        { 
+            CREATE_TRIGGER_SAMPLEGROUP_ONUPDATE, 
+            CREATE_TRIGGER_SampleGoup_OnDelete 
+        };
 
         public const string CREATE_TRIGGER_SAMPLEGROUP_ONUPDATE =
 @"CREATE TRIGGER SampleGroup_OnUpdate
@@ -104,8 +108,7 @@ AFTER UPDATE OF
 ON SampleGroup
 FOR EACH ROW
 BEGIN
-    UPDATE SampleGroup SET ModifiedDate = datetime('now', 'localtime') WHERE SampleGroup_CN = old.SampleGroup_CN;
-    UPDATE SampleGroup SET RowVersion = old.RowVersion WHERE SampleGroup_CN = old.SampleGroup_CN;
+    UPDATE SampleGroup SET ModifiedDate = CURRENT_TIMESTAMP WHERE SampleGroup_CN = old.SampleGroup_CN;
 END;";
 
         public const string CREATE_TRIGGER_SampleGoup_OnDelete =
@@ -135,10 +138,10 @@ BEGIN
         MaxKPI,
         SmallFPS,
         CreatedBy,
-        CreatedDate,
+        Created_TS,
         ModifiedBy,
-        ModifiedDate,
-        RowVersion
+        Modified_TS,
+        Deleted_TS
     ) VALUES (
         OLD.CruiseID,
         OLD.SampleGroupCode,
@@ -161,10 +164,10 @@ BEGIN
         OLD.MaxKPI,
         OLD.SmallFPS,
         OLD.CreatedBy,
-        OLD.CreatedDate,
+        OLD.Created_TS,
         OLD.ModifiedBy,
-        OLD.ModifiedDate,
-        OLD.RowVersion
+        OLD.Modified_TS,
+        CURRENT_TIMESTAMP
     );
 END;";
     }

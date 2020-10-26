@@ -15,14 +15,15 @@ namespace CruiseDAL.Schema
     DefaultUOM TEXT,
     LogGradingEnabled BOOLEAN Default 0,
     CreatedBy TEXT DEFAULT 'none',
-    CreatedDate DateTime DEFAULT (datetime('now', 'localtime')),
+    Created_TS DATETIME DEFAULT (CURRENT_TIMESTAMP),
     ModifiedBy TEXT,
-    ModifiedDate DateTime,
+    Modified_TS DATETIME,
+
+    UNIQUE (CruiseID),
 
     CHECK (CruiseID LIKE '________-____-____-____-____________'),
 
-    FOREIGN KEY (SaleID) REFERENCES Sale (SaleID) ON DELETE CASCADE,
-    UNIQUE (CruiseID)
+    FOREIGN KEY (SaleID) REFERENCES Sale (SaleID) ON DELETE CASCADE
 );";
 
         public string InitializeTable => null;
@@ -43,8 +44,7 @@ AFTER UPDATE OF
     DefaultUOM
 ON Sale
 BEGIN
-    UPDATE Sale SET ModifiedDate = datetime('now', 'localtime') WHERE Sale_CN = old.Sale_CN;
-    UPDATE Sale SET RowVersion = old.RowVersion + 1 WHERE Sale_CN = old.Sale_CN;
+    UPDATE Sale SET Modified_TS = CURRENT_TIMESTAMP WHERE Sale_CN = old.Sale_CN;
 END;";
     }
 }

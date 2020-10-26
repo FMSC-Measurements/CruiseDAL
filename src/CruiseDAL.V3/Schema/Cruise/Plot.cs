@@ -16,18 +16,17 @@ namespace CruiseDAL.Schema
     Slope REAL Default 0.0,
     Aspect REAL Default 0.0,
     Remarks TEXT,
-    CreatedBy TEXT DEFAULT '',
-    CreatedDate DATETIME DEFAULT (datetime('now', 'localtime')),
-    ModifiedBy TEXT COLLATE NOCASE,
-    ModifiedDate DATETIME,
-    RowVersion INTEGER DEFAULT 0,
+    CreatedBy TEXT DEFAULT 'none',
+    Created_TS DATETIME DEFAULT (CURRENT_TIMESTAMP),
+    ModifiedBy TEXT,
+    Modified_TS DATETIME,
 
     CHECK (PlotID LIKE '________-____-____-____-____________'),
 
     UNIQUE (PlotID),
     UNIQUE (PlotNumber, CuttingUnitCode, CruiseID),
 
-    FOREIGN KEY (CuttingUnitCode, CruiseID) REFERENCES CuttingUnit (Code, CruiseID) ON DELETE CASCADE ON UPDATE CASCADE
+    FOREIGN KEY (CuttingUnitCode, CruiseID) REFERENCES CuttingUnit (CuttingUnitCode, CruiseID) ON DELETE CASCADE ON UPDATE CASCADE
 );";
 
         public string InitializeTable => null;
@@ -42,11 +41,17 @@ namespace CruiseDAL.Schema
     Aspect REAL,
     Remarks TEXT,
     CreatedBy TEXT,
-    CreatedDate DATETIME,
-    ModifiedBy TEXT COLLATE NOCASE,
-    ModifiedDate DATETIME,
-    RowVersion INTEGER
-);";
+    Created_TS DATETIME,
+    ModifiedBy TEXT,
+    Modified_TS DATETIME,
+    Deleted_TS DATETIME
+);
+
+CREATE INDEX Plot_Tombstone_PlotID ON Plot_Tombstone 
+(PlotID);
+
+CREATE INDEX Plot_Tombstone_CruiseID_PlotNumber_CuttingUnitCode ON Plot_Tombstone 
+(CruiseID, PlotNumber, CuttingUnitCode);";
 
         public string CreateIndexes =>
 @"CREATE INDEX Plot_CuttingUnitCode_CruiseID ON Plot (CuttingUnitCode, CruiseID);
@@ -61,15 +66,11 @@ AFTER UPDATE OF
     CuttingUnitCode,
     Slope,
     Aspect,
-    Remarks,
-    XCoordinate,
-    YCoordinate,
-    ZCoordinate
+    Remarks
 ON Plot
 FOR EACH ROW
 BEGIN
-    UPDATE Plot SET ModifiedDate = datetime('now', 'localtime') WHERE Plot_CN = old.Plot_CN;
-    UPDATE Plot SET RowVersion = old.RowVersion WHERE Plot_CN = old.Plot_CN;
+    UPDATE Plot SET Modified_TS = CURRENT_TIMESTAMP WHERE Plot_CN = old.Plot_CN;
 END;";
 
         public const string CREATE_TRIGGER_Plot_OnDelete =
@@ -86,10 +87,10 @@ BEGIN
         Aspect,
         Remarks,
         CreatedBy,
-        CreatedDate,
+        Created_TS,
         ModifiedBy,
-        ModifiedDate,
-        RowVersion
+        Modified_TS,
+        Deleted_TS
     ) VALUES (
         OLD.PlotID,
         OLD.PlotNumber,
@@ -99,10 +100,10 @@ BEGIN
         OLD.Aspect,
         OLD.Remarks,
         OLD.CreatedBy,
-        OLD.CreatedDate,
+        OLD.Created_TS,
         OLD.ModifiedBy,
-        OLD.ModifiedDate,
-        OLD.RowVersion
+        OLD.Modified_TS,
+        CURRENT_TIMESTAMP
     );
 END;";
     }

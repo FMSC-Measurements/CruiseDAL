@@ -12,24 +12,57 @@ namespace CruiseDAL.Schema
     LogGradeAuditRule_CN INTEGER PRIMARY KEY AUTOINCREMENT,
     CruiseID TEXT NOT NULL COLLATE NOCASE,
     SpeciesCode TEXT COLLATE NOCASE,
-    DefectMax REAL Default 0.0,
     Grade TEXT NOT NULL COLLATE NOCASE CHECK (length(Grade) > 0),
-
+    DefectMax REAL Default 0.0,
+    
     FOREIGN KEY (SpeciesCode, CruiseID) REFERENCES Species (SpeciesCode, CruiseID) ON DELETE CASCADE ON UPDATE CASCADE,
     FOREIGN KEY (CruiseID) REFERENCES Cruise (CruiseID) ON DELETE CASCADE
 );";
 
         public string InitializeTable => null;
 
-        public string CreateTombstoneTable => null;
+        public string CreateTombstoneTable =>
+@"CREATE TABLE LogGradeAuditRule_Tombstone (
+    CruiseID TEXT NOT NULL COLLATE NOCASE,
+    SpeciesCode TEXT COLLATE NOCASE,
+    Grade TEXT NOT NULL COLLATE NOCASE,
+    DefectMax REAL,
+    Deleted_TS DATETIME
+);
+
+CREATE INDEX LogGradeAuditRule_Tombstone_CruiseID_SpeciesCode_Grade ON LogGradeAuditRule_Tombstone
+(CruiseID, (ifnull(SpeciesCode, '')), Grade);";
 
         public string CreateIndexes =>
 @"CREATE UNIQUE INDEX LogGradeAuditRule_SpeciesCode_DefectMax_Grade_CruiseID
 ON LogGradeAuditRule
 (ifnull(SpeciesCode, ''), round(DefectMax, 2), Grade, CruiseID);
 
-CREATE INDEX 'LogGradeAuditRule_SpeciesCode' ON 'LogGradeAuditRule' ('SpeciesCode');";
+CREATE INDEX LogGradeAuditRule_CruiseID_SpeciesCode ON LogGradeAuditRule (CruiseID, SpeciesCode);";
 
-        public IEnumerable<string> CreateTriggers => Enumerable.Empty<string>();
+        public IEnumerable<string> CreateTriggers => new[]
+        {
+            CREATE_TRIGGER_LogGradeAuditRule_OnDelete,
+        };
+
+        public const string CREATE_TRIGGER_LogGradeAuditRule_OnDelete =
+@"CREATE TRIGGER LogGradeAuditRule_OnDelete 
+BEFORE DELETE ON LogGradeAuditRule 
+FOR EACH ROW
+BEGIN
+    INSERT OR REPLACE INTO LogGradeAuditRule_Tombstone (
+        CruiseID,
+        SpeciesCode,
+        Grade,
+        DefectMax,
+        Deleted_TS
+    ) VALUES (
+        OLD.CruiseID,
+        OLD.SpeciesCode,
+        OLD.Grade,
+        OLD.DefectMax,
+        CURRENT_TIMESTAMP
+    );
+END;";
     }
 }

@@ -22,7 +22,6 @@ SELECT
     sum(tl.TreeCount) AS TreeCount,
     sum(tl.KPI) AS KPI
 FROM TallyLedger AS tl
-WHERE IsDeleted = 0
 GROUP BY 
     CruiseID, 
     CuttingUnitCode,
@@ -44,7 +43,6 @@ SELECT
     sum(tl.TreeCount) AS TreeCount,
     sum(tl.KPI) AS KPI
 FROM TallyLedger AS tl
-WHERE IsDeleted = 0
 GROUP BY 
     CruiseID,
     CuttingUnitCode,
@@ -64,8 +62,7 @@ SELECT
     sum(tl.TreeCount) AS TreeCount,
     sum(tl.KPI) AS KPI
 FROM TallyLedger AS tl
-WHERE IsDeleted = 0
-    AND TreeID IS NOT NULL
+WHERE  TreeID IS NOT NULL
 GROUP BY 
     CruiseID,
     TreeID

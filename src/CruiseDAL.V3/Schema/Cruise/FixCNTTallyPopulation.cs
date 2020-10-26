@@ -18,6 +18,10 @@ namespace CruiseDAL.Schema
     IntervalSize INTEGER Default 0,
     Min INTEGER Default 0,
     Max INTEGER Default 0,
+    CreatedBy TEXT DEFAULT 'none',
+    Created_TS DATETIME DEFAULT (CURRENT_TIMESTAMP),
+    ModifiedBy TEXT,
+    Modified_TS DATETIME,
 
     UNIQUE (CruiseID, StratumCode, SampleGroupCode, SpeciesCode, LiveDead),
 
@@ -33,6 +37,21 @@ namespace CruiseDAL.Schema
 
 CREATE INDEX 'FixCNTTallyPopulation_StratumCode_SampleGroupCode_SpeciesCode_LiveDead_CruiseID' ON FixCNTTallyPopulation (StratumCode, SampleGroupCode, SpeciesCode, LiveDead, CruiseID);";
 
-        public IEnumerable<string> CreateTriggers => Enumerable.Empty<string>();
+        public IEnumerable<string> CreateTriggers => new[]
+        {
+            CREATE_TRIGGER_FixCNTTallyPopulation_OnUpdate,
+        };
+
+        public const string CREATE_TRIGGER_FixCNTTallyPopulation_OnUpdate =
+@"CREATE TRIGGER FixCNTTallyPopulation_OnUpdate
+AFTER UPDATE OF
+    IntervalSize,
+    Min,
+    Max
+ON FixCNTTallyPopulation
+FOR EACH ROW
+BEGIN
+    UPDATE FixCNTTallyPopulation SET Modified_TS = CURRENT_TIMESTAMP WHERE FixCNTTallyPopulation_CN = old.FixCNTTallyPopulation_CN;
+END;";
     }
 }

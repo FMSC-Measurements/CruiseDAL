@@ -25,10 +25,9 @@ $@"INSERT INTO {toDbName}.Sale (
     Remarks,
     DefaultUOM,
     CreatedBy,
-    CreatedDate,
+    Created_TS,
     ModifiedBy,
-    ModifiedDate,
-    RowVersion
+    Modified_TS
 )
 SELECT
     '{saleID}',
@@ -47,8 +46,7 @@ SELECT
     CreatedBy,
     CreatedDate,
     ModifiedBy,
-    ModifiedDate,
-    RowVersion
+    ModifiedDate
 FROM {fromDbName}.Sale;";
         }
     }

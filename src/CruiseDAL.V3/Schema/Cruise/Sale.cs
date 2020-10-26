@@ -22,10 +22,9 @@ namespace CruiseDAL.Schema
     Remarks TEXT,
     DefaultUOM TEXT,
     CreatedBy TEXT DEFAULT 'none',
-    CreatedDate DateTime DEFAULT (datetime('now', 'localtime')),
+    Created_TS DATETIME DEFAULT (CURRENT_TIMESTAMP),
     ModifiedBy TEXT,
-    ModifiedDate DateTime ,
-    RowVersion INTEGER DEFAULT 0,
+    Modified_TS DATETIME,
 
     CHECK (SaleID LIKE '________-____-____-____-____________'),
     UNIQUE(SaleID),
@@ -57,8 +56,7 @@ AFTER UPDATE OF
     DefaultUOM
 ON Sale
 BEGIN
-    UPDATE Sale SET ModifiedDate = datetime('now', 'localtime') WHERE Sale_CN = old.Sale_CN;
-    UPDATE Sale SET RowVersion = old.RowVersion + 1 WHERE Sale_CN = old.Sale_CN;
+    UPDATE Sale SET Modified_TS = CURRENT_TIMESTAMP WHERE Sale_CN = old.Sale_CN;
 END;";
     }
 }

@@ -24,13 +24,49 @@ namespace CruiseDAL.Schema
 
         public string InitializeTable => null;
 
-        public string CreateTombstoneTable => null;// TODO
+        public string CreateTombstoneTable =>
+@"CREATE TABLE LogFieldSetup_Tombstone (
+    StratumCode TEXT NOT NULL,
+    CruiseID TEXT NOT NULL COLLATE NOCASE,
+    Field TEXT NOT NULL,
+    FieldOrder INTEGER,
+    Heading TEXT,
+    Width REAL,
+    Deleted_TS DATETIME
+);";
 
         public string CreateIndexes =>
 @"CREATE INDEX 'LogFieldSetup_Field' ON 'LogFieldSetup'('Field' COLLATE NOCASE);
 
 CREATE INDEX 'LogFieldSetup_StratumCode_CruiseID' ON 'LogFieldSetup'('StratumCode', 'CruiseID');";
 
-        public IEnumerable<string> CreateTriggers => Enumerable.Empty<string>();
+        public IEnumerable<string> CreateTriggers => new[]
+        {
+            CREATE_TRIGGER_LogFieldSetup_OnDelete,
+        };
+
+        public const string CREATE_TRIGGER_LogFieldSetup_OnDelete =
+@"CREATE TRIGGER LogFieldSetup_OnDelete 
+BEFORE DELETE ON LogFieldSetup
+FOR EACH ROW
+BEGIN
+    INSERT OR REPLACE INTO LogFieldSetup_Tombstone (
+        StratumCode,
+        CruiseID,
+        Field,
+        FieldOrder,
+        Heading,
+        Width,
+        Deleted_TS
+    ) VALUES (
+        OLD.StratumCode,
+        OLD.CruiseID,
+        OLD.Field,
+        OLD.FieldOrder,
+        OLD.Heading,
+        OLD.Width,
+        CURRENT_TIMESTAMP
+    );
+END;";
     }
 }

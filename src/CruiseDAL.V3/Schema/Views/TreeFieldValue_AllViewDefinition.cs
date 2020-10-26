@@ -18,7 +18,10 @@ SELECT
     ValueReal,
     ValueBool,
     ValueText,
-    CreatedDate
+    CreatedBy,
+    Created_TS,
+    ModifiedBy,
+    Modified_TS
 FROM TreeFieldValue_TreeMeasurment
 UNION ALL
 SELECT
@@ -28,7 +31,10 @@ SELECT
     ValueReal,
     ValueBool,
     ValueText,
-    CreatedDate
+    CreatedBy,
+    Created_TS,
+    ModifiedBy,
+    Modified_TS
 FROM TreeFieldValue;";
     }
 }

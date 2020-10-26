@@ -31,10 +31,9 @@ $@"INSERT INTO {toDbName}.TreeDefaultValue (
         AverageZ, 
         ReferenceHeightPercent,
         CreatedBy,
-        CreatedDate,
+        Created_TS,
         ModifiedBy,
-        ModifiedDate,
-        RowVersion
+        Modified_TS
     )
     SELECT
         tdvl.TreeDefaultValue_CN,
@@ -59,8 +58,7 @@ $@"INSERT INTO {toDbName}.TreeDefaultValue (
         tdvl.CreatedBy,
         tdvl.CreatedDate,
         tdvl.ModifiedBy,
-        tdvl.ModifiedDate,
-        tdvl.RowVersion
+        tdvl.ModifiedDate
     FROM (SELECT * FROM {fromDbName}.TreeDefaultValue WHERE LiveDead = 'L') AS tdvl 
     LEFT JOIN (SELECT * FROM {fromDbName}.TreeDefaultValue WHERE LiveDead = 'D') AS tdvd USING (Species, PrimaryProduct);
 ";

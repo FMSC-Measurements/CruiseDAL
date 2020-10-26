@@ -8,13 +8,19 @@ namespace CruiseDAL.Schema
 
         public string CreateTable =>
 @"CREATE TABLE TreeFieldValue (
+    TreeFieldValue_OID INTEGER PRIMARY KEY AUTOINCREMENT,
     TreeID TEXT NOT NULL,
     Field TEXT NOT NULL COLLATE NOCASE,
     ValueInt INTEGER,
     ValueReal REAL,
     ValueBool BOOLEAN,
     ValueText TEXT,
-    CreatedDate DateTime DEFAULT(datetime('now', 'localtime')) ,
+
+    CreatedBy TEXT DEFAULT 'none',
+    Created_TS DATETIME DEFAULT (CURRENT_TIMESTAMP),
+    ModifiedBy TEXT,
+    Modified_TS DATETIME,
+
     FOREIGN KEY (Field) REFERENCES TreeField (Field),
     FOREIGN KEY (TreeID) REFERENCES Tree (TreeID) ON DELETE CASCADE
 );";
@@ -29,8 +35,16 @@ namespace CruiseDAL.Schema
     ValueReal REAL,
     ValueBool BOOLEAN,
     ValueText TEXT,
-    CreatedDate DateTime
-);";
+
+    CreatedBy TEXT,
+    Created_TS DATETIME,
+    ModifiedBy TEXT,
+    Modified_TS DATETIME,
+    Deleted_TS DATETIME
+);
+
+CREATE INDEX TreeFieldValue_Tombstone_TreeID_Field ON TreeFieldValue_Tombstone 
+(TreeID, Field);";
 
         public string CreateIndexes =>
 @"CREATE INDEX 'TreeFieldValue_TreeID' ON 'TreeFieldValue'('TreeID');
@@ -38,6 +52,19 @@ namespace CruiseDAL.Schema
 CREATE INDEX 'TreeFieldValue_Field' ON 'TreeFieldValue'('Field');";
 
         public IEnumerable<string> CreateTriggers => new[] { CREATE_TRIGGER_TreeFieldValue_OnDelete };
+
+        public const string CREATE_TRIGGER_TreeFieldValue_OnUpdate =
+@"CREATE TRIGGER TreeFieldValue_OnUpdate 
+AFTER UPDATE OF 
+    ValueInt,
+    ValueReal,
+    ValueBool,
+    ValueText
+ON TreeFieldValue 
+FOR EACH ROW
+BEGIN 
+    UPDATE TreeFieldValue SET Modified_TS = CURRENT_TIMESTAMP WHERE TreeFieldValue_OID = old.TreeFieldValue_OID;
+END;";
 
         public const string CREATE_TRIGGER_TreeFieldValue_OnDelete =
 @"CREATE TRIGGER TreeFieldValue_OnDelete 
@@ -50,7 +77,11 @@ BEGIN
         ValueReal,
         ValueBool,
         ValueText,
-        CreatedDate
+        CreatedBy,
+        Created_TS,
+        ModifiedBy,
+        Modified_TS,
+        Deleted_TS
     ) VALUES (
         OLD.TreeID,
         OLD.Field,
@@ -58,7 +89,11 @@ BEGIN
         OLD.ValueReal,
         OLD.ValueBool,
         OLD.ValueText,
-        OLD.CreatedDate
+        OLD.CreatedBy,
+        OLD.Created_TS,
+        OLD.ModifiedBy,
+        OLD.Modified_TS,
+        CURRENT_TIMESTAMP
     );
 END;";
 

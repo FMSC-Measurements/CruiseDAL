@@ -20,10 +20,9 @@ $@"INSERT INTO {toDbName}.Plot_Stratum (
         KPI,
         ThreePRandomValue,
         CreatedBy,
-        CreatedDate,
+        Created_TS,
         ModifiedBy,
-        ModifiedDate,
-        RowVersion
+        Modified_TS
     )
     SELECT
         p.Plot_CN AS Plot_Stratum_CN,
@@ -37,8 +36,7 @@ $@"INSERT INTO {toDbName}.Plot_Stratum (
         p.CreatedBy,
         p.CreatedDate,
         p.ModifiedBy,
-        p.ModifiedDate,
-        p.RowVersion
+        p.ModifiedDate
     FROM {fromDbName}.Plot AS p
     JOIN {fromDbName}.CuttingUnit AS cu USING (CuttingUnit_CN)
     JOIN {fromDbName}.Stratum AS st USING (Stratum_CN);";

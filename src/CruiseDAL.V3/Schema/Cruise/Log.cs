@@ -27,11 +27,10 @@ namespace CruiseDAL.Schema
     CubicFootRemoved REAL Default 0.0,
     DIBClass REAL Default 0.0,
     BarkThickness REAL Default 0.0,
-    CreatedBy TEXT DEFAULT '',
-    CreatedDate DateTime DEFAULT (datetime('now', 'localtime')),
-    ModifiedBy TEXT ,
-    ModifiedDate DateTime ,
-    RowVersion INTEGER DEFAULT 0,
+    CreatedBy TEXT DEFAULT 'none',
+    Created_TS DATETIME DEFAULT (CURRENT_TIMESTAMP),
+    ModifiedBy TEXT,
+    Modified_TS DATETIME,
 
     UNIQUE (LogID),
     UNIQUE (TreeID, LogNumber),
@@ -64,47 +63,53 @@ namespace CruiseDAL.Schema
     DIBClass REAL,
     BarkThickness REAL,
     CreatedBy TEXT,
-    CreatedDate DateTime,
+    Created_TS DATETIME,
     ModifiedBy TEXT,
-    ModifiedDate DateTime,
+    Modified_TS DATETIME,
+    Deleted_TS DATETIME
+);
 
-    UNIQUE (LogID),
-    UNIQUE (TreeID, LogNumber),
+CREATE INDEX Log_Tombstone_TreeID_LogNumber ON Log_Tombstone 
+(TreeID, LogNumber);
 
-    CHECK (LogID LIKE '________-____-____-____-____________')
-);";
+CREATE INDEX Log_Tombstone_LogID ON Log_Tombstone
+(LogID);
+";
 
         public string CreateIndexes =>
 @"CREATE INDEX Log_LogNumber ON Log (LogNumber);
 CREATE INDEX Log_TreeID ON Log (TreeID);";
 
-        public IEnumerable<string> CreateTriggers => new[] { CREATE_TRIGGER_LOG_ONUPDATE, CREATE_TRIGGER_Log_OnDelete };
+        public IEnumerable<string> CreateTriggers => new[] 
+        {
+            CREATE_TRIGGER_LOG_ONUPDATE, 
+            CREATE_TRIGGER_Log_OnDelete 
+        };
 
         public const string CREATE_TRIGGER_LOG_ONUPDATE =
-            "CREATE TRIGGER Log_OnUpdate " +
-            "AFTER UPDATE OF " +
-                "LogNumber, " +
-                "Grade, " +
-                "SeenDefect, " +
-                "PercentRecoverable, " +
-                "Length, " +
-                "ExportGrade, " +
-                "SmallEndDiameter, " +
-                "LargeEndDiameter, " +
-                "GrossBoardFoot, " +
-                "NetBoardFoot, " +
-                "GrossCubicFoot, " +
-                "NetCubicFoot, " +
-                "BoardFootRemoved, " +
-                "CubicFootRemoved, " +
-                "DIBClass, " +
-                "BarkThickness " +
-            "ON Log " +
-            "FOR EACH ROW " +
-            "BEGIN " +
-                "UPDATE Log SET RowVersion = old.RowVersion + 1 WHERE Log_CN = old.Log_CN; " +
-                "UPDATE Log SET ModifiedDate = datetime('now', 'localtime') WHERE Log_CN = old.Log_CN; " +
-            "END;";
+@"CREATE TRIGGER Log_OnUpdate 
+AFTER UPDATE OF
+    LogNumber,
+    Grade,
+    SeenDefect,
+    PercentRecoverable,
+    Length,
+    ExportGrade,
+    SmallEndDiameter,
+    LargeEndDiameter,
+    GrossBoardFoot,
+    NetBoardFoot,
+    GrossCubicFoot,
+    NetCubicFoot,
+    BoardFootRemoved,
+    CubicFootRemoved,
+    DIBClass,
+    BarkThickness
+ON Log
+FOR EACH ROW
+BEGIN
+    UPDATE Log SET ModifiedDate = CURRENT_TIMESTAMP WHERE Log_CN = old.Log_CN;
+END;";
 
         public const string CREATE_TRIGGER_Log_OnDelete =
 @"CREATE TRIGGER Log_OnDelete
@@ -132,9 +137,10 @@ BEGIN
         DIBClass,
         BarkThickness,
         CreatedBy,
-        CreatedDate,
+        Created_TS,
         ModifiedBy,
-        ModifiedDate
+        Modified_TS,
+        Deleted_TS
     ) VALUES (
         OLD.LogID,
         OLD.TreeID,
@@ -156,9 +162,10 @@ BEGIN
         OLD.DIBClass,
         OLD.BarkThickness,
         OLD.CreatedBy,
-        OLD.CreatedDate,
+        OLD.Created_TS,
         OLD.ModifiedBy,
-        OLD.ModifiedDate
+        OLD.Modified_TS,
+        CURRENT_TIMESTAMP
     );
 END;";
     }

@@ -26,10 +26,9 @@ $@"INSERT INTO {toDbName}.Stratum (
     Month,
     Year,
     CreatedBy,
-    CreatedDate,
+    Created_TS,
     ModifiedBy,
-    ModifiedDate,
-    RowVersion
+    Modified_TS
 )
 SELECT
     Code,
@@ -49,8 +48,7 @@ SELECT
     CreatedBy,
     CreatedDate,
     ModifiedBy,
-    ModifiedDate,
-    RowVersion
+    ModifiedDate
 FROM {fromDbName}.Stratum;";
         }
     }

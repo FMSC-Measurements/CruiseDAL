@@ -25,10 +25,10 @@
             "l.DIBClass, " +
             "l.BarkThickness, " +
             "l.CreatedBy, " +
-            "l.CreatedDate, " +
+            "l.Created_TS AS CreateDate, " +
             "l.ModifiedBy, " +
-            "l.ModifiedDate, " +
-            "l.RowVersion " +
+            "l.Modified_TS AS ModifiedDate, " +
+            "0 AS RowVersion " +
             "FROM Log AS l " +
             "JOIN Tree AS t USING (TreeID);";
     }

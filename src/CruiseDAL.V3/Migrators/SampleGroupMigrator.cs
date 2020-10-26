@@ -33,10 +33,9 @@ $@"INSERT INTO {toDbName}.SampleGroup (
     MaxKPI,
     SmallFPS,
     CreatedBy,
-    CreatedDate,
+    Created_TS,
     ModifiedBy,
-    ModifiedDate,
-    RowVersion
+    Modified_TS
 )
 SELECT
     sg.SampleGroup_CN,
@@ -66,8 +65,7 @@ SELECT
     sg.CreatedBy,
     sg.CreatedDate,
     sg.ModifiedBy,
-    sg.ModifiedDate,
-    sg.RowVersion
+    sg.ModifiedDate
 FROM {fromDbName}.SampleGroup AS sg
 JOIN {fromDbName}.Stratum AS st USING (Stratum_CN);";
         }

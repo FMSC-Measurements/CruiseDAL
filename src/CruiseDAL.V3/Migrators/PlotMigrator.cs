@@ -20,10 +20,9 @@ $@"INSERT INTO {toDbName}.Plot (
     Aspect,
     Remarks,
     CreatedBy,
-    CreatedDate,
+    Created_TS,
     ModifiedBy,
-    ModifiedDate,
-    RowVersion
+    Modified_TS
 )
 SELECT
     p.Plot_CN,
@@ -45,10 +44,9 @@ SELECT
     p.Aspect,
     group_concat(p.Remarks) AS Remarks,
     p.CreatedBy,
-    p.CreatedDate,
+    p.Created_TS,
     p.ModifiedBy,
-    p.ModifiedDate,
-    p.RowVersion
+    p.Modified_TS
 FROM {fromDbName}.Plot AS p
 JOIN {fromDbName}.CuttingUnit AS cu USING (CuttingUnit_CN)
 GROUP BY cu.Code, PlotNumber;";

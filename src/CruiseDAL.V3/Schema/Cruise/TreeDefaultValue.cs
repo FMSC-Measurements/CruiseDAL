@@ -28,10 +28,9 @@ namespace CruiseDAL.Schema
     AverageZ REAL DEFAULT 0.0,
     ReferenceHeightPercent REAL DEFAULT 0.0,
     CreatedBy TEXT DEFAULT 'none',
-    CreatedDate DateTime DEFAULT (datetime( 'now', 'localtime')),
+    Created_TS DATETIME DEFAULT (CURRENT_TIMESTAMP),
     ModifiedBy TEXT,
-    ModifiedDate DateTime,
-    RowVersion INTEGER DEFAULT 0,
+    Modified_TS DATETIME,
 
     FOREIGN KEY (CruiseID) REFERENCES Cruise (CruiseID) ON DELETE CASCADE,
     FOREIGN KEY (SpeciesCode, CruiseID) REFERENCES Species (SpeciesCode, CruiseID) ON UPDATE CASCADE ON DELETE CASCADE
@@ -60,11 +59,14 @@ namespace CruiseDAL.Schema
     AverageZ REAL,
     ReferenceHeightPercent REAL,
     CreatedBy TEXT,
-    CreatedDate DateTime,
+    Created_TS DATETIME,
     ModifiedBy TEXT,
-    ModifiedDate DateTime,
-    RowVersion INTEGER
-);";
+    Modified_TS DATETIME,
+    Deleted_TS DATETIME
+);
+
+CREATE INDEX TreeDefaultValue_Tombstone_CruiseID_SpeciesCode_PrimaryProduct ON TreeDefaultValue_Tombstone
+(CruiseID, ifnull(SpeciesCode, '') COLLATE NOCASE, ifnull(PrimaryProduct, '') COLLATE NOCASE);";
 
         public string CreateIndexes =>
 @"CREATE UNIQUE INDEX TreeDefaultValue_SpeciesCode_PrimaryProduct ON TreeDefaultValue (CruiseID, ifnull(SpeciesCode, '') COLLATE NOCASE, ifnull(PrimaryProduct, '') COLLATE NOCASE);
@@ -98,8 +100,7 @@ AFTER UPDATE OF
 ON TreeDefaultValue
 FOR EACH ROW
 BEGIN
-    UPDATE TreeDefaultValue SET ModifiedDate = datetime( 'now', 'localtime') WHERE TreeDefaultValue_CN = new.TreeDefaultValue_CN;
-    UPDATE TreeDefaultValue SET RowVersion = old.RowVersion + 1 WHERE TreeDefaultValue_CN = old.TreeDefaultValue_CN;
+    UPDATE TreeDefaultValue SET Modified_TS = CURRENT_TIMESTAMP WHERE TreeDefaultValue_CN = new.TreeDefaultValue_CN;
 END; ";
 
         public const string CREATE_TRIGGER_TreeDefaultValue_OnDelete =
@@ -126,11 +127,12 @@ BEGIN
         BarkThicknessRatio,
         AverageZ,
         ReferenceHeightPercent,
+
         CreatedBy,
-        CreatedDate,
+        Created_TS,
         ModifiedBy,
-        ModifiedDate,
-        RowVersion
+        Modified_TS,
+        Deleted_TS
     ) VALUES (
         OLD.CruiseID,
         OLD.SpeciesCode,
@@ -150,11 +152,12 @@ BEGIN
         OLD.BarkThicknessRatio,
         OLD.AverageZ,
         OLD.ReferenceHeightPercent,
+
         OLD.CreatedBy,
-        OLD.CreatedDate,
+        OLD.Created_TS,
         OLD.ModifiedBy,
-        OLD.ModifiedDate,
-        OLD.RowVersion
+        OLD.Modified_TS,
+        CURRENT_TIMESTAMP
     );
 END;";
     }

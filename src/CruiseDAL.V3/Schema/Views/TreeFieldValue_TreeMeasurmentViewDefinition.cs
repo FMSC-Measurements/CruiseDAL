@@ -57,7 +57,10 @@ SELECT
         ELSE NULL END) AS ValueText,
 
     NULL AS ValueInt,
-    NULL AS CreatedDate
+    tm.CreatedBy,
+    tm.Created_TS,
+    tm.ModifiedBy,
+    tm.Modified_TS
 
 FROM TreeMeasurment AS tm
 CROSS JOIN TreeField AS tf

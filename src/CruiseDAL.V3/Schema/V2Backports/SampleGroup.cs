@@ -27,10 +27,10 @@
                 "sg.MaxKPI, " +
                 "sg.SmallFPS, " +
                 "sg.CreatedBy, " +
-                "sg.CreatedDate, " +
+                "sg.Created_TS AS CreatedDate, " +
                 "sg.ModifiedBy, " +
-                "sg.ModifiedDate, " +
-                "sg.RowVersion " +
+                "sg.Modified_TS AS ModifiedDate, " +
+                "0 AS RowVersion " +
             "FROM SampleGroup AS sg " +
             "JOIN Stratum AS st ON sg.StratumCode = st.Code " +
             ";";
