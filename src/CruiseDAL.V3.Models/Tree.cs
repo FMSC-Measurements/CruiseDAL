@@ -2,11 +2,14 @@ using System;
 using FMSC.ORM.EntityModel.Attributes;
 namespace CruiseDAL.V3.Models
 {
- [Table("Tree_V3")]
- public partial class Tree_V3
+ [Table("Tree")]
+ public partial class Tree
  {
   [PrimaryKeyField("Tree_CN")]
   public Int32? Tree_CN { get; set; }
+
+  [Field("CruiseID")]
+  public String CruiseID { get; set; }
 
   [Field("TreeID")]
   public String TreeID { get; set; }
@@ -20,8 +23,8 @@ namespace CruiseDAL.V3.Models
   [Field("SampleGroupCode")]
   public String SampleGroupCode { get; set; }
 
-  [Field("Species")]
-  public String Species { get; set; }
+  [Field("SpeciesCode")]
+  public String SpeciesCode { get; set; }
 
   [Field("LiveDead")]
   public String LiveDead { get; set; }
@@ -35,14 +38,17 @@ namespace CruiseDAL.V3.Models
   [Field("CountOrMeasure")]
   public String CountOrMeasure { get; set; }
 
-  [Field("XCoordinate")]
-  public Double? XCoordinate { get; set; }
+  [Field("CreatedBy")]
+  public String CreatedBy { get; set; }
 
-  [Field("YCoordinate")]
-  public Double? YCoordinate { get; set; }
+  [Field("Created_TS")]
+  public DateTime? Created_TS { get; set; }
 
-  [Field("ZCoordinate")]
-  public Double? ZCoordinate { get; set; }
+  [Field("ModifiedBy")]
+  public String ModifiedBy { get; set; }
+
+  [Field("Modified_TS")]
+  public DateTime? Modified_TS { get; set; }
 
  }
 

@@ -2,8 +2,8 @@ using System;
 using FMSC.ORM.EntityModel.Attributes;
 namespace CruiseDAL.V3.Models
 {
- [Table("Log_V3")]
- public partial class Log_V3
+ [Table("Log")]
+ public partial class Log
  {
   [PrimaryKeyField("Log_CN")]
   public Int32? Log_CN { get; set; }
@@ -61,6 +61,18 @@ namespace CruiseDAL.V3.Models
 
   [Field("BarkThickness")]
   public Double? BarkThickness { get; set; }
+
+  [Field("CreatedBy")]
+  public String CreatedBy { get; set; }
+
+  [Field("Created_TS")]
+  public DateTime? Created_TS { get; set; }
+
+  [Field("ModifiedBy")]
+  public String ModifiedBy { get; set; }
+
+  [Field("Modified_TS")]
+  public DateTime? Modified_TS { get; set; }
 
  }
 

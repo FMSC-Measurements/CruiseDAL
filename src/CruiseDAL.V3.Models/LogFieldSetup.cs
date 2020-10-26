@@ -2,11 +2,14 @@ using System;
 using FMSC.ORM.EntityModel.Attributes;
 namespace CruiseDAL.V3.Models
 {
- [Table("TreeFieldSetup_V3")]
- public partial class TreeFieldSetup_V3
+ [Table("LogFieldSetup")]
+ public partial class LogFieldSetup
  {
   [Field("StratumCode")]
   public String StratumCode { get; set; }
+
+  [Field("CruiseID")]
+  public String CruiseID { get; set; }
 
   [Field("Field")]
   public String Field { get; set; }

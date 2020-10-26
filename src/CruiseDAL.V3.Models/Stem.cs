@@ -2,8 +2,8 @@ using System;
 using FMSC.ORM.EntityModel.Attributes;
 namespace CruiseDAL.V3.Models
 {
- [Table("Stem_V3")]
- public partial class Stem_V3
+ [Table("Stem")]
+ public partial class Stem
  {
   [PrimaryKeyField("Stem_CN")]
   public Int32? Stem_CN { get; set; }
@@ -19,6 +19,18 @@ namespace CruiseDAL.V3.Models
 
   [Field("DiameterType")]
   public String DiameterType { get; set; }
+
+  [Field("CreatedBy")]
+  public String CreatedBy { get; set; }
+
+  [Field("Created_TS")]
+  public DateTime? Created_TS { get; set; }
+
+  [Field("ModifiedBy")]
+  public String ModifiedBy { get; set; }
+
+  [Field("Modified_TS")]
+  public DateTime? Modified_TS { get; set; }
 
  }
 

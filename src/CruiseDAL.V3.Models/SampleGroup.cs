@@ -2,11 +2,14 @@ using System;
 using FMSC.ORM.EntityModel.Attributes;
 namespace CruiseDAL.V3.Models
 {
- [Table("SampleGroup_V3")]
- public partial class SampleGroup_V3
+ [Table("SampleGroup")]
+ public partial class SampleGroup
  {
   [PrimaryKeyField("SampleGroup_CN")]
   public Int32? SampleGroup_CN { get; set; }
+
+  [Field("CruiseID")]
+  public String CruiseID { get; set; }
 
   [Field("SampleGroupCode")]
   public String SampleGroupCode { get; set; }
@@ -64,6 +67,18 @@ namespace CruiseDAL.V3.Models
 
   [Field("SmallFPS")]
   public Double? SmallFPS { get; set; }
+
+  [Field("CreatedBy")]
+  public String CreatedBy { get; set; }
+
+  [Field("Created_TS")]
+  public DateTime? Created_TS { get; set; }
+
+  [Field("ModifiedBy")]
+  public String ModifiedBy { get; set; }
+
+  [Field("Modified_TS")]
+  public DateTime? Modified_TS { get; set; }
 
  }
 
