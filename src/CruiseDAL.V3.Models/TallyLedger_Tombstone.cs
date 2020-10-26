@@ -2,12 +2,9 @@ using System;
 using FMSC.ORM.EntityModel.Attributes;
 namespace CruiseDAL.V3.Models
 {
- [Table("TallyLedger")]
- public partial class TallyLedger
+ [Table("TallyLedger_Tombstone")]
+ public partial class TallyLedger_Tombstone
  {
-  [PrimaryKeyField("TallyLedger_CN")]
-  public Int32? TallyLedger_CN { get; set; }
-
   [Field("TallyLedgerID")]
   public String TallyLedgerID { get; set; }
 
@@ -64,6 +61,9 @@ namespace CruiseDAL.V3.Models
 
   [Field("Created_TS")]
   public DateTime? Created_TS { get; set; }
+
+  [Field("Deleted_TS")]
+  public DateTime? Deleted_TS { get; set; }
 
  }
 

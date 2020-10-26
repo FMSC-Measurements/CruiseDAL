@@ -2,14 +2,17 @@ using System;
 using FMSC.ORM.EntityModel.Attributes;
 namespace CruiseDAL.V3.Models
 {
- [Table("SubPopulation")]
- public partial class SubPopulation
+ [Table("Tree_Tombstone")]
+ public partial class Tree_Tombstone
  {
-  [PrimaryKeyField("Subpopulation_CN")]
-  public Int32? Subpopulation_CN { get; set; }
-
   [Field("CruiseID")]
   public String CruiseID { get; set; }
+
+  [Field("TreeID")]
+  public String TreeID { get; set; }
+
+  [Field("CuttingUnitCode")]
+  public String CuttingUnitCode { get; set; }
 
   [Field("StratumCode")]
   public String StratumCode { get; set; }
@@ -23,6 +26,15 @@ namespace CruiseDAL.V3.Models
   [Field("LiveDead")]
   public String LiveDead { get; set; }
 
+  [Field("PlotNumber")]
+  public Int32? PlotNumber { get; set; }
+
+  [Field("TreeNumber")]
+  public Int32 TreeNumber { get; set; }
+
+  [Field("CountOrMeasure")]
+  public String CountOrMeasure { get; set; }
+
   [Field("CreatedBy")]
   public String CreatedBy { get; set; }
 
@@ -34,6 +46,9 @@ namespace CruiseDAL.V3.Models
 
   [Field("Modified_TS")]
   public DateTime? Modified_TS { get; set; }
+
+  [Field("Deleted_TS")]
+  public DateTime? Deleted_TS { get; set; }
 
  }
 

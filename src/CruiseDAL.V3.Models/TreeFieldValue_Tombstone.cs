@@ -2,12 +2,9 @@ using System;
 using FMSC.ORM.EntityModel.Attributes;
 namespace CruiseDAL.V3.Models
 {
- [Table("TreeFieldValue")]
- public partial class TreeFieldValue
+ [Table("TreeFieldValue_Tombstone")]
+ public partial class TreeFieldValue_Tombstone
  {
-  [PrimaryKeyField("TreeFieldValue_OID")]
-  public Int32? TreeFieldValue_OID { get; set; }
-
   [Field("TreeID")]
   public String TreeID { get; set; }
 
@@ -37,6 +34,9 @@ namespace CruiseDAL.V3.Models
 
   [Field("Modified_TS")]
   public DateTime? Modified_TS { get; set; }
+
+  [Field("Deleted_TS")]
+  public DateTime? Deleted_TS { get; set; }
 
  }
 

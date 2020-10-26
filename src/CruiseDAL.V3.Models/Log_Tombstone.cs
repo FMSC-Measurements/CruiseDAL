@@ -2,14 +2,14 @@ using System;
 using FMSC.ORM.EntityModel.Attributes;
 namespace CruiseDAL.V3.Models
 {
- [Table("LogStock")]
- public partial class LogStock
+ [Table("Log_Tombstone")]
+ public partial class Log_Tombstone
  {
-  [PrimaryKeyField("LogStock_CN")]
-  public Int32? LogStock_CN { get; set; }
+  [Field("LogID")]
+  public String LogID { get; set; }
 
-  [Field("Tree_CN")]
-  public Int32 Tree_CN { get; set; }
+  [Field("TreeID")]
+  public String TreeID { get; set; }
 
   [Field("LogNumber")]
   public String LogNumber { get; set; }
@@ -59,11 +59,20 @@ namespace CruiseDAL.V3.Models
   [Field("BarkThickness")]
   public Double? BarkThickness { get; set; }
 
-  [Field("BoardUtil")]
-  public Double? BoardUtil { get; set; }
+  [Field("CreatedBy")]
+  public String CreatedBy { get; set; }
 
-  [Field("CubicUtil")]
-  public Double? CubicUtil { get; set; }
+  [Field("Created_TS")]
+  public DateTime? Created_TS { get; set; }
+
+  [Field("ModifiedBy")]
+  public String ModifiedBy { get; set; }
+
+  [Field("Modified_TS")]
+  public DateTime? Modified_TS { get; set; }
+
+  [Field("Deleted_TS")]
+  public DateTime? Deleted_TS { get; set; }
 
  }
 

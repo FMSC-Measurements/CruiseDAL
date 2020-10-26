@@ -2,14 +2,14 @@ using System;
 using FMSC.ORM.EntityModel.Attributes;
 namespace CruiseDAL.V3.Models
 {
- [Table("TreeDefaultValue_TreeAuditRule")]
- public partial class TreeDefaultValue_TreeAuditRule
+ [Table("TreeAuditRuleSelector_Tombstone")]
+ public partial class TreeAuditRuleSelector_Tombstone
  {
-  [PrimaryKeyField("TreeDefaultValue_TreeAuditRule_CN")]
-  public Int32? TreeDefaultValue_TreeAuditRule_CN { get; set; }
+  [Field("CruiseID")]
+  public String CruiseID { get; set; }
 
-  [Field("Species")]
-  public String Species { get; set; }
+  [Field("SpeciesCode")]
+  public String SpeciesCode { get; set; }
 
   [Field("LiveDead")]
   public String LiveDead { get; set; }

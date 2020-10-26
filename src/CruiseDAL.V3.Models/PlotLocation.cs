@@ -2,20 +2,20 @@ using System;
 using FMSC.ORM.EntityModel.Attributes;
 namespace CruiseDAL.V3.Models
 {
- [Table("Reports")]
- public partial class Reports
+ [Table("PlotLocation")]
+ public partial class PlotLocation
  {
-  [Field("ReportID")]
-  public String ReportID { get; set; }
+  [PrimaryKeyField("PlotLocation_CN")]
+  public Int32? PlotLocation_CN { get; set; }
 
-  [Field("CruiseID")]
-  public String CruiseID { get; set; }
+  [Field("PlotID")]
+  public String PlotID { get; set; }
 
-  [Field("Selected")]
-  public Boolean? Selected { get; set; }
+  [Field("Latitude")]
+  public Double Latitude { get; set; }
 
-  [Field("Title")]
-  public String Title { get; set; }
+  [Field("Longitude")]
+  public Double Longitude { get; set; }
 
   [Field("CreatedBy")]
   public String CreatedBy { get; set; }

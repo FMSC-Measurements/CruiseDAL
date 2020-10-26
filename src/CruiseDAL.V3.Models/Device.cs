@@ -8,6 +8,9 @@ namespace CruiseDAL.V3.Models
   [Field("DeviceID")]
   public String DeviceID { get; set; }
 
+  [Field("CruiseID")]
+  public String CruiseID { get; set; }
+
   [Field("Name")]
   public String Name { get; set; }
 

@@ -2,20 +2,17 @@ using System;
 using FMSC.ORM.EntityModel.Attributes;
 namespace CruiseDAL.V3.Models
 {
- [Table("Reports")]
- public partial class Reports
+ [Table("PlotLocation_Tombstone")]
+ public partial class PlotLocation_Tombstone
  {
-  [Field("ReportID")]
-  public String ReportID { get; set; }
+  [Field("PlotID")]
+  public String PlotID { get; set; }
 
-  [Field("CruiseID")]
-  public String CruiseID { get; set; }
+  [Field("Latitude")]
+  public Double Latitude { get; set; }
 
-  [Field("Selected")]
-  public Boolean? Selected { get; set; }
-
-  [Field("Title")]
-  public String Title { get; set; }
+  [Field("Longitude")]
+  public Double Longitude { get; set; }
 
   [Field("CreatedBy")]
   public String CreatedBy { get; set; }
@@ -28,6 +25,9 @@ namespace CruiseDAL.V3.Models
 
   [Field("Modified_TS")]
   public DateTime? Modified_TS { get; set; }
+
+  [Field("Deleted_TS")]
+  public DateTime? Deleted_TS { get; set; }
 
  }
 

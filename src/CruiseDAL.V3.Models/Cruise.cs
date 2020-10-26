@@ -2,20 +2,26 @@ using System;
 using FMSC.ORM.EntityModel.Attributes;
 namespace CruiseDAL.V3.Models
 {
- [Table("Reports")]
- public partial class Reports
+ [Table("Cruise")]
+ public partial class Cruise
  {
-  [Field("ReportID")]
-  public String ReportID { get; set; }
-
   [Field("CruiseID")]
   public String CruiseID { get; set; }
 
-  [Field("Selected")]
-  public Boolean? Selected { get; set; }
+  [Field("SaleID")]
+  public String SaleID { get; set; }
 
-  [Field("Title")]
-  public String Title { get; set; }
+  [Field("Purpose")]
+  public String Purpose { get; set; }
+
+  [Field("Remarks")]
+  public String Remarks { get; set; }
+
+  [Field("DefaultUOM")]
+  public String DefaultUOM { get; set; }
+
+  [Field("LogGradingEnabled")]
+  public Boolean? LogGradingEnabled { get; set; }
 
   [Field("CreatedBy")]
   public String CreatedBy { get; set; }

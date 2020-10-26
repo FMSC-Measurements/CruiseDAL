@@ -2,12 +2,9 @@ using System;
 using FMSC.ORM.EntityModel.Attributes;
 namespace CruiseDAL.V3.Models
 {
- [Table("CuttingUnit")]
- public partial class CuttingUnit
+ [Table("CuttingUnit_Tombstone")]
+ public partial class CuttingUnit_Tombstone
  {
-  [PrimaryKeyField("CuttingUnit_CN")]
-  public Int32? CuttingUnit_CN { get; set; }
-
   [Field("CuttingUnitCode")]
   public String CuttingUnitCode { get; set; }
 
@@ -40,6 +37,9 @@ namespace CruiseDAL.V3.Models
 
   [Field("Modified_TS")]
   public DateTime? Modified_TS { get; set; }
+
+  [Field("Deleted_TS")]
+  public DateTime? Deleted_TS { get; set; }
 
  }
 
