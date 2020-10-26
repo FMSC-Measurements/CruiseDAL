@@ -1,9 +1,4 @@
 ﻿using FMSC.ORM.EntityModel.Attributes;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace FMSC.ORM.ModelGenerator
 {
@@ -26,6 +21,5 @@ namespace FMSC.ORM.ModelGenerator
 
         [Field("type")]
         public string DbType { get; set; }
-
     }
 }

@@ -9,18 +9,20 @@ namespace FMSC.ORM.Sql
         SqlSelectBuilder BuildSelect(TableOrSubQuery source, IFieldInfoCollection fields);
 
         void BuildInsert(IDbCommand command,
-            object data,
-            string tableName,
-            IFieldInfoCollection fields,
-            OnConflictOption option = OnConflictOption.Default,
-            object keyValue = null);
+                         object data,
+                         string tableName,
+                         IFieldInfoCollection fields,
+                         OnConflictOption option = OnConflictOption.Default,
+                         object keyValue = null);
 
         void BuildUpdate(IDbCommand command,
-            object data,
-            string tableName,
-            IFieldInfoCollection fields,
-            OnConflictOption option = OnConflictOption.Default,
-            object keyValue = null);
+                         object data,
+                         string tableName,
+                         IFieldInfoCollection fields,
+                         string whereExpression = null,
+                         OnConflictOption option = OnConflictOption.Default,
+                         object keyValue = null,
+                         object extraPrams = null);
 
         void BuildDelete(IDbCommand command, object data, string tableName, IFieldInfoCollection fields);
     }

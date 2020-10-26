@@ -1,6 +1,8 @@
 ﻿using Backpack.SqlBuilder;
 using Backpack.SqlBuilder.Sqlite;
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 
 namespace FMSC.ORM.ModelGenerator
@@ -10,17 +12,17 @@ namespace FMSC.ORM.ModelGenerator
         public static ISqlDialect Dialect { get; } = new SqliteDialect();
         private int TAB_SIZE = 4;
 
-        public void GenerateFiles(ISchemaInfoProvider provider, string @namespace, string directory)
+        public void GenerateFiles(ISchemaInfoProvider provider, string @namespace, string directory, IEnumerable<string> nonPersistedColumns)
         {
             foreach (var tableInfo in provider.Tables)
             {
-                GenerateFile(tableInfo, @namespace, directory);
+                GenerateFile(tableInfo, @namespace, directory, nonPersistedColumns);
             }
         }
 
-        public static void GenerateFile(TableInfo tableInfo, string @namespace, string directory)
+        public static void GenerateFile(TableInfo tableInfo, string @namespace, string directory, IEnumerable<string> nonPersistedColumns)
         {
-            var fileContent = GenerateFileContent(tableInfo, @namespace);
+            var fileContent = GenerateFileContent(tableInfo, @namespace, nonPersistedColumns);
 
             var fileName = tableInfo.TableName + ".cs";
 
@@ -29,7 +31,7 @@ namespace FMSC.ORM.ModelGenerator
             System.IO.File.WriteAllText(filePath, fileContent);
         }
 
-        public static string GenerateFileContent(TableInfo tableInfo, string @namespace)
+        public static string GenerateFileContent(TableInfo tableInfo, string @namespace, IEnumerable<string> nonPersistedColumns)
         {
             var sb = new StringBuilder();
             sb.AppendLine("using System;");
@@ -38,7 +40,7 @@ namespace FMSC.ORM.ModelGenerator
             sb.AppendLine($"namespace {@namespace}");
             sb.AppendLine("{");
 
-            sb.AppendLine(GenerateClass(tableInfo, 1));
+            sb.AppendLine(GenerateClass(tableInfo, tabIndex: 1, nonPersistedColumns: nonPersistedColumns));
 
             sb.AppendLine("}");
 
@@ -49,8 +51,10 @@ namespace FMSC.ORM.ModelGenerator
             int tabIndex = 0,
             string tableAttr = "Table",
             string fieldAttr = "Field",
-            string primaryKeyAttr = "PrimaryKeyField")
+            string primaryKeyAttr = "PrimaryKeyField",
+            IEnumerable<string> nonPersistedColumns = null)
         {
+            nonPersistedColumns ??= Enumerable.Empty<string>();
             var sb = new StringBuilder();
 
             if (!string.IsNullOrWhiteSpace(tableAttr))
@@ -63,9 +67,12 @@ namespace FMSC.ORM.ModelGenerator
 
             foreach (var fi in tableInfo.Fields)
             {
+                var fieldName = fi.FieldName;
+                var isNonPersisted = nonPersistedColumns.Contains(fieldName, StringComparer.InvariantCultureIgnoreCase);
+                var persistanceFlags = isNonPersisted ? ", PersistanceFlags = PersistanceFlags.Never" : "";
                 var attr = (fi.IsPK) ?
-                    $"[{primaryKeyAttr}(\"{fi.FieldName}\")]" 
-                    : $"[{fieldAttr}(\"{fi.FieldName}\")]";
+                    $"[{primaryKeyAttr}(\"{fi.FieldName}\"{persistanceFlags})]" 
+                    : $"[{fieldAttr}(\"{fi.FieldName}\"{persistanceFlags})]";
 
                 sb.Append(Tab(tabIndex)).AppendLine(attr);
 
@@ -104,18 +111,5 @@ namespace FMSC.ORM.ModelGenerator
         }
     }
 
-    public static class ObjectExtentions
-    {
-        public static TReturn Try<TTarget, TReturn>(this TTarget target, Func<TTarget, TReturn> @try, Func<TTarget, Exception, TReturn> @catch)
-        {
-            try
-            {
-                return @try(target);
-            }
-            catch (Exception e)
-            {
-                return @catch(target, e);
-            }
-        }
-    }
+    
 }

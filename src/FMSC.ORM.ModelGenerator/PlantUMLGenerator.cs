@@ -9,7 +9,7 @@ namespace FMSC.ORM.ModelGenerator
 {
     public class PlantUMLGenerator : IGenerator
     {
-        public void GenerateFiles(ISchemaInfoProvider provider, string @namespace, string directory)
+        public void GenerateFiles(ISchemaInfoProvider provider, string @namespace, string directory, IEnumerable<string> nonPersistedColumns)
         {
             var fileName = "PlantERD.txt";
             var path = Path.Combine(directory, fileName);

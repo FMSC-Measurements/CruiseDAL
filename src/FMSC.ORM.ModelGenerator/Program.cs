@@ -31,6 +31,9 @@ namespace FMSC.ORM.ModelGenerator
 
             [Option(HelpText = "column seperated list of columns to ignore")]
             public string IgnoreColumns { get; set; }
+
+            [Option(HelpText = "column seperated list of columns to not persisted")]
+            public string NonPersistedColumns { get; set; }
         }
 
         static void Main(string[] args)
@@ -50,13 +53,17 @@ namespace FMSC.ORM.ModelGenerator
                                 o.IgnoreColumns.Split(',')
                                 : (string[])null;
 
+                            var nonPersistedColumns = (string.IsNullOrWhiteSpace(o.NonPersistedColumns) == false) ?
+                                o.IgnoreColumns.Split(',')
+                                : (string[])null;
+
                             var schemaProvider = new SqliteDatastoreSchemaInfoProvider(datastore, ignoreColmns);
 
                             var modelGenerator = new CSModelGenerator();
-                            modelGenerator.GenerateFiles(schemaProvider, o.Namespace, o.OutputDirectory);
+                            modelGenerator.GenerateFiles(schemaProvider, o.Namespace, o.OutputDirectory, nonPersistedColumns);
 
                             var plantUMLGenerator = new PlantUMLGenerator();
-                            plantUMLGenerator.GenerateFiles(schemaProvider, o.Namespace, o.OutputDirectory);
+                            plantUMLGenerator.GenerateFiles(schemaProvider, o.Namespace, o.OutputDirectory, nonPersistedColumns);
                         }
                     }
                 });

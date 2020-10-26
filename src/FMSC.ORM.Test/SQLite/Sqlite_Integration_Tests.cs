@@ -44,7 +44,7 @@ namespace FMSC.ORM.SQLite
         [InlineData(1L, "?1", "?1")]
 #endif
         [InlineData(1L, "@1", "@1")]
-        [InlineData(1L, "@something", "@something")]
+        [InlineData(1L, "@something", "@Something")]
         public void Bind_Paramater(object value, string pName, string pExpr)
         {
             using (var connection = GetOpenConnection())
@@ -61,6 +61,30 @@ namespace FMSC.ORM.SQLite
                 Assert.Equal(value, result);
             }
         }
+
+#if !SYSTEM_DATA_SQLITE
+        // this may change see issue: https://github.com/dotnet/efcore/issues/18861
+        [Theory]
+        [InlineData("@something", "@Something")]
+        [InlineData("@Something", "@something")]
+
+        public void Bind_Pramater_is_case_sensitive(string pName, string pExpr)
+        {
+            var value = 1L;
+
+            using (var connection = GetOpenConnection())
+            {
+                var command = connection.CreateCommand();
+                command.CommandText = $"SELECT {pExpr};";
+                var parm = command.CreateParameter();
+                parm.ParameterName = pName;
+                parm.Value = value;
+                command.Parameters.Add(parm);
+
+                var result = command.Invoking( x=> x.ExecuteScalar()).Should().Throw<Exception>();
+            }
+        }
+#endif
 
 #if MICROSOFT_DATA_SQLITE
 

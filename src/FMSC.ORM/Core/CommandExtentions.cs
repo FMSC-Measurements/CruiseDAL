@@ -44,7 +44,7 @@ namespace FMSC.ORM.Core
             foreach (var name in propNames)
             {
                 var param = cmd.CreateParameter();
-                param.ParameterName = "@" + name;
+                param.ParameterName = "@" + name.ToLower();
                 param.Value = data.GetType().GetProperty(name).GetValue(data, (object[])null) ?? DBNull.Value;
 
                 cmd.Parameters.Add(param);

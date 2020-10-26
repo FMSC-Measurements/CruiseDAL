@@ -9,9 +9,9 @@ namespace FMSC.ORM.Core
 
         IDbConnection OpenConnection();
 
-        void EnterConnectionHold();
+        //void EnterConnectionHold();
 
-        void ExitConnectionHold();
+        //void ExitConnectionHold();
 
         //void ReleaseConnection();
 
@@ -22,7 +22,5 @@ namespace FMSC.ORM.Core
         void CommitTransaction();
 
         void RollbackTransaction();
-
-        //void ReleaseTransaction();
     }
 }

@@ -12,6 +12,8 @@ namespace FMSC.ORM.EntityModel.Support
 
         public FieldInfo PrimaryKeyField { get; set; }
 
+        public IEnumerable<FieldInfo> DataFields => _fields;
+
         public FieldInfoCollection()
         {
         }
@@ -87,21 +89,21 @@ namespace FMSC.ORM.EntityModel.Support
             }
         }
 
-        public IEnumerable<FieldInfo> GetPersistedFields(bool includeKeyField, PersistanceFlags filter)
-        {
-            if (includeKeyField && this.PrimaryKeyField != null)
-            {
-                yield return this.PrimaryKeyField;
-            }
+        //public IEnumerable<FieldInfo> GetPersistedFields(bool includeKeyField, PersistanceFlags filter)
+        //{
+        //    if (includeKeyField && this.PrimaryKeyField != null)
+        //    {
+        //        yield return this.PrimaryKeyField;
+        //    }
 
-            foreach (var fi in _fields)
-            {
-                if ((fi.PersistanceFlags & filter) == filter)
-                {
-                    yield return fi;
-                }
-            }
-        }
+        //    foreach (var fi in _fields)
+        //    {
+        //        if ((fi.PersistanceFlags & filter) == filter)
+        //        {
+        //            yield return fi;
+        //        }
+        //    }
+        //}
 
         public IEnumerator<FieldInfo> GetEnumerator()
         {

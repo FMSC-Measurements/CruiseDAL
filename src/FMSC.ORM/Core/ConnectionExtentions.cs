@@ -214,6 +214,7 @@ namespace FMSC.ORM.Core
         #region CRUD
 
         #region From
+
         //public static QueryBuilder<TResult> From<TResult>(this DbConnection connection, ICommandBuilder commandBuilder = null) where TResult : class, new()
         //{
         //    return From<TResult>(connection, (TableOrSubQuery)null, (ICommandBuilder)null);
@@ -227,9 +228,11 @@ namespace FMSC.ORM.Core
 
             return new QueryBuilder<TResult>(connection, builder);
         }
-        #endregion
+
+        #endregion From
 
         #region Query
+
         public static IEnumerable<TResult> Query<TResult>(this DbConnection connection, string commandText, object[] paramaters = null, DbTransaction transaction = null, IExceptionProcessor exceptionProcessor = null) where TResult : new()
         {
             var discription = GlobalEntityDescriptionLookup.Instance.LookUpEntityByType(typeof(TResult));
@@ -255,7 +258,8 @@ namespace FMSC.ORM.Core
                 return new QueryResult<TResult>(connection, command, transaction, exceptionProcessor);
             }
         }
-        #endregion
+
+        #endregion Query
 
         #region QueryScalar
 
@@ -402,8 +406,6 @@ namespace FMSC.ORM.Core
 
         #endregion QueryGeneric
 
-
-
         public static object Insert(this DbConnection connection, object data, string tableName = null,
                                     EntityDescription entityDescription = null, DbTransaction transaction = null,
                                     OnConflictOption option = OnConflictOption.Default,
@@ -468,6 +470,7 @@ namespace FMSC.ORM.Core
         }
 
         public static void Update(this DbConnection connection, object data, string tableName = null,
+                                  string whereExpression = null,
                                   EntityDescription entityDescription = null,
                                   OnConflictOption option = OnConflictOption.Default, DbTransaction transaction = null,
                                   IExceptionProcessor exceptionProcessor = null, object keyValue = null)
@@ -477,7 +480,9 @@ namespace FMSC.ORM.Core
             entityDescription = entityDescription ?? DescriptionLookup.LookUpEntityByType(data.GetType());
             tableName = tableName ?? entityDescription.SourceName;
 
-            Update(connection, data, tableName, entityDescription.Fields,
+            Update(connection, data, tableName,
+                whereExpression: whereExpression,
+                fields: entityDescription.Fields,
                 option: option,
                 transaction: transaction,
                 exceptionProcessor: exceptionProcessor,
@@ -485,7 +490,8 @@ namespace FMSC.ORM.Core
         }
 
         internal static void Update(this DbConnection connection, object data, string tableName,
-                                  IFieldInfoCollection fields, OnConflictOption option = OnConflictOption.Default,
+                                  string whereExpression = null,
+                                  IFieldInfoCollection fields = null, OnConflictOption option = OnConflictOption.Default,
                                   DbTransaction transaction = null, ICommandBuilder commandBuilder = null,
                                   IExceptionProcessor exceptionProcessor = null, object keyValue = null)
         {
@@ -500,7 +506,13 @@ namespace FMSC.ORM.Core
 
             using (var command = connection.CreateCommand())
             {
-                commandBuilder.BuildUpdate(command, data, tableName, fields, option, keyValue);
+                commandBuilder.BuildUpdate(command,
+                                           data,
+                                           tableName,
+                                           fields,
+                                           whereExpression: whereExpression,
+                                           option: option,
+                                           keyValue: keyValue);
 
                 try
                 {

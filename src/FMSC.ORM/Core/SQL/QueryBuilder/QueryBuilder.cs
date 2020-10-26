@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Data.Common;
+using System.Threading;
 
 namespace FMSC.ORM.Core.SQL.QueryBuilder
 {
@@ -36,6 +37,19 @@ namespace FMSC.ORM.Core.SQL.QueryBuilder
             }
         }
 
+        public IEnumerable<T> Query2(object parameters)
+        {
+            var connection = Connection;
+            if (connection != null)
+            {
+                return connection.Query2<T>(Builder.ToString() + ";", paramaters: parameters);
+            }
+            else
+            {
+                return Datastore.Query2<T>(Builder.ToString() + ";", paramaters: parameters);
+            }
+        }
+
         //public IEnumerable<T> Query(Object[] selectionArgs,  DbTransaction transaction, IExceptionProcessor exceptionProcessor = null)
         //{
         //    var connection = Connection;
@@ -64,6 +78,61 @@ namespace FMSC.ORM.Core.SQL.QueryBuilder
                 return Datastore.Read<T>(Builder, selectionArgs);
             }
         }
+
+        public long Count(params Object[] selectionArgs)
+        {
+            var builder = Builder;
+            var countBuilder = new SqlSelectBuilder
+            {
+                Source = builder.Source,
+                Dialect = builder.Dialect,
+                WhereClause = builder.WhereClause,
+                GroupByClause = builder.GroupByClause,
+                OrderByClause = builder.OrderByClause,
+                LimitClause = builder.LimitClause,
+                Clauses = builder.Clauses,
+            };
+            foreach (var jc in builder.JoinClauses) { countBuilder.JoinClauses.Add(jc); }
+            countBuilder.ResultColumns.Add("count(1)");
+
+            var connection = Connection;
+            if (connection != null)
+            {
+                return connection.ExecuteScalar<long>(countBuilder.ToString() + ";", parameters: selectionArgs);
+            }
+            else
+            {
+                return Datastore.ExecuteScalar<long>(countBuilder.ToString() + ";", parameters: selectionArgs);
+            }
+        }
+
+        public long Count2(object parameters)
+        {
+            var builder = Builder;
+            var countBuilder = new SqlSelectBuilder
+            {
+                Source = builder.Source,
+                Dialect = builder.Dialect,
+                WhereClause = builder.WhereClause,
+                GroupByClause = builder.GroupByClause,
+                OrderByClause = builder.OrderByClause,
+                LimitClause = builder.LimitClause,
+                Clauses = builder.Clauses,
+            };
+            foreach(var jc in builder.JoinClauses) { countBuilder.JoinClauses.Add(jc); }
+            countBuilder.ResultColumns.Add("count(1)");
+
+            var connection = Connection;
+            if (connection != null)
+            {
+                return connection.ExecuteScalar2<long>(countBuilder.ToString() + ";", parameters: parameters);
+            }
+            else
+            {
+                return Datastore.ExecuteScalar2<long>(countBuilder.ToString() + ";", parameters: parameters);
+            }
+        }
+
 
         public IQueryBuilder<T> Limit(int limit, int offset)
         {

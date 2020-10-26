@@ -11,8 +11,9 @@
       <ModelGenDatastoreTypeName Condition="'$(ModelGenDatastoreTypeName)' == ''"></ModelGenDatastoreTypeName>
 
       <ParamModelGenIgnoreColumns Condition="'$(ModelGenIgnoreColumns)' != ''">--ignorecolumns &quot;$(ModelGenIgnoreColumns)&quot;</ParamModelGenIgnoreColumns>
+      <ParamModelGenNonPersistedColumns Condition="'$(ModelGenIgnoreColumns)' != ''">--nonpersistedcolumns &quot;$(ModelGenNonPersistedColumns)&quot;</ParamModelGenNonPersistedColumns>
 
-      <ModelGenParams Condition="'$(ModelGenParams)' == ''">--ds --outputdirectory &quot;$(MSBuildProjectDirectory)&quot; --namespace &quot;$(ModelGenRootNamespace)&quot; --targetassembly &quot;$(ModelGenTargetAssembly)&quot; --typename &quot;$(ModelGenDatastoreTypeName)&quot; $(ParamModelGenIgnoreColumns)</ModelGenParams>
+      <ModelGenParams Condition="'$(ModelGenParams)' == ''">--ds --outputdirectory &quot;$(MSBuildProjectDirectory)&quot; --namespace &quot;$(ModelGenRootNamespace)&quot; --targetassembly &quot;$(ModelGenTargetAssembly)&quot; --typename &quot;$(ModelGenDatastoreTypeName)&quot; $(ParamModelGenIgnoreColumns) $(ParamModelGenNonPersistedColumns)</ModelGenParams>
     </PropertyGroup>
 
     <Message Importance="high" Text="&quot;$(ModelGenToolPath)&quot; $(ModelGenParams)"/>
