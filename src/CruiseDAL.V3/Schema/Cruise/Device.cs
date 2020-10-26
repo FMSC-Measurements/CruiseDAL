@@ -8,29 +8,26 @@ namespace CruiseDAL.Schema
 {
     public class DeviceTableDefinition : ITableDefinition
     {
-        public const string CREATE_TABLE_DEVICE =
-@"CREATE TABLE Device ( 
-    DeviceID TEXT NOT NULL COLLATE NOCASE, 
-    Name TEXT, 
-
-    UNIQUE (DeviceID)
-);";
-
         public string TableName => "Device";
 
         public string CreateTable =>
 @"CREATE TABLE Device ( 
     DeviceID TEXT NOT NULL COLLATE NOCASE, 
-    Name TEXT, 
+    CruiseID TEXT NOT NULL COLLATE NOCASE,
+    Name TEXT,
+    
+    FOREIGN KEY (CruiseID) REFERENCES Cruise (CruiseID) ON DELETE CASCADE,
 
-    UNIQUE (DeviceID)
+    UNIQUE (DeviceID, CruiseID)
 );";
 
         public string InitializeTable => null;
 
         public string CreateTombstoneTable => null;
 
-        public string CreateIndexes => null;
+        public string CreateIndexes =>
+@"CREATE INDEX Device_CruiseID ON Device (CruiseID);
+CREATE INDEX Device_DeviceID ON Device (DeviceID);";
 
         public IEnumerable<string> CreateTriggers => Enumerable.Empty<string>();
     }

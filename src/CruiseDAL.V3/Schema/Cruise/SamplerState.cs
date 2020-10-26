@@ -23,7 +23,7 @@ namespace CruiseDAL.Schema
 
     UNIQUE (CruiseID, DeviceID, StratumCode, SampleGroupCode),
 
-    FOREIGN KEY (DeviceID) REFERENCES Device (DeviceID) ON DELETE CASCADE,
+    FOREIGN KEY (DeviceID, CruiseID) REFERENCES Device (DeviceID, CruiseID) ON DELETE CASCADE,
     FOREIGN KEY (StratumCode, SampleGroupCode, CruiseID) REFERENCES SampleGroup (StratumCode, SampleGroupCode, CruiseID) ON DELETE CASCADE ON UPDATE CASCADE
 );";
 
