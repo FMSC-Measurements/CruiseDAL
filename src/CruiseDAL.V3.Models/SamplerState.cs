@@ -38,8 +38,17 @@ namespace CruiseDAL.V3.Models
   [Field("InsuranceCounter")]
   public String InsuranceCounter { get; set; }
 
-  [Field("ModifiedDate")]
-  public DateTime? ModifiedDate { get; set; }
+  [Field("CreatedBy")]
+  public String CreatedBy { get; set; }
+
+  [Field("Created_TS")]
+  public DateTime? Created_TS { get; set; }
+
+  [Field("ModifiedBy")]
+  public String ModifiedBy { get; set; }
+
+  [Field("Modified_TS")]
+  public DateTime? Modified_TS { get; set; }
 
  }
 
