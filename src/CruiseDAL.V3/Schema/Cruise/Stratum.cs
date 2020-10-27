@@ -20,6 +20,7 @@ namespace CruiseDAL.Schema
     Hotkey TEXT,
     FBSCode TEXT,
     YieldComponent TEXT DEFAULT 'CL',
+    FixCNTField TEXT NOT NULL COLLATE NOCASE,
     VolumeFactor REAL DEFAULT 0.0,
     Month INTEGER DEFAULT 0,
     Year INTEGER DEFAULT 0,
@@ -29,6 +30,7 @@ namespace CruiseDAL.Schema
     Modified_TS DATETIME,
 
     FOREIGN KEY (CruiseID) REFERENCES Cruise (CruiseID) ON DELETE CASCADE,
+    FOREIGN KEY (FixCNTField) REFERENCES TreeField (Field), 
 
     UNIQUE(StratumCode, CruiseID),
 
