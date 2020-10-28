@@ -5,6 +5,9 @@ namespace CruiseDAL.V3.Models
  [Table("CuttingUnit_Tombstone")]
  public partial class CuttingUnit_Tombstone
  {
+  [Field("CuttingUnitID")]
+  public String CuttingUnitID { get; set; }
+
   [Field("CuttingUnitCode")]
   public String CuttingUnitCode { get; set; }
 

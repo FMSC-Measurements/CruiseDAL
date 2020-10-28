@@ -8,6 +8,9 @@ namespace CruiseDAL.V3.Models
   [PrimaryKeyField("Subpopulation_CN")]
   public Int32? Subpopulation_CN { get; set; }
 
+  [Field("SubPopulationID")]
+  public String SubPopulationID { get; set; }
+
   [Field("CruiseID")]
   public String CruiseID { get; set; }
 

@@ -9,6 +9,7 @@ namespace CruiseDAL.Schema
         public string CreateTable =>
 @"CREATE TABLE SampleGroup (
     SampleGroup_CN INTEGER PRIMARY KEY AUTOINCREMENT,
+    SampleGroupID  TEXT NOT NULL COLLATE NOCASE,
     CruiseID TEXT NOT NULL COLLATE NOCASE,
     SampleGroupCode TEXT NOT NULL COLLATE NOCASE,
     StratumCode TEXT NOT NULL COLLATE NOCASE,
@@ -34,8 +35,10 @@ namespace CruiseDAL.Schema
     ModifiedBy TEXT,
     Modified_TS DATETIME,
 
+    CHECK (SampleGroupID LIKE '________-____-____-____-____________'),
     CHECK (length(SampleGroupCode) > 0)
 
+    UNIQUE (SampleGroupID),
     UNIQUE (StratumCode, SampleGroupCode, CruiseID),
 
     FOREIGN KEY (StratumCode, CruiseID) REFERENCES Stratum (StratumCode, CruiseID) ON DELETE CASCADE ON UPDATE CASCADE
@@ -48,6 +51,7 @@ namespace CruiseDAL.Schema
 
         public string CreateTombstoneTable =>
 @"CREATE TABLE SampleGroup_Tombstone (
+    SampleGroupID  TEXT NOT NULL COLLATE NOCASE,
     CruiseID TEXT NOT NULL COLLATE NOCASE,
     SampleGroupCode TEXT NOT NULL COLLATE NOCASE,
     StratumCode TEXT NOT NULL COLLATE NOCASE,
@@ -72,7 +76,9 @@ namespace CruiseDAL.Schema
     Created_TS DATETIME,
     ModifiedBy TEXT,
     Modified_TS DATETIME,
-    Deleted_TS DATETIME
+    Deleted_TS DATETIME,
+
+    UNIQUE(SampleGroupID)
 );
 
 CREATE INDEX SampleGroup_Tombstone_CruiseID_SampleGroupCode_StratumCode ON SampleGroup_Tombstone 
@@ -117,6 +123,7 @@ BEFORE DELETE ON SampleGroup
 FOR EACH ROW
 BEGIN
     INSERT OR REPLACE INTO SampleGroup_Tombstone (
+        SampleGroupID,
         CruiseID,
         SampleGroupCode,
         StratumCode,
@@ -143,6 +150,7 @@ BEGIN
         Modified_TS,
         Deleted_TS
     ) VALUES (
+        OLD.SampleGroupID,
         OLD.CruiseID,
         OLD.SampleGroupCode,
         OLD.StratumCode,

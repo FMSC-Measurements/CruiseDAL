@@ -8,6 +8,9 @@ namespace CruiseDAL.V3.Models
   [PrimaryKeyField("Stratum_CN")]
   public Int32? Stratum_CN { get; set; }
 
+  [Field("StratumID")]
+  public String StratumID { get; set; }
+
   [Field("StratumCode")]
   public String StratumCode { get; set; }
 
@@ -40,6 +43,9 @@ namespace CruiseDAL.V3.Models
 
   [Field("YieldComponent")]
   public String YieldComponent { get; set; }
+
+  [Field("FixCNTField")]
+  public String FixCNTField { get; set; }
 
   [Field("VolumeFactor")]
   public Double? VolumeFactor { get; set; }

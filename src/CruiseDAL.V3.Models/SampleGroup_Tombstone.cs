@@ -5,6 +5,9 @@ namespace CruiseDAL.V3.Models
  [Table("SampleGroup_Tombstone")]
  public partial class SampleGroup_Tombstone
  {
+  [Field("SampleGroupID")]
+  public String SampleGroupID { get; set; }
+
   [Field("CruiseID")]
   public String CruiseID { get; set; }
 

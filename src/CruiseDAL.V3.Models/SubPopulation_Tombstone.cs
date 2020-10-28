@@ -5,6 +5,9 @@ namespace CruiseDAL.V3.Models
  [Table("SubPopulation_Tombstone")]
  public partial class SubPopulation_Tombstone
  {
+  [Field("SubPopulationID")]
+  public String SubPopulationID { get; set; }
+
   [Field("CruiseID")]
   public String CruiseID { get; set; }
 

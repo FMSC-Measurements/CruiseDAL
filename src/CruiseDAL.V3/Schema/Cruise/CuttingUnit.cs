@@ -9,6 +9,7 @@ namespace CruiseDAL.Schema
         public string CreateTable =>
 @"CREATE TABLE CuttingUnit(
     CuttingUnit_CN INTEGER PRIMARY KEY AUTOINCREMENT,
+    CuttingUnitID TEXT NOT NULL COLLATE NOCASE,
     CuttingUnitCode TEXT NOT NULL COLLATE NOCASE,
     CruiseID TEXT NOT NULL COLLATE NOCASE,
     Area REAL DEFAULT 0.0,
@@ -21,10 +22,12 @@ namespace CruiseDAL.Schema
     ModifiedBy TEXT,
     Modified_TS DATETIME ,
 
+    UNIQUE(CuttingUnitID),
     UNIQUE(CuttingUnitCode, CruiseID),
 
     FOREIGN KEY (CruiseID) REFERENCES Cruise (CruiseID) ON DELETE CASCADE,
 
+    CHECK (CuttingUnitID LIKE '________-____-____-____-____________'),
     CHECK (length(CuttingUnitCode) > 0)
 );";
 
@@ -32,6 +35,7 @@ namespace CruiseDAL.Schema
 
         public string CreateTombstoneTable =>
 @"CREATE TABLE CuttingUnit_Tombstone (
+    CuttingUnitID TEXT NOT NULL COLLATE NOCASE,
     CuttingUnitCode TEXT NOT NULL COLLATE NOCASE,
     CruiseID TEXT NOT NULL COLLATE NOCASE,
     Area REAL,
@@ -43,7 +47,9 @@ namespace CruiseDAL.Schema
     Created_TS DATETIME,
     ModifiedBy TEXT,
     Modified_TS DATETIME,
-    Deleted_TS DATETIME
+    Deleted_TS DATETIME,
+
+    UNIQUE(CuttingUnitID)
 );
 
 CREATE INDEX CuttingUnit_Tombstone_CruiseID_CuttingUnitCode ON CuttingUnit_Tombstone 

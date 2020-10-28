@@ -8,6 +8,9 @@ namespace CruiseDAL.V3.Models
   [PrimaryKeyField("CuttingUnit_CN")]
   public Int32? CuttingUnit_CN { get; set; }
 
+  [Field("CuttingUnitID")]
+  public String CuttingUnitID { get; set; }
+
   [Field("CuttingUnitCode")]
   public String CuttingUnitCode { get; set; }
 

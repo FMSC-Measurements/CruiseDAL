@@ -5,6 +5,9 @@ namespace CruiseDAL.V3.Models
  [Table("Stratum_Tombstone")]
  public partial class Stratum_Tombstone
  {
+  [Field("StratumID")]
+  public String StratumID { get; set; }
+
   [Field("StratumCode")]
   public String StratumCode { get; set; }
 

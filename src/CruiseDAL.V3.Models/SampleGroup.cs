@@ -8,6 +8,9 @@ namespace CruiseDAL.V3.Models
   [PrimaryKeyField("SampleGroup_CN")]
   public Int32? SampleGroup_CN { get; set; }
 
+  [Field("SampleGroupID")]
+  public String SampleGroupID { get; set; }
+
   [Field("CruiseID")]
   public String CruiseID { get; set; }
 

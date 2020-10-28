@@ -9,6 +9,7 @@ namespace CruiseDAL.Schema
         public string CreateTable =>
 @"CREATE TABLE SubPopulation (
     Subpopulation_CN INTEGER PRIMARY KEY AUTOINCREMENT,
+    SubPopulationID TEXT NOT NULL COLLATE NOCASE,
     CruiseID TEXT NOT NULL COLLATE NOCASE,
     StratumCode TEXT NOT NULL COLLATE NOCASE,
     SampleGroupCode TEXT NOT NULL COLLATE NOCASE,
@@ -19,8 +20,10 @@ namespace CruiseDAL.Schema
     ModifiedBy TEXT,
     Modified_TS DATETIME,
 
+    UNIQUE (SubPopulationID),
     UNIQUE (CruiseID, StratumCode, SampleGroupCode, SpeciesCode, LiveDead),
 
+    CHECK (SubPopulationID LIKE '________-____-____-____-____________'),
     CHECK (LiveDead IN ('L', 'D')),
 
     FOREIGN KEY (StratumCode, SampleGroupCode, CruiseID) REFERENCES SampleGroup (StratumCode, SampleGroupCode, CruiseID) ON DELETE CASCADE ON UPDATE CASCADE,
@@ -31,6 +34,7 @@ namespace CruiseDAL.Schema
 
         public string CreateTombstoneTable =>
 @"CREATE TABLE SubPopulation_Tombstone (
+    SubPopulationID TEXT NOT NULL COLLATE NOCASE,
     CruiseID TEXT NOT NULL COLLATE NOCASE,
     StratumCode TEXT NOT NULL COLLATE NOCASE,
     SampleGroupCode TEXT NOT NULL COLLATE NOCASE,
@@ -40,7 +44,9 @@ namespace CruiseDAL.Schema
     Created_TS DATETIME,
     ModifiedBy TEXT,
     Modified_TS DATETIME,
-    Deleted_TS DATETIME
+    Deleted_TS DATETIME,
+
+    UNIQUE(SubPopulationID)
 );
 
 CREATE INDEX SubPopulation_Tombstone_CruiseID_StratumCode_SampleGroupCode_SpeciesCode_LiveDead ON SubPopulation_Tombstone 
@@ -69,6 +75,7 @@ BEFORE DELETE ON SubPopulation
 FOR EACH ROW
 BEGIN
     INSERT OR REPLACE INTO SubPopulation_Tomstone (
+        SubPopulationID,
         CruiseID,
         StratumCode,
         SampleGroupCode,
@@ -80,6 +87,7 @@ BEGIN
         Modified_TS,
         Deleted_TS
     ) VALUES (
+        OLD.SubPopulationID,
         OLD.CruiseID,
         OLD.StratumCode,
         OLD.SampleGroupCode,

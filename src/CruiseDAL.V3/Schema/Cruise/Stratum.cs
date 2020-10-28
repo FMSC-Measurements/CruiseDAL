@@ -9,6 +9,7 @@ namespace CruiseDAL.Schema
         public string CreateTable =>
 @"CREATE TABLE Stratum (
     Stratum_CN INTEGER PRIMARY KEY AUTOINCREMENT,
+    StratumID TEXT NOT NULL COLLATE NOCASE,
     StratumCode TEXT NOT NULL COLLATE NOCASE,
     CruiseID TEXT NOT NULL COLLATE NOCASE,
     Description TEXT,
@@ -32,8 +33,10 @@ namespace CruiseDAL.Schema
     FOREIGN KEY (CruiseID) REFERENCES Cruise (CruiseID) ON DELETE CASCADE,
     FOREIGN KEY (FixCNTField) REFERENCES TreeField (Field), 
 
+    UNIQUE(StratumID),
     UNIQUE(StratumCode, CruiseID),
 
+    CHECK (StratumID LIKE '________-____-____-____-____________'),
     CHECK (length(StratumCode) > 0)
 );";
 
@@ -41,6 +44,7 @@ namespace CruiseDAL.Schema
 
         public string CreateTombstoneTable =>
 @"CREATE TABLE Stratum_Tombstone (
+    StratumID TEXT NOT NULL COLLATE NOCASE,
     StratumCode TEXT NOT NULL COLLATE NOCASE,
     CruiseID TEXT NOT NULL COLLATE NOCASE,
     Description TEXT,
@@ -59,7 +63,9 @@ namespace CruiseDAL.Schema
     Created_TS DATETIME,
     ModifiedBy TEXT,
     Modified_TS DATETIME,
-    Deleted_TS DATETIME
+    Deleted_TS DATETIME,
+
+    UNIQUE(StratumID)
 );
 
 CREATE INDEX Stratum_Tombstone_CruiseID_StratumCode ON Stratum_Tombstone 
@@ -97,6 +103,7 @@ BEFORE DELETE ON Stratum
 FOR EACH ROW
 BEGIN
     INSERT OR REPLACE INTO Stratum_Tombstone (
+        StratumID,
         StratumCode,
         CruiseID,
         Description,
@@ -117,6 +124,7 @@ BEGIN
         Modified_TS,
         Deleted_TS
     ) VALUES (
+        OLD.StratumID,
         OLD.StratumCode,
         OLD.CruiseID,
         OLD.Description,
