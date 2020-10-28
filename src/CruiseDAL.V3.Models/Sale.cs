@@ -5,11 +5,11 @@ namespace CruiseDAL.V3.Models
  [Table("Sale")]
  public partial class Sale
  {
-  [Field("SaleID")]
-  public String SaleID { get; set; }
-
   [PrimaryKeyField("Sale_CN")]
   public Int32? Sale_CN { get; set; }
+
+  [Field("SaleID")]
+  public String SaleID { get; set; }
 
   [Field("SaleNumber")]
   public String SaleNumber { get; set; }
