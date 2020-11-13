@@ -46,7 +46,6 @@ namespace CruiseDAL
             new SubPopulationTableDefinition(),
             new TallyDescriptionTableDefinition(),
             new TallyHotkeyTableDefinition(),
-            new FixCNTTallyClassTableDefinition(),
             new FixCNTTallyPopulationTableDefinition(),
 
             // field data

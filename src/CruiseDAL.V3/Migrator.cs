@@ -24,7 +24,6 @@ namespace CruiseDAL
             new SpeciesMigrator(),
             new SubPopulationMigrator(),
             new TreeDefaultValueMigrator(),
-            new FixCNTTallyClassMigrator(),
             new FixCNTTallyPopulationMigrator(),
             new TreeMigrator(),
             new TreeMeasurmentsMigrator(),

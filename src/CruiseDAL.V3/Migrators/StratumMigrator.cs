@@ -22,6 +22,7 @@ $@"INSERT INTO {toDbName}.Stratum (
     HotKey,
     FBSCode,
     YieldComponent,
+    FixCNTField, 
     VolumeFactor,
     Month,
     Year,
@@ -31,25 +32,27 @@ $@"INSERT INTO {toDbName}.Stratum (
     Modified_TS
 )
 SELECT
-    Code,
-    '{cruiseID}',
-    Description,
-    Method,
-    BasalAreaFactor,
-    FixedPlotSize,
-    KZ3PPNT,
-    SamplingFrequency,
-    HotKey,
-    FBSCode,
-    YieldComponent,
-    VolumeFactor,
-    Month,
-    Year,
-    CreatedBy,
-    CreatedDate,
-    ModifiedBy,
-    ModifiedDate
-FROM {fromDbName}.Stratum;";
+    st.Code,
+    st.'{cruiseID}',
+    st.Description,
+    st.Method,
+    st.BasalAreaFactor,
+    st.FixedPlotSize,
+    st.KZ3PPNT,
+    st.SamplingFrequency,
+    st.HotKey,
+    st.FBSCode,
+    st.YieldComponent,
+    tc.Field,
+    st.VolumeFactor,
+    st.Month,
+    st.Year,
+    st.CreatedBy,
+    st.CreatedDate,
+    st.ModifiedBy,
+    st.ModifiedDate
+FROM {fromDbName}.Stratum AS st
+LEFT JOIN FixCNTTallyClass AS tc USING (Stratum_CN);";
         }
     }
 }
