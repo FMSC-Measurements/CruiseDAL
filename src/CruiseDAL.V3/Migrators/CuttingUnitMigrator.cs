@@ -10,9 +10,10 @@ namespace CruiseDAL.Migrators
         public string MigrateToV3(string toDbName, string fromDbName, string cruiseID, string saleID)
         {
 return $@"INSERT INTO {toDbName}.CuttingUnit (
+        CuttingUnitID,
         CuttingUnit_CN,
         CruiseID,
-        Code,
+        CuttingUnitCode,
         Area,
         Description,
         LoggingMethod,
@@ -20,6 +21,10 @@ return $@"INSERT INTO {toDbName}.CuttingUnit (
         Rx
     )
     SELECT
+        (hex( randomblob(4)) || '-' || hex( randomblob(2)) 
+            || '-' || '4' || substr(hex(randomblob(2)), 2) || '-'
+            || substr('AB89', 1 + (abs(random()) % 4), 1) ||
+            substr(hex(randomblob(2)), 2) || '-' || hex(randomblob(6))) AS CuttringUnitID,
         CuttingUnit_CN,
         '{cruiseID}',
         Code,

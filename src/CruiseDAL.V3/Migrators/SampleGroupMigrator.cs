@@ -11,6 +11,7 @@ namespace CruiseDAL.Migrators
         {
             return
 $@"INSERT INTO {toDbName}.SampleGroup (
+    SampleGroupID,
     SampleGroup_CN,
     CruiseID,
     SampleGroupCode,
@@ -38,6 +39,10 @@ $@"INSERT INTO {toDbName}.SampleGroup (
     Modified_TS
 )
 SELECT
+    (hex( randomblob(4)) || '-' || hex( randomblob(2)) 
+            || '-' || '4' || substr(hex(randomblob(2)), 2) || '-'
+            || substr('AB89', 1 + (abs(random()) % 4), 1) ||
+            substr(hex(randomblob(2)), 2) || '-' || hex(randomblob(6))) AS SampleGroupID,
     sg.SampleGroup_CN,
     '{cruiseID}',
     sg.Code AS SampleGroupCode,

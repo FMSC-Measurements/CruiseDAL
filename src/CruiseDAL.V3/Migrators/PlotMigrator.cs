@@ -26,7 +26,7 @@ $@"INSERT INTO {toDbName}.Plot (
 )
 SELECT
     p.Plot_CN,
-    ifnull(
+    coalesce( -- we are going to check the if PlotID is valid otherwise generate a new guid
         (CASE typeof(Plot_GUID) COLLATE NOCASE -- ckeck the type of Plot_GUID
             WHEN 'TEXT' THEN -- if text
                 (CASE WHEN Plot_GUID LIKE '________-____-____-____-____________' -- check to see if it is a properly formated guid
@@ -44,9 +44,9 @@ SELECT
     p.Aspect,
     group_concat(p.Remarks) AS Remarks,
     p.CreatedBy,
-    p.Created_TS,
+    p.CreatedDate,
     p.ModifiedBy,
-    p.Modified_TS
+    p.ModifiedDate
 FROM {fromDbName}.Plot AS p
 JOIN {fromDbName}.CuttingUnit AS cu USING (CuttingUnit_CN)
 GROUP BY cu.Code, PlotNumber;";

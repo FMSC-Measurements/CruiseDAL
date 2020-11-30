@@ -147,7 +147,7 @@ namespace CruiseDAL.V3.Test
                 var command = new LogGradeAuditRuleMigrator().MigrateToV3("main", "v2", Guid.NewGuid().ToString(), Guid.NewGuid().ToString());
                 toDb.Execute(command);
 
-                var results = toDb.From<CruiseDAL.V3.Models.LogGradeAuditRule_V3>().Query().ToArray();
+                var results = toDb.From<CruiseDAL.V3.Models.LogGradeAuditRule>().Query().ToArray();
                 results.Should().NotBeEmpty();
 
                 foreach(var value in testLGARValues)

@@ -11,6 +11,7 @@ namespace CruiseDAL.Migrators
         {
             return
 $@"INSERT INTO {toDbName}.Stratum (
+    StratumID,
     StratumCode,
     CruiseID,
     Description,
@@ -32,8 +33,12 @@ $@"INSERT INTO {toDbName}.Stratum (
     Modified_TS
 )
 SELECT
+    (hex( randomblob(4)) || '-' || hex( randomblob(2)) 
+            || '-' || '4' || substr(hex(randomblob(2)), 2) || '-'
+            || substr('AB89', 1 + (abs(random()) % 4), 1) ||
+            substr(hex(randomblob(2)), 2) || '-' || hex(randomblob(6))) AS StratumID,
     st.Code,
-    st.'{cruiseID}',
+    '{cruiseID}',
     st.Description,
     st.Method,
     st.BasalAreaFactor,
@@ -43,7 +48,7 @@ SELECT
     st.HotKey,
     st.FBSCode,
     st.YieldComponent,
-    tc.Field,
+    tc.FieldName,
     st.VolumeFactor,
     st.Month,
     st.Year,
@@ -52,7 +57,7 @@ SELECT
     st.ModifiedBy,
     st.ModifiedDate
 FROM {fromDbName}.Stratum AS st
-LEFT JOIN FixCNTTallyClass AS tc USING (Stratum_CN);";
+LEFT JOIN {fromDbName}.FixCNTTallyClass AS tc USING (Stratum_CN);";
         }
     }
 }

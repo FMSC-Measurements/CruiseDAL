@@ -18,7 +18,8 @@ return $@"INSERT INTO {toDbName}.Cruise (
     Remarks,
     CreatedBy,
     Created_TS,
-    ModifiedBy
+    ModifiedBy,
+    Modified_TS
 )
 SELECT
     '{cruiseID}',
@@ -29,7 +30,8 @@ SELECT
     Remarks,
     CreatedBy,
     CreatedDate,
-    ModifiedBy
+    ModifiedBy,
+    ModifiedDate
 FROM {fromDbName}.Sale;";
         }
     }
