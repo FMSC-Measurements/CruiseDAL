@@ -14,8 +14,11 @@ namespace CruiseDAL.Schema
     Field TEXT NOT NULL COLLATE NOCASE,
     FieldOrder INTEGER Default 0,
     Heading TEXT,
-    Width REAL Default 0.0,
-    DefaultValueInt INTEGER,
+    Width REAL Default 0.0, 
+    IsHidden BOOLEAN Default 0,
+    IsLocked BOOLEAN Default 0,
+    -- value type determined by TreeField.DbType
+    DefaultValueInt INTEGER, 
     DefaultValueReal REAL,
     DefaultValueBool BOOLEAN,
     DefaultValueText TEXT,
