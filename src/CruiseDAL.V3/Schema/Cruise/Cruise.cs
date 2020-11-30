@@ -8,6 +8,7 @@ namespace CruiseDAL.Schema
 
         public string CreateTable =>
 @"CREATE TABLE Cruise (
+    Cruise_CN INTEGER PRIMARY KEY AUTOINCREMENT,
     CruiseID TEXT NOT NULL COLLATE NOCASE,
     SaleID TEXT NOT NULL COLLATE NOCASE,
     Purpose TEXT,

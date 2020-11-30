@@ -22,7 +22,7 @@ namespace CruiseDAL.Schema
     FBSCode TEXT,
     YieldComponent TEXT DEFAULT 'CL',
 
-    FixCNTField TEXT NOT NULL COLLATE NOCASE,
+    FixCNTField TEXT COLLATE NOCASE,
 
     VolumeFactor REAL DEFAULT 0.0,
     Month INTEGER DEFAULT 0,
