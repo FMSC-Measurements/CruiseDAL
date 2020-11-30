@@ -13,7 +13,8 @@ namespace CruiseDAL.Schema
     Field TEXT COLLATE NOCASE,
     DbType TEXT NOT NULL COLLATE NOCASE,
     IsTreeMeasurmentField BOOLEAN DEFAULT 0,
-    UNIQUE (Field)
+    UNIQUE (Field),
+    CHECK (DbType IN ('REAL', 'TEXT', 'BOOLEAN', 'INTEGER'))
 );";
 
         public string InitializeTable =>
