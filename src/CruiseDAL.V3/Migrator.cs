@@ -36,6 +36,7 @@ namespace CruiseDAL
             new LogGradeAuditRuleMigrator(),
             new TreeAuditRuleMigrator(),
             new TreeAuditRuleSelectorMigrator(),
+            new ReportsMigrator(),
 
             new GlobalsMigrator(),
             new MessageLogMigrator(),
@@ -102,16 +103,33 @@ namespace CruiseDAL
 
             var cruiseID = Guid.NewGuid().ToString();
             var saleID = Guid.NewGuid().ToString();
-            using (var transaction = connection.BeginTransaction())
-            {
-                var migrators = MIGRATORS;
-                foreach (var migrator in migrators)
-                {
-                    var command = migrator.MigrateToV3(to, from, cruiseID, saleID);
-                    connection.ExecuteNonQuery(command, transaction: transaction, exceptionProcessor: exceptionProcessor);
-                }
+            //using (var transaction = connection.BeginTransaction())
+            //{
+            //    try
+            //    {
+            //        var migrators = MIGRATORS;
+            //        foreach (var migrator in migrators)
+            //        {
+            //            var command = migrator.MigrateToV3(to, from, cruiseID, saleID);
+            //            connection.ExecuteNonQuery(command, transaction: transaction, exceptionProcessor: exceptionProcessor);
+            //        }
 
-                transaction.Commit();
+            //        transaction.Commit();
+            //    }
+            //    catch
+            //    {
+            //        transaction.Rollback();
+            //        throw;
+            //    }
+            //}
+
+            DbTransaction transaction = null;
+
+            var migrators = MIGRATORS;
+            foreach (var migrator in migrators)
+            {
+                var command = migrator.MigrateToV3(to, from, cruiseID, saleID);
+                connection.ExecuteNonQuery(command, transaction: transaction, exceptionProcessor: exceptionProcessor);
             }
         }
     }
