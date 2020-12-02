@@ -12,8 +12,20 @@ namespace CruiseDAL.Migrators
             return
 $@"WITH ctFlattened AS ( 
 SELECT SampleGroup_CN, TreeDefaultValue_CN, max(Tally_CN) AS Tally_CN 
-FROM {fromDbName}.CountTree 
-GROUP BY SampleGroup_CN, ifnull(TreeDefaultValue_CN, '')) 
+FROM {fromDbName}.CountTree AS ct
+-- we need to join with SGTDV to prefent fKey fails with SubPopulation, 
+JOIN {fromDbName}.SampleGroupTreeDefaultValue AS sgtdv USING (SampleGroup_CN, TreeDefaultValue_CN)
+WHERE ct.TreeDefaultValue_CN NOTNULL
+GROUP BY SampleGroup_CN, TreeDefaultValue_CN
+
+UNION ALL 
+
+SELECT SampleGroup_CN, NULL AS TreeDefaultValue_CN, max(Tally_CN) AS Tally_CN 
+FROM {fromDbName}.CountTree AS ct
+WHERE ct.TreeDefaultValue_CN IS NULL
+GROUP BY SampleGroup_CN
+
+) 
 
 INSERT OR REPLACE INTO {toDbName}.TallyDescription ( 
     CruiseID, 
