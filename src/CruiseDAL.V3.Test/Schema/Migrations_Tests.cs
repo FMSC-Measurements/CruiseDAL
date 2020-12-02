@@ -93,10 +93,11 @@ namespace CruiseDAL.V3.Test
         [Fact]
         public void ContainsAllMigrators()
         {
-            var allMigratorTypes = Assembly.GetExecutingAssembly()
-                .GetTypes().Where(x => typeof(IMigrator).IsAssignableFrom(x)).ToArray();
+            var allMigratorTypes = Assembly.GetAssembly(typeof(IMigrator))
+                .GetTypes().Where(x => typeof(IMigrator).IsAssignableFrom(x) && x != typeof(IMigrator)).ToArray();
 
-            Migrator.MIGRATORS.Select(x => x.GetType()).Should().Contain(allMigratorTypes);
+            Migrator.MIGRATORS.Select(x => x.GetType()).ToArray()
+                .Should().Contain(allMigratorTypes);
         }
 
         [Theory]
