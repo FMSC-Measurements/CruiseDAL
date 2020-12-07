@@ -1,4 +1,5 @@
 ﻿using CruiseDAL.Schema;
+using CruiseDAL.Schema.Cruise.Lookup;
 using CruiseDAL.Schema.Views;
 using FMSC.ORM.Core;
 using FMSC.ORM.Logging;
@@ -21,6 +22,12 @@ namespace CruiseDAL
             new FIATableDefinition(),
             new TreeFieldTableDefinition(),
             new LogFieldTableDefinition(),
+            new CruiseMethodSTableDefinition(),
+            new LoggingMethodsTableDefinition(),
+            new ProductsTableDefinition(),
+            new RegionsTableDefinition(),
+            new ForestsTableDefintion(),
+            new UOMCodesTableDefinition(),
 
             // cruise specific lookup
             new SpeciesTableDefinition(),
@@ -115,9 +122,12 @@ namespace CruiseDAL
             {
                 Logger?.Log($"Creating Triggers For Table {table.TableName}", LogCategory.DbBuilder, LogLevel.Info);
                 var triggers = table.CreateTriggers;
-                foreach (var trigger in triggers)
+                if (triggers != null)
                 {
-                    connection.ExecuteNonQuery(trigger, transaction: transaction, exceptionProcessor: exceptionProcessor);
+                    foreach (var trigger in triggers)
+                    {
+                        connection.ExecuteNonQuery(trigger, transaction: transaction, exceptionProcessor: exceptionProcessor);
+                    }
                 }
             }
         }

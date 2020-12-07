@@ -13,8 +13,8 @@ namespace CruiseDAL.Schema
     SaleNumber TEXT NOT NULL,
     Name TEXT,
     Purpose TEXT,
-    Region TEXT DEFAULT '',
-    Forest TEXT DEFAULT '',
+    Region  TEXT COLLATE NOCASE,
+    Forest TEXT COLLATE NOCASE,
     District TEXT DEFAULT '',
     MeasurementYear TEXT,
     CalendarYear INTEGER Default 0,
@@ -28,7 +28,10 @@ namespace CruiseDAL.Schema
 
     CHECK (SaleID LIKE '________-____-____-____-____________'),
     UNIQUE(SaleID),
-    UNIQUE(SaleNumber)
+    UNIQUE(SaleNumber),
+
+    FOREIGN KEY (Region) REFERENCES Regions (Region),
+    FOREIGN KEY (Forest, Region) REFERENCES Forests (Forest, Region)
 );";
 
         public string InitializeTable => null;

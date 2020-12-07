@@ -46,7 +46,7 @@ namespace CruiseDAL.V3.Test
         public void ContainsAllTableDefinitions()
         {
             
-            var tableTypes = Assembly.GetAssembly(typeof(ITableDefinition)).GetTypes()
+            var tableTypes = Assembly.GetAssembly(typeof(CruiseDatastoreBuilder_V3)).GetTypes()
                 .Where(x => typeof(ITableDefinition).IsAssignableFrom(x) && x != typeof(ITableDefinition))
                 .ToArray();
 
@@ -58,8 +58,7 @@ namespace CruiseDAL.V3.Test
         public void ContainsAllViewDefinitions()
         {
 
-            var tableTypes = Assembly.GetAssembly(typeof(ITableDefinition))
-                .GetTypes()
+            var tableTypes = Assembly.GetAssembly(typeof(CruiseDatastoreBuilder_V3)).GetTypes()
                 .Where(x => typeof(IViewDefinition).IsAssignableFrom(x) && x != typeof(IViewDefinition))
                 .ToArray();
 

@@ -48,7 +48,7 @@ SELECT
     sg.Code AS SampleGroupCode,
     st.Code AS StratumCode,
     sg.CutLeave,
-    sg.UOM,
+    trim(sg.UOM) AS UOM,
     sg.PrimaryProduct,
     sg.SecondaryProduct,
     sg.BiomassProduct,

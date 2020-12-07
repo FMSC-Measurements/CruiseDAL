@@ -26,6 +26,12 @@ namespace CruiseDAL.V3.Models
   [Field("Width")]
   public Double? Width { get; set; }
 
+  [Field("IsHidden")]
+  public Boolean? IsHidden { get; set; }
+
+  [Field("IsLocked")]
+  public Boolean? IsLocked { get; set; }
+
   [Field("DefaultValueInt")]
   public Int32? DefaultValueInt { get; set; }
 

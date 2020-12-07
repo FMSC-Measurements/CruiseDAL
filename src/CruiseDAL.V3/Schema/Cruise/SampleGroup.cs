@@ -14,10 +14,10 @@ namespace CruiseDAL.Schema
     SampleGroupCode TEXT NOT NULL COLLATE NOCASE,
     StratumCode TEXT NOT NULL COLLATE NOCASE,
     CutLeave TEXT DEFAULT 'C' COLLATE NOCASE,
-    UOM TEXT DEFAULT '' COLLATE NOCASE,
-    PrimaryProduct TEXT DEFAULT '' COLLATE NOCASE,
+    UOM TEXT COLLATE NOCASE,
+    PrimaryProduct TEXT COLLATE NOCASE,
     SecondaryProduct TEXT COLLATE NOCASE,
-    BiomassProduct TEXT,
+    BiomassProduct TEXT COLLATE NOCASE,
     DefaultLiveDead TEXT DEFAULT 'L' COLLATE NOCASE,
     SamplingFrequency INTEGER Default 0,
     InsuranceFrequency INTEGER Default 0,
@@ -41,7 +41,9 @@ namespace CruiseDAL.Schema
     UNIQUE (SampleGroupID),
     UNIQUE (StratumCode, SampleGroupCode, CruiseID),
 
-    FOREIGN KEY (StratumCode, CruiseID) REFERENCES Stratum (StratumCode, CruiseID) ON DELETE CASCADE ON UPDATE CASCADE
+    FOREIGN KEY (StratumCode, CruiseID) REFERENCES Stratum (StratumCode, CruiseID) ON DELETE CASCADE ON UPDATE CASCADE,
+    FOREIGN KEY (UOM) REFERENCES UOMCodes (UOM),
+    FOREIGN KEY (PrimaryProduct) REFERENCES Products (Product)
 );";
 
         public string InitializeTable => null;

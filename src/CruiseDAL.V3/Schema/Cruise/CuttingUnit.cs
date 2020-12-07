@@ -14,7 +14,7 @@ namespace CruiseDAL.Schema
     CruiseID TEXT NOT NULL COLLATE NOCASE,
     Area REAL DEFAULT 0.0,
     Description TEXT,
-    LoggingMethod TEXT,
+    LoggingMethod TEXT COLLATE NOCASE,
     PaymentUnit TEXT,
     Rx TEXT,
     CreatedBy TEXT DEFAULT 'none',
@@ -26,6 +26,7 @@ namespace CruiseDAL.Schema
     UNIQUE(CuttingUnitCode, CruiseID),
 
     FOREIGN KEY (CruiseID) REFERENCES Cruise (CruiseID) ON DELETE CASCADE,
+    FOREIGN KEY (LoggingMethod) REFERENCES LoggingMethods (LoggingMethod),
 
     CHECK (CuttingUnitID LIKE '________-____-____-____-____________'),
     CHECK (length(CuttingUnitCode) > 0)

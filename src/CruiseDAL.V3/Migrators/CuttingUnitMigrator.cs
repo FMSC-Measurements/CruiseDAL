@@ -30,7 +30,7 @@ return $@"INSERT INTO {toDbName}.CuttingUnit (
         Code,
         Area,
         Description,
-        LoggingMethod,
+        trim(LoggingMethod) AS LoggingMethod,
         PaymentUnit,
         Rx
     FROM {fromDbName}.CuttingUnit;";

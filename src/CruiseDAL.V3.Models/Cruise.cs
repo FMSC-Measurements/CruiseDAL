@@ -5,6 +5,9 @@ namespace CruiseDAL.V3.Models
  [Table("Cruise")]
  public partial class Cruise
  {
+  [PrimaryKeyField("Cruise_CN")]
+  public Int32? Cruise_CN { get; set; }
+
   [Field("CruiseID")]
   public String CruiseID { get; set; }
 

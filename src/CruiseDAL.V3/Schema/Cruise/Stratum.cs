@@ -13,7 +13,7 @@ namespace CruiseDAL.Schema
     StratumCode TEXT NOT NULL COLLATE NOCASE,
     CruiseID TEXT NOT NULL COLLATE NOCASE,
     Description TEXT,
-    Method TEXT DEFAULT '' COLLATE NOCASE,
+    Method TEXT NOT NULL COLLATE NOCASE,
     BasalAreaFactor REAL DEFAULT 0.0,
     FixedPlotSize REAL DEFAULT 0.0,
     KZ3PPNT INTEGER DEFAULT 0,
@@ -34,6 +34,7 @@ namespace CruiseDAL.Schema
 
     FOREIGN KEY (CruiseID) REFERENCES Cruise (CruiseID) ON DELETE CASCADE,
     FOREIGN KEY (FixCNTField) REFERENCES TreeField (Field), 
+    FOREIGN KEY (Method) REFERENCES CruiseMethods (Method), 
 
     UNIQUE(StratumID),
     UNIQUE(StratumCode, CruiseID),
