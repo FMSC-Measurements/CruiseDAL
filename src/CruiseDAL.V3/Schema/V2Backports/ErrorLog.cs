@@ -1,8 +1,10 @@
-﻿namespace CruiseDAL.Schema
+﻿namespace CruiseDAL.Schema.V2Backports
 {
-    public partial class DDL
+    public class ErrorLog_V2_ViewDefinition : IViewDefinition
     {
-        public const string CREATE_VIEW_ERRORLOG =
+        public string ViewName => "ErrorLog_V2";
+
+        public string CreateView =>
 @"CREATE VIEW ErrorLog_V2 AS
 SELECT
     -1 * ((((t.Tree_CN << 4) + (tf.TreeField_CN & 15)) << 4) + 1) AS RowID,
@@ -29,13 +31,13 @@ SELECT
 FROM LogGradeError AS le
 JOIN Log AS l USING (LogID)
 
-UNION ALL 
-SELECT 
+UNION ALL
+SELECT
     -1 * (((pe.Plot_Stratum_CN << 4) << 4) + 3) AS RowID,
     'Plot' AS TableName,
-    pe.Plot_Stratum_CN AS CN_Number, 
-    pe.Field, 
-    pe.Level, 
+    pe.Plot_Stratum_CN AS CN_Number,
+    pe.Field,
+    pe.Level,
     pe.Message,
     'FScruiser' AS Program,
     pe.IsResolved AS Suppress

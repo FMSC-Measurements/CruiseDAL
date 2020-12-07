@@ -1,5 +1,6 @@
 ﻿using CruiseDAL.Schema;
 using CruiseDAL.Schema.Cruise.Lookup;
+using CruiseDAL.Schema.V2Backports;
 using CruiseDAL.Schema.Views;
 using FMSC.ORM.Core;
 using FMSC.ORM.Logging;
@@ -92,6 +93,18 @@ namespace CruiseDAL
                 new TreeFieldValue_AllViewDefinition(),
                 new TreeFieldValue_TreeMeasurmentViewDefinition(),
                 new TreeFieldValue_TreeMeasurment_FilteredViewDefinition(),
+
+                new CountTree_V2_ViewDefinition(),
+                new CuttingUnitStratum_V2_ViewDefinition(),
+                new ErrorLog_V2_ViewDefinition(),
+                new FixCNTTallyClass_V2_ViewDefinition(),
+                new Log_V2_ViewDefinition(),
+                new Plot_V2_ViewDefinition(),
+                new SampleGroup_V2_ViewDefinition(),
+                new SampleGroupTreeDefaultValue_V2_ViewDefinition(),
+                new Tree_V2_ViewDefinition(),
+                new TreeDefaultValue_V2_ViewDefinition(),
+                new TreeDefaultValueTreeAuditValue_V2_ViewDefinition(),
             };
 
         private ILogger Logger { get; } = LoggerProvider.Get();
