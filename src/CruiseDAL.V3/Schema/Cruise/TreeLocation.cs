@@ -28,6 +28,11 @@ namespace CruiseDAL.Schema
     CHECK  ((SS_Latatude IS NOT NULL AND SS_Longitude IS NOT NULL AND Azimuth IS NOT NULL AND Distance IS NOT NULL)
         OR (SS_Latatude IS NULL AND SS_Longitude IS NULL AND Azimuth IS NULL AND Distance IS NULL)),
 
+    CHECK (Latitude BETWEEN -90.0 AND 90.0),
+    CHECK (Longitude BETWEEN -180.0 AND 180.0),
+    CHECK (SS_Latatude IS NULL OR SS_Latatude BETWEEN -90.0 AND 90.0),
+    CHECK (SS_Longitude IS NULL OR SS_Longitude BETWEEN -180.0 AND 180.0),
+
     UNIQUE (TreeID),
 
     FOREIGN KEY (TreeID) REFERENCES Tree (TreeID) ON DELETE CASCADE

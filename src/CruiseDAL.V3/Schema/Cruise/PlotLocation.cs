@@ -21,6 +21,9 @@ namespace CruiseDAL.Schema
     Modified_TS DATETIME,
 
     UNIQUE (PlotID),
+
+    CHECK (Latitude BETWEEN -90.0 AND 90.0),
+    CHECK (Longitude BETWEEN -180.0 AND 180.0),
     
     FOREIGN KEY (PlotID) REFERENCES Plot (PlotID) ON DELETE CASCADE
 );";
