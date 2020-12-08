@@ -1,5 +1,6 @@
 ﻿using CommandLine;
 using FMSC.ORM.Core;
+using FMSC.ORM.ModelGenerator.Generators;
 using System;
 using System.Diagnostics;
 using System.Linq;
@@ -62,8 +63,11 @@ namespace FMSC.ORM.ModelGenerator
                             var modelGenerator = new CSModelGenerator();
                             modelGenerator.GenerateFiles(schemaProvider, o.Namespace, o.OutputDirectory, nonPersistedColumns);
 
-                            var plantUMLGenerator = new PlantUMLGenerator();
-                            plantUMLGenerator.GenerateFiles(schemaProvider, o.Namespace, o.OutputDirectory, nonPersistedColumns);
+                            //var plantUMLGenerator = new PlantUMLGenerator();
+                            //plantUMLGenerator.GenerateFiles(schemaProvider, o.Namespace, o.OutputDirectory, nonPersistedColumns);
+
+                            var mermadeGenerator = new MermaidGenerator();
+                            mermadeGenerator.GenerateFiles(schemaProvider, o.Namespace, o.OutputDirectory, nonPersistedColumns);
                         }
                     }
                 });

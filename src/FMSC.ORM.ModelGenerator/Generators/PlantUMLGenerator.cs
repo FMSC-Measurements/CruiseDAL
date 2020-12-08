@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace FMSC.ORM.ModelGenerator
+namespace FMSC.ORM.ModelGenerator.Generators
 {
     public class PlantUMLGenerator : IGenerator
     {

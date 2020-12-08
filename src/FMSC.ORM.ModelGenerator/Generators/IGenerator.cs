@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace FMSC.ORM.ModelGenerator
+namespace FMSC.ORM.ModelGenerator.Generators
 {
     public interface IGenerator
     {

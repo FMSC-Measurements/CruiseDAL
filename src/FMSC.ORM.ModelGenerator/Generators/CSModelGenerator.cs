@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace FMSC.ORM.ModelGenerator
+namespace FMSC.ORM.ModelGenerator.Generators
 {
     public class CSModelGenerator : IGenerator
     {
