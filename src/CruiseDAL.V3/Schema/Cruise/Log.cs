@@ -108,7 +108,7 @@ AFTER UPDATE OF
 ON Log
 FOR EACH ROW
 BEGIN
-    UPDATE Log SET ModifiedDate = CURRENT_TIMESTAMP WHERE Log_CN = old.Log_CN;
+    UPDATE Log SET Modified_TS = CURRENT_TIMESTAMP WHERE Log_CN = old.Log_CN;
 END;";
 
         public const string CREATE_TRIGGER_Log_OnDelete =

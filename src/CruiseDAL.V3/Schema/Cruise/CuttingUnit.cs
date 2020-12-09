@@ -76,7 +76,7 @@ AFTER UPDATE OF
 ON CuttingUnit
 FOR EACH ROW
 BEGIN
-    UPDATE CuttingUnit SET ModifiedDate = CURRENT_TIMESTAMP WHERE CuttingUnit_CN = old.CuttingUnit_CN;
+    UPDATE CuttingUnit SET Modified_TS = CURRENT_TIMESTAMP WHERE CuttingUnit_CN = old.CuttingUnit_CN;
 END; ";
 
         public const string CREATE_TRIGGER_CuttingUnit_OnDelete =

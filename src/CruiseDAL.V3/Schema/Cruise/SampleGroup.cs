@@ -116,7 +116,7 @@ AFTER UPDATE OF
 ON SampleGroup
 FOR EACH ROW
 BEGIN
-    UPDATE SampleGroup SET ModifiedDate = CURRENT_TIMESTAMP WHERE SampleGroup_CN = old.SampleGroup_CN;
+    UPDATE SampleGroup SET Modified_TS = CURRENT_TIMESTAMP WHERE SampleGroup_CN = old.SampleGroup_CN;
 END;";
 
         public const string CREATE_TRIGGER_SampleGoup_OnDelete =
