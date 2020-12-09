@@ -525,7 +525,7 @@ namespace FMSC.ORM.Core
                 catch (Exception e)
                 {
                     if (exceptionProcessor != null)
-                    { exceptionProcessor.ProcessException(e, connection, command.CommandText, transaction); }
+                    { throw exceptionProcessor.ProcessException(e, connection, command.CommandText, transaction); }
                     else { throw; }
                 }
             }
@@ -576,7 +576,7 @@ namespace FMSC.ORM.Core
                     {
                         if (exceptionProcessor is null) throw;
                         else
-                        { exceptionProcessor.ProcessException(e, connection, command.CommandText, transaction); }
+                        { throw exceptionProcessor.ProcessException(e, connection, command.CommandText, transaction); }
                     }
                 }
 
