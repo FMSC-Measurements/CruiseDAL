@@ -1,6 +1,6 @@
 # Summary of Version 3 changes
 
-Version 3 has the following primary goals: remove redundancies between tables, consolidate storage of tree counts, divorce storage of tree counts from tally setup, and provide support for syncing data between multiple files.
+Version 3 has the following primary goals: remove redundancies between tables, consolidate storage of tree counts, divorce storage of tree counts from tally setup, allow storing multiple cruises in the same database, and provide better support for syncing data between multiple files.
 
 Secondary goals: remove the need to save validation results back to the database, separate tree data from tree default data.
 
@@ -11,13 +11,23 @@ Secondary goals: remove the need to save validation results back to the database
 # New Tables and Views
 
 ## Tables
+
+### Cruise
+
+### Plot_Stratum 
+Previously the plot table had a reference to the Stratum table. This caused duplicated data when a plot had multiple strata. 
+After the stratum reference was removed from the Plot table this table was created to fill the need of having a Plot Stratum relationship.
+
 ### SpeciesCode
 Single field table for referencing valid species codes. This table will allow us to maintain constancy through out the database. Updates to this table should cascade to all table that reference it.
 The table was named `SpeciesCode` instead of `Species` because of the common field name `Species` was causing some issues... i think.
 
+### FIA 
+
+
 ### TallyLedger
 
-Store all edits to tree counts, and KPI totals. This table will be populated using the CountTree table and Tree tables
+Running log of all changes to tree count, and KPI totals.
 
 ### TallyDescription
 Table stores description of tally.
@@ -76,59 +86,54 @@ used by the Tree view
 
 
 # Modified Tables
-These are tables from the original schema that have been significantly modified and given a version 3 specific name.
-Here is a list of Version 2 tables, with the version 3 tables they correspond to:
+These are some tables from the original schema that have been significantly modified, split up, or Renamed.
+Here is a list of modified Version 2 tables, with the version 3 tables they correspond to:
 
  - CuttingUnitStratum -> CuttingUnit_Stratum
- - Log -> Log_V3
- - Plot => Plot_V3 and Plot_Stratum
+ - Plot => Plot and Plot_Stratum
+ - SampleGroup => SampleGroup, SamplerState
  - SampleGroupTreeDefaultValue => SubPopulation
- - SampleGroup => SampleGroup_V3
- - Tree => Tree_V3, TallyLedger, TreeMeasurment and TreeCalculatedValues
+ - Tree => Tree, TallyLedger, TreeMeasurment and TreeCalculatedValues
+ - CountTree => TallyLedger, SampleGroup 
  - TreeAuditValue => TreeAuditRule
- - TreeDefaultValueTreeAuditValue => TreeDefaultValue_TreeAuditRule
- - LogFieldSetup => LogFieldSetup_V3
- - TreeFieldSetup => TreeFieldSetup_V3
- - FixCNTTallyClass => FixCNTTallyClass_V3
- - FixCNTTallyPopulation => FixCNTTallyPopulation_V3
- - Stem => Stem_V3
+ - TreeDefaultValueTreeAuditValue => TreeAuditRuleSelector
+ - FixCNTTallyClass => Stratum
  - ErrorLog => (see below about tbl_ErrorLog)
 
-### CuttingUnit_Stratum
- - uses StratumCode and CuttingUnitCode instead of Stratum_CN and CuttingUnit_CN
 
-### Log_V3
- - change Tree_CN to TreeID
-
-### Plot_V3
+### Plot
  - removed fields dependent on stratum. Stratum dependent fields are now in Plot_Stratum
 
 ### SubPopulation
- - removes reference on TreeDefaultValue
+ - removes reference to TreeDefaultValue
  - changed SampleGroup_CN to (SampleGroupCode, StratumCode)  
 
-### SampleGroup_V3
+### SampleGroup
  - removed samplerState ,
  - changed Stratum_CN to StratumCode
- - - CutLeave defaults to "C"
- - ? UOM defaults to empty string. It might be preferable to use null as the default value this would better reflect our indented behavior of having UOM be set at the Sale level and allowing it to be overridden at the sample group level
+ - CutLeave defaults to "C"
+ - ? UOM defaults to null. It might be preferable to use null as the default value this would better reflect our indented behavior of having UOM be set at the Sale level and allowing it to be overridden at the sample group level
  - DefaultLiveDead defaults to "L"
- - PrimaryProduct defaults to empty string
+ - PrimaryProduct defaults to null
 
-TallyBySubPop value from original file is ignored. Instead the value is determined by detecting whether samplegroup has tally setup with tree defaults by looking at the CountTree table.
+#### TallyBySubPop
+When setting up tally populations users are given a choice to either tally by species or by sample group. 
+In version 2 the user would make their choice and then nessicary records would be created in the CountTree table reflecting their choice.
+When reopening a cruise file their selected choice would have to be inferred by analyzing the CountTree table. 
+ 
+
+Version 3 explicitly stores this choice using the TallyBySubPop flag. Where `Tally By SubPop` is the same as what was `Tally by Species` 
+
+In Version 2 to Version 3 conversion TallyBySubPop value from original file is ignored. Version 2 had a TallyBySubPop field but wasn't used because it could differ from what was inferred and that could cause issues. Instead the Version 3 TallyBySubPop value is determined by using the same process of inferring from the CountTree table used by Cruise Manager. 
 
 
-### Tree_V3
+### Tree
  - remove measurment fields
  - change Tree_GUID to TreeID
- - change CuttingUnit_CN to CuttingUnitCode
- - change Stratum_CN to StratumCode
- - change SampleGroupCode to (StratumCode, SampleGroupCode)
- - change Plot_CN to (PlotNumber, CuttingUnitCode)
 
 #### Split out tree measurement columns into TreeMeasurments table
-The fields that had made up the Tree table have been split out into two tables. This has been done primarily for the purpose of managing changes when syncing cruise files but there are some other advantages to this. The advantage that having the tree table split up gives to syncing files is to ensure that changes to tree data and changes to the identity of the tree can be isolated and that we can track those changes separately.
-Additionally there's the consideration that it may be better to store tree field values in separate rows the way the TreeFieldValues_ALL view provides. By moving those fields preemptive to a separate table, gives us more flexibility with our schema.
+The fields that had made up the Tree table have been split out into two tables. This has been done primarily for the purpose of tracking and segregating changes while syncing cruise files. The advantages of having the tree table split up give to syncing files is to ensure that changes to tree data and changes to the identity of the tree can be isolated, that we can track those changes separately, and we can sync tree data without worrying about side effects from changes to identifying values.
+Additionally there's the consideration that it may be better to store tree field data as attributes, the way the TreeFieldValues_ALL view provides. By compartmentalizing tree data we have more flexibility with our data structure, should the need for custom tree fields materialize.
 Some additional notes about this change:
 
  - The FiaCode field has been removed. This field is redundant and should be retrieved from the TreeDefaultValue table.
@@ -150,25 +155,23 @@ take over the measurement fields from tree table
  - changed Stratum_CN to StratumCode,
 Note this table has no backport
 
-### TreeFieldSetup_V3
+### TreeFieldSetup
  - removed unused fields
- - changed Stratum_CN to StratumCode
- note this table has no backport
+ - Added SampleGroupCode
+ - Added DefaultValues
+ - Added IsHidden flag
 
-### FixCNTTallyClass_V3
- - changed Stratum_CN to StratumCode,
- - added unique constraint for StratumCode,
- - changed type of Field to text(this is how it was being stored anyways))
+#### Expanding the function of TreeFieldSetup
+TreeFieldSetup has taken on some of the functionality of Tree Default Values. 
+We have added the ability to set DefaultValues on fields in FieldSetup. 
+This adds a second method to set up default values on trees that suplements the features provided by the TreeDefaultValue table.
+The purpose of this is to allow defining default values at the SampleGroup or Stratum level independent of species or product. 
 
-### FixCNTTallyPopulation_V3
- - removed reference to FixCNTTallyClass_CN because we can use StratumCode instead,
- - changed SampleGroup_CN to (StratumCode and SampleGroupCode)
 
-### Stem_V3
- - removed unique constraint on Tree
- - Changed Tree_CN to TreeID
+Note this table has no backport
 
-### LogGradeAuditRule_V3
+
+### LogGradeAuditRule
  - Split out Valid Grades. This is a slightly better design and allows for audits to be preformed by just querying the data. Also don't store multiple values in on field
  - changed from using 'ANY' to indicate that rule applies to all species values, to NULL indicate that value applies to all species values
 
@@ -176,80 +179,34 @@ Note this table has no backport
  - removed ErrorMessage (this field hadn't been used in a long time)
  - added TreeAuditRuleID, a unique identifier for audit rules
 
-### tbl_ErrorLog
-This is a bit of an odd duck. This table is the same as the old ErrorLog table but since ErrorLog is a view now with mostly records that get generated. tbl_ErrorLog stores any data that is written back to the view
+### TreeAuditRuleSelector
+Before tree audit rules linked to a tree based on the TreeDefaultValue on the tree. 
+Now rule are linked to a tree based on Species, LiveDead, or Product. 
 
 
 
-# Old tables with read-only back-ports
-Tables that have been significantly modified have been given views to allow for backwards compatibility allowing CruiseProcessing to work with the new data structure. All of these views can't be written back to,  with the exception of ErrorLog and some specific fields on the Tree view.
- - CountTree
- - CuttingUnitStratum
- - Plot
- - SampleGroup
- - SampleGroupTreeDefaultValue
- - Tree
- - Log
- - TreeDefaultValueTreeAuditValue
- - TreeEstimate
- - ErrorLog
+## General Changes
 
-# Tables with no changes
+### Look up tables
+Lookup tables have been created for 
+ - CruiseMethods
+ - FIA
+ - Log Fields
+ - Logging Methods
+ - Products
+ - Regions
+ - Tree Fields
+ - UOM Codes
 
-- All Processing tables (except: LogStock, and TreeCalculatedValue)
+Tables that use these field now reference those look up tables and their values are enforced using foreign keys. 
+
+### Cascading Updates and Deletes
+Foreign Keys on most tables have been setup to cascade deletes and updates. 
+There are some cases where cascading deletes or updates have not been setup. Such as tables referencing lookup tables where we don't expect records to be deleted from a lookup table. 
+
+Cascading updates have not been setup where we never expect a key to change. Such as keys that use a GUID.  
 
 
-# Tables with only minor changes
-Where possible, some tables have been left with minimal or no changes. This has been done to maintain backwards compatibility with the old schema for the purpose of processing.
-
-- Sale
-- CuttingUnit
-- Stratum
-- TreeDefaultValue
-- StratumStats
-- SampleGroupStats
-- TreeCalculatedValues
-
-In some places fields that had been marked as `NOT NULL` have been changed to have a default value instead. This has been to make the database easier to use and test while maintaining the requirement that those fields always have a non-null value.
-Tables that have a `Code` or `[tableName]Code`, `Species`, `LiveDead` or `PrimaryProduct` key value have been modified so those fields use a `COLLATE NOCASE`. This makes it so that those key fields are treated as case insensitive.
-
-## Sale
- - Region, Forest, District changed `not-null` to `default ''`
-
-## CuttingUnit
- - Code add `COLLATE NOCASE`
- - Area changed `NOT NULL` to `default 0.0`
-
-## Stratum
- - Code add `COLLATE NOCASE`
- - Method changed `NOT NULL` to `DEFAULT ''`
-
-## TreeDefaultValue
- - PrimaryProduct, Species, LiveDead, TreeGrade added `COLLATE NOCASE`
- - TODO: add index on PrimaryProduct, LiveDead, Species since generally these are treated as the compound key for the table.
-
-## LogStock
- - deletes from tree will cascade to LogStock
- - modifiedDate no longer updated on modifications, because table doesn't really need to track modifications
-
-## SampleGroupStatsTreeDefaultValue
- - TreeDefaultValue and SampleGroupStats deletes cascade
-
-## StratumStats
- - deletes from stratum cascade
- - added not null to `stratum_cn`
-
-## SampleGroupStats
- - deletes from StratumStats cascade
-
-## MessageLog
- - date and time fields now auto populate with current date and time
- - level auto-populates with 'N' for normal
- - level, and program collates nocase
-
-## Globals
- - block defaults to ''
- - add collate nocase to block, and key
 
 # Removed depreciated fields
 ## TreeDefaultValue
@@ -398,7 +355,6 @@ in the previous database it is possible for species and live dead values to not 
 
 
  # ongoing considerations
- - add root cruse entity type
  - custom fields for cutting unit
  - remove unit code length constraint and add separate field for TIM unit code
  - species codes
@@ -422,7 +378,7 @@ in the previous database it is possible for species and live dead values to not 
  - [ ] move month and year from stratum to sale *** this change is associated with reconsidering backwards compatibility view and removing the _V3 suffix
      - remove Stratum.VolumeFactor to a processing table
  - [x] remove foreign key reference to tree default value in treeAuditRule_treeDefaultValue table to allow for generalized rules
- - [ ] change table names, removing _V3 and other things done to maintain backwards compatibility
+ - [x] change table names, removing _V3 and other things done to maintain backwards compatibility
 
  - [x] remove backwards compatibility views
  - [x] remove error log table
@@ -430,12 +386,12 @@ in the previous database it is possible for species and live dead values to not 
  - [ ] logical deletes ?
      - keep on tally ledger?
  - [ ] add isDeleted flags to tree, log, plot, unit, stratum, sampleGroup. triggers to cascade isDeleted flags?
- - [ ] remove logMatrix table because the only person who used it has retired.
+ - [x] remove logMatrix table because the only person who used it has retired.
  - [ ] look up tables for purpose, methods, forest, regions, uom
  - [ ] update migrations
      - pull errorlog.suppressed into TreeAuditRuleResolutions
  - [-] move fiaCode, contract species from tdv to species table
- - [ ] take another look at uniques on LogGradeAuditRule
+ - [x] take another look at uniques on LogGradeAuditRule
  - [ ] change ifnull() to coalesce() in ddl
  - [x] common name on species table( currently in volEq)
  - [ ] clarify stem.diameterType
@@ -444,5 +400,15 @@ in the previous database it is possible for species and live dead values to not 
  - [ ] track original device when creating copy of sample state, or use guid id for sample states and track that.
      - check that there is a modified time stamp on sampler state
  - [ ] support for multi variable 3p
- - [ ] get rid of value equations
- 
+ - [x] get rid of value equations
+ - [ ] fix log migration so that its not using tree_cn
+ - [ ] Tie UOM to product or leave at sample group?
+ - [ ] Keep tally description?
+ - [ ] Move FixCNT Field to Stratum
+ - [ ] Switch from _CN suffix to _OID suffix
+ - [ ] remove TreeMeasurments.MetaData
+ - [ ] add mapping table Device_Cruise or leave Device as is?
+ - [ ] figure out any changes for check cruising. do we add seperate table for check measurments? field for signing off on check?
+ - [ ] get updated list of forest codes for region 4
+ - [ ] depreciate PCMTRE cruise method for PCM
+ - [ ] backport of TreeAuditRules
