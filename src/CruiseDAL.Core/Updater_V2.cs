@@ -110,22 +110,26 @@ namespace CruiseDAL
             {
                 FixVersion_2_5_0(db);
             }
-            if (db.DatabaseVersion.StartsWith("2.2.")) 
+            if (db.DatabaseVersion.StartsWith("2.2."))
             {
                 UpdateTo_2_5_1(db);
             }
-            if(db.DatabaseVersion.StartsWith("2.5."))
+            if (db.DatabaseVersion.StartsWith("2.5."))
             {
                 UpdateTo_2_6_1(db);
             }
-            if(db.DatabaseVersion.StartsWith("2.6."))
+            if (db.DatabaseVersion.StartsWith("2.6."))
             {
                 UpdateTo_2_7_0(db);
+            }
+            if (db.DatabaseVersion == "2.7.0")
+            {
+                UpdateTo_2_7_1(db);
             }
 
         }
 
-        
+
 
         public static void UpdateToVersion2015_04_28(CruiseDatastore db)
         {
@@ -635,7 +639,7 @@ ValidGrades TEXT);");
                 SetDatabaseVersion(db, targetVersion);
                 db.CommitTransaction();
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 db.RollbackTransaction();
                 throw new SchemaUpdateException(version, targetVersion, e);
@@ -1067,6 +1071,36 @@ COMMIT;");
                     //db.Execute();
                     db.ReleaseConnection();
                 }
+
+                SetDatabaseVersion(db, targetVersion);
+            }
+            catch (Exception e)
+            {
+                throw new SchemaUpdateException(version, targetVersion, e);
+            }
+        }
+
+        private static void UpdateTo_2_7_1(CruiseDatastore db)
+        {
+            var version = db.DatabaseVersion;
+            var targetVersion = "2.7.1";
+
+            try
+            {
+                db.Execute(
+@"DROP TABLE TreeEstimate;
+CREATE TABLE TreeEstimate (
+			TreeEstimate_CN INTEGER PRIMARY KEY AUTOINCREMENT,
+			CountTree_CN INTEGER,
+			TreeEstimate_GUID TEXT,
+			KPI REAL NOT NULL,
+			CreatedBy TEXT DEFAULT 'none',
+			CreatedDate DateTime DEFAULT (datetime(current_timestamp, 'localtime')) ,
+			ModifiedBy TEXT ,
+			ModifiedDate DateTime );");
+
+                db.ReleaseConnection();
+
 
                 SetDatabaseVersion(db, targetVersion);
             }
