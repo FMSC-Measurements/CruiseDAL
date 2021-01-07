@@ -42,9 +42,10 @@ namespace FMSC.ORM.SQLite
 
 #if !SYSTEM_DATA_SQLITE
         [InlineData(1L, "?1", "?1")]
+#else
+        [InlineData(1L, "@something", "@Something")] // https://github.com/dotnet/efcore/issues/18861
 #endif
         [InlineData(1L, "@1", "@1")]
-        [InlineData(1L, "@something", "@Something")]
         public void Bind_Paramater(object value, string pName, string pExpr)
         {
             using (var connection = GetOpenConnection())
