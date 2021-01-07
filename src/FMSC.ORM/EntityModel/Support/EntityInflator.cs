@@ -6,6 +6,8 @@ using System.Data;
 
 namespace FMSC.ORM.EntityModel.Support
 {
+    // TODO optimize this class somemore. use a hash to see if the look up needs to be recreated?
+
     public class EntityInflator
     {
         private IDictionary<string, int> OrdinalLookup { get; set; }
@@ -20,6 +22,7 @@ namespace FMSC.ORM.EntityModel.Support
             //HACK with microsoft.data.sqlite calling GetOrdinal throws exception if reader is empty
             //if(reader is DbDataReader && ((DbDataReader)reader).HasRows == false) { return; }
 
+
             var fieldCount = reader.FieldCount;
             var fields = new string[fieldCount];
             var ordinalLookup = new Dictionary<string, int>(fieldCount);
@@ -27,14 +30,10 @@ namespace FMSC.ORM.EntityModel.Support
             for (int i = 0; i < fieldCount; i++)
             {
                 var fieldName = reader.GetName(i).ToLower(System.Globalization.CultureInfo.InvariantCulture);
-                try
+                fields[i] = fieldName;
+                if (ordinalLookup.ContainsKey(fieldName) == false)
                 {
-                    fields[i] = fieldName;
                     ordinalLookup.Add(fieldName, i);
-                }
-                catch
-                {
-                    //ignore exception when adding duplicate or null value
                 }
             }
             var hash = fields.CombineHashs();
