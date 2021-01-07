@@ -20,14 +20,6 @@ namespace FMSC.ORM.Core
             ExceptionProcessor = exceptionProcessor;
         }
 
-        //public QueryResult(DbConnection connection, string commandText, IEnumerable<KeyValuePair<string, object>> parameters, DbTransaction transaction = null, IExceptionProcessor exceptionProcessor = null)
-        //{
-        //}
-
-        //public QueryResult(DbConnection connection, string commandText, object[] parameters = null, DbTransaction transaction = null, IExceptionProcessor exceptionProcessor = null)
-        //{
-        //}
-
         public IEnumerator<TResult> GetEnumerator()
         {
             var exceptionProcessor = ExceptionProcessor;
