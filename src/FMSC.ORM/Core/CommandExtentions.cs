@@ -50,6 +50,17 @@ namespace FMSC.ORM.Core
                 cmd.Parameters.Add(param);
             }
 
+#if DEBUG
+            var cmdText = cmd.CommandText;
+            var prms = cmd.Parameters.OfType<IDbDataParameter>().ToArray();
+            foreach (var match in System.Text.RegularExpressions.Regex.Matches(cmdText, "[@]\\w+").OfType<System.Text.RegularExpressions.Match>())
+            {
+                if (prms.Any(x => x.ParameterName == match.Value) == false)
+                {
+                    throw new InvalidOperationException(match.Value + " is missing");
+                }
+            }
+#endif
 
             //var cmdText = cmd.CommandText;
             //var prms = cmd.Parameters.OfType<IDbDataParameter>().ToArray();
@@ -63,19 +74,6 @@ namespace FMSC.ORM.Core
 
             //    cmd.Parameters.Add(param);
             //}
-
-
-#if DEBUG
-            var cmdText = cmd.CommandText;
-            var prms = cmd.Parameters.OfType<IDbDataParameter>().ToArray();
-            foreach (var match in System.Text.RegularExpressions.Regex.Matches(cmdText, "[@]\\w+").OfType<System.Text.RegularExpressions.Match>())
-            {
-                if (prms.Any(x => x.ParameterName == match.Value) == false)
-                {
-                    throw new InvalidOperationException(match.Value + " is missing");
-                }
-            }
-#endif
         }
 
         public static IEnumerable<string> GetPropNames(object obj)
