@@ -8,5 +8,7 @@
         CRUD,
         ValueMapper,
         Datastore,
+        DbBuilder,
+        Updater,
     }
 }

@@ -11,6 +11,9 @@ namespace CruiseDAL.V3.Models
   [Field("TallyLedgerID")]
   public String TallyLedgerID { get; set; }
 
+  [Field("CruiseID")]
+  public String CruiseID { get; set; }
+
   [Field("TreeID")]
   public String TreeID { get; set; }
 
@@ -26,8 +29,8 @@ namespace CruiseDAL.V3.Models
   [Field("PlotNumber")]
   public Int32? PlotNumber { get; set; }
 
-  [Field("Species")]
-  public String Species { get; set; }
+  [Field("SpeciesCode")]
+  public String SpeciesCode { get; set; }
 
   [Field("LiveDead")]
   public String LiveDead { get; set; }
@@ -56,8 +59,11 @@ namespace CruiseDAL.V3.Models
   [Field("EntryType")]
   public String EntryType { get; set; }
 
-  [Field("IsDeleted")]
-  public Boolean? IsDeleted { get; set; }
+  [Field("CreatedBy")]
+  public String CreatedBy { get; set; }
+
+  [Field("Created_TS")]
+  public DateTime? Created_TS { get; set; }
 
  }
 

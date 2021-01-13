@@ -5,6 +5,7 @@
     <TargetFrameworks>net461</TargetFrameworks>
     <StartupObject>FMSC.ORM.ModelGenerator.Program</StartupObject>
     <AssemblyName>ModelGen</AssemblyName>
+    <LangVersion>8.0</LangVersion>
   </PropertyGroup>
 
   <ItemGroup>
@@ -21,6 +22,12 @@
 
   <ItemGroup>
     <ProjectReference Include="..\FMSC.ORM\FMSC.ORM.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="FMSC.ORM.ModelGenerator.targets">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
 
 </Project>

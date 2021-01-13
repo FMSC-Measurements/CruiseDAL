@@ -11,6 +11,9 @@ namespace CruiseDAL.V3.Models
   [Field("DeviceID")]
   public String DeviceID { get; set; }
 
+  [Field("CruiseID")]
+  public String CruiseID { get; set; }
+
   [Field("StratumCode")]
   public String StratumCode { get; set; }
 
@@ -34,6 +37,18 @@ namespace CruiseDAL.V3.Models
 
   [Field("InsuranceCounter")]
   public String InsuranceCounter { get; set; }
+
+  [Field("CreatedBy")]
+  public String CreatedBy { get; set; }
+
+  [Field("Created_TS")]
+  public DateTime? Created_TS { get; set; }
+
+  [Field("ModifiedBy")]
+  public String ModifiedBy { get; set; }
+
+  [Field("Modified_TS")]
+  public DateTime? Modified_TS { get; set; }
 
  }
 

@@ -1,7 +1,9 @@
-﻿namespace FMSC.ORM.Core
+﻿using System.Data.Common;
+
+namespace FMSC.ORM.Core
 {
     public interface IDatastoreBuilder
     {
-        void CreateDatastore(Datastore datastore);
+        void BuildDatabase(DbConnection connection, DbTransaction transaction, IExceptionProcessor exceptionProcessor = null);
     }
 }

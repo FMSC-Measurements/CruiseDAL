@@ -1,7 +1,5 @@
 ﻿using CruiseDAL.DataObjects;
-using CruiseDAL.V3.Tests;
 using FluentAssertions;
-using FMSC.ORM.SQLite;
 
 using System;
 using System.Collections.Generic;
@@ -9,12 +7,14 @@ using System.IO;
 using System.Linq;
 using Xunit;
 using Xunit.Abstractions;
+using System.Reflection;
+using CruiseDAL.Migrators;
 
 #if NET452 || NET461
 using MoreLinq;
 #endif
 
-namespace CruiseDAL.Tests.Schema
+namespace CruiseDAL.V3.Test
 {
     public class Migrations_Tests : TestBase
     {
@@ -91,23 +91,13 @@ namespace CruiseDAL.Tests.Schema
         }
 
         [Fact]
-        public void GetMigrateCommands_Contains_All_Public_Static_String_commands()
+        public void ContainsAllMigrators()
         {
-            var commandsLookup = CruiseDAL.Schema.Migrations.GetMigrateCommands("to", "from").ToDictionary(x => x);
+            var allMigratorTypes = Assembly.GetAssembly(typeof(IMigrator))
+                .GetTypes().Where(x => typeof(IMigrator).IsAssignableFrom(x) && x != typeof(IMigrator)).ToArray();
 
-            var type = typeof(CruiseDAL.Schema.Migrations);
-
-            var fields = type.GetFields(System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags.Public)
-                .Where(x => x.FieldType == typeof(string));
-
-            foreach (var field in fields)
-            {
-                var commandFormat = (string)field.GetValue(null);
-                var command = string.Format(commandFormat, "to", "from");
-                commandsLookup.ContainsKey(command).Should().BeTrue(field.Name);
-            }
-
-            commandsLookup.Count().Should().Be(fields.Count());
+            Migrator.MIGRATORS.Select(x => x.GetType()).ToArray()
+                .Should().Contain(allMigratorTypes);
         }
 
         [Theory]
@@ -154,11 +144,11 @@ namespace CruiseDAL.Tests.Schema
                         value);
                 }
 
-
                 toDb.AttachDB(fromDb, "v2");
-                toDb.Execute(String.Format(CruiseDAL.Schema.Migrations.MIGRATE_LOGGRADEAUDITRULE_V3, "main", "v2"));
+                var command = new LogGradeAuditRuleMigrator().MigrateToV3("main", "v2", Guid.NewGuid().ToString(), Guid.NewGuid().ToString());
+                toDb.Execute(command);
 
-                var results = toDb.From<CruiseDAL.V3.Models.LogGradeAuditRule_V3>().Query().ToArray();
+                var results = toDb.From<CruiseDAL.V3.Models.LogGradeAuditRule>().Query().ToArray();
                 results.Should().NotBeEmpty();
 
                 foreach(var value in testLGARValues)

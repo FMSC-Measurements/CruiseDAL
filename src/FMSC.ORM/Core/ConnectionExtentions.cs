@@ -1,4 +1,5 @@
 ﻿using Backpack.SqlBuilder;
+using FMSC.ORM.Core.SQL.QueryBuilder;
 using FMSC.ORM.EntityModel;
 using FMSC.ORM.EntityModel.Support;
 using FMSC.ORM.Logging;
@@ -212,6 +213,51 @@ namespace FMSC.ORM.Core
 
         #region CRUD
 
+        #region From
+
+        //public static QueryBuilder<TResult> From<TResult>(this DbConnection connection, ICommandBuilder commandBuilder = null) where TResult : class, new()
+        //{
+        //    return From<TResult>(connection, (TableOrSubQuery)null, (ICommandBuilder)null);
+        //}
+
+        public static QueryBuilder<TResult> From<TResult>(this DbConnection connection, TableOrSubQuery source = null, ICommandBuilder commandBuilder = null) where TResult : class, new()
+        {
+            commandBuilder = commandBuilder ?? DefaultCommandBuilder;
+            var discription = GlobalEntityDescriptionLookup.Instance.LookUpEntityByType(typeof(TResult));
+            SqlSelectBuilder builder = commandBuilder.BuildSelect(source ?? discription.Source, discription.Fields);
+
+            return new QueryBuilder<TResult>(connection, builder);
+        }
+
+        #endregion From
+
+        #region Query
+
+        public static IEnumerable<TResult> Query<TResult>(this DbConnection connection, string commandText, object[] paramaters = null, DbTransaction transaction = null, IExceptionProcessor exceptionProcessor = null) where TResult : new()
+        {
+            var discription = GlobalEntityDescriptionLookup.Instance.LookUpEntityByType(typeof(TResult));
+
+            var command = connection.CreateCommand();
+            command.CommandText = commandText;
+            command.SetParams(paramaters);
+
+            return new QueryResult<TResult>(connection, command, transaction, exceptionProcessor);
+            
+        }
+
+        public static IEnumerable<TResult> Query2<TResult>(this DbConnection connection, string commandText, object paramaters = null, DbTransaction transaction = null, IExceptionProcessor exceptionProcessor = null) where TResult : new()
+        {
+            var discription = GlobalEntityDescriptionLookup.Instance.LookUpEntityByType(typeof(TResult));
+
+            var command = connection.CreateCommand();
+            command.CommandText = commandText;
+            command.AddParams(paramaters);
+
+            return new QueryResult<TResult>(connection, command, transaction, exceptionProcessor);
+        }
+
+        #endregion Query
+
         #region QueryScalar
 
         public static IEnumerable<TResult> QueryScalar<TResult>(this DbConnection connection, string commandText,
@@ -357,8 +403,6 @@ namespace FMSC.ORM.Core
 
         #endregion QueryGeneric
 
-
-
         public static object Insert(this DbConnection connection, object data, string tableName = null,
                                     EntityDescription entityDescription = null, DbTransaction transaction = null,
                                     OnConflictOption option = OnConflictOption.Default,
@@ -423,6 +467,7 @@ namespace FMSC.ORM.Core
         }
 
         public static void Update(this DbConnection connection, object data, string tableName = null,
+                                  string whereExpression = null,
                                   EntityDescription entityDescription = null,
                                   OnConflictOption option = OnConflictOption.Default, DbTransaction transaction = null,
                                   IExceptionProcessor exceptionProcessor = null, object keyValue = null)
@@ -432,7 +477,9 @@ namespace FMSC.ORM.Core
             entityDescription = entityDescription ?? DescriptionLookup.LookUpEntityByType(data.GetType());
             tableName = tableName ?? entityDescription.SourceName;
 
-            Update(connection, data, tableName, entityDescription.Fields,
+            Update(connection, data, tableName,
+                whereExpression: whereExpression,
+                fields: entityDescription.Fields,
                 option: option,
                 transaction: transaction,
                 exceptionProcessor: exceptionProcessor,
@@ -440,7 +487,8 @@ namespace FMSC.ORM.Core
         }
 
         internal static void Update(this DbConnection connection, object data, string tableName,
-                                  IFieldInfoCollection fields, OnConflictOption option = OnConflictOption.Default,
+                                  string whereExpression = null,
+                                  IFieldInfoCollection fields = null, OnConflictOption option = OnConflictOption.Default,
                                   DbTransaction transaction = null, ICommandBuilder commandBuilder = null,
                                   IExceptionProcessor exceptionProcessor = null, object keyValue = null)
         {
@@ -455,7 +503,13 @@ namespace FMSC.ORM.Core
 
             using (var command = connection.CreateCommand())
             {
-                commandBuilder.BuildUpdate(command, data, tableName, fields, option, keyValue);
+                commandBuilder.BuildUpdate(command,
+                                           data,
+                                           tableName,
+                                           fields,
+                                           whereExpression: whereExpression,
+                                           option: option,
+                                           keyValue: keyValue);
 
                 try
                 {
@@ -468,7 +522,7 @@ namespace FMSC.ORM.Core
                 catch (Exception e)
                 {
                     if (exceptionProcessor != null)
-                    { exceptionProcessor.ProcessException(e, connection, command.CommandText, transaction); }
+                    { throw exceptionProcessor.ProcessException(e, connection, command.CommandText, transaction); }
                     else { throw; }
                 }
             }
@@ -519,7 +573,7 @@ namespace FMSC.ORM.Core
                     {
                         if (exceptionProcessor is null) throw;
                         else
-                        { exceptionProcessor.ProcessException(e, connection, command.CommandText, transaction); }
+                        { throw exceptionProcessor.ProcessException(e, connection, command.CommandText, transaction); }
                     }
                 }
 

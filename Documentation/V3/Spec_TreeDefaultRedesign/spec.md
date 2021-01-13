@@ -9,6 +9,19 @@ We need a way to expand tree default to allow defining with more flexibility.
 ### Defining Tree Defaults using Sample Group Code
 One solution to the issue of misuse of species codes is to allow Tree Defaults to be defined using Sample Group codes. Additionally we could allow for partial matching of sample group codes, such as a suffix. 
 
+## Use Cases
+
+### Defining different tree defaults based on logging method
+In region 6 they use multiple tree defaults with different TopDIB based on the logging method used (Tractor vs Skyline vs Helicopter). As well this requires different strata for each logging method which is unavoidable.  Their workaround in version 2 is to use FIA codes as the species code for Tractor logged trees and a mnemonic of species + logging method for everything else.
+
+### Different Tree Defaults for young growth
+In region 10 they use different tree defaults for young growth. Their workaround is the add a Y to the species code.
+
+### Tree Defaults for different size classes
+In region 10 they would like the ability to define different tree defaults based on size class.  
+
+
+
 ## Removal of LiveDead column 
 In version 2 LiveDead was one of the major key identifiers of tree defaults. However many users find is cumbersome having to deal with LiveDead so frequently. Many users don't even cruise dead trees. As well not all values in are suceptible to being changed based on LiveDead. 
 
@@ -33,13 +46,15 @@ Score added for each match
  - Primary Product : 1
 
 ## Speration of Species, FIACode, and CommonName into new tables
-FIACode and CommonName have been moved into a static lookup table: FIA. Since these values shouldn't change and are constant across all regions. 
+FIACode and CommonName have been moved into a static look-up table: FIA. Since these values shouldn't change and are constant across all regions. 
 
-SpeciesCode and ContractSpecies have been moved to a new Species table that allows users to customize the Species Codes per-cruise
+SpeciesCode has been moved to a new Species table. This allows defining species codes separate from Tree Defaults. This table will also include a CruiseID field allowing customizing species codes for each cruise. We did consider moving contract species to the species table, except it appears region 3 uses different contract species per products. 
 
 Another Species table will exist for template data to allow users to customize what species will appear in newly created cruises at the region and forest level. 
 
-# ongoing considerations
-## Species Code vs FIACode in Tree Default table
-Would FIACode serve better in the Tree Default table instead of Species Code. This would be better in a larger database design where we might want a standardized value for species across all cruises, but would require more cross walking to get the cruise specific Species Code for data entry and processing, as well, would require more mental cross waling when viewing the raw table data.
+
+# need clarification
+ - what type of data is MerchHeightType. Is this true/false. Does this need a look up table. 
+ - what are the range of values cull primary, hidden primary. 0-100 or 0.0-1.0
+
 

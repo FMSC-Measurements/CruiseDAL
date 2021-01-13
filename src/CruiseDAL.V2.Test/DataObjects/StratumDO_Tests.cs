@@ -29,6 +29,18 @@ namespace CruiseDAL.V2.DataObjects
                 { Stratum_CN = stratum.Stratum_CN.Value, Code = "sg1", CutLeave = "C", UOM="01", PrimaryProduct="01" };
                 database.Insert(sampleGroup);
 
+                var samplerState = new SamplerState()
+                { SampleGroup_CN = sampleGroup.SampleGroup_CN.Value };
+                database.Insert(samplerState);
+
+                var countTree = new CountTree()
+                { CuttingUnit_CN = unit.CuttingUnit_CN.Value, SampleGroup_CN = sampleGroup.SampleGroup_CN.Value };
+                database.Insert(countTree);
+
+                var treeEstimate = new TreeEstimate()
+                { CountTree_CN = countTree.CountTree_CN };
+                database.Insert(countTree);
+
                 var stratumStats = new StratumStats()
                 { Stratum_CN = stratum.Stratum_CN.Value, Code = "ss1" };
                 database.Insert(stratumStats);
@@ -84,6 +96,11 @@ namespace CruiseDAL.V2.DataObjects
                 database.GetRowCount("SampleGroupStats", "WHERE SampleGroupStats_CN = @p1", sampleGroupStats.SampleGroupStats_CN)
                     .Should().Be(0);
 
+                var stuff = database.QueryGeneric("PRAGMA FOREIGN_KEY_CHECK");
+
+                //database.Execute($"DELETE FROM SamplerState WHERE SampleGroup_CN IN (SELECT SampleGroup_CN FROM SampleGroup WHERE SampleGroup.Stratum_CN = {stDO.Stratum_CN});");
+
+                //stuff = database.QueryGeneric("PRAGMA FOREIGN_KEY_CHECK");
 
                 database.HasForeignKeyErrors().Should().BeFalse();
             }

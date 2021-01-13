@@ -8,6 +8,9 @@ namespace CruiseDAL.V3.Models
   [PrimaryKeyField("TreeAuditResolution_CN")]
   public Int32? TreeAuditResolution_CN { get; set; }
 
+  [Field("CruiseID")]
+  public String CruiseID { get; set; }
+
   [Field("TreeID")]
   public String TreeID { get; set; }
 

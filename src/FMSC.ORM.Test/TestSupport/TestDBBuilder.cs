@@ -1,9 +1,9 @@
 ﻿using FMSC.ORM.Core;
-using FMSC.ORM.SQLite;
+using System.Data.Common;
 
 namespace FMSC.ORM.TestSupport
 {
-	public class TestDBBuilder : SQLiteDatabaseBuilder
+    public class TestDBBuilder : IDatastoreBuilder
     {
         public const string CREATE_MULTIPROPTABLE =
 @"CREATE TABLE MultiPropTable
@@ -42,10 +42,10 @@ namespace FMSC.ORM.TestSupport
     Data TEXT
 );";
 
-        public override void BuildDatabase(Datastore datastore)
+        public void BuildDatabase(DbConnection connection, DbTransaction transaction, IExceptionProcessor exceptionProcessor = null)
         {
-            datastore.Execute(CREATE_MULTIPROPTABLE);
-            datastore.Execute(CREATE_AUTOINCREMENT_TABLE);
+            connection.ExecuteNonQuery(CREATE_MULTIPROPTABLE, transaction: transaction, exceptionProcessor: exceptionProcessor);
+            connection.ExecuteNonQuery(CREATE_AUTOINCREMENT_TABLE, transaction: transaction, exceptionProcessor: exceptionProcessor);
         }
     }
 }
