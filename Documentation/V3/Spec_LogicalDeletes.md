@@ -33,6 +33,10 @@ Tracking Deletions serve the following needs
  - LogGradeAuditRule
  - Reports
 
+## No deletion tracking for Sale or Cruise records
+When deleting Sale or Cruise records we are assuming the intention of the user is to permanently remove the whole sale or cruise.
+Because of this we do not need deletion tracking for recovery of data.
+Additionally when a cruise is deleted it can not be synced. Because of this we do not need deletion tracking for syncing.
 
 ## Tombstone Implementation
 Tombstone tables are named the same as their corresponding live table but with a `_Tombstone` suffix. 
@@ -40,7 +44,7 @@ Column definitions of Tombstone tables should mirror their live table but with s
  - auto increment _CN field removed
  - DEFAULT element removed
  - add DeletedDate field
-Tombsone tables wont have foreign keys
+Tombstone tables wont have foreign keys
 
   
 
