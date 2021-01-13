@@ -47,6 +47,7 @@ namespace CruiseDAL
             new SampleGroupTableDefinition(),
 
             new TreeFieldSetupTableDefinition(),
+            new TreeFieldHeading(),
             new LogFieldSetupTableDefinition(),
 
             new SamplerStateTableDefinition(),
