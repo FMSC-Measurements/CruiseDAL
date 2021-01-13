@@ -8,6 +8,9 @@ namespace CruiseDAL.V3.Models
   [PrimaryKeyField("Sale_CN")]
   public Int32? Sale_CN { get; set; }
 
+  [Field("SaleID")]
+  public String SaleID { get; set; }
+
   [Field("SaleNumber")]
   public String SaleNumber { get; set; }
 
@@ -40,6 +43,18 @@ namespace CruiseDAL.V3.Models
 
   [Field("DefaultUOM")]
   public String DefaultUOM { get; set; }
+
+  [Field("CreatedBy")]
+  public String CreatedBy { get; set; }
+
+  [Field("Created_TS")]
+  public DateTime? Created_TS { get; set; }
+
+  [Field("ModifiedBy")]
+  public String ModifiedBy { get; set; }
+
+  [Field("Modified_TS")]
+  public DateTime? Modified_TS { get; set; }
 
  }
 

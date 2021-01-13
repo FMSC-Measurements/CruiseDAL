@@ -159,12 +159,12 @@ DELETE FROM Plot WHERE Stratum_CN = {0};
 DELETE FROM TreeEstimate WHERE CountTree_CN IN (SELECT CountTree_CN FROM CountTree JOIN SampleGroup USING (SampleGroup_CN) WHERE Stratum_CN = {0});
 DELETE FROM CountTree WHERE SampleGroup_CN IN (SELECT SampleGroup_CN FROM SampleGroup WHERE SampleGroup.Stratum_CN = {0});
 DELETE FROM SampleGroupTreeDefaultValue WHERE SampleGroup_CN IN (SELECT SampleGroup_CN FROM SampleGroup WHERE SampleGroup.Stratum_CN = {0});
+DELETE FROM SamplerState WHERE SampleGroup_CN IN (SELECT SampleGroup_CN FROM SampleGroup WHERE SampleGroup.Stratum_CN = {0});
 DELETE FROM SampleGroup WHERE Stratum_CN = {0};
 DELETE FROM TreeFieldSetup WHERE Stratum_CN = {0};
 DELETE FROM LogFieldSetup WHERE Stratum_CN = {0};
 DELETE FROM FixCNTTallyPopulation WHERE FixCNTTallyClass_CN IN (SELECT FixCNTtallyClass_CN FROM FixCNTTallyClass WHERE Stratum_CN = {0});
 DELETE FROM FixCNTTallyClass WHERE Stratum_CN = {0};
-DELETE FROM SamplerState WHERE SampleGroup_CN IN (SELECT SampleGroup_CN FROM SampleGroup WHERE SampleGroup.Stratum_CN = {0});
 DELETE FROM SampleGroupStatsTreeDefaultValue WHERE SampleGroupStats_CN IN 
     (SELECT SampleGroupStats_CN FROM SampleGroupStats AS sgs 
         JOIN StratumStats AS ss USING (StratumStats_CN) WHERE Stratum_CN = {0});

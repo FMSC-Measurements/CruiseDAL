@@ -215,17 +215,28 @@ $@"SELECT name  FROM pragma_table_info('{table}'); ").ToArray();
         [InlineData("something.cruise", CruiseFileType.Cruise)]
         [InlineData("something.CRUISE", CruiseFileType.Cruise)]
         [InlineData("something.bananas.cruise", CruiseFileType.Cruise)]
+
         [InlineData("something.m.cruise", CruiseFileType.Master, CruiseFileType.Cruise)]
         [InlineData("something.M.cruise", CruiseFileType.Master, CruiseFileType.Cruise)]
         [InlineData("something.m.CRUISE", CruiseFileType.Master, CruiseFileType.Cruise)]
         [InlineData("something.bananas.m.CRUISE", CruiseFileType.Master, CruiseFileType.Cruise)]
+
         [InlineData("something.1.cruise", CruiseFileType.Component, CruiseFileType.Cruise)]
+        [InlineData("something.01.cruise", CruiseFileType.Component, CruiseFileType.Cruise)]
+        [InlineData("something.10.cruise", CruiseFileType.Component, CruiseFileType.Cruise)]
+        [InlineData("something.99.cruise", CruiseFileType.Component, CruiseFileType.Cruise)]
+        [InlineData("something.00.cruise", CruiseFileType.Component, CruiseFileType.Cruise)]
         [InlineData("something.bananas.1.cruise", CruiseFileType.Component, CruiseFileType.Cruise)]
-        [InlineData("something.123456789.cruise", CruiseFileType.Component, CruiseFileType.Cruise)]
+
+        // max component number is 99
+        [InlineData("something.100.cruise", CruiseFileType.Cruise, CruiseFileType.Cruise)]
+        [InlineData("something.123456789.cruise", CruiseFileType.Cruise, CruiseFileType.Cruise)]
+
         [InlineData("something.back-cruise", CruiseFileType.Backup, CruiseFileType.Cruise)]
         [InlineData("something.m.back-cruise", CruiseFileType.Backup, CruiseFileType.Cruise)]
         [InlineData("something.M.back-cruise", CruiseFileType.Backup, CruiseFileType.Cruise)]
         [InlineData("something.1.back-cruise", CruiseFileType.Backup, CruiseFileType.Cruise)]
+
         [InlineData("something.cut", CruiseFileType.Template)]
         [InlineData("something.design", CruiseFileType.Design)]
         public void ExtrapolateCruiseFileType_Test(string fileName, CruiseFileType expectedType, params CruiseFileType[] flags)

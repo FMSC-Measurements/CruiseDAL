@@ -81,14 +81,14 @@ namespace CruiseDAL
                 OpenConnection();
                 if (builder != null)
                 {
-                    builder.CreateDatastore(this);
+                    CreateDatastore(builder);
                 }
             }
             else if (makeNew)
             {
                 if (builder != null)
                 {
-                    builder.CreateDatastore(this);
+                    CreateDatastore(builder);
                 }
             }
             else if (!makeNew && !exists)

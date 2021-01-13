@@ -1,4 +1,5 @@
 ﻿using Backpack.SqlBuilder;
+using FMSC.ORM.Core;
 using FMSC.ORM.EntityModel.Attributes;
 using FMSC.ORM.EntityModel.Support;
 using System;
@@ -9,10 +10,12 @@ namespace FMSC.ORM.Sql
 {
     public class CommandBuilder : ICommandBuilder
     {
+        public static string GetParameterName(FieldInfo field) => "@" + field.Name;
+
         public static IDbDataParameter MakeParameter(IDbCommand command, FieldInfo field, object value)
         {
             var param = command.CreateParameter();
-            param.ParameterName = "@" + field.Name.ToLower();
+            param.ParameterName = GetParameterName(field);
             param.Value = value;
             return param;
         }
@@ -81,14 +84,18 @@ namespace FMSC.ORM.Sql
                 valueExpressions.Add(param.ParameterName);
             }
 
-            foreach (var field in fields.GetPersistedFields(false, PersistanceFlags.OnInsert))
+            foreach (var field in fields)
             {
-                object value = field.GetFieldValueOrDefault(data) ?? DBNull.Value;
-                var param = MakeParameter(command, field, value);
-                command.Parameters.Add(param);
+                if ((field.PersistanceFlags & PersistanceFlags.OnInsert) == PersistanceFlags.OnInsert
+                    && field.IsKeyField == false)
+                {
+                    object value = field.GetFieldValueOrDefault(data) ?? DBNull.Value;
+                    var param = MakeParameter(command, field, value);
+                    command.Parameters.Add(param);
 
-                columnNames.Add(field.Name);
-                valueExpressions.Add(param.ParameterName);
+                    columnNames.Add(field.Name);
+                    valueExpressions.Add(param.ParameterName);
+                }
             }
 
             var builder = new SqlInsertCommand
@@ -104,8 +111,14 @@ namespace FMSC.ORM.Sql
             command.CommandText = builder.ToString() + $"; SELECT {keyFieldName} FROM { tableName} WHERE RowID = last_insert_rowid();";
         }
 
-        public void BuildUpdate(IDbCommand command, object data, string tableName, IFieldInfoCollection fields,
-            OnConflictOption option = OnConflictOption.Default, object keyValue = null)
+        public void BuildUpdate(IDbCommand command,
+                                object data,
+                                string tableName,
+                                IFieldInfoCollection fields,
+                                string whereExpression = null,
+                                OnConflictOption option = OnConflictOption.Default,
+                                object keyValue = null,
+                                object extraPrams = null)
         {
             if (command is null) { throw new ArgumentNullException(nameof(command)); }
             if (data is null) { throw new ArgumentNullException(nameof(data)); }
@@ -114,29 +127,37 @@ namespace FMSC.ORM.Sql
 
             var pkField = fields.PrimaryKeyField ?? throw new InvalidOperationException($"Primary Key field required for Update command");
 
-            if(keyValue is null)
+            if (keyValue is null)
             {
                 keyValue = pkField.GetFieldValue(data);
             }
-            if(keyValue is null)
+            if (keyValue is null)
             { throw new InvalidOperationException($"{pkField.Property.Name} should not be null"); }
+
+
 
             var columnNames = new List<string>();
             var columnExpressions = new List<string>();
-            foreach (var field in fields.GetPersistedFields(false, PersistanceFlags.OnUpdate))
+            foreach (var field in fields)
             {
                 object value = field.GetFieldValueOrDefault(data) ?? DBNull.Value;
                 var param = MakeParameter(command, field, value);
                 command.Parameters.Add(param);
 
-                columnNames.Add(field.Name);
-                columnExpressions.Add(param.ParameterName);
+                if ((field.PersistanceFlags & PersistanceFlags.OnUpdate) == PersistanceFlags.OnUpdate)
+                {
+                    columnNames.Add(field.Name);
+                    columnExpressions.Add(param.ParameterName);
+                }
             }
 
-            var keyParam = MakeParameter(command, pkField, keyValue);
-            command.Parameters.Add(keyParam);
+            if(extraPrams != null)
+            {
+                command.AddParams(extraPrams);
+            }
 
-            var where = new WhereClause(pkField.Name + " = " + keyParam.ParameterName);
+            whereExpression = whereExpression ?? pkField.Name + " = " + GetParameterName(pkField);
+            var where = new WhereClause(whereExpression);
             var expression = new SqlUpdateCommand()
             {
                 TableName = tableName,

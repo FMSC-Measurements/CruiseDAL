@@ -4,7 +4,7 @@ using System.IO;
 using System.Reflection;
 using Xunit.Abstractions;
 
-namespace CruiseDAL.V3.Tests
+namespace CruiseDAL.V3.Test
 {
     public abstract class TestBase
     {

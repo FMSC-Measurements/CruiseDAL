@@ -10,21 +10,4 @@
   <ItemGroup Label="Project References">
     <ProjectReference Include="..\FMSC.ORM\FMSC.ORM.csproj" PrivateAssets="none"/>
   </ItemGroup>
-
-  <ItemGroup Label="Auto Generated Files">
-    <None Update="CruiseDAL\Schema\Schema.tt">
-      <Generator>TextTemplatingFileGenerator</Generator>
-      <LastGenOutput>Schema.cs</LastGenOutput>
-    </None>
-    <Compile Update="CruiseDAL\Schema\Schema.cs">
-      <DesignTime>True</DesignTime>
-      <AutoGen>True</AutoGen>
-      <DependentUpon>Schema.tt</DependentUpon>
-    </Compile>
-  </ItemGroup>
-
-  <ItemGroup>
-    <Service Include="{508349b6-6b84-4df5-91f0-309beebad82d}" />
-  </ItemGroup>
-
 </Project>

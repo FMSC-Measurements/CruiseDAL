@@ -1,0 +1,3 @@
+SELECT TreeDefaultValue_CN, PrimaryProduct, Species, LiveDead, FiaCode, HiddenPrimary, contractSpecies FROM main.TreeDefaultValue
+EXCEPT 
+select TreeDefaultValue_CN, PrimaryProduct, Species, LiveDead, FiaCode, HiddenPrimary, contractSpecies from fromDB.treedefaultValue;

@@ -1,5 +1,6 @@
 ﻿using CommandLine;
 using FMSC.ORM.Core;
+using FMSC.ORM.ModelGenerator.Generators;
 using System;
 using System.Diagnostics;
 using System.Linq;
@@ -31,6 +32,9 @@ namespace FMSC.ORM.ModelGenerator
 
             [Option(HelpText = "column seperated list of columns to ignore")]
             public string IgnoreColumns { get; set; }
+
+            [Option(HelpText = "column seperated list of columns to not persisted")]
+            public string NonPersistedColumns { get; set; }
         }
 
         static void Main(string[] args)
@@ -50,13 +54,20 @@ namespace FMSC.ORM.ModelGenerator
                                 o.IgnoreColumns.Split(',')
                                 : (string[])null;
 
+                            var nonPersistedColumns = (string.IsNullOrWhiteSpace(o.NonPersistedColumns) == false) ?
+                                o.IgnoreColumns.Split(',')
+                                : (string[])null;
+
                             var schemaProvider = new SqliteDatastoreSchemaInfoProvider(datastore, ignoreColmns);
 
                             var modelGenerator = new CSModelGenerator();
-                            modelGenerator.GenerateFiles(schemaProvider, o.Namespace, o.OutputDirectory);
+                            modelGenerator.GenerateFiles(schemaProvider, o.Namespace, o.OutputDirectory, nonPersistedColumns);
 
-                            var plantUMLGenerator = new PlantUMLGenerator();
-                            plantUMLGenerator.GenerateFiles(schemaProvider, o.Namespace, o.OutputDirectory);
+                            //var plantUMLGenerator = new PlantUMLGenerator();
+                            //plantUMLGenerator.GenerateFiles(schemaProvider, o.Namespace, o.OutputDirectory, nonPersistedColumns);
+
+                            var mermadeGenerator = new MermaidGenerator();
+                            mermadeGenerator.GenerateFiles(schemaProvider, o.Namespace, o.OutputDirectory, nonPersistedColumns);
                         }
                     }
                 });

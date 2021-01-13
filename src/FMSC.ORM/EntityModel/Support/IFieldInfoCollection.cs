@@ -7,6 +7,8 @@ namespace FMSC.ORM.EntityModel.Support
     {
         FieldInfo PrimaryKeyField { get; }
 
-        IEnumerable<FieldInfo> GetPersistedFields(bool includeKeyField, PersistanceFlags filter);
+        IEnumerable<FieldInfo> DataFields { get; }
+
+        //IEnumerable<FieldInfo> GetPersistedFields(bool includeKeyField, PersistanceFlags filter);
     }
 }

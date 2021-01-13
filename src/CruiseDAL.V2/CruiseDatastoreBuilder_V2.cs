@@ -1,18 +1,14 @@
 ﻿using FMSC.ORM.Core;
-using FMSC.ORM.SQLite;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+using System.Data.Common;
 
 namespace CruiseDAL
 {
-    public class CruiseDatastoreBuilder_V2 : SQLiteDatabaseBuilder
+    public class CruiseDatastoreBuilder_V2 : IDatastoreBuilder
     {
-        public override void BuildDatabase(Datastore datastore)
+        public void BuildDatabase(DbConnection connection, DbTransaction transaction, IExceptionProcessor exceptionProcessor = null)
         {
-            datastore.Execute(Schema.Schema.CREATE_TABLES);
-            datastore.Execute(Schema.Schema.CREATE_TRIGGERS);
+            connection.ExecuteNonQuery(Schema.Schema.CREATE_TABLES, transaction: transaction, exceptionProcessor: exceptionProcessor);
+            connection.ExecuteNonQuery(Schema.Schema.CREATE_TRIGGERS, transaction: transaction, exceptionProcessor: exceptionProcessor);
         }
     }
 }

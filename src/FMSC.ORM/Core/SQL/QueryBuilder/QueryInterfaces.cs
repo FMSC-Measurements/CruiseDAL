@@ -7,7 +7,13 @@ namespace FMSC.ORM.Core.SQL.QueryBuilder
     {
         IEnumerable<T> Query(params Object[] selectionArgs);
 
+        IEnumerable<T> Query2(object parameters);
+
         IEnumerable<T> Read(params Object[] selectionArgs);
+
+        long Count(params Object[] selectionArgs);
+
+        long Count2(object parameters);
     }
 
     public interface IQuerryAcceptsLimit<T> : IQueryBuilder<T> where T : new()

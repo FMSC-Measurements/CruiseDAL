@@ -1,0 +1,24 @@
+INSERT INTO main.CuttingUnit 
+SELECT * FROM fromDB.CuttingUnit;
+
+INSERT INTO main.Stratum 
+SELECT * FROM fromDB.Stratum;
+
+INSERT INTO main.CuttingUnitStratum
+SELECT * FROM fromDB.CuttingUnitStratum;
+
+INSERT INTO main.SampleGroup
+SELECT * FROM fromDB.SampleGroup;
+
+INSERT INTO main.TreeFieldSetup
+SELECT * FROM fromDB.TreeFieldSetup;
+
+INSERT INTO main.LogFieldSetup
+SELECT * FROM fromDB.LogFieldSetup;
+
+INSERT INTO main.CountTree
+SELECT * FROM fromDB.CountTree;
+
+INSERT INTO Tally
+SELECT * FROM fromDB.Tally;
+

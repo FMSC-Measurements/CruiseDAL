@@ -11,6 +11,9 @@ namespace CruiseDAL.V3.Models
   [Field("TreeAuditRuleID")]
   public String TreeAuditRuleID { get; set; }
 
+  [Field("CruiseID")]
+  public String CruiseID { get; set; }
+
   [Field("Field")]
   public String Field { get; set; }
 
@@ -19,6 +22,9 @@ namespace CruiseDAL.V3.Models
 
   [Field("Max")]
   public Double? Max { get; set; }
+
+  [Field("Desctiption")]
+  public String Desctiption { get; set; }
 
  }
 

@@ -7,7 +7,7 @@ namespace FMSC.ORM.EntityModel.Support
     {
         EntityDescription LookUpEntityByType(Type type);
 
-        EntityInflator GetEntityInflator(Type type);
+        //EntityInflator GetEntityInflator(Type type);
     }
 
     public class GlobalEntityDescriptionLookup : IEntityDescriptionLookup
@@ -45,22 +45,22 @@ namespace FMSC.ORM.EntityModel.Support
             }
         }
 
-        public EntityInflator GetEntityInflator(Type type)
-        {
-            lock (_entityDescriptionLookup)
-            {
-                if (!_entityInflatorLookup.ContainsKey(type))
-                {
-                    var entityDescription = LookUpEntityByType(type);
-                    var entityInflator = new EntityInflator(entityDescription);
-                    _entityInflatorLookup.Add(type, entityInflator);
-                    return entityInflator;
-                }
-                else
-                {
-                    return _entityInflatorLookup[type];
-                }
-            }
-        }
+        //public EntityInflator GetEntityInflator(Type type)
+        //{
+        //    lock (_entityDescriptionLookup)
+        //    {
+        //        if (!_entityInflatorLookup.ContainsKey(type))
+        //        {
+        //            var entityDescription = LookUpEntityByType(type);
+        //            var entityInflator = new EntityInflator(entityDescription);
+        //            _entityInflatorLookup.Add(type, entityInflator);
+        //            return entityInflator;
+        //        }
+        //        else
+        //        {
+        //            return _entityInflatorLookup[type];
+        //        }
+        //    }
+        //}
     }
 }

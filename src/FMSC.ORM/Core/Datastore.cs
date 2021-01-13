@@ -39,12 +39,11 @@ namespace FMSC.ORM.Core
 
         protected IEntityDescriptionLookup EntityDescriptionLookup { get; set; } = GlobalEntityDescriptionLookup.Instance;
 
+        // TODO should dialect be in the commandBuilder
         protected ISqlDialect SqlDialect { get; set; }
-        protected IExceptionProcessor ExceptionProcessor { get; set; }
-
-        protected IDatastoreBuilder DatabaseBuilder { get; set; }
-
-        protected ICommandBuilder CommandBuilder { get; }
+        public IExceptionProcessor ExceptionProcessor { get; }
+        public IDatastoreBuilder DatabaseBuilder { get; }
+        public ICommandBuilder CommandBuilder { get; }
 
         private string _path;
 
@@ -73,6 +72,27 @@ namespace FMSC.ORM.Core
             SqlDialect = dialect;
             ExceptionProcessor = exceptionProcessor;
             CommandBuilder = commandBuilder;
+        }
+
+        public virtual void CreateDatastore(IDatastoreBuilder builder)
+        {
+            var conn = OpenConnection();
+            var transaction = conn.BeginTransaction();
+            try
+            {
+                builder.BuildDatabase(conn, transaction, ExceptionProcessor);
+
+                transaction.Commit();
+            }
+            catch
+            {
+                transaction.Rollback();
+                throw;
+            }
+            finally
+            {
+                ReleaseConnection();
+            }
         }
 
         #region Entity Info
@@ -214,8 +234,6 @@ namespace FMSC.ORM.Core
             }
         }
 
-        
-
         #region read methods
 
         public IEnumerable<TResult> Read<TResult>(string commandText, object[] paramaters) where TResult : class, new()
@@ -225,7 +243,7 @@ namespace FMSC.ORM.Core
                 var connection = OpenConnection();
                 try
                 {
-                    EntityInflator inflator = GlobalEntityDescriptionLookup.Instance.GetEntityInflator(typeof(TResult));
+                    var discription = GlobalEntityDescriptionLookup.Instance.LookUpEntityByType(typeof(TResult));
                     EntityCache cache = GetEntityCache(typeof(TResult));//TODO delegate access of cach to data context type
                     using (var command = CreateCommand())
                     {
@@ -234,13 +252,13 @@ namespace FMSC.ORM.Core
 
                         using (var reader = connection.ExecuteReader(command, CurrentTransaction))
                         {
-                            inflator.CheckOrdinals(reader);
+                            var inflator = InflatorLookup.Instance.GetEntityInflator(reader);
                             while (reader.Read())
                             {
                                 TResult entity = null;
                                 try
                                 {
-                                    object key = inflator.ReadPrimaryKey(reader);
+                                    object key = inflator.ReadPrimaryKey(reader, discription);
                                     if (key != null && cache.ContainsKey(key))
                                     {
                                         entity = cache[key] as TResult;
@@ -262,7 +280,7 @@ namespace FMSC.ORM.Core
                                         }
                                         try
                                         {
-                                            inflator.ReadData(reader, entity);
+                                            inflator.ReadData(reader, entity, discription);
                                         }
                                         finally
                                         {
@@ -379,7 +397,7 @@ namespace FMSC.ORM.Core
                 var connection = OpenConnection();
                 try
                 {
-                    FMSC.ORM.EntityModel.Support.EntityInflator inflator = GlobalEntityDescriptionLookup.Instance.GetEntityInflator(typeof(TResult));
+                    var discription = GlobalEntityDescriptionLookup.Instance.LookUpEntityByType(typeof(TResult));
 
                     using (var command = CreateCommand())
                     {
@@ -388,9 +406,7 @@ namespace FMSC.ORM.Core
 
                         using (var reader = connection.ExecuteReader(command, CurrentTransaction))
                         {
-                            //HACK with microsoft.data.sqlite calling GetOrdinal throws exception if reader is empty
-                            //if(reader is DbDataReader && ((DbDataReader)reader).HasRows == false) { yield break; }
-                            inflator.CheckOrdinals(reader);
+                            var inflator = InflatorLookup.Instance.GetEntityInflator(reader);
 
                             while (reader.Read())
                             {
@@ -405,7 +421,7 @@ namespace FMSC.ORM.Core
                                 }
                                 try
                                 {
-                                    inflator.ReadData(reader, newDO);
+                                    inflator.ReadData(reader, newDO, discription);
                                 }
                                 catch (Exception e)
                                 {
@@ -446,7 +462,7 @@ namespace FMSC.ORM.Core
                 var connection = OpenConnection();
                 try
                 {
-                    FMSC.ORM.EntityModel.Support.EntityInflator inflator = GlobalEntityDescriptionLookup.Instance.GetEntityInflator(typeof(TResult));
+                    var discription = GlobalEntityDescriptionLookup.Instance.LookUpEntityByType(typeof(TResult));
 
                     using (var command = CreateCommand())
                     {
@@ -455,9 +471,7 @@ namespace FMSC.ORM.Core
 
                         using (var reader = connection.ExecuteReader(command, CurrentTransaction))
                         {
-                            //HACK with microsoft.data.sqlite calling GetOrdinal throws exception if reader is empty
-                            //if(reader is DbDataReader && ((DbDataReader)reader).HasRows == false) { yield break; }
-                            inflator.CheckOrdinals(reader);
+                            var inflator = InflatorLookup.Instance.GetEntityInflator(reader);
 
                             while (reader.Read())
                             {
@@ -472,7 +486,7 @@ namespace FMSC.ORM.Core
                                 }
                                 try
                                 {
-                                    inflator.ReadData(reader, newDO);
+                                    inflator.ReadData(reader, newDO, discription);
                                 }
                                 catch (Exception e)
                                 {

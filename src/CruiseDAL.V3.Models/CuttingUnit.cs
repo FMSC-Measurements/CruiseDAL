@@ -8,14 +8,17 @@ namespace CruiseDAL.V3.Models
   [PrimaryKeyField("CuttingUnit_CN")]
   public Int32? CuttingUnit_CN { get; set; }
 
-  [Field("Code")]
-  public String Code { get; set; }
+  [Field("CuttingUnitID")]
+  public String CuttingUnitID { get; set; }
+
+  [Field("CuttingUnitCode")]
+  public String CuttingUnitCode { get; set; }
+
+  [Field("CruiseID")]
+  public String CruiseID { get; set; }
 
   [Field("Area")]
   public Double? Area { get; set; }
-
-  [Field("TallyHistory")]
-  public String TallyHistory { get; set; }
 
   [Field("Description")]
   public String Description { get; set; }
@@ -28,6 +31,18 @@ namespace CruiseDAL.V3.Models
 
   [Field("Rx")]
   public String Rx { get; set; }
+
+  [Field("CreatedBy")]
+  public String CreatedBy { get; set; }
+
+  [Field("Created_TS")]
+  public DateTime? Created_TS { get; set; }
+
+  [Field("ModifiedBy")]
+  public String ModifiedBy { get; set; }
+
+  [Field("Modified_TS")]
+  public DateTime? Modified_TS { get; set; }
 
  }
 

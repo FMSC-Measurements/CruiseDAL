@@ -5,6 +5,9 @@ namespace CruiseDAL.V3.Models
  [Table("TreeFieldValue")]
  public partial class TreeFieldValue
  {
+  [PrimaryKeyField("TreeFieldValue_OID")]
+  public Int32? TreeFieldValue_OID { get; set; }
+
   [Field("TreeID")]
   public String TreeID { get; set; }
 
@@ -22,6 +25,18 @@ namespace CruiseDAL.V3.Models
 
   [Field("ValueText")]
   public String ValueText { get; set; }
+
+  [Field("CreatedBy")]
+  public String CreatedBy { get; set; }
+
+  [Field("Created_TS")]
+  public DateTime? Created_TS { get; set; }
+
+  [Field("ModifiedBy")]
+  public String ModifiedBy { get; set; }
+
+  [Field("Modified_TS")]
+  public DateTime? Modified_TS { get; set; }
 
  }
 

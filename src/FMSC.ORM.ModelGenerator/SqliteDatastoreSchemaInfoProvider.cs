@@ -12,6 +12,7 @@ namespace FMSC.ORM.ModelGenerator
         public Datastore Datastore { get; set; }
         public ISqlDialect Dialect { get; }
         public IEnumerable<string> IgnoreColumns { get; }
+        
 
         public IEnumerable<TableInfo> Tables
         {
@@ -28,7 +29,7 @@ namespace FMSC.ORM.ModelGenerator
         private IEnumerable<TableInfo> GenerateTableInfo(Datastore datastore, IEnumerable<string> ignoreColumnNames = null)
         {
             var dialect = Dialect;
-            ignoreColumnNames = ignoreColumnNames ?? new string[0];
+            ignoreColumnNames = ignoreColumnNames ?? Enumerable.Empty<string>();
 
             // note: we are only generating types off of tables because sqlite may fail to reflect the type on columns in views
             var tableNames = datastore.QueryScalar<string>("SELECT tbl_name FROM Sqlite_Master WHERE type IN ('table') AND tbl_name NOT LIKE 'sqlite\\_%' ESCAPE '\\';");

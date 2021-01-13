@@ -1,0 +1,9 @@
+INSERT INTO main.Plot
+SELECT * FROM fromDB.Plot;
+
+INSERT INTO main.Tree
+SELECT * FROM fromDB.Tree;
+
+INSERT INTO main.Log
+SELECT * FROM fromDB.Log;
+

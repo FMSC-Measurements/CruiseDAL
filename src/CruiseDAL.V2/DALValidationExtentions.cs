@@ -16,14 +16,10 @@ namespace CruiseDAL
                 hasErrors = true;
             }
 
-            if (HasMismatchSpeciesOrLiveDead(dal))
+            if (HasMismatchSpecies(dal))
             {
-                FixMismatchSpecies(dal);
-                if (HasMismatchSpeciesOrLiveDead(dal))
-                {
-                    errorList.Add("Tree table has mismatch species codes");
-                    hasErrors = true;
-                }
+                errorList.Add("Tree table has mismatch species codes");
+                hasErrors = true;
             }
 
             if (dal.HasSampleGroupUOMErrors())
@@ -104,28 +100,9 @@ namespace CruiseDAL
             return dal.GetRowCount(SAMPLEGROUP._NAME, "WHERE ifnull(DefaultLiveDead, '') = ''") > 0;
         }
 
-        private static bool HasMismatchSpeciesOrLiveDead(CruiseDatastore dal)
+        private static bool HasMismatchSpecies(CruiseDatastore dal)
         {
-            return dal.GetRowCount("Tree", "JOIN TreeDefaultValue AS tdv USING (TreeDefaultValue_CN) WHERE Tree.Species != tdv.Species OR Tree.LiveDead != tdv.LiveDead;") > 0;
-        }
-
-        private static void FixMismatchSpecies(CruiseDatastore dal)
-        {
-            dal.Execute(
-@"UPDATE Tree
-SET [Species] =
-        (SELECT [Species]
-        FROM TreeDefaultValue AS tdv
-        WHERE tdv.TreeDefaultValue_CN = Tree.TreeDefaultValue_CN),
-    LiveDead =
-        (SELECT [LiveDead]
-        FROM TreeDefaultValue AS tdv
-        WHERE tdv.TreeDefaultValue_CN = Tree.TreeDefaultValue_CN)
-WHERE Tree_CN IN
-    (SELECT Tree_CN from Tree
-    JOIN TreeDefaultValue as tdv using (TreeDefaultVAlue_CN)
-    WHERE tree.[Species] != tdv.[Species]
-        AND tree.LiveDead != tdv.LiveDead);");
+            return dal.GetRowCount("Tree", "JOIN TreeDefaultValue AS tdv USING (TreeDefaultValue_CN) WHERE Tree.Species != tdv.Species;") > 0;
         }
 
         private static bool HasSampleGroupUOMErrors(this CruiseDatastore dal)

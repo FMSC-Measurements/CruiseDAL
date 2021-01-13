@@ -2,6 +2,8 @@
 {
 	public static partial class Schema
 	{
+		public static string CREATE_TABLES_VERSION = "2.7.1";
+
 		public static string CREATE_TABLES =
 		@"
 --Core Tables--
@@ -292,7 +294,7 @@
 
     CREATE TABLE TreeEstimate (
 				TreeEstimate_CN INTEGER PRIMARY KEY AUTOINCREMENT,
-				CountTree_CN INTEGER REFERENCES CountTree,
+				CountTree_CN INTEGER,
 				TreeEstimate_GUID TEXT,
 				KPI REAL NOT NULL,
 				CreatedBy TEXT DEFAULT 'none',
@@ -834,9 +836,9 @@ FROM CuttingUnitStratum
 JOIN CuttingUnit USING (CuttingUnit_CN)
 JOIN Stratum USING (Stratum_CN);" +
 
-@"
-INSERT INTO Globals (Block, Key, Value) VALUES ('Database', 'Version', '2.7.0');
-INSERT INTO Globals (Block, Key, Value) VALUES ('Database', 'CreateVersion', '2.7.0');
+$@"
+INSERT INTO Globals (Block, Key, Value) VALUES ('Database', 'Version', '{CREATE_TABLES_VERSION}');
+INSERT INTO Globals (Block, Key, Value) VALUES ('Database', 'CreateVersion', '{CREATE_TABLES_VERSION}');
 PRAGMA user_version = 5;";
 
 	}//END CLASS

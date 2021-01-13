@@ -1,0 +1,47 @@
+--the purpose of this script is to reassign the rowID values of all design and field data in preperation to merge it into another cruise file
+
+--clean up
+DELETE FROM SampleGroupStatsTreeDefaultValue;
+DELETE FROM SampleGroupStats;
+DELETE FROM StratumStats;
+
+PRAGMA foreign_keys = off;
+
+UPDATE Stratum SET Stratum_CN = Stratum_CN + @shift;
+UPDATE SampleGroup SET Stratum_CN = Stratum_CN + @shift;
+UPDATE FixCNTTallyClass SET Stratum_CN = Stratum_CN + @shift;
+UPDATE CuttingUnitStratum SET Stratum_CN = Stratum_CN + @shift;
+UPDATE Plot SET Stratum_CN = Stratum_CN + @shift;
+UPDATE Tree SET Stratum_CN = Stratum_CN + @shift;
+UPDATE TreeFieldSetup SET Stratum_CN = Stratum_CN + @shift;
+UPDATE LogFieldSetup SET Stratum_CN = Stratum_CN + @shift;
+
+UPDATE SampleGroup SET SampleGroup_CN = SampleGroup_CN + @shift;
+UPDATE CountTree SET SampleGroup_CN = SampleGroup_CN + @shift;
+UPDATE Tree SET SampleGroup_CN = SampleGroup_CN + @shift;
+UPDATE SampleGroupTreeDefaultValue SET SampleGroup_CN = SampleGroup_CN + @shift;
+UPDATE FixCNTTallyPopulation SET SampleGroup_CN = SampleGroup_CN + @shift;
+
+UPDATE CuttingUnit SET CuttingUnit_CN = CuttingUnit_CN + @shift;
+UPDATE CountTree SET CuttingUnit_CN = CuttingUnit_CN + @shift;
+UPDATE Tree SET CuttingUnit_CN = CuttingUnit_CN + @shift;
+UPDATE CuttingUnitStratum SET CuttingUnit_CN = CuttingUnit_CN + @shift;
+UPDATE Plot SET CuttingUnit_CN = CuttingUnit_CN + @shift;
+
+UPDATE Plot SET Plot_CN = Plot_CN + @shift;
+UPDATE Tree SET Plot_CN = Plot_CN + @shift;
+
+UPDATE Tree SET Tree_CN = Tree_CN + @shift;
+UPDATE Log SET Tree_CN = Tree_CN + @shift;
+
+UPDATE Log SET Log_CN = Log_CN + @shift;
+
+UPDATE CountTree SET CountTree_CN = CountTree_CN + @shift;
+
+UPDATE Tally SET Tally_CN = Tally_CN + @shift;
+UPDATE CountTree SET Tally_CN = Tally_CN + @shift;
+
+PRAGMA foreign_keys = on;
+
+
+

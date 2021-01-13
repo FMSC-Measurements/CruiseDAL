@@ -101,13 +101,13 @@ namespace FMSC.ORM.EntityModel.Support
 
             using (var command = DbProvider.CreateCommand())
             {
-                commandBuilder.BuildUpdate(command, data, ed.SourceName, ed.Fields, OnConflictOption.Default);
+                commandBuilder.BuildUpdate(command, data, ed.SourceName, ed.Fields, option: OnConflictOption.Default);
                 var commandText = command.CommandText;
 
                 ValidateCommand(command);
                 commandText.Should().Contain("ID", "");
 
-                command.Parameters.OfType<DbParameter>().Where(x => x.ParameterName == "@id")
+                command.Parameters.OfType<DbParameter>().Where(x => x.ParameterName == "@ID")
                     .Should().HaveCount(1);
 
                 command.Parameters.OfType<DbParameter>().Select(x => x.ParameterName).Should().OnlyHaveUniqueItems();

@@ -49,6 +49,31 @@ namespace FMSC.ORM.Core
 
                 cmd.Parameters.Add(param);
             }
+
+#if DEBUG
+            var cmdText = cmd.CommandText;
+            var prms = cmd.Parameters.OfType<IDbDataParameter>().ToArray();
+            foreach (var match in System.Text.RegularExpressions.Regex.Matches(cmdText, "[@]\\w+").OfType<System.Text.RegularExpressions.Match>())
+            {
+                if (prms.Any(x => x.ParameterName == match.Value) == false)
+                {
+                    throw new InvalidOperationException(match.Value + " is missing");
+                }
+            }
+#endif
+
+            //var cmdText = cmd.CommandText;
+            //var prms = cmd.Parameters.OfType<IDbDataParameter>().ToArray();
+            //foreach (var match in System.Text.RegularExpressions.Regex.Matches(cmdText, "[@]\\w+").OfType<System.Text.RegularExpressions.Match>())
+            //{
+            //    var name = match.Value;
+            //    var pName = name.TrimStart('@');
+            //    var param = cmd.CreateParameter();
+            //    param.ParameterName = name;
+            //    param.Value = data.GetType().GetProperty(pName).GetValue(data, (object[])null) ?? DBNull.Value;
+
+            //    cmd.Parameters.Add(param);
+            //}
         }
 
         public static IEnumerable<string> GetPropNames(object obj)

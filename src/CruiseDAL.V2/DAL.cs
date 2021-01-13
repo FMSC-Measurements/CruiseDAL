@@ -75,7 +75,7 @@ namespace CruiseDAL
             {
                 return CruiseFileType.Master;
             }
-            else if (System.Text.RegularExpressions.Regex.IsMatch(normPath, @".+\.\d+\.cruise\s*$", System.Text.RegularExpressions.RegexOptions.IgnoreCase))
+            else if (System.Text.RegularExpressions.Regex.IsMatch(normPath, @".+\.\d{1,2}\.cruise\s*$", System.Text.RegularExpressions.RegexOptions.IgnoreCase))
             {
                 return CruiseFileType.Component;
             }

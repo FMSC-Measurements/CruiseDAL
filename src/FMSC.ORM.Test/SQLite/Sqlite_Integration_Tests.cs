@@ -1,4 +1,5 @@
 ﻿using FluentAssertions;
+using FMSC.ORM.Core;
 using System;
 using System.Data.Common;
 using System.Globalization;
@@ -15,6 +16,23 @@ namespace FMSC.ORM.SQLite
         {
         }
 
+        [Fact]
+        // the official behavior is, if a command is executed without assigning the 
+        // Transaction property an exception should be thrown. However through testing 
+        // it apears this is not so. This test should fail if that behavior is changed
+        // https://docs.microsoft.com/en-us/dotnet/framework/data/adonet/local-transactions
+        public void ExecuteCommandWithOutAssigningTrasaction()
+        {
+            using(var connection = GetOpenConnection())
+            {
+                var transaction = connection.BeginTransaction();
+                var command = connection.CreateCommand();
+                command.CommandText = "CREATE TABLE a (something TEXT);";
+                var result = command.ExecuteScalar();
+                transaction.Commit();
+            }
+        }
+
         [Theory]
 #if !MICROSOFT_DATA_SQLITE
         [InlineData(1L, "1", "?1" )]
@@ -24,9 +42,10 @@ namespace FMSC.ORM.SQLite
 
 #if !SYSTEM_DATA_SQLITE
         [InlineData(1L, "?1", "?1")]
+#else
+        [InlineData(1L, "@something", "@Something")] // https://github.com/dotnet/efcore/issues/18861
 #endif
         [InlineData(1L, "@1", "@1")]
-        [InlineData(1L, "@something", "@something")]
         public void Bind_Paramater(object value, string pName, string pExpr)
         {
             using (var connection = GetOpenConnection())
@@ -43,6 +62,30 @@ namespace FMSC.ORM.SQLite
                 Assert.Equal(value, result);
             }
         }
+
+#if !SYSTEM_DATA_SQLITE
+        // this may change see issue: https://github.com/dotnet/efcore/issues/18861
+        [Theory]
+        [InlineData("@something", "@Something")]
+        [InlineData("@Something", "@something")]
+
+        public void Bind_Pramater_is_case_sensitive(string pName, string pExpr)
+        {
+            var value = 1L;
+
+            using (var connection = GetOpenConnection())
+            {
+                var command = connection.CreateCommand();
+                command.CommandText = $"SELECT {pExpr};";
+                var parm = command.CreateParameter();
+                parm.ParameterName = pName;
+                parm.Value = value;
+                command.Parameters.Add(parm);
+
+                var result = command.Invoking( x=> x.ExecuteScalar()).Should().Throw<Exception>();
+            }
+        }
+#endif
 
 #if MICROSOFT_DATA_SQLITE
 
