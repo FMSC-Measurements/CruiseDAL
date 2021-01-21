@@ -2,11 +2,11 @@ using System;
 using FMSC.ORM.EntityModel.Attributes;
 namespace CruiseDAL.V3.Models
 {
- [Table("Regions")]
- public partial class Regions
+ [Table("LK_Region")]
+ public partial class LK_Region
  {
-  [PrimaryKeyField("Regions_CN")]
-  public Int32? Regions_CN { get; set; }
+  [PrimaryKeyField("LK_Region_CN")]
+  public Int32? LK_Region_CN { get; set; }
 
   [Field("Region")]
   public String Region { get; set; }

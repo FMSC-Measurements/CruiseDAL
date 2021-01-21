@@ -2,26 +2,26 @@
 
 namespace CruiseDAL.Schema.Cruise.Lookup
 {
-    public class ForestsTableDefintion : ITableDefinition
+    public class LK_Forest : ITableDefinition
     {
-        public string TableName => "Forests";
+        public string TableName => "LK_Forest";
 
         public string CreateTable =>
-@"CREATE TABLE Forests (
-    Forests_CN INTEGER PRIMARY KEY AUTOINCREMENT,
+@"CREATE TABLE LK_Forest (
+    LK_Forest_CN INTEGER PRIMARY KEY AUTOINCREMENT,
     Forest TEXT NOT NULL COLLATE NOCASE, -- needs to be text because one blm forest has non numeric forest number
     Region TEXT NOT NULL COLLATE NOCASE,
     FriendlyName TEXT NOT NULL COLLATE NOCASE,
     State TEXT NOT NULL COLLATE NOCASE,
     
 
-    FOREIGN KEY (Region) REFERENCES Regions (Region) ON DELETE CASCADE,
+    FOREIGN KEY (Region) REFERENCES LK_Region (Region) ON DELETE CASCADE,
 
     UNIQUE (Forest, Region)
 );";
 
         public string InitializeTable =>
-@"INSERT INTO Forests (Forest, FriendlyName, State, Region)
+@"INSERT INTO LK_Forest (Forest, FriendlyName, State, Region)
 VALUES
     ('02', 'Beaverhead-Deerlodge', 'MT', '01'),
     ('03', 'Bitterroot', 'MT', '01'),

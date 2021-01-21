@@ -2,20 +2,20 @@
 
 namespace CruiseDAL.Schema
 {
-    public class RegionsTableDefinition : ITableDefinition
+    public class LK_Region : ITableDefinition
     {
-        public string TableName => "Regions";
+        public string TableName => "LK_Region";
 
         public string CreateTable =>
-@"CREATE TABLE Regions (
-    Regions_CN INTEGER PRIMARY KEY AUTOINCREMENT,
+@"CREATE TABLE LK_Region (
+    LK_Region_CN INTEGER PRIMARY KEY AUTOINCREMENT,
     Region TEXT NOT NULL COLLATE NOCASE,
     FriendlyName TEXT NOT NULL COLLATE NOCASE,
     UNIQUE (Region)
 );";
 
         public string InitializeTable =>
-@"INSERT INTO Regions (Region, FriendlyName)
+@"INSERT INTO LK_Region (Region, FriendlyName)
 VALUES
     ('01', 'Northern'),
     ('02', 'Rocky Mountain'),

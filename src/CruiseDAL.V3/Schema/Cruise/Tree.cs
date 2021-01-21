@@ -67,37 +67,37 @@ namespace CruiseDAL.Schema
     Deleted_TS DATETIME
 );
 
-CREATE INDEX Tree_Tombstone_TreeID ON Tree_Tombstone 
+CREATE INDEX NIX_Tree_Tombstone_TreeID ON Tree_Tombstone 
 (TreeID);
 
-CREATE INDEX Tree_Tombstone_CruiseID_CuttingUnitCode_PlotNumber_TreeNumber ON Tree_Tombstone 
+CREATE INDEX NIX_Tree_Tombstone_CruiseID_CuttingUnitCode_PlotNumber_TreeNumber ON Tree_Tombstone 
 (CruiseID, CuttingUnitCode, PlotNumber, TreeNumber);";
 
         public string CreateIndexes =>
-@"CREATE INDEX Tree_TreeNumber_CruiseID ON Tree (TreeNumber, CruiseID);
+@"CREATE INDEX NIX_Tree_TreeNumber_CruiseID ON Tree (TreeNumber, CruiseID);
 
-CREATE INDEX 'Tree_SpeciesCode' ON 'Tree'('SpeciesCode');
+CREATE INDEX NIX_Tree_SpeciesCode ON Tree ('SpeciesCode');
 
-CREATE INDEX 'Tree_PlotNumber_CuttingUnitCode_CruiseID' ON 'Tree'('PlotNumber', 'CuttingUnitCode', 'CruiseID');
+CREATE INDEX NIX_Tree_PlotNumber_CuttingUnitCode_CruiseID ON Tree ('PlotNumber', 'CuttingUnitCode', 'CruiseID');
 
-CREATE INDEX 'Tree_SampleGroupCode_StratumCode_CruiseID' ON 'Tree'('SampleGroupCode', 'StratumCode', 'CruiseID');
+CREATE INDEX NIX_Tree_SampleGroupCode_StratumCode_CruiseID ON Tree ('SampleGroupCode', 'StratumCode', 'CruiseID');
 
-CREATE INDEX 'Tree_StratumCode_CruiseID' ON 'Tree'('StratumCode', 'CruiseID');
+CREATE INDEX NIX_Tree_StratumCode_CruiseID ON Tree ('StratumCode', 'CruiseID');
 
-CREATE INDEX 'Tree_CuttingUnitCode_CruiseID' ON 'Tree'('CuttingUnitCode', 'CruiseID');
+CREATE INDEX NIX_Tree_CuttingUnitCode_CruiseID ON Tree ('CuttingUnitCode', 'CruiseID');
 
-CREATE UNIQUE INDEX Tree_TreeID_CuttingUnitCode_SampleGroupCode_StratumCode ON Tree (TreeID, CuttingUnitCode, SampleGroupCode, StratumCode);
+CREATE UNIQUE INDEX UIX_Tree_TreeID_CuttingUnitCode_SampleGroupCode_StratumCode ON Tree (TreeID, CuttingUnitCode, SampleGroupCode, StratumCode);
 
-CREATE UNIQUE INDEX Tree_TreeID_SpeciesCode ON Tree (TreeID, SpeciesCode);
+CREATE UNIQUE INDEX UIX_Tree_TreeID_SpeciesCode ON Tree (TreeID, SpeciesCode);
 
-CREATE UNIQUE INDEX Tree_TreeID_LiveDead ON Tree (TreeID, LiveDead);
+CREATE UNIQUE INDEX UIX_Tree_TreeID_LiveDead ON Tree (TreeID, LiveDead);
 
-CREATE UNIQUE INDEX Tree_TreeID_PlotNumber ON Tree (TreeID, PlotNumber);
+CREATE UNIQUE INDEX UIX_Tree_TreeID_PlotNumber ON Tree (TreeID, PlotNumber);
 
-CREATE UNIQUE INDEX Tree_TreeNumber_CuttingUnitCode_PlotNumber_StratumCode_CruiseID ON Tree
+CREATE UNIQUE INDEX UIX_Tree_TreeNumber_CuttingUnitCode_PlotNumber_StratumCode_CruiseID ON Tree
     (TreeNumber, CuttingUnitCode, PlotNumber, StratumCode, CruiseID) WHERE PlotNumber IS NOT NULL;
 
-CREATE UNIQUE INDEX Tree_TreeNumber_CuttingUnitCode_CruiseID ON Tree
+CREATE UNIQUE INDEX UIX_Tree_TreeNumber_CuttingUnitCode_CruiseID ON Tree
     (TreeNumber, CuttingUnitCode, CruiseID) WHERE PlotNumber IS NULL;";
 
         public IEnumerable<string> CreateTriggers => new[] { CREATE_TRIGGER_TREE_ONUPDATE, CREATE_TRIGGER_Tree_OnDelete };

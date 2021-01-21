@@ -30,15 +30,15 @@ namespace CruiseDAL.Schema
     Deleted_TS DATETIME
 );
 
-CREATE INDEX LogGradeAuditRule_Tombstone_CruiseID_SpeciesCode_Grade ON LogGradeAuditRule_Tombstone
+CREATE INDEX NIX_LogGradeAuditRule_Tombstone_CruiseID_SpeciesCode_Grade ON LogGradeAuditRule_Tombstone
 (CruiseID, (ifnull(SpeciesCode, '')), Grade);";
 
         public string CreateIndexes =>
-@"CREATE UNIQUE INDEX LogGradeAuditRule_SpeciesCode_DefectMax_Grade_CruiseID
+@"CREATE UNIQUE INDEX UIX_LogGradeAuditRule_SpeciesCode_DefectMax_Grade_CruiseID
 ON LogGradeAuditRule
 (ifnull(SpeciesCode, ''), round(DefectMax, 2), Grade, CruiseID);
 
-CREATE INDEX LogGradeAuditRule_CruiseID_SpeciesCode ON LogGradeAuditRule (CruiseID, SpeciesCode);";
+CREATE INDEX UIX_LogGradeAuditRule_CruiseID_SpeciesCode ON LogGradeAuditRule (CruiseID, SpeciesCode);";
 
         public IEnumerable<string> CreateTriggers => new[]
         {

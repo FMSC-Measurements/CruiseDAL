@@ -76,19 +76,19 @@ namespace CruiseDAL.Schema
     Deleted_TS DATETIME
 );
 
-CREATE INDEX TallyLedger_Tombstone_TallyLedgerID ON TallyLedger_Tombstone
+CREATE INDEX NIX_TallyLedger_Tombstone_TallyLedgerID ON TallyLedger_Tombstone
 (TallyLedgerID);";
 
         public string CreateIndexes =>
-@"CREATE INDEX 'TallyLedger_TreeID' ON 'TallyLedger'('TreeID');
+@"CREATE INDEX NIX_TallyLedger_TreeID ON TallyLedger ('TreeID');
 
-CREATE INDEX 'TallyLedger_SampleGroupCode_StratumCode_CruiseID' ON 'TallyLedger'('SampleGroupCode', 'StratumCode', 'CruiseID');
+CREATE INDEX NIX_TallyLedger_SampleGroupCode_StratumCode_CruiseID ON TallyLedger ('SampleGroupCode', 'StratumCode', 'CruiseID');
 
-CREATE INDEX 'TallyLedger_StratumCode_CruiseID' ON 'TallyLedger'('StratumCode', 'CruiseID');
+CREATE INDEX NIX_TallyLedger_StratumCode_CruiseID ON TallyLedger ('StratumCode', 'CruiseID');
 
-CREATE INDEX 'TallyLedger_CuttingUnitCode_CruiseID' ON 'TallyLedger'('CuttingUnitCode', 'CruiseID');
+CREATE INDEX NIX_TallyLedger_CuttingUnitCode_CruiseID ON TallyLedger ('CuttingUnitCode', 'CruiseID');
 
-CREATE INDEX TallyLedger_Created_TS ON TallyLedger (Created_TS);";
+CREATE INDEX NIX_TallyLedger_Created_TS ON TallyLedger (Created_TS);";
 
         public IEnumerable<string> CreateTriggers => new[]
         {

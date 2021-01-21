@@ -26,7 +26,7 @@ namespace CruiseDAL.Schema
     UNIQUE(CuttingUnitCode, CruiseID),
 
     FOREIGN KEY (CruiseID) REFERENCES Cruise (CruiseID) ON DELETE CASCADE,
-    FOREIGN KEY (LoggingMethod) REFERENCES LoggingMethods (LoggingMethod),
+    FOREIGN KEY (LoggingMethod) REFERENCES LK_LoggingMethod (LoggingMethod),
 
     CHECK (CuttingUnitID LIKE '________-____-____-____-____________'),
     CHECK (length(CuttingUnitCode) > 0)
@@ -53,7 +53,7 @@ namespace CruiseDAL.Schema
     UNIQUE(CuttingUnitID)
 );
 
-CREATE INDEX CuttingUnit_Tombstone_CruiseID_CuttingUnitCode ON CuttingUnit_Tombstone 
+CREATE INDEX NIX_CuttingUnit_Tombstone_CruiseID_CuttingUnitCode ON CuttingUnit_Tombstone 
 (CruiseID, CuttingUnitCode);";
 
         public string CreateIndexes => null;

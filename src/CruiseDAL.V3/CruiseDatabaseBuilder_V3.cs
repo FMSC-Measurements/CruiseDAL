@@ -1,6 +1,5 @@
 ﻿using CruiseDAL.Schema;
 using CruiseDAL.Schema.Cruise.Lookup;
-using CruiseDAL.Schema.V2Backports;
 using CruiseDAL.Schema.Views;
 using FMSC.ORM.Core;
 using FMSC.ORM.Logging;
@@ -12,7 +11,7 @@ namespace CruiseDAL
 {
     public class CruiseDatastoreBuilder_V3 : IDatastoreBuilder
     {
-        public static Version DATABASE_VERSION = new Version("3.0.3");
+        public static Version DATABASE_VERSION = new Version("3.1.0");
 
         public static readonly IEnumerable<ITableDefinition> TABLE_DEFINITIONS =
         new ITableDefinition[]
@@ -23,12 +22,13 @@ namespace CruiseDAL
             new FIATableDefinition(),
             new TreeFieldTableDefinition(),
             new LogFieldTableDefinition(),
-            new CruiseMethodSTableDefinition(),
-            new LoggingMethodsTableDefinition(),
-            new ProductsTableDefinition(),
-            new RegionsTableDefinition(),
-            new ForestsTableDefintion(),
-            new UOMCodesTableDefinition(),
+            new LK_CruiseMethod(),
+            new LK_LoggingMethod(),
+            new LK_Product(),
+            new LK_Region(),
+            new LK_Forest(),
+            new LK_UOM(),
+            new LK_Purpose(),
 
             // cruise specific lookup
             new SpeciesTableDefinition(),
@@ -94,18 +94,6 @@ namespace CruiseDAL
                 new TreeFieldValue_AllViewDefinition(),
                 new TreeFieldValue_TreeMeasurmentViewDefinition(),
                 new TreeFieldValue_TreeMeasurment_FilteredViewDefinition(),
-
-                new CountTree_V2_ViewDefinition(),
-                new CuttingUnitStratum_V2_ViewDefinition(),
-                new ErrorLog_V2_ViewDefinition(),
-                new FixCNTTallyClass_V2_ViewDefinition(),
-                new Log_V2_ViewDefinition(),
-                new Plot_V2_ViewDefinition(),
-                new SampleGroup_V2_ViewDefinition(),
-                new SampleGroupTreeDefaultValue_V2_ViewDefinition(),
-                new Tree_V2_ViewDefinition(),
-                new TreeDefaultValue_V2_ViewDefinition(),
-                new TreeDefaultValueTreeAuditValue_V2_ViewDefinition(),
             };
 
         private ILogger Logger { get; } = LoggerProvider.Get();

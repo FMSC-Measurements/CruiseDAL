@@ -2,13 +2,13 @@
 
 namespace CruiseDAL.Schema.Cruise.Lookup
 {
-    public class CruiseMethodSTableDefinition : ITableDefinition
+    public class LK_CruiseMethod : ITableDefinition
     {
-        public string TableName => "CruiseMethods";
+        public string TableName => "LK_CruiseMethod";
 
         public string CreateTable =>
-@"CREATE TABLE CruiseMethods (
-    CruiseMethods_CN INTEGER PRIMARY KEY AUTOINCREMENT,
+@"CREATE TABLE LK_CruiseMethod (
+    LK_CruiseMethod_CN INTEGER PRIMARY KEY AUTOINCREMENT,
     Method TEXT NOT NULL COLLATE NOCASE,
     FriendlyName TEXT NOT NULL,
     IsPlotMethod BOOLEAN NOT NULL,
@@ -16,7 +16,7 @@ namespace CruiseDAL.Schema.Cruise.Lookup
 );";
 
         public string InitializeTable =>
-@"INSERT INTO CruiseMethods (Method, FriendlyName, IsPlotMethod)
+@"INSERT INTO LK_CruiseMethod (Method, FriendlyName, IsPlotMethod)
 VALUES
     ('100', 'Classic 100%', 0),
     ('3P', 'Classic 3P' , 0),

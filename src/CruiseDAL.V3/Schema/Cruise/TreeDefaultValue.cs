@@ -34,7 +34,7 @@ namespace CruiseDAL.Schema
 
     FOREIGN KEY (CruiseID) REFERENCES Cruise (CruiseID) ON DELETE CASCADE,
     FOREIGN KEY (SpeciesCode, CruiseID) REFERENCES Species (SpeciesCode, CruiseID) ON UPDATE CASCADE ON DELETE CASCADE,
-    FOREIGN KEY (PrimaryProduct) REFERENCES Products (Product)
+    FOREIGN KEY (PrimaryProduct) REFERENCES LK_Product (Product)
 );";
 
         public string InitializeTable => null;
@@ -66,15 +66,15 @@ namespace CruiseDAL.Schema
     Deleted_TS DATETIME
 );
 
-CREATE INDEX TreeDefaultValue_Tombstone_CruiseID_SpeciesCode_PrimaryProduct ON TreeDefaultValue_Tombstone
+CREATE INDEX NIX_TreeDefaultValue_Tombstone_CruiseID_SpeciesCode_PrimaryProduct ON TreeDefaultValue_Tombstone
 (CruiseID, ifnull(SpeciesCode, '') COLLATE NOCASE, ifnull(PrimaryProduct, '') COLLATE NOCASE);";
 
         public string CreateIndexes =>
-@"CREATE UNIQUE INDEX TreeDefaultValue_SpeciesCode_PrimaryProduct ON TreeDefaultValue (CruiseID, ifnull(SpeciesCode, '') COLLATE NOCASE, ifnull(PrimaryProduct, '') COLLATE NOCASE);
+@"CREATE UNIQUE INDEX UIX_TreeDefaultValue_SpeciesCode_PrimaryProduct ON TreeDefaultValue (CruiseID, ifnull(SpeciesCode, '') COLLATE NOCASE, ifnull(PrimaryProduct, '') COLLATE NOCASE);
 
-CREATE INDEX 'TreeDefaultValue_SpeciesCode' ON 'TreeDefaultValue' ('SpeciesCode');
+CREATE INDEX NIX_TreeDefaultValue_SpeciesCode ON TreeDefaultValue ('SpeciesCode');
 
-CREATE INDEX 'TreeDefaultValue_CruiseID' ON 'TreeDefaultValue' ('CruiseID');";
+CREATE INDEX NIX_TreeDefaultValue_CruiseID ON TreeDefaultValue ('CruiseID');";
 
         public IEnumerable<string> CreateTriggers => new[] { CREATE_TRIGGER_TREEDEFAULTVALUE_ONUPDATE, CREATE_TRIGGER_TreeDefaultValue_OnDelete };
 

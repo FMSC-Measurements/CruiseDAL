@@ -49,13 +49,13 @@ namespace CruiseDAL.Schema
     UNIQUE(SubPopulationID)
 );
 
-CREATE INDEX SubPopulation_Tombstone_CruiseID_StratumCode_SampleGroupCode_SpeciesCode_LiveDead ON SubPopulation_Tombstone 
+CREATE INDEX NIX_SubPopulation_Tombstone_CruiseID_StratumCode_SampleGroupCode_SpeciesCode_LiveDead ON SubPopulation_Tombstone 
 (CruiseID, StratumCode, SampleGroupCode, SpeciesCode, LiveDead);";
 
         public string CreateIndexes =>
-@"CREATE INDEX Subpopulation_SpeciesCode_CruiseID ON Subpopulation (SpeciesCode, CruiseID);
+@"CREATE INDEX NIX_Subpopulation_SpeciesCode_CruiseID ON Subpopulation (SpeciesCode, CruiseID);
 
-CREATE INDEX Subpopulation_StratumCode_SampleGroupCode_CruiseID ON Subpopulation (StratumCode, SampleGroupCode,  CruiseID);";
+CREATE INDEX NIX_Subpopulation_StratumCode_SampleGroupCode_CruiseID ON Subpopulation (StratumCode, SampleGroupCode,  CruiseID);";
 
         public IEnumerable<string> CreateTriggers => new[] { CREATE_TRIGGER_SubPopulation_OnUpdate, CREATE_TRIGGER_SubPopulation_OnDelete };
 

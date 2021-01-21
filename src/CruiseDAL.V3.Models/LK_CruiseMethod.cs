@@ -2,11 +2,11 @@ using System;
 using FMSC.ORM.EntityModel.Attributes;
 namespace CruiseDAL.V3.Models
 {
- [Table("CruiseMethods")]
- public partial class CruiseMethods
+ [Table("LK_CruiseMethod")]
+ public partial class LK_CruiseMethod
  {
-  [PrimaryKeyField("CruiseMethods_CN")]
-  public Int32? CruiseMethods_CN { get; set; }
+  [PrimaryKeyField("LK_CruiseMethod_CN")]
+  public Int32? LK_CruiseMethod_CN { get; set; }
 
   [Field("Method")]
   public String Method { get; set; }

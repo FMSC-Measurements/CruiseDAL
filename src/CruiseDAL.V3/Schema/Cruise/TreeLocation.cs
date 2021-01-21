@@ -55,7 +55,6 @@ namespace CruiseDAL.Schema
     ModifiedBy TEXT,
     Modified_TS DATETIME,
     Deleted_TS DATETIME
-
 );";
 
         public string CreateIndexes => null;

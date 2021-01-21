@@ -34,7 +34,7 @@ namespace CruiseDAL.Schema
 
     FOREIGN KEY (CruiseID) REFERENCES Cruise (CruiseID) ON DELETE CASCADE,
     FOREIGN KEY (FixCNTField) REFERENCES TreeField (Field), 
-    FOREIGN KEY (Method) REFERENCES CruiseMethods (Method), 
+    FOREIGN KEY (Method) REFERENCES LK_CruiseMethod (Method), 
 
     UNIQUE(StratumID),
     UNIQUE(StratumCode, CruiseID),
@@ -71,7 +71,7 @@ namespace CruiseDAL.Schema
     UNIQUE(StratumID)
 );
 
-CREATE INDEX Stratum_Tombstone_CruiseID_StratumCode ON Stratum_Tombstone 
+CREATE INDEX NIX_Stratum_Tombstone_CruiseID_StratumCode ON Stratum_Tombstone 
 (CruiseID, StratumCode);";
 
         public string CreateIndexes => null;

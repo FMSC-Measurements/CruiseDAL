@@ -46,14 +46,14 @@ namespace CruiseDAL.Schema
 );";
 
         public string CreateIndexes =>
-@"CREATE INDEX TreeFieldSetup_Field ON TreeFieldSetup (Field);
+@"CREATE INDEX NIX_TreeFieldSetup_Field ON TreeFieldSetup (Field);
 
-CREATE INDEX TreeFieldSetup_StratumCode_CruiseID ON TreeFieldSetup (StratumCode, CruiseID);
+CREATE INDEX NIX_TreeFieldSetup_StratumCode_CruiseID ON TreeFieldSetup (StratumCode, CruiseID);
 
-CREATE INDEX TreeFieldSetup_SampleGroupCode_StratumCode_CruiseID ON TreeFieldSetup (SampleGroupCode, StratumCode, CruiseID); 
+CREATE INDEX NIX_TreeFieldSetup_SampleGroupCode_StratumCode_CruiseID ON TreeFieldSetup (SampleGroupCode, StratumCode, CruiseID); 
 
-CREATE UNIQUE INDEX TreeFieldSetup_SampleGroupCode_StratumCode_Field_CruiseID ON TreeFieldSetup
-    (coalesce(SampleGroupCode, ''), StratumCode, Field, CruiseID)";
+CREATE UNIQUE INDEX UIX_TreeFieldSetup_SampleGroupCode_StratumCode_Field_CruiseID ON TreeFieldSetup
+    (coalesce(SampleGroupCode, ''), StratumCode, Field, CruiseID);";
 
         public IEnumerable<string> CreateTriggers => new[] { CREATE_TRIGGER_TreeFieldSetup_OnDelete };
 

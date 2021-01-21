@@ -2,11 +2,11 @@ using System;
 using FMSC.ORM.EntityModel.Attributes;
 namespace CruiseDAL.V3.Models
 {
- [Table("Products")]
- public partial class Products
+ [Table("LK_Product")]
+ public partial class LK_Product
  {
-  [PrimaryKeyField("Products_CN")]
-  public Int32? Products_CN { get; set; }
+  [PrimaryKeyField("LK_Product_CN")]
+  public Int32? LK_Product_CN { get; set; }
 
   [Field("Product")]
   public String Product { get; set; }

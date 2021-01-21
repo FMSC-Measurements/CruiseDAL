@@ -45,13 +45,13 @@ namespace CruiseDAL.Schema
     Deleted_TS DATETIME
 );
 
-CREATE INDEX Plot_Stratum_Tombstone_CruiseID_PlotNumber_CuttingUnitCode_StratumCode ON Plot_Stratum_Tombstone 
+CREATE INDEX NIX_Plot_Stratum_Tombstone_CruiseID_PlotNumber_CuttingUnitCode_StratumCode ON Plot_Stratum_Tombstone 
 (CruiseID, PlotNumber, CuttingUnitCode, StratumCode);";
 
         public string CreateIndexes =>
-@"CREATE INDEX 'Plot_Stratum_StratumCode_CruiseID' ON 'Plot_Stratum'('StratumCode', 'CruiseID');
+@"CREATE INDEX NIX_Plot_Stratum_StratumCode_CruiseID ON Plot_Stratum ('StratumCode', 'CruiseID');
 
-CREATE INDEX 'Plot_Stratum_PlotNumber_CuttingUnitCode_CruiseID' ON 'Plot_Stratum' ('PlotNumber', 'CuttingUnitCode', 'CruiseID');";
+CREATE INDEX NIX_Plot_Stratum_PlotNumber_CuttingUnitCode_CruiseID ON Plot_Stratum ('PlotNumber', 'CuttingUnitCode', 'CruiseID');";
 
         public IEnumerable<string> CreateTriggers => new[] { CREATE_TRIGGER_PLOT_STRATUM_ONUPDATE, CREATE_TRIGGER_Plot_Stratum_OnDelete };
 

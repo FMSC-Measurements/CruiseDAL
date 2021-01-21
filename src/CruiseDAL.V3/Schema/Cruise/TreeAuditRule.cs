@@ -37,7 +37,7 @@ namespace CruiseDAL.Schema
 );";
 
         public string CreateIndexes =>
-@"CREATE INDEX 'TreeAuditRule_Field' ON 'TreeAuditRule'('Field');";
+@"CREATE INDEX NIX_TreeAuditRule_Field ON TreeAuditRule ('Field');";
 
         public IEnumerable<string> CreateTriggers => new[] { CREATE_TRIGGER_TreeAuditRule_OnDelete };
 

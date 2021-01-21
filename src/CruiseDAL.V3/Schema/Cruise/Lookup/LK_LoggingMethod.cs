@@ -2,20 +2,20 @@
 
 namespace CruiseDAL.Schema.Cruise.Lookup
 {
-    public class LoggingMethodsTableDefinition : ITableDefinition
+    public class LK_LoggingMethod : ITableDefinition
     {
-        public string TableName => "LoggingMethods";
+        public string TableName => "LK_LoggingMethod";
 
         public string CreateTable =>
-@"CREATE TABLE LoggingMethods (
-    LoggingMethods_CN INTEGER PRIMARY KEY AUTOINCREMENT,
+@"CREATE TABLE LK_LoggingMethod (
+    LK_LoggingMethod_CN INTEGER PRIMARY KEY AUTOINCREMENT,
     LoggingMethod TEXT NOT NULL COLLATE NOCASE,
     FriendlyName TEXT NOT NULL,
     UNIQUE (LoggingMethod)
 );";
 
         public string InitializeTable =>
-@"INSERT INTO LoggingMethods (LoggingMethod, FriendlyName)
+@"INSERT INTO LK_LoggingMethod (LoggingMethod, FriendlyName)
 VALUES
     ('401', 'Manual logging'),
     ('410', 'Animal'),

@@ -2,11 +2,11 @@ using System;
 using FMSC.ORM.EntityModel.Attributes;
 namespace CruiseDAL.V3.Models
 {
- [Table("UOMCodes")]
- public partial class UOMCodes
+ [Table("LK_UOM")]
+ public partial class LK_UOM
  {
-  [PrimaryKeyField("UOMCodes_CN")]
-  public Int32? UOMCodes_CN { get; set; }
+  [PrimaryKeyField("LK_UOM_CN")]
+  public Int32? LK_UOM_CN { get; set; }
 
   [Field("UOM")]
   public String UOM { get; set; }

@@ -43,13 +43,13 @@ namespace CruiseDAL.Schema
     Deleted_TS DATETIME
 );
 
-CREATE INDEX TreeFieldValue_Tombstone_TreeID_Field ON TreeFieldValue_Tombstone 
+CREATE INDEX NIX_TreeFieldValue_Tombstone_TreeID_Field ON TreeFieldValue_Tombstone 
 (TreeID, Field);";
 
         public string CreateIndexes =>
-@"CREATE INDEX 'TreeFieldValue_TreeID' ON 'TreeFieldValue'('TreeID');
+@"CREATE INDEX NIX_TreeFieldValue_TreeID ON TreeFieldValue ('TreeID');
 
-CREATE INDEX 'TreeFieldValue_Field' ON 'TreeFieldValue'('Field');";
+CREATE INDEX NIX_TreeFieldValue_Field ON TreeFieldValue ('Field');";
 
         public IEnumerable<string> CreateTriggers => new[] { CREATE_TRIGGER_TreeFieldValue_OnDelete };
 

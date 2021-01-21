@@ -2,20 +2,20 @@
 
 namespace CruiseDAL.Schema
 {
-    public class ProductsTableDefinition : ITableDefinition
+    public class LK_Product : ITableDefinition
     {
-        public string TableName => "Products";
+        public string TableName => "LK_Product";
 
         public string CreateTable =>
-@"CREATE TABLE Products (
-    Products_CN INTEGER PRIMARY KEY AUTOINCREMENT,
+@"CREATE TABLE LK_Product (
+    LK_Product_CN INTEGER PRIMARY KEY AUTOINCREMENT,
     Product TEXT NOT NULL COLLATE NOCASE,
     FriendlyName TEXT NOT NULL COLLATE NOCASE,
     UNIQUE (Product)
 );";
 
         public string InitializeTable =>
-@"INSERT INTO Products (Product, FriendlyName)
+@"INSERT INTO LK_Product (Product, FriendlyName)
 VALUES
     ('01', 'Sawtimber'),
     ('02', 'Pulpwood'),

@@ -7,11 +7,11 @@ namespace CruiseDAL.Schema
 {
     public class FIATableDefinition : ITableDefinition
     {
-        public string TableName => "FIA";
+        public string TableName => "LK_FIA";
 
         public string CreateTable =>
-@"CREATE TABLE FIA (
-    FIA_cn INTEGER PRIMARY KEY AUTOINCREMENT,
+@"CREATE TABLE LK_FIA (
+    LK_FIA_CN INTEGER PRIMARY KEY AUTOINCREMENT,
     FIACode INTEGER NOT NULL,
     CommonName TEXT NOT NULL,
 

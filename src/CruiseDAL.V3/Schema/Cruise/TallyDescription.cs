@@ -30,11 +30,11 @@ namespace CruiseDAL.Schema
         public string CreateTombstoneTable => null;
 
         public string CreateIndexes =>
-@"CREATE UNIQUE INDEX TallyDescription_StratumCode_SampleGroupCode_SpeciesCode_LiveDead_CruiseID
+@"CREATE UNIQUE INDEX UIX_TallyDescription_StratumCode_SampleGroupCode_SpeciesCode_LiveDead_CruiseID
 ON TallyDescription
 (CruiseID, StratumCode, SampleGroupCode, ifnull(SpeciesCode, '') COLLATE NOCASE, ifnull(LiveDead, '') COLLATE NOCASE);
 
-CREATE INDEX 'TallyDescription_SpeciesCode_CruiseID' ON 'TallyDescription' ('SpeciesCode', 'CruiseID');";
+CREATE INDEX NIX_TallyDescription_SpeciesCode_CruiseID ON TallyDescription ('SpeciesCode', 'CruiseID');";
 
         public IEnumerable<string> CreateTriggers => Enumerable.Empty<string>();
     }

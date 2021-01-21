@@ -36,9 +36,9 @@ namespace CruiseDAL.Schema
 );";
 
         public string CreateIndexes =>
-@"CREATE INDEX 'LogFieldSetup_Field' ON 'LogFieldSetup'('Field' COLLATE NOCASE);
+@"CREATE INDEX NIX_LogFieldSetup_Field ON LogFieldSetup ('Field' COLLATE NOCASE);
 
-CREATE INDEX 'LogFieldSetup_StratumCode_CruiseID' ON 'LogFieldSetup'('StratumCode', 'CruiseID');";
+CREATE INDEX NIX_LogFieldSetup_StratumCode_CruiseID ON LogFieldSetup ('StratumCode', 'CruiseID');";
 
         public IEnumerable<string> CreateTriggers => new[]
         {
