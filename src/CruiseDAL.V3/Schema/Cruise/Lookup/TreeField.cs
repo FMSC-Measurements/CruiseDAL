@@ -14,6 +14,7 @@ namespace CruiseDAL.Schema
     DefaultHeading TEXT NOT NULL,
     DbType TEXT NOT NULL COLLATE NOCASE,
     IsTreeMeasurmentField BOOLEAN DEFAULT 0,
+
     UNIQUE (Field),
     CHECK (DbType IN ('REAL', 'TEXT', 'BOOLEAN', 'INTEGER'))
 );";
