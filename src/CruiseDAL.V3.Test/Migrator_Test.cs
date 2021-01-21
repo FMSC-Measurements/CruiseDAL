@@ -6,6 +6,7 @@ using System.IO;
 using System.Linq;
 using Xunit;
 using Xunit.Abstractions;
+using CruiseDAL.V3.Models;
 
 namespace CruiseDAL.V3.Test
 {
@@ -63,6 +64,10 @@ namespace CruiseDAL.V3.Test
 
                 semVerActual.Major.Should().Be(semVerExpected.Major);
                 semVerActual.Minor.Should().Be(semVerExpected.Minor);
+
+                var cruise = newCruise.From<Cruise>().Query().Single();
+                cruise.CruiseID.Should().NotBeNullOrEmpty();
+
             }
         }
 
