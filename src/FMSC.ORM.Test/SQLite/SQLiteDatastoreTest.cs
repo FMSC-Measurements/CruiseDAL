@@ -450,6 +450,41 @@ namespace FMSC.ORM.SQLite
         }
 
         [Fact]
+        public void Insert()
+        {
+            using (var ds = new SQLiteDatastore())
+            {
+                ds.CreateDatastore(new TestDBBuilder());
+
+                var ent = POCOMultiTypeObject.CreateWithNullID();
+                ent.ID.Should().BeNull();
+                ds.Insert(ent);
+                ent.ID.Should().NotBeNull();
+
+                var entAgain = ds.From<POCOMultiTypeObject>().Query().Single();
+                ent.Should().BeEquivalentTo(entAgain);
+            }
+        }
+
+        [Fact]
+        public void Insert_WithID()
+        {
+            using (var ds = new SQLiteDatastore())
+            {
+                ds.CreateDatastore(new TestDBBuilder());
+
+                var ent = POCOMultiTypeObject.CreateWithID();
+                var entID = ent.ID;
+                ds.Insert(ent);
+                ent.ID.Should().Be(entID);
+                ent.ID.Should().NotBeNull();
+
+                var entAgain = ds.From<POCOMultiTypeObject>().Query().Single();
+                ent.Should().BeEquivalentTo(entAgain);
+            }
+        }
+
+        [Fact]
         public void GetRowCountTest()
         {
             using (var ds = new SQLiteDatastore())
@@ -748,17 +783,15 @@ namespace FMSC.ORM.SQLite
             {
                 ds.Execute(TestDBBuilder.CREATE_MULTIPROPTABLE);
 
-                var poco = CreateRandomPoco(nulls);
+                var poco = POCOMultiTypeObject.CreateWithNullID();
                 ds.Insert(poco);
 
-                var result = ds.From<POCOMultiTypeObject>().Query()
+                var result = ds.From<MultiPropTypeWithAliases>().Query()
                     .SingleOrDefault();
 
                 result.Should().NotBeNull();
 
-                result.Should().BeEquivalentTo(poco, config => config
-                .Excluding(y => y.ID)
-                .Excluding(y => y.AliasForStringField));
+                poco.Should().BeEquivalentTo(result, config => config.ExcludingMissingMembers() );
 
                 result.AliasForStringField.Should().Be(result.StringField);
             }
@@ -842,9 +875,7 @@ namespace FMSC.ORM.SQLite
 
                 result.Should().NotBeNull();
 
-                result.Should().BeEquivalentTo(poco, config => config
-                .Excluding(y => y.ID)
-                .Excluding(y => y.AliasForStringField));
+                result.Should().BeEquivalentTo(poco);
             }
         }
 

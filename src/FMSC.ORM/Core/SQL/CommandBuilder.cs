@@ -74,7 +74,7 @@ namespace FMSC.ORM.Sql
             {
                 if (pkField is null)
                 {
-                    throw new InvalidOperationException($"keyValue provided but type has no key field type:{data.GetType().Name}");
+                    throw new InvalidOperationException($"keyValue provided but [{data.GetType().Name}] has no property with a primary key attribute");
                 }
 
                 var param = MakeParameter(command, pkField, keyValue);

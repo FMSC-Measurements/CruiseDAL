@@ -82,7 +82,7 @@ namespace FMSC.ORM.EntityModel.Support
 
             pkField.Property.Getter.Should().NotBeNull();
             pkField.Property.Setter.Should().NotBeNull();
-            pkField.PersistanceFlags.Should().Be(PersistanceFlags.Never);
+            pkField.PersistanceFlags.Should().Be(PersistanceFlags.OnInsert);
 
             doi.Fields.Should().Contain(pkField);
         }

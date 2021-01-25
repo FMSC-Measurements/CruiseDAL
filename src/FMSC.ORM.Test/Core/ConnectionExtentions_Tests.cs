@@ -53,9 +53,7 @@ namespace FMSC.ORM.Core
 
                     result.Should().NotBeNull();
 
-                    result.Should().BeEquivalentTo(poco, config => config
-                    .Excluding(y => y.ID)
-                    .Excluding(y => y.AliasForStringField));
+                    result.Should().BeEquivalentTo(poco);
                 }
             }
         }

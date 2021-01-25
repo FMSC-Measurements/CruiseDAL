@@ -4,12 +4,12 @@
     {
         public PrimaryKeyFieldAttribute() : base()
         { 
-            PersistanceFlags = PersistanceFlags.Never; 
+            PersistanceFlags = PersistanceFlags.OnInsert; 
         }
 
         public PrimaryKeyFieldAttribute(string fieldName) : base(fieldName)
         {
-            PersistanceFlags = PersistanceFlags.Never;
+            PersistanceFlags = PersistanceFlags.OnInsert;
         }
     }
 }
