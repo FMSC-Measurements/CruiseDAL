@@ -183,7 +183,7 @@ namespace FMSC.ORM.Core
             }
         }
 
-        public object Insert(object data, string tableName = null, OnConflictOption option = OnConflictOption.Default, object keyValue = null)
+        public object Insert(object data, string tableName = null, OnConflictOption option = OnConflictOption.Default, object keyValue = null, bool persistKeyvalue = true)
         {
             if (data is null) { throw new ArgumentNullException(nameof(data)); }
 
@@ -201,7 +201,8 @@ namespace FMSC.ORM.Core
                         option: option,
                         commandBuilder: CommandBuilder,
                         exceptionProcessor: ExceptionProcessor,
-                        keyValue: keyValue);
+                        keyValue: keyValue, 
+                        persistKeyvalue: persistKeyvalue);
                 }
                 finally
                 {
@@ -250,7 +251,8 @@ namespace FMSC.ORM.Core
                         command.CommandText = commandText;
                         command.SetParams(paramaters);
 
-                        using (var reader = connection.ExecuteReader(command, CurrentTransaction))
+                        var exceptionProcessor = ExceptionProcessor;
+                        using (var reader = connection.ExecuteReader(command, CurrentTransaction, exceptionProcessor: exceptionProcessor))
                         {
                             var inflator = InflatorLookup.Instance.GetEntityInflator(reader);
                             while (reader.Read())
@@ -293,7 +295,6 @@ namespace FMSC.ORM.Core
                                 }
                                 catch (Exception e)
                                 {
-                                    var exceptionProcessor = ExceptionProcessor;
                                     if (exceptionProcessor != null)
                                     { throw exceptionProcessor.ProcessException(e, connection, commandText, CurrentTransaction); }
                                     else { throw; }
@@ -404,7 +405,8 @@ namespace FMSC.ORM.Core
                         command.CommandText = commandText;
                         command.SetParams(paramaters);
 
-                        using (var reader = connection.ExecuteReader(command, CurrentTransaction))
+                        var exceptionProcessor = ExceptionProcessor;
+                        using (var reader = connection.ExecuteReader(command, CurrentTransaction, exceptionProcessor: exceptionProcessor))
                         {
                             var inflator = InflatorLookup.Instance.GetEntityInflator(reader);
 
@@ -425,7 +427,6 @@ namespace FMSC.ORM.Core
                                 }
                                 catch (Exception e)
                                 {
-                                    var exceptionProcessor = ExceptionProcessor;
                                     if (exceptionProcessor != null)
                                     {
                                         throw exceptionProcessor.ProcessException(e, connection, commandText, CurrentTransaction);
@@ -469,7 +470,8 @@ namespace FMSC.ORM.Core
                         command.CommandText = commandText;
                         command.AddParams(paramaters);
 
-                        using (var reader = connection.ExecuteReader(command, CurrentTransaction))
+                        var exceptionProcessor = ExceptionProcessor;
+                        using (var reader = connection.ExecuteReader(command, CurrentTransaction, exceptionProcessor: exceptionProcessor))
                         {
                             var inflator = InflatorLookup.Instance.GetEntityInflator(reader);
 
@@ -490,7 +492,6 @@ namespace FMSC.ORM.Core
                                 }
                                 catch (Exception e)
                                 {
-                                    var exceptionProcessor = ExceptionProcessor;
                                     if (exceptionProcessor != null)
                                     {
                                         throw exceptionProcessor.ProcessException(e, connection, commandText, CurrentTransaction);

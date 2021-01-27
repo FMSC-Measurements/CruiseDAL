@@ -27,7 +27,7 @@ namespace FMSC.ORM.Core
         
         void RollbackTransaction();
 
-        object Insert(object data, string tableName = null, OnConflictOption option = OnConflictOption.Default, object keyValue = null);
+        object Insert(object data, string tableName = null, OnConflictOption option = OnConflictOption.Default, object keyValue = null, bool persistKeyvalue =  true);
         void Delete(object data, string tableName = null);
         void Update(object data, string tableName = null, OnConflictOption option = OnConflictOption.Default, object keyValue = null);
 

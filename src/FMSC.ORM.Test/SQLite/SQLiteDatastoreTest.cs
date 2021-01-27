@@ -879,6 +879,18 @@ namespace FMSC.ORM.SQLite
             }
         }
 
+        [Fact]
+        public void Query_With_Invalid_SQL()
+        {
+            using (var ds = new SQLiteDatastore())
+            {
+                ds.Invoking(x => x.Query<POCOMultiTypeObject>("Invalid SQL;").ToArray())
+                    .Should().Throw<SQLException>();
+            }
+        }
+
+
+
         [Theory]
         [InlineData(true)]
         [InlineData(false)]
