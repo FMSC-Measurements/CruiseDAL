@@ -1,18 +1,17 @@
-﻿using FluentAssertions;
+﻿using Backpack.SqlBuilder;
+using FluentAssertions;
+using FMSC.ORM.Sql;
 using FMSC.ORM.TestSupport.TestModels;
-using Backpack.SqlBuilder;
 using System.Data.Common;
 using System.Linq;
 using Xunit;
 using Xunit.Abstractions;
-using FMSC.ORM.Test;
-using FMSC.ORM.Sql;
 
 namespace FMSC.ORM.EntityModel.Support
 {
-    public class EntityCommandBuilderTest : TestBase
+    public class CommandBuilderTest : TestBase
     {
-        public EntityCommandBuilderTest(ITestOutputHelper output)
+        public CommandBuilderTest(ITestOutputHelper output)
             : base(output)
         { }
 
@@ -45,7 +44,7 @@ namespace FMSC.ORM.EntityModel.Support
         }
 
         [Fact]
-        public void BuildInsert_Without_KeyData()
+        public void BuildInsert_With_null_pk()
         {
             var data = new POCOMultiTypeObject();
 
@@ -68,7 +67,55 @@ namespace FMSC.ORM.EntityModel.Support
         }
 
         [Fact]
-        public void BuildInsertTest_withKeyData()
+        public void BuildInsertTest_with_nonNull_PK()
+        {
+            var data = new POCOMultiTypeObject()
+            {
+                ID = 1
+            };
+
+            var ed = new EntityDescription(typeof(POCOMultiTypeObject));
+            var commandBuilder = new CommandBuilder();
+
+            using (var command = DbProvider.CreateCommand())
+            {
+                commandBuilder.BuildInsert(command, data, ed.SourceName, ed.Fields, OnConflictOption.Default);
+                var commandText = command.CommandText;
+                Output.WriteLine(commandText);
+
+                ValidateCommand(command);
+                commandText.Should().Contain("@ID", "Insert with keyData should assign ID column");
+
+                VerifyCommandSyntex(commandText);
+            }
+        }
+
+        [Fact]
+        public void BuildInsertTest_with_nonNull_PK_dont_persist_pk()
+        {
+            var data = new POCOMultiTypeObject()
+            {
+                ID = 1
+            };
+
+            var ed = new EntityDescription(typeof(POCOMultiTypeObject));
+            var commandBuilder = new CommandBuilder();
+
+            using (var command = DbProvider.CreateCommand())
+            {
+                commandBuilder.BuildInsert(command, data, ed.SourceName, ed.Fields, OnConflictOption.Default, persistKeyvalue: false);
+                var commandText = command.CommandText;
+                Output.WriteLine(commandText);
+
+                ValidateCommand(command);
+                commandText.Should().NotContain("@ID");
+
+                VerifyCommandSyntex(commandText);
+            }
+        }
+
+        [Fact]
+        public void BuildInsertTest_with_null_PK_and_KeyValue()
         {
             var data = new POCOMultiTypeObject();
 
@@ -77,12 +124,40 @@ namespace FMSC.ORM.EntityModel.Support
 
             using (var command = DbProvider.CreateCommand())
             {
-                commandBuilder.BuildInsert(command, data, ed.SourceName, ed.Fields, OnConflictOption.Default, keyValue: 1 );
+                commandBuilder.BuildInsert(command, data, ed.SourceName, ed.Fields, OnConflictOption.Default, keyValue: 1);
                 var commandText = command.CommandText;
                 Output.WriteLine(commandText);
 
                 ValidateCommand(command);
-                commandText.Should().Contain("ID", "Insert with keyData should assign ID column");
+                commandText.Should().Contain("@ID", "Insert with keyData should assign ID column");
+
+                VerifyCommandSyntex(commandText);
+            }
+        }
+
+        [Fact]
+        public void BuildInsertTest_with_nonNull_PK_and_KeyValue()
+        {
+            var data = new POCOMultiTypeObject()
+            {
+                ID = 1,
+            };
+
+            var ed = new EntityDescription(typeof(POCOMultiTypeObject));
+            var commandBuilder = new CommandBuilder();
+
+            using (var command = DbProvider.CreateCommand())
+            {
+                commandBuilder.BuildInsert(command, data, ed.SourceName, ed.Fields, OnConflictOption.Default, keyValue: 101);
+                var commandText = command.CommandText;
+                Output.WriteLine(commandText);
+
+                var idParam = command.Parameters["@ID"];
+                idParam.Should().NotBeNull();
+                idParam.Value.Should().Be(101);
+
+                ValidateCommand(command);
+                commandText.Should().Contain("@ID", "Insert with keyData should assign ID column");
 
                 VerifyCommandSyntex(commandText);
             }
