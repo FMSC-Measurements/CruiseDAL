@@ -17,9 +17,6 @@ namespace CruiseDAL.V3.Models
   [Field("Name")]
   public String Name { get; set; }
 
-  [Field("Purpose")]
-  public String Purpose { get; set; }
-
   [Field("Region")]
   public String Region { get; set; }
 
@@ -29,14 +26,8 @@ namespace CruiseDAL.V3.Models
   [Field("District")]
   public String District { get; set; }
 
-  [Field("MeasurementYear")]
-  public String MeasurementYear { get; set; }
-
   [Field("CalendarYear")]
   public Int32? CalendarYear { get; set; }
-
-  [Field("LogGradingEnabled")]
-  public Boolean? LogGradingEnabled { get; set; }
 
   [Field("Remarks")]
   public String Remarks { get; set; }

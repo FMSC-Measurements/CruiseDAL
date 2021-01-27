@@ -390,7 +390,8 @@ namespace FMSC.ORM.SQLite
                     {
                         var commandText = command.CommandText = "PRAGMA table_info(" + tableName + ");";
 
-                        using (var reader = conn.ExecuteReader(command, CurrentTransaction))
+                        var exceptionProcessor = ExceptionProcessor;
+                        using (var reader = conn.ExecuteReader(command, CurrentTransaction, exceptionProcessor: exceptionProcessor))
                         {
                             int nameOrd = reader.GetOrdinal("name");
                             int dbTypeOrd = reader.GetOrdinal("type");
@@ -415,7 +416,7 @@ namespace FMSC.ORM.SQLite
                             }
                             catch (Exception e)
                             {
-                                throw ExceptionProcessor.ProcessException(e, conn, commandText, (DbTransaction)null);
+                                throw exceptionProcessor.ProcessException(e, conn, commandText, (DbTransaction)null);
                             }
                         }
                     }
@@ -466,7 +467,7 @@ namespace FMSC.ORM.SQLite
 
                     try
                     {
-                        using (var reader = connection.ExecuteReader(command, CurrentTransaction))
+                        using (var reader = connection.ExecuteReader(command, CurrentTransaction, exceptionProcessor: ExceptionProcessor))
                         {
                             hasErrors = reader.Read();
                         }

@@ -407,7 +407,8 @@ namespace FMSC.ORM.Core
                                     EntityDescription entityDescription = null, DbTransaction transaction = null,
                                     OnConflictOption option = OnConflictOption.Default,
                                     ICommandBuilder commandBuilder = null, IExceptionProcessor exceptionProcessor = null,
-                                    object keyValue = null)
+                                    object keyValue = null,
+                                    bool persistKeyvalue = true)
         {
             if (data is null) { throw new ArgumentNullException(nameof(data)); }
 
@@ -419,14 +420,17 @@ namespace FMSC.ORM.Core
                 option: option,
                 commandBuilder: commandBuilder,
                 exceptionProcessor: exceptionProcessor,
-                keyValue: keyValue);
+                keyValue: keyValue,
+                persistKeyvalue: persistKeyvalue);
         }
 
-        internal static object Insert(this DbConnection connection, object data, string tableName,
+        private static object Insert(this DbConnection connection, object data, string tableName,
                                       IFieldInfoCollection fields, DbTransaction transaction = null,
                                       OnConflictOption option = OnConflictOption.Default,
                                       ICommandBuilder commandBuilder = null,
-                                      IExceptionProcessor exceptionProcessor = null, object keyValue = null)
+                                      IExceptionProcessor exceptionProcessor = null, 
+                                      object keyValue = null,
+                                      bool persistKeyvalue = true)
         {
             if (data == null) { throw new ArgumentNullException("data"); }
 
@@ -436,7 +440,8 @@ namespace FMSC.ORM.Core
             {
                 commandBuilder.BuildInsert(command, data, tableName, fields,
                     option: option,
-                    keyValue: keyValue);
+                    keyValue: keyValue,
+                    persistKeyvalue: persistKeyvalue);
 
                 try
                 {

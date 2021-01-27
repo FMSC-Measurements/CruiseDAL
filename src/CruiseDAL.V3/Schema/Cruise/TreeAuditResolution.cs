@@ -34,9 +34,9 @@ namespace CruiseDAL.Schema
 );";
 
         public string CreateIndexes =>
-@"CREATE INDEX 'TreeAuditResolution_TreeAuditRuleID' ON 'TreeAuditResolution'('TreeAuditRuleID');
+@"CREATE INDEX NIX_TreeAuditResolution_TreeAuditRuleID ON TreeAuditResolution ('TreeAuditRuleID');
 
-CREATE INDEX 'TreeAuditResolution_TreeID' ON 'TreeAuditResolution'('TreeID');";
+CREATE INDEX NIX_TreeAuditResolution_TreeID ON TreeAuditResolution ('TreeID');";
 
         public IEnumerable<string> CreateTriggers => new[] { CREATE_TRIGGER_TreeAuditResolution_OnDelete };
 

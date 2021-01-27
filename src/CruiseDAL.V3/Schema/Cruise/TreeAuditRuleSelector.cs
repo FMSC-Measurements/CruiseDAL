@@ -34,7 +34,7 @@ namespace CruiseDAL.Schema
 );";
 
         public string CreateIndexes =>
-@"CREATE UNIQUE INDEX TreeAuditRuleSelector_SpeciesCode_LiveDead_PrimaryProduct_TreeAuditRuleID_CruiseID
+@"CREATE UNIQUE INDEX UIX_TreeAuditRuleSelector_SpeciesCode_LiveDead_PrimaryProduct_TreeAuditRuleID_CruiseID
 ON TreeAuditRuleSelector (
     CruiseID,
     ifnull(SpeciesCode, ''),
@@ -43,9 +43,9 @@ ON TreeAuditRuleSelector (
     TreeAuditRuleID
 );
 
-CREATE INDEX 'TreeAuditRuleSelector_SpeciesCode' ON 'TreeAuditRuleSelector'('SpeciesCode');
+CREATE INDEX NIX_TreeAuditRuleSelector_SpeciesCode ON TreeAuditRuleSelector ('SpeciesCode');
 
-CREATE INDEX 'TreeAuditRuleSelector_TreeAuditRuleID' ON 'TreeAuditRuleSelector'('TreeAuditRuleID');";
+CREATE INDEX NIX_TreeAuditRuleSelector_TreeAuditRuleID ON TreeAuditRuleSelector ('TreeAuditRuleID');";
 
         public IEnumerable<string> CreateTriggers => new[] { CREATE_TRIGGER_TreeAuditRuleSelector_OnDelete };
 

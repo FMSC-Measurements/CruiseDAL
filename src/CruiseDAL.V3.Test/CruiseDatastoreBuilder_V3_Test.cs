@@ -88,9 +88,7 @@ namespace CruiseDAL.V3.Test
 
             using (var database = new FMSC.ORM.SQLite.SQLiteDatastore())
             {
-                database.Execute("EXPLAIN " + commandText);
-                database.Invoking(x => x.Execute("EXPLAIN " + commandText)).Should().NotThrow();
-                
+                database.Invoking(x => x.Execute("EXPLAIN " + commandText)).Should().NotThrow();   
             }
         }
 

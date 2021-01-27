@@ -23,6 +23,9 @@ namespace CruiseDAL.V3.Models
   [Field("DefaultUOM")]
   public String DefaultUOM { get; set; }
 
+  [Field("MeasurementYear")]
+  public String MeasurementYear { get; set; }
+
   [Field("LogGradingEnabled")]
   public Boolean? LogGradingEnabled { get; set; }
 

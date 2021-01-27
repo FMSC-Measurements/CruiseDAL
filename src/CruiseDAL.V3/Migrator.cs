@@ -78,6 +78,8 @@ namespace CruiseDAL
             {
                 MigrateFromV2ToV3(v2Cruise, newCruise);
             }
+
+
         }
 
         public static void MigrateFromV2ToV3(CruiseDatastore v2db, CruiseDatastore_V3 v3db)
@@ -92,8 +94,8 @@ namespace CruiseDAL
             }
             finally
             {
-                v3db.ReleaseConnection();
                 v3db.DetachDB(oldDbAlias);
+                v3db.ReleaseConnection();
             }
         }
 

@@ -5,8 +5,8 @@ classDiagram
         - Name : TEXT
     }
 
-    class FIA {
-    * FIA_cn
+    class LK_FIA {
+    * LK_FIA_CN
     -----
         - FIACode : INTEGER
         - CommonName : TEXT
@@ -16,6 +16,7 @@ classDiagram
     * TreeField_CN
     -----
         - Field : TEXT
+        - DefaultHeading : TEXT
         - DbType : TEXT
         - IsTreeMeasurmentField : BOOLEAN
     }
@@ -27,37 +28,37 @@ classDiagram
         - DbType : TEXT
     }
 
-    class CruiseMethods {
-    * CruiseMethods_CN
+    class LK_CruiseMethod {
+    * LK_CruiseMethod_CN
     -----
         - Method : TEXT
         - FriendlyName : TEXT
         - IsPlotMethod : BOOLEAN
     }
 
-    class LoggingMethods {
-    * LoggingMethods_CN
+    class LK_LoggingMethod {
+    * LK_LoggingMethod_CN
     -----
         - LoggingMethod : TEXT
         - FriendlyName : TEXT
     }
 
-    class Products {
-    * Products_CN
+    class LK_Product {
+    * LK_Product_CN
     -----
         - Product : TEXT
         - FriendlyName : TEXT
     }
 
-    class Regions {
-    * Regions_CN
+    class LK_Region {
+    * LK_Region_CN
     -----
         - Region : TEXT
         - FriendlyName : TEXT
     }
 
-    class Forests {
-    * Forests_CN
+    class LK_Forest {
+    * LK_Forest_CN
     -----
         - Forest : TEXT
         - Region : TEXT <<FK>>
@@ -65,11 +66,18 @@ classDiagram
         - State : TEXT
     }
 
-    class UOMCodes {
-    * UOMCodes_CN
+    class LK_UOM {
+    * LK_UOM_CN
     -----
         - UOM : TEXT
         - FriendlyName : TEXT
+    }
+
+    class LK_Purpose {
+    * LK_Purpose_CN
+    -----
+        - Purpose : TEXT
+        - ShortCode : TEXT
     }
 
     class Species {
@@ -78,6 +86,7 @@ classDiagram
         - SpeciesCode : TEXT
         - CruiseID : TEXT
         - ContractSpecies : TEXT
+        - FIACode : TEXT <<FK>>
     }
 
     class TreeDefaultValue {
@@ -139,13 +148,10 @@ classDiagram
         - SaleID : TEXT
         - SaleNumber : TEXT
         - Name : TEXT
-        - Purpose : TEXT
         - Region : TEXT <<FK>>
         - Forest : TEXT <<FK>>
         - District : TEXT
-        - MeasurementYear : TEXT
         - CalendarYear : INTEGER
-        - LogGradingEnabled : BOOLEAN
         - Remarks : TEXT
         - DefaultUOM : TEXT
         - CreatedBy : TEXT
@@ -159,9 +165,10 @@ classDiagram
     -----
         - CruiseID : TEXT
         - SaleID : TEXT <<FK>>
-        - Purpose : TEXT
+        - Purpose : TEXT <<FK>>
         - Remarks : TEXT
         - DefaultUOM : TEXT <<FK>>
+        - MeasurementYear : TEXT
         - LogGradingEnabled : BOOLEAN
         - CreatedBy : TEXT
         - Created_TS : DATETIME
@@ -370,7 +377,7 @@ classDiagram
         - CutLeave : TEXT
         - UOM : TEXT <<FK>>
         - PrimaryProduct : TEXT <<FK>>
-        - SecondaryProduct : TEXT
+        - SecondaryProduct : TEXT <<FK>>
         - BiomassProduct : TEXT
         - DefaultLiveDead : TEXT
         - SamplingFrequency : INTEGER
@@ -447,6 +454,18 @@ classDiagram
         - DefaultValueReal : REAL
         - DefaultValueBool : BOOLEAN
         - DefaultValueText : TEXT
+    }
+
+    class TreeFieldHeading {
+    * TreeFieldHeading_CN
+    -----
+        - CruiseID : TEXT <<FK>>
+        - Field : TEXT <<FK>>
+        - Heading : TEXT
+        - CreatedBy : TEXT
+        - Created_TS : DATETIME
+        - ModifiedBy : TEXT
+        - Modified_TS : DATETIME
     }
 
     class LogFieldSetup {
@@ -940,6 +959,17 @@ classDiagram
         - Modified_TS : DATETIME
     }
 
+    class Reports_Tombstone {
+        - ReportID : TEXT
+        - CruiseID : TEXT
+        - Selected : BOOLEAN
+        - Title : TEXT
+        - CreatedBy : TEXT
+        - Created_TS : DATETIME
+        - ModifiedBy : TEXT
+        - Modified_TS : DATETIME
+    }
+
     class MessageLog {
     * Message_CN
     -----
@@ -966,27 +996,30 @@ classDiagram
 
 
 
-    Regions <|-- Forests
+    LK_Region <|-- LK_Forest
 
 
+
+    LK_FIA <|-- Species
 
     Cruise <|-- TreeDefaultValue
-    Products <|-- TreeDefaultValue
+    LK_Product <|-- TreeDefaultValue
     Species <|-- TreeDefaultValue
 
 
-    Forests <|-- Sale
-    Regions <|-- Sale
+    LK_Forest <|-- Sale
+    LK_Region <|-- Sale
 
+    LK_Purpose <|-- Cruise
+    LK_UOM <|-- Cruise
     Sale <|-- Cruise
-    UOMCodes <|-- Cruise
 
     Cruise <|-- CuttingUnit
-    LoggingMethods <|-- CuttingUnit
+    LK_LoggingMethod <|-- CuttingUnit
 
 
     Cruise <|-- Stratum
-    CruiseMethods <|-- Stratum
+    LK_CruiseMethod <|-- Stratum
     TreeField <|-- Stratum
 
 
@@ -1004,15 +1037,18 @@ classDiagram
     Plot <|-- PlotLocation
 
 
-    Products <|-- SampleGroup
+    LK_Product <|-- SampleGroup
+    LK_UOM <|-- SampleGroup
     Stratum <|-- SampleGroup
-    UOMCodes <|-- SampleGroup
 
 
     SampleGroup <|-- TreeFieldSetup
     Stratum <|-- TreeFieldSetup
     TreeField <|-- TreeFieldSetup
 
+
+    Cruise <|-- TreeFieldHeading
+    TreeField <|-- TreeFieldHeading
 
     LogField <|-- LogFieldSetup
     Stratum <|-- LogFieldSetup
@@ -1083,5 +1119,6 @@ classDiagram
 
 
     Cruise <|-- Reports
+
 
 

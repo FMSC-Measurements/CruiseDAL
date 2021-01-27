@@ -38,7 +38,7 @@ namespace FMSC.ORM.EntityModel.Support
         [Fact]
         public void ReadDataTest()
         {
-            var poco = AutoBogus.AutoFaker.Generate<POCOMultiTypeObject>();
+            var poco = POCOMultiTypeObject.CreateWithID();
 
             var reader = new TestSupport.ObjectDataReader<POCOMultiTypeObject>(new POCOMultiTypeObject[] { poco });
             Assert.True(reader.Read());

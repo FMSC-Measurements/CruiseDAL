@@ -13,7 +13,7 @@ namespace FMSC.ORM.Test.TestSupport.TestModels
         public const string CREATE_TABLE_COMMAND = "CREATE TABLE " + nameof(RowIDAsPrimaryKey) + " (StringField TEXT)";
 
         [PrimaryKeyField(Name = "RowID")]
-        public long RowID { get; set; }
+        public long? RowID { get; set; }
 
         [Field(Name = "StringField")]
         public string StringField { get; set; }

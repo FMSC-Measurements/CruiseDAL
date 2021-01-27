@@ -6,6 +6,7 @@ using System.IO;
 using System.Linq;
 using Xunit;
 using Xunit.Abstractions;
+using CruiseDAL.V3.Models;
 
 namespace CruiseDAL.V3.Test
 {
@@ -37,7 +38,7 @@ namespace CruiseDAL.V3.Test
                 using (var newCruise = new CruiseDatastore_V3(newFilePath))
                 {
                     var semVerActual = new Version(newCruise.DatabaseVersion);
-                    var semVerExpected = new Version("3.0");
+                    var semVerExpected = new Version("3.1");
 
                     semVerActual.Major.Should().Be(semVerExpected.Major);
                     semVerActual.Minor.Should().Be(semVerExpected.Minor);
@@ -59,10 +60,14 @@ namespace CruiseDAL.V3.Test
             using (var newCruise = new CruiseDatastore_V3(newCruisePath))
             {
                 var semVerActual = new Version(newCruise.DatabaseVersion);
-                var semVerExpected = new Version("3.0");
+                var semVerExpected = new Version("3.1");
 
                 semVerActual.Major.Should().Be(semVerExpected.Major);
                 semVerActual.Minor.Should().Be(semVerExpected.Minor);
+
+                var cruise = newCruise.From<Cruise>().Query().Single();
+                cruise.CruiseID.Should().NotBeNullOrEmpty();
+
             }
         }
 

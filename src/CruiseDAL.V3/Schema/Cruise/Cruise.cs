@@ -14,6 +14,7 @@ namespace CruiseDAL.Schema
     Purpose TEXT,
     Remarks TEXT,
     DefaultUOM TEXT COLLATE NOCASE,
+    MeasurementYear TEXT COLLATE NOCASE,
     LogGradingEnabled BOOLEAN Default 0,
     CreatedBy TEXT DEFAULT 'none',
     Created_TS DATETIME DEFAULT (CURRENT_TIMESTAMP),
@@ -25,7 +26,8 @@ namespace CruiseDAL.Schema
     CHECK (CruiseID LIKE '________-____-____-____-____________'),
 
     FOREIGN KEY (SaleID) REFERENCES Sale (SaleID) ON DELETE CASCADE,
-    FOREIGN KEY (DefaultUOM) REFERENCES UOMCodes (UOM)
+    FOREIGN KEY (DefaultUOM) REFERENCES LK_UOM (UOM),
+    FOREIGN KEY (Purpose) REFERENCES LK_Purpose (Purpose)
 );";
 
         public string InitializeTable => null;

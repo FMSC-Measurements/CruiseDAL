@@ -47,16 +47,16 @@ namespace CruiseDAL.Schema
     Deleted_TS DATETIME
 );
 
-CREATE INDEX Plot_Tombstone_PlotID ON Plot_Tombstone 
+CREATE INDEX NIX_Plot_Tombstone_PlotID ON Plot_Tombstone 
 (PlotID);
 
-CREATE INDEX Plot_Tombstone_CruiseID_PlotNumber_CuttingUnitCode ON Plot_Tombstone 
+CREATE INDEX NIX_Plot_Tombstone_CruiseID_PlotNumber_CuttingUnitCode ON Plot_Tombstone 
 (CruiseID, PlotNumber, CuttingUnitCode);";
 
         public string CreateIndexes =>
-@"CREATE INDEX Plot_CuttingUnitCode_CruiseID ON Plot (CuttingUnitCode, CruiseID);
+@"CREATE INDEX NIX_Plot_CuttingUnitCode_CruiseID ON Plot (CuttingUnitCode, CruiseID);
 
-CREATE INDEX Plot_PlotNumber_CruiseID ON Plot (PlotNumber, CruiseID);";
+CREATE INDEX NIX_Plot_PlotNumber_CruiseID ON Plot (PlotNumber, CruiseID);";
 
         public IEnumerable<string> CreateTriggers => new[] { CREATE_TRIGGER_PLOT_ONUPDATE, CREATE_TRIGGER_Plot_OnDelete };
 

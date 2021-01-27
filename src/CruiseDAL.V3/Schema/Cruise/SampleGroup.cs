@@ -42,14 +42,15 @@ namespace CruiseDAL.Schema
     UNIQUE (StratumCode, SampleGroupCode, CruiseID),
 
     FOREIGN KEY (StratumCode, CruiseID) REFERENCES Stratum (StratumCode, CruiseID) ON DELETE CASCADE ON UPDATE CASCADE,
-    FOREIGN KEY (UOM) REFERENCES UOMCodes (UOM),
-    FOREIGN KEY (PrimaryProduct) REFERENCES Products (Product)
+    FOREIGN KEY (UOM) REFERENCES LK_UOM (UOM),
+    FOREIGN KEY (PrimaryProduct) REFERENCES LK_Product (Product),
+    FOREIGN KEY (SecondaryProduct) REFERENCES LK_Product (Product)
 );";
 
         public string InitializeTable => null;
 
         public string CreateIndexes =>
-@"CREATE INDEX SampleGroup_StratumCode_CruiseID ON SampleGroup (StratumCode, CruiseID);";
+@"CREATE INDEX NIX_SampleGroup_StratumCode_CruiseID ON SampleGroup (StratumCode, CruiseID);";
 
         public string CreateTombstoneTable =>
 @"CREATE TABLE SampleGroup_Tombstone (
@@ -83,7 +84,7 @@ namespace CruiseDAL.Schema
     UNIQUE(SampleGroupID)
 );
 
-CREATE INDEX SampleGroup_Tombstone_CruiseID_SampleGroupCode_StratumCode ON SampleGroup_Tombstone 
+CREATE INDEX NIX_SampleGroup_Tombstone_CruiseID_SampleGroupCode_StratumCode ON SampleGroup_Tombstone 
 (CruiseID, SampleGroupCode, StratumCode);";
 
         public IEnumerable<string> CreateTriggers => new[] 

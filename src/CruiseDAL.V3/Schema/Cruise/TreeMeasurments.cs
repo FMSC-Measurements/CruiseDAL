@@ -150,7 +150,7 @@ namespace CruiseDAL.Schema
     Deleted_TS DATETIME
 );
 
-CREATE INDEX TreeMeasurment_Tombstone_TreeID ON TreeMeasurment_Tombstone 
+CREATE INDEX NIX_TreeMeasurment_Tombstone_TreeID ON TreeMeasurment_Tombstone 
 (TreeID);";
 
         public string CreateIndexes => null;

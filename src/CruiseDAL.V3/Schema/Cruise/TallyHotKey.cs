@@ -35,9 +35,9 @@ namespace CruiseDAL.Schema
         public string CreateTombstoneTable => null;
 
         public string CreateIndexes =>
-@"CREATE INDEX 'TallyHotKey_SpeciesCode' ON 'TallyHotKey'('SpeciesCode', 'CruiseID');
+@"CREATE INDEX NIX_TallyHotKey_SpeciesCode ON 'TallyHotKey'('SpeciesCode', 'CruiseID');
 
-CREATE INDEX TallyHotKey_StratumCode_SampleGroupCode_SpeciesCode_LiveDead_CruiseID
+CREATE INDEX NIX_TallyHotKey_StratumCode_SampleGroupCode_SpeciesCode_LiveDead_CruiseID
 ON TallyHotKey
 (StratumCode, SampleGroupCode, ifnull(SpeciesCode, '') COLLATE NOCASE, ifnull(LiveDead, '') COLLATE NOCASE);";
 

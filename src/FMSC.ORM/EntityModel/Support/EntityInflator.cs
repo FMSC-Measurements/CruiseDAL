@@ -6,7 +6,7 @@ using System.Data;
 
 namespace FMSC.ORM.EntityModel.Support
 {
-    // TODO optimize this class somemore. use a hash to see if the look up needs to be recreated?
+    // TODO optimize this class some more. use a hash to see if the look up needs to be recreated?
 
     public class EntityInflator
     {

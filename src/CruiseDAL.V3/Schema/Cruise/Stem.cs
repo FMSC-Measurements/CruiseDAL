@@ -42,7 +42,7 @@ namespace CruiseDAL.Schema
     Deleted_TS DATETIME
 );";
 
-        public string CreateIndexes => @"CREATE INDEX Stem_TreeID ON Stem (TreeID);";
+        public string CreateIndexes => @"CREATE INDEX NIX_Stem_TreeID ON Stem (TreeID);";
 
         public IEnumerable<string> CreateTriggers => new[] { CREATE_TRIGGER_Stem_ON_UPDATE, CREATE_TRIGGER_Stem_OnDelete };
 

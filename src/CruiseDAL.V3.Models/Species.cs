@@ -17,6 +17,9 @@ namespace CruiseDAL.V3.Models
   [Field("ContractSpecies")]
   public String ContractSpecies { get; set; }
 
+  [Field("FIACode")]
+  public String FIACode { get; set; }
+
  }
 
 }

@@ -43,7 +43,7 @@ namespace CruiseDAL.V2.DataObjects
 
                 var treeEstimate = new TreeEstimate()
                 { CountTree_CN = countTree.CountTree_CN };
-                database.Insert(countTree);
+                database.Insert(treeEstimate);
 
                 var stratumStats = new StratumStats()
                 { Stratum_CN = stratum.Stratum_CN.Value, Code = "ss1" };

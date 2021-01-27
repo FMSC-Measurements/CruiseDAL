@@ -69,10 +69,10 @@ namespace CruiseDAL.Schema
     Deleted_TS DATETIME
 );
 
-CREATE INDEX Log_Tombstone_TreeID_LogNumber ON Log_Tombstone 
+CREATE INDEX NIX_Log_Tombstone_TreeID_LogNumber ON Log_Tombstone 
 (TreeID, LogNumber);
 
-CREATE INDEX Log_Tombstone_LogID ON Log_Tombstone
+CREATE INDEX NIX_Log_Tombstone_LogID ON Log_Tombstone
 (LogID);
 ";
 

@@ -52,7 +52,13 @@ namespace FMSC.ORM.Sql
             }
         }
 
-        public void BuildInsert(IDbCommand command, object data, string tableName, IFieldInfoCollection fields, OnConflictOption option = OnConflictOption.Default, object keyValue = null)
+        public void BuildInsert(IDbCommand command,
+                                object data,
+                                string tableName,
+                                IFieldInfoCollection fields,
+                                OnConflictOption option = OnConflictOption.Default,
+                                object keyValue = null,
+                                bool persistKeyvalue = true)
         {
             if (command is null) { throw new ArgumentNullException(nameof(command)); }
             if (data is null) { throw new ArgumentNullException(nameof(data)); }
@@ -70,11 +76,11 @@ namespace FMSC.ORM.Sql
                 keyValue = pkField.GetFieldValueOrDefault(data);
             }
 
-            if (keyValue != null)
+            if (persistKeyvalue && keyValue != null)
             {
                 if (pkField is null)
                 {
-                    throw new InvalidOperationException($"keyValue provided but type has no key field type:{data.GetType().Name}");
+                    throw new InvalidOperationException($"keyValue provided but [{data.GetType().Name}] has no property with a primary key attribute");
                 }
 
                 var param = MakeParameter(command, pkField, keyValue);

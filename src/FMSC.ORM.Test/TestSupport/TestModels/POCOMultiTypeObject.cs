@@ -7,6 +7,58 @@ namespace FMSC.ORM.TestSupport.TestModels
     [Table(FMSC.ORM.TestSupport.TestSQLConstants.MULTI_PROP_TABLE_NAME)]
     public class POCOMultiTypeObject : IInterface
     {
+        private static Bogus.Randomizer _randomizer = new Bogus.Randomizer();
+        public static POCOMultiTypeObject CreateWithID(bool nullableSetNull = false)
+        {
+            var poco = new POCOMultiTypeObject()
+            {
+                BoolField = _randomizer.Bool(),
+                DateTimeField = DateTime.Now,
+                NDateTimeField = (nullableSetNull) ? (DateTime?)null : DateTime.Now,
+                StrDateTime = (nullableSetNull) ? (string)null : DateTime.Now.ToShortTimeString(),
+                DoubleField = _randomizer.Double(),
+                FloatField = _randomizer.Float(),
+                GuidField = _randomizer.Guid(),
+                NGuidField = (nullableSetNull) ? (Guid?)null : _randomizer.Guid(),
+                ID = _randomizer.Int(),
+                IntField = _randomizer.Int(),
+                LongField = _randomizer.Long(),
+                NBoolField = (nullableSetNull) ? (bool?)null : _randomizer.Bool(),
+                NDoubleField = (nullableSetNull) ? (double?)null : _randomizer.Double(),
+                NFloatField = (nullableSetNull) ? (float?)null : _randomizer.Float(),
+                NIntField = (nullableSetNull) ? (int?)null : _randomizer.Int(),
+                NLongField = (nullableSetNull) ? (long?)null : _randomizer.Long(),
+                //RowID = randomizer.Int(),
+                StringField = _randomizer.String2(16),
+            };
+            return poco;
+        }
+
+        public static POCOMultiTypeObject CreateWithNullID(bool nullableSetNull = false)
+        {
+            var poco = new POCOMultiTypeObject()
+            {
+                BoolField = _randomizer.Bool(),
+                DateTimeField = DateTime.Now,
+                NDateTimeField = (nullableSetNull) ? (DateTime?)null : DateTime.Now,
+                StrDateTime = (nullableSetNull) ? (string)null : DateTime.Now.ToShortTimeString(),
+                DoubleField = _randomizer.Double(),
+                FloatField = _randomizer.Float(),
+                GuidField = _randomizer.Guid(),
+                NGuidField = (nullableSetNull) ? (Guid?)null : _randomizer.Guid(),
+                IntField = _randomizer.Int(),
+                LongField = _randomizer.Long(),
+                NBoolField = (nullableSetNull) ? (bool?)null : _randomizer.Bool(),
+                NDoubleField = (nullableSetNull) ? (double?)null : _randomizer.Double(),
+                NFloatField = (nullableSetNull) ? (float?)null : _randomizer.Float(),
+                NIntField = (nullableSetNull) ? (int?)null : _randomizer.Int(),
+                NLongField = (nullableSetNull) ? (long?)null : _randomizer.Long(),
+                //RowID = randomizer.Int(),
+                StringField = _randomizer.String2(16),
+            };
+            return poco;
+        }
+
         [PrimaryKeyField(Name = "ID")]
         public int? ID { get; set; }
 
@@ -74,8 +126,6 @@ namespace FMSC.ORM.TestSupport.TestModels
         // test field mapped without a [Field] attribute
         public string AutomaticStringField { get; set; }
 
-        [Field(Alias = "AliasForStringField", SQLExpression = "StringField")]
-        public string AliasForStringField { get; set; }
 
         #region non visible fields
 

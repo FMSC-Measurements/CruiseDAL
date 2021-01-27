@@ -15,20 +15,23 @@ namespace CruiseDAL
         {
             var version = datastore.DatabaseVersion;
             if (version == "3.0.0" 
-                || version == "3.0.1")
+                || version == "3.0.1"
+                || version == "3.0.2"
+                || version == "3.0.3")
             {
-                UpdateTo_3_0_2(datastore);
+                UpdateTo_3_1_0(datastore);
             }
         }
 
-        public static void UpdateTo_3_0_2(CruiseDatastore ds)
+        public static void UpdateTo_3_1_0(CruiseDatastore ds)
         {
             // create an in-memory database
             // to migrate into
             using (var newDatastore = new CruiseDatastore_V3())
             {
+                var excludeTables = new[] { "SamplerState" };
                 // migrate contents of old db into new in-memory database
-                Migrate(ds, newDatastore, new[] { "SamplerState", });
+                Migrate(ds, newDatastore, excludeTables);
 
                 // use back up rutine to replace old database with 
                 // migrated contents

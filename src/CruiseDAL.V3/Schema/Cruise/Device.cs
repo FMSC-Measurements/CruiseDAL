@@ -26,8 +26,8 @@ namespace CruiseDAL.Schema
         public string CreateTombstoneTable => null;
 
         public string CreateIndexes =>
-@"CREATE INDEX Device_CruiseID ON Device (CruiseID);
-CREATE INDEX Device_DeviceID ON Device (DeviceID);";
+@"CREATE INDEX NIX_Device_CruiseID ON Device (CruiseID);
+CREATE INDEX NIX_Device_DeviceID ON Device (DeviceID);";
 
         public IEnumerable<string> CreateTriggers => Enumerable.Empty<string>();
     }

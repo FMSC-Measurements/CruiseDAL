@@ -33,9 +33,9 @@ namespace CruiseDAL.Schema
         public string CreateTombstoneTable => null;
 
         public string CreateIndexes =>
-@"CREATE INDEX FixCNTTallyPopulation_StratumCode_CruiseID ON FixCNTTallyPopulation (StratumCode, CruiseID);
+@"CREATE INDEX NIX_FixCNTTallyPopulation_StratumCode_CruiseID ON FixCNTTallyPopulation (StratumCode, CruiseID);
 
-CREATE INDEX 'FixCNTTallyPopulation_StratumCode_SampleGroupCode_SpeciesCode_LiveDead_CruiseID' ON FixCNTTallyPopulation (StratumCode, SampleGroupCode, SpeciesCode, LiveDead, CruiseID);";
+CREATE INDEX NIX_FixCNTTallyPopulation_StratumCode_SampleGroupCode_SpeciesCode_LiveDead_CruiseID ON FixCNTTallyPopulation (StratumCode, SampleGroupCode, SpeciesCode, LiveDead, CruiseID);";
 
         public IEnumerable<string> CreateTriggers => new[]
         {
