@@ -25,6 +25,7 @@ call %msbuild% -t:pack /p:PackageOutputPath=%packageOutputDir%;Configuration=%bu
 call %msbuild% -t:pack /p:PackageOutputPath=%packageOutputDir%;Configuration=%build_config% %parent%CruiseDAL.V3\CruiseDAL.V3.csproj
 call %msbuild% -t:pack /p:PackageOutputPath=%packageOutputDir%;Configuration=%build_config% %parent%CruiseDAL.V3.Models\CruiseDAL.V3.Models.csproj
 call %msbuild% -t:pack /p:PackageOutputPath=%packageOutputDir%;Configuration=%build_config% %parent%CruiseDAL.V2.Models\CruiseDAL.V2.Models.csproj
+call %msbuild% -t:pack /p:PackageOutputPath=%packageOutputDir%;Configuration=%build_config% %parent%CruiseDAL.V3.Sync\CruiseDAL.V3.Sync.csproj
 
 ::if invoked from windows explorer, pause
 IF "%interactive%"=="0" PAUSE

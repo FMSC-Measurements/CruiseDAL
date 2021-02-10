@@ -412,3 +412,6 @@ in the previous database it is possible for species and live dead values to not 
  - [ ] get updated list of forest codes for region 4
  - [ ] depreciate PCMTRE cruise method for PCM
  - [ ] backport of TreeAuditRules
+ - [ ] LogGradingEnabled on sale level or cruise level
+ - [ ] What is Volume Factor at the stratum level?
+ - [ ] month/year on stratum?

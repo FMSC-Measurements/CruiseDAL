@@ -48,13 +48,19 @@ namespace CruiseDAL
         {
             // get path, directory and filename of original file
             var fileDirectory = System.IO.Path.GetDirectoryName(v2Path);
-            var fileName = System.IO.Path.GetFileNameWithoutExtension(v2Path);
 
             // create path for new temp file
-            var newFileName = fileName + ".crz3";
+            var newFileName = GetConvertedFileName(v2Path);
             var newFilePath = System.IO.Path.Combine(fileDirectory, newFileName);
 
             return newFilePath;
+        }
+
+        public static string GetConvertedFileName(string v2Path)
+        {
+            var fileName = System.IO.Path.GetFileNameWithoutExtension(v2Path);
+            var newFileName = fileName + ".crz3";
+            return newFileName;
         }
 
         public static string MigrateFromV2ToV3(string v2Path, bool overwrite = false)

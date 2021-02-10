@@ -14,8 +14,7 @@ Mapping tables should be a concatenation of the names of the tables that have a 
 # Indexes
 ## Naming 
 Indexes will be named 
-{U/N}IX_{TableName}_{underscore seperated list of columns}
-
+{U/N}IX_{TableName}_{underscore separated list of columns}
 
 
 # Columns
