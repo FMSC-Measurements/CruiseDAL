@@ -10,9 +10,49 @@ namespace CruiseDAL.V3.Sync
 {
     public class CruiseCopier
     {
+        public void Copy(CruiseDatastore_V3 source, CruiseDatastore_V3 destination, string cruiseID)
+        {
+            var srcConn = source.OpenConnection();
+            try
+            {
+                var destConn = destination.OpenConnection();
+                try
+                {
+                    destination.BeginTransaction();
+                    try
+                    {
+                        Copy(srcConn, destConn, cruiseID);
+                        destination.CommitTransaction();
+                    }
+                    catch
+                    {
+                        destination.RollbackTransaction();
+                        throw;
+                    }
+                }
+                finally
+                {
+                    destination.ReleaseConnection();
+                }
+            }
+            finally
+            {
+                source.ReleaseConnection();
+            }
+        }
+
         public void Copy(DbConnection source, DbConnection destination, string cruiseID)
         {
-            var cruise = source.From<Cruise>().Where("@p1 = @cruiseID;").Query(cruiseID).FirstOrDefault();
+            if (destination.ExecuteScalar<int>("SELECT count(*) FROM Sale JOIN Cruise USING (SaleID) WHERE CruiseID = @p1;", new[] { cruiseID }) == 0)
+            {
+                var sale = source.From<Sale>()
+                    .Join("Cruise AS cr", "USING (SaleID)")
+                    .Where("CruiseID = @p1")
+                    .Query(cruiseID).FirstOrDefault();
+                destination.Insert(sale);
+            }
+
+            var cruise = source.From<Cruise>().Where("CruiseID = @p1;").Query(cruiseID).FirstOrDefault();
             destination.Insert(cruise);
 
             var devices = source.From<Device>().Where("CruiseID = @p1;").Query(cruiseID);
@@ -21,11 +61,7 @@ namespace CruiseDAL.V3.Sync
                 destination.Insert(d);
             }
 
-            if (destination.ExecuteScalar2<int>("SELECT count(*) FROM Sale WHERE SaleID = @saleID;", new { cruise.SaleID }) > 0)
-            {
-                var sale = source.Query2<Sale>("SELECT * FROM Sale WHERE SaleID = @saleID;", new { cruise.SaleID }).FirstOrDefault();
-                destination.Insert(sale);
-            }
+
 
             var units = source.From<CuttingUnit>().Where("CruiseID = @p1;").Query(cruiseID);
             foreach (var unit in units)
