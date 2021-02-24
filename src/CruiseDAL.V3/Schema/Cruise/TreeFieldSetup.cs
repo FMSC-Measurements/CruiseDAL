@@ -23,6 +23,9 @@ namespace CruiseDAL.Schema
     DefaultValueBool BOOLEAN,
     DefaultValueText TEXT,
 
+    CHECK (IsHidden IN (0, 1)),
+    CHECK (IsLocked IN (0, 1)),
+
     FOREIGN KEY (StratumCode, CruiseID) REFERENCES Stratum (StratumCode, CruiseID) ON DELETE CASCADE ON UPDATE CASCADE,
     FOREIGN KEY (SampleGroupCode, StratumCode, CruiseID) REFERENCES SampleGroup (SampleGroupCode, StratumCode, CruiseID) ON DELETE CASCADE ON UPDATE CASCADE,
     FOREIGN KEY (Field) REFERENCES TreeField (Field)

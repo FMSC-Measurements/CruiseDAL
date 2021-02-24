@@ -32,6 +32,7 @@ namespace CruiseDAL.Schema
     Created_TS DATETIME DEFAULT (CURRENT_TIMESTAMP),
 
     CHECK (LiveDead IN ('L', 'D') OR LiveDead IS NULL),
+    CHECK (STM IN (0, 1)),
 
     UNIQUE (TallyLedgerID),
 

@@ -19,7 +19,7 @@ namespace CruiseDAL.Schema
 
     UNIQUE (StratumCode, HotKey) ON CONFLICT REPLACE,
 
-    CHECK(LiveDead IN ('L', 'D') OR LiveDead IS NULL),
+    CHECK (LiveDead IN ('L', 'D') OR LiveDead IS NULL),
     CHECK ((SpeciesCode IS NOT NULL AND LiveDead IS NOT NULL) OR (SpeciesCode IS NULL AND LiveDead IS NULL)),
 
     FOREIGN KEY (StratumCode, SampleGroupCode, CruiseID)
