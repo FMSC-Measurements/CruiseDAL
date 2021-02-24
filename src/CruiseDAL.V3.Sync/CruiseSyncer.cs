@@ -64,6 +64,7 @@ namespace CruiseDAL.V3.Sync
                 SyncCuttingUnit_Stratum(cruiseID, source, destination, options);
                 SyncSampleGroup(cruiseID, source, destination, options);
                 SyncSamplerState(cruiseID, source, destination, options);
+                SyncSpecies(cruiseID, source, destination, options);
                 SyncSubPopulation(cruiseID, source, destination, options);
                 SyncFixCNTTallyPopulation(cruiseID, source, destination, options);
 
@@ -106,7 +107,7 @@ namespace CruiseDAL.V3.Sync
             var hasMatch = destination.ExecuteScalar<bool>("SELECT EXISTS (SELECT * FROM Sale WHERE SaleID = @p1);", new[] { sourceSale.SaleID });
             if(!hasMatch)
             {
-                destination.Insert(sourceSale);
+                destination.Insert(sourceSale, persistKeyvalue: false);
             }
             else
             {
@@ -132,7 +133,7 @@ namespace CruiseDAL.V3.Sync
             {
                 if (options.Design.HasFlag(SyncFlags.Insert))
                 {
-                    destination.Insert(sCruise);
+                    destination.Insert(sCruise, persistKeyvalue: false);
                 }
             }
             else
@@ -162,7 +163,7 @@ namespace CruiseDAL.V3.Sync
 
                 if(hasMatch == false)
                 {
-                    destination.Insert(i);
+                    destination.Insert(i, persistKeyvalue: false);
                 }
             }
         }
@@ -189,7 +190,7 @@ namespace CruiseDAL.V3.Sync
                     {
                         if (options.Design.HasFlag(SyncFlags.Insert))
                         {
-                            destination.Insert(i);
+                            destination.Insert(i, persistKeyvalue: false);
                         }
                     }
                 }
@@ -224,7 +225,7 @@ namespace CruiseDAL.V3.Sync
                 {
                     if(hasTombstone == false)
                     {
-                        destination.Insert(i);
+                        destination.Insert(i, persistKeyvalue: false);
                     }
                 }
             }
@@ -253,7 +254,7 @@ namespace CruiseDAL.V3.Sync
                     {
                         if (options.Design.HasFlag(SyncFlags.Insert))
                         {
-                            destination.Insert(i);
+                            destination.Insert(i, persistKeyvalue: false);
                         }
                     }
                 }
@@ -298,7 +299,7 @@ namespace CruiseDAL.V3.Sync
                     {
                         if (options.Design.HasFlag(SyncFlags.Insert))
                         {
-                            destination.Insert(i);
+                            destination.Insert(i, persistKeyvalue: false);
                         }
                     }
                 }
@@ -337,7 +338,7 @@ namespace CruiseDAL.V3.Sync
                 {
                     if (options.SamplerState.HasFlag(SyncFlags.Insert))
                     {
-                        destination.Insert(i);
+                        destination.Insert(i, persistKeyvalue: false);
                     }
                 }
                 else
@@ -354,6 +355,20 @@ namespace CruiseDAL.V3.Sync
                             destination.Update(i, whereExpression: where);
                         }
                     }
+                }
+            }
+        }
+
+        void SyncSpecies(string cruiseID, DbConnection source, DbConnection desination, CruiseSyncOptions options)
+        {
+            var sourceItems = source.From<Species>().Where("CruiseID = @p1").Query(cruiseID);
+            foreach(var i in sourceItems)
+            {
+                var hasMatch = desination.From<Species>().Where("CruiseID = @CruiseID AND SpeciesCode = @SpeciesCode").Count2(i) > 0;
+
+                if(hasMatch == false)
+                {
+                    desination.Insert(i, persistKeyvalue: false);
                 }
             }
         }
@@ -377,7 +392,7 @@ namespace CruiseDAL.V3.Sync
 
                     if (hasTombstone == false && options.Design.HasFlag(SyncFlags.Insert))
                     {
-                        destination.Insert(i);
+                        destination.Insert(i, persistKeyvalue: false);
                     }
                 }
             }
@@ -398,7 +413,7 @@ namespace CruiseDAL.V3.Sync
 
                 if (match == null)
                 {
-                    destination.Insert(i);
+                    destination.Insert(i, persistKeyvalue: false);
                 }
                 else
                 {
@@ -438,7 +453,7 @@ namespace CruiseDAL.V3.Sync
                     {
                         if (options.FieldData.HasFlag(SyncFlags.Insert))
                         {
-                            destination.Insert(i);
+                            destination.Insert(i, persistKeyvalue: false);
                         }
                     }
                 }
@@ -487,7 +502,7 @@ namespace CruiseDAL.V3.Sync
                     {
                         if (options.FieldData.HasFlag(SyncFlags.Insert))
                         {
-                            destination.Insert(item);
+                            destination.Insert(item, persistKeyvalue: false);
                         }
                     }
                 }
@@ -535,7 +550,7 @@ namespace CruiseDAL.V3.Sync
                         {
                             if (options.FieldData.HasFlag(SyncFlags.Insert))
                             {
-                                destination.Insert(i);
+                                destination.Insert(i, persistKeyvalue: false);
                             }
                         }
                     }
@@ -610,7 +625,7 @@ namespace CruiseDAL.V3.Sync
                     {
                         if (syncFlags.HasFlag(SyncFlags.Insert))
                         {
-                            destination.Insert(tree);
+                            destination.Insert(tree, persistKeyvalue: false);
                         }
                     }
                 }
@@ -661,7 +676,7 @@ namespace CruiseDAL.V3.Sync
                         {
                             if (options.FieldData.HasFlag(SyncFlags.Insert))
                             {
-                                destination.Insert(i);
+                                destination.Insert(i, persistKeyvalue: false);
                             }
                         }
                     }
@@ -708,7 +723,7 @@ namespace CruiseDAL.V3.Sync
                     }
                     else
                     {
-                        destination.Insert(sourceMeasurmentsRecord);
+                        destination.Insert(sourceMeasurmentsRecord, persistKeyvalue: false);
                     }
                 }
 
@@ -742,7 +757,7 @@ namespace CruiseDAL.V3.Sync
                     {
                         if (options.FieldData.HasFlag(SyncFlags.Insert))
                         {
-                            destination.Insert(treeLocationRecord);
+                            destination.Insert(treeLocationRecord, persistKeyvalue: false);
                         }
                     }
                 }
@@ -776,7 +791,7 @@ namespace CruiseDAL.V3.Sync
                 }
                 else
                 {
-                    destination.Insert(tfv);
+                    destination.Insert(tfv, persistKeyvalue: false);
                 }
             }
         }
@@ -796,7 +811,7 @@ namespace CruiseDAL.V3.Sync
 
                 if (hasRecord == false && hasTombstone == false)
                 {
-                    destination.Insert(tl);
+                    destination.Insert(tl, persistKeyvalue: false);
                 }
             }
         }
@@ -824,7 +839,7 @@ namespace CruiseDAL.V3.Sync
                     {
                         if (options.FieldData.HasFlag(SyncFlags.Insert))
                         {
-                            destination.Insert(i);
+                            destination.Insert(i, persistKeyvalue: false);
                         }
                     }
                 }
@@ -867,7 +882,7 @@ namespace CruiseDAL.V3.Sync
                     {
                         if (options.FieldData.HasFlag(SyncFlags.Insert))
                         {
-                            destination.Insert(i);
+                            destination.Insert(i, persistKeyvalue: false);
                         }
                     }
                 }
@@ -921,7 +936,7 @@ namespace CruiseDAL.V3.Sync
                             {
                                 if (options.FieldData.HasFlag(SyncFlags.Insert))
                                 {
-                                    destination.Insert(i);
+                                    destination.Insert(i, persistKeyvalue: false);
                                 }
                             }
                         }
@@ -964,7 +979,7 @@ namespace CruiseDAL.V3.Sync
                 {
                     if (options.FieldData.HasFlag(SyncFlags.Insert))
                     {
-                        destination.Insert(i);
+                        destination.Insert(i, persistKeyvalue: false);
                     }
                 }
             }
@@ -988,7 +1003,7 @@ namespace CruiseDAL.V3.Sync
                 {
                     if (options.Design.HasFlag(SyncFlags.Insert))
                     {
-                        destination.Insert(i);
+                        destination.Insert(i, persistKeyvalue: false);
                     }
                 }
             }
@@ -1012,7 +1027,7 @@ namespace CruiseDAL.V3.Sync
                 {
                     if (options.Design.HasFlag(SyncFlags.Insert))
                     {
-                        destination.Insert(i);
+                        destination.Insert(i, persistKeyvalue: false);
                     }
                 }
             }
@@ -1036,7 +1051,7 @@ namespace CruiseDAL.V3.Sync
                 {
                     if (options.Design.HasFlag(SyncFlags.Insert))
                     {
-                        destination.Insert(i);
+                        destination.Insert(i, persistKeyvalue: false);
                     }
                 }
             }
