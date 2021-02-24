@@ -10,7 +10,7 @@ namespace CruiseDAL.V3.Sync
     {
         public bool HasDesignKeyChanges(CruiseDatastore_V3 source, CruiseDatastore_V3 destination, string cruiseID)
         {
-            var sourceAlias = "db1";
+            var sourceAlias = "src";
             destination.AttachDB(source, sourceAlias);
             try
             {
@@ -41,92 +41,124 @@ $@"SELECT count(*) FROM main.SubPopulation AS sp1
             }
             finally
             {
-                source.DetachDB(sourceAlias);
+                destination.DetachDB(sourceAlias);
             }
         }
 
-        public IEnumerable<CuttingUnitDiffResult> DiffCuttingUnitKeys(CruiseDatastore_V3 source, CruiseDatastore_V3 destination)
+        public IEnumerable<CuttingUnitDiffResult> DiffCuttingUnitKeys(CruiseDatastore_V3 source, CruiseDatastore_V3 destination, string cruiseID)
         {
-            var sourceAlias = "db1";
+            var sourceAlias = "src";
             destination.AttachDB(source, sourceAlias);
             try
             {
                 return destination.Query<CuttingUnitDiffResult>(
-$@"SELECT cu1.CuttingUnitID, cu1.CuttingUnitCode AS DestCuttingUnitCode, cu2.CuttingUnitCode AS SrcCuttingUnitCode 
-    FROM main.CuttingUnit AS cu1
-    JOIN {sourceAlias}.CuttingUnit AS cu2 USING (CuttingUnitID) 
-    WHERE cu1.CuttingUnitCode != cu2.CuttingUnitCode;").ToArray();
+$@"SELECT 
+    cu1.CuttingUnitID, 
+    cu1.CuttingUnitCode AS DestCuttingUnitCode, 
+    cu2.CuttingUnitCode AS SrcCuttingUnitCode 
+FROM main.CuttingUnit AS cu1
+JOIN {sourceAlias}.CuttingUnit AS cu2 USING (CuttingUnitID) 
+WHERE cu1.CruiseID = @p1 AND cu1.CuttingUnitCode != cu2.CuttingUnitCode;", cruiseID).ToArray();
             }
             finally
             {
-                source.DetachDB(sourceAlias);
+                destination.DetachDB(sourceAlias);
             }
         }
 
-        public IEnumerable<StratumDiffResult> DiffStratumKeys(CruiseDatastore_V3 source, CruiseDatastore_V3 destination)
+        public IEnumerable<StratumDiffResult> DiffStratumKeys(CruiseDatastore_V3 source, CruiseDatastore_V3 destination, string cruiseID)
         {
-            var sourceAlias = "db1";
+            var sourceAlias = "src";
             destination.AttachDB(source, sourceAlias);
             try
             {
                 return destination.Query<StratumDiffResult>(
-$@"SELECT st1.StratumID, st1.StratumCode AS DestStratumCode, st2.StratumCode AS SrcStratumCode 
-    FROM main.Stratum AS st1
-    JOIN {sourceAlias}.Stratum AS st2 USING (StratumID) 
-    WHERE st1.StratumCode != st2.StratumCode;").ToArray();
+$@"SELECT 
+    st1.StratumID, 
+    st1.StratumCode AS DestStratumCode, 
+    st2.StratumCode AS SrcStratumCode 
+FROM main.Stratum AS st1
+JOIN {sourceAlias}.Stratum AS st2 USING (StratumID) 
+WHERE st1.CruiseID = @p1 AND st1.StratumCode != st2.StratumCode;", cruiseID).ToArray();
             }
             finally
             {
-                source.DetachDB(sourceAlias);
+                destination.DetachDB(sourceAlias);
             }
         }
 
-        public IEnumerable<SampleGroupDiffResult> DiffSampleGroupKeys(CruiseDatastore_V3 source, CruiseDatastore_V3 destination)
+        public IEnumerable<SampleGroupDiffResult> DiffSampleGroupKeys(CruiseDatastore_V3 source, CruiseDatastore_V3 destination, string cruiseID)
         {
-            var sourceAlias = "db1";
+            var sourceAlias = "src";
             destination.AttachDB(source, sourceAlias);
             try
             {
                 return destination.Query<SampleGroupDiffResult>(
-$@"SELECT   sg1.SampleGroupID, 
-            sg1.SampleGroupCode AS DestSampleGroupCode, 
-            sg2.SampleGroupCode AS SrcSampleGroupCode 
-            sg1.StratumCode AS DestStratumCode,
-            sg2.StratumCode AS SrcStratumCode
-    FROM main.SampleGroup AS sg1
-    JOIN {sourceAlias}.SampleGroup AS sg2 USING (SampleGroupID)
-    WHERE sg1.StratumCode != sg2.StratumCode OR sg1.SampleGroupCode != sg2.SampleGroupCode;").ToArray();
+$@"SELECT   
+    sg1.SampleGroupID, 
+    sg1.SampleGroupCode AS DestSampleGroupCode, 
+    sg2.SampleGroupCode AS SrcSampleGroupCode, 
+    sg1.StratumCode AS DestStratumCode,
+    sg2.StratumCode AS SrcStratumCode
+FROM main.SampleGroup AS sg1
+JOIN {sourceAlias}.SampleGroup AS sg2 USING (SampleGroupID)
+WHERE sg1.CruiseID = @p1 AND sg1.StratumCode != sg2.StratumCode OR sg1.SampleGroupCode != sg2.SampleGroupCode;", cruiseID).ToArray();
             }
             finally
             {
-                source.DetachDB(sourceAlias);
+                destination.DetachDB(sourceAlias);
             }
         }
 
-        public IEnumerable<SubPopulationDiffResult> DiffSubPopulationKeys(CruiseDatastore_V3 source, CruiseDatastore_V3 destination)
+        public IEnumerable<SubPopulationDiffResult> DiffSubPopulationKeys(CruiseDatastore_V3 source, CruiseDatastore_V3 destination, string cruiseID)
         {
-            var sourceAlias = "db1";
+            var sourceAlias = "src";
             destination.AttachDB(source, sourceAlias);
             try
             {
                 return destination.Query<SubPopulationDiffResult>(
-$@"SELECT   sp1.SubPopulationID 
-            sp1.SpeciesCode AS DestSpeciesCode,
-            sp2.SpeciesCode AS SrcSpeciesCode, 
-            sp1.LiveDead AS DestLiveDead,
-            sp2.LiveDead AS SrcLiveDead
-    FROM main.SubPopulation AS sp1
-    JOIN {sourceAlias}.SubPopulation AS sp2 USING (SubPopulationID)
-    WHERE sp1.SpeciesCode != sp2.SpeciesCode OR sp1.LiveDead != sp2.LiveDead;").ToArray();
+$@"SELECT   
+    sp1.SubPopulationID, 
+    sp1.SpeciesCode AS DestSpeciesCode,
+    sp2.SpeciesCode AS SrcSpeciesCode, 
+    sp1.LiveDead AS DestLiveDead,
+    sp2.LiveDead AS SrcLiveDead
+FROM main.SubPopulation AS sp1
+JOIN {sourceAlias}.SubPopulation AS sp2 USING (SubPopulationID)
+WHERE sp1.CruiseID = @p1 AND sp1.SpeciesCode != sp2.SpeciesCode OR sp1.LiveDead != sp2.LiveDead;", cruiseID).ToArray();
             }
             finally
             {
-                source.DetachDB(sourceAlias);
+                destination.DetachDB(sourceAlias);
             }
         }
 
 
-        public IEnumerable<CruiseConflict> GetCruiseConflicts(CruiseDatastore_V3 source, CruiseDatastore_V3 destination)
+        public IEnumerable<SaleConflict> GetSaleConflicts(CruiseDatastore_V3 source, CruiseDatastore_V3 destination, string cruiseID)
+        {
+            var sourceAlias = "src";
+            destination.AttachDB(source, sourceAlias);
+            try
+            {
+                return destination.Query<SaleConflict>(
+$@"SELECT 
+    srcS.SaleNumber,
+    srcS.Name,
+    destS.SaleID AS DestSaleID,
+    srcS.SaleID AS SrcSaleID
+FROM {sourceAlias}.Sale AS srcS
+JOIN {sourceAlias}.Cruise AS srcCr USING (SaleID)
+JOIN main.Sale AS destS USING (SaleNumber)
+WHERE srcCr.CruiseID = @p1 AND srcS.SaleID != destS.SaleID;
+", cruiseID).ToArray();
+            }
+            finally
+            {
+                destination.DetachDB(sourceAlias);
+            }
+        }
+
+        public IEnumerable<CruiseConflict> GetCruiseConflicts(CruiseDatastore_V3 source, CruiseDatastore_V3 destination, string cruiseID)
         {
             var sourceAlias = "src";
             destination.AttachDB(source, sourceAlias);
@@ -134,14 +166,13 @@ $@"SELECT   sp1.SubPopulationID
             {
                 return destination.Query<CruiseConflict>(
 $@"SELECT 
-    s1.SaleNumber,
-    s1.Name,
-FROM main.Cruise AS c1
-    JOIN main.Sale AS s1 ON c1.SaleID == s1.SaleID
-    JOIN {sourceAlias}.Cruise AS c2 ON c1.CruiseID = c2.CruiseID
-    JOIN {sourceAlias}.Sale AS s2 ON c2.SaleID = s2.SaleID
-WHERE c1.CruiseID != c2.CruiseID OR s1.SaleID != s2.SaleID;
-");
+    srcCr.CruiseNumber,
+    destCr.CruiseID AS DestCruiseID,
+    srcCr.CruiseID AS SrcCruiseID
+FROM {sourceAlias}.Cruise AS srcCr 
+JOIN main.Cruise AS destCr USING (CruiseNumber)
+WHERE srcCr.CruiseID =@p1 AND destCr.CruiseID != srcCr.CruiseID;
+", cruiseID).ToArray();
             }
             finally
             {
@@ -151,39 +182,39 @@ WHERE c1.CruiseID != c2.CruiseID OR s1.SaleID != s2.SaleID;
 
         public IEnumerable<PlotConflict> GetPlotConflicts(CruiseDatastore_V3 source, CruiseDatastore_V3 destination, string cruiseID)
         {
-            var sourceAlias = "db1";
+            var sourceAlias = "src";
             destination.AttachDB(source, sourceAlias);
             try
             {
                 return destination.Query<PlotConflict>(
 $@"SELECT 
-    p1.CuttingUnitCode, 
-    p1.PlotNumber, 
-    p2.PlotID AS SrcPlotID, 
-    p2.PlotID AS DestPlotID
-FROM main.Plot AS p1
-    JOIN {sourceAlias}.Plot AS p2 USING (CuttingUnitCode, PlotNumber, CruiseID) 
-    WHERE p1.CruiseID = @p1 AND p1.PlotID != p2.PlotID;", cruiseID).ToArray();
+    destP.CuttingUnitCode, 
+    destP.PlotNumber, 
+    srcP.PlotID AS SrcPlotID, 
+    destP.PlotID AS DestPlotID
+FROM main.Plot AS destP
+    JOIN {sourceAlias}.Plot AS srcP USING (CuttingUnitCode, PlotNumber, CruiseID) 
+    WHERE destP.CruiseID = @p1 AND destP.PlotID != srcP.PlotID;", cruiseID).ToArray();
             }
             finally
             {
-                source.DetachDB(sourceAlias);
+                destination.DetachDB(sourceAlias);
             }
         }
 
         public IEnumerable<TreeConflict> GetTreeConflicts(CruiseDatastore_V3 source, CruiseDatastore_V3 destination, string cruiseID)
         {
-            var sourceAlias = "db1";
+            var sourceAlias = "src";
             destination.AttachDB(source, sourceAlias);
             try
             {
                 return destination.Query<TreeConflict>(
 $@"SELECT 
-    t1.CuttingUnitCode, 
-    t1.PlotNumber, 
-    t1.TreeNumber,
-    t2.TreeID AS SrcTreeID, 
-    t1.TreeID AS DestTreeID
+    destT.CuttingUnitCode, 
+    destT.PlotNumber, 
+    destT.TreeNumber,
+    srcT.TreeID AS SrcTreeID, 
+    destT.TreeID AS DestTreeID
 FROM main.Tree AS destT
     JOIN {sourceAlias}.Tree AS srcT ON 
         destT.CruiseID = srcT.CruiseID 
@@ -194,7 +225,7 @@ WHERE destT.CruiseID = @p1 AND destT.TreeID != srcT.TreeID;", cruiseID).ToArray(
             }
             finally
             {
-                source.DetachDB(sourceAlias);
+                destination.DetachDB(sourceAlias);
             }
         }
 
@@ -210,24 +241,32 @@ $@"SELECT
     destT.PlotNumber,
     destT.TreeNumber,
     destL.LogNumber,
-    destL.DestLogID,
-    srcL.SrcLogID
+    destL.LogID AS DestLogID,
+    srcL.LogID AS SrcLogID
 FROM main.Log AS destL 
     JOIN main.Tree AS destT USING (TreeID)
     JOIN {sourceAlias}.Tree AS srcT ON 
         destT.CruiseID = srcT.CruiseID
-        destT.CuttingUnitCode = src.CuttingUnitCode 
+        AND destT.CuttingUnitCode = srcT.CuttingUnitCode 
         AND ifnull(destT.PlotNumber, 0) = ifnull(srcT.PlotNumber, 0)
         AND destT.TreeNumber = srcT.TreeNumber
     JOIN {sourceAlias}.Log AS srcL ON srcT.TreeID = srcL.TreeID
         AND destL.LogNumber = srcL.LogNumber
-WHERE destL.CruiseID = @p1 AND destL.LogID != src;", cruiseID).ToArray();
+WHERE destT.CruiseID = @p1 AND destL.LogID != srcL.LogID;", cruiseID).ToArray();
             }
             finally
             {
                 destination.DetachDB(sourceAlias);
             }
         }
+    }
+
+    public class SaleConflict
+    {
+        public string SaleNumber { get; set; }
+        public string Name { get; set; }
+        public string SrcSaleID { get; set; }
+        public string DestSaleID { get; set; }
     }
 
     public class CruiseConflict
