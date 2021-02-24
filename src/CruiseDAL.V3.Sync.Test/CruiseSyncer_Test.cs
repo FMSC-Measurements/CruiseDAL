@@ -34,7 +34,7 @@ namespace CruiseDAL.V3.Sync
             var cruiseID = Guid.NewGuid().ToString();
             var saleID = Guid.NewGuid().ToString();
 
-            using var fromDb = CreateDatabase(fromPath, cruiseID, saleID);
+            using var fromDb = CreateDatabaseFile(fromPath, cruiseID, saleID);
 
             fromDb.CopyTo(toPath, true);
             using var toDb = new CruiseDatastore_V3(toPath);
@@ -68,7 +68,7 @@ namespace CruiseDAL.V3.Sync
             var cruiseID = Guid.NewGuid().ToString();
             var saleID = Guid.NewGuid().ToString();
 
-            using var fromDb = CreateDatabase(fromPath, cruiseID, saleID);
+            using var fromDb = CreateDatabaseFile(fromPath, cruiseID, saleID);
 
             fromDb.CopyTo(toPath, true);
             using var toDb = new CruiseDatastore_V3(toPath);
@@ -105,7 +105,7 @@ namespace CruiseDAL.V3.Sync
             var cruiseID = Guid.NewGuid().ToString();
             var saleID = Guid.NewGuid().ToString();
 
-            using var fromDb = CreateDatabase(fromPath, cruiseID, saleID);
+            using var fromDb = CreateDatabaseFile(fromPath, cruiseID, saleID);
             fromDb.CopyTo(toPath, true);
             using var toDb = new CruiseDatastore_V3(toPath);
 
@@ -138,7 +138,7 @@ namespace CruiseDAL.V3.Sync
             var cruiseID = Guid.NewGuid().ToString();
             var saleID = Guid.NewGuid().ToString();
 
-            using var fromDb = CreateDatabase(fromPath, cruiseID, saleID);
+            using var fromDb = CreateDatabaseFile(fromPath, cruiseID, saleID);
             fromDb.CopyTo(toPath, true);
             using var toDb = new CruiseDatastore_V3(toPath);
 
