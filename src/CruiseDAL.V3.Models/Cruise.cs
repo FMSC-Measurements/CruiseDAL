@@ -14,6 +14,9 @@ namespace CruiseDAL.V3.Models
   [Field("SaleID")]
   public String SaleID { get; set; }
 
+  [Field("CruiseNumber")]
+  public String CruiseNumber { get; set; }
+
   [Field("Purpose")]
   public String Purpose { get; set; }
 

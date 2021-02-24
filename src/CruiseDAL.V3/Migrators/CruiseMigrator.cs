@@ -12,6 +12,7 @@ namespace CruiseDAL.Migrators
 return $@"INSERT INTO {toDbName}.Cruise (
     CruiseID,
     SaleID,
+    CruiseNumber,
     Purpose,
     DefaultUOM,
     LogGradingEnabled,
@@ -24,6 +25,7 @@ return $@"INSERT INTO {toDbName}.Cruise (
 SELECT
     '{cruiseID}',
     '{saleID}',
+    SaleNumber,
     Purpose,
     DefaultUOM,
     LogGradingEnabled,

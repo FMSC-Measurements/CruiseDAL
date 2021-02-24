@@ -11,6 +11,7 @@ namespace CruiseDAL.Schema
     Cruise_CN INTEGER PRIMARY KEY AUTOINCREMENT,
     CruiseID TEXT NOT NULL COLLATE NOCASE,
     SaleID TEXT NOT NULL COLLATE NOCASE,
+    CruiseNumber TEXT NOT NULL COLLATE NOCASE,
     Purpose TEXT,
     Remarks TEXT,
     DefaultUOM TEXT COLLATE NOCASE,
@@ -22,8 +23,10 @@ namespace CruiseDAL.Schema
     Modified_TS DATETIME,
 
     UNIQUE (CruiseID),
+    UNIQUE (CruiseNumber),
 
     CHECK (CruiseID LIKE '________-____-____-____-____________'),
+    CHECK (LogGradingEnabled IN (0, 1)),
 
     FOREIGN KEY (SaleID) REFERENCES Sale (SaleID) ON DELETE CASCADE,
     FOREIGN KEY (DefaultUOM) REFERENCES LK_UOM (UOM),
