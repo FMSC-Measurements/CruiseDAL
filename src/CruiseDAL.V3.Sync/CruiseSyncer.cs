@@ -44,47 +44,73 @@ namespace CruiseDAL.V3.Sync
             }
         }
 
-        public Task SyncAsync(string cruiseID, DbConnection source, DbConnection destination, CruiseSyncOptions options)
+        public Task SyncAsync(string cruiseID, DbConnection source, DbConnection destination, CruiseSyncOptions options, IProgress<float> progress = null)
         {
-            return Task.Run(() => Sync(cruiseID, source, destination, options));
+            return Task.Run(() => Sync(cruiseID, source, destination, options, progress));
         }
 
-        public void Sync(string cruiseID, DbConnection source, DbConnection destination, CruiseSyncOptions options)
+        public void Sync(string cruiseID, DbConnection source, DbConnection destination, CruiseSyncOptions options, IProgress<float> progress = null)
         {
+            var steps = 23;
+            float p = 0.0f;
             var transaction = destination.BeginTransaction();
             try
             {
+                
                 SyncSale(cruiseID, source, destination, options);
+                progress?.Report(p++ / steps);
                 SyncCruise(cruiseID, source, destination, options);
+                progress?.Report(p++ / steps);
 
                 SyncDevice(cruiseID, source, destination, options);
+                progress?.Report(p++ / steps);
 
                 SyncCuttingUnits(cruiseID, source, destination, options);
+                progress?.Report(p++ / steps);
                 SyncStrata(cruiseID, source, destination, options);
+                progress?.Report(p++ / steps);
                 SyncCuttingUnit_Stratum(cruiseID, source, destination, options);
+                progress?.Report(p++ / steps);
                 SyncSampleGroup(cruiseID, source, destination, options);
+                progress?.Report(p++ / steps);
                 SyncSamplerState(cruiseID, source, destination, options);
+                progress?.Report(p++ / steps);
                 SyncSpecies(cruiseID, source, destination, options);
+                progress?.Report(p++ / steps);
                 SyncSubPopulation(cruiseID, source, destination, options);
+                progress?.Report(p++ / steps);
                 SyncFixCNTTallyPopulation(cruiseID, source, destination, options);
+                progress?.Report(p++ / steps);
 
                 SyncLogFieldSetup(cruiseID, source, destination, options);
+                progress?.Report(p++ / steps);
                 SyncTreeFieldSetup(cruiseID, source, destination, options);
+                progress?.Report(p++ / steps);
 
                 SyncTreeAuditRule(cruiseID, source, destination, options);
+                progress?.Report(p++ / steps);
 
                 SyncPlots(cruiseID, source, destination, options);
+                progress?.Report(p++ / steps);
                 SyncPlotLocation(cruiseID, source, destination, options);
+                progress?.Report(p++ / steps);
                 SyncPlot_Strata(cruiseID, source, destination, options);
+                progress?.Report(p++ / steps);
                 SyncPlotTree(cruiseID, source, destination, options);
+                progress?.Report(p++ / steps);
                 SyncNonPlotTrees(cruiseID, source, destination, options);
+                progress?.Report(p++ / steps);
 
                 SyncTallyLedger(cruiseID, source, destination, options);
+                progress?.Report(p++ / steps);
 
                 SyncLog(cruiseID, source, destination, options);
+                progress?.Report(p++ / steps);
                 SyncStem(cruiseID, source, destination, options);
+                progress?.Report(p++ / steps);
 
                 SyncTreeFieldHeading(cruiseID, source, destination, options);
+                progress?.Report(p++ / steps);
 
                 transaction.Commit();
             }
