@@ -27,7 +27,7 @@ namespace CruiseDAL.Schema
     FOREIGN KEY (SpeciesCode, CruiseID)
         REFERENCES Species (SpeciesCode, CruiseID) ON DELETE CASCADE ON UPDATE CASCADE,
     FOREIGN KEY (CruiseID, StratumCode, SampleGroupCode, SpeciesCode, LiveDead)
-        REFERENCES Subpopulation (CruiseID, StratumCode, SampleGroupCode, SpeciesCode, LiveDead)
+        REFERENCES Subpopulation (CruiseID, StratumCode, SampleGroupCode, SpeciesCode, LiveDead) ON DELETE CASCADE
 );";
 
         public string InitializeTable => null;

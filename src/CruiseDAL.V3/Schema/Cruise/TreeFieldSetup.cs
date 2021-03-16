@@ -60,13 +60,14 @@ CREATE UNIQUE INDEX UIX_TreeFieldSetup_SampleGroupCode_StratumCode_Field_CruiseI
 
         public IEnumerable<string> CreateTriggers => new[] { CREATE_TRIGGER_TreeFieldSetup_OnDelete };
 
-        public const string CREATE_TRIGGER_TreeFieldSetup_OnDelete =
+    public const string CREATE_TRIGGER_TreeFieldSetup_OnDelete =
 @"CREATE TRIGGER TreeFieldSetup_OnDelete
 BEFORE DELETE ON TreeFieldSetup
 BEGIN
-    INSERT OR REPLACE INTO TreeFieldSetup (
+    INSERT OR REPLACE INTO TreeFieldSetup_Tombstone (
         CruiseID,
         StratumCode,
+        SampleGroupCode,
         Field,
         FieldOrder,
         Heading,
@@ -78,6 +79,7 @@ BEGIN
     ) VALUES (
         OLD.CruiseID,
         OLD.StratumCode,
+        OLD.SampleGroupCode,
         OLD.Field,
         OLD.FieldOrder,
         OLD.Heading,

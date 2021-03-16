@@ -31,10 +31,12 @@ namespace CruiseDAL.Schema
     CruiseID TEXT NOT NULL COLLATE NOCASE,
     Selected BOOLEAN,
     Title TEXT,
+
     CreatedBy TEXT,
     Created_TS DATETIME,
     ModifiedBy TEXT,
-    Modified_TS DATETIME
+    Modified_TS DATETIME,
+    Deleted_TS DATETIME
 );
 
 CREATE INDEX Reports_Tombstone_ReportID ON Reports_Tombstone

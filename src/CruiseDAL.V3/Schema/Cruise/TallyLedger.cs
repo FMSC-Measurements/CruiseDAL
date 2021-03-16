@@ -36,9 +36,9 @@ namespace CruiseDAL.Schema
 
     UNIQUE (TallyLedgerID),
 
-    FOREIGN KEY (CuttingUnitCode, CruiseID) REFERENCES CuttingUnit (CuttingUnitCode, CruiseID)
-    FOREIGN KEY (SampleGroupCode, StratumCode, CruiseID) REFERENCES SampleGroup (SampleGroupCode, StratumCode, CruiseID),
-    FOREIGN KEY (SpeciesCode,CruiseID) REFERENCES Species (SpeciesCode, CruiseID)
+    FOREIGN KEY (CuttingUnitCode, CruiseID) REFERENCES CuttingUnit (CuttingUnitCode, CruiseID) ON DELETE CASCADE ON UPDATE CASCADE,
+    FOREIGN KEY (SampleGroupCode, StratumCode, CruiseID) REFERENCES SampleGroup (SampleGroupCode, StratumCode, CruiseID) ON DELETE CASCADE ON UPDATE CASCADE,
+    FOREIGN KEY (SpeciesCode,CruiseID) REFERENCES Species (SpeciesCode, CruiseID) ON DELETE CASCADE ON UPDATE CASCADE,
     FOREIGN KEY (PlotNumber, CuttingUnitCode, CruiseID) REFERENCES Plot (PlotNumber, CuttingUnitCode, CruiseID) ON DELETE CASCADE ON UPDATE CASCADE,
 
     -- everything below are tree fKey references. there are a few, but because some tree values can be null we need to have them as seperate references

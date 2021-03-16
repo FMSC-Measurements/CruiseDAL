@@ -60,11 +60,11 @@ BEGIN
         PrimaryProduct,
         TreeAuditRuleID
     ) VALUES (
-        CruiseID,
-        SpeciesCode,
-        LiveDead,
-        PrimaryProduct,
-        TreeAuditRuleID
+        OLD.CruiseID,
+        OLD.SpeciesCode,
+        OLD.LiveDead,
+        OLD.PrimaryProduct,
+        OLD.TreeAuditRuleID
     );
 END;";
     }
