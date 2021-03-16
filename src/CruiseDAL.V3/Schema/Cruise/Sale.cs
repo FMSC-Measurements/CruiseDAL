@@ -27,8 +27,8 @@ namespace CruiseDAL.Schema
     UNIQUE(SaleID),
     UNIQUE(SaleNumber),
 
-    FOREIGN KEY (Region) REFERENCES LK_Region (Region),
-    FOREIGN KEY (Forest, Region) REFERENCES LK_Forest (Forest, Region)
+    FOREIGN KEY (Region) REFERENCES LK_Region (Region)--,
+    --FOREIGN KEY (Forest, Region) REFERENCES LK_Forest (Forest, Region)
 );";
 
         public string InitializeTable => null;

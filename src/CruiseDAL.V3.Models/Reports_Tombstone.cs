@@ -29,6 +29,9 @@ namespace CruiseDAL.V3.Models
   [Field("Modified_TS")]
   public DateTime? Modified_TS { get; set; }
 
+  [Field("Deleted_TS")]
+  public DateTime? Deleted_TS { get; set; }
+
  }
 
 }
