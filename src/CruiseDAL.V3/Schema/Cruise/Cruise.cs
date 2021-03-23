@@ -44,14 +44,15 @@ namespace CruiseDAL.Schema
         public const string CREATE_TRIGGER_CRUISE_ONUPDATE =
 @"CREATE TRIGGER OnUpdateCruise
 AFTER UPDATE OF
-    SaleID,
+    CruiseNumber,
     Purpose,
-    LogGradingEnabled,
     Remarks,
-    DefaultUOM
-ON Sale
+    DefaultUOM,
+    MeasurementYear,
+    LogGradingEnabled
+ON Cruise
 BEGIN
-    UPDATE Sale SET Modified_TS = CURRENT_TIMESTAMP WHERE Sale_CN = old.Sale_CN;
+    UPDATE Cruise SET Modified_TS = CURRENT_TIMESTAMP WHERE Cruise_CN = old.Cruise_CN;
 END;";
     }
 }
