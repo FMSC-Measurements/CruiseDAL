@@ -17,6 +17,7 @@ namespace CruiseDAL.Schema
     DefaultUOM TEXT COLLATE NOCASE,
     MeasurementYear TEXT COLLATE NOCASE,
     LogGradingEnabled BOOLEAN Default 0,
+    UseCrossStrataPlotTreeNumbering BOOLEAN Default 0,
     CreatedBy TEXT DEFAULT 'none',
     Created_TS DATETIME DEFAULT (CURRENT_TIMESTAMP),
     ModifiedBy TEXT,
@@ -27,6 +28,7 @@ namespace CruiseDAL.Schema
 
     CHECK (CruiseID LIKE '________-____-____-____-____________'),
     CHECK (LogGradingEnabled IN (0, 1)),
+    CHECK (UseCrossStrataPlotTreeNumbering IN (0, 1)),
 
     FOREIGN KEY (SaleID) REFERENCES Sale (SaleID) ON DELETE CASCADE,
     FOREIGN KEY (DefaultUOM) REFERENCES LK_UOM (UOM),

@@ -32,6 +32,9 @@ namespace CruiseDAL.V3.Models
   [Field("LogGradingEnabled")]
   public Boolean? LogGradingEnabled { get; set; }
 
+  [Field("UseCrossStrataPlotTreeNumbering")]
+  public Boolean? UseCrossStrataPlotTreeNumbering { get; set; }
+
   [Field("CreatedBy")]
   public String CreatedBy { get; set; }
 
