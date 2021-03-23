@@ -908,7 +908,7 @@ classDiagram
     }
 
     class TreeAuditRuleSelector {
-    * TreeDefaultValue_TreeAuditRule_CN
+    * TreeAuditRuleSelector_CN
     -----
         - CruiseID : TEXT <<FK>>
         - SpeciesCode : TEXT <<FK>>
