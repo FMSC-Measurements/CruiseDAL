@@ -74,7 +74,7 @@ END;";
 BEFORE DELETE ON SubPopulation
 FOR EACH ROW
 BEGIN
-    INSERT OR REPLACE INTO SubPopulation_Tomstone (
+    INSERT OR REPLACE INTO SubPopulation_Tombstone (
         SubPopulationID,
         CruiseID,
         StratumCode,

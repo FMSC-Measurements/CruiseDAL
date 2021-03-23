@@ -37,11 +37,7 @@ namespace CruiseDAL.V3.Test
                 Migrator.MigrateFromV2ToV3(filePath, newFilePath);
                 using (var newCruise = new CruiseDatastore_V3(newFilePath))
                 {
-                    var semVerActual = new Version(newCruise.DatabaseVersion);
-                    var semVerExpected = new Version("3.1");
-
-                    semVerActual.Major.Should().Be(semVerExpected.Major);
-                    semVerActual.Minor.Should().Be(semVerExpected.Minor);
+                    newCruise.DatabaseVersion.Should().NotBeNullOrEmpty();
                 }
             }
         }
@@ -59,12 +55,6 @@ namespace CruiseDAL.V3.Test
             var newCruisePath = Migrator.MigrateFromV2ToV3(tempPath);
             using (var newCruise = new CruiseDatastore_V3(newCruisePath))
             {
-                var semVerActual = new Version(newCruise.DatabaseVersion);
-                var semVerExpected = new Version("3.1");
-
-                semVerActual.Major.Should().Be(semVerExpected.Major);
-                semVerActual.Minor.Should().Be(semVerExpected.Minor);
-
                 var cruise = newCruise.From<Cruise>().Query().Single();
                 cruise.CruiseID.Should().NotBeNullOrEmpty();
 

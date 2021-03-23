@@ -63,7 +63,15 @@ classDiagram
         - Forest : TEXT
         - Region : TEXT <<FK>>
         - FriendlyName : TEXT
-        - State : TEXT
+    }
+
+    class LK_District {
+    * LK_District_CN
+    -----
+        - Region : TEXT <<FK>>
+        - Forest : TEXT <<FK>>
+        - District : TEXT
+        - FriendlyName : TEXT
     }
 
     class LK_UOM {
@@ -149,7 +157,7 @@ classDiagram
         - SaleNumber : TEXT
         - Name : TEXT
         - Region : TEXT <<FK>>
-        - Forest : TEXT <<FK>>
+        - Forest : TEXT
         - District : TEXT
         - CalendarYear : INTEGER
         - Remarks : TEXT
@@ -165,11 +173,13 @@ classDiagram
     -----
         - CruiseID : TEXT
         - SaleID : TEXT <<FK>>
+        - CruiseNumber : TEXT
         - Purpose : TEXT <<FK>>
         - Remarks : TEXT
         - DefaultUOM : TEXT <<FK>>
         - MeasurementYear : TEXT
         - LogGradingEnabled : BOOLEAN
+        - UseCrossStrataPlotTreeNumbering : BOOLEAN
         - CreatedBy : TEXT
         - Created_TS : DATETIME
         - ModifiedBy : TEXT
@@ -184,6 +194,7 @@ classDiagram
         - CruiseID : TEXT <<FK>>
         - Area : REAL
         - Description : TEXT
+        - Remarks : TEXT
         - LoggingMethod : TEXT <<FK>>
         - PaymentUnit : TEXT
         - Rx : TEXT
@@ -199,6 +210,7 @@ classDiagram
         - CruiseID : TEXT
         - Area : REAL
         - Description : TEXT
+        - Remarks : TEXT
         - LoggingMethod : TEXT
         - PaymentUnit : TEXT
         - Rx : TEXT
@@ -968,6 +980,7 @@ classDiagram
         - Created_TS : DATETIME
         - ModifiedBy : TEXT
         - Modified_TS : DATETIME
+        - Deleted_TS : DATETIME
     }
 
     class MessageLog {
@@ -998,6 +1011,9 @@ classDiagram
 
     LK_Region <|-- LK_Forest
 
+    LK_Forest <|-- LK_District
+    LK_Region <|-- LK_District
+
 
 
     LK_FIA <|-- Species
@@ -1007,7 +1023,6 @@ classDiagram
     Species <|-- TreeDefaultValue
 
 
-    LK_Forest <|-- Sale
     LK_Region <|-- Sale
 
     LK_Purpose <|-- Cruise

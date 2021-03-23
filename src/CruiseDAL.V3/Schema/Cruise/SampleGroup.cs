@@ -37,6 +37,8 @@ namespace CruiseDAL.Schema
 
     CHECK (SampleGroupID LIKE '________-____-____-____-____________'),
     CHECK (length(SampleGroupCode) > 0)
+    CHECK (TallyBySubPop IN (0, 1)),
+    CHECK (UseExternalSampler IN (0, 1)),
 
     UNIQUE (SampleGroupID),
     UNIQUE (StratumCode, SampleGroupCode, CruiseID),

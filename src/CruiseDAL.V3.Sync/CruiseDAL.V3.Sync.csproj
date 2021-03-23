@@ -1,0 +1,14 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <!--<TargetFrameworks>$(LibTargetFrameworks)</TargetFrameworks>-->
+    <TargetFrameworks>netstandard20</TargetFrameworks>
+    <Version>$(CruiseDALV3SyncVersion)</Version>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\CruiseDAL.V3.Models\CruiseDAL.V3.Models.csproj" />
+    <ProjectReference Include="..\CruiseDAL.V3\CruiseDAL.V3.csproj" />
+  </ItemGroup>
+
+</Project>

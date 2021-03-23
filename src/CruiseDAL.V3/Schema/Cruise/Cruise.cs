@@ -11,19 +11,24 @@ namespace CruiseDAL.Schema
     Cruise_CN INTEGER PRIMARY KEY AUTOINCREMENT,
     CruiseID TEXT NOT NULL COLLATE NOCASE,
     SaleID TEXT NOT NULL COLLATE NOCASE,
+    CruiseNumber TEXT NOT NULL COLLATE NOCASE,
     Purpose TEXT,
     Remarks TEXT,
     DefaultUOM TEXT COLLATE NOCASE,
     MeasurementYear TEXT COLLATE NOCASE,
     LogGradingEnabled BOOLEAN Default 0,
+    UseCrossStrataPlotTreeNumbering BOOLEAN Default 0,
     CreatedBy TEXT DEFAULT 'none',
     Created_TS DATETIME DEFAULT (CURRENT_TIMESTAMP),
     ModifiedBy TEXT,
     Modified_TS DATETIME,
 
     UNIQUE (CruiseID),
+    UNIQUE (CruiseNumber),
 
     CHECK (CruiseID LIKE '________-____-____-____-____________'),
+    CHECK (LogGradingEnabled IN (0, 1)),
+    CHECK (UseCrossStrataPlotTreeNumbering IN (0, 1)),
 
     FOREIGN KEY (SaleID) REFERENCES Sale (SaleID) ON DELETE CASCADE,
     FOREIGN KEY (DefaultUOM) REFERENCES LK_UOM (UOM),
@@ -41,14 +46,15 @@ namespace CruiseDAL.Schema
         public const string CREATE_TRIGGER_CRUISE_ONUPDATE =
 @"CREATE TRIGGER OnUpdateCruise
 AFTER UPDATE OF
-    SaleID,
+    CruiseNumber,
     Purpose,
-    LogGradingEnabled,
     Remarks,
-    DefaultUOM
-ON Sale
+    DefaultUOM,
+    MeasurementYear,
+    LogGradingEnabled
+ON Cruise
 BEGIN
-    UPDATE Sale SET Modified_TS = CURRENT_TIMESTAMP WHERE Sale_CN = old.Sale_CN;
+    UPDATE Cruise SET Modified_TS = CURRENT_TIMESTAMP WHERE Cruise_CN = old.Cruise_CN;
 END;";
     }
 }
