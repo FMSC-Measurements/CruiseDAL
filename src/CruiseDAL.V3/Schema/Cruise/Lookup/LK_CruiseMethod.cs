@@ -28,7 +28,6 @@ VALUES
     ('P3P', 'Point with 3P subsample', 1),
     ('STR', 'Sample Tree', 0),
     ('S3P', 'Sample Tree with 3P subsample', 0),
-    --('PCMTRE', 'Point Count/Measure Tree  (Also coded as PCM)', 1),
     ('PCM', 'Point Count/Measure Tree', 1),
     ('FCM', 'Fixed Count/Measure', 1);";
 

@@ -40,7 +40,7 @@ SELECT
     st.Code,
     '{cruiseID}',
     st.Description,
-    st.Method,
+    CASE WHEN st.Method = 'PCMTRE' THEN 'PCM' ELSE st.Method END,
     st.BasalAreaFactor,
     st.FixedPlotSize,
     st.KZ3PPNT,
