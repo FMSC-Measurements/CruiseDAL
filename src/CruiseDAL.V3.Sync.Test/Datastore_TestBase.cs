@@ -8,7 +8,7 @@ namespace CruiseDAL.V3.Sync
 {
     public class Datastore_TestBase : TestBase
     {
-        DatabaseInitializer DbInitializer { get; }
+        protected DatabaseInitializer DbInitializer { get; }
 
         public string CruiseID => DbInitializer.CruiseID;
         public string SaleID => DbInitializer.SaleID;

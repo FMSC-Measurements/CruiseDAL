@@ -7,29 +7,31 @@ using System.Threading.Tasks;
 namespace CruiseDAL.V3.Sync
 {
     [Flags]
-    public enum SyncFlags { Lock = 0, Insert = 1, Update = 3 };
+    public enum SyncFlags { Lock = 0, Insert = 1, Update = 2, InsertUpdate = 3, ForceInsert = 5, ForceUpdate = 10, ForceInsertUpdate = 15 };
 
     public class CruiseSyncOptions
     {
-        public SyncFlags Design { get; set; }
+        public SyncFlags Design { get; set; } = SyncFlags.InsertUpdate;
 
-        public SyncFlags TreeFlags { get; set; }
+        public SyncFlags TreeFlags { get; set; } = SyncFlags.InsertUpdate;
 
-        public SyncFlags TreeDataFlags { get; set; }
+        public SyncFlags TreeDataFlags { get; set; } = SyncFlags.InsertUpdate;
 
-        public SyncFlags FieldData { get; set; }
+        public SyncFlags FieldData { get; set; } = SyncFlags.InsertUpdate;
 
-        public SyncFlags SamplerState { get; set; }
+        public SyncFlags SamplerState { get; set; } = SyncFlags.InsertUpdate;
 
-        public SyncFlags Validation { get; set; }
+        public SyncFlags Validation { get; set; } = SyncFlags.InsertUpdate;
 
-        public SyncFlags Processing { get; set; }
+        public SyncFlags Processing { get; set; } = SyncFlags.InsertUpdate;
 
-        public bool StemAllOrNone { get; set; }
+        public bool LogAllOrNone { get; set; } = false;
 
-        public bool PlotTreeAllOrNone { get; set; }
+        public bool StemAllOrNone { get; set; } = false;
 
-        public bool NonPlotTreeAllOrNone { get; set; }
+        public bool PlotTreeAllOrNone { get; set; } = false;
+
+        public bool NonPlotTreeAllOrNone { get; set; } = false;
 
     }
 }

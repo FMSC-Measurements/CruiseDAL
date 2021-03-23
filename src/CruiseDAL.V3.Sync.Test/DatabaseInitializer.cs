@@ -54,7 +54,7 @@ namespace CruiseDAL.V3.Sync
                 new CuttingUnit_Stratum {CuttingUnitCode = units[1], StratumCode = nonPlotStrata[1].StratumCode},
             };
 
-            var species = Species = new string[] { "sp1", "sp2", "sp3" };
+            var species = Species = new string[] { "sp1", "sp2", "sp3", "sp4" };
 
             var sampleGroups = SampleGroups = new[]
             {
