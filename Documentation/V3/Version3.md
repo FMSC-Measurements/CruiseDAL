@@ -366,29 +366,29 @@ in the previous database it is possible for species and live dead values to not 
 
 
  # Todo 2
+ 
+  x = done, ! = will not implement
  - [x] generate plantuml ERD
 
- - [-] add root Cruise entity type
+ - [x] add root Cruise entity type
      - a sale could contain multiple cruises or we could combine cruises
      - change purpose to int or collate no case
      -
 
 
  - [ ] cutting unit attributes
- - [ ] move month and year from stratum to sale *** this change is associated with reconsidering backwards compatibility view and removing the _V3 suffix
-     - remove Stratum.VolumeFactor to a processing table
  - [x] remove foreign key reference to tree default value in treeAuditRule_treeDefaultValue table to allow for generalized rules
  - [x] change table names, removing _V3 and other things done to maintain backwards compatibility
 
  - [x] remove backwards compatibility views
  - [x] remove error log table
- - [ ] move yeald component somewhere else
- - [ ] logical deletes ?
+
+ - [x] logical deletes ?
      - keep on tally ledger?
- - [ ] add isDeleted flags to tree, log, plot, unit, stratum, sampleGroup. triggers to cascade isDeleted flags?
+ - [!] add isDeleted flags to tree, log, plot, unit, stratum, sampleGroup. triggers to cascade isDeleted flags?
  - [x] remove logMatrix table because the only person who used it has retired.
- - [ ] look up tables for purpose, methods, forest, regions, uom
- - [ ] update migrations
+ - [x] look up tables for purpose, methods, forest, regions, uom
+ - [!] update migrations
      - pull errorlog.suppressed into TreeAuditRuleResolutions
  - [-] move fiaCode, contract species from tdv to species table
  - [x] take another look at uniques on LogGradeAuditRule
@@ -402,16 +402,17 @@ in the previous database it is possible for species and live dead values to not 
  - [ ] support for multi variable 3p
  - [x] get rid of value equations
  - [ ] fix log migration so that its not using tree_cn
- - [ ] Tie UOM to product or leave at sample group?
+
  - [ ] Keep tally description?
- - [ ] Move FixCNT Field to Stratum
- - [ ] Switch from _CN suffix to _OID suffix
+ - [x] Move FixCNT Field to Stratum
  - [ ] remove TreeMeasurments.MetaData
  - [ ] add mapping table Device_Cruise or leave Device as is?
  - [ ] figure out any changes for check cruising. do we add seperate table for check measurments? field for signing off on check?
- - [ ] get updated list of forest codes for region 4
- - [ ] depreciate PCMTRE cruise method for PCM
- - [ ] backport of TreeAuditRules
- - [ ] LogGradingEnabled on sale level or cruise level
- - [ ] What is Volume Factor at the stratum level?
- - [ ] month/year on stratum?
+ - [x] get updated list of forest codes for region 4
+ - [x] depreciate PCMTRE cruise method for PCM
+ - [x] backport of TreeAuditRules
+ - [x] LogGradingEnabled on sale level or cruise level
+ 
+ - [x] Remove VolumeFactor from stratum
+ - [x] Remove month/year on stratum
+ - [!] move yeald component somewhere else
