@@ -33,10 +33,10 @@ SELECT
     HotKey,
     FBSCode,
     YieldComponent,
-    Month,
-    Year,
+    (SELECT strftime('%m', min(Created_TS)) FROM {fromDbName}.TallyLedger WHERE CruiseID =  '{cruiseID}' AND StratumCode = st.StratumCode AND EntryType = 'tally'),
+    (SELECT strftime('%Y', min(Created_TS)) FROM {fromDbName}.TallyLedger WHERE CruiseID =  '{cruiseID}' AND StratumCode = st.StratumCode AND EntryType = 'tally'),
     '{createdBy}'
-FROM {fromDbName}.Stratum
+FROM {fromDbName}.Stratum AS st
 WHERE CruiseID = '{cruiseID}';
 
 INSERT INTO {toDbName}.FixCNTTallyClass (
