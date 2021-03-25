@@ -17,7 +17,6 @@ $@"INSERT INTO {toDbName}.Stratum (
     Hotkey,
     FBSCode,
     YieldComponent,
-    VolumeFactor,
     Month,
     Year,
     CreatedBy
@@ -34,7 +33,6 @@ SELECT
     HotKey,
     FBSCode,
     YieldComponent,
-    VolumeFactor,
     Month,
     Year,
     '{createdBy}'

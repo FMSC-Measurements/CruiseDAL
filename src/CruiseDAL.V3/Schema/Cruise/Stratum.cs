@@ -23,8 +23,6 @@ namespace CruiseDAL.Schema
     YieldComponent TEXT DEFAULT 'CL',
 
     FixCNTField TEXT COLLATE NOCASE,
-
-    VolumeFactor REAL DEFAULT 0.0,
     Month INTEGER DEFAULT 0,
     Year INTEGER DEFAULT 0,
     CreatedBy TEXT DEFAULT 'none',
@@ -59,7 +57,6 @@ namespace CruiseDAL.Schema
     Hotkey TEXT,
     FBSCode TEXT,
     YieldComponent TEXT,
-    VolumeFactor REAL,
     Month INTEGER,
     Year INTEGER,
     CreatedBy TEXT,
@@ -91,7 +88,6 @@ AFTER UPDATE OF
     HotKey,
     FBSCode,
     YieldComponent,
-    VolumeFactor,
     Month,
     Year
 ON Stratum
@@ -118,7 +114,6 @@ BEGIN
         Hotkey,
         FBSCode,
         YieldComponent,
-        VolumeFactor,
         Month,
         Year,
         CreatedBy,
@@ -139,7 +134,6 @@ BEGIN
         OLD.Hotkey,
         OLD.FBSCode,
         OLD.YieldComponent,
-        OLD.VolumeFactor,
         OLD.Month,
         OLD.Year,
         OLD.CreatedBy,
