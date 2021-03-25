@@ -95,7 +95,9 @@ namespace FMSC.ORM.Sql
                 if ((field.PersistanceFlags & PersistanceFlags.OnInsert) == PersistanceFlags.OnInsert
                     && field.IsKeyField == false)
                 {
-                    object value = field.GetFieldValueOrDefault(data) ?? DBNull.Value;
+                    object value = field.GetFieldValueOrDefault(data);
+                    if(value == null) { continue; }
+
                     var param = MakeParameter(command, field, value);
                     command.Parameters.Add(param);
 
