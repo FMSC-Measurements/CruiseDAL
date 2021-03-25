@@ -198,6 +198,7 @@ namespace CruiseDAL.V3
                 CruiseID = cruiseID,
                 SaleID = saleID,
                 CruiseNumber = saleNumber,
+                DefaultUOM = "01",
             });
 
             //Cutting Units
@@ -231,6 +232,7 @@ namespace CruiseDAL.V3
             {
                 sg.SampleGroupID = Guid.NewGuid().ToString();
                 sg.CruiseID = cruiseID;
+                sg.PrimaryProduct = "01";
                 db.Insert(sg);
             }
 
