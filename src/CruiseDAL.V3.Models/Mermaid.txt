@@ -237,7 +237,6 @@ classDiagram
         - FBSCode : TEXT
         - YieldComponent : TEXT
         - FixCNTField : TEXT <<FK>>
-        - VolumeFactor : REAL
         - Month : INTEGER
         - Year : INTEGER
         - CreatedBy : TEXT
@@ -259,7 +258,6 @@ classDiagram
         - Hotkey : TEXT
         - FBSCode : TEXT
         - YieldComponent : TEXT
-        - VolumeFactor : REAL
         - Month : INTEGER
         - Year : INTEGER
         - CreatedBy : TEXT

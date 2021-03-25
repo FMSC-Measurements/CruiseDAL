@@ -41,9 +41,6 @@ namespace CruiseDAL.V3.Models
   [Field("YieldComponent")]
   public String YieldComponent { get; set; }
 
-  [Field("VolumeFactor")]
-  public Double? VolumeFactor { get; set; }
-
   [Field("Month")]
   public Int32? Month { get; set; }
 
