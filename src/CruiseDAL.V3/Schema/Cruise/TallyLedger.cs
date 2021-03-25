@@ -33,6 +33,7 @@ namespace CruiseDAL.Schema
 
     CHECK (LiveDead IN ('L', 'D') OR LiveDead IS NULL),
     CHECK (STM IN (0, 1)),
+    CHECK (EntryType IN ('tally', 'utility', 'treecount_edit', 'clicker') OR EntryType IS NULL),
 
     UNIQUE (TallyLedgerID),
 
