@@ -94,7 +94,7 @@ classDiagram
         - SpeciesCode : TEXT
         - CruiseID : TEXT
         - ContractSpecies : TEXT
-        - FIACode : TEXT <<FK>>
+        - FIACode : TEXT
     }
 
     class TreeDefaultValue {
@@ -1014,7 +1014,6 @@ classDiagram
 
 
 
-    LK_FIA <|-- Species
 
     Cruise <|-- TreeDefaultValue
     LK_Product <|-- TreeDefaultValue
