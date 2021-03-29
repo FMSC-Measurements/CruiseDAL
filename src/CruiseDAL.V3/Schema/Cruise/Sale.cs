@@ -14,7 +14,7 @@ namespace CruiseDAL.Schema
     Name TEXT,
     Region  TEXT COLLATE NOCASE,
     Forest TEXT COLLATE NOCASE,
-    District TEXT DEFAULT '',
+    District TEXT COLLATE NOCASE,
     CalendarYear INTEGER Default 0,
     Remarks TEXT,
     DefaultUOM TEXT,
