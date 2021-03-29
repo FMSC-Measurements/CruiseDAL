@@ -889,7 +889,7 @@ classDiagram
         - Field : TEXT <<FK>>
         - Min : REAL
         - Max : REAL
-        - Desctiption : TEXT
+        - Description : TEXT
     }
 
     class TreeAuditRule_Tombstone {
