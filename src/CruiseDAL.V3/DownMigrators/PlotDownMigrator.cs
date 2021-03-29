@@ -33,8 +33,9 @@ SELECT
 FROM {fromDbName}.Plot_Stratum AS ps
 JOIN {fromDbName}.Plot AS p  USING (PlotNumber, CuttingUnitCode)
 JOIN {fromDbName}.Stratum AS st USING (StratumCode)
-JOIN {fromDbName}.CuttingUnit AS cu USING (CuttingUnitCode);
-";
+JOIN {fromDbName}.CuttingUnit AS cu USING (CuttingUnitCode)
+WHERE ps.CruiseID = '{cruiseID}'
+;";
         }
     }
 }

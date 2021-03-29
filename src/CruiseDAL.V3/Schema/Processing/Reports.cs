@@ -20,7 +20,7 @@ namespace CruiseDAL.Schema
 
     FOREIGN KEY (CruiseID) REFERENCES Cruise (CruiseID) ON DELETE CASCADE,
 
-    UNIQUE (ReportID)
+    UNIQUE (ReportID, CruiseID)
 );";
 
         public string InitializeTable => null;

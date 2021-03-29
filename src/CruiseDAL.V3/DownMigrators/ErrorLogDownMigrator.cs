@@ -26,6 +26,7 @@ SELECT
 FROM {fromDbName}.TreeError AS te
 JOIN {fromDbName}.TreeField AS tf ON te.Field = tf.Field
 JOIN {fromDbName}.Tree AS t USING (TreeID)
+WHERE te.CruiseID = '{cruiseID}'
 
 UNION ALL
 
@@ -40,6 +41,7 @@ SELECT
     le.IsResolved AS Suppress
 FROM {fromDbName}.LogGradeError AS le
 JOIN {fromDbName}.Log AS l USING (LogID)
+WHERE le.CruiseID = '{cruiseID}'
 
 UNION ALL
 
@@ -53,6 +55,7 @@ SELECT
     'FScruiser' AS Program,
     pe.IsResolved AS Suppress
 FROM {fromDbName}.PlotError AS pe
+WHERE pe.CruiseID = '{cruiseID}'
 ;";
         }
     }

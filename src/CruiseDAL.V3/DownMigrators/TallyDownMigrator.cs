@@ -13,9 +13,10 @@ SELECT
     thk.HotKey,
     ifnull(tds.Description, tp.SampleGroupCode || ' ' || tp.SpeciesCode) AS Description
 FROM {fromDbName}.TallyPopulation AS tp
-JOIN {fromDbName}.TallyHotKey AS thk USING (StratumCode, SampleGroupCode, SpeciesCode, LiveDead)
-JOIN {fromDbName}.TallyDescription AS tds USING (StratumCode, SampleGroupCode, SpeciesCode, LiveDead);
-";
+JOIN {fromDbName}.TallyHotKey AS thk USING (StratumCode, SampleGroupCode, SpeciesCode, LiveDead, CruiseID)
+JOIN {fromDbName}.TallyDescription AS tds USING (StratumCode, SampleGroupCode, SpeciesCode, LiveDead, CruiseID)
+WHERE tp.CruiseID =  '{cruiseID}'
+;";
         }
     }
 }

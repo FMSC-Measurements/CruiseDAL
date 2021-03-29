@@ -13,8 +13,9 @@ SELECT
     sg.SampleGroup_CN,
     tdv.TreeDefaultValue_CN
 FROM {fromDbName}.SubPopulation AS subpop
-JOIN {fromDbName}.SampleGroup AS sg USING (SampleGroupCode, StratumCode)
+JOIN {fromDbName}.SampleGroup AS sg USING (SampleGroupCode, StratumCode, CruiseID)
 JOIN {toDbName}.TreeDefaultValue AS tdv ON sg.PrimaryProduct = tdv.PrimaryProduct AND subpop.SpeciesCode = tdv.Species AND subpop.LiveDead = tdv.LiveDead
+WHERE subpop.CruiseID = '{cruiseID}'
 ;";
         }
     }
