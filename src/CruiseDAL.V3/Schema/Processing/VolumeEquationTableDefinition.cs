@@ -1,8 +1,8 @@
 ﻿using System.Collections.Generic;
 
-namespace CruiseDAL.Schema.Processing
+namespace CruiseDAL.Schema
 {
-    public class VolumeEquation : ITableDefinition
+    public class VolumeEquationTableDefinition : ITableDefinition
     {
         public string TableName => "VolumeEquation";
 

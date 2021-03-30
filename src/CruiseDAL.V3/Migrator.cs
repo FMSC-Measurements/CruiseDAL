@@ -13,30 +13,38 @@ namespace CruiseDAL
     {
         public static readonly IEnumerable<IMigrator> MIGRATORS = new IMigrator[]
         {
+            // design
             new SaleMigrator(),
             new CruiseMigrator(),
             new CuttingUnitMigrator(),
             new StratumMigrator(),
             new CuttingUnit_StratumMigrator(),
             new SampleGroupMigrator(),
-            new PlotMigrator(),
-            new Plot_StratumMigrator(),
             new SpeciesMigrator(),
             new SubPopulationMigrator(),
             new TreeDefaultValueMigrator(),
             new FixCNTTallyPopulationMigrator(),
-            new TreeMigrator(),
-            new TreeMeasurmentsMigrator(),
-            new LogMigrator(),
-            new TallyLedgerMigrator(),
             new LogFieldSetupMigrator(),
             new TreeFieldSetupMigrator(),
             new TallyDescriptionMigrator(),
             new TallyHotkeyMigrator(),
+
+            // field data
+            new PlotMigrator(),
+            new Plot_StratumMigrator(),
+            new TreeMigrator(),
+            new TreeMeasurmentsMigrator(),
+            new LogMigrator(),
+            new TallyLedgerMigrator(),
+            
+            // validation
             new LogGradeAuditRuleMigrator(),
             new TreeAuditRuleMigrator(),
             new TreeAuditRuleSelectorMigrator(),
+
+            // processing
             new ReportsMigrator(),
+            new VolumeEquationMigrator(),
 
             new GlobalsMigrator(),
             new MessageLogMigrator(),

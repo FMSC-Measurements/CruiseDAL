@@ -35,8 +35,7 @@ $@"INSERT INTO {toDbName}.VolumeEquation (
 		Model,
 		CommonSpeciesName,
 		MerchModFlag,
-		EvenOddSegment,
-		CreatedBy
+		EvenOddSegment
 ) 
 SELECT 
     	'{cruiseID}',

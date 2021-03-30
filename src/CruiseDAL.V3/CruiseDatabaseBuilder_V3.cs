@@ -77,7 +77,7 @@ namespace CruiseDAL
 
             // processing
             new ReportsTableDefinition(),
-
+            new VolumeEquationTableDefinition(),
             // utility
             new MessageLogTableDefinition(),
             new GlobalsTableDefinition(),

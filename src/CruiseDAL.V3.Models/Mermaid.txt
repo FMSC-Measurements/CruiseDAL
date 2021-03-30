@@ -973,6 +973,70 @@ classDiagram
         - Deleted_TS : DATETIME
     }
 
+    class VolumeEquation {
+    * VolumeEquation_CN
+    -----
+        - CruiseID : TEXT
+        - Species : TEXT
+        - PrimaryProduct : TEXT
+        - VolumeEquationNumber : TEXT
+        - StumpHeight : REAL
+        - TopDIBPrimary : REAL
+        - TopDIBSecondary : REAL
+        - CalcTotal : INTEGER
+        - CalcBoard : INTEGER
+        - CalcCubic : INTEGER
+        - CalcCord : INTEGER
+        - CalcTopwood : INTEGER
+        - CalcBiomass : INTEGER
+        - Trim : REAL
+        - SegmentationLogic : INTEGER
+        - MinLogLengthPrimary : REAL
+        - MaxLogLengthPrimary : REAL
+        - MinLogLengthSecondary : REAL
+        - MaxLogLengthSecondary : REAL
+        - MinMerchLength : REAL
+        - Model : TEXT
+        - CommonSpeciesName : TEXT
+        - MerchModFlag : INTEGER
+        - EvenOddSegment : INTEGER
+        - CreatedBy : TEXT
+        - Created_TS : DATETIME
+        - ModifiedBy : TEXT
+        - Modified_TS : DATETIME
+    }
+
+    class VolumeEquation_Tombstone {
+        - CruiseID : TEXT
+        - Species : TEXT
+        - PrimaryProduct : TEXT
+        - VolumeEquationNumber : TEXT
+        - StumpHeight : REAL
+        - TopDIBPrimary : REAL
+        - TopDIBSecondary : REAL
+        - CalcTotal : INTEGER
+        - CalcBoard : INTEGER
+        - CalcCubic : INTEGER
+        - CalcCord : INTEGER
+        - CalcTopwood : INTEGER
+        - CalcBiomass : INTEGER
+        - Trim : REAL
+        - SegmentationLogic : INTEGER
+        - MinLogLengthPrimary : REAL
+        - MaxLogLengthPrimary : REAL
+        - MinLogLengthSecondary : REAL
+        - MaxLogLengthSecondary : REAL
+        - MinMerchLength : REAL
+        - Model : TEXT
+        - CommonSpeciesName : TEXT
+        - MerchModFlag : INTEGER
+        - EvenOddSegment : INTEGER
+        - CreatedBy : TEXT
+        - Created_TS : DATETIME
+        - ModifiedBy : TEXT
+        - Modified_TS : DATETIME
+        - Deleted_TS : DATETIME
+    }
     class MessageLog {
     * Message_CN
     -----
