@@ -22,6 +22,7 @@ namespace CruiseDAL.Schema
     Modified_TS DATETIME,
 
     UNIQUE (PlotNumber, CuttingUnitCode, StratumCode, CruiseID),
+    CHECK (IsEmpty IN (0, 1)),
 
     FOREIGN KEY (StratumCode,  CruiseID) REFERENCES Stratum (StratumCode, CruiseID) ON DELETE CASCADE ON UPDATE CASCADE,
     FOREIGN KEY (PlotNumber, CuttingUnitCode, CruiseID) REFERENCES Plot (PlotNumber, CuttingUnitCode, CruiseID) ON DELETE CASCADE ON UPDATE CASCADE

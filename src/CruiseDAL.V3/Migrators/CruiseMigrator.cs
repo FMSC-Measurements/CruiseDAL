@@ -12,9 +12,11 @@ namespace CruiseDAL.Migrators
 return $@"INSERT INTO {toDbName}.Cruise (
     CruiseID,
     SaleID,
+    CruiseNumber,
     Purpose,
     DefaultUOM,
     LogGradingEnabled,
+    UseCrossStrataPlotTreeNumbering,
     Remarks,
     CreatedBy,
     Created_TS,
@@ -24,9 +26,11 @@ return $@"INSERT INTO {toDbName}.Cruise (
 SELECT
     '{cruiseID}',
     '{saleID}',
+    SaleNumber,
     Purpose,
     DefaultUOM,
     LogGradingEnabled,
+    CASE WHEN Purpose = 'Recon' THEN 0 ELSE 1 END,
     Remarks,
     CreatedBy,
     CreatedDate,

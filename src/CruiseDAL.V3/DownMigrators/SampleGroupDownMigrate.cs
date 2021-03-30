@@ -33,7 +33,7 @@ SELECT
     st.Stratum_CN,
     sg.SampleGroupCode AS Code,
     sg.CutLeave,
-    sg.UOM,
+    ifnull(sg.UOM, (SELECT DefaultUOM FROM {fromDbName}.Cruise WHERE CruiseID = '{cruiseID}')),
     sg.PrimaryProduct,
     sg.SecondaryProduct,
     sg.BiomassProduct,

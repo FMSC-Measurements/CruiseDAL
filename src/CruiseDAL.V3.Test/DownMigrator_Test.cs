@@ -15,6 +15,44 @@ namespace CruiseDAL.V3.Test
         {
         }
 
+        [Fact]
+        public void MigrateFromV3ToV2()
+        {
+            var initializer = new DatabaseInitializer();
+            var fromPath = GetTempFilePath("MigrateFromV3ToV2.crz3");
+            var toPath = GetTempFilePath("MigrateFromV3ToV2.cruise");
+
+            using var fromDb = initializer.CreateDatabaseFile(fromPath);
+            using var toDb = new DAL(toPath, true);
+
+            var downMigrator = new DownMigrator();
+            downMigrator.MigrateFromV3ToV2(initializer.CruiseID, fromDb, toDb);
+
+            ValidateMigration(fromDb, toDb);
+
+        }
+
+        void ValidateMigration(CruiseDatastore v3db, CruiseDatastore v2db)
+        {
+            var units = v3db.From<V3.Models.CuttingUnit>().Query();
+            var strata = v3db.From<V3.Models.Stratum>().Query().ToArray();
+            var samplegroups = v3db.From<V3.Models.SampleGroup>().Query();
+            var plots = v3db.From<V3.Models.Plot>().Query();
+            var trees = v3db.From<V3.Models.Tree>().Query();
+
+            var units2 = v2db.From<V2.Models.CuttingUnit>().Query();
+            var strata2 = v2db.From<V2.Models.Stratum>().Query().ToArray();
+            var samplegroups2 = v2db.From<V2.Models.SampleGroup>().Query();
+            var plots2 = v2db.From<V2.Models.Plot>().Query();
+            var trees2 = v2db.From<V2.Models.Tree>().Query();
+
+            units.Should().HaveSameCount(units2);
+            strata.Should().HaveSameCount(strata2);
+            samplegroups.Should().HaveSameCount(samplegroups2);
+            plots.Should().HaveSameCount(plots2);
+            trees.Should().HaveSameCount(trees2);
+        }
+
         [Theory]
         [InlineData("7Wolf.cruise")]
         [InlineData("MultiTest.2014.10.31.cruise")]
@@ -120,7 +158,11 @@ namespace CruiseDAL.V3.Test
                 var stratav2 = dbv2.From<V2.Models.Stratum>()
                     .Query();
 
-                stratav2Again.Should().BeEquivalentTo(stratav2);
+                stratav2Again.Should().BeEquivalentTo(stratav2, 
+                    config => config
+                    .Excluding(x => x.VolumeFactor)
+                    .Excluding(x => x.Month)
+                    .Excluding(x => x.Year));
             }
         }
 

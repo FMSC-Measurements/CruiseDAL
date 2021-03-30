@@ -20,12 +20,6 @@ namespace CruiseDAL.V3.Models
   [Field("FieldOrder")]
   public Int32? FieldOrder { get; set; }
 
-  [Field("Heading")]
-  public String Heading { get; set; }
-
-  [Field("Width")]
-  public Double? Width { get; set; }
-
   [Field("DefaultValueInt")]
   public Int32? DefaultValueInt { get; set; }
 

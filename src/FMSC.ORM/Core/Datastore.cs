@@ -796,6 +796,7 @@ namespace FMSC.ORM.Core
         /// <returns></returns>
         public virtual DbConnection OpenConnection()
         {
+            CheckIsDisposed();
             lock (PersistentConnectionSyncLock)
             {
                 DbConnection conn;
@@ -973,6 +974,11 @@ namespace FMSC.ORM.Core
         }
 
         #region IDisposable Support
+
+        protected void CheckIsDisposed()
+        {
+            if(isDisposed) { throw new ObjectDisposedException(this.GetType().Name); }
+        }
 
         protected bool isDisposed = false; // To detect redundant calls
 

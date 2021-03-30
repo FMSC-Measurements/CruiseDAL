@@ -14,6 +14,7 @@ namespace CruiseDAL.Schema
     CruiseID TEXT NOT NULL COLLATE NOCASE,
     Area REAL DEFAULT 0.0,
     Description TEXT,
+    Remarks TEXT, 
     LoggingMethod TEXT COLLATE NOCASE,
     PaymentUnit TEXT,
     Rx TEXT,
@@ -41,6 +42,7 @@ namespace CruiseDAL.Schema
     CruiseID TEXT NOT NULL COLLATE NOCASE,
     Area REAL,
     Description TEXT,
+    Remarks TEXT,
     LoggingMethod TEXT,
     PaymentUnit TEXT,
     Rx TEXT,
@@ -85,6 +87,7 @@ BEFORE DELETE ON CuttingUnit
 FOR EACH ROW
 BEGIN
     INSERT OR REPLACE INTO CuttingUnit_Tombstone (
+        CuttingUnitID,
         CuttingUnitCode,
         CruiseID,
         Area,
@@ -97,6 +100,7 @@ BEGIN
         Modified_TS,
         Deleted_TS
     ) VALUES (
+        OLD.CuttingUnitID,
         OLD.CuttingUnitCode,
         OLD.CruiseID,
         OLD.Area,

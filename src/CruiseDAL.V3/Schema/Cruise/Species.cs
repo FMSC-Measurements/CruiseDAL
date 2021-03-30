@@ -16,7 +16,7 @@ namespace CruiseDAL.Schema
     FIACode TEXT COLLATE NOCASE,
     CHECK (length(SpeciesCode) > 0),
 
-    FOREIGN KEY (FIACode) REFERENCES LK_FIA (FIACode), 
+    --FOREIGN KEY (FIACode) REFERENCES LK_FIA (FIACode), 
 
     UNIQUE (SpeciesCode, CruiseID)
 ); ";

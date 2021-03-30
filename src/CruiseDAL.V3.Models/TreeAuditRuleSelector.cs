@@ -5,8 +5,8 @@ namespace CruiseDAL.V3.Models
  [Table("TreeAuditRuleSelector")]
  public partial class TreeAuditRuleSelector
  {
-  [PrimaryKeyField("TreeDefaultValue_TreeAuditRule_CN")]
-  public Int32? TreeDefaultValue_TreeAuditRule_CN { get; set; }
+  [PrimaryKeyField("TreeAuditRuleSelector_CN")]
+  public Int32? TreeAuditRuleSelector_CN { get; set; }
 
   [Field("CruiseID")]
   public String CruiseID { get; set; }

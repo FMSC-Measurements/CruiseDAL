@@ -1,19 +1,28 @@
-﻿namespace CruiseDAL.Schema
+﻿using System.Collections.Generic;
+
+namespace CruiseDAL.Schema
 {
-    public partial class DDL
+    public class LogFieldSetupDefaultTableDefinition : ITableDefinition
     {
-        public const string CREATE_TABLE_LOGFIELDSETUPDEFAULT =
-            "CREATE TABLE LogFieldSetupDefault ( " +
-                "LogFieldSetupDefault_CN INTEGER PRIMARY KEY AUTOINCREMENT, " +
-                "Field TEXT NOT NULL COLLATE NOCASE, " +
-                "FieldOrder INTEGER Default 0, " +
-                "ColumnType TEXT, " +
-                "Heading TEXT, " +
-                "Width REAL Default 0.0, " +
-                "Format TEXT, " +
-                "Behavior TEXT, " +
-                "UNIQUE(Field)," +
-                "FOREIGN KEY (Field) REFERENCES LogField (Field) " +
-            ");";
+
+        public string TableName => "LogFieldSetupDefault";
+
+        public string CreateTable =>
+@"CREATE TABLE LogFieldSetupDefault (
+    LogFieldSetupDefault_CN INTEGER PRIMARY KEY AUTOINCREMENT,
+    StratumDefaultID TEXT COLLATE NOCASE,
+    Field TEXT NOT NULL COLLATE NOCASE,
+    FieldOrder INTEGER Default 0,
+    UNIQUE(Field),
+    FOREIGN KEY (Field) REFERENCES LogField (Field)
+);";
+
+        public string InitializeTable => null;
+
+        public string CreateTombstoneTable => null;
+
+        public string CreateIndexes => null;
+
+        public IEnumerable<string> CreateTriggers => null;
     }
 }

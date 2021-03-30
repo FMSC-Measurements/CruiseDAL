@@ -13,30 +13,42 @@ namespace CruiseDAL
     {
         public static readonly IEnumerable<IMigrator> MIGRATORS = new IMigrator[]
         {
+            // design
             new SaleMigrator(),
             new CruiseMigrator(),
             new CuttingUnitMigrator(),
             new StratumMigrator(),
             new CuttingUnit_StratumMigrator(),
             new SampleGroupMigrator(),
-            new PlotMigrator(),
-            new Plot_StratumMigrator(),
             new SpeciesMigrator(),
             new SubPopulationMigrator(),
             new TreeDefaultValueMigrator(),
             new FixCNTTallyPopulationMigrator(),
-            new TreeMigrator(),
-            new TreeMeasurmentsMigrator(),
-            new LogMigrator(),
-            new TallyLedgerMigrator(),
             new LogFieldSetupMigrator(),
             new TreeFieldSetupMigrator(),
             new TallyDescriptionMigrator(),
             new TallyHotkeyMigrator(),
+
+            // field data
+            new PlotMigrator(),
+            new Plot_StratumMigrator(),
+            new TreeMigrator(),
+            new TreeMeasurmentsMigrator(),
+            new LogMigrator(),
+            new TallyLedgerMigrator(),
+            
+            // validation
             new LogGradeAuditRuleMigrator(),
             new TreeAuditRuleMigrator(),
             new TreeAuditRuleSelectorMigrator(),
+
+            // processing
             new ReportsMigrator(),
+            new VolumeEquationMigrator(),
+
+            // template
+            new LogFieldSetupDefaultMigrator(),
+            new TreeFieldSetupDefaultMigrator(),
 
             new GlobalsMigrator(),
             new MessageLogMigrator(),
@@ -48,13 +60,19 @@ namespace CruiseDAL
         {
             // get path, directory and filename of original file
             var fileDirectory = System.IO.Path.GetDirectoryName(v2Path);
-            var fileName = System.IO.Path.GetFileNameWithoutExtension(v2Path);
 
             // create path for new temp file
-            var newFileName = fileName + ".crz3";
+            var newFileName = GetConvertedFileName(v2Path);
             var newFilePath = System.IO.Path.Combine(fileDirectory, newFileName);
 
             return newFilePath;
+        }
+
+        public static string GetConvertedFileName(string v2Path)
+        {
+            var fileName = System.IO.Path.GetFileNameWithoutExtension(v2Path);
+            var newFileName = fileName + ".crz3";
+            return newFileName;
         }
 
         public static string MigrateFromV2ToV3(string v2Path, bool overwrite = false)

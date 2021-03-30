@@ -114,17 +114,18 @@ SELECT
     tm.MetaData,
     tm.Initials
 FROM {fromDbName}.Tree AS t
-JOIN {fromDbName}.SampleGroup AS sg USING (StratumCode, SampleGroupCode)
-JOIN {fromDbName}.Stratum AS st USING (StratumCode)
-JOIN {fromDbName}.CuttingUnit AS cu USING (CuttingUnitCode)
-LEFT JOIN {fromDbName}.Plot_Stratum AS plt USING (CuttingUnitCode, StratumCode, PlotNumber)
+JOIN {fromDbName}.SampleGroup AS sg USING (StratumCode, SampleGroupCode, CruiseID)
+JOIN {fromDbName}.Stratum AS st USING (StratumCode, CruiseID)
+JOIN {fromDbName}.CuttingUnit AS cu USING (CuttingUnitCode, CruiseID)
+LEFT JOIN {fromDbName}.Plot_Stratum AS plt USING (CuttingUnitCode, StratumCode, PlotNumber, CruiseID)
 LEFT JOIN {toDbName}.TreeDefaultValue AS tdv ON
             tdv.Species = t.SpeciesCode
             AND tdv.LiveDead = t.LiveDead
             AND tdv.PrimaryProduct = sg.PrimaryProduct
 LEFT JOIN {fromDbName}.TallyLedger_Tree_Totals AS tl ON tl.TreeID = t.TreeID
 LEFT JOIN {fromDbName}.TreeMeasurment AS tm ON t.TreeID = tm.TreeID
-";
+WHERE t.CruiseID = '{cruiseID}'
+;";
         }
     }
 }

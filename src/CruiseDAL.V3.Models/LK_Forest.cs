@@ -17,9 +17,6 @@ namespace CruiseDAL.V3.Models
   [Field("FriendlyName")]
   public String FriendlyName { get; set; }
 
-  [Field("State")]
-  public String State { get; set; }
-
  }
 
 }

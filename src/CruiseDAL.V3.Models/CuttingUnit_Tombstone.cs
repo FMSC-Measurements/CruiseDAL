@@ -20,6 +20,9 @@ namespace CruiseDAL.V3.Models
   [Field("Description")]
   public String Description { get; set; }
 
+  [Field("Remarks")]
+  public String Remarks { get; set; }
+
   [Field("LoggingMethod")]
   public String LoggingMethod { get; set; }
 

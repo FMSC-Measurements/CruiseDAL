@@ -14,7 +14,7 @@ namespace CruiseDAL.Schema
     Field TEXT NOT NULL COLLATE NOCASE,
     Min REAL,
     Max REAL,
-    Desctiption TEXT,
+    Description TEXT,
     UNIQUE (TreeAuditRuleID),
 
     CHECK ((Min IS NULL OR Max IS NULL) OR (Min < Max)),
@@ -53,14 +53,14 @@ BEGIN
         Field,
         Min,
         Max,
-        Desctiption
+        Description
     ) VALUES (
         OLD.TreeAuditRuleID,
         OLD.CruiseID,
         OLD.Field,
         OLD.Min,
         OLD.Max,
-        OLD.Desctiption
+        OLD.Description
     );
 END;";
 

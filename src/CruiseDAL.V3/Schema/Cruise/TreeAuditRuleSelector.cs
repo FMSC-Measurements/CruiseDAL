@@ -8,7 +8,7 @@ namespace CruiseDAL.Schema
 
         public string CreateTable =>
 @"CREATE TABLE TreeAuditRuleSelector (
-    TreeDefaultValue_TreeAuditRule_CN INTEGER PRIMARY KEY AUTOINCREMENT,
+    TreeAuditRuleSelector_CN INTEGER PRIMARY KEY AUTOINCREMENT,
     CruiseID TEXT NOT NULL COLLATE NOCASE,
     SpeciesCode TEXT COLLATE NOCASE,
     LiveDead TEXT COLLATE NOCASE,
@@ -60,11 +60,11 @@ BEGIN
         PrimaryProduct,
         TreeAuditRuleID
     ) VALUES (
-        CruiseID,
-        SpeciesCode,
-        LiveDead,
-        PrimaryProduct,
-        TreeAuditRuleID
+        OLD.CruiseID,
+        OLD.SpeciesCode,
+        OLD.LiveDead,
+        OLD.PrimaryProduct,
+        OLD.TreeAuditRuleID
     );
 END;";
     }

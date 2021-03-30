@@ -63,7 +63,15 @@ classDiagram
         - Forest : TEXT
         - Region : TEXT <<FK>>
         - FriendlyName : TEXT
-        - State : TEXT
+    }
+
+    class LK_District {
+    * LK_District_CN
+    -----
+        - Region : TEXT <<FK>>
+        - Forest : TEXT <<FK>>
+        - District : TEXT
+        - FriendlyName : TEXT
     }
 
     class LK_UOM {
@@ -86,7 +94,7 @@ classDiagram
         - SpeciesCode : TEXT
         - CruiseID : TEXT
         - ContractSpecies : TEXT
-        - FIACode : TEXT <<FK>>
+        - FIACode : TEXT
     }
 
     class TreeDefaultValue {
@@ -149,7 +157,7 @@ classDiagram
         - SaleNumber : TEXT
         - Name : TEXT
         - Region : TEXT <<FK>>
-        - Forest : TEXT <<FK>>
+        - Forest : TEXT
         - District : TEXT
         - CalendarYear : INTEGER
         - Remarks : TEXT
@@ -165,11 +173,13 @@ classDiagram
     -----
         - CruiseID : TEXT
         - SaleID : TEXT <<FK>>
+        - CruiseNumber : TEXT
         - Purpose : TEXT <<FK>>
         - Remarks : TEXT
         - DefaultUOM : TEXT <<FK>>
         - MeasurementYear : TEXT
         - LogGradingEnabled : BOOLEAN
+        - UseCrossStrataPlotTreeNumbering : BOOLEAN
         - CreatedBy : TEXT
         - Created_TS : DATETIME
         - ModifiedBy : TEXT
@@ -184,6 +194,7 @@ classDiagram
         - CruiseID : TEXT <<FK>>
         - Area : REAL
         - Description : TEXT
+        - Remarks : TEXT
         - LoggingMethod : TEXT <<FK>>
         - PaymentUnit : TEXT
         - Rx : TEXT
@@ -199,6 +210,7 @@ classDiagram
         - CruiseID : TEXT
         - Area : REAL
         - Description : TEXT
+        - Remarks : TEXT
         - LoggingMethod : TEXT
         - PaymentUnit : TEXT
         - Rx : TEXT
@@ -225,9 +237,6 @@ classDiagram
         - FBSCode : TEXT
         - YieldComponent : TEXT
         - FixCNTField : TEXT <<FK>>
-        - VolumeFactor : REAL
-        - Month : INTEGER
-        - Year : INTEGER
         - CreatedBy : TEXT
         - Created_TS : DATETIME
         - ModifiedBy : TEXT
@@ -247,9 +256,6 @@ classDiagram
         - Hotkey : TEXT
         - FBSCode : TEXT
         - YieldComponent : TEXT
-        - VolumeFactor : REAL
-        - Month : INTEGER
-        - Year : INTEGER
         - CreatedBy : TEXT
         - Created_TS : DATETIME
         - ModifiedBy : TEXT
@@ -432,8 +438,6 @@ classDiagram
         - SampleGroupCode : TEXT <<FK>>
         - Field : TEXT <<FK>>
         - FieldOrder : INTEGER
-        - Heading : TEXT
-        - Width : REAL
         - IsHidden : BOOLEAN
         - IsLocked : BOOLEAN
         - DefaultValueInt : INTEGER
@@ -448,8 +452,6 @@ classDiagram
         - SampleGroupCode : TEXT
         - Field : TEXT
         - FieldOrder : INTEGER
-        - Heading : TEXT
-        - Width : REAL
         - DefaultValueInt : INTEGER
         - DefaultValueReal : REAL
         - DefaultValueBool : BOOLEAN
@@ -883,7 +885,7 @@ classDiagram
         - Field : TEXT <<FK>>
         - Min : REAL
         - Max : REAL
-        - Desctiption : TEXT
+        - Description : TEXT
     }
 
     class TreeAuditRule_Tombstone {
@@ -896,7 +898,7 @@ classDiagram
     }
 
     class TreeAuditRuleSelector {
-    * TreeDefaultValue_TreeAuditRule_CN
+    * TreeAuditRuleSelector_CN
     -----
         - CruiseID : TEXT <<FK>>
         - SpeciesCode : TEXT <<FK>>
@@ -968,6 +970,142 @@ classDiagram
         - Created_TS : DATETIME
         - ModifiedBy : TEXT
         - Modified_TS : DATETIME
+        - Deleted_TS : DATETIME
+    }
+
+    class VolumeEquation {
+    * VolumeEquation_CN
+    -----
+        - CruiseID : TEXT
+        - Species : TEXT
+        - PrimaryProduct : TEXT
+        - VolumeEquationNumber : TEXT
+        - StumpHeight : REAL
+        - TopDIBPrimary : REAL
+        - TopDIBSecondary : REAL
+        - CalcTotal : INTEGER
+        - CalcBoard : INTEGER
+        - CalcCubic : INTEGER
+        - CalcCord : INTEGER
+        - CalcTopwood : INTEGER
+        - CalcBiomass : INTEGER
+        - Trim : REAL
+        - SegmentationLogic : INTEGER
+        - MinLogLengthPrimary : REAL
+        - MaxLogLengthPrimary : REAL
+        - MinLogLengthSecondary : REAL
+        - MaxLogLengthSecondary : REAL
+        - MinMerchLength : REAL
+        - Model : TEXT
+        - CommonSpeciesName : TEXT
+        - MerchModFlag : INTEGER
+        - EvenOddSegment : INTEGER
+        - CreatedBy : TEXT
+        - Created_TS : DATETIME
+        - ModifiedBy : TEXT
+        - Modified_TS : DATETIME
+    }
+
+    class VolumeEquation_Tombstone {
+        - CruiseID : TEXT
+        - Species : TEXT
+        - PrimaryProduct : TEXT
+        - VolumeEquationNumber : TEXT
+        - StumpHeight : REAL
+        - TopDIBPrimary : REAL
+        - TopDIBSecondary : REAL
+        - CalcTotal : INTEGER
+        - CalcBoard : INTEGER
+        - CalcCubic : INTEGER
+        - CalcCord : INTEGER
+        - CalcTopwood : INTEGER
+        - CalcBiomass : INTEGER
+        - Trim : REAL
+        - SegmentationLogic : INTEGER
+        - MinLogLengthPrimary : REAL
+        - MaxLogLengthPrimary : REAL
+        - MinLogLengthSecondary : REAL
+        - MaxLogLengthSecondary : REAL
+        - MinMerchLength : REAL
+        - Model : TEXT
+        - CommonSpeciesName : TEXT
+        - MerchModFlag : INTEGER
+        - EvenOddSegment : INTEGER
+        - CreatedBy : TEXT
+        - Created_TS : DATETIME
+        - ModifiedBy : TEXT
+        - Modified_TS : DATETIME
+        - Deleted_TS : DATETIME
+    }
+
+    class StratumDefault {
+    * StratumDefault_CN
+    -----
+        - StratumDefaultID : TEXT
+        - Region : TEXT <<FK>>
+        - Forest : TEXT <<FK>>
+        - District : TEXT <<FK>>
+        - StratumCode : TEXT
+        - Description : TEXT
+        - Method : TEXT <<FK>>
+        - BasalAreaFactor : REAL
+        - FixedPlotSize : REAL
+        - KZ3PPNT : INTEGER
+        - SamplingFrequency : INTEGER
+        - Hotkey : TEXT
+        - FBSCode : TEXT
+        - YieldComponent : TEXT
+        - FixCNTField : TEXT <<FK>>
+    }
+
+    class SampleGroupDefault {
+    * SampleGroupDefault_CN
+    -----
+        - SampleGroupDefaultID : TEXT
+        - Region : TEXT <<FK>>
+        - Forest : TEXT <<FK>>
+        - District : TEXT <<FK>>
+        - SampleGroupCode : TEXT
+        - CutLeave : TEXT
+        - UOM : TEXT <<FK>>
+        - PrimaryProduct : TEXT <<FK>>
+        - SecondaryProduct : TEXT <<FK>>
+        - BiomassProduct : TEXT
+        - DefaultLiveDead : TEXT
+        - SamplingFrequency : INTEGER
+        - InsuranceFrequency : INTEGER
+        - KZ : INTEGER
+        - BigBAF : INTEGER
+        - TallyBySubPop : BOOLEAN
+        - UseExternalSampler : BOOLEAN
+        - TallyMethod : TEXT
+        - Description : TEXT
+        - MinKPI : INTEGER
+        - MaxKPI : INTEGER
+        - SmallFPS : REAL
+    }
+
+    class TreeFieldSetupDefault {
+    * TreeFieldSetupDefault_CN
+    -----
+        - StratumDefaultID : TEXT
+        - SampleGroupDefaultID : TEXT
+        - Field : TEXT <<FK>>
+        - FieldOrder : INTEGER
+        - IsHidden : BOOLEAN
+        - IsLocked : BOOLEAN
+        - DefaultValueInt : INTEGER
+        - DefaultValueReal : REAL
+        - DefaultValueBool : BOOLEAN
+        - DefaultValueText : TEXT
+    }
+
+    class LogFieldSetupDefault {
+    * LogFieldSetupDefault_CN
+    -----
+        - StratumDefaultID : TEXT
+        - Field : TEXT <<FK>>
+        - FieldOrder : INTEGER
     }
 
     class MessageLog {
@@ -998,16 +1136,17 @@ classDiagram
 
     LK_Region <|-- LK_Forest
 
+    LK_Forest <|-- LK_District
+    LK_Region <|-- LK_District
 
 
-    LK_FIA <|-- Species
+
 
     Cruise <|-- TreeDefaultValue
     LK_Product <|-- TreeDefaultValue
     Species <|-- TreeDefaultValue
 
 
-    LK_Forest <|-- Sale
     LK_Region <|-- Sale
 
     LK_Purpose <|-- Cruise
@@ -1120,5 +1259,23 @@ classDiagram
 
     Cruise <|-- Reports
 
+
+
+
+    LK_CruiseMethod <|-- StratumDefault
+    LK_District <|-- StratumDefault
+    LK_Forest <|-- StratumDefault
+    LK_Region <|-- StratumDefault
+    TreeField <|-- StratumDefault
+
+    LK_District <|-- SampleGroupDefault
+    LK_Forest <|-- SampleGroupDefault
+    LK_Product <|-- SampleGroupDefault
+    LK_Region <|-- SampleGroupDefault
+    LK_UOM <|-- SampleGroupDefault
+
+    TreeField <|-- TreeFieldSetupDefault
+
+    LogField <|-- LogFieldSetupDefault
 
 

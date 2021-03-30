@@ -13,8 +13,6 @@ namespace CruiseDAL.Schema
     SampleGroupCode TEXT COLLATE NOCASE,
     Field TEXT NOT NULL COLLATE NOCASE,
     FieldOrder INTEGER Default 0,
-    Heading TEXT,
-    Width REAL Default 0.0, 
     IsHidden BOOLEAN Default 0,
     IsLocked BOOLEAN Default 0,
     -- value type determined by TreeField.DbType
@@ -22,6 +20,9 @@ namespace CruiseDAL.Schema
     DefaultValueReal REAL,
     DefaultValueBool BOOLEAN,
     DefaultValueText TEXT,
+
+    CHECK (IsHidden IN (0, 1)),
+    CHECK (IsLocked IN (0, 1)),
 
     FOREIGN KEY (StratumCode, CruiseID) REFERENCES Stratum (StratumCode, CruiseID) ON DELETE CASCADE ON UPDATE CASCADE,
     FOREIGN KEY (SampleGroupCode, StratumCode, CruiseID) REFERENCES SampleGroup (SampleGroupCode, StratumCode, CruiseID) ON DELETE CASCADE ON UPDATE CASCADE,
@@ -37,8 +38,6 @@ namespace CruiseDAL.Schema
     SampleGroupCode TEXT COLLATE NOCASE,
     Field TEXT NOT NULL COLLATE NOCASE,
     FieldOrder INTEGER,
-    Heading TEXT,
-    Width REAL,
     DefaultValueInt INTEGER,
     DefaultValueReal REAL,
     DefaultValueBool BOOLEAN,
@@ -57,17 +56,16 @@ CREATE UNIQUE INDEX UIX_TreeFieldSetup_SampleGroupCode_StratumCode_Field_CruiseI
 
         public IEnumerable<string> CreateTriggers => new[] { CREATE_TRIGGER_TreeFieldSetup_OnDelete };
 
-        public const string CREATE_TRIGGER_TreeFieldSetup_OnDelete =
+    public const string CREATE_TRIGGER_TreeFieldSetup_OnDelete =
 @"CREATE TRIGGER TreeFieldSetup_OnDelete
 BEFORE DELETE ON TreeFieldSetup
 BEGIN
-    INSERT OR REPLACE INTO TreeFieldSetup (
+    INSERT OR REPLACE INTO TreeFieldSetup_Tombstone (
         CruiseID,
         StratumCode,
+        SampleGroupCode,
         Field,
         FieldOrder,
-        Heading,
-        Width,
         DefaultValueInt,
         DefaultValueReal,
         DefaultValueBool,
@@ -75,10 +73,9 @@ BEGIN
     ) VALUES (
         OLD.CruiseID,
         OLD.StratumCode,
+        OLD.SampleGroupCode,
         OLD.Field,
         OLD.FieldOrder,
-        OLD.Heading,
-        OLD.Width,
         OLD.DefaultValueInt,
         OLD.DefaultValueReal,
         OLD.DefaultValueBool,

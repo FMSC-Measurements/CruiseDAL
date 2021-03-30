@@ -14,7 +14,7 @@ namespace CruiseDAL.Schema
     Name TEXT,
     Region  TEXT COLLATE NOCASE,
     Forest TEXT COLLATE NOCASE,
-    District TEXT DEFAULT '',
+    District TEXT COLLATE NOCASE,
     CalendarYear INTEGER Default 0,
     Remarks TEXT,
     DefaultUOM TEXT,
@@ -27,8 +27,8 @@ namespace CruiseDAL.Schema
     UNIQUE(SaleID),
     UNIQUE(SaleNumber),
 
-    FOREIGN KEY (Region) REFERENCES LK_Region (Region),
-    FOREIGN KEY (Forest, Region) REFERENCES LK_Forest (Forest, Region)
+    FOREIGN KEY (Region) REFERENCES LK_Region (Region)--,
+    --FOREIGN KEY (Forest, Region) REFERENCES LK_Forest (Forest, Region)
 );";
 
         public string InitializeTable => null;

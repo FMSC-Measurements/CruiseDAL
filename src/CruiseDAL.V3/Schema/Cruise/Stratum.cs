@@ -18,15 +18,11 @@ namespace CruiseDAL.Schema
     FixedPlotSize REAL DEFAULT 0.0,
     KZ3PPNT INTEGER DEFAULT 0,
     SamplingFrequency INTEGER DEFAULT 0,
-    Hotkey TEXT,
-    FBSCode TEXT,
-    YieldComponent TEXT DEFAULT 'CL',
+    Hotkey TEXT COLLATE NOCASE,
+    FBSCode TEXT COLLATE NOCASE,
+    YieldComponent TEXT DEFAULT 'CL' COLLATE NOCASE,
 
     FixCNTField TEXT COLLATE NOCASE,
-
-    VolumeFactor REAL DEFAULT 0.0,
-    Month INTEGER DEFAULT 0,
-    Year INTEGER DEFAULT 0,
     CreatedBy TEXT DEFAULT 'none',
     Created_TS DATETIME DEFAULT (CURRENT_TIMESTAMP),
     ModifiedBy TEXT,
@@ -59,9 +55,6 @@ namespace CruiseDAL.Schema
     Hotkey TEXT,
     FBSCode TEXT,
     YieldComponent TEXT,
-    VolumeFactor REAL,
-    Month INTEGER,
-    Year INTEGER,
     CreatedBy TEXT,
     Created_TS DATETIME,
     ModifiedBy TEXT,
@@ -90,10 +83,7 @@ AFTER UPDATE OF
     SamplingFrequency,
     HotKey,
     FBSCode,
-    YieldComponent,
-    VolumeFactor,
-    Month,
-    Year
+    YieldComponent
 ON Stratum
 FOR EACH ROW
 BEGIN
@@ -118,9 +108,6 @@ BEGIN
         Hotkey,
         FBSCode,
         YieldComponent,
-        VolumeFactor,
-        Month,
-        Year,
         CreatedBy,
         Created_TS,
         ModifiedBy,
@@ -139,9 +126,6 @@ BEGIN
         OLD.Hotkey,
         OLD.FBSCode,
         OLD.YieldComponent,
-        OLD.VolumeFactor,
-        OLD.Month,
-        OLD.Year,
         OLD.CreatedBy,
         OLD.Created_TS,
         OLD.ModifiedBy,
