@@ -1037,6 +1037,77 @@ classDiagram
         - Modified_TS : DATETIME
         - Deleted_TS : DATETIME
     }
+
+    class StratumDefault {
+    * StratumDefault_CN
+    -----
+        - StratumDefaultID : TEXT
+        - Region : TEXT <<FK>>
+        - Forest : TEXT <<FK>>
+        - District : TEXT <<FK>>
+        - StratumCode : TEXT
+        - Description : TEXT
+        - Method : TEXT <<FK>>
+        - BasalAreaFactor : REAL
+        - FixedPlotSize : REAL
+        - KZ3PPNT : INTEGER
+        - SamplingFrequency : INTEGER
+        - Hotkey : TEXT
+        - FBSCode : TEXT
+        - YieldComponent : TEXT
+        - FixCNTField : TEXT <<FK>>
+    }
+
+    class SampleGroupDefault {
+    * SampleGroupDefault_CN
+    -----
+        - SampleGroupDefaultID : TEXT
+        - Region : TEXT <<FK>>
+        - Forest : TEXT <<FK>>
+        - District : TEXT <<FK>>
+        - SampleGroupCode : TEXT
+        - CutLeave : TEXT
+        - UOM : TEXT <<FK>>
+        - PrimaryProduct : TEXT <<FK>>
+        - SecondaryProduct : TEXT <<FK>>
+        - BiomassProduct : TEXT
+        - DefaultLiveDead : TEXT
+        - SamplingFrequency : INTEGER
+        - InsuranceFrequency : INTEGER
+        - KZ : INTEGER
+        - BigBAF : INTEGER
+        - TallyBySubPop : BOOLEAN
+        - UseExternalSampler : BOOLEAN
+        - TallyMethod : TEXT
+        - Description : TEXT
+        - MinKPI : INTEGER
+        - MaxKPI : INTEGER
+        - SmallFPS : REAL
+    }
+
+    class TreeFieldSetupDefault {
+    * TreeFieldSetupDefault_CN
+    -----
+        - StratumDefaultID : TEXT
+        - SampleGroupDefaultID : TEXT
+        - Field : TEXT <<FK>>
+        - FieldOrder : INTEGER
+        - IsHidden : BOOLEAN
+        - IsLocked : BOOLEAN
+        - DefaultValueInt : INTEGER
+        - DefaultValueReal : REAL
+        - DefaultValueBool : BOOLEAN
+        - DefaultValueText : TEXT
+    }
+
+    class LogFieldSetupDefault {
+    * LogFieldSetupDefault_CN
+    -----
+        - StratumDefaultID : TEXT
+        - Field : TEXT <<FK>>
+        - FieldOrder : INTEGER
+    }
+
     class MessageLog {
     * Message_CN
     -----
@@ -1188,5 +1259,23 @@ classDiagram
 
     Cruise <|-- Reports
 
+
+
+
+    LK_CruiseMethod <|-- StratumDefault
+    LK_District <|-- StratumDefault
+    LK_Forest <|-- StratumDefault
+    LK_Region <|-- StratumDefault
+    TreeField <|-- StratumDefault
+
+    LK_District <|-- SampleGroupDefault
+    LK_Forest <|-- SampleGroupDefault
+    LK_Product <|-- SampleGroupDefault
+    LK_Region <|-- SampleGroupDefault
+    LK_UOM <|-- SampleGroupDefault
+
+    TreeField <|-- TreeFieldSetupDefault
+
+    LogField <|-- LogFieldSetupDefault
 
 

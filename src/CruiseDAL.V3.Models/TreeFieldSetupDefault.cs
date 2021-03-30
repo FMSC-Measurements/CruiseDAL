@@ -2,23 +2,29 @@ using System;
 using FMSC.ORM.EntityModel.Attributes;
 namespace CruiseDAL.V3.Models
 {
- [Table("TreeFieldSetup_Tombstone")]
- public partial class TreeFieldSetup_Tombstone
+ [Table("TreeFieldSetupDefault")]
+ public partial class TreeFieldSetupDefault
  {
-  [Field("CruiseID")]
-  public String CruiseID { get; set; }
+  [PrimaryKeyField("TreeFieldSetupDefault_CN")]
+  public Int32? TreeFieldSetupDefault_CN { get; set; }
 
-  [Field("StratumCode")]
-  public String StratumCode { get; set; }
+  [Field("StratumDefaultID")]
+  public String StratumDefaultID { get; set; }
 
-  [Field("SampleGroupCode")]
-  public String SampleGroupCode { get; set; }
+  [Field("SampleGroupDefaultID")]
+  public String SampleGroupDefaultID { get; set; }
 
   [Field("Field")]
   public String Field { get; set; }
 
   [Field("FieldOrder")]
   public Int32? FieldOrder { get; set; }
+
+  [Field("IsHidden")]
+  public Boolean? IsHidden { get; set; }
+
+  [Field("IsLocked")]
+  public Boolean? IsLocked { get; set; }
 
   [Field("DefaultValueInt")]
   public Int32? DefaultValueInt { get; set; }

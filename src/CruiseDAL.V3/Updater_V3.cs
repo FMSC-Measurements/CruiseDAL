@@ -21,9 +21,9 @@ namespace CruiseDAL
             {
                 UpdateTo_3_1_0(datastore);
             }
-            if(version == "3.1.0")
+            if(version == "3.1.0" || version == "3.2.0")
             {
-                UpdateTo_3_2_0(datastore);
+                UpdateTo_3_2_1(datastore);
             }
         }
 
@@ -44,13 +44,26 @@ namespace CruiseDAL
         }
 
         // update notes: Added table LK_District and updated initialization for LK_Forests
-        public static void UpdateTo_3_2_0(CruiseDatastore ds)
+        public static void UpdateTo_3_2_1(CruiseDatastore ds)
         {
             // create an in-memory database
             // to migrate into
             using (var newDatastore = new CruiseDatastore_V3())
             {
-                var excludeTables = new[] { "LK_Forest" };
+                var excludeTables = new[] 
+                { 
+                    "LK_CruiseMethod",
+                    "LK_District",
+                    "LK_FIA",
+                    "LK_Forest",
+                    "LK_LoggingMethod",
+                    "LK_Product",
+                    "LK_Purpose",
+                    "LK_Region",
+                    "LK_UOM",
+                    "LogField",
+                    "TreeField",
+                };
                 // migrate contents of old db into new in-memory database
                 Migrate(ds, newDatastore, excludeTables);
 

@@ -46,6 +46,10 @@ namespace CruiseDAL
             new ReportsMigrator(),
             new VolumeEquationMigrator(),
 
+            // template
+            new LogFieldSetupDefaultMigrator(),
+            new TreeFieldSetupDefaultMigrator(),
+
             new GlobalsMigrator(),
             new MessageLogMigrator(),
         };
