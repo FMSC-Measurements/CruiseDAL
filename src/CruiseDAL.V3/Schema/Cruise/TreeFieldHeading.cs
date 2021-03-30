@@ -20,7 +20,7 @@ namespace CruiseDAL.Schema
 
     UNIQUE (CruiseID, Field),
 
-    FOREIGN KEY (CruiseID) REFERENCES Cruise (CruiseID) ON DELETE CASCADE, 
+    FOREIGN KEY (CruiseID) REFERENCES Cruise (CruiseID) ON DELETE CASCADE,
     FOREIGN KEY (Field) REFERENCES TreeField (Field) ON DELETE CASCADE
 );";
 

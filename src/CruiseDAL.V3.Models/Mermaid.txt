@@ -438,8 +438,6 @@ classDiagram
         - SampleGroupCode : TEXT <<FK>>
         - Field : TEXT <<FK>>
         - FieldOrder : INTEGER
-        - Heading : TEXT
-        - Width : REAL
         - IsHidden : BOOLEAN
         - IsLocked : BOOLEAN
         - DefaultValueInt : INTEGER
@@ -454,8 +452,6 @@ classDiagram
         - SampleGroupCode : TEXT
         - Field : TEXT
         - FieldOrder : INTEGER
-        - Heading : TEXT
-        - Width : REAL
         - DefaultValueInt : INTEGER
         - DefaultValueReal : REAL
         - DefaultValueBool : BOOLEAN
