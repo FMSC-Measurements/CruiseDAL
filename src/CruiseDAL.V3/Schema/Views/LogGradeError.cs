@@ -9,6 +9,7 @@
 SELECT
     l.Log_CN,
     l.LogID,
+    t.CruiseID,
     LogGradeAuditRule_CN,
     'Species ' || t.SpeciesCode || ', log grade ' || lgar.Grade || 'max defect is ' || lgar.DefectMax AS Message,
     0 AS IsResolved,
