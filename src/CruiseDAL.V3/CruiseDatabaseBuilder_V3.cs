@@ -49,6 +49,7 @@ namespace CruiseDAL
 
             new TreeFieldSetupTableDefinition(),
             new TreeFieldHeading(),
+            new LogFieldHeading(),
             new LogFieldSetupTableDefinition(),
 
             new SamplerStateTableDefinition(),
@@ -63,10 +64,8 @@ namespace CruiseDAL
             new TreeMeasurmentsTableDefinition(),
             new TreeLocationTableDefinition(),
             new TreeFieldValueTableDefinition(),
-
             new LogTableDefinition(),
             new StemTableDefinition(),
-
             new TallyLedgerTableDefinition(),
 
             // validation

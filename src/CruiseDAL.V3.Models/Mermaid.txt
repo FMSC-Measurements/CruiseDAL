@@ -25,6 +25,7 @@ classDiagram
     * LogField_CN
     -----
         - Field : TEXT
+        - DefaultHeading : TEXT
         - DbType : TEXT
     }
 
@@ -460,6 +461,18 @@ classDiagram
 
     class TreeFieldHeading {
     * TreeFieldHeading_CN
+    -----
+        - CruiseID : TEXT <<FK>>
+        - Field : TEXT <<FK>>
+        - Heading : TEXT
+        - CreatedBy : TEXT
+        - Created_TS : DATETIME
+        - ModifiedBy : TEXT
+        - Modified_TS : DATETIME
+    }
+
+    class LogFieldHeading {
+    * LogFieldHeading_CN
     -----
         - CruiseID : TEXT <<FK>>
         - Field : TEXT <<FK>>
@@ -1188,6 +1201,9 @@ classDiagram
 
     Cruise <|-- TreeFieldHeading
     TreeField <|-- TreeFieldHeading
+
+    Cruise <|-- LogFieldHeading
+    LogField <|-- LogFieldHeading
 
     LogField <|-- LogFieldSetup
     Stratum <|-- LogFieldSetup
