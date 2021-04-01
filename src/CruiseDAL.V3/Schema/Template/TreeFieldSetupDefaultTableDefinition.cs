@@ -22,8 +22,8 @@ namespace CruiseDAL.Schema
     DefaultValueBool BOOLEAN,
     DefaultValueText TEXT,
 
-    UNIQUE (StratumDefaultID, Field),
     CHECK (StratumDefaultID NOTNULL OR SampleGroupDefaultID NOTNULL), 
+    CHECK (NOT(StratumDefaultID NOTNULL AND SampleGroupDefaultID NOTNULL)),
 
     FOREIGN KEY (Field) REFERENCES TreeField (Field)
 );";
@@ -32,7 +32,9 @@ namespace CruiseDAL.Schema
 
         public string CreateTombstoneTable => null;
 
-        public string CreateIndexes => null;
+        public string CreateIndexes =>
+@"CREATE UNIQUE INDEX UNX_TreeFieldSetupDefault_StratumDefaultID_SampleGroupDefaultID_Field ON TreeFieldSetupDefault
+(ifnull(StratumDefaultID, ''), ifnull(SampleGroupDefaultID, ''), Field);";
 
         public IEnumerable<string> CreateTriggers => null;
     }
