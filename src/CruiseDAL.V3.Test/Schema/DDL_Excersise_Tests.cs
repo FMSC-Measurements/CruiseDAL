@@ -99,10 +99,23 @@ namespace CruiseDAL.V3.Test.Schema
             }
         }
 
-        [Theory]
+        [SkippableTheory]
         [ClassData(typeof(TableNamesTestDataProvider))]
         public void RunDelete_WithData(string tableName)
         {
+            var skipTables = new[]
+                {
+                    "LK_CruiseMethod",
+                    "LK_Product",
+                    "LK_Purpose",
+                    "LK_Region",
+                    "LK_UOM",
+                    "Species",
+                    "TreeField",
+                };
+            // some tables don't have cascading deletes so we need to skip them
+            Skip.If(skipTables.Contains(tableName));
+
             var initializer = new DatabaseInitializer();
             using (var database = initializer.CreateDatabase())
             {
@@ -111,10 +124,23 @@ namespace CruiseDAL.V3.Test.Schema
             }
         }
 
-        [Theory]
+        [SkippableTheory]
         [ClassData(typeof(TableNamesTestDataProvider))]
         public void RunDelete_WithConvertedFile(string tableName)
         {
+            var skipTables = new[]
+      {
+                    "LK_CruiseMethod",
+                    "LK_Product",
+                    "LK_Purpose",
+                    "LK_Region",
+                    "LK_UOM",
+                    "Species",
+                    "TreeField",
+                };
+            // some tables don't have cascading deletes so we need to skip them
+            Skip.If(skipTables.Contains(tableName));
+
             var testFile = "MultiTest.2014.10.31.cruise";
             var (orgFile, crz3) = SetUpTestFile(testFile);
 
