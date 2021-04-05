@@ -32,9 +32,9 @@ namespace CruiseDAL.Schema
     ModifiedBy TEXT,
     Modified_TS DATETIME,
 
-    FOREIGN KEY (CruiseID) REFERENCES Cruise (CruiseID) ON DELETE CASCADE,
-    FOREIGN KEY (SpeciesCode, CruiseID) REFERENCES Species (SpeciesCode, CruiseID) ON UPDATE CASCADE ON DELETE CASCADE,
-    FOREIGN KEY (PrimaryProduct) REFERENCES LK_Product (Product)
+    FOREIGN KEY (CruiseID) REFERENCES Cruise (CruiseID) ON DELETE CASCADE
+    --FOREIGN KEY (SpeciesCode, CruiseID) REFERENCES Species (SpeciesCode, CruiseID) ON UPDATE CASCADE ON DELETE CASCADE
+    --FOREIGN KEY (PrimaryProduct) REFERENCES LK_Product (Product)
 );";
 
         public string InitializeTable => null;
