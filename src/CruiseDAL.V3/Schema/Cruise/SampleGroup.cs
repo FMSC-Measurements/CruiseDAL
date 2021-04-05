@@ -4,10 +4,14 @@ namespace CruiseDAL.Schema
 {
     public class SampleGroupTableDefinition : ITableDefinition
     {
+        public const string SAMPLESELECTORTYPE_SYSTEMATICSELECTER = "SystematicSelecter";
+        public const string SAMPLESELECTORTYPE_BLOCKSELECTER = "BlockSelecter";
+        public const string SAMPLESELECTORTYPE_CLICKERSELECTER = "ClickerSelecter";
+
         public string TableName => "SampleGroup";
 
         public string CreateTable =>
-@"CREATE TABLE SampleGroup (
+$@"CREATE TABLE SampleGroup (
     SampleGroup_CN INTEGER PRIMARY KEY AUTOINCREMENT,
     SampleGroupID  TEXT NOT NULL COLLATE NOCASE,
     CruiseID TEXT NOT NULL COLLATE NOCASE,
@@ -25,7 +29,7 @@ namespace CruiseDAL.Schema
     BigBAF INTEGER Default 0,
     TallyBySubPop BOOLEAN DEFAULT 0,
     UseExternalSampler BOOLEAN DEFAULT 0,
-    TallyMethod TEXT COLLATE NOCASE,
+    SampleSelectorType TEXT COLLATE NOCASE,
     Description TEXT,
     MinKPI INTEGER Default 0,
     MaxKPI INTEGER Default 0,
@@ -39,6 +43,12 @@ namespace CruiseDAL.Schema
     CHECK (length(SampleGroupCode) > 0)
     CHECK (TallyBySubPop IN (0, 1)),
     CHECK (UseExternalSampler IN (0, 1)),
+    CHECK (SampleSelectorType IS NULL 
+        OR SampleSelectorType IN (
+            '{SAMPLESELECTORTYPE_SYSTEMATICSELECTER}', 
+            '{SAMPLESELECTORTYPE_BLOCKSELECTER}', 
+            '{SAMPLESELECTORTYPE_CLICKERSELECTER}')),
+    
 
     UNIQUE (SampleGroupID),
     UNIQUE (StratumCode, SampleGroupCode, CruiseID),
@@ -72,7 +82,7 @@ namespace CruiseDAL.Schema
     BigBAF INTEGER,
     TallyBySubPop BOOLEAN,
     UseExternalSampler BOOLEAN,
-    TallyMethod TEXT COLLATE NOCASE,
+    SampleSelectorType TEXT COLLATE NOCASE,
     Description TEXT,
     MinKPI INTEGER,
     MaxKPI INTEGER,
@@ -111,7 +121,7 @@ AFTER UPDATE OF
     KZ,
     BigBAF,
     TallyBySubPop,
-    TallyMethod,
+    SampleSelectorType,
     Description,
     MinKPI,
     MaxKPI,
@@ -144,7 +154,7 @@ BEGIN
         BigBAF,
         TallyBySubPop,
         UseExternalSampler,
-        TallyMethod,
+        SampleSelectorType,
         Description,
         MinKPI,
         MaxKPI,
@@ -171,7 +181,7 @@ BEGIN
         OLD.BigBAF,
         OLD.TallyBySubPop,
         OLD.UseExternalSampler,
-        OLD.TallyMethod,
+        OLD.SampleSelectorType,
         OLD.Description,
         OLD.MinKPI,
         OLD.MaxKPI,

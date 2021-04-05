@@ -102,8 +102,8 @@ classDiagram
     * TreeDefaultValue_CN
     -----
         - CruiseID : TEXT <<FK>>
-        - SpeciesCode : TEXT <<FK>>
-        - PrimaryProduct : TEXT <<FK>>
+        - SpeciesCode : TEXT
+        - PrimaryProduct : TEXT
         - CullPrimary : REAL
         - CullPrimaryDead : REAL
         - HiddenPrimary : REAL
@@ -393,7 +393,7 @@ classDiagram
         - BigBAF : INTEGER
         - TallyBySubPop : BOOLEAN
         - UseExternalSampler : BOOLEAN
-        - TallyMethod : TEXT
+        - SampleSelectorType : TEXT
         - Description : TEXT
         - MinKPI : INTEGER
         - MaxKPI : INTEGER
@@ -907,7 +907,7 @@ classDiagram
         - Field : TEXT
         - Min : REAL
         - Max : REAL
-        - Desctiption : TEXT
+        - Description : TEXT
     }
 
     class TreeAuditRuleSelector {
@@ -1156,8 +1156,6 @@ classDiagram
 
 
     Cruise <|-- TreeDefaultValue
-    LK_Product <|-- TreeDefaultValue
-    Species <|-- TreeDefaultValue
 
 
     LK_Region <|-- Sale

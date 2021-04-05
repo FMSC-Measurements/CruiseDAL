@@ -100,6 +100,7 @@ namespace CruiseDAL.V3.Test
                     samplegroupsAgain.Should().BeEquivalentTo(samplegroups, config => config
                         .Excluding(x => x.SampleSelectorState)
                         .Excluding(x => x.SampleSelectorType)
+                        .Excluding(x => x.TallyMethod)
                     );
 
                     var plotsAgain = v2again.From<V2.Models.Plot>().Query();
@@ -184,7 +185,8 @@ namespace CruiseDAL.V3.Test
 
                 sgv2Again.Should().BeEquivalentTo(sgv2, x =>
                     x.Excluding(y => y.SampleSelectorState)
-                    .Excluding(y => y.SampleSelectorType));
+                    .Excluding(y => y.SampleSelectorType)
+                    .Excluding(y => y.TallyMethod));
             }
         }
 
