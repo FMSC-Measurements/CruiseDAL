@@ -7,7 +7,7 @@ namespace CruiseDAL.Migrators
 {
     public class TreeDefaultValueMigrator : IMigrator
     {
-        public string MigrateToV3(string toDbName, string fromDbName, string cruiseID, string saleID)
+        public string MigrateToV3(string toDbName, string fromDbName, string cruiseID, string saleID, string deviceID)
         {
             return
 $@"INSERT INTO {toDbName}.TreeDefaultValue (
@@ -30,10 +30,7 @@ $@"INSERT INTO {toDbName}.TreeDefaultValue (
         BarkThicknessRatio,        
         AverageZ, 
         ReferenceHeightPercent,
-        CreatedBy,
-        Created_TS,
-        ModifiedBy,
-        Modified_TS
+        CreatedBy
     )
     SELECT
         tdvl.TreeDefaultValue_CN,
@@ -55,10 +52,7 @@ $@"INSERT INTO {toDbName}.TreeDefaultValue (
         tdvl.BarkThicknessRatio,
         tdvl.AverageZ,
         tdvl.ReferenceHeightPercent,
-        tdvl.CreatedBy,
-        tdvl.CreatedDate,
-        tdvl.ModifiedBy,
-        tdvl.ModifiedDate
+        '{deviceID}'
     FROM (SELECT * FROM {fromDbName}.TreeDefaultValue WHERE LiveDead = 'L') AS tdvl 
     LEFT JOIN (SELECT * FROM {fromDbName}.TreeDefaultValue WHERE LiveDead = 'D') AS tdvd USING (Species, PrimaryProduct);
 ";

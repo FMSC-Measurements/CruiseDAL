@@ -7,7 +7,7 @@ namespace CruiseDAL.Migrators
 {
     public class TallyHotkeyMigrator : IMigrator
     {
-        public string MigrateToV3(string toDbName, string fromDbName, string cruiseID, string saleID)
+        public string MigrateToV3(string toDbName, string fromDbName, string cruiseID, string saleID, string deviceID)
         {
             return
 $@"WITH ctFlattened AS ( 

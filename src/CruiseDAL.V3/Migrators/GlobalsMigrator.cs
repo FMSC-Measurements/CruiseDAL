@@ -7,7 +7,7 @@ namespace CruiseDAL.Migrators
 {
     public class GlobalsMigrator : IMigrator
     {
-        public string MigrateToV3(string toDbName, string fromDbName, string cruiseID, string saleID)
+        public string MigrateToV3(string toDbName, string fromDbName, string cruiseID, string saleID, string deviceID)
         {
             return
 $@"INSERT OR IGNORE INTO {toDbName}.Globals ( -- dont overwrite existing global valus

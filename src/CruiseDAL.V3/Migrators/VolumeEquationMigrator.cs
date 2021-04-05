@@ -8,7 +8,7 @@ namespace CruiseDAL.Migrators
 {
     public class VolumeEquationMigrator : IMigrator
     {
-        public string MigrateToV3(string toDbName, string fromDbName, string cruiseID, string saleID)
+        public string MigrateToV3(string toDbName, string fromDbName, string cruiseID, string saleID, string deviceID)
         {
 			return
 $@"INSERT INTO {toDbName}.VolumeEquation (
@@ -35,7 +35,8 @@ $@"INSERT INTO {toDbName}.VolumeEquation (
 		Model,
 		CommonSpeciesName,
 		MerchModFlag,
-		EvenOddSegment
+		EvenOddSegment,
+		CreatedBy
 ) 
 SELECT 
     	'{cruiseID}',
@@ -61,7 +62,8 @@ SELECT
 		Model,
 		CommonSpeciesName,
 		MerchModFlag,
-		EvenOddSegment
+		EvenOddSegment,
+		'{deviceID}'
 FROM {fromDbName}.VolumeEquation;";
         }
     }

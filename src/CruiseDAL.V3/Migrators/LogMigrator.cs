@@ -7,7 +7,7 @@ namespace CruiseDAL.Migrators
 {
     public class LogMigrator : IMigrator
     {
-        public string MigrateToV3(string toDbName, string fromDbName, string cruiseID, string saleID)
+        public string MigrateToV3(string toDbName, string fromDbName, string cruiseID, string saleID, string deviceID)
         {
             return
 $@"INSERT INTO {toDbName}.Log (
@@ -30,10 +30,7 @@ $@"INSERT INTO {toDbName}.Log (
     CubicFootRemoved,
     DIBClass,
     BarkThickness,
-    CreatedBy,
-    Created_TS,
-    ModifiedBy,
-    Modified_TS
+    CreatedBy
 )
 SELECT
     l.Log_CN,
@@ -65,10 +62,7 @@ SELECT
     l.CubicFootRemoved,
     l.DIBClass,
     l.BarkThickness,
-    l.CreatedBy,
-    l.CreatedDate,
-    l.ModifiedBy,
-    l.ModifiedDate
+    '{deviceID}' AS CreatedBy
 FROM {fromDbName}.Log as l
 JOIN {toDbName}.Tree AS t USING (Tree_CN);";
         }

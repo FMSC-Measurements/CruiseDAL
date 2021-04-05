@@ -7,7 +7,7 @@ namespace CruiseDAL.Migrators
 {
     public class CruiseMigrator : IMigrator
     {
-        public string MigrateToV3(string toDbName, string fromDbName, string cruiseID, string saleID)
+        public string MigrateToV3(string toDbName, string fromDbName, string cruiseID, string saleID, string deviceID)
         {
 return $@"INSERT INTO {toDbName}.Cruise (
     CruiseID,
@@ -18,10 +18,7 @@ return $@"INSERT INTO {toDbName}.Cruise (
     LogGradingEnabled,
     UseCrossStrataPlotTreeNumbering,
     Remarks,
-    CreatedBy,
-    Created_TS,
-    ModifiedBy,
-    Modified_TS
+    CreatedBy
 )
 SELECT
     '{cruiseID}',
@@ -30,13 +27,24 @@ SELECT
     Purpose,
     DefaultUOM,
     LogGradingEnabled,
-    CASE WHEN Purpose = 'Recon' THEN 0 ELSE 1 END,
+    CASE WHEN Purpose = 'Recon' THEN 0 ELSE 1 END AS UseCrossStrataPlotTreeNumbering,
     Remarks,
-    CreatedBy,
-    CreatedDate,
-    ModifiedBy,
-    ModifiedDate
-FROM {fromDbName}.Sale;";
+    '{deviceID}'  AS CreatedBy
+FROM {fromDbName}.Sale
+
+UNION ALL
+
+SELECT 
+    '{cruiseID}',
+    '{saleID}',
+    '{saleID}' AS SaleNumber,
+    NULL AS Purpose,
+    NULL AS DefaultUOM,
+    0 AS LogGradingEnabled,
+    0 AS UseCrossStrataPlotTreeNumbering,
+    NULL AS Remarks,
+    '{deviceID}'  AS CreatedBy
+WHERE NOT EXISTS (SELECT * FROM {fromDbName}.Sale);";
         }
     }
 }

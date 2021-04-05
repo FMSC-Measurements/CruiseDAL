@@ -8,7 +8,7 @@ namespace CruiseDAL.Migrators
 {
     public class LogFieldSetupDefaultMigrator : IMigrator
     {
-        public string MigrateToV3(string toDbName, string fromDbName, string cruiseID, string saleID)
+        public string MigrateToV3(string toDbName, string fromDbName, string cruiseID, string saleID, string deviceID)
         {
             var stratumDefaultID = Guid.NewGuid().ToString();
 
