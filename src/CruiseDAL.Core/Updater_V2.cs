@@ -126,6 +126,10 @@ namespace CruiseDAL
             {
                 UpdateTo_2_7_1(db);
             }
+            if(db.CheckFieldExists("Stratum", "HotKey") == false)
+            {
+                db.AddField("Stratum", new ColumnInfo("HotKey", "TEXT"));
+            }
 
         }
 
