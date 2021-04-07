@@ -7,6 +7,11 @@ namespace CruiseDAL.Schema
     {
         public string TableName => "TreeField";
 
+        public const string DBTYPE_REAL = "REAL";
+        public const string DBTYPE_TEXT = "TEXT";
+        public const string DBTYPE_BOOLEAN = "BOOLEAN";
+        public const string DBTYPE_INTEGER = "INTIGER";
+
         public string CreateTable =>
 @"CREATE TABLE TreeField (
     TreeField_CN INTEGER PRIMARY KEY AUTOINCREMENT,
