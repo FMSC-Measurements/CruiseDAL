@@ -19,7 +19,7 @@ INSERT INTO {toDbName}.StratumDefault (
     Description
 ) VALUES (
     '{stratumDefaultID}',
-    'Default Log Field Setup'
+    'Default Log Field Setup Profile'
 );
 
 
