@@ -120,6 +120,9 @@ namespace CruiseDAL.V3.Sync
                 SyncStem(cruiseID, source, destination, options);
                 progress?.Report(p++ / steps);
 
+                //processing
+                
+
                 
 
                 transaction.Commit();
@@ -1195,6 +1198,30 @@ namespace CruiseDAL.V3.Sync
             foreach (var i in sourceItems)
             {
                 var match = destination.From<LogFieldHeading>().Where(where).Query2(i).FirstOrDefault();
+
+                if (match == null)
+                {
+                    destination.Insert(i, persistKeyvalue: false);
+                }
+                else
+                {
+                    if (ShouldUpdate(i.Modified_TS, match.Modified_TS, options.Design))
+                    {
+                        destination.Update(i, whereExpression: where);
+                    }
+                }
+            }
+        }
+
+        private void SyncVolumeEquations(string cruiseID, DbConnection source, DbConnection destination, CruiseSyncOptions options)
+        {
+            var where = "CruiseID = @CruiseID AND Species = @Species AND PrimaryProduct =  @PrimaryProduct AND VolumeEquationNumber = @VolumeEquationNumber";
+            var sourceItems = source.From<VolumeEquation>()
+                .Where("CruiseID = @p1").Query(cruiseID);
+
+            foreach(var i in sourceItems)
+            {
+                var match = destination.From<VolumeEquation>().Where(where).Query2(i).FirstOrDefault();
 
                 if (match == null)
                 {
