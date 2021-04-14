@@ -13,7 +13,7 @@ namespace CruiseDAL.Schema
     StratumCode TEXT NOT NULL COLLATE NOCASE,
     CruiseID TEXT NOT NULL COLLATE NOCASE,
     Description TEXT,
-    Method TEXT NOT NULL COLLATE NOCASE,
+    Method TEXT COLLATE NOCASE,
     BasalAreaFactor REAL DEFAULT 0.0,
     FixedPlotSize REAL DEFAULT 0.0,
     KZ3PPNT INTEGER DEFAULT 0,

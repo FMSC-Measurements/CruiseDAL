@@ -2,24 +2,24 @@ namespace CruiseDAL.Schema
 {
     public static class CruiseMethods
     {
-        public static readonly string H_PCT = "100";
-        public static readonly string STR = "STR";
-        public static readonly string S3P = "S3P";
-        public static readonly string THREEP = "3P";
-        public static readonly string FIX = "FIX";
-        public static readonly string F3P = "F3P";
-        public static readonly string FCM = "FCM";
-        public static readonly string PCM = "PCM";
-        public static readonly string PNT = "PNT";
-        public static readonly string P3P = "P3P";
-        public static readonly string THREEPPNT = "3PPNT";
-        public static readonly string FIXCNT = "FIXCNT";
+        public const string H_PCT = "100";
+        public const string STR = "STR";
+        public const string S3P = "S3P";
+        public const string THREEP = "3P";
+        public const string FIX = "FIX";
+        public const string F3P = "F3P";
+        public const string FCM = "FCM";
+        public const string PCM = "PCM";
+        public const string PNT = "PNT";
+        public const string P3P = "P3P";
+        public const string THREEPPNT = "3PPNT";
+        public const string FIXCNT = "FIXCNT";
 
-        public static readonly string SYSTEMATIC_SAMPLER_TYPE = "SystematicSelecter";
-        public static readonly string BLOCK_SAMPLER_TYPE = "BlockSelecter";
-        public static readonly string SRS_SAMPLER_TYPE = "SRSSelecter";
-        public static readonly string THREEP_SAMPLER_TYPE = "ThreePSelecter";
-        public static readonly string CLICKER_SAMPLER_TYPE = "ClickerSelecter";
+        public const string SYSTEMATIC_SAMPLER_TYPE = "SystematicSelecter";
+        public const string BLOCK_SAMPLER_TYPE = "BlockSelecter";
+        public const string SRS_SAMPLER_TYPE = "SRSSelecter";
+        public const string THREEP_SAMPLER_TYPE = "ThreePSelecter";
+        public const string CLICKER_SAMPLER_TYPE = "ClickerSelecter";
 
         public static readonly string[] RECON_METHODS = { FIX, PNT };
         public static readonly string[] SUPPORTED_METHODS = { H_PCT, STR, S3P, THREEP, FIX, F3P, FCM, PCM, PNT, P3P, THREEPPNT, FIXCNT };

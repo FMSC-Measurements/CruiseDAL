@@ -7,7 +7,7 @@ namespace CruiseDAL.Migrators
 {
     public class TreeMigrator : IMigrator
     {
-        public string MigrateToV3(string toDbName, string fromDbName, string cruiseID, string saleID)
+        public string MigrateToV3(string toDbName, string fromDbName, string cruiseID, string saleID, string deviceID)
         {
             return
 $@"INSERT INTO {toDbName}.Tree (
@@ -22,10 +22,7 @@ $@"INSERT INTO {toDbName}.Tree (
         PlotNumber,
         TreeNumber,
         CountOrMeasure,
-        CreatedBy,
-        Created_TS,
-        ModifiedBy,
-        Modified_TS
+        CreatedBy
     )
     SELECT
         t.Tree_CN,
@@ -49,10 +46,7 @@ $@"INSERT INTO {toDbName}.Tree (
         p.PlotNumber, 
         t.TreeNumber,
         t.CountOrMeasure,
-        t.CreatedBy,
-        t.CreatedDate,
-        t.ModifiedBy,
-        t.ModifiedDate
+        '{deviceID}'
     FROM {fromDbName}.Tree as t
     JOIN {fromDbName}.CuttingUnit AS cu USING (CuttingUnit_CN)
     JOIN {fromDbName}.Stratum AS st USING (Stratum_CN)

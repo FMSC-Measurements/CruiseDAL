@@ -33,7 +33,7 @@ namespace CruiseDAL.Schema
     Field TEXT NOT NULL COLLATE NOCASE,
     Min REAL,
     Max REAL,
-    Desctiption TEXT
+    Description TEXT
 );";
 
         public string CreateIndexes =>
@@ -60,7 +60,7 @@ BEGIN
         OLD.Field,
         OLD.Min,
         OLD.Max,
-        OLD.Description
+        OLD.Description 
     );
 END;";
 

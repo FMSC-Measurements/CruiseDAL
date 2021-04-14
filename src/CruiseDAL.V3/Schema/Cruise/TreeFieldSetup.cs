@@ -52,7 +52,7 @@ CREATE INDEX NIX_TreeFieldSetup_StratumCode_CruiseID ON TreeFieldSetup (StratumC
 CREATE INDEX NIX_TreeFieldSetup_SampleGroupCode_StratumCode_CruiseID ON TreeFieldSetup (SampleGroupCode, StratumCode, CruiseID); 
 
 CREATE UNIQUE INDEX UIX_TreeFieldSetup_SampleGroupCode_StratumCode_Field_CruiseID ON TreeFieldSetup
-    (coalesce(SampleGroupCode, ''), StratumCode, Field, CruiseID);";
+    (ifnull(SampleGroupCode, ''), StratumCode, Field, CruiseID);";
 
         public IEnumerable<string> CreateTriggers => new[] { CREATE_TRIGGER_TreeFieldSetup_OnDelete };
 

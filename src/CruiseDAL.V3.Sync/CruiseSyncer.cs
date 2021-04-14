@@ -50,11 +50,12 @@ namespace CruiseDAL.V3.Sync
 
         public void Sync(string cruiseID, DbConnection source, DbConnection destination, CruiseSyncOptions options, IProgress<float> progress = null)
         {
-            var steps = 25;
+            var steps = 27;
             float p = 0.0f;
             var transaction = destination.BeginTransaction();
             try
             {
+                // core
                 SyncSale(cruiseID, source, destination, options);
                 progress?.Report(p++ / steps);
                 SyncCruise(cruiseID, source, destination, options);
@@ -63,6 +64,7 @@ namespace CruiseDAL.V3.Sync
                 SyncDevice(cruiseID, source, destination, options);
                 progress?.Report(p++ / steps);
 
+                // design
                 SyncCuttingUnits(cruiseID, source, destination, options);
                 progress?.Report(p++ / steps);
                 SyncStrata(cruiseID, source, destination, options);
@@ -80,11 +82,17 @@ namespace CruiseDAL.V3.Sync
                 SyncFixCNTTallyPopulation(cruiseID, source, destination, options);
                 progress?.Report(p++ / steps);
 
+                // field setup
                 SyncLogFieldSetup(cruiseID, source, destination, options);
                 progress?.Report(p++ / steps);
                 SyncTreeFieldSetup(cruiseID, source, destination, options);
                 progress?.Report(p++ / steps);
+                SyncTreeFieldHeading(cruiseID, source, destination, options);
+                progress?.Report(p++ / steps);
+                SyncLogFieldHeading(cruiseID, source, destination, options);
+                progress?.Report(p++ / steps);
 
+                // validation
                 SyncTreeAuditRule(cruiseID, source, destination, options);
                 progress?.Report(p++ / steps);
                 SyncTreeAuditRuleSelector(cruiseID, source, destination, options);
@@ -92,6 +100,7 @@ namespace CruiseDAL.V3.Sync
                 SyncTreeAuditResolution(cruiseID, source, destination, options);
                 progress?.Report(p++ / steps);
 
+                // field data
                 SyncPlots(cruiseID, source, destination, options);
                 progress?.Report(p++ / steps);
                 SyncPlotLocation(cruiseID, source, destination, options);
@@ -111,8 +120,10 @@ namespace CruiseDAL.V3.Sync
                 SyncStem(cruiseID, source, destination, options);
                 progress?.Report(p++ / steps);
 
-                SyncTreeFieldHeading(cruiseID, source, destination, options);
+                //processing
+                SyncVolumeEquations(cruiseID, source, destination, options);
                 progress?.Report(p++ / steps);
+
 
                 transaction.Commit();
             }
@@ -122,6 +133,8 @@ namespace CruiseDAL.V3.Sync
                 throw;
             }
         }
+
+        
 
         private bool ShouldUpdate(DateTime? srcMod, DateTime? desMod, SyncFlags syncFlags)
         {
@@ -1156,10 +1169,71 @@ namespace CruiseDAL.V3.Sync
 
         private void SyncTreeFieldHeading(string cruiseID, DbConnection source, DbConnection destination, CruiseSyncOptions options)
         {
+            var where = "CruiseID = @CruiseID AND Field = @Field";
             var sourceItems = source.From<TreeFieldHeading>().Where("CruiseID = @p1").Query(cruiseID);
 
             foreach (var i in sourceItems)
             {
+                var match = destination.From<TreeFieldHeading>().Where(where).Query2(i).FirstOrDefault();
+
+                if(match == null)
+                {
+                    destination.Insert(i, persistKeyvalue: false);
+                }
+                else
+                {
+                    if(ShouldUpdate(i.Modified_TS, match.Modified_TS, options.Design))
+                    {
+                        destination.Update(i, whereExpression: where);
+                    }
+                }
+            }
+        }
+
+        private void SyncLogFieldHeading(string cruiseID, DbConnection source, DbConnection destination, CruiseSyncOptions options)
+        {
+            var where = "CruiseID = @CruiseID AND Field = @Field";
+            var sourceItems = source.From<LogFieldHeading>().Where("CruiseID = @p1").Query(cruiseID);
+
+            foreach (var i in sourceItems)
+            {
+                var match = destination.From<LogFieldHeading>().Where(where).Query2(i).FirstOrDefault();
+
+                if (match == null)
+                {
+                    destination.Insert(i, persistKeyvalue: false);
+                }
+                else
+                {
+                    if (ShouldUpdate(i.Modified_TS, match.Modified_TS, options.Design))
+                    {
+                        destination.Update(i, whereExpression: where);
+                    }
+                }
+            }
+        }
+
+        private void SyncVolumeEquations(string cruiseID, DbConnection source, DbConnection destination, CruiseSyncOptions options)
+        {
+            var where = "CruiseID = @CruiseID AND Species = @Species AND PrimaryProduct =  @PrimaryProduct AND VolumeEquationNumber = @VolumeEquationNumber";
+            var sourceItems = source.From<VolumeEquation>()
+                .Where("CruiseID = @p1").Query(cruiseID);
+
+            foreach(var i in sourceItems)
+            {
+                var match = destination.From<VolumeEquation>().Where(where).Query2(i).FirstOrDefault();
+
+                if (match == null)
+                {
+                    destination.Insert(i, persistKeyvalue: false);
+                }
+                else
+                {
+                    if (ShouldUpdate(i.Modified_TS, match.Modified_TS, options.Processing))
+                    {
+                        destination.Update(i, whereExpression: where);
+                    }
+                }
             }
         }
     }

@@ -7,7 +7,7 @@ namespace CruiseDAL.Migrators
 {
     public class PlotMigrator : IMigrator
     {
-        public string MigrateToV3(string toDbName, string fromDbName, string cruiseID, string saleID)
+        public string MigrateToV3(string toDbName, string fromDbName, string cruiseID, string saleID, string deviceID)
         {
             return
 $@"INSERT INTO {toDbName}.Plot ( 
@@ -19,10 +19,7 @@ $@"INSERT INTO {toDbName}.Plot (
     Slope,
     Aspect,
     Remarks,
-    CreatedBy,
-    Created_TS,
-    ModifiedBy,
-    Modified_TS
+    CreatedBy
 )
 SELECT
     p.Plot_CN,
@@ -43,10 +40,7 @@ SELECT
     p.Slope,
     p.Aspect,
     group_concat(p.Remarks) AS Remarks,
-    p.CreatedBy,
-    p.CreatedDate,
-    p.ModifiedBy,
-    p.ModifiedDate
+    '{deviceID}' AS CreatedBy
 FROM {fromDbName}.Plot AS p
 JOIN {fromDbName}.CuttingUnit AS cu USING (CuttingUnit_CN)
 GROUP BY cu.Code, PlotNumber;";

@@ -11,6 +11,9 @@ namespace CruiseDAL.V3.Models
   [Field("Field")]
   public String Field { get; set; }
 
+  [Field("DefaultHeading")]
+  public String DefaultHeading { get; set; }
+
   [Field("DbType")]
   public String DbType { get; set; }
 

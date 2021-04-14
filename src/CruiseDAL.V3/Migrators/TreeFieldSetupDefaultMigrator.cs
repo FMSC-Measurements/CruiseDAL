@@ -9,7 +9,7 @@ namespace CruiseDAL.Migrators
 {
     public class TreeFieldSetupDefaultMigrator : IMigrator
     {
-        public string MigrateToV3(string toDbName, string fromDbName, string cruiseID, string saleID)
+        public string MigrateToV3(string toDbName, string fromDbName, string cruiseID, string saleID, string deviceID)
         {
             return
 $@"INSERT INTO {toDbName}.StratumDefault (
@@ -22,7 +22,8 @@ SELECT
         || substr('AB89', 1 + (abs(random()) % 4), 1) ||
         substr(hex(randomblob(2)), 2) || '-' || hex(randomblob(6))) AS StratumDefaultID,
     Method
-FROM {fromDbName}.TreeFieldSetupDefault;
+FROM {fromDbName}.TreeFieldSetupDefault
+GROUP BY Method;
 
 INSERT INTO { toDbName}.TreeFieldSetupDefault (
     StratumDefaultID,

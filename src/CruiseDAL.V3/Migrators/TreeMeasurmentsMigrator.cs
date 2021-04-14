@@ -7,7 +7,7 @@ namespace CruiseDAL.Migrators
 {
     public class TreeMeasurmentsMigrator : IMigrator
     {
-        public string MigrateToV3(string toDbName, string fromDbName, string cruiseID, string saleID)
+        public string MigrateToV3(string toDbName, string fromDbName, string cruiseID, string saleID, string deviceID)
         {
             return
 $@"INSERT INTO {toDbName}.TreeMeasurment (
@@ -43,10 +43,7 @@ $@"INSERT INTO {toDbName}.TreeMeasurment (
         MetaData,
         IsFallBuckScale,
         Initials,
-        CreatedBy,
-        Created_TS,
-        ModifiedBy,
-        Modified_TS
+        CreatedBy
     )
     SELECT
         t.Tree_CN AS TreeMeasurment_CN,
@@ -81,10 +78,7 @@ $@"INSERT INTO {toDbName}.TreeMeasurment (
         t.MetaData,
         t.IsFallBuckScale,
         t.Initials,
-        t.CreatedBy,
-        t.CreatedDate,
-        t.ModifiedBy,
-        t.ModifiedDate
+        '{deviceID}'
     FROM {fromDbName}.Tree AS t
     JOIN {toDbName}.Tree AS t3 USING (Tree_CN);";
         }

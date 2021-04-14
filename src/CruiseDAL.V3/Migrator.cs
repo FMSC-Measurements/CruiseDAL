@@ -75,7 +75,7 @@ namespace CruiseDAL
             return newFileName;
         }
 
-        public static string MigrateFromV2ToV3(string v2Path, bool overwrite = false)
+        public static string MigrateFromV2ToV3(string v2Path, bool overwrite = false, string deviceID = null)
         {
             var newFilePath = GetConvertedPath(v2Path);
             var newFileName = System.IO.Path.GetFileName(newFilePath);
@@ -84,23 +84,28 @@ namespace CruiseDAL
             var fileAlreadyExists = File.Exists(newFilePath);
             if (fileAlreadyExists && !overwrite) { throw new UpdateException(newFileName + " already exists"); }
 
-            MigrateFromV2ToV3(v2Path, newFilePath);
+            MigrateFromV2ToV3(v2Path, newFilePath, deviceID: deviceID);
 
             return newFilePath;
         }
 
-        public static void MigrateFromV2ToV3(string v2Path, string newFilePath)
+        public static void MigrateFromV2ToV3(string v2Path, string newFilePath, string deviceID =  null)
         {
-            using (var v2Cruise = new CruiseDatastore(v2Path, false, null, new Updater_V2()))
             using (var newCruise = new CruiseDatastore_V3(newFilePath, true))
             {
-                MigrateFromV2ToV3(v2Cruise, newCruise);
+                MigrateFromV2ToV3(v2Path, newCruise, deviceID: deviceID);
             }
-
-
         }
 
-        public static void MigrateFromV2ToV3(CruiseDatastore v2db, CruiseDatastore_V3 v3db)
+        public static void MigrateFromV2ToV3(string v2Path, CruiseDatastore_V3 v3db, string deviceID = null)
+        {
+            using (var v2Cruise = new CruiseDatastore(v2Path, false, null, new Updater_V2()))
+            {
+                MigrateFromV2ToV3(v2Cruise, v3db, deviceID: deviceID);
+            }
+        }
+
+        public static void MigrateFromV2ToV3(CruiseDatastore v2db, CruiseDatastore_V3 v3db, string deviceID = null)
         {
             var oldDbAlias = "v2";
             v3db.AttachDB(v2db, oldDbAlias);
@@ -108,7 +113,7 @@ namespace CruiseDAL
             try
             {
                 var connection = v3db.OpenConnection();
-                MigrateFromV2ToV3(connection, oldDbAlias, v3db.ExceptionProcessor);
+                MigrateFromV2ToV3(connection, oldDbAlias, deviceID: deviceID, exceptionProcessor: v3db.ExceptionProcessor);
             }
             finally
             {
@@ -117,7 +122,7 @@ namespace CruiseDAL
             }
         }
 
-        public static void MigrateFromV2ToV3(DbConnection connection, string from = "v2", IExceptionProcessor exceptionProcessor = null)
+        public static void MigrateFromV2ToV3(DbConnection connection, string from = "v2", string deviceID = null, IExceptionProcessor exceptionProcessor = null)
         {
             var to = "main";
 
@@ -148,7 +153,7 @@ namespace CruiseDAL
             var migrators = MIGRATORS;
             foreach (var migrator in migrators)
             {
-                var command = migrator.MigrateToV3(to, from, cruiseID, saleID);
+                var command = migrator.MigrateToV3(to, from, cruiseID, saleID, deviceID);
                 connection.ExecuteNonQuery(command, transaction: transaction, exceptionProcessor: exceptionProcessor);
             }
         }

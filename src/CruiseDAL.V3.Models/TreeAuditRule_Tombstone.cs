@@ -20,8 +20,8 @@ namespace CruiseDAL.V3.Models
   [Field("Max")]
   public Double? Max { get; set; }
 
-  [Field("Desctiption")]
-  public String Desctiption { get; set; }
+  [Field("Description")]
+  public String Description { get; set; }
 
  }
 

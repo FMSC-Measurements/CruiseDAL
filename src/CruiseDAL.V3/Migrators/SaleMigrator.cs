@@ -7,12 +7,11 @@ namespace CruiseDAL.Migrators
 {
     public class SaleMigrator : IMigrator
     {
-        public string MigrateToV3(string toDbName, string fromDbName, string cruiseID, string saleID)
+        public string MigrateToV3(string toDbName, string fromDbName, string cruiseID, string saleID, string deviceID)
         {
             return
 $@"INSERT INTO {toDbName}.Sale (
     SaleID,
-    Sale_CN,
     SaleNumber,
     Name,
     Region,
@@ -20,14 +19,10 @@ $@"INSERT INTO {toDbName}.Sale (
     District,
     Remarks,
     DefaultUOM,
-    CreatedBy,
-    Created_TS,
-    ModifiedBy,
-    Modified_TS
+    CreatedBy
 )
 SELECT
     '{saleID}',
-    Sale_CN,
     SaleNumber,
     Name,
     trim(Region) AS Region,
@@ -35,11 +30,23 @@ SELECT
     District,
     Remarks,
     DefaultUOM,
-    CreatedBy,
-    CreatedDate,
-    ModifiedBy,
-    ModifiedDate
-FROM {fromDbName}.Sale;";
+    '{deviceID}'
+FROM {fromDbName}.Sale
+
+UNION ALL
+
+SELECT 
+    '{saleID}',
+    '{saleID}' AS SaleNumber,
+    NULL AS Name,
+    NULL AS Region,
+    NULL AS Forest,
+    NULL AS District,
+    NULL AS Remarks,
+    NULL AS DefaultUOM,
+    '{deviceID}'
+WHERE NOT EXISTS (SELECT * FROM {fromDbName}.Sale);
+;";
         }
     }
 }

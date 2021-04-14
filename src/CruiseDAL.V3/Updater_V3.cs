@@ -21,9 +21,9 @@ namespace CruiseDAL
             {
                 UpdateTo_3_1_0(datastore);
             }
-            if(version == "3.1.0" || version == "3.2.0")
+            if(version == "3.1.0" || version == "3.2.0" || version == "3.2.1")
             {
-                UpdateTo_3_2_1(datastore);
+                UpdateTo_3_2_2(datastore);
             }
         }
 
@@ -44,7 +44,7 @@ namespace CruiseDAL
         }
 
         // update notes: Added table LK_District and updated initialization for LK_Forests
-        public static void UpdateTo_3_2_1(CruiseDatastore ds)
+        public static void UpdateTo_3_2_2(CruiseDatastore ds)
         {
             // create an in-memory database
             // to migrate into

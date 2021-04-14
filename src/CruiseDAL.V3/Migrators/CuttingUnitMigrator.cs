@@ -7,7 +7,7 @@ namespace CruiseDAL.Migrators
 {
     public class CuttingUnitMigrator : IMigrator
     {
-        public string MigrateToV3(string toDbName, string fromDbName, string cruiseID, string saleID)
+        public string MigrateToV3(string toDbName, string fromDbName, string cruiseID, string saleID, string deviceID)
         {
 return $@"INSERT INTO {toDbName}.CuttingUnit (
         CuttingUnitID,
@@ -18,7 +18,8 @@ return $@"INSERT INTO {toDbName}.CuttingUnit (
         Description,
         LoggingMethod,
         PaymentUnit,
-        Rx
+        Rx, 
+        CreatedBy
     )
     SELECT
         (hex( randomblob(4)) || '-' || hex( randomblob(2)) 
@@ -32,7 +33,8 @@ return $@"INSERT INTO {toDbName}.CuttingUnit (
         Description,
         trim(LoggingMethod) AS LoggingMethod,
         PaymentUnit,
-        Rx
+        Rx,
+        '{deviceID}' AS CreatedBy
     FROM {fromDbName}.CuttingUnit;";
         }
     }

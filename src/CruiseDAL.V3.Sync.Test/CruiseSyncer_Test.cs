@@ -448,7 +448,10 @@ namespace CruiseDAL.V3.Sync
             var subPopulationAgain = toDb.From<SubPopulation>()
                 .Where("SubPopulationID = @p1")
                 .Query(subPopID).FirstOrDefault();
-            subPopulationAgain.Should().BeEquivalentTo(newSubpopulation, x => x.Excluding(y => y.Modified_TS));
+            subPopulationAgain.Should().BeEquivalentTo(newSubpopulation, x => x
+                .Excluding(y => y.Modified_TS)
+                .Excluding(y => y.Created_TS)
+                .Excluding(y => y.CreatedBy));
         }
 
         [Fact]

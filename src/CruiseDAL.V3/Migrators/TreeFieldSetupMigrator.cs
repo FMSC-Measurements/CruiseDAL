@@ -7,7 +7,7 @@ namespace CruiseDAL.Migrators
 {
     public class TreeFieldSetupMigrator : IMigrator
     {
-        public string MigrateToV3(string toDbName, string fromDbName, string cruiseID, string saleID)
+        public string MigrateToV3(string toDbName, string fromDbName, string cruiseID, string saleID, string deviceID)
         {
             return
 $@"INSERT INTO {toDbName}.TreeFieldSetup (
@@ -28,12 +28,14 @@ JOIN {toDbName}.TreeField AS tf USING (Field); -- join with TreeField so that we
 INSERT INTO {toDbName}.TreeFieldHeading (
     CruiseID,
     Field,
-    Heading
+    Heading,
+    CreatedBy
 )
 SELECT
     '{cruiseID}',
     Field,
-    min(Heading)
+    min(Heading),
+    '{deviceID}'
 FROM { fromDbName}.TreeFieldSetup AS tfs
 JOIN {toDbName}.TreeField AS tf USING (Field)
 WHERE length(Heading) > 1

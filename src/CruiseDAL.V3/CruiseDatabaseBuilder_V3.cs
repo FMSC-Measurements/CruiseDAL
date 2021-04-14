@@ -11,7 +11,7 @@ namespace CruiseDAL
 {
     public class CruiseDatastoreBuilder_V3 : IDatastoreBuilder
     {
-        public static Version DATABASE_VERSION = new Version("3.2.1");
+        public static Version DATABASE_VERSION = new Version("3.2.2");
 
         public static readonly IEnumerable<ITableDefinition> TABLE_DEFINITIONS =
         new ITableDefinition[]
@@ -49,6 +49,7 @@ namespace CruiseDAL
 
             new TreeFieldSetupTableDefinition(),
             new TreeFieldHeading(),
+            new LogFieldHeading(),
             new LogFieldSetupTableDefinition(),
 
             new SamplerStateTableDefinition(),
@@ -63,10 +64,8 @@ namespace CruiseDAL
             new TreeMeasurmentsTableDefinition(),
             new TreeLocationTableDefinition(),
             new TreeFieldValueTableDefinition(),
-
             new LogTableDefinition(),
             new StemTableDefinition(),
-
             new TallyLedgerTableDefinition(),
 
             // validation

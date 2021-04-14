@@ -13,7 +13,9 @@ namespace CruiseDAL.Schema
     StratumDefaultID TEXT COLLATE NOCASE,
     Field TEXT NOT NULL COLLATE NOCASE,
     FieldOrder INTEGER Default 0,
-    UNIQUE(Field),
+
+    UNIQUE (StratumDefaultID, Field),    
+
     FOREIGN KEY (Field) REFERENCES LogField (Field)
 );";
 

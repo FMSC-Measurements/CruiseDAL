@@ -7,7 +7,7 @@ namespace CruiseDAL.Migrators
 {
     public class Plot_StratumMigrator : IMigrator
     {
-        public string MigrateToV3(string toDbName, string fromDbName, string cruiseID, string saleID)
+        public string MigrateToV3(string toDbName, string fromDbName, string cruiseID, string saleID, string deviceID)
         {
             return
 $@"INSERT INTO {toDbName}.Plot_Stratum (
@@ -19,10 +19,7 @@ $@"INSERT INTO {toDbName}.Plot_Stratum (
         IsEmpty,
         KPI,
         ThreePRandomValue,
-        CreatedBy,
-        Created_TS,
-        ModifiedBy,
-        Modified_TS
+        CreatedBy
     )
     SELECT
         p.Plot_CN AS Plot_Stratum_CN,
@@ -33,10 +30,7 @@ $@"INSERT INTO {toDbName}.Plot_Stratum (
         (CASE p.IsEmpty WHEN 'True' THEN 1 ELSE 0 END) AS IsEmpty,
         p.KPI,
         p.ThreePRandomValue,
-        p.CreatedBy,
-        p.CreatedDate,
-        p.ModifiedBy,
-        p.ModifiedDate
+        '{deviceID}' AS CreatedBy
     FROM {fromDbName}.Plot AS p
     JOIN {fromDbName}.CuttingUnit AS cu USING (CuttingUnit_CN)
     JOIN {fromDbName}.Stratum AS st USING (Stratum_CN);";

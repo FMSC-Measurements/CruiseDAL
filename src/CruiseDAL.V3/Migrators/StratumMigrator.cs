@@ -7,7 +7,7 @@ namespace CruiseDAL.Migrators
 {
     public class StratumMigrator : IMigrator
     {
-        public string MigrateToV3(string toDbName, string fromDbName, string cruiseID, string saleID)
+        public string MigrateToV3(string toDbName, string fromDbName, string cruiseID, string saleID, string deviceID)
         {
             return
 $@"INSERT INTO {toDbName}.Stratum (
@@ -24,10 +24,7 @@ $@"INSERT INTO {toDbName}.Stratum (
     FBSCode,
     YieldComponent,
     FixCNTField, 
-    CreatedBy,
-    Created_TS,
-    ModifiedBy,
-    Modified_TS
+    CreatedBy
 )
 SELECT
     (hex( randomblob(4)) || '-' || hex( randomblob(2)) 
@@ -46,10 +43,7 @@ SELECT
     st.FBSCode,
     st.YieldComponent,
     tc.FieldName,
-    st.CreatedBy,
-    st.CreatedDate,
-    st.ModifiedBy,
-    st.ModifiedDate
+    '{deviceID}' AS CreatedBy
 FROM {fromDbName}.Stratum AS st
 LEFT JOIN {fromDbName}.FixCNTTallyClass AS tc USING (Stratum_CN);";
         }

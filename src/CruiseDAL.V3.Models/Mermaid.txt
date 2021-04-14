@@ -25,6 +25,7 @@ classDiagram
     * LogField_CN
     -----
         - Field : TEXT
+        - DefaultHeading : TEXT
         - DbType : TEXT
     }
 
@@ -101,8 +102,8 @@ classDiagram
     * TreeDefaultValue_CN
     -----
         - CruiseID : TEXT <<FK>>
-        - SpeciesCode : TEXT <<FK>>
-        - PrimaryProduct : TEXT <<FK>>
+        - SpeciesCode : TEXT
+        - PrimaryProduct : TEXT
         - CullPrimary : REAL
         - CullPrimaryDead : REAL
         - HiddenPrimary : REAL
@@ -392,7 +393,7 @@ classDiagram
         - BigBAF : INTEGER
         - TallyBySubPop : BOOLEAN
         - UseExternalSampler : BOOLEAN
-        - TallyMethod : TEXT
+        - SampleSelectorType : TEXT
         - Description : TEXT
         - MinKPI : INTEGER
         - MaxKPI : INTEGER
@@ -460,6 +461,18 @@ classDiagram
 
     class TreeFieldHeading {
     * TreeFieldHeading_CN
+    -----
+        - CruiseID : TEXT <<FK>>
+        - Field : TEXT <<FK>>
+        - Heading : TEXT
+        - CreatedBy : TEXT
+        - Created_TS : DATETIME
+        - ModifiedBy : TEXT
+        - Modified_TS : DATETIME
+    }
+
+    class LogFieldHeading {
+    * LogFieldHeading_CN
     -----
         - CruiseID : TEXT <<FK>>
         - Field : TEXT <<FK>>
@@ -894,7 +907,7 @@ classDiagram
         - Field : TEXT
         - Min : REAL
         - Max : REAL
-        - Desctiption : TEXT
+        - Description : TEXT
     }
 
     class TreeAuditRuleSelector {
@@ -1143,8 +1156,6 @@ classDiagram
 
 
     Cruise <|-- TreeDefaultValue
-    LK_Product <|-- TreeDefaultValue
-    Species <|-- TreeDefaultValue
 
 
     LK_Region <|-- Sale
@@ -1188,6 +1199,9 @@ classDiagram
 
     Cruise <|-- TreeFieldHeading
     TreeField <|-- TreeFieldHeading
+
+    Cruise <|-- LogFieldHeading
+    LogField <|-- LogFieldHeading
 
     LogField <|-- LogFieldSetup
     Stratum <|-- LogFieldSetup

@@ -7,7 +7,7 @@ namespace CruiseDAL.Migrators
 {
     public class SampleGroupMigrator : IMigrator
     {
-        public string MigrateToV3(string toDbName, string fromDbName, string cruiseID, string saleID)
+        public string MigrateToV3(string toDbName, string fromDbName, string cruiseID, string saleID, string deviceID)
         {
             return
 $@"INSERT INTO {toDbName}.SampleGroup (
@@ -28,15 +28,12 @@ $@"INSERT INTO {toDbName}.SampleGroup (
     BigBAF,
     TallyBySubPop,
     UseExternalSampler,
-    TallyMethod,
+    SampleSelectorType,
     Description,
     MinKPI,
     MaxKPI,
     SmallFPS,
-    CreatedBy,
-    Created_TS,
-    ModifiedBy,
-    Modified_TS
+    CreatedBy
 )
 SELECT
     (hex( randomblob(4)) || '-' || hex( randomblob(2)) 
@@ -62,15 +59,12 @@ SELECT
             WHERE ct.SampleGroup_CN = sg.SampleGroup_CN AND ct.TreeDefaultValue_CN NOT NULL
         )) AS TallyBySubPop,
     (CASE WHEN sg.SampleSelectorType = 'ClickerSelecter' THEN 1 ELSE 0 END) AS UseExternalSampler,
-    sg.TallyMethod,
+    CASE WHEN sg.SampleSelectorType IN ('SystematicSelecter', 'BlockSelecter', 'ClickerSelecter') THEN sg.SampleSelectorType ELSE NULL END,
     sg.Description,
     sg.MinKPI,
     sg.MaxKPI,
     sg.SmallFPS,
-    sg.CreatedBy,
-    sg.CreatedDate,
-    sg.ModifiedBy,
-    sg.ModifiedDate
+    '{deviceID}' AS CreatedBy
 FROM {fromDbName}.SampleGroup AS sg
 JOIN {fromDbName}.Stratum AS st USING (Stratum_CN);";
         }

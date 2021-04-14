@@ -7,7 +7,7 @@ namespace CruiseDAL.Migrators
 {
     public class TallyLedgerMigrator : IMigrator
     {
-        public string MigrateToV3(string toDbName, string fromDbName, string cruiseID, string saleID)
+        public string MigrateToV3(string toDbName, string fromDbName, string cruiseID, string saleID, string deviceID)
         {
             return
                 // migrate counts from CountTree table
@@ -21,7 +21,8 @@ $@"INSERT INTO {toDbName}.TallyLedger (
     LiveDead,
     TreeCount,
     KPI,
-    EntryType
+    EntryType,
+    CreatedBy
 )
 SELECT
     'initFromCountTree-' || cu.Code || ',' || st.Code || ',' || sg.Code || ',' || ifnull(tdv.Species, 'null') || ',' || ifnull(tdv.LiveDead, 'null') || ',' || ifnull(Component_CN, 'master'),
@@ -33,7 +34,8 @@ SELECT
     tdv.LiveDead AS LiveDead,
     Sum(ct.TreeCount) AS TreeCount,
     Sum(ct.SumKPI) AS SumKPI,
-    'utility' AS EntryType 
+    'utility' AS EntryType,
+    '{deviceID}' AS CreatedBy
 FROM {fromDbName}.CountTree AS ct
 JOIN {fromDbName}.CuttingUnit AS cu USING (CuttingUnit_CN)
 JOIN {fromDbName}.SampleGroup AS sg USING (SampleGroup_CN)
@@ -62,7 +64,8 @@ $@"INSERT INTO {toDbName}.TallyLedger(
    LiveDead,
    TreeCount,
    KPI,
-   EntryType
+   EntryType,
+   CreatedBy
 )
 SELECT
     'migrateFromTree-' || t.Tree_CN,
@@ -76,7 +79,8 @@ SELECT
     tdv.LiveDead AS LiveDead,
     t.TreeCount,
     t.KPI AS KPI,
-    'utility' AS EntryType
+    'utility' AS EntryType,
+    '{deviceID}' AS CreatedBy
 FROM {fromDbName}.Tree AS t
 JOIN {fromDbName}.CuttingUnit AS cu USING (CuttingUnit_CN)
 JOIN {fromDbName}.Stratum AS st USING (Stratum_CN)

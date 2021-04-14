@@ -7,7 +7,7 @@ namespace CruiseDAL.Migrators
 {
     public class ReportsMigrator : IMigrator
     {
-        public string MigrateToV3(string toDbName, string fromDbName, string cruiseID, string saleID)
+        public string MigrateToV3(string toDbName, string fromDbName, string cruiseID, string saleID, string deviceID)
         {
             // todo
             return
@@ -15,13 +15,15 @@ $@"INSERT INTO {toDbName}.Reports (
     ReportID,
     CruiseID,
     Selected,
-    Title
+    Title,
+    CreatedBy
 )
 SELECT 
     ReportID,
     '{cruiseID}',
     Selected,
-    Title
+    Title,
+    '{deviceID}' AS CreatedBy
 FROM {fromDbName}.Reports;";
         }
     }
