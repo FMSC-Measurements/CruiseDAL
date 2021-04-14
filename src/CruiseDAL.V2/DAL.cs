@@ -15,7 +15,7 @@ using System.IO;
 
 namespace CruiseDAL
 {
-    public enum CruiseFileType { Unknown, Cruise, Template, Design, Master = 32 | Cruise, Component = 64 | Cruise, Backup = 128 | Cruise }
+    public enum CruiseFileType { Unknown, Cruise, Template, Design, Master = 32 | Cruise, Component = 64 | Cruise, Backup = 128 | Cruise, Process }
 
     public class DAL : CruiseDatastore
     {
@@ -94,6 +94,10 @@ namespace CruiseDAL
             else if (normPath.EndsWith(".back-cruise", StringComparison.OrdinalIgnoreCase))
             {
                 return CruiseFileType.Backup;
+            }
+            else if (normPath.EndsWith(".process", StringComparison.OrdinalIgnoreCase))
+            {
+                return CruiseFileType.Process;
             }
 
             return CruiseFileType.Unknown;
