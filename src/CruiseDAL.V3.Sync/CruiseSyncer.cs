@@ -50,7 +50,7 @@ namespace CruiseDAL.V3.Sync
 
         public void Sync(string cruiseID, DbConnection source, DbConnection destination, CruiseSyncOptions options, IProgress<float> progress = null)
         {
-            var steps = 26;
+            var steps = 27;
             float p = 0.0f;
             var transaction = destination.BeginTransaction();
             try
@@ -121,9 +121,9 @@ namespace CruiseDAL.V3.Sync
                 progress?.Report(p++ / steps);
 
                 //processing
-                
+                SyncVolumeEquations(cruiseID, source, destination, options);
+                progress?.Report(p++ / steps);
 
-                
 
                 transaction.Commit();
             }
@@ -1229,7 +1229,7 @@ namespace CruiseDAL.V3.Sync
                 }
                 else
                 {
-                    if (ShouldUpdate(i.Modified_TS, match.Modified_TS, options.Design))
+                    if (ShouldUpdate(i.Modified_TS, match.Modified_TS, options.Processing))
                     {
                         destination.Update(i, whereExpression: where);
                     }
