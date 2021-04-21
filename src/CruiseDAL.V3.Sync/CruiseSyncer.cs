@@ -265,7 +265,7 @@ namespace CruiseDAL.V3.Sync
 
         private void SyncCuttingUnit_Stratum(string cruiseID, DbConnection source, DbConnection destination, CruiseSyncOptions options)
         {
-            var where = "CuttingUnitCode = @CuttingUnitCode AND StratumCode = @StratumCode";
+            var where = "CuttingUnitCode = @CuttingUnitCode AND StratumCode = @StratumCode  AND CruiseID = @CruiseID";
             var sourceItems = source.From<CuttingUnit_Stratum>().Where("CruiseID = @p1").Query(cruiseID);
             foreach (var i in sourceItems)
             {
