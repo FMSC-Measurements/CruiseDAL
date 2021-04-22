@@ -10,6 +10,7 @@ namespace CruiseDAL
     {
         public void Update(CruiseDatastore datastore)
         {
+
             //PatchSureToMeasure(db);
 
             Update_Impl(datastore);
@@ -23,6 +24,9 @@ namespace CruiseDAL
         public static void Update_Impl(CruiseDatastore db)
         {
             var dbVersion = db.DatabaseVersion;
+            if (string.IsNullOrWhiteSpace(dbVersion))
+            { throw new UpdateException("unable to determin file version"); }
+
             if (!CheckCanUpdate(dbVersion))
             {
                 throw new IncompatibleSchemaException($"The version of this cruise file ({dbVersion}) is not compatible with the version of the software you are using." +
@@ -126,7 +130,7 @@ namespace CruiseDAL
             {
                 UpdateTo_2_7_1(db);
             }
-            if(db.CheckFieldExists("Stratum", "HotKey") == false)
+            if (db.CheckFieldExists("Stratum", "HotKey") == false)
             {
                 db.AddField("Stratum", new ColumnInfo("HotKey", "TEXT"));
             }
