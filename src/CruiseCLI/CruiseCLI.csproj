@@ -1,0 +1,14 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <Version>$(CruiseDALV3Version)</Version>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\CruiseDAL.V2\CruiseDAL.V2.csproj" />
+    <ProjectReference Include="..\CruiseDAL.V3\CruiseDAL.V3.csproj" />
+  </ItemGroup>
+
+</Project>
