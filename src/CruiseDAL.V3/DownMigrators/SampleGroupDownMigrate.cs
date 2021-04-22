@@ -31,7 +31,7 @@ SELECT
     sg.SampleGroup_CN,
     st.Stratum_CN,
     sg.SampleGroupCode AS Code,
-    sg.CutLeave,
+    ifnull(sg.CutLeave, 'C') AS CutLeave,
     ifnull(sg.UOM, (SELECT DefaultUOM FROM {fromDbName}.Cruise WHERE CruiseID = '{cruiseID}')),
     sg.PrimaryProduct,
     sg.SecondaryProduct,
