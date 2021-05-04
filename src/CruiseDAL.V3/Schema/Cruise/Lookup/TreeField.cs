@@ -53,7 +53,7 @@ VALUES
     ('Slope', 'Slope', 'REAL', 1),
     ('Aspect', 'Aspect', 'REAL', 1),
     ('Remarks', 'Remarks', 'TEXT', 1),
-    ('MetaData', 'Meta Data', 'REAL', 1),
+    ('MetaData', 'Meta Data', 'TEXT', 1),
     ('IsFallBuckScale', 'Is Fall Buck Scale', 'BOOLEAN', 1),
     ('Initials', 'Initials', 'TEXT', 1)
 ;";

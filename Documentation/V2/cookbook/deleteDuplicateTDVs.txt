@@ -1,0 +1,38 @@
+DELETE FROM TreeDefaultValueTreeAuditValue
+WHERE TreeDefaultValue_CN IN
+
+(
+	SELECT TreedefaultValue_CN FROM TreeDefaultValue AS tdv WHERE
+
+	(Species, PrimaryProduct, LiveDead) IN
+	(
+		SELECT Species, PrimaryProduct, LiveDead FROM 
+		(
+			SELECT count(*) AS cnt, Species, PrimaryProduct, LiveDead
+			FROM TreeDefaultValue
+			GROUP BY Species, PrimaryProduct, LiveDead)
+			WHERE cnt > 1)
+			AND NOT EXISTS (SELECT * FROM Tree AS t WHERE tdv.TreeDefaultValue_CN = t.TreeDefaultValue_CN)
+		)
+	)
+);
+
+
+DELETE FROM TreeDefaultValue
+WHERE TreeDefaultValue_CN IN
+
+(
+	SELECT TreedefaultValue_CN FROM TreeDefaultValue AS tdv WHERE
+
+	(Species, PrimaryProduct, LiveDead) IN
+	(
+		SELECT Species, PrimaryProduct, LiveDead FROM 
+		(
+			SELECT count(*) AS cnt, Species, PrimaryProduct, LiveDead
+			FROM TreeDefaultValue
+			GROUP BY Species, PrimaryProduct, LiveDead)
+			WHERE cnt > 1)
+			AND NOT EXISTS (SELECT * FROM Tree AS t WHERE tdv.TreeDefaultValue_CN = t.TreeDefaultValue_CN)
+		)
+	)
+);

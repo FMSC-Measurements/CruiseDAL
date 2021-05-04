@@ -1,6 +1,7 @@
 ﻿using CruiseDAL.DataObjects;
 using CruiseDAL.V3.Models;
 using FluentAssertions;
+using System;
 using System.IO;
 using System.Linq;
 using System.Runtime.CompilerServices;
@@ -27,6 +28,67 @@ namespace CruiseDAL.V3.Test
 
             var downMigrator = new DownMigrator();
             downMigrator.MigrateFromV3ToV2(initializer.CruiseID, fromDb, toDb);
+
+            ValidateMigration(fromDb, toDb);
+
+        }
+
+        [Fact]
+        public void MigrateFromV3ToV2_With_FieldDefaults()
+        {
+            var initializer = new DatabaseInitializer();
+            var fromPath = GetTempFilePath("MigrateFromV3ToV2.crz3");
+            var toPath = GetTempFilePath("MigrateFromV3ToV2.cruise");
+
+            using var fromDb = initializer.CreateDatabaseFile(fromPath);
+
+            var sg = initializer.SampleGroups.First();
+            fromDb.Insert(new TreeFieldSetup()
+            {
+                CruiseID = initializer.CruiseID,
+                SampleGroupCode  = sg.SampleGroupCode,
+                StratumCode = sg.StratumCode,
+                Field = "DBH",
+                DefaultValueReal = 12.0,
+            });
+
+            fromDb.Insert(new TreeFieldSetup()
+            {
+                CruiseID = initializer.CruiseID,
+                StratumCode = sg.StratumCode,
+                Field = "DBH",
+                DefaultValueReal = 11.0,
+            });
+
+            fromDb.Insert(new TreeFieldSetup()
+            {
+                CruiseID = initializer.CruiseID,
+                StratumCode = sg.StratumCode,
+                Field = "DRC",
+                DefaultValueReal = 13.0,
+            });
+
+            var tree = new Tree()
+            {
+                CruiseID = initializer.CruiseID,
+                TreeID = Guid.NewGuid().ToString(),
+                TreeNumber = 101,
+                CuttingUnitCode = initializer.Units.First(),
+                StratumCode = sg.StratumCode,
+                SampleGroupCode = sg.SampleGroupCode,
+            };
+            fromDb.Insert(tree);
+
+
+            using var toDb = new DAL(toPath, true);
+
+            var downMigrator = new DownMigrator();
+            downMigrator.MigrateFromV3ToV2(initializer.CruiseID, fromDb, toDb);
+
+            var treeAgain = toDb.From<V2.Models.Tree>().Where("TreeNumber = 101").Query().Single();
+            treeAgain.Should().NotBeNull();
+            treeAgain.DBH.Should().Be(12.0);
+            treeAgain.DRC.Should().Be(13.0);
 
             ValidateMigration(fromDb, toDb);
 

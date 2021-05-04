@@ -82,7 +82,7 @@ CREATE INDEX NIX_TallyLedger_Tombstone_TallyLedgerID ON TallyLedger_Tombstone
 (TallyLedgerID);";
 
         public string CreateIndexes =>
-@"CREATE INDEX NIX_TallyLedger_TreeID ON TallyLedger ('TreeID');
+@"CREATE INDEX NIX_TallyLedger_TreeID ON TallyLedger ('TreeID'); -- treeID should not be unique because we can have multiple leger entries per tree in FixCNT
 
 CREATE INDEX NIX_TallyLedger_SampleGroupCode_StratumCode_CruiseID ON TallyLedger ('SampleGroupCode', 'StratumCode', 'CruiseID');
 
