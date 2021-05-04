@@ -456,7 +456,7 @@ namespace CruiseDAL.V3.Sync
 
         private void SyncFixCNTTallyPopulation(string cruiseID, DbConnection source, DbConnection destination, CruiseSyncOptions options)
         {
-            var where = "CruiseID = @CruiseID AND StratumCode = @StratumCode AND SampleGroupCode = @SampleGroupCode AND Species = @Species AND LiveDead = @LiveDead";
+            var where = "CruiseID = @CruiseID AND StratumCode = @StratumCode AND SampleGroupCode = @SampleGroupCode AND SpeciesCode = @SpeciesCode AND LiveDead = @LiveDead";
 
             var sampleGroups = destination.From<SampleGroup>()
                 .Where("CruiseID = @p1")
