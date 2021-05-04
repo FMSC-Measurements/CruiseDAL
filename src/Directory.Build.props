@@ -15,7 +15,7 @@
 
     <TestsTargetFrameworks>net452;net461;netcoreapp2.0;</TestsTargetFrameworks>
 
-    <FMSCORMversion>2.6.11</FMSCORMversion>
+    <FMSCORMversion>2.6.11.1</FMSCORMversion>
 
     <CruiseDALv2SchemaVersion>2.7.2</CruiseDALv2SchemaVersion>
     <CruiseDALv3SchemaVersion>3.2.3</CruiseDALv3SchemaVersion>
