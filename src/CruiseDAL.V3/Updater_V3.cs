@@ -1,4 +1,5 @@
-﻿using FMSC.ORM.Core;
+﻿using CruiseDAL.Schema;
+using FMSC.ORM.Core;
 using FMSC.ORM.Logging;
 using System;
 using System.Collections.Generic;
@@ -24,6 +25,31 @@ namespace CruiseDAL
             if(version == "3.1.0" || version == "3.2.0" || version == "3.2.1")
             {
                 UpdateTo_3_2_2(datastore);
+            }
+            if(version == "3.2.2")
+            {
+                UpdateTo_3_2_3(datastore);
+            }
+        }
+
+        // update notes: changed view TreeAuditError
+        public static void UpdateTo_3_2_3(CruiseDatastore datastore)
+        {
+            datastore.BeginTransaction();
+            try
+            {
+                var viewDef = new TreeAuditErrorViewDefinition();
+                RecreateView(datastore, viewDef);
+
+                datastore.Execute("DELETE FROM TreeField WHERE Field = 'MetaData';");
+                datastore.Execute("INSERT INTO TreeField (Field, DefaultHeading, DbType, IsTreeMeasurmentField) VALUES ('MetaData', 'Meta Data', 'TEXT', 1)");
+
+                SetDatabaseVersion(datastore, "3.2.3");
+                datastore.CommitTransaction();
+            }
+            catch
+            {
+                datastore.RollbackTransaction();
             }
         }
 
@@ -71,6 +97,13 @@ namespace CruiseDAL
                 // migrated contents
                 newDatastore.BackupDatabase(ds);
             }
+        }
+
+        public static void RecreateView(CruiseDatastore datastore, IViewDefinition viewDef)
+        {
+            var viewName = viewDef.ViewName;
+            datastore.Execute($"DROP VIEW {viewName};");
+            datastore.Execute(viewDef.CreateView);
         }
 
         public static void Migrate(CruiseDatastore sourceDS, CruiseDatastore destinationDS, IEnumerable<string> excluding = null)
@@ -181,6 +214,13 @@ SELECT {fields} FROM {from}.{table};"
             var tables2 = conn2.QueryScalar2<string>(query);
 
             return tables1.Intersect(tables2).ToArray();
+        }
+
+        public static void SetDatabaseVersion(CruiseDatastore db, string newVersion)
+        {
+            string command = String.Format("UPDATE Globals SET Value = '{0}' WHERE Block = 'Database' AND Key = 'Version';", newVersion);
+            db.Execute(command);
+            db.LogMessage($"Updated structure version to {newVersion}");
         }
     }
 }
