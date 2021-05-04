@@ -18,7 +18,7 @@ measureTrees AS (
         t.LiveDead,
         sg.PrimaryProduct
     FROM Tree AS t
-    JOIN SampleGroup AS sg USING (SampleGroupCode, StratumCode)
+    JOIN SampleGroup AS sg USING (SampleGroupCode, StratumCode, CruiseID)
     WHERE t.CountOrMeasure = 'M'),
 
 -- expands TreeAuditRuleSelector to include Field, Min, Max
