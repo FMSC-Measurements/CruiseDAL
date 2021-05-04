@@ -6,7 +6,7 @@
   </PropertyGroup>
 
   <ItemGroup Condition="$(MicrosoftDataSqlite) == 'true'">
-    <PackageReference Include="Microsoft.Data.Sqlite" Version="3.1.10" />
+    <PackageReference Include="Microsoft.Data.Sqlite" Version="3.1.14" PrivateAssets="none" />
   </ItemGroup>
 
   <ItemGroup>
