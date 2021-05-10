@@ -15,20 +15,72 @@ namespace CruiseDAL
         public void Update(CruiseDatastore datastore)
         {
             var version = datastore.DatabaseVersion;
-            if (version == "3.0.0" 
+            if (version == "3.0.0"
                 || version == "3.0.1"
                 || version == "3.0.2"
                 || version == "3.0.3")
             {
                 UpdateTo_3_1_0(datastore);
             }
-            if(version == "3.1.0" || version == "3.2.0" || version == "3.2.1")
+            if (version == "3.1.0" || version == "3.2.0" || version == "3.2.1")
             {
                 UpdateTo_3_2_2(datastore);
             }
-            if(version == "3.2.2")
+            if (version == "3.2.2")
             {
                 UpdateTo_3_2_3(datastore);
+            }
+            if (version == "3.2.3")
+            {
+                UpdateTo_3_2_4(datastore);
+            }
+            // skip update for 3.2.4
+            // added check to Stratum.YieldComponent
+        }
+
+        public static void UpdateTo_3_1_0(CruiseDatastore ds)
+        {
+            // create an in-memory database
+            // to migrate into
+            using (var newDatastore = new CruiseDatastore_V3())
+            {
+                var excludeTables = new[] { "SamplerState" };
+                // migrate contents of old db into new in-memory database
+                Migrate(ds, newDatastore, excludeTables);
+
+                // use back up rutine to replace old database with
+                // migrated contents
+                newDatastore.BackupDatabase(ds);
+            }
+        }
+
+        // update notes: Added table LK_District and updated initialization for LK_Forests
+        public static void UpdateTo_3_2_2(CruiseDatastore ds)
+        {
+            // create an in-memory database
+            // to migrate into
+            using (var newDatastore = new CruiseDatastore_V3())
+            {
+                var excludeTables = new[]
+                {
+                    "LK_CruiseMethod",
+                    "LK_District",
+                    "LK_FIA",
+                    "LK_Forest",
+                    "LK_LoggingMethod",
+                    "LK_Product",
+                    "LK_Purpose",
+                    "LK_Region",
+                    "LK_UOM",
+                    "LogField",
+                    "TreeField",
+                };
+                // migrate contents of old db into new in-memory database
+                Migrate(ds, newDatastore, excludeTables);
+
+                // use back up rutine to replace old database with
+                // migrated contents
+                newDatastore.BackupDatabase(ds);
             }
         }
 
@@ -53,47 +105,16 @@ namespace CruiseDAL
             }
         }
 
-        public static void UpdateTo_3_1_0(CruiseDatastore ds)
+        private void UpdateTo_3_2_4(CruiseDatastore ds)
         {
             // create an in-memory database
             // to migrate into
             using (var newDatastore = new CruiseDatastore_V3())
             {
-                var excludeTables = new[] { "SamplerState" };
                 // migrate contents of old db into new in-memory database
-                Migrate(ds, newDatastore, excludeTables);
+                Migrate(ds, newDatastore);
 
-                // use back up rutine to replace old database with 
-                // migrated contents
-                newDatastore.BackupDatabase(ds);
-            }
-        }
-
-        // update notes: Added table LK_District and updated initialization for LK_Forests
-        public static void UpdateTo_3_2_2(CruiseDatastore ds)
-        {
-            // create an in-memory database
-            // to migrate into
-            using (var newDatastore = new CruiseDatastore_V3())
-            {
-                var excludeTables = new[] 
-                { 
-                    "LK_CruiseMethod",
-                    "LK_District",
-                    "LK_FIA",
-                    "LK_Forest",
-                    "LK_LoggingMethod",
-                    "LK_Product",
-                    "LK_Purpose",
-                    "LK_Region",
-                    "LK_UOM",
-                    "LogField",
-                    "TreeField",
-                };
-                // migrate contents of old db into new in-memory database
-                Migrate(ds, newDatastore, excludeTables);
-
-                // use back up rutine to replace old database with 
+                // use back up rutine to replace old database with
                 // migrated contents
                 newDatastore.BackupDatabase(ds);
             }
@@ -110,7 +131,6 @@ namespace CruiseDAL
         {
             var destConn = destinationDS.OpenConnection();
             var sourceConn = sourceDS.OpenConnection();
-
 
             try
             {
@@ -149,29 +169,28 @@ namespace CruiseDAL
                         foreach (var table in tables)
                         {
                             if (excluding?.Contains(table) ?? false)
-                            { continue; }
+                            { return; }
 
                             if (table == "Globals")
                             {
                                 destConn.ExecuteNonQuery(
-    $@"INSERT OR IGNORE INTO {to}.{table} (""Block"", ""Key"", ""Value"")
+                $@"INSERT OR IGNORE INTO {to}.{table} (""Block"", ""Key"", ""Value"")
 SELECT ""Block"", ""Key"", ""Value""
-FROM {from}.{table} 
+FROM {from}.{table}
 WHERE ""Block"" != 'Database' AND ""Key"" != 'Version';", null, transaction);
-                                continue;
+                                return;
                             }
                             else
                             {
-                                // get the interscetion of fields in table from both databases 
+                                // get the interscetion of fields in table from both databases
                                 // encased in double quotes just incase any field names are sql keywords
                                 string[] both = ListFieldsIntersect(sourceConn, destConn, table);
                                 var fields = string.Join(",", both);
 
                                 destConn.ExecuteNonQuery(
-    $@"INSERT OR IGNORE INTO {to}.{table} ({fields})
+                $@"INSERT OR IGNORE INTO {to}.{table} ({fields})
 SELECT {fields} FROM {from}.{table};"
                                     , null, transaction);
-
                             }
                         }
 
