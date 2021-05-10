@@ -111,8 +111,22 @@ namespace CruiseDAL
             // to migrate into
             using (var newDatastore = new CruiseDatastore_V3())
             {
+                var excludeTables = new[]
+                {
+                    "LK_CruiseMethod",
+                    "LK_District",
+                    "LK_FIA",
+                    "LK_Forest",
+                    "LK_LoggingMethod",
+                    "LK_Product",
+                    "LK_Purpose",
+                    "LK_Region",
+                    "LK_UOM",
+                    "LogField",
+                    "TreeField",
+                };
                 // migrate contents of old db into new in-memory database
-                Migrate(ds, newDatastore);
+                Migrate(ds, newDatastore, excludeTables);
 
                 // use back up rutine to replace old database with
                 // migrated contents
@@ -169,7 +183,7 @@ namespace CruiseDAL
                         foreach (var table in tables)
                         {
                             if (excluding?.Contains(table) ?? false)
-                            { return; }
+                            { continue; }
 
                             if (table == "Globals")
                             {
@@ -178,7 +192,7 @@ namespace CruiseDAL
 SELECT ""Block"", ""Key"", ""Value""
 FROM {from}.{table}
 WHERE ""Block"" != 'Database' AND ""Key"" != 'Version';", null, transaction);
-                                return;
+                                continue;
                             }
                             else
                             {
