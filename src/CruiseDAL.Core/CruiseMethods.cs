@@ -26,6 +26,8 @@ namespace CruiseDAL.Schema
         public static readonly string[] PLOT_METHODS = { FIX, F3P, FCM, PNT, PCM, P3P };
         public static readonly string[] THREE_P_METHODS = { THREEP, S3P, F3P, P3P };
         public static readonly string[] VARIABLE_RADIUS_METHODS = { PCM, PNT, P3P, THREEPPNT };
+        public static readonly string[] FIXED_SIZE_PLOT_METHODS = { FIX, FCM, F3P, FIXCNT };
+        public static readonly string[] FREQUENCY_SAMPLED_METHODS = { STR, FCM, PCM, S3P };
         public static readonly string[] TALLY_METHODS = { STR, THREEP, S3P, F3P, P3P, PCM, FCM };
         public static readonly string[] MANDITORY_TALLY_METHODS = { STR, THREEP, S3P, PCM, FCM };
         public static readonly string[] UNSUPPORTED_METHODS = { };

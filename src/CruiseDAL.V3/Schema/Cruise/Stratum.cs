@@ -35,6 +35,7 @@ namespace CruiseDAL.Schema
     UNIQUE(StratumID),
     UNIQUE(StratumCode, CruiseID),
 
+    CHECK (YieldComponent IN ('CL', 'CD', 'NL', 'ND')),
     CHECK (StratumID LIKE '________-____-____-____-____________'),
     CHECK (length(StratumCode) > 0)
 );";
