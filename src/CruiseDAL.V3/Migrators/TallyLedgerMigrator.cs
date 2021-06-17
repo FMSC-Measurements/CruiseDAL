@@ -64,6 +64,7 @@ $@"INSERT INTO {toDbName}.TallyLedger(
    LiveDead,
    TreeCount,
    KPI,
+   STM,
    EntryType,
    CreatedBy
 )
@@ -79,6 +80,7 @@ SELECT
     tdv.LiveDead AS LiveDead,
     t.TreeCount,
     t.KPI AS KPI,
+    CASE t.STM COLLATE NOCASE WHEN 'Y' THEN 1 WHEN 'N' THEN 0 ELSE 0 END AS STM,
     'utility' AS EntryType,
     '{deviceID}' AS CreatedBy
 FROM {fromDbName}.Tree AS t
