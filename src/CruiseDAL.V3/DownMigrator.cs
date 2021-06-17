@@ -22,6 +22,8 @@ namespace CruiseDAL
             new LogDownMigrator(),
             new CountTreeDownMigrator(),
             new ErrorLogDownMigrator(),
+            new VolumeEquationDownMigrator(),
+            new ReportsDownMigrator(),
         };
 
         public void MigrateFromV3ToV2(string cruiseID, CruiseDatastore_V3 v3db, CruiseDatastore v2db, string createdBy = null)

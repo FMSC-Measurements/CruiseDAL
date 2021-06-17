@@ -118,6 +118,7 @@ namespace CruiseDAL.V3.Test
         [Theory]
         [InlineData("7Wolf.cruise")]
         [InlineData("MultiTest.2014.10.31.cruise")]
+        [InlineData("R2_Test.cruise")]
         public void RoundTripV2Migration(string fileName)
         {
             var filePath = Path.Combine(TestFilesDirectory, fileName);
@@ -166,7 +167,11 @@ namespace CruiseDAL.V3.Test
                     );
 
                     var plotsAgain = v2again.From<V2.Models.Plot>().Query();
-                    plotsAgain.Should().BeEquivalentTo(plots);
+                    plotsAgain.Should().BeEquivalentTo(plots, 
+                        config => config
+                        .Excluding(x => x.Plot_GUID) // Plot_Stratum doesn't have a guid
+                        .Using<string>(ctx => ctx.Subject.Should().Be(ctx.Expectation ?? "False")) // v3 will auto populate IsEmpty with False if null
+                        .When(info => info.SelectedMemberPath.Equals(nameof(V2.Models.Plot.IsEmpty))));
 
                     var treesAgain = v2again.From<V2.Models.Tree>().Query();
                     treesAgain.Should().BeEquivalentTo(trees, congig => congig
@@ -175,6 +180,7 @@ namespace CruiseDAL.V3.Test
                         .Excluding(x => x.ExpansionFactor)
                         .Excluding(x => x.TreeFactor)
                         .Excluding(x => x.PointFactor)
+                        .Excluding(x => x.TreeCount) // tree count may get combined into the count tree table
                     );
                 }
             }
@@ -336,6 +342,29 @@ namespace CruiseDAL.V3.Test
                     .Excluding(y => y.PointFactor)
                     .Excluding(y => y.ExpansionFactor)
                     .Excluding(y => y.Tree_GUID));
+            }
+        }
+
+        [Theory]
+        [InlineData("R2_Test.cruise")]
+        public void Reports_Test(string fileName)
+        {
+            var (orgFile, crz3File, origAgain) = SetUpTestFile(fileName);
+
+            using (var dbv2 = new CruiseDatastore(orgFile))
+            using (var dbv2Again = new CruiseDatastore(origAgain))
+            {
+                var reportsV2Again = dbv2Again.From<V2.Models.Reports>()
+                    .Query().ToArray();
+                reportsV2Again.Should().NotBeEmpty();
+
+                var reportsV2 = dbv2.From<V2.Models.Reports>()
+                    .Query().ToArray();
+                reportsV2.Should().NotBeEmpty();
+
+                reportsV2Again.Should().HaveSameCount(reportsV2);
+                reportsV2Again.Should().BeEquivalentTo(reportsV2);
+                
             }
         }
 
