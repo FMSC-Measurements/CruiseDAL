@@ -32,6 +32,7 @@ namespace CruiseDAL.V3.Test
 
                 foreach(var table in CruiseDatastoreBuilder_V3.TABLE_DEFINITIONS)
                 {
+                    Output.WriteLine(table.TableName);
                     database.CheckTableExists(table.TableName).Should().BeTrue(table.TableName);
                 }
 

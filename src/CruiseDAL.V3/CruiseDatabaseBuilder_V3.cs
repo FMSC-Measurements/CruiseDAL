@@ -11,7 +11,7 @@ namespace CruiseDAL
 {
     public class CruiseDatastoreBuilder_V3 : IDatastoreBuilder
     {
-        public static Version DATABASE_VERSION = new Version("3.2.4");
+        public static Version DATABASE_VERSION = new Version("3.3.0");
 
         public static readonly IEnumerable<ITableDefinition> TABLE_DEFINITIONS =
         new ITableDefinition[]
@@ -79,10 +79,10 @@ namespace CruiseDAL
             new VolumeEquationTableDefinition(),
 
             //template
-            new StratumDefaultTableDefinition(),
+            new StratumTemplateTableDefinition(),
+            new StratumTemplateTreeFieldSetupTableDefinition(),
+            new StratumTemplateLogFieldSetupTableDefinition(),
             new SampleGroupDefaultTableDefinition(),
-            new TreeFieldSetupDefaultTableDefinition(),
-            new LogFieldSetupDefaultTableDefinition(),
             
             // utility
             new MessageLogTableDefinition(),
@@ -101,6 +101,9 @@ namespace CruiseDAL
                 new TreeFieldValue_AllViewDefinition(),
                 new TreeFieldValue_TreeMeasurmentViewDefinition(),
                 new TreeFieldValue_TreeMeasurment_FilteredViewDefinition(),
+                new StratumDefaultViewDefinition(),
+                new TreeFieldSetupDefaultViewDefinition(),
+                new LogFieldSetupDefaultViewDefinition(),
             };
 
         private ILogger Logger { get; } = LoggerProvider.Get();
