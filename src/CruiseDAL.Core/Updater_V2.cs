@@ -130,6 +130,11 @@ namespace CruiseDAL
             {
                 UpdateTo_2_7_1(db);
             }
+            if (db.DatabaseVersion == "2.7.1" || db.DatabaseVersion == "2.7.3")
+            {
+                UpdateTo_2_7_3(db);
+            }
+
             if (db.CheckFieldExists("Stratum", "HotKey") == false)
             {
                 db.AddField("Stratum", new ColumnInfo("HotKey", "TEXT"));
@@ -1115,6 +1120,25 @@ CREATE TABLE TreeEstimate (
             catch (Exception e)
             {
                 throw new SchemaUpdateException(version, targetVersion, e);
+            }
+        }
+
+        private static void UpdateTo_2_7_3(CruiseDatastore db)
+        {
+            var startVersion = db.DatabaseVersion;
+            var targetVersion = "2.7.3";
+
+            try
+            {
+                db.BeginTransaction();
+                db.Execute("DROP VIEW IF EXISTS CountTree_View;");
+                db.Execute("DROP VIEW IF EXISTS StratumAcres_View;");
+                SetDatabaseVersion(db, targetVersion);
+            }
+            catch (Exception e)
+            {
+                db.RollbackTransaction();
+                throw new SchemaUpdateException(startVersion, targetVersion, e);
             }
         }
 
