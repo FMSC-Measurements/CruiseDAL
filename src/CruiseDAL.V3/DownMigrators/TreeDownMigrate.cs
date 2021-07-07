@@ -5,10 +5,7 @@
         public string CreateCommand(string toDbName, string fromDbName, string cruiseID, string createdBy)
         {
             return
-$@"
-
-
-INSERT INTO {toDbName}.Tree (
+$@"INSERT INTO {toDbName}.Tree (
     Tree_CN,
     Tree_GUID,
     CuttingUnit_CN,
