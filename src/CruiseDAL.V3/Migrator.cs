@@ -47,8 +47,8 @@ namespace CruiseDAL
             new VolumeEquationMigrator(),
 
             // template
-            new LogFieldSetupDefaultMigrator(),
-            new TreeFieldSetupDefaultMigrator(),
+            new StratumTemplateTreeFieldSetupMigrator(),
+            new StratumTemplateLogFieldSetupMigrator(),
 
             new GlobalsMigrator(),
             new MessageLogMigrator(),

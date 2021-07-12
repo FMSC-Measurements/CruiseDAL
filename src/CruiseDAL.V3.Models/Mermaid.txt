@@ -421,7 +421,7 @@ classDiagram
         - BigBAF : INTEGER
         - TallyBySubPop : BOOLEAN
         - UseExternalSampler : BOOLEAN
-        - TallyMethod : TEXT
+        - SampleSelectorType : TEXT
         - Description : TEXT
         - MinKPI : INTEGER
         - MaxKPI : INTEGER
@@ -1051,15 +1051,12 @@ classDiagram
         - Deleted_TS : DATETIME
     }
 
-    class StratumDefault {
-    * StratumDefault_CN
+    class StratumTemplate {
+    * StratumTemplate_CN
     -----
-        - StratumDefaultID : TEXT
-        - Region : TEXT <<FK>>
-        - Forest : TEXT <<FK>>
-        - District : TEXT <<FK>>
+        - StratumTemplateName : TEXT
+        - CruiseID : TEXT <<FK>>
         - StratumCode : TEXT
-        - Description : TEXT
         - Method : TEXT <<FK>>
         - BasalAreaFactor : REAL
         - FixedPlotSize : REAL
@@ -1069,6 +1066,30 @@ classDiagram
         - FBSCode : TEXT
         - YieldComponent : TEXT
         - FixCNTField : TEXT <<FK>>
+    }
+
+    class StratumTemplateTreeFieldSetup {
+    * StratumTemplateTreeFieldSetup_CN
+    -----
+        - StratumTemplateName : TEXT <<FK>>
+        - CruiseID : TEXT <<FK>>
+        - Field : TEXT <<FK>>
+        - FieldOrder : INTEGER
+        - IsHidden : BOOLEAN
+        - IsLocked : BOOLEAN
+        - DefaultValueInt : INTEGER
+        - DefaultValueReal : REAL
+        - DefaultValueBool : BOOLEAN
+        - DefaultValueText : TEXT
+    }
+
+    class StratumTemplateLogFieldSetup {
+    * StratumTemplateLogFieldSetup_CN
+    -----
+        - StratumTemplateName : TEXT <<FK>>
+        - CruiseID : TEXT <<FK>>
+        - Field : TEXT <<FK>>
+        - FieldOrder : INTEGER
     }
 
     class SampleGroupDefault {
@@ -1096,29 +1117,6 @@ classDiagram
         - MinKPI : INTEGER
         - MaxKPI : INTEGER
         - SmallFPS : REAL
-    }
-
-    class TreeFieldSetupDefault {
-    * TreeFieldSetupDefault_CN
-    -----
-        - StratumDefaultID : TEXT
-        - SampleGroupDefaultID : TEXT
-        - Field : TEXT <<FK>>
-        - FieldOrder : INTEGER
-        - IsHidden : BOOLEAN
-        - IsLocked : BOOLEAN
-        - DefaultValueInt : INTEGER
-        - DefaultValueReal : REAL
-        - DefaultValueBool : BOOLEAN
-        - DefaultValueText : TEXT
-    }
-
-    class LogFieldSetupDefault {
-    * LogFieldSetupDefault_CN
-    -----
-        - StratumDefaultID : TEXT
-        - Field : TEXT <<FK>>
-        - FieldOrder : INTEGER
     }
 
     class MessageLog {
@@ -1276,20 +1274,20 @@ classDiagram
 
 
 
-    LK_CruiseMethod <|-- StratumDefault
-    LK_District <|-- StratumDefault
-    LK_Forest <|-- StratumDefault
-    LK_Region <|-- StratumDefault
-    TreeField <|-- StratumDefault
+    Cruise <|-- StratumTemplate
+    LK_CruiseMethod <|-- StratumTemplate
+    TreeField <|-- StratumTemplate
+
+    StratumTemplate <|-- StratumTemplateTreeFieldSetup
+    TreeField <|-- StratumTemplateTreeFieldSetup
+
+    LogField <|-- StratumTemplateLogFieldSetup
+    StratumTemplate <|-- StratumTemplateLogFieldSetup
 
     LK_District <|-- SampleGroupDefault
     LK_Forest <|-- SampleGroupDefault
     LK_Product <|-- SampleGroupDefault
     LK_Region <|-- SampleGroupDefault
     LK_UOM <|-- SampleGroupDefault
-
-    TreeField <|-- TreeFieldSetupDefault
-
-    LogField <|-- LogFieldSetupDefault
 
 

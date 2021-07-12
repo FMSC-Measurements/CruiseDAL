@@ -1,3 +1,5 @@
+BEGIN;
+
 INSERT INTO main.Plot
 SELECT * FROM fromDB.Plot;
 
@@ -6,4 +8,6 @@ SELECT * FROM fromDB.Tree;
 
 INSERT INTO main.Log
 SELECT * FROM fromDB.Log;
+
+COMMIT;
 

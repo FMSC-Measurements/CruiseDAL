@@ -41,6 +41,9 @@ UPDATE CountTree SET CountTree_CN = CountTree_CN + @shift;
 UPDATE Tally SET Tally_CN = Tally_CN + @shift;
 UPDATE CountTree SET Tally_CN = Tally_CN + @shift;
 
+UPDATE Component SET Component_CN = Component_CN + @Shift;
+UPDATE CountTree SET Component_CN = Component_CN + @Shift;
+
 PRAGMA foreign_keys = on;
 
 

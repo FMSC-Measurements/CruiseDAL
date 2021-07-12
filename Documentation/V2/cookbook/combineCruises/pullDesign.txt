@@ -1,3 +1,5 @@
+BEGIN;
+
 INSERT INTO main.CuttingUnit 
 SELECT * FROM fromDB.CuttingUnit;
 
@@ -16,9 +18,15 @@ SELECT * FROM fromDB.TreeFieldSetup;
 INSERT INTO main.LogFieldSetup
 SELECT * FROM fromDB.LogFieldSetup;
 
+INSERT INTO Tally
+SELECT * FROM fromDB.Tally;
+
+INSERT INTO Component
+SELECT * FROM fromDB.Component;
+
 INSERT INTO main.CountTree
 SELECT * FROM fromDB.CountTree;
 
-INSERT INTO Tally
-SELECT * FROM fromDB.Tally;
+COMMIT;
+
 

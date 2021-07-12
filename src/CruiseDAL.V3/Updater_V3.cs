@@ -1,4 +1,6 @@
 ﻿using CruiseDAL.Schema;
+using CruiseDAL.Schema.Views;
+using FMSC.ORM;
 using FMSC.ORM.Core;
 using FMSC.ORM.Logging;
 using System;
@@ -34,8 +36,123 @@ namespace CruiseDAL
             {
                 UpdateTo_3_2_4(datastore);
             }
-            // skip update for 3.2.4
-            // added check to Stratum.YieldComponent
+            if(version == "3.2.4")
+            {
+                UpdateTo_3_3_0(datastore);
+            }
+        }
+
+        private void UpdateTo_3_3_0(CruiseDatastore ds)
+        {
+            var curVersion = ds.DatabaseVersion;
+            var targetVersion = "3.3.0";
+            ds.BeginTransaction();
+
+            try
+            {
+                var cruiseIDs = ds.QueryScalar<string>("SELECT CruiseID FROM Cruise;");
+                if (cruiseIDs.Count() == 1)
+                {
+                    var cruiseID = cruiseIDs.Single();
+
+                    ds.Execute(new StratumTemplateTableDefinition().CreateTable);
+
+                    ds.Execute(
+    $@"INSERT INTO StratumTemplate (
+    StratumTemplateName,
+    CruiseID,
+    StratumCode,
+    Method,
+    BasalAreaFactor,
+    FixedPlotSize,
+    KZ3PPNT,
+    SamplingFrequency,
+    Hotkey,
+    FBSCode,
+    YieldComponent,
+    FixCNTField
+) SELECT 
+    (CASE WHEN sd.Method NOT NULL THEN sd.Method || ' ' ELSE '' END) || (CASE WHEN sd.StratumCode NOT NULL THEN sd.StratumCode || ' ' ELSE '' END) || ifnull(Description, '') AS StratumTemplateName,
+    '{cruiseID}' AS CruiseID,
+    StratumCode,
+    Method,
+    BasalAreaFactor,
+    FixedPlotSize,
+    KZ3PPNT,
+    SamplingFrequency,
+    Hotkey,
+    FBSCode,
+    YieldComponent,
+    FixCNTField
+FROM StratumDefault AS sd;");
+
+                    var sttfs = new StratumTemplateTreeFieldSetupTableDefinition();
+                    ds.Execute(sttfs.CreateTable);
+                    ds.Execute(sttfs.CreateIndexes);
+
+                    ds.Execute(
+    $@"INSERT INTO StratumTemplateTreeFieldSetup (
+    StratumTemplateName,
+    CruiseID,
+    Field,
+    FieldOrder,
+    IsHidden,
+    IsLocked,
+    DefaultValueInt,
+    DefaultValueReal,
+    DefaultValueBool,
+    DefaultValueText  
+) SELECT 
+    (CASE WHEN sd.Method NOT NULL THEN sd.Method || ' ' ELSE '' END) || (CASE WHEN sd.StratumCode NOT NULL THEN sd.StratumCode || ' ' ELSE '' END) || ifnull(Description, '') AS StratumTemplateName,
+    '{cruiseID}' AS CruiseID,
+    Field,
+    FieldOrder,
+    IsHidden,
+    IsLocked,
+    DefaultValueInt,
+    DefaultValueReal,
+    DefaultValueBool,
+    DefaultValueText  
+FROM TreeFieldSetupDefault AS tfsd
+JOIN StratumDefault AS sd USING (StratumDefaultID);");
+
+                    var stlfs = new StratumTemplateLogFieldSetupTableDefinition();
+                    ds.Execute(stlfs.CreateTable);
+                    ds.Execute(stlfs.CreateIndexes);
+
+                    ds.Execute(
+    $@"INSERT INTO StratumTemplateLogFieldSetup (
+    StratumTemplateName,
+    CruiseID,
+    Field,
+    FieldOrder
+) SELECT 
+    (CASE WHEN sd.Method NOT NULL THEN sd.Method || ' ' ELSE '' END) || (CASE WHEN sd.StratumCode NOT NULL THEN sd.StratumCode || ' ' ELSE '' END) || ifnull(Description, '') AS StratumTemplateName,
+    '{cruiseID}' AS CruiseID,
+    Field,
+    FieldOrder
+FROM LogFieldSetupDefault AS lfsd
+JOIN StratumDefault AS sd USING (StratumDefaultID);");
+
+                    ds.Execute("DROP TABLE StratumDefault;");
+                    ds.Execute("DROP TABLE TreeFieldSetupDefault;");
+                    ds.Execute("DROP TABLE LogFieldSetupDefault;");
+
+                    ds.Execute(new StratumDefaultViewDefinition().CreateView);
+                    ds.Execute(new TreeFieldSetupDefaultViewDefinition().CreateView);
+                    ds.Execute(new LogFieldSetupDefaultViewDefinition().CreateView);
+                }
+
+                SetDatabaseVersion(ds, targetVersion);
+
+                ds.CommitTransaction();
+            }
+            catch(Exception e)
+            {
+                ds.RollbackTransaction();
+                throw new SchemaUpdateException(curVersion, targetVersion, e);
+            }
+
         }
 
         public static void UpdateTo_3_1_0(CruiseDatastore ds)

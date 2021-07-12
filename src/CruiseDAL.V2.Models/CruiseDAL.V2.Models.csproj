@@ -7,7 +7,7 @@
   </PropertyGroup>
   
   <PropertyGroup>
-    <GenerateModels Condition="'$(GenerateModels)' == ''">false</GenerateModels>
+    <GenerateModels Condition="'$(GenerateModels)' == ''">true</GenerateModels>
   </PropertyGroup>
   
   <Target Name="BeforeGenerateModels" BeforeTargets="GenerateModels">
@@ -19,7 +19,7 @@
   </Target>
   
   <Import Project="$(ModelGenToolDirectory)FMSC.ORM.ModelGenerator.targets" />
-  <Target Name="_GenerateModel" DependsOnTargets="GenerateModels" BeforeTargets="Build" Condition="$(GenerateModels) == true">
+  <Target Name="_GenerateModel" DependsOnTargets="GenerateModels" BeforeTargets="Build" Condition="$(GenerateModels) == true AND $(TargetFramework) == 'net40'">
   </Target>
   
   <ItemGroup>

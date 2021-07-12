@@ -2,7 +2,7 @@
 {
 	public static partial class Schema
 	{
-		public static string CREATE_TABLES_VERSION = "2.7.1";
+		public static string CREATE_TABLES_VERSION = "2.7.3";
 
 		public static string CREATE_TABLES =
 		@"
@@ -818,23 +818,6 @@ RecordGUID TEXT,
 TableName TEXT NOT NULL COLLATE NOCASE,
 Data TEXT,
 DeletedDate DATETIME NON NULL);" +
-
-@"CREATE VIEW CountTree_View AS
-SELECT Stratum.Code as StratumCode,
-Stratum.Method as Method,
-SampleGroup.Code as SampleGroupCode,
-SampleGroup.PrimaryProduct as PrimaryProduct,
-CountTree.*
-FROM CountTree JOIN SampleGroup USING (SampleGroup_CN) JOIN Stratum USING (Stratum_CN);
-
-CREATE VIEW StratumAcres_View AS
-SELECT CuttingUnit.Code as CuttingUnitCode,
-Stratum.Code as StratumCode,
-ifnull(Area, CuttingUnit.Area) as Area,
-CuttingUnitStratum.*
-FROM CuttingUnitStratum
-JOIN CuttingUnit USING (CuttingUnit_CN)
-JOIN Stratum USING (Stratum_CN);" +
 
 $@"
 INSERT INTO Globals (Block, Key, Value) VALUES ('Database', 'Version', '{CREATE_TABLES_VERSION}');

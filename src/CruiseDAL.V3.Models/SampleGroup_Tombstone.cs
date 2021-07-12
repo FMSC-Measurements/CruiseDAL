@@ -53,8 +53,8 @@ namespace CruiseDAL.V3.Models
   [Field("UseExternalSampler")]
   public Boolean? UseExternalSampler { get; set; }
 
-  [Field("TallyMethod")]
-  public String TallyMethod { get; set; }
+  [Field("SampleSelectorType")]
+  public String SampleSelectorType { get; set; }
 
   [Field("Description")]
   public String Description { get; set; }

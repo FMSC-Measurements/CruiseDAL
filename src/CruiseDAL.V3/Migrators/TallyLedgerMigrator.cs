@@ -33,7 +33,7 @@ SELECT
     tdv.Species AS SpeciesCode,
     tdv.LiveDead AS LiveDead,
     Sum(ct.TreeCount) AS TreeCount,
-    Sum(ct.SumKPI) AS SumKPI,
+    Sum(ct.SumKPI) - (SELECT Sum(KPI) FROM {fromDbName}.Tree AS t WHERE t.CuttingUnit_CN = ct.CuttingUnit_CN AND t.SampleGroup_CN = ct.SampleGroup_CN AND (ct.TreeDefaultValue_CN IS NULL OR t.TreeDefaultValue_CN = ct.TreeDefaultValue_CN))  AS SumKPI,
     'utility' AS EntryType,
     '{deviceID}' AS CreatedBy
 FROM {fromDbName}.CountTree AS ct
@@ -64,6 +64,7 @@ $@"INSERT INTO {toDbName}.TallyLedger(
    LiveDead,
    TreeCount,
    KPI,
+   STM,
    EntryType,
    CreatedBy
 )
@@ -79,6 +80,7 @@ SELECT
     tdv.LiveDead AS LiveDead,
     t.TreeCount,
     t.KPI AS KPI,
+    CASE t.STM COLLATE NOCASE WHEN 'Y' THEN 1 WHEN 'N' THEN 0 ELSE 0 END AS STM,
     'utility' AS EntryType,
     '{deviceID}' AS CreatedBy
 FROM {fromDbName}.Tree AS t

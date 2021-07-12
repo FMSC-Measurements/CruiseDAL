@@ -23,9 +23,8 @@ namespace CruiseDAL
             new CountTreeDownMigrator(),
             new ErrorLogDownMigrator(),
             new VolumeEquationDownMigrator(),
+            new ReportsDownMigrator(),
         };
-
-        public IEnumerable<IDownMigrator> Migrators { get; set; } = DOWN_MIGRATORS;
 
         public void MigrateFromV3ToV2(string cruiseID, CruiseDatastore_V3 v3db, CruiseDatastore v2db, string createdBy = null)
         {
@@ -44,13 +43,13 @@ namespace CruiseDAL
             }
         }
 
-        public void MigrateFromV3ToV2(string cruiseID, DbConnection connection, string createdBy, string from = "v3", IExceptionProcessor exceptionProcessor = null)
+        public static void MigrateFromV3ToV2(string cruiseID, DbConnection connection, string createdBy, string from = "v3", IExceptionProcessor exceptionProcessor = null)
         {
             var to = "main";
 
             DbTransaction transaction = null;
 
-            var migrators = Migrators;
+            var migrators = DOWN_MIGRATORS;
             foreach (var migrator in migrators)
             {
                 var command = migrator.CreateCommand(to, from, cruiseID, createdBy);

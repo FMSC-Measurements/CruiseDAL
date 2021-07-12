@@ -118,6 +118,7 @@ namespace CruiseDAL.V3.Test
         [Theory]
         [InlineData("7Wolf.cruise")]
         [InlineData("MultiTest.2014.10.31.cruise")]
+        [InlineData("R2_Test.cruise")]
         public void RoundTripV2Migration(string fileName)
         {
             var filePath = Path.Combine(TestFilesDirectory, fileName);
@@ -138,6 +139,21 @@ namespace CruiseDAL.V3.Test
                 var samplegroups = v2db.From<V2.Models.SampleGroup>().Query();
                 var plots = v2db.From<V2.Models.Plot>().Query();
                 var trees = v2db.From<V2.Models.Tree>().Query();
+//                var countTrees = v2db.Query<TreeCNTTotals>(
+//@"SELECT CuttingUnit_CN, SampleGroup_CN, ifnull(TreeDefaultValue_CN, 0) AS TreeDefaultValue_CN, Sum(TreeCount) AS TreeCount, sum(SumKPI) AS SumKPI FROM CountTree 
+//GROUP BY CuttingUnit_CN, SampleGroup_CN, ifnull(TreeDefaultValue_CN, 0);").ToArray();
+
+                var treeCounts = v2db.Query<TreeCNTTotals>(
+@"SELECT cnt.CuttingUnit_CN, cnt.SampleGroup_CN, cnt.TreeDefaultValue_CN, cnt.TreeCount + sum(TreeCNTTotal) AS TreeCNT, cnt.SumKPI 
+ FROM CountTree AS cnt
+ JOIN (SELECT CuttingUnit_CN, SampleGroup_CN, TreeDefaultValue_CN, Sum(TreeCount) as TreeCNTTotal
+    FROM Tree 
+    GROUP BY CuttingUnit_CN, SampleGroup_CN, ifnull(TreeDefaultValue_CN, 0)) AS tcnt on tcnt.CuttingUnit_CN = cnt.CuttingUnit_CN
+                        AND tcnt.SampleGroup_CN = cnt.SampleGroup_CN
+                        AND (cnt.TreeDefaultValue_CN IS NULL OR ifnull(tcnt.TreeDefaultValue_CN, 0) = ifnull(cnt.TreeDefaultValue_CN, 0))
+
+GROUP BY cnt.CuttingUnit_CN, cnt.SampleGroup_CN, cnt.TreeDefaultValue_CN
+ORDER BY cnt.CuttingUnit_CN, cnt.SampleGroup_CN, cnt.TreeDefaultValue_CN;").ToArray();
 
                 var cruise = v3Database.From<Cruise>().Query().Single();
                 var cruiseID = cruise.CruiseID;
@@ -148,6 +164,28 @@ namespace CruiseDAL.V3.Test
 
                     var downMigrator = new DownMigrator();
                     downMigrator.MigrateFromV3ToV2(cruiseID, v3Database, v2again, "test");
+
+//                    var countTreesAgain = v2again.Query<TreeCNTTotals>(
+//@"SELECT CuttingUnit_CN, SampleGroup_CN, ifnull(TreeDefaultValue_CN, 0) AS TreeDefaultValue_CN, Sum(TreeCount) AS TreeCount, sum(SumKPI) AS SumKPI FROM CountTree 
+//GROUP BY CuttingUnit_CN, SampleGroup_CN, ifnull(TreeDefaultValue_CN, 0);").ToArray();
+
+
+//                    var countTreeDiff = countTreesAgain.Except(countTrees).ToArray();
+//                    countTreesAgain.Should().BeEquivalentTo(countTrees);
+
+                    var treeCountsAgain = v2again.Query<TreeCNTTotals>(
+@"SELECT cnt.CuttingUnit_CN, cnt.SampleGroup_CN, cnt.TreeDefaultValue_CN, cnt.TreeCount + sum(TreeCNTTotal) AS TreeCNT, cnt.SumKPI 
+ FROM CountTree AS cnt
+ JOIN (SELECT CuttingUnit_CN, SampleGroup_CN, TreeDefaultValue_CN, Sum(TreeCount) as TreeCNTTotal
+    FROM Tree 
+    GROUP BY CuttingUnit_CN, SampleGroup_CN, ifnull(TreeDefaultValue_CN, 0)) AS tcnt on tcnt.CuttingUnit_CN = cnt.CuttingUnit_CN
+                        AND tcnt.SampleGroup_CN = cnt.SampleGroup_CN
+                        AND (cnt.TreeDefaultValue_CN IS NULL OR ifnull(tcnt.TreeDefaultValue_CN, 0) = ifnull(cnt.TreeDefaultValue_CN, 0))
+GROUP BY cnt.CuttingUnit_CN, cnt.SampleGroup_CN, cnt.TreeDefaultValue_CN
+ORDER BY cnt.CuttingUnit_CN, cnt.SampleGroup_CN, cnt.TreeDefaultValue_CN;").ToArray();
+
+                    var treeCountDiff = treeCountsAgain.Except(treeCounts).ToArray();
+                    treeCountsAgain.Should().BeEquivalentTo(treeCounts);
 
                     var unitsAgain = v2again.From<V2.Models.CuttingUnit>().Query();
                     unitsAgain.Should().BeEquivalentTo(units, config => config
@@ -166,7 +204,11 @@ namespace CruiseDAL.V3.Test
                     );
 
                     var plotsAgain = v2again.From<V2.Models.Plot>().Query();
-                    plotsAgain.Should().BeEquivalentTo(plots);
+                    plotsAgain.Should().BeEquivalentTo(plots, 
+                        config => config
+                        .Excluding(x => x.Plot_GUID) // Plot_Stratum doesn't have a guid
+                        .Using<string>(ctx => ctx.Subject.Should().Be(ctx.Expectation ?? "False")) // v3 will auto populate IsEmpty with False if null
+                        .When(info => info.SelectedMemberPath.Equals(nameof(V2.Models.Plot.IsEmpty))));
 
                     var treesAgain = v2again.From<V2.Models.Tree>().Query();
                     treesAgain.Should().BeEquivalentTo(trees, congig => congig
@@ -175,6 +217,7 @@ namespace CruiseDAL.V3.Test
                         .Excluding(x => x.ExpansionFactor)
                         .Excluding(x => x.TreeFactor)
                         .Excluding(x => x.PointFactor)
+                        .Excluding(x => x.TreeCount) // tree count may get combined into the count tree table
                     );
                 }
             }
@@ -251,8 +294,6 @@ namespace CruiseDAL.V3.Test
                     .Excluding(y => y.TallyMethod));
             }
         }
-
-
 
         [Theory]
         [InlineData("7Wolf.cruise")]
@@ -339,6 +380,31 @@ namespace CruiseDAL.V3.Test
             }
         }
 
+        [Theory]
+        [InlineData("R2_Test.cruise")]
+        public void Reports_Test(string fileName)
+        {
+            var (orgFile, crz3File, origAgain) = SetUpTestFile(fileName);
+
+            using (var dbv2 = new CruiseDatastore(orgFile))
+            using (var dbv2Again = new CruiseDatastore(origAgain))
+            {
+                var reportsV2Again = dbv2Again.From<V2.Models.Reports>()
+                    .Query().ToArray();
+                reportsV2Again.Should().NotBeEmpty();
+
+                var reportsV2 = dbv2.From<V2.Models.Reports>()
+                    .Query().ToArray();
+                reportsV2.Should().NotBeEmpty();
+
+                reportsV2Again.Should().HaveSameCount(reportsV2);
+                reportsV2Again.Should().BeEquivalentTo(reportsV2);
+                
+            }
+        }
+
+
+
         private (string, string, string) SetUpTestFile(string fileName, [CallerMemberName] string caller = null)
         {
             var filePath = Path.Combine(TestFilesDirectory, fileName);
@@ -366,6 +432,16 @@ namespace CruiseDAL.V3.Test
             }
 
             return (orgFile, crz3File, v2againPath);
+        }
+
+        protected record TreeCNTTotals
+        {
+            public int CuttingUnit_CN { get; set; }
+            public int SampleGroup_CN { get; set; }
+            public int? TreeDefaultValue_CN { get; set; }
+            public int TreeCNT { get; set; }
+            public int TreeCount { get; set; }
+            public int SumKPI { get; set; }
         }
     }
 }
