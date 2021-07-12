@@ -139,6 +139,21 @@ namespace CruiseDAL.V3.Test
                 var samplegroups = v2db.From<V2.Models.SampleGroup>().Query();
                 var plots = v2db.From<V2.Models.Plot>().Query();
                 var trees = v2db.From<V2.Models.Tree>().Query();
+//                var countTrees = v2db.Query<TreeCNTTotals>(
+//@"SELECT CuttingUnit_CN, SampleGroup_CN, ifnull(TreeDefaultValue_CN, 0) AS TreeDefaultValue_CN, Sum(TreeCount) AS TreeCount, sum(SumKPI) AS SumKPI FROM CountTree 
+//GROUP BY CuttingUnit_CN, SampleGroup_CN, ifnull(TreeDefaultValue_CN, 0);").ToArray();
+
+                var treeCounts = v2db.Query<TreeCNTTotals>(
+@"SELECT cnt.CuttingUnit_CN, cnt.SampleGroup_CN, cnt.TreeDefaultValue_CN, cnt.TreeCount + sum(TreeCNTTotal) AS TreeCNT, cnt.SumKPI 
+ FROM CountTree AS cnt
+ JOIN (SELECT CuttingUnit_CN, SampleGroup_CN, TreeDefaultValue_CN, Sum(TreeCount) as TreeCNTTotal
+    FROM Tree 
+    GROUP BY CuttingUnit_CN, SampleGroup_CN, ifnull(TreeDefaultValue_CN, 0)) AS tcnt on tcnt.CuttingUnit_CN = cnt.CuttingUnit_CN
+                        AND tcnt.SampleGroup_CN = cnt.SampleGroup_CN
+                        AND (cnt.TreeDefaultValue_CN IS NULL OR ifnull(tcnt.TreeDefaultValue_CN, 0) = ifnull(cnt.TreeDefaultValue_CN, 0))
+
+GROUP BY cnt.CuttingUnit_CN, cnt.SampleGroup_CN, cnt.TreeDefaultValue_CN
+ORDER BY cnt.CuttingUnit_CN, cnt.SampleGroup_CN, cnt.TreeDefaultValue_CN;").ToArray();
 
                 var cruise = v3Database.From<Cruise>().Query().Single();
                 var cruiseID = cruise.CruiseID;
@@ -149,6 +164,28 @@ namespace CruiseDAL.V3.Test
 
                     var downMigrator = new DownMigrator();
                     downMigrator.MigrateFromV3ToV2(cruiseID, v3Database, v2again, "test");
+
+//                    var countTreesAgain = v2again.Query<TreeCNTTotals>(
+//@"SELECT CuttingUnit_CN, SampleGroup_CN, ifnull(TreeDefaultValue_CN, 0) AS TreeDefaultValue_CN, Sum(TreeCount) AS TreeCount, sum(SumKPI) AS SumKPI FROM CountTree 
+//GROUP BY CuttingUnit_CN, SampleGroup_CN, ifnull(TreeDefaultValue_CN, 0);").ToArray();
+
+
+//                    var countTreeDiff = countTreesAgain.Except(countTrees).ToArray();
+//                    countTreesAgain.Should().BeEquivalentTo(countTrees);
+
+                    var treeCountsAgain = v2again.Query<TreeCNTTotals>(
+@"SELECT cnt.CuttingUnit_CN, cnt.SampleGroup_CN, cnt.TreeDefaultValue_CN, cnt.TreeCount + sum(TreeCNTTotal) AS TreeCNT, cnt.SumKPI 
+ FROM CountTree AS cnt
+ JOIN (SELECT CuttingUnit_CN, SampleGroup_CN, TreeDefaultValue_CN, Sum(TreeCount) as TreeCNTTotal
+    FROM Tree 
+    GROUP BY CuttingUnit_CN, SampleGroup_CN, ifnull(TreeDefaultValue_CN, 0)) AS tcnt on tcnt.CuttingUnit_CN = cnt.CuttingUnit_CN
+                        AND tcnt.SampleGroup_CN = cnt.SampleGroup_CN
+                        AND (cnt.TreeDefaultValue_CN IS NULL OR ifnull(tcnt.TreeDefaultValue_CN, 0) = ifnull(cnt.TreeDefaultValue_CN, 0))
+GROUP BY cnt.CuttingUnit_CN, cnt.SampleGroup_CN, cnt.TreeDefaultValue_CN
+ORDER BY cnt.CuttingUnit_CN, cnt.SampleGroup_CN, cnt.TreeDefaultValue_CN;").ToArray();
+
+                    var treeCountDiff = treeCountsAgain.Except(treeCounts).ToArray();
+                    treeCountsAgain.Should().BeEquivalentTo(treeCounts);
 
                     var unitsAgain = v2again.From<V2.Models.CuttingUnit>().Query();
                     unitsAgain.Should().BeEquivalentTo(units, config => config
@@ -258,8 +295,6 @@ namespace CruiseDAL.V3.Test
             }
         }
 
-
-
         [Theory]
         [InlineData("7Wolf.cruise")]
         [InlineData("0432 C53East TS.cruise")]
@@ -368,6 +403,8 @@ namespace CruiseDAL.V3.Test
             }
         }
 
+
+
         private (string, string, string) SetUpTestFile(string fileName, [CallerMemberName] string caller = null)
         {
             var filePath = Path.Combine(TestFilesDirectory, fileName);
@@ -395,6 +432,16 @@ namespace CruiseDAL.V3.Test
             }
 
             return (orgFile, crz3File, v2againPath);
+        }
+
+        protected record TreeCNTTotals
+        {
+            public int CuttingUnit_CN { get; set; }
+            public int SampleGroup_CN { get; set; }
+            public int? TreeDefaultValue_CN { get; set; }
+            public int TreeCNT { get; set; }
+            public int TreeCount { get; set; }
+            public int SumKPI { get; set; }
         }
     }
 }
