@@ -26,7 +26,7 @@ namespace CruiseDAL
             new ReportsDownMigrator(),
         };
 
-        public void MigrateFromV3ToV2(string cruiseID, CruiseDatastore_V3 v3db, CruiseDatastore v2db, string createdBy = null)
+        public void MigrateFromV3ToV2(string cruiseID, CruiseDatastore_V3 v3db, CruiseDatastore v2db, string createdBy = null, IEnumerable<IDownMigrator> migrators = null)
         {
             var v3DbAlias = "v3";
             v2db.AttachDB(v3db, v3DbAlias);
@@ -34,7 +34,7 @@ namespace CruiseDAL
             try
             {
                 var connection = v2db.OpenConnection();
-                MigrateFromV3ToV2(cruiseID, connection, createdBy, v3DbAlias, v2db.ExceptionProcessor);
+                MigrateFromV3ToV2(cruiseID, connection, createdBy, v3DbAlias, v2db.ExceptionProcessor, migrators);
             }
             finally
             {
@@ -43,13 +43,13 @@ namespace CruiseDAL
             }
         }
 
-        public static void MigrateFromV3ToV2(string cruiseID, DbConnection connection, string createdBy, string from = "v3", IExceptionProcessor exceptionProcessor = null)
+        public static void MigrateFromV3ToV2(string cruiseID, DbConnection connection, string createdBy, string from = "v3", IExceptionProcessor exceptionProcessor = null, IEnumerable<IDownMigrator> migrators = null)
         {
             var to = "main";
 
             DbTransaction transaction = null;
 
-            var migrators = DOWN_MIGRATORS;
+            migrators ??= DOWN_MIGRATORS;
             foreach (var migrator in migrators)
             {
                 var command = migrator.CreateCommand(to, from, cruiseID, createdBy);

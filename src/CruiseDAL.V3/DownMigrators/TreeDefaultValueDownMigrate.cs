@@ -7,6 +7,14 @@ namespace CruiseDAL.DownMigrators
         {
             return
 $@"
+-- setup: before converting TDVs we need to create a unique index on the TDV table 
+-- that properly implements the unique Species, Product, LiveDead unique constraint
+CREATE UNIQUE INDEX IF NOT EXISTS {toDbName}.UIX_TreeDefaultValue_Species_PrimaryProduct_LiveDead 
+ON TreeDefaultValue (Species, PrimaryProduct, LiveDead);
+
+
+
+
 WITH 
 tdvExpandSpecies AS (
     SELECT 
@@ -123,13 +131,14 @@ tdvProdAndSpDefined AS (
 ),
 
 tdvExpanded AS (
-    SELECT * FROM tdvExpandSpecies
-    UNION ALL
+    SELECT * FROM tdvProdAndSpDefined
+    UNION ALL 
     SELECT * FROM tdvExpandProduct
     UNION ALL 
+    SELECT * FROM tdvExpandSpecies
+    UNION ALL
     SELECT * FROM tdvExpandProdAndSp
-    UNION ALL 
-    SELECT * FROM tdvProdAndSpDefined 
+     
 ),
 
 tdvLiveDeadExpanded AS (
@@ -157,8 +166,8 @@ tdvLiveDeadExpanded AS (
     UNION ALL
     SELECT 
         CruiseID,
-        'D' AS LiveDead,
         TreeDefaultValue_CN,
+        'D' AS LiveDead,
         PrimaryProduct,
         SpeciesCode,
         ContractSpecies,
@@ -220,7 +229,9 @@ SELECT
 	ReferenceHeightPercent,
 	'{createdBy}' AS CreatedBy
 FROM tdvLiveDeadExpanded
-WHERE CruiseID = '{cruiseID}';
+WHERE CruiseID = '{cruiseID}'
+ON CONFLICT (Species, PrimaryProduct, LiveDead)
+DO NOTHING;
 ";
         }
     }

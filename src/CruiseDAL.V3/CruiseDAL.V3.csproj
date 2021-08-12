@@ -4,6 +4,7 @@
     <RootNamespace>CruiseDAL</RootNamespace>
     <Version>$(CruiseDALV3Version)</Version>
     <TargetFrameworks>$(LibTargetFrameworks)</TargetFrameworks>
+    <LangVersion>9.0</LangVersion>
   </PropertyGroup>
 
   <ItemGroup>
