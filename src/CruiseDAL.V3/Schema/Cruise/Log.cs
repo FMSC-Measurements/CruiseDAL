@@ -9,6 +9,7 @@ namespace CruiseDAL.Schema
         public string CreateTable =>
 @"CREATE TABLE Log (
     Log_CN INTEGER PRIMARY KEY AUTOINCREMENT,
+    CruiseID TEXT NOT NULL,
     LogID TEXT NOT NULL,
     TreeID TEXT NOT NULL,
     LogNumber TEXT NOT NULL,
@@ -37,13 +38,15 @@ namespace CruiseDAL.Schema
 
     CHECK (LogID LIKE '________-____-____-____-____________'),
 
-    FOREIGN KEY (TreeID) REFERENCES Tree (TreeID) ON DELETE CASCADE
+    FOREIGN KEY (TreeID) REFERENCES Tree (TreeID) ON DELETE CASCADE,
+    FOREIGN KEY (CruiseID) REFERENCES Cruise (CruiseID)
 );";
 
         public string InitializeTable => null;
 
         public string CreateTombstoneTable =>
 @"CREATE TABLE Log_Tombstone (
+    CruiseID TEXT NOT NULL,
     LogID TEXT NOT NULL,
     TreeID TEXT NOT NULL,
     LogNumber TEXT NOT NULL,
@@ -74,11 +77,15 @@ CREATE INDEX NIX_Log_Tombstone_TreeID_LogNumber ON Log_Tombstone
 
 CREATE INDEX NIX_Log_Tombstone_LogID ON Log_Tombstone
 (LogID);
+
+CREATE INDEX NIX_Log_Tombstone_CruiseID ON Log_Tombstone
+(CruiseID);
 ";
 
         public string CreateIndexes =>
-@"CREATE INDEX Log_LogNumber ON Log (LogNumber);
-CREATE INDEX Log_TreeID ON Log (TreeID);";
+@"CREATE INDEX NIX_Log_LogNumber ON Log (LogNumber);
+CREATE INDEX NIX_Log_TreeID ON Log (TreeID);
+CREATE INDEX NIX_Log_CruiseID ON Log (CruiseID);";
 
         public IEnumerable<string> CreateTriggers => new[] 
         {
@@ -117,6 +124,7 @@ BEFORE DELETE ON Log
 FOR EACH ROW
 BEGIN
     INSERT OR REPLACE INTO Log_Tombstone (
+        CruiseID,
         LogID,
         TreeID,
         LogNumber,
@@ -142,6 +150,7 @@ BEGIN
         Modified_TS,
         Deleted_TS
     ) VALUES (
+        OLD.CruiseID,
         OLD.LogID,
         OLD.TreeID,
         OLD.LogNumber,

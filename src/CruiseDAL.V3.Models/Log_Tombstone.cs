@@ -5,6 +5,9 @@ namespace CruiseDAL.V3.Models
  [Table("Log_Tombstone")]
  public partial class Log_Tombstone
  {
+  [Field("CruiseID")]
+  public String CruiseID { get; set; }
+
   [Field("LogID")]
   public String LogID { get; set; }
 

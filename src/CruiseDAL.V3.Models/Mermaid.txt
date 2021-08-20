@@ -768,6 +768,7 @@ classDiagram
     class Log {
     * Log_CN
     -----
+        - CruiseID : TEXT <<FK>>
         - LogID : TEXT
         - TreeID : TEXT <<FK>>
         - LogNumber : TEXT
@@ -793,6 +794,7 @@ classDiagram
     }
 
     class Log_Tombstone {
+        - CruiseID : TEXT
         - LogID : TEXT
         - TreeID : TEXT
         - LogNumber : TEXT
@@ -822,6 +824,7 @@ classDiagram
     * Stem_CN
     -----
         - StemID : TEXT
+        - CruiseID : TEXT <<FK>>
         - TreeID : TEXT <<FK>>
         - Diameter : REAL
         - DiameterType : TEXT
@@ -833,6 +836,7 @@ classDiagram
 
     class Stem_Tombstone {
         - StemID : TEXT
+        - CruiseID : TEXT
         - TreeID : TEXT
         - Diameter : REAL
         - DiameterType : TEXT
@@ -1238,9 +1242,11 @@ classDiagram
     TreeField <|-- TreeFieldValue
 
 
+    Cruise <|-- Log
     Tree <|-- Log
 
 
+    Cruise <|-- Stem
     Tree <|-- Stem
 
 
