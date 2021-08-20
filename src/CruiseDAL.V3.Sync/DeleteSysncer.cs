@@ -442,7 +442,7 @@ namespace CruiseDAL.V3.Sync
         private void SyncTallyLedger(string cruiseID, DbConnection source, DbConnection destination, CruiseSyncOptions options)
         {
             var deletedItems = source.From<TallyLedger_Tombstone>()
-                .Where("CruiseID = @CruiseID")
+                .Where("CruiseID = @p1")
                 .Query(cruiseID);
 
             foreach(var i in deletedItems)
@@ -464,22 +464,58 @@ namespace CruiseDAL.V3.Sync
             }
         }
 
-        // TODO
-        //private void SyncLog(string cruiseID, DbConnection source, DbConnection destination, CruiseSyncOptions options)
-        //{
-        //    throw new NotImplementedException();
-        //}
+        private void synclog(string cruiseid, DbConnection source, DbConnection destination, CruiseSyncOptions options)
+        {
+            var deletedItems = source.From<Log_Tombstone>()
+                .Where("CruiseID = @p1")
+                .Query(cruiseid);
 
-        // TODO
-        //private void SyncStem(string cruiseID, DbConnection source, DbConnection destination, CruiseSyncOptions options)
-        //{
-        //    throw new NotImplementedException();
-        //}
+            foreach(var i in deletedItems)
+            {
+                var match = destination.From<Log>()
+                    .Where("LogID = @LogID")
+                    .Query2(new { i.LogID })
+                    .FirstOrDefault();
+
+                if(match != null)
+                {
+                    var x = destination.ExecuteNonQuery2("DELETE FROM Log WHERE LogID = @LogID;", new { i.LogID });
+                }
+                else
+                {
+                    destination.Insert(i);
+                }
+            }
+        }
+
+        private void SyncStem(string cruiseID, DbConnection source, DbConnection destination, CruiseSyncOptions options)
+        {
+            var deletedItems = source.From<Stem_Tombstone>()
+                .Where("CruiseID = @p1")
+                .Query(cruiseID);
+
+            foreach(var i in deletedItems)
+            {
+                var match = destination.From<Stem>()
+                    .Where("Stem = @StemID")
+                    .Query2(new { i.StemID })
+                    .FirstOrDefault();
+
+                if(match != null)
+                {
+                    var x = destination.ExecuteNonQuery2("DELETE FROM Stem WHERE StemID = @StemID;", new { i.StemID });
+                }
+                else
+                {
+                    destination.Insert(i);
+                }
+            }
+        }
 
         private void SyncVolumeEquations(string cruiseID, DbConnection source, DbConnection destination, CruiseSyncOptions options)
         {
             var deletedItems = source.From<VolumeEquation_Tombstone>()
-                .Where("CruiseID = @CruiseID")
+                .Where("CruiseID = @p1")
                 .Query(cruiseID);
 
             foreach(var i in deletedItems)
