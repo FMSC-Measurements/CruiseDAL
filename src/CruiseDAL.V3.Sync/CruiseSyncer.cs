@@ -11,7 +11,7 @@ namespace CruiseDAL.V3.Sync
     public class CruiseSyncer : IDbSyncer
     {
         private ILogger _logger;
-        private ILogger Logger => _logger ?? (_logger = LoggerProvider.Get());
+        private ILogger Logger => _logger ??= LoggerProvider.Get();
 
         public bool CheckContiansCruise(DbConnection db, string cruiseID)
         {
@@ -124,7 +124,6 @@ namespace CruiseDAL.V3.Sync
                 SyncVolumeEquations(cruiseID, source, destination, options);
                 progress?.Report(p++ / steps);
 
-
                 transaction.Commit();
             }
             catch (Exception e)
@@ -133,8 +132,6 @@ namespace CruiseDAL.V3.Sync
                 throw;
             }
         }
-
-        
 
         private bool ShouldUpdate(DateTime? srcMod, DateTime? desMod, SyncFlags syncFlags)
         {
@@ -684,6 +681,12 @@ namespace CruiseDAL.V3.Sync
 
                 if (match == null)
                 {
+                    // we're only checking for a tombstone if a match doesn't exist
+                    // it could be possible for a tombstone to exist event if a match
+                    // exists. However, I think we can ignore tombstones in such cases.
+                    // perhaps we decided to reinsert the record from another file, but
+                    // keep the original tombstone around to retain the records history.
+
                     var hasTombstone = destination.From<Tree_Tombstone>()
                         .Where(where)
                         .Count2(tree) > 0;
@@ -692,6 +695,9 @@ namespace CruiseDAL.V3.Sync
                             || (hasTombstone == false && syncFlags.HasFlag(SyncFlags.Insert)))
                     {
                         destination.Insert(tree, persistKeyvalue: false);
+
+                        // only sync tree data if we have synced the new tree record
+                        SyncTreeData(source, destination, tree.TreeID, options);
                     }
                 }
                 else
@@ -703,9 +709,9 @@ namespace CruiseDAL.V3.Sync
                     {
                         destination.Update(match, whereExpression: where);
                     }
-                }
 
-                SyncTreeData(source, destination, tree.TreeID, options);
+                    SyncTreeData(source, destination, tree.TreeID, options);
+                }
             }
         }
 
@@ -736,6 +742,8 @@ namespace CruiseDAL.V3.Sync
                             || (hasTombstone == false && options.FieldData.HasFlag(SyncFlags.Insert)))
                         {
                             destination.Insert(i, persistKeyvalue: false);
+
+                            SyncTreeData(source, destination, i.TreeID, options);
                         }
                     }
                     else
@@ -747,6 +755,8 @@ namespace CruiseDAL.V3.Sync
                         {
                             destination.Update(i, whereExpression: where);
                         }
+
+                        SyncTreeData(source, destination, i.TreeID, options);
                     }
                 }
             }
@@ -761,6 +771,10 @@ namespace CruiseDAL.V3.Sync
 
             var srcLatestTimeStamp = GetTreeDataModified(source, treeID);
             var destLatestTimeStamp = GetTreeDataModified(destination, treeID);
+
+            // we are comparing the agregate time stamps, per tree, across the files.
+            // This means changes to tree data in any of the tables that contain tree data
+            // can cause the given tree record to be updated in the sync.
 
             if (srcLatestTimeStamp != null
                 && (destLatestTimeStamp == null || srcLatestTimeStamp.Value.CompareTo(destLatestTimeStamp) > 0))
@@ -788,11 +802,15 @@ namespace CruiseDAL.V3.Sync
 
         public static DateTime? GetTreeDataModified(DbConnection db, string treeID)
         {
+            // get the latest time stamp on the tree by agregating the Created Timestamp and Modified Timestamps
+            // from both the TreeMeasurment record and the TreeFieldValues records.
             return db.ExecuteScalar<DateTime>(
 @" SELECT max(mod) FROM (
-        SELECT max( max(tm.Created_TS), max(tm.Modified_TS)) AS mod FROM TreeMeasurment AS tm JOIN Tree AS t USING (TreeID) WHERE t.TreeID = @p1
+        SELECT max( tm.Created_TS, tm.Modified_TS) AS mod FROM TreeMeasurment AS tm WHERE tm.TreeID = @p1
         UNION ALL
-        SELECT max( max(tfv.Created_TS), max(tfv.Modified_TS)) AS mod FROM TreeFieldValue AS tfv JOIN Tree AS t USING (TreeID) WHERE t.TreeID = @p1
+        SELECT max( tfv.Created_TS, tfv.Modified_TS) AS mod FROM TreeFieldValue AS tfv WHERE tfv.TreeID = @p1
+        UNION ALL
+        SELECT max( tl.Created_TS, tl.Modified_TS) AS mod FROM TreeLocation AS tl WHERE tl.TreeID = @p1
 );", parameters: new[] { treeID });
         }
 
@@ -1144,7 +1162,7 @@ namespace CruiseDAL.V3.Sync
             var where = "TreeAuditRuleID = @TreeAuditRuleID AND TreeID = @TreeID";
 
             var sourceItems = source.From<TreeAuditResolution>().Where("CruiseID = @p1").Query(cruiseID);
-            foreach(var i in sourceItems)
+            foreach (var i in sourceItems)
             {
                 var match = destination.From<TreeAuditResolution>()
                     .Where(where).Query2(i);
@@ -1176,13 +1194,13 @@ namespace CruiseDAL.V3.Sync
             {
                 var match = destination.From<TreeFieldHeading>().Where(where).Query2(i).FirstOrDefault();
 
-                if(match == null)
+                if (match == null)
                 {
                     destination.Insert(i, persistKeyvalue: false);
                 }
                 else
                 {
-                    if(ShouldUpdate(i.Modified_TS, match.Modified_TS, options.Design))
+                    if (ShouldUpdate(i.Modified_TS, match.Modified_TS, options.Design))
                     {
                         destination.Update(i, whereExpression: where);
                     }
@@ -1219,7 +1237,7 @@ namespace CruiseDAL.V3.Sync
             var sourceItems = source.From<VolumeEquation>()
                 .Where("CruiseID = @p1").Query(cruiseID);
 
-            foreach(var i in sourceItems)
+            foreach (var i in sourceItems)
             {
                 var match = destination.From<VolumeEquation>().Where(where).Query2(i).FirstOrDefault();
 

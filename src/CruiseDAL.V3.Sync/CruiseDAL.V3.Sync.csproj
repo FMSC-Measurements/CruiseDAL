@@ -4,6 +4,7 @@
     <!--<TargetFrameworks>$(LibTargetFrameworks)</TargetFrameworks>-->
     <TargetFrameworks>netstandard20</TargetFrameworks>
     <Version>$(CruiseDALV3SyncVersion)</Version>
+    <LangVersion>8.0</LangVersion>
   </PropertyGroup>
 
   <ItemGroup>
