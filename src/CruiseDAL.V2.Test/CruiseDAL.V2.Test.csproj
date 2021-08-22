@@ -4,6 +4,7 @@
     <TargetFrameworks>$(TestsTargetFrameworks)</TargetFrameworks>
     <RootNamespace>CruiseDAL.V2</RootNamespace>
     <IsPackable>false</IsPackable>
+    <LangVersion>8.0</LangVersion>
   </PropertyGroup>
 
   <ItemGroup>
@@ -24,5 +25,7 @@
     <ProjectReference Include="..\CruiseDAL.V2.Models\CruiseDAL.V2.Models.csproj" />
     <ProjectReference Include="..\CruiseDAL.V2\CruiseDAL.V2.csproj" />
   </ItemGroup>
+
+  <Import Project="..\CruiseDAL.TestCommon\CruiseDAL.TestCommon.projitems" Label="Shared" />
 
 </Project>

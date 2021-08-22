@@ -1,4 +1,5 @@
 ﻿using CruiseDAL.DataObjects;
+using CruiseDAL.TestCommon;
 using CruiseDAL.V3.Models;
 using FluentAssertions;
 using System;

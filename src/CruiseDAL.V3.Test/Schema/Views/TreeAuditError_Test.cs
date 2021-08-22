@@ -1,10 +1,8 @@
-﻿using CruiseDAL.V3.Models;
+﻿using CruiseDAL.TestCommon;
+using CruiseDAL.V3.Models;
 using FluentAssertions;
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Xunit;
 
 namespace CruiseDAL.V3.Test.Schema.Views
@@ -17,7 +15,6 @@ namespace CruiseDAL.V3.Test.Schema.Views
             var init = new DatabaseInitializer();
 
             using var db = init.CreateDatabase();
-
 
             var tree = new Tree
             {

@@ -30,7 +30,7 @@
     <LibTargetFrameworks>net40;net461;netstandard20;</LibTargetFrameworks>
     <LibTargetFrameworks Condition="'$(BuildCF)' == 'true'">$(LibTargetFrameworks)net35-cf;</LibTargetFrameworks>
 
-    <TestsTargetFrameworks>net452;net461;netcoreapp2.0;</TestsTargetFrameworks>
+    <TestsTargetFrameworks>net452;net461;netcoreapp3.1;</TestsTargetFrameworks>
   </PropertyGroup>
 
   <PropertyGroup Label="Directories">

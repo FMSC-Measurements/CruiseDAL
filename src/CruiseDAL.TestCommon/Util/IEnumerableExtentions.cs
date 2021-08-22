@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 
-namespace CruiseDAL.V3.Test.Util
+namespace CruiseDAL.TestCommon.Util
 {
     public static class IEnumerableExtentions
     {

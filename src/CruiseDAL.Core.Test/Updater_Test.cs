@@ -11,6 +11,7 @@ using FMSC.ORM.EntityModel.Attributes;
 using System.Collections.Generic;
 using FMSC.ORM.EntityModel.Support;
 using FMSC.ORM.Sql;
+using CruiseDAL.TestCommon;
 
 namespace CruiseDAL.Tests
 {
@@ -102,10 +103,8 @@ namespace CruiseDAL.Tests
 
                 using (var datastore = new CruiseDatastore(filePath))
                 {
-                    var dataStore = new CruiseDatastore(filePath);
-
                     var updater = new Updater_V2();
-                    updater.Invoking(x => x.Update(dataStore))
+                    updater.Invoking(x => x.Update(datastore))
                         .Should().NotThrow();
 
                     var semVerActual = new Version(datastore.DatabaseVersion);

@@ -1,12 +1,4 @@
-﻿using FluentAssertions;
-using FMSC.ORM.SQLite;
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Xunit;
+﻿using CruiseDAL.TestCommon;
 using Xunit.Abstractions;
 
 namespace CruiseDAL.Tests
@@ -24,7 +16,6 @@ namespace CruiseDAL.Tests
 
         //    try
         //    {
-
         //        using (var db = new SQLiteDatastore(filePath))
         //        {
         //            var builder = new CruiseDALDatastoreBuilder();

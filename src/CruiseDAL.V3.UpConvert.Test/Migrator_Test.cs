@@ -7,6 +7,7 @@ using System.Linq;
 using Xunit;
 using Xunit.Abstractions;
 using CruiseDAL.V3.Models;
+using CruiseDAL.TestCommon;
 
 namespace CruiseDAL.V3.Test
 {

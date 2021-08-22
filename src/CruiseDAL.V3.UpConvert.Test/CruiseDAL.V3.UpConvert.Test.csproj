@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
@@ -28,6 +28,7 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
+    <PackageReference Include="Xunit.SkippableFact" Version="1.4.13" />
   </ItemGroup>
 
   <ItemGroup>
@@ -35,5 +36,9 @@
     <ProjectReference Include="..\CruiseDAL.V3.Models\CruiseDAL.V3.Models.csproj" />
     <ProjectReference Include="..\CruiseDAL.V3.UpConvert\CruiseDAL.V3.UpConvert.csproj" />
   </ItemGroup>
+
+  <Import Project="..\CruiseDAL.TestCommon\CruiseDAL.TestCommon.projitems" Label="Shared" />
+
+  <Import Project="..\CruiseDAL.TestCommon.V3\CruiseDAL.TestCommon.V3.projitems" Label="Shared" />
 
 </Project>

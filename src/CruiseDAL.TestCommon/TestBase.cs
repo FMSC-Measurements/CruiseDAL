@@ -1,16 +1,20 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.Common;
+using System.Diagnostics;
 using System.IO;
 using System.Reflection;
 using Xunit.Abstractions;
 
-namespace CruiseDAL.Tests
+namespace CruiseDAL.TestCommon
 {
     public abstract class TestBase
     {
         protected readonly ITestOutputHelper Output;
         private string _testTempPath;
         private List<string> FilesToBeDeleted { get; } = new List<string>();
+        protected DbProviderFactory DbProvider { get; private set; }
+        protected Stopwatch _stopwatch;
 
         public TestBase(ITestOutputHelper output)
         {
@@ -21,6 +25,12 @@ namespace CruiseDAL.Tests
             {
                 Directory.CreateDirectory(testTempPath);
             }
+
+#if SYSTEM_DATA_SQLITE
+            DbProvider = System.Data.SQLite.SQLiteFactory.Instance;
+#elif MICROSOFT_DATA_SQLITE
+            DbProvider = Microsoft.Data.Sqlite.SqliteFactory.Instance;
+#endif
         }
 
         ~TestBase()
@@ -47,9 +57,28 @@ namespace CruiseDAL.Tests
             }
         }
 
-        public string TestTempPath => _testTempPath ?? (_testTempPath = Path.Combine(Path.GetTempPath(), "TestTemp", this.GetType().FullName));
+        public string TestTempPath => _testTempPath ??= Path.Combine(Path.GetTempPath(), "TestTemp", this.GetType().FullName);
         public string TestFilesDirectory => Path.Combine(TestExecutionDirectory, "TestFiles");
         public string ResourceDirectory => Path.Combine(TestExecutionDirectory, "Resources");
+
+        public string GetTempFilePath(string extention, string fileName = null)
+        {
+            return Path.Combine(TestTempPath, (fileName ?? Guid.NewGuid().ToString()) + extention);
+        }
+
+        public string GetTestFile(string fileName) => InitializeTestFile(fileName);
+
+        public string InitializeTestFile(string fileName)
+        {
+            var sourcePath = Path.Combine(TestFilesDirectory, fileName);
+            if (File.Exists(sourcePath) == false) { throw new FileNotFoundException(sourcePath); }
+
+            var targetPath = Path.Combine(TestTempPath, fileName);
+
+            RegesterFileForCleanUp(targetPath);
+            File.Copy(sourcePath, targetPath, true);
+            return targetPath;
+        }
 
         public void RegesterFileForCleanUp(string path)
         {
@@ -66,14 +95,17 @@ namespace CruiseDAL.Tests
             Output.WriteLine("}");
         }
 
-        public string InitializeTestFile(string fileName)
+        public void StartTimer()
         {
-            var sourcePath = Path.Combine(TestFilesDirectory, fileName);
-            var targetPath = Path.Combine(TestTempPath, fileName);
+            _stopwatch = new Stopwatch();
+            Output.WriteLine("Stopwatch Started");
+            _stopwatch.Start();
+        }
 
-            RegesterFileForCleanUp(targetPath);
-            File.Copy(sourcePath, targetPath, true);
-            return targetPath;
+        public void EndTimer()
+        {
+            _stopwatch.Stop();
+            Output.WriteLine("Stopwatch Ended:" + _stopwatch.ElapsedMilliseconds.ToString() + "ms");
         }
 
         //public static async Task<int> RunProcessAsync(string fileName, string args)

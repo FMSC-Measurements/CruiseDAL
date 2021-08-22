@@ -1,4 +1,5 @@
 ﻿using CruiseDAL.DownMigrators;
+using CruiseDAL.TestCommon;
 using CruiseDAL.V3.Models;
 using FluentAssertions;
 using System.Linq;
@@ -47,7 +48,7 @@ namespace CruiseDAL.V3.Test.DownMigrators
             tdvs.Should().OnlyContain(x => x.Recoverable == 1.1);
 
             // from the TDV with explicitly set product, we should have 2 TDVs for each species minus the one that was created with explicit sp and prod
-            var tdvFromProd = toDb.From<V2.Models.TreeDefaultValue>().Where("PrimaryProduct = @p1 AND Species != @p2 ").Query("01","sp1").ToArray();
+            var tdvFromProd = toDb.From<V2.Models.TreeDefaultValue>().Where("PrimaryProduct = @p1 AND Species != @p2 ").Query("01", "sp1").ToArray();
             tdvFromProd.Should().HaveCount((int)((spCount - 1) * 2));
             tdvFromProd.Should().OnlyContain(x => x.Recoverable == 1.2);
 
@@ -56,7 +57,7 @@ namespace CruiseDAL.V3.Test.DownMigrators
             tdvFromSp.Should().HaveCount((int)((prodCount - 1) * 2));
             tdvFromSp.Should().OnlyContain(x => x.Recoverable == 1.3);
 
-            // from the TDV with neither species or product defined, we should get (sp -1 * prod - 1) * 2 TDVs 
+            // from the TDV with neither species or product defined, we should get (sp -1 * prod - 1) * 2 TDVs
             var tdvFromAnyAny = toDb.From<V2.Models.TreeDefaultValue>().Where("Species != @p1 AND PrimaryProduct != @p2").Query("sp1", "01").ToArray();
             tdvFromAnyAny.Should().HaveCount((int)((spCount - 1) * (prodCount - 1) * 2));
             tdvFromAnyAny.Should().OnlyContain(x => x.Recoverable == 1.4);
