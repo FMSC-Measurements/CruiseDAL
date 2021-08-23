@@ -1134,6 +1134,7 @@ CREATE TABLE TreeEstimate (
                 db.Execute("DROP VIEW IF EXISTS CountTree_View;");
                 db.Execute("DROP VIEW IF EXISTS StratumAcres_View;");
                 SetDatabaseVersion(db, targetVersion);
+                db.CommitTransaction();
             }
             catch (Exception e)
             {
