@@ -78,6 +78,8 @@ namespace CruiseDAL.Tests
 
                     var updater = new Updater_V2();
                     updater.Invoking(x => x.Update(dataStore)).Should().Throw<IncompatibleSchemaException>();
+
+                    database.CurrentTransaction.Should().BeNull();
                 }
             }
             finally
