@@ -7,26 +7,33 @@
     <RepositoryUrl>https://github.com/FMSC-Measurements/CruiseDAL.git</RepositoryUrl>
   </PropertyGroup>
 
-  <PropertyGroup Label="CustomProperties">
-
-    <BuildCF>false</BuildCF>
-    <LibTargetFrameworks>net40;net461;netstandard20;</LibTargetFrameworks>
-    <LibTargetFrameworks Condition="'$(BuildCF)' == 'true'">$(LibTargetFrameworks)net35-cf;</LibTargetFrameworks>
-
-    <TestsTargetFrameworks>net452;net461;netcoreapp2.0;</TestsTargetFrameworks>
-
+  <PropertyGroup Label="ProjectVersions">
     <FMSCORMversion>2.6.11.1</FMSCORMversion>
 
     <CruiseDALv2SchemaVersion>2.7.3</CruiseDALv2SchemaVersion>
-    <CruiseDALv3SchemaVersion>3.3.0</CruiseDALv3SchemaVersion>
-    <CruiseDALIncrementalVersion>90</CruiseDALIncrementalVersion>
+    <CruiseDALv3SchemaVersion>3.3.1</CruiseDALv3SchemaVersion>
+    <CruiseDALIncrementalVersion>91</CruiseDALIncrementalVersion>
     <CruiseDALCoreVersion>3.0.0.$(CruiseDALIncrementalVersion)</CruiseDALCoreVersion>
     <CruiseDALV2Version>$(CruiseDALv2SchemaVersion).$(CruiseDALIncrementalVersion)</CruiseDALV2Version>
     <CruiseDALV3Version>$(CruiseDALv3SchemaVersion).$(CruiseDALIncrementalVersion)</CruiseDALV3Version>
     <CruiseDALV3SyncVersion>$(CruiseDALv3SchemaVersion).$(CruiseDALIncrementalVersion)</CruiseDALV3SyncVersion>
     <CruiseDALV3ModelsVersion>$(CruiseDALv3SchemaVersion).$(CruiseDALIncrementalVersion)</CruiseDALV3ModelsVersion>
     <CruiseDALV2ModelsVersion>$(CruiseDALv2SchemaVersion).$(CruiseDALIncrementalVersion)</CruiseDALV2ModelsVersion>
+    
+    <!--  -->
+    <CruiseDALUpconvertVersion>$(CruiseDALv3SchemaVersion).$(CruiseDALIncrementalVersion)00</CruiseDALUpconvertVersion>
+    <CruiseDALDownconvertVersion>$(CruiseDALv3SchemaVersion).$(CruiseDALIncrementalVersion)00</CruiseDALDownconvertVersion>
+  </PropertyGroup>
 
+  <PropertyGroup Label="CustomProperties">
+    <BuildCF>false</BuildCF>
+    <LibTargetFrameworks>net40;net461;netstandard20;</LibTargetFrameworks>
+    <LibTargetFrameworks Condition="'$(BuildCF)' == 'true'">$(LibTargetFrameworks)net35-cf;</LibTargetFrameworks>
+
+    <TestsTargetFrameworks>net452;net461;netcoreapp3.1;</TestsTargetFrameworks>
+  </PropertyGroup>
+
+  <PropertyGroup Label="Directories">
     <FMSCORMToolsDirectory>$(MSBuildThisFileDirectory)tools\</FMSCORMToolsDirectory>
     <ModelGenToolDirectory>$(FMSCORMToolsDirectory)ModelGen\</ModelGenToolDirectory>
   </PropertyGroup>

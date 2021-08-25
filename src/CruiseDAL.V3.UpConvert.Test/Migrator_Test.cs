@@ -7,6 +7,8 @@ using System.Linq;
 using Xunit;
 using Xunit.Abstractions;
 using CruiseDAL.V3.Models;
+using CruiseDAL.TestCommon;
+using CruiseDAL.UpConvert;
 
 namespace CruiseDAL.V3.Test
 {
@@ -34,7 +36,7 @@ namespace CruiseDAL.V3.Test
             using (var v2db = new DAL(filePath, true))
             {
                 var newFilePath = Migrator.GetConvertedPath(filePath);
-                Migrator.MigrateFromV2ToV3(filePath, newFilePath);
+                new Migrator().MigrateFromV2ToV3(filePath, newFilePath);
                 using (var newCruise = new CruiseDatastore_V3(newFilePath))
                 {
                     newCruise.DatabaseVersion.Should().NotBeNullOrEmpty();
@@ -52,7 +54,7 @@ namespace CruiseDAL.V3.Test
             var tempPath = Path.Combine(TestTempPath, fileName);
             File.Copy(filePath, tempPath);
 
-            var newCruisePath = Migrator.MigrateFromV2ToV3(tempPath);
+            var newCruisePath = new Migrator().MigrateFromV2ToV3(tempPath);
             using (var newCruise = new CruiseDatastore_V3(newCruisePath))
             {
                 var cruise = newCruise.From<Cruise>().Query().Single();
@@ -71,7 +73,7 @@ namespace CruiseDAL.V3.Test
             var tempPath = Path.Combine(TestTempPath, fileName);
             File.Copy(filePath, tempPath);
 
-            var newFilePath = Migrator.MigrateFromV2ToV3(filePath, true);
+            var newFilePath = new Migrator().MigrateFromV2ToV3(filePath, true);
 
             using (var destDB = new CruiseDatastore_V3())
             using (var srcDB = new CruiseDatastore_V3(newFilePath))
@@ -113,6 +115,15 @@ namespace CruiseDAL.V3.Test
                     destDB.ReleaseConnection();
                 }
             }
+        }
+
+
+        [Fact]
+        public void GetDefaultDeviceID()
+        {
+            var deviceID = Migrator.GetDefaultDeviceID();
+            deviceID.Should().NotBeNullOrWhiteSpace();
+            Output.WriteLine(deviceID);
         }
 
         

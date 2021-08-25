@@ -1,4 +1,4 @@
-﻿using CruiseDAL.V2.Test;
+﻿using CruiseDAL.TestCommon;
 using FMSC.ORM.TestSupport.TestModels;
 using System;
 using System.Linq;

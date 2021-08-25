@@ -36,12 +36,178 @@ namespace CruiseDAL
             {
                 UpdateTo_3_2_4(datastore);
             }
-            if(version == "3.2.4")
+            if (version == "3.2.4")
             {
                 UpdateTo_3_3_0(datastore);
             }
+            if (version == "3.3.0")
+            {
+                UpdateTo_3_3_1(datastore);
+            }
         }
 
+
+        // update 3.3.1 notes:
+        // Add CruiseID fields to Log and Stem tables
+        // Change is fully backwards compatible with prior versions
+        private void UpdateTo_3_3_1(CruiseDatastore ds)
+        {
+
+
+
+            var curVersion = ds.DatabaseVersion;
+            var targetVersion = "3.3.1";
+            ds.BeginTransaction();
+
+            // create an in-memory database
+            // to migrate into
+            using (var newDatastore = new CruiseDatastore_V3())
+            {
+                var excludeTables = new[]
+                {
+                        "LogField",
+                        "TreeField",
+                        "Log",
+                        "Stem",
+                };
+
+
+                Migrate(ds, newDatastore, excluding: excludeTables, excludeLooupTables: true);
+
+
+                var destConn = newDatastore.OpenConnection();
+                var sourceConn = ds.OpenConnection();
+
+                try
+                {
+                    var to = "main"; // alias used by the source database
+                    var from = "fromdb";
+
+#if SYSTEM_DATA_SQLITE
+                    var srcDataSource = ((System.Data.SQLite.SQLiteConnection)sourceConn).FileName;
+#else
+            var srcDataSource = sourceConn.DataSource;
+#endif
+                    destConn.ExecuteNonQuery($"ATTACH DATABASE \"{srcDataSource}\" AS {from};");
+
+                    using (var transaction = destConn.BeginTransaction())
+                    {
+                        try
+                        {
+                            sourceConn.ExecuteNonQuery(
+@$"INSERT INTO {to}.Log (
+    Log_CN,
+    CruiseID,
+    LogID,
+    TreeID,
+    LogNumber,
+    Grade,
+    SeenDefect,
+    PercentRecoverable,
+    Length,
+    ExportGrade,
+    SmallEndDiameter,
+    LargeEndDiameter,
+    GrossBoardFoot,
+    NetBoardFoot,
+    GrossCubicFoot,
+    NetCubicFoot,
+    BoardFootRemoved,
+    CubicFootRemoved,
+    DIBClass,
+    BarkThickness,
+    CreatedBy,
+    Created_TS,
+    ModifiedBy,
+    Modified_TS
+) 
+SELECT 
+    l.Log_CN,
+    t.CruiseID,
+    l.LogID,
+    l.TreeID,
+    l.LogNumber,
+    l.Grade,
+    l.SeenDefect,
+    l.PercentRecoverable,
+    l.Length,
+    l.ExportGrade,
+    l.SmallEndDiameter,
+    l.LargeEndDiameter,
+    l.GrossBoardFoot,
+    l.NetBoardFoot,
+    l.GrossCubicFoot,
+    l.NetCubicFoot,
+    l.BoardFootRemoved,
+    l.CubicFootRemoved,
+    l.DIBClass,
+    l.BarkThickness,
+    l.CreatedBy,
+    l.Created_TS,
+    l.ModifiedBy,
+    l.Modified_TS
+FROM {from}.Log AS l
+JOIN Tree AS t USING (TreeID);");
+
+                            sourceConn.ExecuteNonQuery(
+@$"INSERT INTO {to}.Stem (
+    Stem_CN,
+    StemID,
+    CruiseID,
+    TreeID,
+    Diameter,
+    DiameterType,
+    CreatedBy,
+    Created_TS,
+    ModifiedBy,
+    Modified_TS
+) 
+SELECT 
+    s.Stem_CN,
+    s.StemID,
+    t.CruiseID,
+    s.TreeID,
+    s.Diameter,
+    s.DiameterType,
+    s.CreatedBy,
+    s.Created_TS,
+    s.ModifiedBy,
+    s.Modified_TS
+FROM {from}.Stem AS s
+JOIN Tree AS t USING (TreeID);");
+
+                            transaction.Commit();
+                        }
+                        catch
+                        {
+                            transaction.Rollback();
+                            throw;
+                        }
+                        
+                    }
+
+                }
+                finally
+                {
+                    newDatastore.ReleaseConnection();
+                    ds.ReleaseConnection();
+                }
+
+                // use back up rutine to replace old database with
+                // migrated contents
+                newDatastore.BackupDatabase(ds);
+            }
+
+
+
+        }
+
+        // update 3.3.0 notes
+        // redesign Stratum Template tables. Remove existing StratumDefault, LogFieldSetupDefault, TreeFielSetupDefault tables
+        // Replace with StratumTemplate and StratumTemplateTreeFieldSetup tables
+        // Updated schema is not backwards compatible with previous schema, 
+        // but no application code relies on previous tables. Previous tables were only written to when 
+        // file was created.
         private void UpdateTo_3_3_0(CruiseDatastore ds)
         {
             var curVersion = ds.DatabaseVersion;
@@ -147,7 +313,7 @@ JOIN StratumDefault AS sd USING (StratumDefaultID);");
 
                 ds.CommitTransaction();
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 ds.RollbackTransaction();
                 throw new SchemaUpdateException(curVersion, targetVersion, e);
@@ -155,24 +321,7 @@ JOIN StratumDefault AS sd USING (StratumDefaultID);");
 
         }
 
-        public static void UpdateTo_3_1_0(CruiseDatastore ds)
-        {
-            // create an in-memory database
-            // to migrate into
-            using (var newDatastore = new CruiseDatastore_V3())
-            {
-                var excludeTables = new[] { "SamplerState" };
-                // migrate contents of old db into new in-memory database
-                Migrate(ds, newDatastore, excludeTables);
-
-                // use back up rutine to replace old database with
-                // migrated contents
-                newDatastore.BackupDatabase(ds);
-            }
-        }
-
-        // update notes: Added table LK_District and updated initialization for LK_Forests
-        public static void UpdateTo_3_2_2(CruiseDatastore ds)
+        private void UpdateTo_3_2_4(CruiseDatastore ds)
         {
             // create an in-memory database
             // to migrate into
@@ -222,7 +371,8 @@ JOIN StratumDefault AS sd USING (StratumDefaultID);");
             }
         }
 
-        private void UpdateTo_3_2_4(CruiseDatastore ds)
+        // update 3.2.2 notes: Added table LK_District and updated initialization for LK_Forests
+        public static void UpdateTo_3_2_2(CruiseDatastore ds)
         {
             // create an in-memory database
             // to migrate into
@@ -251,6 +401,22 @@ JOIN StratumDefault AS sd USING (StratumDefaultID);");
             }
         }
 
+        public static void UpdateTo_3_1_0(CruiseDatastore ds)
+        {
+            // create an in-memory database
+            // to migrate into
+            using (var newDatastore = new CruiseDatastore_V3())
+            {
+                var excludeTables = new[] { "SamplerState" };
+                // migrate contents of old db into new in-memory database
+                Migrate(ds, newDatastore, excludeTables);
+
+                // use back up rutine to replace old database with
+                // migrated contents
+                newDatastore.BackupDatabase(ds);
+            }
+        }
+
         public static void RecreateView(CruiseDatastore datastore, IViewDefinition viewDef)
         {
             var viewName = viewDef.ViewName;
@@ -258,7 +424,7 @@ JOIN StratumDefault AS sd USING (StratumDefaultID);");
             datastore.Execute(viewDef.CreateView);
         }
 
-        public static void Migrate(CruiseDatastore sourceDS, CruiseDatastore destinationDS, IEnumerable<string> excluding = null)
+        public static void Migrate(CruiseDatastore sourceDS, CruiseDatastore destinationDS, IEnumerable<string> excluding = null, bool excludeLooupTables = false)
         {
             var destConn = destinationDS.OpenConnection();
             var sourceConn = sourceDS.OpenConnection();
@@ -274,7 +440,7 @@ JOIN StratumDefault AS sd USING (StratumDefaultID);");
             }
         }
 
-        public static void Migrate(DbConnection sourceConn, DbConnection destConn, IEnumerable<string> excluding = null)
+        public static void Migrate(DbConnection sourceConn, DbConnection destConn, IEnumerable<string> excluding = null, bool excludeLooupTables = false)
         {
             var to = "main"; // alias used by the source database
             var from = "fromdb";
@@ -299,6 +465,8 @@ JOIN StratumDefault AS sd USING (StratumDefaultID);");
                     {
                         foreach (var table in tables)
                         {
+                            if (excludeLooupTables && table.StartsWith("LK_"))
+                            { continue; }
                             if (excluding?.Contains(table) ?? false)
                             { continue; }
 

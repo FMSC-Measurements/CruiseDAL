@@ -8,6 +8,8 @@
 
   <ItemGroup>
     <ProjectReference Include="..\CruiseDAL.V2\CruiseDAL.V2.csproj" />
+    <ProjectReference Include="..\CruiseDAL.V3.DownConvert\CruiseDAL.V3.DownConvert.csproj" />
+    <ProjectReference Include="..\CruiseDAL.V3.UpConvert\CruiseDAL.V3.UpConvert.csproj" />
     <ProjectReference Include="..\CruiseDAL.V3\CruiseDAL.V3.csproj" />
   </ItemGroup>
 

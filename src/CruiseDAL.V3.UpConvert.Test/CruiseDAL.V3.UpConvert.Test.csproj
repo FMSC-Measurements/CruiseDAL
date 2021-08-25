@@ -1,0 +1,44 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+
+    <IsPackable>false</IsPackable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="TestFiles\*" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="TestFiles\*">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="FluentAssertions" Version="5.6.0" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.9.4" />
+    <PackageReference Include="xunit" Version="2.4.1" />
+    <PackageReference Include="xunit.runner.visualstudio" Version="2.4.3">
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+      <PrivateAssets>all</PrivateAssets>
+    </PackageReference>
+    <PackageReference Include="coverlet.collector" Version="3.0.2">
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+      <PrivateAssets>all</PrivateAssets>
+    </PackageReference>
+    <PackageReference Include="Xunit.SkippableFact" Version="1.4.13" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\CruiseDAL.V2\CruiseDAL.V2.csproj" />
+    <ProjectReference Include="..\CruiseDAL.V3.Models\CruiseDAL.V3.Models.csproj" />
+    <ProjectReference Include="..\CruiseDAL.V3.UpConvert\CruiseDAL.V3.UpConvert.csproj" />
+  </ItemGroup>
+
+  <Import Project="..\CruiseDAL.TestCommon\CruiseDAL.TestCommon.projitems" Label="Shared" />
+
+  <Import Project="..\CruiseDAL.TestCommon.V3\CruiseDAL.TestCommon.V3.projitems" Label="Shared" />
+
+</Project>

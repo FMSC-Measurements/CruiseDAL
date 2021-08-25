@@ -1,12 +1,8 @@
-﻿using CruiseDAL.V2.Test;
+﻿using CruiseDAL.TestCommon;
 using FluentAssertions;
 using FMSC.ORM.EntityModel.Attributes;
-using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Xunit;
 using Xunit.Abstractions;
 
@@ -37,7 +33,7 @@ namespace CruiseDAL.V2.DataObjects
         public void QuertyFixCNTTallyClass_Test()
         {
             var filePath = Path.Combine(TestFilesDirectory, "test_FixCNT.cruise");
-            using(var db = new DAL(filePath))
+            using (var db = new DAL(filePath))
             {
                 var result = db.From<FixCNTTallyClassDTO>().Query().ToArray();
                 result.Should().NotBeEmpty();

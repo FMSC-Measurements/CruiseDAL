@@ -33,4 +33,8 @@
     <ProjectReference Include="..\CruiseDAL.V3\CruiseDAL.V3.csproj" />
   </ItemGroup>
 
+  <Import Project="..\CruiseDAL.TestCommon\CruiseDAL.TestCommon.projitems" Label="Shared" />
+
+  <Import Project="..\CruiseDAL.TestCommon.V3\CruiseDAL.TestCommon.V3.projitems" Label="Shared" />
+
 </Project>

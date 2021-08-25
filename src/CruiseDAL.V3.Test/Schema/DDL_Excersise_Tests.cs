@@ -1,13 +1,8 @@
-﻿using CruiseDAL.Schema;
+﻿using CruiseDAL.TestCommon;
 using FluentAssertions;
 using FMSC.ORM;
 using System;
-using System.Collections.Generic;
-using System.IO;
 using System.Linq;
-using System.Runtime.CompilerServices;
-using System.Text;
-using System.Threading.Tasks;
 using Xunit;
 using Xunit.Abstractions;
 
@@ -17,7 +12,6 @@ namespace CruiseDAL.V3.Test.Schema
     {
         public DDL_Excersise_Tests(ITestOutputHelper output) : base(output)
         {
-
         }
 
         public CruiseDatastore_V3 CreateDatastore()
@@ -57,7 +51,6 @@ namespace CruiseDAL.V3.Test.Schema
 
                     try
                     {
-
                         datastore.Execute($"DELETE FROM {view};");
                     }
                     catch (SQLException e)
@@ -80,7 +73,7 @@ namespace CruiseDAL.V3.Test.Schema
         {
             using (var database = CreateDatastore())
             {
-                // calling foreign key check will expose any DDL errors related to foreign keys 
+                // calling foreign key check will expose any DDL errors related to foreign keys
                 database.Invoking(x => x.Execute("PRAGMA foreign_key_check;")).Should().NotThrow();
             }
         }
@@ -122,57 +115,6 @@ namespace CruiseDAL.V3.Test.Schema
                 database.Invoking(x => x.Execute($"DELETE FROM {tableName};"))
                         .Should().NotThrow();
             }
-        }
-
-        [SkippableTheory]
-        [ClassData(typeof(TableNamesTestDataProvider))]
-        public void RunDelete_WithConvertedFile(string tableName)
-        {
-            var skipTables = new[]
-      {
-                    "LK_CruiseMethod",
-                    "LK_Product",
-                    "LK_Purpose",
-                    "LK_Region",
-                    "LK_UOM",
-                    "Species",
-                    "TreeField",
-                };
-            // some tables don't have cascading deletes so we need to skip them
-            Skip.If(skipTables.Contains(tableName));
-
-            var testFile = "MultiTest.2014.10.31.cruise";
-            var (orgFile, crz3) = SetUpTestFile(testFile);
-
-            var initializer = new DatabaseInitializer();
-            using (var database = new CruiseDatastore_V3(crz3))
-            {
-                //database.OpenConnection();
-                //database.Execute("PRAGMA foreign_keys=0;");
-                database.Invoking(x => x.Execute($"DELETE FROM {tableName};"))
-                        .Should().NotThrow();
-                //var fKeyErrors = database.QueryGeneric("PRAGMA foreign_key_check;");
-                //Output.WriteLine(string.Join("|\r\n",fKeyErrors.Select(x=> x.ToString()).ToArray()));
-                //fKeyErrors.Should().BeEmpty();
-            }
-        }
-
-        private (string, string) SetUpTestFile(string fileName, [CallerMemberName] string testName = null)
-        {
-            var filePath = Path.Combine(TestFilesDirectory, fileName);
-
-            var baseFileName = Path.GetFileName(fileName);
-            var orgFile = Path.Combine(TestTempPath,  testName + fileName);
-            var crz3File = (string)null;
-
-            // create copy of base file
-            if (File.Exists(orgFile) == false)
-            {
-                File.Copy(filePath, orgFile);
-            }
-            crz3File = Migrator.MigrateFromV2ToV3(orgFile, true);
-
-            return (orgFile, crz3File);
         }
     }
 }

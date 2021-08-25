@@ -11,6 +11,9 @@ namespace CruiseDAL.V3.Models
   [Field("StemID")]
   public String StemID { get; set; }
 
+  [Field("CruiseID")]
+  public String CruiseID { get; set; }
+
   [Field("TreeID")]
   public String TreeID { get; set; }
 

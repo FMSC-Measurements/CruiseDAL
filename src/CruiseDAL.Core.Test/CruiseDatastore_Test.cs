@@ -1,4 +1,5 @@
-﻿using FluentAssertions;
+﻿using CruiseDAL.TestCommon;
+using FluentAssertions;
 using FMSC.ORM;
 using System;
 using System.IO;

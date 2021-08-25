@@ -1,9 +1,9 @@
-﻿using CruiseDAL.V3.Models;
-using CruiseDAL.V3.Test.Util;
+﻿using CruiseDAL.TestCommon.Util;
+using CruiseDAL.V3.Models;
 using System;
 using System.Linq;
 
-namespace CruiseDAL.V3
+namespace CruiseDAL.TestCommon
 {
     public class DatabaseInitializer
     {
@@ -121,7 +121,7 @@ namespace CruiseDAL.V3
             };
         }
 
-        public CruiseDatastore_V3 CreateDatabase(string cruiseID = null, string saleID = null, string saleNumber =  null)
+        public CruiseDatastore_V3 CreateDatabase(string cruiseID = null, string saleID = null, string saleNumber = null)
         {
             cruiseID = cruiseID ?? CruiseID;
             saleID = saleID ?? SaleID;

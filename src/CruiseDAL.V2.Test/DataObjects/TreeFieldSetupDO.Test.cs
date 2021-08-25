@@ -1,5 +1,5 @@
 ﻿using CruiseDAL.DataObjects;
-using CruiseDAL.V2.Test;
+using CruiseDAL.TestCommon;
 using Xunit;
 using Xunit.Abstractions;
 

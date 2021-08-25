@@ -1,13 +1,10 @@
-﻿using CruiseDAL.V2.Test;
+﻿using CruiseDAL.TestCommon;
 using FluentAssertions;
 using FMSC.ORM.EntityModel;
 using FMSC.ORM.EntityModel.Attributes;
 using FMSC.ORM.EntityModel.Support;
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Xunit;
 using Xunit.Abstractions;
 
@@ -49,7 +46,6 @@ namespace CruiseDAL.V2.DataObjects
             Assert.NotNull(doi.Fields.PrimaryKeyField);
             //Assert.NotNull(doi.Fields.PrimaryKeyField.Property.Getter);
             //Assert.NotNull(doi.Fields.PrimaryKeyField.Property.Setter);
-
         }
 
         private void VerifyField(EntityDescription doi, string fieldName)

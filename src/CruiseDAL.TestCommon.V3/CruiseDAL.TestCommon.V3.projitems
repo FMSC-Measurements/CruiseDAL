@@ -1,0 +1,16 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <MSBuildAllProjects Condition="'$(MSBuildVersion)' == '' Or '$(MSBuildVersion)' &lt; '16.0'">$(MSBuildAllProjects);$(MSBuildThisFileFullPath)</MSBuildAllProjects>
+    <HasSharedItems>true</HasSharedItems>
+    <SharedGUID>ed86a10a-9d11-4dcb-9d72-196c8732d3b2</SharedGUID>
+  </PropertyGroup>
+  <PropertyGroup Label="Configuration">
+    <Import_RootNamespace>CruiseDAL.TestCommon.V3</Import_RootNamespace>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="$(MSBuildThisFileDirectory)DatabaseInitializer.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)TableDefinitionsTestDataProvider.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)TableNamesTestDataProvider.cs" />
+  </ItemGroup>
+</Project>

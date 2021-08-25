@@ -8,6 +8,9 @@ namespace CruiseDAL.V3.Models
   [PrimaryKeyField("Log_CN")]
   public Int32? Log_CN { get; set; }
 
+  [Field("CruiseID")]
+  public String CruiseID { get; set; }
+
   [Field("LogID")]
   public String LogID { get; set; }
 

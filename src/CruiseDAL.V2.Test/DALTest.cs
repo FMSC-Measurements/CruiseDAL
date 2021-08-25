@@ -1,4 +1,4 @@
-﻿using CruiseDAL.V2.Test;
+﻿using CruiseDAL.TestCommon;
 using FluentAssertions;
 using System;
 using System.Collections.Generic;
@@ -28,14 +28,14 @@ namespace CruiseDAL.Tests
             }
         }
 
-        IEnumerable<string> DiffTables(CruiseDatastore left, CruiseDatastore right)
+        private IEnumerable<string> DiffTables(CruiseDatastore left, CruiseDatastore right)
         {
             var leftTables = left.GetTableNames();
             var rightTables = right.GetTableNames();
             return leftTables.Except(rightTables);
         }
 
-        IEnumerable<(string, string)> DiffTableInfo(CruiseDatastore left, CruiseDatastore right)
+        private IEnumerable<(string, string)> DiffTableInfo(CruiseDatastore left, CruiseDatastore right)
         {
             var tables = left.GetTableNames();
 
@@ -43,14 +43,14 @@ namespace CruiseDAL.Tests
             {
                 var diff = DiffTableInfo(left, right, t);
 
-                foreach(var i in diff)
+                foreach (var i in diff)
                 {
                     yield return i;
                 }
             }
         }
 
-        IEnumerable<(string, string)> DiffTableInfo(CruiseDatastore left, CruiseDatastore right, string table)
+        private IEnumerable<(string, string)> DiffTableInfo(CruiseDatastore left, CruiseDatastore right, string table)
         {
             var leftValues = left.QueryScalar<string>(
 $@"SELECT name  FROM pragma_table_info('{table}') where Name != 'CreatedBy' AND Name != 'CreatedDate'; ").ToArray();
@@ -102,9 +102,6 @@ $@"SELECT name  FROM pragma_table_info('{table}'); ").ToArray();
 
                 var strata = database.From<DataObjects.StratumDO>()
                     .Query().ToArray();
-
-                
-                
             }
         }
 
@@ -215,12 +212,10 @@ $@"SELECT name  FROM pragma_table_info('{table}'); ").ToArray();
         [InlineData("something.cruise", CruiseFileType.Cruise)]
         [InlineData("something.CRUISE", CruiseFileType.Cruise)]
         [InlineData("something.bananas.cruise", CruiseFileType.Cruise)]
-
         [InlineData("something.m.cruise", CruiseFileType.Master, CruiseFileType.Cruise)]
         [InlineData("something.M.cruise", CruiseFileType.Master, CruiseFileType.Cruise)]
         [InlineData("something.m.CRUISE", CruiseFileType.Master, CruiseFileType.Cruise)]
         [InlineData("something.bananas.m.CRUISE", CruiseFileType.Master, CruiseFileType.Cruise)]
-
         [InlineData("something.1.cruise", CruiseFileType.Component, CruiseFileType.Cruise)]
         [InlineData("something.01.cruise", CruiseFileType.Component, CruiseFileType.Cruise)]
         [InlineData("something.10.cruise", CruiseFileType.Component, CruiseFileType.Cruise)]
@@ -231,12 +226,10 @@ $@"SELECT name  FROM pragma_table_info('{table}'); ").ToArray();
         // max component number is 99
         [InlineData("something.100.cruise", CruiseFileType.Cruise, CruiseFileType.Cruise)]
         [InlineData("something.123456789.cruise", CruiseFileType.Cruise, CruiseFileType.Cruise)]
-
         [InlineData("something.back-cruise", CruiseFileType.Backup, CruiseFileType.Cruise)]
         [InlineData("something.m.back-cruise", CruiseFileType.Backup, CruiseFileType.Cruise)]
         [InlineData("something.M.back-cruise", CruiseFileType.Backup, CruiseFileType.Cruise)]
         [InlineData("something.1.back-cruise", CruiseFileType.Backup, CruiseFileType.Cruise)]
-
         [InlineData("something.cut", CruiseFileType.Template)]
         [InlineData("something.design", CruiseFileType.Design)]
         public void ExtrapolateCruiseFileType_Test(string fileName, CruiseFileType expectedType, params CruiseFileType[] flags)

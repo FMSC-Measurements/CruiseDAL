@@ -1,5 +1,33 @@
 # Possible Conversion Issues
 
+## Count Tree
+In V2 there was no field in the database that explicitly stored the tally setup configuration 
+for a population. Tally setup determined whether count tree records had a TreeDefaultValue foreign key
+reference or not, and doing tally setup in Cruise Manager would populate the count tree table for each 
+populate. While it was definatly possible to have a sample group level value that indicated the tally setup
+configuration. This was decided against to minimize the possibility of having conflicting stats in the data structure. 
+So the choice was made, since we had to have count tree records, we would just extrapolate the tally setup state from 
+the count tree table.
+
+When the user set up their tally populations as either tally by species, tally by 
+sample group, or leave it as don't tally, cruise manager would populate the count tree table with 
+records reflecting their choice. With one count tree record per unit for each sample group and optionaly 
+species combination. It could be possible for the user to add a unit after doing tally setup. In this case
+FScruiser would look at other units to extrapolate the tally setup and create a count tree record on the fly.
+
+Tree bases cruise methods (STR, 3P) would always have their tallies setup. This is partialy because, 
+thiese methods require count tree records to store tree counts. 
+Plot based methods frequently did not have tally setup, and in earlier versions it wasn't possible. 
+Because plot methods do not use the count tree table to store tree counts. 
+
+In V3 with the removal of the count tree table, we were able to switch over to storing tally setup as a value 
+at the sample group level. To keep things simple as well as there not being reason to keep the 'don't tally' option. 
+This new field was made as a boolean flag idicating Tally By Species (true) or by default Tally By Sample Group (false). 
+
+This means that any converted populations would become Tally by Sample Group by default if they didn't have any count tree
+records. The consiquence of this is that it is posible for a population to have count tree records when converting back to V3
+that it did not have previously. 
+
 ## Tree Default Value Conversion Issues
 Because in V3 we allow TreeDefaultValues (TDV) records to be defined with a null value 
 for Species, and/or Primary Product. Where by a null value idicating that the 

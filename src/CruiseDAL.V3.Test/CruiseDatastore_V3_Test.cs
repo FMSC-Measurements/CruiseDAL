@@ -1,9 +1,8 @@
-﻿using FluentAssertions;
+﻿using CruiseDAL.TestCommon;
+using FluentAssertions;
 using System;
 using System.IO;
 using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
 using Xunit;
 using Xunit.Abstractions;
 
@@ -32,7 +31,6 @@ namespace CruiseDAL.V3.Test
                 var db = new CruiseDatastore_V3(null);
             };
             action.Should().Throw<ArgumentException>();
-
         }
 
         [Fact]
@@ -65,10 +63,10 @@ namespace CruiseDAL.V3.Test
             }
         }
 
-        void ValidateDAL(CruiseDatastore_V3 db)
+        private void ValidateDAL(CruiseDatastore_V3 db)
         {
             var f_keys = db.ExecuteScalar<string>("PRAGMA foreign_keys;");
-            f_keys.Should().BeOneOf("on","1","yes","true");
+            f_keys.Should().BeOneOf("on", "1", "yes", "true");
 
             var version = db.DatabaseVersion;
             version.Should().NotBeNull();

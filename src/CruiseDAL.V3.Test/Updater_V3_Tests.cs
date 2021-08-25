@@ -1,4 +1,5 @@
-﻿using FluentAssertions;
+﻿using CruiseDAL.TestCommon;
+using FluentAssertions;
 using FMSC.ORM.Core;
 using FMSC.ORM.SQLite;
 using System;

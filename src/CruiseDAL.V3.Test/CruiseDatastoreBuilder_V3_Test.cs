@@ -1,22 +1,17 @@
-﻿using System;
+﻿using CruiseDAL.Schema;
+using CruiseDAL.TestCommon;
+using FluentAssertions;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Reflection;
 using Xunit;
 using Xunit.Abstractions;
-using FluentAssertions;
-using System.Reflection;
-using CruiseDAL.Schema;
-using FMSC.ORM.SQLite;
 
 namespace CruiseDAL.V3.Test
 {
     public class CruiseDALDatastoreBuilder_Test : TestBase
     {
-        
-
         public CruiseDALDatastoreBuilder_Test(ITestOutputHelper output) : base(output)
         {
         }
@@ -28,9 +23,9 @@ namespace CruiseDAL.V3.Test
             {
                 var dbBuilder = new CruiseDatastoreBuilder_V3();
 
-                database.Invoking( x => x.CreateDatastore(dbBuilder)).Should().NotThrow();
+                database.Invoking(x => x.CreateDatastore(dbBuilder)).Should().NotThrow();
 
-                foreach(var table in CruiseDatastoreBuilder_V3.TABLE_DEFINITIONS)
+                foreach (var table in CruiseDatastoreBuilder_V3.TABLE_DEFINITIONS)
                 {
                     Output.WriteLine(table.TableName);
                     database.CheckTableExists(table.TableName).Should().BeTrue(table.TableName);
@@ -46,19 +41,17 @@ namespace CruiseDAL.V3.Test
         [Fact]
         public void ContainsAllTableDefinitions()
         {
-            
             var tableTypes = Assembly.GetAssembly(typeof(CruiseDatastoreBuilder_V3)).GetTypes()
                 .Where(x => typeof(ITableDefinition).IsAssignableFrom(x) && x != typeof(ITableDefinition))
                 .ToArray();
 
             var stuff = CruiseDatastoreBuilder_V3.TABLE_DEFINITIONS.Select(x => x.GetType()).ToArray();
-                stuff.Should().Contain(tableTypes);
+            stuff.Should().Contain(tableTypes);
         }
 
         [Fact]
         public void ContainsAllViewDefinitions()
         {
-
             var tableTypes = Assembly.GetAssembly(typeof(CruiseDatastoreBuilder_V3)).GetTypes()
                 .Where(x => typeof(IViewDefinition).IsAssignableFrom(x) && x != typeof(IViewDefinition))
                 .ToArray();
@@ -84,12 +77,12 @@ namespace CruiseDAL.V3.Test
 
         private void TestSyntax(string commandText)
         {
-            // test if it can be parsed 
+            // test if it can be parsed
             var parsed = TSQL.TSQLTokenizer.ParseTokens(commandText).ToArray(); ;
 
             using (var database = new FMSC.ORM.SQLite.SQLiteDatastore())
             {
-                database.Invoking(x => x.Execute("EXPLAIN " + commandText)).Should().NotThrow();   
+                database.Invoking(x => x.Execute("EXPLAIN " + commandText)).Should().NotThrow();
             }
         }
 
