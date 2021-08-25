@@ -36,8 +36,8 @@ namespace CruiseDAL.V3.Test.DownMigrators
             using var fromDb = initializer.CreateDatabaseFile(fromPath);
             using var toDb = new DAL(toPath, true);
 
-            var downMigrator = new DownMigrator();
-            downMigrator.MigrateFromV3ToV2(initializer.CruiseID, fromDb, toDb, migrators: new[] { new TreeDefaultValueDownMigrate(), });
+            var downMigrator = new DownMigrator(new[] { new TreeDefaultValueDownMigrate(), });
+            downMigrator.MigrateFromV3ToV2(initializer.CruiseID, fromDb, toDb);
 
             var prodCount = fromDb.From<LK_Product>().Count();
             var spCount = initializer.Species.Count();

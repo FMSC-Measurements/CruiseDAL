@@ -10,6 +10,7 @@ using System.Reflection;
 using CruiseDAL.Migrators;
 using System.Runtime.CompilerServices;
 using CruiseDAL.TestCommon;
+using CruiseDAL.UpConvert;
 
 #if NET452 || NET461
 using MoreLinq;
@@ -58,7 +59,7 @@ namespace CruiseDAL.V3.Test
             {
                 File.Copy(filePath, orgFile);
             }
-            crz3File = Migrator.MigrateFromV2ToV3(orgFile, true);
+            crz3File = new Migrator().MigrateFromV2ToV3(orgFile, true);
 
             return (orgFile, crz3File);
         }
@@ -160,7 +161,7 @@ namespace CruiseDAL.V3.Test
             {
                 File.Copy(filePath, orgFile);
             }
-            crz3File = Migrator.MigrateFromV2ToV3(orgFile, true);
+            crz3File = new Migrator().MigrateFromV2ToV3(orgFile, true);
 
             return (orgFile, crz3File);
         }

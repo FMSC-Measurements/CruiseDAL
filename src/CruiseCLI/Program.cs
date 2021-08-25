@@ -1,4 +1,5 @@
 ﻿using CruiseDAL;
+using CruiseDAL.UpConvert;
 using System;
 using System.IO;
 using System.Linq;
@@ -32,7 +33,7 @@ namespace CruiseCLI
                         using (var v2Db = new DAL(filePath))
                         using (var v3Db = new CruiseDatastore_V3())
                         {
-                            Migrator.MigrateFromV2ToV3(v2Db, v3Db, deviceID: "CruiseCLI");
+                            new Migrator().MigrateFromV2ToV3(v2Db, v3Db, deviceID: "CruiseCLI");
                             v3Db.BackupDatabase(v3Path);
                         }
                     }

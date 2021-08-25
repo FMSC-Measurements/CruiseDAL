@@ -7,10 +7,12 @@ using System.Collections.Generic;
 using System.Data.Common;
 using System.IO;
 
-namespace CruiseDAL
+namespace CruiseDAL.UpConvert
 {
-    public static class Migrator
+    public class Migrator
     {
+        public static ILogger Logger { get; set; } = LoggerProvider.Get();
+
         public static readonly IEnumerable<IMigrator> MIGRATORS = new IMigrator[]
         {
             // design
@@ -36,7 +38,7 @@ namespace CruiseDAL
             new TreeMeasurmentsMigrator(),
             new LogMigrator(),
             new TallyLedgerMigrator(),
-            
+
             // validation
             new LogGradeAuditRuleMigrator(),
             new TreeAuditRuleMigrator(),
@@ -54,7 +56,81 @@ namespace CruiseDAL
             new MessageLogMigrator(),
         };
 
-        public static ILogger Logger { get; set; } = LoggerProvider.Get();
+        public IEnumerable<IMigrator> Migrators { get; }
+
+        public Migrator() : this(MIGRATORS)
+        { }
+
+        public Migrator(IEnumerable<IMigrator> migrators)
+        {
+            Migrators = migrators ?? throw new ArgumentNullException(nameof(migrators));
+        }
+
+        public string MigrateFromV2ToV3(string v2Path, bool overwrite = false, string deviceID = null)
+        {
+            var newFilePath = GetConvertedPath(v2Path);
+            var newFileName = System.IO.Path.GetFileName(newFilePath);
+
+            // check temp file doesn't already exist, otherwise throw exception
+            var fileAlreadyExists = File.Exists(newFilePath);
+            if (fileAlreadyExists && !overwrite) { throw new UpdateException(newFileName + " already exists"); }
+
+            MigrateFromV2ToV3(v2Path, newFilePath, deviceID: deviceID);
+
+            return newFilePath;
+        }
+
+        public void MigrateFromV2ToV3(string v2Path, string newFilePath, string deviceID = null)
+        {
+            using (var newCruise = new CruiseDatastore_V3(newFilePath, true))
+            {
+                MigrateFromV2ToV3(v2Path, newCruise, deviceID: deviceID);
+            }
+        }
+
+        public void MigrateFromV2ToV3(string v2Path, CruiseDatastore_V3 v3db, string deviceID = null)
+        {
+            using (var v2Cruise = new CruiseDatastore(v2Path, false, null, new Updater_V2()))
+            {
+                MigrateFromV2ToV3(v2Cruise, v3db, deviceID: deviceID);
+            }
+        }
+
+        public void MigrateFromV2ToV3(CruiseDatastore v2db, CruiseDatastore_V3 v3db, string deviceID = null)
+        {
+            var oldDbAlias = "v2";
+            v3db.AttachDB(v2db, oldDbAlias);
+
+            try
+            {
+                var connection = v3db.OpenConnection();
+                MigrateFromV2ToV3(connection, oldDbAlias, deviceID: deviceID, exceptionProcessor: v3db.ExceptionProcessor, migrators: Migrators);
+            }
+            finally
+            {
+                v3db.DetachDB(oldDbAlias);
+                v3db.ReleaseConnection();
+            }
+        }
+
+        public static void MigrateFromV2ToV3(DbConnection connection, string from = "v2", string deviceID = null, IExceptionProcessor exceptionProcessor = null, IEnumerable<IMigrator> migrators = null)
+        {
+            var to = "main";
+
+            deviceID ??= GetDefaultDeviceID();
+
+            var cruiseID = Guid.NewGuid().ToString();
+            var saleID = Guid.NewGuid().ToString();
+
+            DbTransaction transaction = null;
+
+            migrators ??= MIGRATORS;
+            foreach (var migrator in migrators)
+            {
+                var command = migrator.MigrateToV3(to, from, cruiseID, saleID, deviceID);
+                connection.ExecuteNonQuery(command, transaction: transaction, exceptionProcessor: exceptionProcessor);
+            }
+        }
 
         public static string GetConvertedPath(string v2Path)
         {
@@ -75,87 +151,9 @@ namespace CruiseDAL
             return newFileName;
         }
 
-        public static string MigrateFromV2ToV3(string v2Path, bool overwrite = false, string deviceID = null)
+        public static string GetDefaultDeviceID()
         {
-            var newFilePath = GetConvertedPath(v2Path);
-            var newFileName = System.IO.Path.GetFileName(newFilePath);
-
-            // check temp file doesn't already exist, otherwise throw exception
-            var fileAlreadyExists = File.Exists(newFilePath);
-            if (fileAlreadyExists && !overwrite) { throw new UpdateException(newFileName + " already exists"); }
-
-            MigrateFromV2ToV3(v2Path, newFilePath, deviceID: deviceID);
-
-            return newFilePath;
-        }
-
-        public static void MigrateFromV2ToV3(string v2Path, string newFilePath, string deviceID =  null)
-        {
-            using (var newCruise = new CruiseDatastore_V3(newFilePath, true))
-            {
-                MigrateFromV2ToV3(v2Path, newCruise, deviceID: deviceID);
-            }
-        }
-
-        public static void MigrateFromV2ToV3(string v2Path, CruiseDatastore_V3 v3db, string deviceID = null)
-        {
-            using (var v2Cruise = new CruiseDatastore(v2Path, false, null, new Updater_V2()))
-            {
-                MigrateFromV2ToV3(v2Cruise, v3db, deviceID: deviceID);
-            }
-        }
-
-        public static void MigrateFromV2ToV3(CruiseDatastore v2db, CruiseDatastore_V3 v3db, string deviceID = null)
-        {
-            var oldDbAlias = "v2";
-            v3db.AttachDB(v2db, oldDbAlias);
-
-            try
-            {
-                var connection = v3db.OpenConnection();
-                MigrateFromV2ToV3(connection, oldDbAlias, deviceID: deviceID, exceptionProcessor: v3db.ExceptionProcessor);
-            }
-            finally
-            {
-                v3db.DetachDB(oldDbAlias);
-                v3db.ReleaseConnection();
-            }
-        }
-
-        public static void MigrateFromV2ToV3(DbConnection connection, string from = "v2", string deviceID = null, IExceptionProcessor exceptionProcessor = null)
-        {
-            var to = "main";
-
-            var cruiseID = Guid.NewGuid().ToString();
-            var saleID = Guid.NewGuid().ToString();
-            //using (var transaction = connection.BeginTransaction())
-            //{
-            //    try
-            //    {
-            //        var migrators = MIGRATORS;
-            //        foreach (var migrator in migrators)
-            //        {
-            //            var command = migrator.MigrateToV3(to, from, cruiseID, saleID);
-            //            connection.ExecuteNonQuery(command, transaction: transaction, exceptionProcessor: exceptionProcessor);
-            //        }
-
-            //        transaction.Commit();
-            //    }
-            //    catch
-            //    {
-            //        transaction.Rollback();
-            //        throw;
-            //    }
-            //}
-
-            DbTransaction transaction = null;
-
-            var migrators = MIGRATORS;
-            foreach (var migrator in migrators)
-            {
-                var command = migrator.MigrateToV3(to, from, cruiseID, saleID, deviceID);
-                connection.ExecuteNonQuery(command, transaction: transaction, exceptionProcessor: exceptionProcessor);
-            }
+            return Environment.OSVersion.Platform.ToString();
         }
     }
 }

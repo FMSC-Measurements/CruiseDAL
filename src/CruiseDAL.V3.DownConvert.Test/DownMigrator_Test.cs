@@ -1,5 +1,6 @@
 ﻿using CruiseDAL.DataObjects;
 using CruiseDAL.TestCommon;
+using CruiseDAL.UpConvert;
 using CruiseDAL.V3.Models;
 using FluentAssertions;
 using System;
@@ -130,7 +131,7 @@ namespace CruiseDAL.V3.Test
             var tempPath = Path.Combine(TestTempPath, fileName);
             File.Copy(filePath, tempPath, true);
 
-            var v3Path = Migrator.MigrateFromV2ToV3(tempPath, true);
+            var v3Path = new Migrator().MigrateFromV2ToV3(tempPath, true);
 
             using (var v2db = new DAL(tempPath))
             using (var v3Database = new CruiseDatastore_V3(v3Path))
@@ -419,7 +420,7 @@ ORDER BY cnt.CuttingUnit_CN, cnt.SampleGroup_CN, cnt.TreeDefaultValue_CN;").ToAr
             {
                 File.Copy(filePath, orgFile);
             }
-            crz3File = Migrator.MigrateFromV2ToV3(orgFile, true);
+            crz3File = new Migrator().MigrateFromV2ToV3(orgFile, true);
 
 
             var v2againPath = Path.Combine(TestTempPath, caller + "_again_" + fileName);
