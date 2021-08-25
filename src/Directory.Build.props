@@ -12,7 +12,7 @@
 
     <CruiseDALv2SchemaVersion>2.7.3</CruiseDALv2SchemaVersion>
     <CruiseDALv3SchemaVersion>3.3.1</CruiseDALv3SchemaVersion>
-    <CruiseDALIncrementalVersion>90</CruiseDALIncrementalVersion>
+    <CruiseDALIncrementalVersion>91</CruiseDALIncrementalVersion>
     <CruiseDALCoreVersion>3.0.0.$(CruiseDALIncrementalVersion)</CruiseDALCoreVersion>
     <CruiseDALV2Version>$(CruiseDALv2SchemaVersion).$(CruiseDALIncrementalVersion)</CruiseDALV2Version>
     <CruiseDALV3Version>$(CruiseDALv3SchemaVersion).$(CruiseDALIncrementalVersion)</CruiseDALV3Version>
@@ -21,8 +21,8 @@
     <CruiseDALV2ModelsVersion>$(CruiseDALv2SchemaVersion).$(CruiseDALIncrementalVersion)</CruiseDALV2ModelsVersion>
     
     <!--  -->
-    <CruiseDALUpconvertVersion>$(CruiseDALv3SchemaVersion).0</CruiseDALUpconvertVersion>
-    <CruiseDALDownconvertVersion>$(CruiseDALv3SchemaVersion).0</CruiseDALDownconvertVersion>
+    <CruiseDALUpconvertVersion>$(CruiseDALv3SchemaVersion).$(CruiseDALIncrementalVersion)00</CruiseDALUpconvertVersion>
+    <CruiseDALDownconvertVersion>$(CruiseDALv3SchemaVersion).$(CruiseDALIncrementalVersion)00</CruiseDALDownconvertVersion>
   </PropertyGroup>
 
   <PropertyGroup Label="CustomProperties">

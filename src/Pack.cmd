@@ -25,6 +25,8 @@ call %msbuild% -t:pack /p:PackageOutputPath=%packageOutputDir%;Configuration=%bu
 call %msbuild% -t:pack /p:PackageOutputPath=%packageOutputDir%;Configuration=%build_config% %parent%CruiseDAL.Core\CruiseDAL.Core.csproj
 call %msbuild% -t:pack /p:PackageOutputPath=%packageOutputDir%;Configuration=%build_config% %parent%CruiseDAL.V2\CruiseDAL.V2.csproj
 call %msbuild% -t:pack /p:PackageOutputPath=%packageOutputDir%;Configuration=%build_config% %parent%CruiseDAL.V3\CruiseDAL.V3.csproj
+call %msbuild% -t:pack /p:PackageOutputPath=%packageOutputDir%;Configuration=%build_config% %parent%CruiseDAL.V3.UpConvert\CruiseDAL.V3.UpConvert.csproj
+call %msbuild% -t:pack /p:PackageOutputPath=%packageOutputDir%;Configuration=%build_config% %parent%CruiseDAL.V3.DownConvert\CruiseDAL.V3.DownConvert.csproj
 call %msbuild% -t:pack /p:PackageOutputPath=%packageOutputDir%;Configuration=%build_config% %parent%CruiseDAL.V3.Models\CruiseDAL.V3.Models.csproj
 call %msbuild% -t:pack /p:PackageOutputPath=%packageOutputDir%;Configuration=%build_config% %parent%CruiseDAL.V2.Models\CruiseDAL.V2.Models.csproj
 call %msbuild% -t:pack /p:PackageOutputPath=%packageOutputDir%;Configuration=%build_config% %parent%CruiseDAL.V3.Sync\CruiseDAL.V3.Sync.csproj

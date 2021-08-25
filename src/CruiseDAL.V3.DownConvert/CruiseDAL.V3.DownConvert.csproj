@@ -2,7 +2,8 @@
 
   <PropertyGroup>
     <TargetFrameworks>$(LibTargetFrameworks)</TargetFrameworks>
-  <LangVersion>8.0</LangVersion>
+    <Version>$(CruiseDALDownconvertVersion)</Version>
+    <LangVersion>8.0</LangVersion>
   </PropertyGroup>
 
   <ItemGroup>
