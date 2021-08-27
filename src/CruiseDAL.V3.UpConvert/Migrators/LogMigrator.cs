@@ -12,6 +12,7 @@ namespace CruiseDAL.Migrators
             return
 $@"INSERT INTO {toDbName}.Log (
     Log_CN,
+    CruiseID,
     LogID,
     TreeID,
     LogNumber,
@@ -34,6 +35,7 @@ $@"INSERT INTO {toDbName}.Log (
 )
 SELECT
     l.Log_CN,
+    '{cruiseID}',
     ifnull(
         (CASE typeof(l.Log_GUID) COLLATE NOCASE -- ckeck the type of Log_GUID
             WHEN 'TEXT' THEN --if text

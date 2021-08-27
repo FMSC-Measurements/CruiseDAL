@@ -121,6 +121,7 @@ namespace CruiseDAL.V3.Test
         [InlineData("7Wolf.cruise")]
         [InlineData("MultiTest.2014.10.31.cruise")]
         [InlineData("R2_Test.cruise")]
+        [InlineData("testRoundTripConvert.cruise")]
         public void RoundTripV2Migration(string fileName)
         {
             var filePath = Path.Combine(TestFilesDirectory, fileName);

@@ -46,18 +46,13 @@ namespace CruiseDAL
             }
         }
 
-
         // update 3.3.1 notes:
         // Add CruiseID fields to Log and Stem tables
         // Change is fully backwards compatible with prior versions
         private void UpdateTo_3_3_1(CruiseDatastore ds)
         {
-
-
-
             var curVersion = ds.DatabaseVersion;
             var targetVersion = "3.3.1";
-            ds.BeginTransaction();
 
             // create an in-memory database
             // to migrate into
@@ -71,9 +66,7 @@ namespace CruiseDAL
                         "Stem",
                 };
 
-
                 Migrate(ds, newDatastore, excluding: excludeTables, excludeLooupTables: true);
-
 
                 var destConn = newDatastore.OpenConnection();
                 var sourceConn = ds.OpenConnection();
@@ -94,7 +87,7 @@ namespace CruiseDAL
                     {
                         try
                         {
-                            sourceConn.ExecuteNonQuery(
+                            destConn.ExecuteNonQuery(
 @$"INSERT INTO {to}.Log (
     Log_CN,
     CruiseID,
@@ -120,8 +113,8 @@ namespace CruiseDAL
     Created_TS,
     ModifiedBy,
     Modified_TS
-) 
-SELECT 
+)
+SELECT
     l.Log_CN,
     t.CruiseID,
     l.LogID,
@@ -149,7 +142,7 @@ SELECT
 FROM {from}.Log AS l
 JOIN Tree AS t USING (TreeID);");
 
-                            sourceConn.ExecuteNonQuery(
+                            destConn.ExecuteNonQuery(
 @$"INSERT INTO {to}.Stem (
     Stem_CN,
     StemID,
@@ -161,8 +154,8 @@ JOIN Tree AS t USING (TreeID);");
     Created_TS,
     ModifiedBy,
     Modified_TS
-) 
-SELECT 
+)
+SELECT
     s.Stem_CN,
     s.StemID,
     t.CruiseID,
@@ -183,9 +176,7 @@ JOIN Tree AS t USING (TreeID);");
                             transaction.Rollback();
                             throw;
                         }
-                        
                     }
-
                 }
                 finally
                 {
@@ -197,16 +188,13 @@ JOIN Tree AS t USING (TreeID);");
                 // migrated contents
                 newDatastore.BackupDatabase(ds);
             }
-
-
-
         }
 
         // update 3.3.0 notes
         // redesign Stratum Template tables. Remove existing StratumDefault, LogFieldSetupDefault, TreeFielSetupDefault tables
         // Replace with StratumTemplate and StratumTemplateTreeFieldSetup tables
-        // Updated schema is not backwards compatible with previous schema, 
-        // but no application code relies on previous tables. Previous tables were only written to when 
+        // Updated schema is not backwards compatible with previous schema,
+        // but no application code relies on previous tables. Previous tables were only written to when
         // file was created.
         private void UpdateTo_3_3_0(CruiseDatastore ds)
         {
@@ -237,7 +225,7 @@ JOIN Tree AS t USING (TreeID);");
     FBSCode,
     YieldComponent,
     FixCNTField
-) SELECT 
+) SELECT
     (CASE WHEN sd.Method NOT NULL THEN sd.Method || ' ' ELSE '' END) || (CASE WHEN sd.StratumCode NOT NULL THEN sd.StratumCode || ' ' ELSE '' END) || ifnull(Description, '') AS StratumTemplateName,
     '{cruiseID}' AS CruiseID,
     StratumCode,
@@ -267,8 +255,8 @@ FROM StratumDefault AS sd;");
     DefaultValueInt,
     DefaultValueReal,
     DefaultValueBool,
-    DefaultValueText  
-) SELECT 
+    DefaultValueText
+) SELECT
     (CASE WHEN sd.Method NOT NULL THEN sd.Method || ' ' ELSE '' END) || (CASE WHEN sd.StratumCode NOT NULL THEN sd.StratumCode || ' ' ELSE '' END) || ifnull(Description, '') AS StratumTemplateName,
     '{cruiseID}' AS CruiseID,
     Field,
@@ -278,7 +266,7 @@ FROM StratumDefault AS sd;");
     DefaultValueInt,
     DefaultValueReal,
     DefaultValueBool,
-    DefaultValueText  
+    DefaultValueText
 FROM TreeFieldSetupDefault AS tfsd
 JOIN StratumDefault AS sd USING (StratumDefaultID);");
 
@@ -292,7 +280,7 @@ JOIN StratumDefault AS sd USING (StratumDefaultID);");
     CruiseID,
     Field,
     FieldOrder
-) SELECT 
+) SELECT
     (CASE WHEN sd.Method NOT NULL THEN sd.Method || ' ' ELSE '' END) || (CASE WHEN sd.StratumCode NOT NULL THEN sd.StratumCode || ' ' ELSE '' END) || ifnull(Description, '') AS StratumTemplateName,
     '{cruiseID}' AS CruiseID,
     Field,
@@ -318,7 +306,6 @@ JOIN StratumDefault AS sd USING (StratumDefaultID);");
                 ds.RollbackTransaction();
                 throw new SchemaUpdateException(curVersion, targetVersion, e);
             }
-
         }
 
         private void UpdateTo_3_2_4(CruiseDatastore ds)
