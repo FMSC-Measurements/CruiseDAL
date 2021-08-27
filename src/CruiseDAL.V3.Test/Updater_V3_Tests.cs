@@ -3,6 +3,7 @@ using FluentAssertions;
 using FMSC.ORM.Core;
 using FMSC.ORM.SQLite;
 using System;
+using System.IO;
 using System.Linq;
 using Xunit;
 using Xunit.Abstractions;
@@ -43,6 +44,25 @@ namespace CruiseDAL.V3.Test
         //        ds.CheckTableExists("TallyLedger_Tree_Totals");
         //    }
         //}
+
+        [InlineData("3.3.0.crz3")]
+        [Theory]
+        public void Update(string fileName)
+        {
+            var filePath = InitializeTestFile(fileName);
+
+            using (var ds = new CruiseDatastore(filePath))
+            {
+                ds.DatabaseVersion.Should().Be(Path.GetFileNameWithoutExtension(fileName));
+
+                var updater = new Updater_V3();
+
+                updater.Update(ds);
+
+                ds.DatabaseVersion.Should().Be(CruiseDatastoreBuilder_V3.DATABASE_VERSION.ToString());
+            }
+
+        }
 
         [Fact]
         public void ListTablesIntersect()
