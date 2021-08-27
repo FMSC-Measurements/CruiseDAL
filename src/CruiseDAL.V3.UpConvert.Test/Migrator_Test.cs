@@ -47,6 +47,7 @@ namespace CruiseDAL.V3.Test
         [Theory]
         [InlineData("7Wolf.cruise")]
         [InlineData("MultiTest.2014.10.31.cruise")]
+        [InlineData("testUpConvert.cruise")]
         public void MigrateFromV2ToV3_Test_With_Existing_File(string fileName)
         {
             var filePath = Path.Combine(TestFilesDirectory, fileName);
@@ -60,6 +61,24 @@ namespace CruiseDAL.V3.Test
                 var cruise = newCruise.From<Cruise>().Query().Single();
                 cruise.CruiseID.Should().NotBeNullOrEmpty();
 
+            }
+        }
+
+        [Theory]
+        [InlineData("R1 Template 2017.11.28.cut")]
+        public void MigrateFromV2ToV3_Test_With_Existing_Template_File(string fileName)
+        {
+            var filePath = Path.Combine(TestFilesDirectory, fileName);
+            // copy file to test temp dir
+            var tempPath = Path.Combine(TestTempPath, fileName);
+            File.Copy(filePath, tempPath);
+
+            var newCruisePath = new Migrator().MigrateFromV2ToV3(tempPath);
+            Output.WriteLine(newCruisePath);
+            using (var newCruise = new CruiseDatastore_V3(newCruisePath))
+            {
+                var cruise = newCruise.From<Cruise>().Query().Single();
+                cruise.CruiseID.Should().NotBeNullOrEmpty();
             }
         }
 
