@@ -1055,6 +1055,43 @@ classDiagram
         - Deleted_TS : DATETIME
     }
 
+    class ValueEquation {
+        - CruiseID : TEXT <<FK>>
+        - Species : TEXT
+        - PrimaryProduct : TEXT
+        - ValueEquationNumber : TEXT
+        - Grade : TEXT
+        - Coefficient1 : REAL
+        - Coefficient2 : REAL
+        - Coefficient3 : REAL
+        - Coefficient4 : REAL
+        - Coefficient5 : REAL
+        - Coefficient6 : REAL
+        - CreatedBy : TEXT
+        - Created_TS : DATETIME
+        - ModifiedBy : TEXT
+        - Modified_TS : DATETIME
+    }
+
+    class BiomassEquation {
+        - CruiseID : TEXT <<FK>>
+        - Species : TEXT
+        - Product : TEXT
+        - Component : TEXT
+        - LiveDead : TEXT
+        - FIAcode : INTEGER
+        - Equation : TEXT
+        - PercentMoisture : REAL
+        - PercentRemoved : REAL
+        - MetaData : TEXT
+        - WeightFactorPrimary : REAL
+        - WeightFactorSecondary : REAL
+        - CreatedBy : TEXT
+        - Created_TS : DATETIME
+        - ModifiedBy : TEXT
+        - Modified_TS : DATETIME
+    }
+
     class StratumTemplate {
     * StratumTemplate_CN
     -----
@@ -1137,6 +1174,175 @@ classDiagram
         - Block : TEXT
         - Key : TEXT
         - Value : TEXT
+    }
+
+    class TallyPopulation {
+        - CruiseID : TEXT
+        - StratumCode : TEXT
+        - SampleGroupCode : TEXT
+        - SpeciesCode : TEXT
+        - LiveDead : TEXT
+        - Description : 
+        - HotKey : 
+    }
+
+    class TallyLedger_Totals {
+        - CruiseID : TEXT
+        - StratumCode : TEXT
+        - SampleGroupCode : TEXT
+        - SpeciesCode : TEXT
+        - LiveDead : TEXT
+        - TreeCount : 
+        - KPI : 
+    }
+
+    class TallyLedger_Tree_Totals {
+        - CruiseID : TEXT
+        - TreeID : TEXT
+        - STM : 
+        - TreeCount : 
+        - KPI : 
+    }
+
+    class TallyLedger_Plot_Totals {
+        - CruiseID : TEXT
+        - StratumCode : TEXT
+        - SampleGroupCode : TEXT
+        - SpeciesCode : TEXT
+        - LiveDead : TEXT
+        - PlotNumber : INTEGER
+        - TreeCount : 
+        - KPI : 
+    }
+
+    class TreeError {
+        - TreeID : TEXT
+        - CruiseID : TEXT
+        - TreeAuditRuleID : TEXT
+        - Level : 
+        - Message : 
+        - Field : TEXT
+        - IsResolved : 
+        - Resolution : TEXT
+        - ResolutionInitials : TEXT
+    }
+
+    class LogGradeError {
+        - Log_CN : INTEGER
+        - LogID : TEXT
+        - CruiseID : TEXT
+        - LogGradeAuditRule_CN : INTEGER
+        - Message : 
+        - IsResolved : 
+        - Resolution : 
+        - ResolutionInitials : 
+    }
+
+    class PlotError {
+        - PlotID : TEXT
+        - CruiseID : TEXT
+        - CuttingUnitCode : TEXT
+        - PlotNumber : INTEGER
+        - StratumCode : TEXT
+        - Plot_Stratum_CN : INTEGER
+        - Message : 
+        - Field : 
+        - Level : 
+        - IsResolved : 
+        - Resolution : 
+        - ResolutionInitials : 
+    }
+
+    class TreeAuditError {
+        - Tree_CN : INTEGER
+        - CruiseID : TEXT
+        - TreeID : TEXT
+        - TreeAuditRuleID : TEXT
+        - Field : TEXT
+        - IsResolved : 
+        - Message : 
+        - Resolution : TEXT
+    }
+
+    class TreeFieldValue_All {
+        - TreeID : TEXT
+        - Field : TEXT
+        - ValueInt : 
+        - ValueReal : 
+        - ValueBool : 
+        - ValueText : 
+        - CreatedBy : TEXT
+        - Created_TS : DATETIME
+        - ModifiedBy : TEXT
+        - Modified_TS : DATETIME
+    }
+
+    class TreeFieldValue_TreeMeasurment {
+        - TreeID : TEXT
+        - Field : TEXT
+        - DbType : TEXT
+        - ValueReal : 
+        - ValueBool : 
+        - ValueText : 
+        - ValueInt : 
+        - CreatedBy : TEXT
+        - Created_TS : DATETIME
+        - ModifiedBy : TEXT
+        - Modified_TS : DATETIME
+    }
+
+    class TreeFieldValue_TreeMeasurment_Filtered {
+        - TreeID : TEXT
+        - Field : TEXT
+        - DbType : TEXT
+        - ValueReal : 
+        - ValueBool : 
+        - ValueText : 
+        - ValueInt : 
+        - CreatedBy : TEXT
+        - Created_TS : DATETIME
+        - ModifiedBy : TEXT
+        - Modified_TS : DATETIME
+    }
+
+    class StratumDefault {
+        - StratumDefault_CN : 
+        - StratumDefaultID : 
+        - Region : 
+        - Forest : 
+        - District : 
+        - StratumCode : TEXT
+        - Description : TEXT
+        - Method : TEXT
+        - BasalAreaFactor : REAL
+        - FixedPlotSize : REAL
+        - KZ3PPNT : INTEGER
+        - SamplingFrequency : INTEGER
+        - Hotkey : TEXT
+        - FBSCode : TEXT
+        - YieldComponent : TEXT
+        - FixCNTField : TEXT
+    }
+
+    class TreeFieldSetupDefault {
+        - TreeFieldSetupDefault_CN : 
+        - StratumDefaultID : 
+        - SampleGroupDefaultID : 
+        - Field : TEXT
+        - FieldOrder : INTEGER
+        - IsHidden : BOOLEAN
+        - IsLocked : BOOLEAN
+        - DefaultValueInt : INTEGER
+        - DefaultValueReal : REAL
+        - DefaultValueBool : BOOLEAN
+        - DefaultValueText : TEXT
+    }
+
+    class LogFieldSetupDefault {
+        - LogFieldSetupDefault_CN : INTEGER
+        - StratumDefaultID : 
+        - Field : TEXT
+        - FieldOrder : INTEGER
     }
 
 
@@ -1280,6 +1486,10 @@ classDiagram
 
 
 
+    Cruise <|-- ValueEquation
+
+    Cruise <|-- BiomassEquation
+
     Cruise <|-- StratumTemplate
     LK_CruiseMethod <|-- StratumTemplate
     TreeField <|-- StratumTemplate
@@ -1295,5 +1505,19 @@ classDiagram
     LK_Product <|-- SampleGroupDefault
     LK_Region <|-- SampleGroupDefault
     LK_UOM <|-- SampleGroupDefault
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 

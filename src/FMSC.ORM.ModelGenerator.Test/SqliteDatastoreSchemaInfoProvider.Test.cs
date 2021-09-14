@@ -37,6 +37,8 @@ namespace FMSC.ORM.ModelGenerator.Test
 
                 datastore.Execute(createTable.ToString());
 
+                datastore.Execute("CREATE VIEW MyView AS SELECT * FROM MyTable;");
+
                 // inserting will trigger the creation of Sqlite_squince table
                 var insert = new SqlInsertCommand() { TableName = createTable.TableName };
                 datastore.Equals(insert.ToString());
@@ -44,12 +46,17 @@ namespace FMSC.ORM.ModelGenerator.Test
                 var schemaInfoProvider = new SqliteDatastoreSchemaInfoProvider(datastore, new[] { "IgnoreMe" });
 
                 var tables = schemaInfoProvider.Tables.ToArray();
-                tables.Should().HaveCount(1);
+                tables.Should().HaveCount(2);
 
                 var myTableInfo = tables.First();
+                myTableInfo.TableName.Should().Be("MyTable");
                 myTableInfo.PrimaryKeyField.Should().NotBeNull();
                 myTableInfo.PrimaryKeyField.IsPK.Should().BeTrue();
                 myTableInfo.Fields.Should().HaveSameCount(createTable.Columns.Where(x => x.Name != "IgnoreMe"));
+
+                var myViewInfo = tables[1];
+                myViewInfo.TableName.Should().Be("MyView");
+
             }
         }
     }
