@@ -44,6 +44,42 @@ namespace CruiseDAL
             {
                 UpdateTo_3_3_1(datastore);
             }
+            if (version == "3.3.2")
+            {
+                UpdateTo_3_3_2(datastore);
+            }
+        }
+
+        private void UpdateTo_3_3_2(CruiseDatastore ds)
+        {
+            var curVersion = ds.DatabaseVersion;
+            var targetVersion = "3.3.1";
+
+            try
+            {
+                // create an in-memory database
+                // to migrate into
+                using (var newDatastore = new CruiseDatastore_V3())
+                {
+                    var excludeTables = new[]
+                    {
+                        "LogField",
+                        "TreeField",
+                        "Log",
+                        "Stem",
+                };
+
+                    Migrate(ds, newDatastore, excluding: excludeTables, excludeLookupTables: true);
+
+                    // use back up rutine to replace old database with
+                    // migrated contents
+                    newDatastore.BackupDatabase(ds);
+                }
+            }
+            catch(Exception e)
+            {
+                throw new SchemaUpdateException(curVersion, targetVersion, e);
+            }
         }
 
         // update 3.3.1 notes:
@@ -66,7 +102,7 @@ namespace CruiseDAL
                         "Stem",
                 };
 
-                Migrate(ds, newDatastore, excluding: excludeTables, excludeLooupTables: true);
+                Migrate(ds, newDatastore, excluding: excludeTables, excludeLookupTables: true);
 
                 var destConn = newDatastore.OpenConnection();
                 var sourceConn = ds.OpenConnection();
@@ -411,7 +447,7 @@ JOIN StratumDefault AS sd USING (StratumDefaultID);");
             datastore.Execute(viewDef.CreateView);
         }
 
-        public static void Migrate(CruiseDatastore sourceDS, CruiseDatastore destinationDS, IEnumerable<string> excluding = null, bool excludeLooupTables = false)
+        public static void Migrate(CruiseDatastore sourceDS, CruiseDatastore destinationDS, IEnumerable<string> excluding = null, bool excludeLookupTables = false)
         {
             var destConn = destinationDS.OpenConnection();
             var sourceConn = sourceDS.OpenConnection();
@@ -427,7 +463,7 @@ JOIN StratumDefault AS sd USING (StratumDefaultID);");
             }
         }
 
-        public static void Migrate(DbConnection sourceConn, DbConnection destConn, IEnumerable<string> excluding = null, bool excludeLooupTables = false)
+        public static void Migrate(DbConnection sourceConn, DbConnection destConn, IEnumerable<string> excluding = null, bool excludeLookupTables = false)
         {
             var to = "main"; // alias used by the source database
             var from = "fromdb";
@@ -452,7 +488,7 @@ JOIN StratumDefault AS sd USING (StratumDefaultID);");
                     {
                         foreach (var table in tables)
                         {
-                            if (excludeLooupTables && table.StartsWith("LK_"))
+                            if (excludeLookupTables && table.StartsWith("LK_"))
                             { continue; }
                             if (excluding?.Contains(table) ?? false)
                             { continue; }

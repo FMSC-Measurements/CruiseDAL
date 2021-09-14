@@ -50,7 +50,7 @@ namespace CruiseDAL.V3.Sync
 
         public void Sync(string cruiseID, DbConnection source, DbConnection destination, CruiseSyncOptions options, IProgress<float> progress = null)
         {
-            var steps = 27;
+            var steps = 31;
             float p = 0.0f;
             var transaction = destination.BeginTransaction();
             try
@@ -99,6 +99,8 @@ namespace CruiseDAL.V3.Sync
                 progress?.Report(p++ / steps);
                 SyncTreeAuditResolution(cruiseID, source, destination, options);
                 progress?.Report(p++ / steps);
+                //SyncLogGradeAuditRules(cruiseID, source, destination, options);
+                //progress?.Report(p++ / steps);
 
                 // field data
                 SyncPlots(cruiseID, source, destination, options);
@@ -121,6 +123,15 @@ namespace CruiseDAL.V3.Sync
                 progress?.Report(p++ / steps);
 
                 //processing
+                SyncBiomassEquations(cruiseID, source, destination, options);
+                progress?.Report(p++ / steps);
+
+                SyncReports(cruiseID, source, destination, options);
+                progress?.Report(p++ / steps);
+
+                SyncValueEquations(cruiseID, source, destination, options);
+                progress?.Report(p++ / steps);
+
                 SyncVolumeEquations(cruiseID, source, destination, options);
                 progress?.Report(p++ / steps);
 
@@ -132,6 +143,8 @@ namespace CruiseDAL.V3.Sync
                 throw;
             }
         }
+
+        
 
         private bool ShouldUpdate(DateTime? srcMod, DateTime? desMod, SyncFlags syncFlags)
         {
@@ -1185,6 +1198,31 @@ namespace CruiseDAL.V3.Sync
             }
         }
 
+        //private void SyncLogGradeAuditRules(string cruiseID, DbConnection source, DbConnection destination, CruiseSyncOptions options)
+        //{
+        //    var where = "CruiseID = @CruiseID AND Grade = @Grade AND ifnull(SpeciesCode, '') = ifnull(@SpeciesCode, '') ";
+
+        //    var sourceItems = source.From<LogGradeAuditRule>().Where("CruiseID = @p1").Query(cruiseID);
+        //    foreach (var i in sourceItems)
+        //    {
+        //        var match = destination.From<LogGradeAuditRule>()
+        //            .Where(where).Query2(i);
+
+        //        if (match == null)
+        //        {
+        //            var hasTombstone = destination.From<LogGradeAuditRule_Tombstone>()
+        //                .Where(where).Count2(i) > 0;
+
+        //            if (options.Validation.HasFlag(SyncFlags.ForceInsert)
+        //                        || (hasTombstone == false && options.Validation.HasFlag(SyncFlags.Insert)))
+        //            {
+        //                destination.Insert(i, persistKeyvalue: false);
+        //            }
+        //        }
+        //        // update not supported
+        //    }
+        //}
+
         private void SyncTreeFieldHeading(string cruiseID, DbConnection source, DbConnection destination, CruiseSyncOptions options)
         {
             var where = "CruiseID = @CruiseID AND Field = @Field";
@@ -1224,6 +1262,81 @@ namespace CruiseDAL.V3.Sync
                 else
                 {
                     if (ShouldUpdate(i.Modified_TS, match.Modified_TS, options.Design))
+                    {
+                        destination.Update(i, whereExpression: where);
+                    }
+                }
+            }
+        }
+
+        private void SyncBiomassEquations(string cruiseID, DbConnection source, DbConnection destination, CruiseSyncOptions options)
+        {
+            var where = "CruiseID = @CruiseID AND Species = @Species AND Product = @Product AND Component = @Component AND LiveDead = @LiveDead";
+            var sourceItems = source.From<BiomassEquation>()
+                .Where("CruiseID = @p1").Query(cruiseID);
+
+            foreach(var i in sourceItems)
+            {
+                var match = destination.From<BiomassEquation>()
+                    .Where(where).Query(i).FirstOrDefault();
+
+                if(match == null)
+                {
+                    destination.Insert(i, persistKeyvalue: false);
+                }
+                else
+                {
+                    if (ShouldUpdate(i.Modified_TS, match.Modified_TS, options.Processing))
+                    {
+                        destination.Update(i, whereExpression: where);
+                    }
+                }
+            }
+        }
+
+        private void SyncReports(string cruiseID, DbConnection source, DbConnection destination, CruiseSyncOptions options)
+        {
+            var where = "CruiseID = @CruiseID AND ReportID = @ReportID";
+            var sourceItems = source.From<Reports>()
+                .Where("CruiseID = @p1").Query(cruiseID);
+
+            foreach (var i in sourceItems)
+            {
+                var match = destination.From<Reports>()
+                    .Where(where).Query(i).FirstOrDefault();
+
+                if (match == null)
+                {
+                    destination.Insert(i, persistKeyvalue: false);
+                }
+                else
+                {
+                    if (ShouldUpdate(i.Modified_TS, match.Modified_TS, options.Processing))
+                    {
+                        destination.Update(i, whereExpression: where);
+                    }
+                }
+            }
+        }
+
+        private void SyncValueEquations(string cruiseID, DbConnection source, DbConnection destination, CruiseSyncOptions options)
+        {
+            var where = "CruiseID = @CruiseID AND Species = @Species AND PrimaryProduct = @PrimaryProduct AND ValueEquationNumber = @ValueEquationNumber";
+            var sourceItems = source.From<ValueEquation>()
+                .Where("CruiseID = @p1").Query(cruiseID);
+
+            foreach (var i in sourceItems)
+            {
+                var match = destination.From<ValueEquation>()
+                    .Where(where).Query(i).FirstOrDefault();
+
+                if (match == null)
+                {
+                    destination.Insert(i, persistKeyvalue: false);
+                }
+                else
+                {
+                    if (ShouldUpdate(i.Modified_TS, match.Modified_TS, options.Processing))
                     {
                         destination.Update(i, whereExpression: where);
                     }

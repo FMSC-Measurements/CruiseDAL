@@ -61,8 +61,6 @@ namespace CruiseDAL.V3.Sync
                 destination.Insert(d);
             }
 
-
-
             var units = source.From<CuttingUnit>().Where("CruiseID = @p1;").Query(cruiseID);
             foreach (var unit in units)
             {
@@ -189,10 +187,22 @@ namespace CruiseDAL.V3.Sync
                 destination.Insert(lfs);
             }
 
+            var logFieldHeadings = source.From<LogFieldHeading>().Where("CruiseID = @p1").Query(cruiseID);
+            foreach(var lfh in logFieldHeadings)
+            {
+                destination.Insert(lfh);
+            }
+
             var treeFieldSetup = source.From<TreeFieldSetup>().Where("CruiseID = @p1;").Query(cruiseID);
             foreach (var tfs in treeFieldSetup)
             {
                 destination.Insert(tfs);
+            }
+
+            var treeFieldHeadings = source.From<TreeFieldHeading>().Where("CruiseID = @p1").Query(cruiseID);
+            foreach(var tfh in treeFieldHeadings)
+            {
+                destination.Insert(tfh);
             }
 
             var treeAuditRules = source.From<TreeAuditRule>().Where("CruiseID = @p1;").Query(cruiseID);
@@ -205,6 +215,52 @@ namespace CruiseDAL.V3.Sync
             foreach (var tars in treeAuditRuleSelector)
             {
                 destination.Insert(tars);
+            }
+
+            var treeAuditResolutions = source.From<TreeAuditResolution>().Where("CruiseID = @p1").Query(cruiseID);
+            foreach (var taRes in treeAuditResolutions)
+            {
+                destination.Insert(taRes);
+            }
+
+            var logGradeAuditRules = source.From<LogGradeAuditRule>().Where("CruiseID = @p1").Query(cruiseID);
+            foreach(var lgar in logGradeAuditRules)
+            {
+                destination.Insert(lgar);
+            }
+
+            var treeDefaultValues = source.From<TreeDefaultValue>().Where("CruiseID = @p1").Query(cruiseID);
+            foreach(var tdv in treeDefaultValues)
+            {
+                destination.Insert(tdv);
+            }
+
+
+
+            // Processing
+
+            var biomassEqs = source.From<BiomassEquation>().Where("CruiseID = @p1").Query(cruiseID);
+            foreach(var bioEq in biomassEqs)
+            {
+                destination.Insert(bioEq);
+            }
+
+            var reports = source.From<Reports>().Where("CruiseID = @p1").Query(cruiseID);
+            foreach(var report in reports)
+            {
+                destination.Insert(report);
+            }
+
+            var valueEqs = source.From<ValueEquation>().Where("CruiseID = @p1").Query(cruiseID);
+            foreach(var valueEq in valueEqs)
+            {
+                destination.Insert(valueEq);
+            }
+
+            var volumeEqs = source.From<VolumeEquation>().Where("CruiseID = @p1").Query(cruiseID);
+            foreach(var volumeEq in volumeEqs)
+            {
+                destination.Insert(volumeEq);
             }
         }
     }
