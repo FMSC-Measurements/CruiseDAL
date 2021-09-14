@@ -25,7 +25,7 @@ namespace CruiseDAL
         protected override bool IsExtentionValid(string path)
         {
             var extension = System.IO.Path.GetExtension(path).ToLower();
-            return extension == ".crz3" || extension == ".crz3t";
+            return extension == ".crz3" || extension == ".crz3t" || extension == ".crz3db";
         }
 
         protected override void OnConnectionOpened(DbConnection connection)
