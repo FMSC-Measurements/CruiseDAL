@@ -105,7 +105,9 @@ namespace CruiseDAL.V3.Sync
 
         private void SyncCuttingUnits(string cruiseID, DbConnection source, DbConnection destination, CruiseSyncOptions options)
         {
-            var deletedItems = source.From<CuttingUnit_Tombstone>().Where("CruiseID = @p1").Query(cruiseID);
+            var deletedItems = source.From<CuttingUnit_Tombstone>()
+                .Where("CruiseID = @p1")
+                .Query(cruiseID);
 
             foreach(var i in deletedItems)
             {
@@ -539,8 +541,8 @@ namespace CruiseDAL.V3.Sync
         private void SyncReports(string cruiseID, DbConnection source, DbConnection destination, CruiseSyncOptions options)
         {
             var deletedItems = source.From<Reports_Tombstone>()
-                .Where("CruiseID = @CruiseID")
-                .Query2(cruiseID);
+                .Where("CruiseID = @p1")
+                .Query(cruiseID);
 
             foreach(var i in deletedItems)
             {

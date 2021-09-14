@@ -4,6 +4,7 @@
     <TargetFrameworks>$(LibTargetFrameworks)</TargetFrameworks>
     <Version>$(CruiseDALDownconvertVersion)</Version>
     <LangVersion>8.0</LangVersion>
+    <RootNamespace>CruiseDAL</RootNamespace>
   </PropertyGroup>
 
   <ItemGroup>

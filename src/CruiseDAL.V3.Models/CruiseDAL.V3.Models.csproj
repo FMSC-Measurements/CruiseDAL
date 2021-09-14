@@ -10,7 +10,7 @@
 
 
   <PropertyGroup>
-    <GenerateModels Condition="'$(GenerateModels)' == ''">true</GenerateModels>
+    <GenerateModels Condition="'$(GenerateModels)' == ''">false</GenerateModels>
   </PropertyGroup>
   
   <Target Name="BeforeGenerateModels" BeforeTargets="GenerateModels">

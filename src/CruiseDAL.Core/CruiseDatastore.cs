@@ -60,8 +60,18 @@ namespace CruiseDAL
         public CruiseDatastore(string path, bool makeNew, IDatastoreBuilder builder, IUpdater updater) : base(path)
         {
             if (path == null) { throw new ArgumentNullException("path"); }
-            if (path != IN_MEMORY_DB_PATH && IsExtentionValid(path) == false)
-            { throw new IOException("File extension is not recognized"); }
+            if (path != IN_MEMORY_DB_PATH)
+            {
+                // I wanted to refactor IsExtentionValid to just take in the extention 
+                // instead of the full path but V2 uses ExtrapolateCruiseFileType 
+                // to determin if extention is valid and that method wants the full file name
+                if (IsExtentionValid(path) is false)
+                {
+                    var extension = System.IO.Path.GetExtension(path);
+                    throw new IOException($"File extension {extension} is not recognized");
+                }
+            }
+
 
             Path = path;
 
@@ -157,7 +167,7 @@ namespace CruiseDAL
                     return AppDomain.CurrentDomain.FriendlyName;
                 }
             }
-            catch
+            catch(Exception e)
             {
                 //TODO add error report message so we know when we encounter this exception and what platforms
                 try

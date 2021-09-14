@@ -47,6 +47,8 @@ namespace CruiseDAL.UpConvert
             // processing
             new ReportsMigrator(),
             new VolumeEquationMigrator(),
+            new ValueEquationMigrator(),
+            new BiomassEquationMigrator(),
 
             // template
             new StratumTemplateTreeFieldSetupMigrator(),

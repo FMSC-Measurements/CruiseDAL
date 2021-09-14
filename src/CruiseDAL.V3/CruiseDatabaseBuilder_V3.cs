@@ -11,7 +11,7 @@ namespace CruiseDAL
 {
     public class CruiseDatastoreBuilder_V3 : IDatastoreBuilder
     {
-        public static Version DATABASE_VERSION = new Version("3.3.1");
+        public static Version DATABASE_VERSION = new Version("3.3.2");
 
         public static readonly IEnumerable<ITableDefinition> TABLE_DEFINITIONS =
         new ITableDefinition[]
@@ -77,6 +77,8 @@ namespace CruiseDAL
             // processing
             new ReportsTableDefinition(),
             new VolumeEquationTableDefinition(),
+            new ValueEquationTableDefinition(),
+            new BiomassEquationTableDefinition(),
 
             //template
             new StratumTemplateTableDefinition(),

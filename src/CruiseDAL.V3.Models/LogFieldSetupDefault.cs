@@ -5,7 +5,7 @@ namespace CruiseDAL.V3.Models
  [Table("LogFieldSetupDefault")]
  public partial class LogFieldSetupDefault
  {
-  [PrimaryKeyField("LogFieldSetupDefault_CN")]
+  [Field("LogFieldSetupDefault_CN")]
   public Int32? LogFieldSetupDefault_CN { get; set; }
 
   [Field("StratumDefaultID")]

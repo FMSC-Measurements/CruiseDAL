@@ -32,7 +32,7 @@ namespace FMSC.ORM.ModelGenerator
             ignoreColumnNames = ignoreColumnNames ?? Enumerable.Empty<string>();
 
             // note: we are only generating types off of tables because sqlite may fail to reflect the type on columns in views
-            var tableNames = datastore.QueryScalar<string>("SELECT tbl_name FROM Sqlite_Master WHERE type IN ('table') AND tbl_name NOT LIKE 'sqlite\\_%' ESCAPE '\\';");
+            var tableNames = datastore.QueryScalar<string>("SELECT tbl_name FROM Sqlite_Master WHERE type IN ('table', 'view') AND tbl_name NOT LIKE 'sqlite\\_%' ESCAPE '\\';");
 
             foreach (var tableName in tableNames)
             {

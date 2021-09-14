@@ -120,8 +120,6 @@ namespace CruiseDAL.V3.Test
         [Theory]
         [InlineData("7Wolf.cruise")]
         [InlineData("MultiTest.2014.10.31.cruise")]
-        [InlineData("R2_Test.cruise")]
-        [InlineData("testRoundTripConvert.cruise")]
         public void RoundTripV2Migration(string fileName)
         {
             var filePath = Path.Combine(TestFilesDirectory, fileName);
@@ -222,6 +220,80 @@ ORDER BY cnt.CuttingUnit_CN, cnt.SampleGroup_CN, cnt.TreeDefaultValue_CN;").ToAr
                         .Excluding(x => x.PointFactor)
                         .Excluding(x => x.TreeCount) // tree count may get combined into the count tree table
                     );
+                }
+            }
+        }
+
+        [InlineData("R2_Test.cruise")]
+        [InlineData("testRoundTripConvert.cruise")]
+        [Theory]
+        public void RoundTripV2Migration_ignoreCountTreeRecordCount(string fileName)
+        {
+            var filePath = Path.Combine(TestFilesDirectory, fileName);
+            var reconvertPath = Path.Combine(TestTempPath, "again_" + fileName);
+            Output.WriteLine(reconvertPath);
+
+            // copy file to test temp dir
+            var tempPath = Path.Combine(TestTempPath, fileName);
+            File.Copy(filePath, tempPath, true);
+
+            var v3Path = new Migrator().MigrateFromV2ToV3(tempPath, true);
+
+            using (var v2db = new DAL(tempPath))
+            using (var v3Database = new CruiseDatastore_V3(v3Path))
+            {
+                var units = v2db.From<V2.Models.CuttingUnit>().Query();
+                var strata = v2db.From<V2.Models.Stratum>().Query().ToArray();
+                var samplegroups = v2db.From<V2.Models.SampleGroup>().Query();
+                var plots = v2db.From<V2.Models.Plot>().Query();
+                var trees = v2db.From<V2.Models.Tree>().Query();
+                var reports = v2db.From<V2.Models.Reports>().Query();
+
+                var cruise = v3Database.From<Cruise>().Query().Single();
+                var cruiseID = cruise.CruiseID;
+
+                using (var v2again = new DAL(reconvertPath, true))
+                {
+                    var tableInfo = v2again.GetTableInfo("Sale");
+
+                    var downMigrator = new DownMigrator();
+                    downMigrator.MigrateFromV3ToV2(cruiseID, v3Database, v2again, "test");
+
+                    var unitsAgain = v2again.From<V2.Models.CuttingUnit>().Query();
+                    unitsAgain.Should().BeEquivalentTo(units, config => config
+                        .Using<string>(x => x.Subject.Should().Be(x.Expectation?.Trim())).WhenTypeIs<string>()// ignore whitespace when type is string
+                        .Excluding(x => x.TallyHistory)
+                    );
+
+                    //var strataAgain = v2again.From<V2.Models.Stratum>().Query();
+                    //strataAgain.Should().Should().BeEquivalentTo(strata);
+
+                    var samplegroupsAgain = v2again.From<V2.Models.SampleGroup>().Query();
+                    samplegroupsAgain.Should().BeEquivalentTo(samplegroups, config => config
+                        .Excluding(x => x.SampleSelectorState)
+                        .Excluding(x => x.SampleSelectorType)
+                        .Excluding(x => x.TallyMethod)
+                    );
+
+                    var plotsAgain = v2again.From<V2.Models.Plot>().Query();
+                    plotsAgain.Should().BeEquivalentTo(plots,
+                        config => config
+                        .Excluding(x => x.Plot_GUID) // Plot_Stratum doesn't have a guid
+                        .Using<string>(ctx => ctx.Subject.Should().Be(ctx.Expectation ?? "False")) // v3 will auto populate IsEmpty with False if null
+                        .When(info => info.SelectedMemberPath.Equals(nameof(V2.Models.Plot.IsEmpty))));
+
+                    var treesAgain = v2again.From<V2.Models.Tree>().Query();
+                    treesAgain.Should().BeEquivalentTo(trees, congig => congig
+                        .Excluding(x => x.Tree_GUID)
+                        .Excluding(x => x.TreeDefaultValue_CN)
+                        .Excluding(x => x.ExpansionFactor)
+                        .Excluding(x => x.TreeFactor)
+                        .Excluding(x => x.PointFactor)
+                        .Excluding(x => x.TreeCount) // tree count may get combined into the count tree table
+                    );
+
+                    var reportsAgain = v2again.From<V2.Models.Reports>().Query();
+                    reportsAgain.Should().BeEquivalentTo(reports);
                 }
             }
         }

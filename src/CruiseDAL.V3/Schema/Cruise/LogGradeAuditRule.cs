@@ -14,6 +14,8 @@ namespace CruiseDAL.Schema
     SpeciesCode TEXT COLLATE NOCASE,
     Grade TEXT NOT NULL COLLATE NOCASE CHECK (length(Grade) > 0),
     DefectMax REAL Default 0.0,
+
+    -- see indexes for unique constraints
     
     FOREIGN KEY (SpeciesCode, CruiseID) REFERENCES Species (SpeciesCode, CruiseID) ON DELETE CASCADE ON UPDATE CASCADE,
     FOREIGN KEY (CruiseID) REFERENCES Cruise (CruiseID) ON DELETE CASCADE

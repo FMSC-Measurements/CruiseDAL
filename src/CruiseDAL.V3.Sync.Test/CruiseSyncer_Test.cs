@@ -1,4 +1,5 @@
-﻿using CruiseDAL.V3.Models;
+﻿using AutoBogus;
+using CruiseDAL.V3.Models;
 using FluentAssertions;
 using System;
 using System.Linq;
@@ -255,14 +256,14 @@ namespace CruiseDAL.V3.Sync
             using var toDb = new CruiseDatastore_V3(toPath);
 
             var stratumID = Guid.NewGuid().ToString();
-            var newStratum = new Stratum()
+            fromDb.Insert(new Stratum()
             {
                 CruiseID = cruiseID,
                 StratumID = stratumID,
                 StratumCode = "10",
                 Method = "100",
-            };
-            fromDb.Insert(newStratum);
+            });
+            var newStratum = fromDb.From<Stratum>().Where("StratumID = @p1").Query(stratumID).Single();
 
             var syncer = new CruiseSyncer();
             syncer.Sync(cruiseID, fromDb, toDb, syncOptions);
@@ -359,21 +360,21 @@ namespace CruiseDAL.V3.Sync
             using var toDb = new CruiseDatastore_V3(toPath);
 
             var sampleGroupID = Guid.NewGuid().ToString();
-            var newSampleGroup = new SampleGroup()
+            fromDb.Insert(new SampleGroup()
             {
                 CruiseID = cruiseID,
                 SampleGroupID = sampleGroupID,
                 SampleGroupCode = "10",
                 StratumCode = Strata[0].StratumCode,
-            };
-            fromDb.Insert(newSampleGroup);
+            });
+            var newSampleGroup = fromDb.From<SampleGroup>().Where("SampleGroupID = @p1").Query(sampleGroupID).Single();
 
             var syncer = new CruiseSyncer();
             syncer.Sync(cruiseID, fromDb, toDb, syncOptions);
 
             var sampleGroupAgain = toDb.From<SampleGroup>().Where("SampleGroupID =  @p1")
                 .Query(sampleGroupID).FirstOrDefault();
-            sampleGroupAgain.Should().BeEquivalentTo(newSampleGroup, x => x.Excluding(y => y.Modified_TS));
+            sampleGroupAgain.Should().BeEquivalentTo(newSampleGroup);
         }
 
         [Fact]
@@ -878,6 +879,7 @@ namespace CruiseDAL.V3.Sync
             var newLog = new Log()
             {
                 LogID = Guid.NewGuid().ToString(),
+                CruiseID = cruiseID,
                 LogNumber = "01",
                 TreeID = tree.TreeID,
             };

@@ -5,8 +5,8 @@ namespace CruiseDAL.V3.Models
  [Table("TreeFieldSetupDefault")]
  public partial class TreeFieldSetupDefault
  {
-  [PrimaryKeyField("TreeFieldSetupDefault_CN")]
-  public Int32? TreeFieldSetupDefault_CN { get; set; }
+  [Field("TreeFieldSetupDefault_CN")]
+  public String TreeFieldSetupDefault_CN { get; set; }
 
   [Field("StratumDefaultID")]
   public String StratumDefaultID { get; set; }

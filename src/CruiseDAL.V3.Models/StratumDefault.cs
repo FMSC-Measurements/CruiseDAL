@@ -5,8 +5,8 @@ namespace CruiseDAL.V3.Models
  [Table("StratumDefault")]
  public partial class StratumDefault
  {
-  [PrimaryKeyField("StratumDefault_CN")]
-  public Int32? StratumDefault_CN { get; set; }
+  [Field("StratumDefault_CN")]
+  public String StratumDefault_CN { get; set; }
 
   [Field("StratumDefaultID")]
   public String StratumDefaultID { get; set; }
