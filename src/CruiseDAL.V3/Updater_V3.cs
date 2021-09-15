@@ -44,7 +44,7 @@ namespace CruiseDAL
             {
                 UpdateTo_3_3_1(datastore);
             }
-            if (version == "3.3.2")
+            if (version == "3.3.1")
             {
                 UpdateTo_3_3_2(datastore);
             }

@@ -2,7 +2,6 @@
 using FluentAssertions;
 using FMSC.ORM.Core;
 using FMSC.ORM.SQLite;
-using System;
 using System.IO;
 using System.Linq;
 using Xunit;
@@ -53,15 +52,23 @@ namespace CruiseDAL.V3.Test
 
             using (var ds = new CruiseDatastore(filePath))
             {
-                ds.DatabaseVersion.Should().Be(Path.GetFileNameWithoutExtension(fileName));
+                var orgDbVersion = ds.DatabaseVersion;
+                orgDbVersion.Should().Be(Path.GetFileNameWithoutExtension(fileName));
 
                 var updater = new Updater_V3();
 
                 updater.Update(ds);
 
-                ds.DatabaseVersion.Should().Be(CruiseDatastoreBuilder_V3.DATABASE_VERSION.ToString());
-            }
+                var verAfter = ds.DatabaseVersion;
+                verAfter.Should().Be(CruiseDatastoreBuilder_V3.DATABASE_VERSION.ToString());
 
+                var tableDefs = CruiseDatastoreBuilder_V3.TABLE_DEFINITIONS;
+                foreach (var t in tableDefs)
+                {
+                    var ti = ds.GetTableInfo(t.TableName);
+                    ti.Should().NotBeNullOrEmpty();
+                }
+            }
         }
 
         [Fact]
