@@ -14,46 +14,50 @@ namespace CruiseDAL
     {
         public static ILogger Logger { get; set; } = LoggerProvider.Get();
 
-        public void Update(CruiseDatastore datastore)
+        public void Update(CruiseDatastore db)
         {
-            var version = datastore.DatabaseVersion;
+            var version = db.DatabaseVersion;
             if (version == "3.0.0"
                 || version == "3.0.1"
                 || version == "3.0.2"
                 || version == "3.0.3")
             {
-                UpdateTo_3_1_0(datastore);
+                UpdateTo_3_1_0(db);
             }
             if (version == "3.1.0" || version == "3.2.0" || version == "3.2.1")
             {
-                UpdateTo_3_2_2(datastore);
+                UpdateTo_3_2_2(db);
             }
             if (version == "3.2.2")
             {
-                UpdateTo_3_2_3(datastore);
+                UpdateTo_3_2_3(db);
             }
             if (version == "3.2.3")
             {
-                UpdateTo_3_2_4(datastore);
+                UpdateTo_3_2_4(db);
             }
             if (version == "3.2.4")
             {
-                UpdateTo_3_3_0(datastore);
+                UpdateTo_3_3_0(db);
             }
             if (version == "3.3.0")
             {
-                UpdateTo_3_3_1(datastore);
+                UpdateTo_3_3_1(db);
             }
             if (version == "3.3.1")
             {
-                UpdateTo_3_3_2(datastore);
+                UpdateTo_3_3_2(db);
+            }
+            if (version == "3.3.2")
+            {
+                UpdateTo_3_3_3(db);
             }
         }
 
-        private void UpdateTo_3_3_2(CruiseDatastore ds)
+        private void UpdateTo_3_3_3(CruiseDatastore db)
         {
-            var curVersion = ds.DatabaseVersion;
-            var targetVersion = "3.3.1";
+            var curVersion = db.DatabaseVersion;
+            var targetVersion = "3.3.3";
 
             try
             {
@@ -65,8 +69,36 @@ namespace CruiseDAL
                     {
                         "LogField",
                         "TreeField",
-                        "Log",
-                        "Stem",
+                };
+
+                    Migrate(db, newDatastore, excluding: excludeTables, excludeLookupTables: true);
+
+                    // use back up rutine to replace old database with
+                    // migrated contents
+                    newDatastore.BackupDatabase(db);
+                }
+            }
+            catch (Exception e)
+            {
+                throw new SchemaUpdateException(curVersion, targetVersion, e);
+            }
+        }
+
+        private void UpdateTo_3_3_2(CruiseDatastore ds)
+        {
+            var curVersion = ds.DatabaseVersion;
+            var targetVersion = "3.3.2";
+
+            try
+            {
+                // create an in-memory database
+                // to migrate into
+                using (var newDatastore = new CruiseDatastore_V3())
+                {
+                    var excludeTables = new[]
+                    {
+                        "LogField",
+                        "TreeField",
                 };
 
                     Migrate(ds, newDatastore, excluding: excludeTables, excludeLookupTables: true);

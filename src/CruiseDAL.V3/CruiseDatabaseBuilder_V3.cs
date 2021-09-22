@@ -11,7 +11,7 @@ namespace CruiseDAL
 {
     public class CruiseDatastoreBuilder_V3 : IDatastoreBuilder
     {
-        public static Version DATABASE_VERSION = new Version("3.3.2");
+        public static Version DATABASE_VERSION = new Version("3.3.3");
 
         public static readonly IEnumerable<ITableDefinition> TABLE_DEFINITIONS =
         new ITableDefinition[]
@@ -30,6 +30,7 @@ namespace CruiseDAL
             new LK_District(),
             new LK_UOM(),
             new LK_Purpose(),
+            new LK_TallyEntryType(),
 
             // cruise specific lookup
             new SpeciesTableDefinition(),
