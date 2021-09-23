@@ -90,7 +90,7 @@ classDiagram
     }
 
     class LK_TallyEntryType {
-    * LK_TallyEntryType
+    * LK_TallyEntryType_CN
     -----
         - EntryType : TEXT
     }

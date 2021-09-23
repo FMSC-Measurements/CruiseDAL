@@ -8,7 +8,7 @@ namespace CruiseDAL.Schema
 
         public string CreateTable =>
 @"CREATE TABLE LK_TallyEntryType (
-    LK_TallyEntryType  INTEGER PRIMARY KEY AUTOINCREMENT,
+    LK_TallyEntryType_CN  INTEGER PRIMARY KEY AUTOINCREMENT,
     EntryType TEXT NOT NULL COLLATE NOCASE,
 
     UNIQUE (EntryType)
