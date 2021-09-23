@@ -4,6 +4,7 @@ using System.Data.Common;
 using System.Diagnostics;
 using System.IO;
 using System.Reflection;
+using System.Runtime.CompilerServices;
 using Xunit.Abstractions;
 
 namespace CruiseDAL.TestCommon
@@ -61,9 +62,9 @@ namespace CruiseDAL.TestCommon
         public string TestFilesDirectory => Path.Combine(TestExecutionDirectory, "TestFiles");
         public string ResourceDirectory => Path.Combine(TestExecutionDirectory, "Resources");
 
-        public string GetTempFilePath(string extention, string fileName = null)
+        public string GetTempFilePath(string extention, string fileName = null, [CallerMemberName]string testName = null)
         {
-            return Path.Combine(TestTempPath, (fileName ?? Guid.NewGuid().ToString()) + extention);
+            return Path.Combine(TestTempPath, (fileName ?? testName + "_" + Guid.NewGuid().ToString()) + extention);
         }
 
         public string GetTestFile(string fileName) => InitializeTestFile(fileName);

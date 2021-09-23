@@ -66,5 +66,33 @@ namespace CruiseDAL
                 connection.ExecuteNonQuery(command, transaction: transaction, exceptionProcessor: exceptionProcessor);
             }
         }
+
+        public bool EnsureCanMigrate(string cruiseID, CruiseDatastore_V3 v3db, out string errorMsg)
+        {
+            errorMsg = null;
+
+            if (CheckHasTreeDefaults(cruiseID, v3db) is false)
+            {
+                return true;
+            }
+            else
+            {
+                errorMsg += "Cruise Has No Tree Default Values";
+                return false;
+            }
+        }
+
+        private static bool CheckHasTreeDefaults(string cruiseID, CruiseDatastore_V3 v3db)
+        {
+            var hasTrees = v3db.GetRowCount("Tree", "WHERE CruiseID = @p1", cruiseID) > 0;
+            var hasTallyBySp = v3db.GetRowCount("TallyPopulation", "WHERE CruiseID = @p1 AND SpeciesCode IS NOT NULL", cruiseID) > 0;
+
+            if (hasTrees || hasTallyBySp)
+            {
+                var hasTDV = v3db.GetRowCount("TreeDefaultValue", "WHERE CruiseID = @p1", cruiseID) > 0;
+                return hasTDV is false;
+            }
+            else { return true; }
+        }
     }
 }

@@ -32,6 +32,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\CruiseDAL.V2.Models\CruiseDAL.V2.Models.csproj" />
     <ProjectReference Include="..\CruiseDAL.V2\CruiseDAL.V2.csproj" />
     <ProjectReference Include="..\CruiseDAL.V3.Models\CruiseDAL.V3.Models.csproj" />
     <ProjectReference Include="..\CruiseDAL.V3.UpConvert\CruiseDAL.V3.UpConvert.csproj" />
@@ -40,5 +41,7 @@
   <Import Project="..\CruiseDAL.TestCommon\CruiseDAL.TestCommon.projitems" Label="Shared" />
 
   <Import Project="..\CruiseDAL.TestCommon.V3\CruiseDAL.TestCommon.V3.projitems" Label="Shared" />
+
+  <Import Project="..\CruiseDAL.TestCommon.V2\CruiseDAL.TestCommon.V2.projitems" Label="Shared" />
 
 </Project>

@@ -9,6 +9,7 @@ using Xunit.Abstractions;
 using CruiseDAL.V3.Models;
 using CruiseDAL.TestCommon;
 using CruiseDAL.UpConvert;
+using CruiseDAL.TestCommon.V2;
 
 namespace CruiseDAL.V3.Test
 {
@@ -145,6 +146,59 @@ namespace CruiseDAL.V3.Test
             Output.WriteLine(deviceID);
         }
 
-        
+        [Fact]
+        public void EnsureCanMigrate_NoDupTDVs()
+        {
+            var v2Path = GetTempFilePath(".cruise");
+
+            var init = new DatabaseInitializer_V2
+            {
+                TreeDefaults = new[]
+                {
+                    new CruiseDAL.V2.Models.TreeDefaultValue {Species = "sp1", PrimaryProduct = "01", LiveDead = "L"},
+                    new CruiseDAL.V2.Models.TreeDefaultValue {Species = "sp2", PrimaryProduct = "01", LiveDead = "L"},
+                    new CruiseDAL.V2.Models.TreeDefaultValue {Species = "sp3", PrimaryProduct = "01", LiveDead = "L"},
+                }
+            };
+
+            using var v2Db = init.CreateDatabase();
+
+            var migrator = new Migrator();
+
+
+
+            var result = migrator.EnsureCanMigrate(v2Db, out var msg);
+            result.Should().BeTrue();
+            msg.Should().BeNull();
+        }
+
+        [Fact]
+        public void EnsureCanMigrate_DupTDVs()
+        {
+            var v2Path = GetTempFilePath(".cruise");
+
+            var init = new DatabaseInitializer_V2
+            {
+                TreeDefaults = new[]
+                {
+                    new CruiseDAL.V2.Models.TreeDefaultValue {Species = "sp1", PrimaryProduct = "01", LiveDead = "L"},
+                    new CruiseDAL.V2.Models.TreeDefaultValue {Species = "sp2", PrimaryProduct = "01", LiveDead = "L"},
+                    new CruiseDAL.V2.Models.TreeDefaultValue {Species = "sp2", PrimaryProduct = "01", LiveDead = "L"},
+                }
+            };
+
+            using var v2Db = init.CreateDatabase();
+
+            var migrator = new Migrator();
+
+
+
+            var result = migrator.EnsureCanMigrate(v2Db, out var msg);
+            result.Should().BeFalse();
+            msg.Should().NotBeNullOrEmpty();
+        }
+
+
+
     }
 }
