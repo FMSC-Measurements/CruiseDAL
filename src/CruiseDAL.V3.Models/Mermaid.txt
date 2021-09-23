@@ -187,6 +187,7 @@ classDiagram
         - MeasurementYear : TEXT
         - LogGradingEnabled : BOOLEAN
         - UseCrossStrataPlotTreeNumbering : BOOLEAN
+        - TemplateFile : TEXT
         - CreatedBy : TEXT
         - Created_TS : DATETIME
         - ModifiedBy : TEXT

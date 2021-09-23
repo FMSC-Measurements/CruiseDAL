@@ -18,6 +18,7 @@ namespace CruiseDAL.Schema
     MeasurementYear TEXT COLLATE NOCASE,
     LogGradingEnabled BOOLEAN Default 0,
     UseCrossStrataPlotTreeNumbering BOOLEAN Default 0,
+    TemplateFile TEXT, 
     CreatedBy TEXT DEFAULT 'none',
     Created_TS DATETIME DEFAULT (CURRENT_TIMESTAMP),
     ModifiedBy TEXT,
