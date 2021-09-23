@@ -48,7 +48,7 @@ namespace CruiseDAL.V3.Test
             fromDb.Insert(new TreeFieldSetup()
             {
                 CruiseID = initializer.CruiseID,
-                SampleGroupCode  = sg.SampleGroupCode,
+                SampleGroupCode = sg.SampleGroupCode,
                 StratumCode = sg.StratumCode,
                 Field = "DBH",
                 DefaultValueReal = 12.0,
@@ -140,9 +140,9 @@ namespace CruiseDAL.V3.Test
                 var samplegroups = v2db.From<V2.Models.SampleGroup>().Query();
                 var plots = v2db.From<V2.Models.Plot>().Query();
                 var trees = v2db.From<V2.Models.Tree>().Query();
-//                var countTrees = v2db.Query<TreeCNTTotals>(
-//@"SELECT CuttingUnit_CN, SampleGroup_CN, ifnull(TreeDefaultValue_CN, 0) AS TreeDefaultValue_CN, Sum(TreeCount) AS TreeCount, sum(SumKPI) AS SumKPI FROM CountTree 
-//GROUP BY CuttingUnit_CN, SampleGroup_CN, ifnull(TreeDefaultValue_CN, 0);").ToArray();
+                //                var countTrees = v2db.Query<TreeCNTTotals>(
+                //@"SELECT CuttingUnit_CN, SampleGroup_CN, ifnull(TreeDefaultValue_CN, 0) AS TreeDefaultValue_CN, Sum(TreeCount) AS TreeCount, sum(SumKPI) AS SumKPI FROM CountTree 
+                //GROUP BY CuttingUnit_CN, SampleGroup_CN, ifnull(TreeDefaultValue_CN, 0);").ToArray();
 
                 var treeCounts = v2db.Query<TreeCNTTotals>(
 @"SELECT cnt.CuttingUnit_CN, cnt.SampleGroup_CN, cnt.TreeDefaultValue_CN, cnt.TreeCount + sum(TreeCNTTotal) AS TreeCNT, cnt.SumKPI 
@@ -166,13 +166,13 @@ ORDER BY cnt.CuttingUnit_CN, cnt.SampleGroup_CN, cnt.TreeDefaultValue_CN;").ToAr
                     var downMigrator = new DownMigrator();
                     downMigrator.MigrateFromV3ToV2(cruiseID, v3Database, v2again, "test");
 
-//                    var countTreesAgain = v2again.Query<TreeCNTTotals>(
-//@"SELECT CuttingUnit_CN, SampleGroup_CN, ifnull(TreeDefaultValue_CN, 0) AS TreeDefaultValue_CN, Sum(TreeCount) AS TreeCount, sum(SumKPI) AS SumKPI FROM CountTree 
-//GROUP BY CuttingUnit_CN, SampleGroup_CN, ifnull(TreeDefaultValue_CN, 0);").ToArray();
+                    //                    var countTreesAgain = v2again.Query<TreeCNTTotals>(
+                    //@"SELECT CuttingUnit_CN, SampleGroup_CN, ifnull(TreeDefaultValue_CN, 0) AS TreeDefaultValue_CN, Sum(TreeCount) AS TreeCount, sum(SumKPI) AS SumKPI FROM CountTree 
+                    //GROUP BY CuttingUnit_CN, SampleGroup_CN, ifnull(TreeDefaultValue_CN, 0);").ToArray();
 
 
-//                    var countTreeDiff = countTreesAgain.Except(countTrees).ToArray();
-//                    countTreesAgain.Should().BeEquivalentTo(countTrees);
+                    //                    var countTreeDiff = countTreesAgain.Except(countTrees).ToArray();
+                    //                    countTreesAgain.Should().BeEquivalentTo(countTrees);
 
                     var treeCountsAgain = v2again.Query<TreeCNTTotals>(
 @"SELECT cnt.CuttingUnit_CN, cnt.SampleGroup_CN, cnt.TreeDefaultValue_CN, cnt.TreeCount + sum(TreeCNTTotal) AS TreeCNT, cnt.SumKPI 
@@ -205,7 +205,7 @@ ORDER BY cnt.CuttingUnit_CN, cnt.SampleGroup_CN, cnt.TreeDefaultValue_CN;").ToAr
                     );
 
                     var plotsAgain = v2again.From<V2.Models.Plot>().Query();
-                    plotsAgain.Should().BeEquivalentTo(plots, 
+                    plotsAgain.Should().BeEquivalentTo(plots,
                         config => config
                         .Excluding(x => x.Plot_GUID) // Plot_Stratum doesn't have a guid
                         .Using<string>(ctx => ctx.Subject.Should().Be(ctx.Expectation ?? "False")) // v3 will auto populate IsEmpty with False if null
@@ -339,7 +339,7 @@ ORDER BY cnt.CuttingUnit_CN, cnt.SampleGroup_CN, cnt.TreeDefaultValue_CN;").ToAr
                 var stratav2 = dbv2.From<V2.Models.Stratum>()
                     .Query();
 
-                stratav2Again.Should().BeEquivalentTo(stratav2, 
+                stratav2Again.Should().BeEquivalentTo(stratav2,
                     config => config
                     .Excluding(x => x.VolumeFactor)
                     .Excluding(x => x.Month)
@@ -474,8 +474,45 @@ ORDER BY cnt.CuttingUnit_CN, cnt.SampleGroup_CN, cnt.TreeDefaultValue_CN;").ToAr
 
                 reportsV2Again.Should().HaveSameCount(reportsV2);
                 reportsV2Again.Should().BeEquivalentTo(reportsV2);
-                
+
             }
+        }
+
+        [Fact]
+        public void EnsureCanMigrate_HasTDVs()
+        {
+            var v3Path = GetTempFilePath(".crz3");
+
+            var init = new DatabaseInitializer
+            {
+                TreeDefaults = new[]
+                {
+                    new TreeDefaultValue {SpeciesCode = "sp1", PrimaryProduct = "01"},
+                }
+            };
+            using var v3db = init.CreateDatabase();
+
+            var migrator = new DownMigrator();
+            var result = migrator.EnsureCanMigrate(init.CruiseID, v3db, out var msg);
+            result.Should().BeTrue();
+            msg.Should().BeNull();
+        }
+
+        [Fact]
+        public void EnsureCanMigrate_DoesntHasTDVs()
+        {
+            var v3Path = GetTempFilePath(".crz3");
+
+            var init = new DatabaseInitializer
+            {
+                TreeDefaults = new TreeDefaultValue[] { },
+            };
+            using var v3db = init.CreateDatabase();
+
+            var migrator = new DownMigrator();
+            var result = migrator.EnsureCanMigrate(init.CruiseID, v3db, out var msg);
+            result.Should().BeFalse();
+            msg.Should().NotBeNullOrEmpty();
         }
 
 

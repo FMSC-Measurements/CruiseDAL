@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.Linq;
 
 namespace CruiseDAL.Schema
 {
@@ -33,10 +32,10 @@ namespace CruiseDAL.Schema
 
     CHECK (LiveDead IN ('L', 'D') OR LiveDead IS NULL),
     CHECK (STM IN (0, 1)),
-    CHECK (EntryType IN ('tally', 'utility', 'treecount_edit', 'clicker') OR EntryType IS NULL),
 
     UNIQUE (TallyLedgerID),
 
+    FOREIGN KEY (EntryType) REFERENCES LK_TallyEntryType (EntryType),
     FOREIGN KEY (CuttingUnitCode, CruiseID) REFERENCES CuttingUnit (CuttingUnitCode, CruiseID) ON DELETE CASCADE ON UPDATE CASCADE,
     FOREIGN KEY (SampleGroupCode, StratumCode, CruiseID) REFERENCES SampleGroup (SampleGroupCode, StratumCode, CruiseID) ON DELETE CASCADE ON UPDATE CASCADE,
     FOREIGN KEY (SpeciesCode,CruiseID) REFERENCES Species (SpeciesCode, CruiseID) ON DELETE CASCADE ON UPDATE CASCADE,
@@ -98,9 +97,9 @@ CREATE INDEX NIX_TallyLedger_Created_TS ON TallyLedger (Created_TS);";
         };
 
         public const string CREATE_TRIGGER_TallyLedger_OnDelete =
-@"CREATE TRIGGER TallyLedger_OnDelete 
-BEFORE DELETE ON TallyLedger 
-FOR EACH ROW 
+@"CREATE TRIGGER TallyLedger_OnDelete
+BEFORE DELETE ON TallyLedger
+FOR EACH ROW
 BEGIN
     INSERT OR REPLACE INTO TallyLedger_Tombstone (
         TallyLedgerID,

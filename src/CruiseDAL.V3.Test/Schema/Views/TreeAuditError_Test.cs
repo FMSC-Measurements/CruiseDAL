@@ -65,6 +65,66 @@ namespace CruiseDAL.V3.Test.Schema.Views
             };
             db.Insert(tfs);
 
+            var taeRecords = db.QueryGeneric("SELECT * FROM TreeAuditError").ToArray();
+            taeRecords.Should().HaveCount(1);
+        }
+
+        [Fact]
+        public void ReadTreeAuditErrors_With_Two_AuditRules()
+        {
+            var init = new DatabaseInitializer();
+
+            using var db = init.CreateDatabase();
+
+            var tree = new Tree
+            {
+                CruiseID = init.CruiseID,
+                TreeID = Guid.NewGuid().ToString(),
+                TreeNumber = 1,
+                CuttingUnitCode = "u1",
+                StratumCode = "st3",
+                SampleGroupCode = "sg1",
+                SpeciesCode = "sp1",
+                CountOrMeasure = "M",
+                LiveDead = "L",
+            };
+            db.Insert(tree);
+
+            var tm = new TreeMeasurment
+            {
+                TreeID = tree.TreeID,
+                DBH = 101,
+            };
+            db.Insert(tm);
+
+            var tar = new TreeAuditRule
+            {
+                CruiseID = init.CruiseID,
+                TreeAuditRuleID = Guid.NewGuid().ToString(),
+                Field = "DBH",
+                Max = 100,
+            };
+
+            db.Insert(tar);
+
+            var tars = new TreeAuditRuleSelector
+            {
+                CruiseID = init.CruiseID,
+                TreeAuditRuleID = tar.TreeAuditRuleID,
+                SpeciesCode = "sp1",
+                PrimaryProduct = "01",
+                LiveDead = "L",
+            };
+            db.Insert(tars);
+
+            var tfs = new TreeFieldSetup
+            {
+                CruiseID = init.CruiseID,
+                Field = "DBH",
+                StratumCode = "st3",
+            };
+            db.Insert(tfs);
+
             var tar2 = new TreeAuditRule
             {
                 CruiseID = init.CruiseID,
@@ -84,7 +144,7 @@ namespace CruiseDAL.V3.Test.Schema.Views
             db.Insert(tars2);
 
             var taeRecords = db.QueryGeneric("SELECT * FROM TreeAuditError").ToArray();
-            taeRecords.Should().HaveCount(1);
+            taeRecords.Should().HaveCount(1); // not sure how to make TreeAuditErrors return only one error per tree, but its a low impact issue
         }
     }
 }

@@ -61,13 +61,17 @@ Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "CruiseDAL.TestCommon.V3", "
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{50484533-C2FF-4C4F-B71C-3BFCFA1DAC59}"
 EndProject
+Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "CruiseDAL.TestCommon.V2", "CruiseDAL.TestCommon.V2\CruiseDAL.TestCommon.V2.shproj", "{884F964B-0730-4A36-AEAC-6E4034070C8C}"
+EndProject
 Global
 	GlobalSection(SharedMSBuildProjectFiles) = preSolution
 		CruiseDAL.TestCommon\CruiseDAL.TestCommon.projitems*{00ae3e67-f599-4674-9bee-261a027600f7}*SharedItemsImports = 5
 		CruiseDAL.TestCommon.V3\CruiseDAL.TestCommon.V3.projitems*{73d6bed5-4a9e-4ae8-bead-1cf43eef9be1}*SharedItemsImports = 5
 		CruiseDAL.TestCommon\CruiseDAL.TestCommon.projitems*{73d6bed5-4a9e-4ae8-bead-1cf43eef9be1}*SharedItemsImports = 5
 		CruiseDAL.TestCommon\CruiseDAL.TestCommon.projitems*{75a64b8f-d90d-42af-ab17-96b35c4df788}*SharedItemsImports = 13
+		CruiseDAL.TestCommon.V2\CruiseDAL.TestCommon.V2.projitems*{884f964b-0730-4a36-aeac-6e4034070c8c}*SharedItemsImports = 13
 		CruiseDAL.TestCommon\CruiseDAL.TestCommon.projitems*{886a3cdf-fd6e-4d0e-8d05-8884dc11d877}*SharedItemsImports = 5
+		CruiseDAL.TestCommon.V2\CruiseDAL.TestCommon.V2.projitems*{8d9a8067-486e-468d-bf6c-a44e695b0f90}*SharedItemsImports = 5
 		CruiseDAL.TestCommon.V3\CruiseDAL.TestCommon.V3.projitems*{8d9a8067-486e-468d-bf6c-a44e695b0f90}*SharedItemsImports = 5
 		CruiseDAL.TestCommon\CruiseDAL.TestCommon.projitems*{8d9a8067-486e-468d-bf6c-a44e695b0f90}*SharedItemsImports = 5
 		CruiseDAL.TestCommon.V3\CruiseDAL.TestCommon.V3.projitems*{a646ff3f-c530-4bdd-b9af-cc86f875ceb3}*SharedItemsImports = 5
@@ -218,6 +222,7 @@ Global
 		{A646FF3F-C530-4BDD-B9AF-CC86F875CEB3} = {50484533-C2FF-4C4F-B71C-3BFCFA1DAC59}
 		{75A64B8F-D90D-42AF-AB17-96B35C4DF788} = {50484533-C2FF-4C4F-B71C-3BFCFA1DAC59}
 		{ED86A10A-9D11-4DCB-9D72-196C8732D3B2} = {50484533-C2FF-4C4F-B71C-3BFCFA1DAC59}
+		{884F964B-0730-4A36-AEAC-6E4034070C8C} = {50484533-C2FF-4C4F-B71C-3BFCFA1DAC59}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {8C6EAB8C-1186-4EFB-BEC1-3597B32E3F4C}

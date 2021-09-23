@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Data.Common;
 using System.IO;
+using System.Linq;
 
 namespace CruiseDAL.UpConvert
 {
@@ -156,6 +157,28 @@ namespace CruiseDAL.UpConvert
         public static string GetDefaultDeviceID()
         {
             return Environment.OSVersion.Platform.ToString();
+        }
+
+        public bool EnsureCanMigrate(CruiseDatastore v2db, out string errorMsg)
+        {
+            errorMsg = null;
+            if (CheckNoDupTreeDefaults(v2db))
+            {
+                return true;
+            }
+            else 
+            {
+                errorMsg = "Cruise Has Multiple Tree Defaults With The Same Species, LiveDead and PrimaryProduct";
+                return false;
+                
+            }
+        }
+
+        private bool CheckNoDupTreeDefaults(CruiseDatastore v2db)
+        {
+            var counts = v2db.QueryScalar<int>("SELECT count(1) FROM TreeDefaultValue GROUP BY Species, LiveDead, PrimaryProduct;");
+            var hasDupTreeDefaults = counts.Any(x => x > 1);
+            return hasDupTreeDefaults is false;
         }
     }
 }

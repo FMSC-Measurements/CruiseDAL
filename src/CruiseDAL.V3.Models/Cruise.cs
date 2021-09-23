@@ -35,6 +35,9 @@ namespace CruiseDAL.V3.Models
   [Field("UseCrossStrataPlotTreeNumbering")]
   public Boolean? UseCrossStrataPlotTreeNumbering { get; set; }
 
+  [Field("TemplateFile")]
+  public String TemplateFile { get; set; }
+
   [Field("CreatedBy")]
   public String CreatedBy { get; set; }
 

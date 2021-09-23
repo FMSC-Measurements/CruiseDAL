@@ -89,6 +89,12 @@ classDiagram
         - ShortCode : TEXT
     }
 
+    class LK_TallyEntryType {
+    * LK_TallyEntryType_CN
+    -----
+        - EntryType : TEXT
+    }
+
     class Species {
     * Species_cn
     -----
@@ -181,6 +187,7 @@ classDiagram
         - MeasurementYear : TEXT
         - LogGradingEnabled : BOOLEAN
         - UseCrossStrataPlotTreeNumbering : BOOLEAN
+        - TemplateFile : TEXT
         - CreatedBy : TEXT
         - Created_TS : DATETIME
         - ModifiedBy : TEXT
@@ -866,7 +873,7 @@ classDiagram
         - Signature : TEXT
         - Reason : TEXT
         - Remarks : TEXT
-        - EntryType : TEXT
+        - EntryType : TEXT <<FK>>
         - CreatedBy : TEXT
         - Created_TS : DATETIME
     }
@@ -1363,6 +1370,7 @@ classDiagram
 
 
 
+
     Cruise <|-- TreeDefaultValue
 
 
@@ -1457,6 +1465,7 @@ classDiagram
 
 
     CuttingUnit <|-- TallyLedger
+    LK_TallyEntryType <|-- TallyLedger
     Plot <|-- TallyLedger
     SampleGroup <|-- TallyLedger
     Species <|-- TallyLedger
