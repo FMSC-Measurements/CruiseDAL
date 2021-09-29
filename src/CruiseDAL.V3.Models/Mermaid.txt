@@ -1114,6 +1114,30 @@ classDiagram
         - FBSCode : TEXT
         - YieldComponent : TEXT
         - FixCNTField : TEXT <<FK>>
+        - CreatedBy : TEXT
+        - Created_TS : DATETIME
+        - ModifiedBy : TEXT
+        - Modified_TS : DATETIME
+    }
+
+    class StratumTemplate_Tombstone {
+        - StratumTemplateName : TEXT
+        - CruiseID : TEXT
+        - StratumCode : TEXT
+        - Method : TEXT
+        - BasalAreaFactor : REAL
+        - FixedPlotSize : REAL
+        - KZ3PPNT : INTEGER
+        - SamplingFrequency : INTEGER
+        - Hotkey : TEXT
+        - FBSCode : TEXT
+        - YieldComponent : TEXT
+        - FixCNTField : TEXT
+        - CreatedBy : TEXT
+        - Created_TS : DATETIME
+        - ModifiedBy : TEXT
+        - Modified_TS : DATETIME
+        - Deleted_TS : DATETIME
     }
 
     class StratumTemplateTreeFieldSetup {
@@ -1129,6 +1153,28 @@ classDiagram
         - DefaultValueReal : REAL
         - DefaultValueBool : BOOLEAN
         - DefaultValueText : TEXT
+        - CreatedBy : TEXT
+        - Created_TS : DATETIME
+        - ModifiedBy : TEXT
+        - Modified_TS : DATETIME
+    }
+
+    class StratumTemplateTreeFieldSetup_Tombstone {
+        - StratumTemplateName : TEXT
+        - CruiseID : TEXT
+        - Field : TEXT
+        - FieldOrder : INTEGER
+        - IsHidden : BOOLEAN
+        - IsLocked : BOOLEAN
+        - DefaultValueInt : INTEGER
+        - DefaultValueReal : REAL
+        - DefaultValueBool : BOOLEAN
+        - DefaultValueText : TEXT
+        - CreatedBy : TEXT
+        - Created_TS : DATETIME
+        - ModifiedBy : TEXT
+        - Modified_TS : DATETIME
+        - Deleted_TS : DATETIME
     }
 
     class StratumTemplateLogFieldSetup {
@@ -1138,6 +1184,22 @@ classDiagram
         - CruiseID : TEXT <<FK>>
         - Field : TEXT <<FK>>
         - FieldOrder : INTEGER
+        - CreatedBy : TEXT
+        - Created_TS : DATETIME
+        - ModifiedBy : TEXT
+        - Modified_TS : DATETIME
+    }
+
+    class StratumTemplateLogFieldSetup_Tombstone {
+        - StratumTemplateName : TEXT
+        - CruiseID : TEXT
+        - Field : TEXT
+        - FieldOrder : INTEGER
+        - CreatedBy : TEXT
+        - Created_TS : DATETIME
+        - ModifiedBy : TEXT
+        - Modified_TS : DATETIME
+        - Deleted_TS : DATETIME
     }
 
     class SampleGroupDefault {
@@ -1503,11 +1565,14 @@ classDiagram
     LK_CruiseMethod <|-- StratumTemplate
     TreeField <|-- StratumTemplate
 
+
     StratumTemplate <|-- StratumTemplateTreeFieldSetup
     TreeField <|-- StratumTemplateTreeFieldSetup
 
+
     LogField <|-- StratumTemplateLogFieldSetup
     StratumTemplate <|-- StratumTemplateLogFieldSetup
+
 
     LK_District <|-- SampleGroupDefault
     LK_Forest <|-- SampleGroupDefault

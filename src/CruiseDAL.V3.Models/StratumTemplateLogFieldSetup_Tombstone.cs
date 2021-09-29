@@ -2,12 +2,9 @@ using System;
 using FMSC.ORM.EntityModel.Attributes;
 namespace CruiseDAL.V3.Models
 {
- [Table("StratumTemplateLogFieldSetup")]
- public partial class StratumTemplateLogFieldSetup
+ [Table("StratumTemplateLogFieldSetup_Tombstone")]
+ public partial class StratumTemplateLogFieldSetup_Tombstone
  {
-  [PrimaryKeyField("StratumTemplateLogFieldSetup_CN")]
-  public Int32? StratumTemplateLogFieldSetup_CN { get; set; }
-
   [Field("StratumTemplateName")]
   public String StratumTemplateName { get; set; }
 
@@ -31,6 +28,9 @@ namespace CruiseDAL.V3.Models
 
   [Field("Modified_TS")]
   public DateTime? Modified_TS { get; set; }
+
+  [Field("Deleted_TS")]
+  public DateTime? Deleted_TS { get; set; }
 
  }
 
