@@ -50,7 +50,7 @@ namespace CruiseDAL.V3.Sync
 
         public void Sync(string cruiseID, DbConnection source, DbConnection destination, CruiseSyncOptions options, IProgress<float> progress = null)
         {
-            var steps = 31;
+            var steps = 34;
             float p = 0.0f;
             var transaction = destination.BeginTransaction();
             try
@@ -135,6 +135,20 @@ namespace CruiseDAL.V3.Sync
                 SyncVolumeEquations(cruiseID, source, destination, options);
                 progress?.Report(p++ / steps);
 
+                // TreeDefaultValue
+                SyncTreeDefaultValues(cruiseID, source, destination, options);
+                progress?.Report(p++ / steps);
+
+                // template
+                SyncStratumTemplates(cruiseID, source, destination, options);
+                progress?.Report(p++ / steps);
+
+                SyncStratumTemplateTreeFieldSetups(cruiseID, source, destination, options);
+                progress?.Report(p++ / steps);
+
+                SyncStratumTemplateLogFieldSetups(cruiseID, source, destination, options);
+                progress?.Report(p++ / steps);
+
                 transaction.Commit();
             }
             catch (Exception e)
@@ -143,8 +157,6 @@ namespace CruiseDAL.V3.Sync
                 throw;
             }
         }
-
-        
 
         private bool ShouldUpdate(DateTime? srcMod, DateTime? desMod, SyncFlags syncFlags)
         {
@@ -1361,6 +1373,130 @@ namespace CruiseDAL.V3.Sync
                 else
                 {
                     if (ShouldUpdate(i.Modified_TS, match.Modified_TS, options.Processing))
+                    {
+                        destination.Update(i, whereExpression: where);
+                    }
+                }
+            }
+        }
+
+        private void SyncTreeDefaultValues(string cruiseID, DbConnection source, DbConnection destination, CruiseSyncOptions options)
+        {
+            var where = "CruiseID = @CruiseID AND coalesce(SpeciesCode, '') = coalesce(@SpeciesCode, '') AND coalesce(PrimaryProduct, '') = coalesce(@PrimaryProduct, '')";
+            var sourceItems = source.From<TreeDefaultValue>()
+                .Where("CruiseID = @p1").Query(cruiseID);
+
+            foreach(var i in sourceItems)
+            {
+                var match = destination.From<TreeDefaultValue>().Where(where).Query2(i).FirstOrDefault();
+
+                if(match == null)
+                {
+                    var hasTombstone = destination.From<TreeDefaultValue_Tombstone>()
+                                                    .Where(where).Count2(i) > 0;
+
+                    if (options.TreeDefaultValue.HasFlag(SyncFlags.ForceInsert)
+                                || (hasTombstone == false && options.TreeDefaultValue.HasFlag(SyncFlags.Insert)))
+                    {
+                        destination.Insert(i, persistKeyvalue: false);
+                    }
+                }
+                else
+                {
+                    if (ShouldUpdate(i.Modified_TS, match.Modified_TS, options.TreeDefaultValue))
+                    {
+                        destination.Update(i, whereExpression: where);
+                    }
+                }
+            }
+        }
+
+        private void SyncStratumTemplates(string cruiseID, DbConnection source, DbConnection destination, CruiseSyncOptions options)
+        {
+            var where = "CruiseID = @CruiseID AND StratumTemplateName = @StratumTemplateName";
+            var sourceItems = source.From<StratumTemplate>()
+                .Where("CruiseID = @p1").Query(cruiseID);
+
+            foreach(var i in sourceItems)
+            {
+                var match = destination.From<StratumTemplate>().Where(where).Query2(i).FirstOrDefault();
+
+                if(match == null)
+                {
+                    var hasTombstone = destination.From<StratumTemplate_Tombstone>()
+                                                    .Where(where).Count2(i) > 0;
+
+                    if (options.Template.HasFlag(SyncFlags.ForceInsert)
+                                || (hasTombstone == false && options.Template.HasFlag(SyncFlags.Insert)))
+                    {
+                        destination.Insert(i, persistKeyvalue: false);
+                    }
+                }
+                else
+                {
+                    if (ShouldUpdate(i.Modified_TS, match.Modified_TS, options.Template))
+                    {
+                        destination.Update(i, whereExpression: where);
+                    }
+                }
+            }
+        }
+
+        private void SyncStratumTemplateTreeFieldSetups(string cruiseID, DbConnection source, DbConnection destination, CruiseSyncOptions options)
+        {
+            var where = "CruiseID = @CruiseID AND StratumTemplateName = @StratumTemplateName AND Field = @Field";
+            var sourceItems = source.From<StratumTemplateTreeFieldSetup>()
+                .Where("CruiseID = @p1").Query(cruiseID);
+
+            foreach (var i in sourceItems)
+            {
+                var match = destination.From<StratumTemplateTreeFieldSetup>().Where(where).Query2(i).FirstOrDefault();
+
+                if (match == null)
+                {
+                    var hasTombstone = destination.From<StratumTemplateTreeFieldSetup_Tombstone>()
+                                .Where(where).Count2(i) > 0;
+
+                    if (options.Template.HasFlag(SyncFlags.ForceInsert)
+                                || (hasTombstone == false && options.Template.HasFlag(SyncFlags.Insert)))
+                    {
+                        destination.Insert(i, persistKeyvalue: false);
+                    }
+                }
+                else
+                {
+                    if (ShouldUpdate(i.Modified_TS, match.Modified_TS, options.Template))
+                    {
+                        destination.Update(i, whereExpression: where);
+                    }
+                }
+            }
+        }
+
+        private void SyncStratumTemplateLogFieldSetups(string cruiseID, DbConnection source, DbConnection destination, CruiseSyncOptions options)
+        {
+            var where = "CruiseID = @CruiseID AND StratumTemplateName = @StratumTemplateName AND Field = @Field";
+            var sourceItems = source.From<StratumTemplateLogFieldSetup>()
+                .Where("CruiseID = @p1").Query(cruiseID);
+
+            foreach (var i in sourceItems)
+            {
+                var match = destination.From<StratumTemplateLogFieldSetup>().Where(where).Query2(i).FirstOrDefault();
+
+                if (match == null)
+                {
+                    var hasTombstone = destination.From<StratumTemplateLogFieldSetup_Tombstone>()
+                                .Where(where).Count2(i) > 0;
+
+                    if (options.Template.HasFlag(SyncFlags.ForceInsert)
+                                || (hasTombstone == false && options.Template.HasFlag(SyncFlags.Insert)))
+                    {
+                        destination.Insert(i, persistKeyvalue: false);
+                    }
+                }
+                else
+                {
+                    if (ShouldUpdate(i.Modified_TS, match.Modified_TS, options.Template))
                     {
                         destination.Update(i, whereExpression: where);
                     }

@@ -1003,5 +1003,156 @@ namespace CruiseDAL.V3.Sync
 
             toDb.GetRowCount("VolumeEquation", "WHERE VolumeEquationNumber = @p1", volEq.VolumeEquationNumber).Should().Be(1);
         }
+
+        [Fact]
+        public void SyncTreeDefaultValues_Add()
+        {
+            var fromPath = base.GetTempFilePath(".crz3", "SyncTreeDefaultValues_Add_fromFile");
+            var toPath = base.GetTempFilePath(".crz3", "SyncTreeDefaultValues_Add_toFile");
+
+            var syncOptions = new CruiseSyncOptions()
+            {
+                Processing = SyncFlags.Insert,
+            };
+
+            var init = new DatabaseInitializer()
+            {
+                TreeDefaults = null,
+            };
+            var cruiseID = init.CruiseID;
+            var saleID = init.SaleID;
+            using var fromDb = init.CreateDatabaseFile(fromPath);
+
+            fromDb.CopyTo(toPath, true);
+            using var toDb = new CruiseDatastore_V3(toPath);
+
+            var tdv = new TreeDefaultValue
+            {
+                CruiseID = cruiseID,
+                SpeciesCode = "sp1",
+                PrimaryProduct = "01",
+            };
+            fromDb.Insert(tdv);
+
+            var syncer = new CruiseSyncer();
+            syncer.Sync(cruiseID, fromDb, toDb, syncOptions);
+
+            toDb.From<TreeDefaultValue>().Count().Should().Be(1);
+        }
+
+        [Fact]
+        public void SyncStratumTemplates_Add()
+        {
+            var fromPath = base.GetTempFilePath(".crz3", "SyncStratumTemplates_Add_fromFile");
+            var toPath = base.GetTempFilePath(".crz3", "SyncStratumTemplates_Add_toFile");
+
+            var syncOptions = new CruiseSyncOptions()
+            {
+                Processing = SyncFlags.Insert,
+            };
+
+            var init = new DatabaseInitializer();
+            var cruiseID = init.CruiseID;
+            var saleID = init.SaleID;
+            using var fromDb = init.CreateDatabaseFile(fromPath);
+
+            fromDb.CopyTo(toPath, true);
+            using var toDb = new CruiseDatastore_V3(toPath);
+
+            var st = new StratumTemplate
+            {
+                CruiseID = cruiseID,
+                StratumTemplateName = "something",
+                
+            };
+            fromDb.Insert(st);
+
+            var syncer = new CruiseSyncer();
+            syncer.Sync(cruiseID, fromDb, toDb, syncOptions);
+
+            toDb.From<StratumTemplate>().Count().Should().Be(1);
+        }
+
+        [Fact]
+        public void SyncStratumTemplateTreeFieldSetup_Add()
+        {
+            var fromPath = base.GetTempFilePath(".crz3", "SyncStratumTemplateTreeFieldSetup_Add_fromFile");
+            var toPath = base.GetTempFilePath(".crz3", "SyncStratumTemplateTreeFieldSetup_Add_toFile");
+
+            var syncOptions = new CruiseSyncOptions()
+            {
+                Processing = SyncFlags.Insert,
+            };
+
+            var init = new DatabaseInitializer();
+            var cruiseID = init.CruiseID;
+            var saleID = init.SaleID;
+            using var fromDb = init.CreateDatabaseFile(fromPath);
+
+            fromDb.CopyTo(toPath, true);
+            using var toDb = new CruiseDatastore_V3(toPath);
+
+            var st = new StratumTemplate
+            {
+                CruiseID = cruiseID,
+                StratumTemplateName = "something",
+
+            };
+            fromDb.Insert(st);
+
+            var sttfs = new StratumTemplateTreeFieldSetup
+            {
+                CruiseID = cruiseID,
+                StratumTemplateName = "something",
+                Field = "DBH",
+            };
+            fromDb.Insert(sttfs);
+
+            var syncer = new CruiseSyncer();
+            syncer.Sync(cruiseID, fromDb, toDb, syncOptions);
+
+            toDb.From<StratumTemplateTreeFieldSetup>().Count().Should().Be(1);
+        }
+
+        [Fact]
+        public void SyncStratumTemplateLogFieldSetup_Add()
+        {
+            var fromPath = base.GetTempFilePath(".crz3", "SyncStratumTemplateLogFieldSetup_Add_fromFile");
+            var toPath = base.GetTempFilePath(".crz3", "SyncStratumTemplateLogFieldSetup_Add_toFile");
+
+            var syncOptions = new CruiseSyncOptions()
+            {
+                Processing = SyncFlags.Insert,
+            };
+
+            var init = new DatabaseInitializer();
+            var cruiseID = init.CruiseID;
+            var saleID = init.SaleID;
+            using var fromDb = init.CreateDatabaseFile(fromPath);
+
+            fromDb.CopyTo(toPath, true);
+            using var toDb = new CruiseDatastore_V3(toPath);
+
+            var st = new StratumTemplate
+            {
+                CruiseID = cruiseID,
+                StratumTemplateName = "something",
+
+            };
+            fromDb.Insert(st);
+
+            var sttfs = new StratumTemplateLogFieldSetup
+            {
+                CruiseID = cruiseID,
+                StratumTemplateName = "something",
+                Field = "Grade",
+            };
+            fromDb.Insert(sttfs);
+
+            var syncer = new CruiseSyncer();
+            syncer.Sync(cruiseID, fromDb, toDb, syncOptions);
+
+            toDb.From<StratumTemplateLogFieldSetup>().Count().Should().Be(1);
+        }
     }
 }
