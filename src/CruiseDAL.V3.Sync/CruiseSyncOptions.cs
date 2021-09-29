@@ -25,6 +25,10 @@ namespace CruiseDAL.V3.Sync
 
         public SyncFlags Processing { get; set; } = SyncFlags.InsertUpdate;
 
+        public SyncFlags TreeDefaultValue { get; set; } = SyncFlags.InsertUpdate;
+
+        public SyncFlags Template { get; set; } = SyncFlags.InsertUpdate;
+
         public bool LogAllOrNone { get; set; } = false;
 
         public bool StemAllOrNone { get; set; } = false;

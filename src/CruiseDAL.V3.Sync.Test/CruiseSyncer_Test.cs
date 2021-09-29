@@ -891,5 +891,268 @@ namespace CruiseDAL.V3.Sync
             toDb.GetRowCount("Log", "WHERE LogID = @p1", newLog.LogID)
                 .Should().Be(1);
         }
+
+        [Fact]
+        public void Sync_Reports_Add()
+        {
+            var rand = new Bogus.Randomizer();
+            var fromPath = base.GetTempFilePath(".crz3", "Sync_Reports_Add_fromFile");
+            var toPath = base.GetTempFilePath(".crz3", "Sync_Reports_Add_toFile");
+
+            var syncOptions = new CruiseSyncOptions()
+            {
+                Processing = SyncFlags.Insert,
+            };
+
+            var cruiseID = Guid.NewGuid().ToString();
+            var saleID = Guid.NewGuid().ToString();
+
+            using var fromDb = CreateDatabaseFile(fromPath, cruiseID, saleID);
+
+            fromDb.CopyTo(toPath, true);
+            using var toDb = new CruiseDatastore_V3(toPath);
+
+            var reportID = Guid.NewGuid().ToString();
+            var report = new Reports
+            {
+                CruiseID = cruiseID,
+                ReportID = reportID,
+                Title = rand.String(),
+            };
+            fromDb.Insert(report);
+
+            var syncer = new CruiseSyncer();
+            syncer.Sync(cruiseID, fromDb, toDb, syncOptions);
+
+            toDb.GetRowCount("Reports", "WHERE ReportID = @p1", reportID).Should().Be(1);
+        }
+
+        public void Sync_Reports_Update()
+        {
+
+        }
+
+        [Fact]
+        public void SyncValueEquations_Add()
+        {
+            var rand = new Bogus.Randomizer();
+            var fromPath = base.GetTempFilePath(".crz3", "SyncValueEquations_Add_fromFile");
+            var toPath = base.GetTempFilePath(".crz3", "SyncValueEquations_Add_toFile");
+
+            var syncOptions = new CruiseSyncOptions()
+            {
+                Processing = SyncFlags.Insert,
+            };
+
+            var cruiseID = Guid.NewGuid().ToString();
+            var saleID = Guid.NewGuid().ToString();
+
+            using var fromDb = CreateDatabaseFile(fromPath, cruiseID, saleID);
+
+            fromDb.CopyTo(toPath, true);
+            using var toDb = new CruiseDatastore_V3(toPath);
+
+
+            var valueEq = new ValueEquation
+            {
+                CruiseID = cruiseID,
+                Species = "sp1",
+                PrimaryProduct = "01",
+                ValueEquationNumber = "something",
+            };
+            fromDb.Insert(valueEq);
+
+            var syncer = new CruiseSyncer();
+            syncer.Sync(cruiseID, fromDb, toDb, syncOptions);
+
+            toDb.GetRowCount("ValueEquation", "WHERE ValueEquationNumber = @p1", valueEq.ValueEquationNumber).Should().Be(1);
+        }
+
+        [Fact]
+        public void SyncVolumeEquations_Add()
+        {
+            var rand = new Bogus.Randomizer();
+            var fromPath = base.GetTempFilePath(".crz3", "SyncVolumeEquations_Add_fromFile");
+            var toPath = base.GetTempFilePath(".crz3", "SyncVolumeEquations_Add_toFile");
+
+            var syncOptions = new CruiseSyncOptions()
+            {
+                Processing = SyncFlags.Insert,
+            };
+
+            var cruiseID = Guid.NewGuid().ToString();
+            var saleID = Guid.NewGuid().ToString();
+
+            using var fromDb = CreateDatabaseFile(fromPath, cruiseID, saleID);
+
+            fromDb.CopyTo(toPath, true);
+            using var toDb = new CruiseDatastore_V3(toPath);
+
+
+            var volEq = new VolumeEquation
+            {
+                CruiseID = cruiseID,
+                Species = "sp1",
+                PrimaryProduct = "01",
+                VolumeEquationNumber = "something"
+            };
+            fromDb.Insert(volEq);
+
+            var syncer = new CruiseSyncer();
+            syncer.Sync(cruiseID, fromDb, toDb, syncOptions);
+
+            toDb.GetRowCount("VolumeEquation", "WHERE VolumeEquationNumber = @p1", volEq.VolumeEquationNumber).Should().Be(1);
+        }
+
+        [Fact]
+        public void SyncTreeDefaultValues_Add()
+        {
+            var fromPath = base.GetTempFilePath(".crz3", "SyncTreeDefaultValues_Add_fromFile");
+            var toPath = base.GetTempFilePath(".crz3", "SyncTreeDefaultValues_Add_toFile");
+
+            var syncOptions = new CruiseSyncOptions()
+            {
+                Processing = SyncFlags.Insert,
+            };
+
+            var init = new DatabaseInitializer()
+            {
+                TreeDefaults = null,
+            };
+            var cruiseID = init.CruiseID;
+            var saleID = init.SaleID;
+            using var fromDb = init.CreateDatabaseFile(fromPath);
+
+            fromDb.CopyTo(toPath, true);
+            using var toDb = new CruiseDatastore_V3(toPath);
+
+            var tdv = new TreeDefaultValue
+            {
+                CruiseID = cruiseID,
+                SpeciesCode = "sp1",
+                PrimaryProduct = "01",
+            };
+            fromDb.Insert(tdv);
+
+            var syncer = new CruiseSyncer();
+            syncer.Sync(cruiseID, fromDb, toDb, syncOptions);
+
+            toDb.From<TreeDefaultValue>().Count().Should().Be(1);
+        }
+
+        [Fact]
+        public void SyncStratumTemplates_Add()
+        {
+            var fromPath = base.GetTempFilePath(".crz3", "SyncStratumTemplates_Add_fromFile");
+            var toPath = base.GetTempFilePath(".crz3", "SyncStratumTemplates_Add_toFile");
+
+            var syncOptions = new CruiseSyncOptions()
+            {
+                Processing = SyncFlags.Insert,
+            };
+
+            var init = new DatabaseInitializer();
+            var cruiseID = init.CruiseID;
+            var saleID = init.SaleID;
+            using var fromDb = init.CreateDatabaseFile(fromPath);
+
+            fromDb.CopyTo(toPath, true);
+            using var toDb = new CruiseDatastore_V3(toPath);
+
+            var st = new StratumTemplate
+            {
+                CruiseID = cruiseID,
+                StratumTemplateName = "something",
+                
+            };
+            fromDb.Insert(st);
+
+            var syncer = new CruiseSyncer();
+            syncer.Sync(cruiseID, fromDb, toDb, syncOptions);
+
+            toDb.From<StratumTemplate>().Count().Should().Be(1);
+        }
+
+        [Fact]
+        public void SyncStratumTemplateTreeFieldSetup_Add()
+        {
+            var fromPath = base.GetTempFilePath(".crz3", "SyncStratumTemplateTreeFieldSetup_Add_fromFile");
+            var toPath = base.GetTempFilePath(".crz3", "SyncStratumTemplateTreeFieldSetup_Add_toFile");
+
+            var syncOptions = new CruiseSyncOptions()
+            {
+                Processing = SyncFlags.Insert,
+            };
+
+            var init = new DatabaseInitializer();
+            var cruiseID = init.CruiseID;
+            var saleID = init.SaleID;
+            using var fromDb = init.CreateDatabaseFile(fromPath);
+
+            fromDb.CopyTo(toPath, true);
+            using var toDb = new CruiseDatastore_V3(toPath);
+
+            var st = new StratumTemplate
+            {
+                CruiseID = cruiseID,
+                StratumTemplateName = "something",
+
+            };
+            fromDb.Insert(st);
+
+            var sttfs = new StratumTemplateTreeFieldSetup
+            {
+                CruiseID = cruiseID,
+                StratumTemplateName = "something",
+                Field = "DBH",
+            };
+            fromDb.Insert(sttfs);
+
+            var syncer = new CruiseSyncer();
+            syncer.Sync(cruiseID, fromDb, toDb, syncOptions);
+
+            toDb.From<StratumTemplateTreeFieldSetup>().Count().Should().Be(1);
+        }
+
+        [Fact]
+        public void SyncStratumTemplateLogFieldSetup_Add()
+        {
+            var fromPath = base.GetTempFilePath(".crz3", "SyncStratumTemplateLogFieldSetup_Add_fromFile");
+            var toPath = base.GetTempFilePath(".crz3", "SyncStratumTemplateLogFieldSetup_Add_toFile");
+
+            var syncOptions = new CruiseSyncOptions()
+            {
+                Processing = SyncFlags.Insert,
+            };
+
+            var init = new DatabaseInitializer();
+            var cruiseID = init.CruiseID;
+            var saleID = init.SaleID;
+            using var fromDb = init.CreateDatabaseFile(fromPath);
+
+            fromDb.CopyTo(toPath, true);
+            using var toDb = new CruiseDatastore_V3(toPath);
+
+            var st = new StratumTemplate
+            {
+                CruiseID = cruiseID,
+                StratumTemplateName = "something",
+
+            };
+            fromDb.Insert(st);
+
+            var sttfs = new StratumTemplateLogFieldSetup
+            {
+                CruiseID = cruiseID,
+                StratumTemplateName = "something",
+                Field = "Grade",
+            };
+            fromDb.Insert(sttfs);
+
+            var syncer = new CruiseSyncer();
+            syncer.Sync(cruiseID, fromDb, toDb, syncOptions);
+
+            toDb.From<StratumTemplateLogFieldSetup>().Count().Should().Be(1);
+        }
     }
 }

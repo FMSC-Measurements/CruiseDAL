@@ -52,6 +52,40 @@ namespace CruiseDAL
             {
                 UpdateTo_3_3_3(db);
             }
+            if (version == "3.3.4")
+            {
+                UpdateTo_3_3_4(db);
+            }
+        }
+
+        private void UpdateTo_3_3_4(CruiseDatastore db)
+        {
+            var curVersion = db.DatabaseVersion;
+            var targetVersion = "3.3.4";
+
+            try
+            {
+                // create an in-memory database
+                // to migrate into
+                using (var newDatastore = new CruiseDatastore_V3())
+                {
+                    var excludeTables = new[]
+                    {
+                        "LogField",
+                        "TreeField",
+                };
+
+                    Migrate(db, newDatastore, excluding: excludeTables, excludeLookupTables: true);
+
+                    // use back up rutine to replace old database with
+                    // migrated contents
+                    newDatastore.BackupDatabase(db);
+                }
+            }
+            catch (Exception e)
+            {
+                throw new SchemaUpdateException(curVersion, targetVersion, e);
+            }
         }
 
         private void UpdateTo_3_3_3(CruiseDatastore db)
