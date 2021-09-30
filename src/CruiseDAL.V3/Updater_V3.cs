@@ -52,7 +52,7 @@ namespace CruiseDAL
             {
                 UpdateTo_3_3_3(db);
             }
-            if (version == "3.3.4")
+            if (version == "3.3.3")
             {
                 UpdateTo_3_3_4(db);
             }
