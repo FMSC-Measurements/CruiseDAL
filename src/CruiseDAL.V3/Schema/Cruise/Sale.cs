@@ -6,8 +6,11 @@ namespace CruiseDAL.Schema
     {
         public string TableName => "Sale";
 
-        public string CreateTable =>
-@"CREATE TABLE Sale(
+        public string CreateTable => GetCreateTable(TableName);
+
+        public string GetCreateTable(string tableName)
+        {
+            return $@"CREATE TABLE {tableName} (
     Sale_CN INTEGER PRIMARY KEY AUTOINCREMENT,
     SaleID TEXT NOT NULL COLLATE NOCASE,
     SaleNumber TEXT NOT NULL,
@@ -30,6 +33,7 @@ namespace CruiseDAL.Schema
     FOREIGN KEY (Region) REFERENCES LK_Region (Region)--,
     --FOREIGN KEY (Forest, Region) REFERENCES LK_Forest (Forest, Region)
 );";
+        }
 
         public string InitializeTable => null;
 

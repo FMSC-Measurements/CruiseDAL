@@ -179,7 +179,8 @@ classDiagram
     * Cruise_CN
     -----
         - CruiseID : TEXT
-        - SaleID : TEXT <<FK>>
+        - SaleID : TEXT
+        - SaleNumber : TEXT <<FK>>
         - CruiseNumber : TEXT
         - Purpose : TEXT <<FK>>
         - Remarks : TEXT

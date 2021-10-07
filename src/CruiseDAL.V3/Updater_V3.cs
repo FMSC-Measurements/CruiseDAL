@@ -5,12 +5,11 @@ using FMSC.ORM.Core;
 using FMSC.ORM.Logging;
 using System;
 using System.Collections.Generic;
-using System.Data.Common;
 using System.Linq;
 
 namespace CruiseDAL
 {
-    public class Updater_V3 : IUpdater
+    public partial class Updater_V3 : IUpdater
     {
         public static ILogger Logger { get; set; } = LoggerProvider.Get();
 
@@ -40,110 +39,167 @@ namespace CruiseDAL
             {
                 UpdateTo_3_3_0(db);
             }
-            if (version == "3.3.0")
+            if (db.DatabaseVersion == "3.3.0")
             {
                 UpdateTo_3_3_1(db);
             }
-            if (version == "3.3.1")
+            if (db.DatabaseVersion == "3.3.1")
             {
                 UpdateTo_3_3_2(db);
             }
-            if (version == "3.3.2")
+            if (db.DatabaseVersion == "3.3.2")
             {
                 UpdateTo_3_3_3(db);
             }
-            if (version == "3.3.3")
+            if (db.DatabaseVersion == "3.3.3")
             {
                 UpdateTo_3_3_4(db);
             }
+            if (db.DatabaseVersion == "3.3.4")
+            {
+                UpdateTo_3_4_0(db);
+            }
         }
 
+        private void UpdateTo_3_4_0(CruiseDatastore db)
+        {
+            var curVersion = db.DatabaseVersion;
+            var targetVersion = "3.4.0";
+
+            var fKeys = db.ExecuteScalar<string>("PRAGMA foreign_keys;");
+            db.Execute("PRAGMA foreign_keys=OFF;");
+
+            db.BeginTransaction();
+            try
+            {
+                RebuildTable(db, new CruiseTableDefinition_3_4_0(), customFieldMaps:
+                    new KeyValuePair<string, string>[] { new KeyValuePair<string, string>(
+                        "SaleNumber",
+                        "(SELECT SaleNumber FROM Sale WHERE cruise.SaleID = sale.SaleID)")
+                    });
+
+                if (fKeys == "ON")
+                {
+                    var keyCheck = db.QueryGeneric("PRAGMA foreign_key_check;");
+                    if (keyCheck.Any())
+                    {
+                        throw new SchemaException("Foreign Key Check failed");
+                    }
+                }
+
+                SetDatabaseVersion(db, targetVersion);
+                db.CommitTransaction();
+
+                db.Execute($"PRAGMA foreign_keys={fKeys};");
+            }
+            catch (Exception e)
+            {
+                db.RollbackTransaction();
+                throw new SchemaUpdateException(curVersion, targetVersion, e);
+            }
+        }
+
+        // update 3.3.4 notes:
+        // added change tracking fields to StratumTempalte, StratumTemplateTreeFieldSetup, and StratumTemplateLogFileSetup
+        // added tombstone tables for StratumTempalte, StratumTemplateTreeFieldSetup, and StratumTemplateLogFileSetup
         private void UpdateTo_3_3_4(CruiseDatastore db)
         {
             var curVersion = db.DatabaseVersion;
             var targetVersion = "3.3.4";
 
+            db.BeginTransaction();
             try
             {
-                // create an in-memory database
-                // to migrate into
-                using (var newDatastore = new CruiseDatastore_V3())
-                {
-                    var excludeTables = new[]
-                    {
-                        "LogField",
-                        "TreeField",
-                };
+                var stratumTemplateTableDef = new StratumTemplateTableDefinition();
+                var stratumTemplateTreeFieldSetupTableDef = new StratumTemplateTreeFieldSetupTableDefinition();
+                var stratumTemplateLogFieldSetupTableDef = new StratumTemplateLogFieldSetupTableDefinition();
 
-                    Migrate(db, newDatastore, excluding: excludeTables, excludeLookupTables: true);
+                db.Execute("DROP VIEW StratumDefault;");
+                db.Execute("DROP VIEW TreeFieldSetupDefault;");
+                db.Execute("DROP VIEW LogFieldSetupDefault;");
 
-                    // use back up rutine to replace old database with
-                    // migrated contents
-                    newDatastore.BackupDatabase(db);
-                }
+                db.Execute(stratumTemplateTableDef.CreateTombstoneTable);
+                db.Execute(stratumTemplateTreeFieldSetupTableDef.CreateTombstoneTable);
+                db.Execute(stratumTemplateLogFieldSetupTableDef.CreateTombstoneTable);
+
+                RebuildTable(db, stratumTemplateTableDef);
+                RebuildTable(db, stratumTemplateTreeFieldSetupTableDef);
+                RebuildTable(db, stratumTemplateLogFieldSetupTableDef);
+
+                db.Execute(new StratumDefaultViewDefinition().CreateView);
+                db.Execute(new TreeFieldSetupDefaultViewDefinition().CreateView);
+                db.Execute(new LogFieldSetupDefaultViewDefinition().CreateView);
+
+                SetDatabaseVersion(db, targetVersion);
+                db.CommitTransaction();
+
             }
             catch (Exception e)
             {
+                db.RollbackTransaction();
                 throw new SchemaUpdateException(curVersion, targetVersion, e);
             }
         }
 
+        // update 3.3.3 notes:
+        // added column TemplateFile to Cruise table
+        // added lookup table LK_TallyEntryType
+        // remove check constraint on EntryType and add FKey on EntryType
         private void UpdateTo_3_3_3(CruiseDatastore db)
         {
             var curVersion = db.DatabaseVersion;
             var targetVersion = "3.3.3";
 
+            db.BeginTransaction();
             try
             {
-                // create an in-memory database
-                // to migrate into
-                using (var newDatastore = new CruiseDatastore_V3())
-                {
-                    var excludeTables = new[]
-                    {
-                        "LogField",
-                        "TreeField",
-                };
+                db.Execute("ALTER TABLE main.Cruise ADD COLUMN TemplateFile TEXT;");
 
-                    Migrate(db, newDatastore, excluding: excludeTables, excludeLookupTables: true);
+                // create table LK_TallyEntryType
+                var tallyEntryTypeTableDef = new LK_TallyEntryType();
+                CreateTable(db, tallyEntryTypeTableDef);
 
-                    // use back up rutine to replace old database with
-                    // migrated contents
-                    newDatastore.BackupDatabase(db);
-                }
+                // remove check constraint on EntryType and add FKey on EntryType
+                var tallyLedgerTableDef = new TallyLedgerTableDefinition();
+                UpdateTableDDL(db, tallyLedgerTableDef);
+
+                SetDatabaseVersion(db, targetVersion);
+                db.CommitTransaction();
             }
             catch (Exception e)
             {
+                db.RollbackTransaction();
                 throw new SchemaUpdateException(curVersion, targetVersion, e);
             }
         }
 
-        private void UpdateTo_3_3_2(CruiseDatastore ds)
+        // update 3.3.2 notes:
+        // added Biomass and ValueEquation tables
+        // changed TallyPopulation view so that 3p methods are always treaded as tally by subpop
+        private void UpdateTo_3_3_2(CruiseDatastore db)
         {
-            var curVersion = ds.DatabaseVersion;
+            var curVersion = db.DatabaseVersion;
             var targetVersion = "3.3.2";
 
+            db.BeginTransaction();
             try
             {
-                // create an in-memory database
-                // to migrate into
-                using (var newDatastore = new CruiseDatastore_V3())
-                {
-                    var excludeTables = new[]
-                    {
-                        "LogField",
-                        "TreeField",
-                };
+                var biomassTableDef = new BiomassEquationTableDefinition();
+                var valueEqTableDef = new ValueEquationTableDefinition();
 
-                    Migrate(ds, newDatastore, excluding: excludeTables, excludeLookupTables: true);
+                CreateTable(db, biomassTableDef);
+                CreateTable(db, valueEqTableDef);
 
-                    // use back up rutine to replace old database with
-                    // migrated contents
-                    newDatastore.BackupDatabase(ds);
-                }
+                // allways treat 3p methods as tally by subpop
+                var tallyPopViewDef = new TallyPopulationViewDefinition_3_3_2();
+                RecreateView(db, tallyPopViewDef);
+
+                SetDatabaseVersion(db, targetVersion);
+                db.CommitTransaction();
             }
-            catch(Exception e)
+            catch (Exception e)
             {
+                db.RollbackTransaction();
                 throw new SchemaUpdateException(curVersion, targetVersion, e);
             }
         }
@@ -151,145 +207,58 @@ namespace CruiseDAL
         // update 3.3.1 notes:
         // Add CruiseID fields to Log and Stem tables
         // Change is fully backwards compatible with prior versions
-        private void UpdateTo_3_3_1(CruiseDatastore ds)
+        private void UpdateTo_3_3_1(CruiseDatastore db)
         {
-            var curVersion = ds.DatabaseVersion;
+            var curVersion = db.DatabaseVersion;
             var targetVersion = "3.3.1";
 
-            // create an in-memory database
-            // to migrate into
-            using (var newDatastore = new CruiseDatastore_V3())
+            var fKeys = db.ExecuteScalar<string>("PRAGMA foreign_keys;");
+            db.Execute("PRAGMA foreign_keys=OFF;");
+
+            db.BeginTransaction();
+            try
             {
-                var excludeTables = new[]
+                db.Execute("DROP TRIGGER TreeLocation_OnUpdate;");
+                db.Execute(TreeLocationTableDefinition.CREATE_TRIGGER_TreeLocation_ONUPDATE);
+
+                // need to drop any views associated with tables we are rebuilding
+                db.Execute("DROP VIEW LogGradeError;");
+
+                var logTableDef = new LogTableDefinition();
+                var stemTableDef = new StemTableDefinition();
+
+                db.Execute("DROP TABLE Log_Tombstone;");
+                db.Execute("DROP TABLE Stem_Tombstone;");
+
+                db.Execute(logTableDef.CreateTombstoneTable);
+                db.Execute(stemTableDef.CreateTombstoneTable);
+
+                RebuildTable(db, logTableDef, customFieldMaps: new KeyValuePair<string, string>[]
                 {
-                        "LogField",
-                        "TreeField",
-                        "Log",
-                        "Stem",
-                };
+                    new KeyValuePair<string, string>("CruiseID", "(SELECT CruiseID FROM Tree WHERE Tree.TreeID = Log.TreeID)"),
+                });
 
-                Migrate(ds, newDatastore, excluding: excludeTables, excludeLookupTables: true);
-
-                var destConn = newDatastore.OpenConnection();
-                var sourceConn = ds.OpenConnection();
-
-                try
+                RebuildTable(db, stemTableDef, customFieldMaps: new KeyValuePair<string, string>[]
                 {
-                    var to = "main"; // alias used by the source database
-                    var from = "fromdb";
+                    new KeyValuePair<string, string>("CruiseID", "(SELECT CruiseID FROM Tree WHERE Tree.TreeID = Stem.TreeID)"),
+                });
 
-#if SYSTEM_DATA_SQLITE
-                    var srcDataSource = ((System.Data.SQLite.SQLiteConnection)sourceConn).FileName;
-#else
-            var srcDataSource = sourceConn.DataSource;
-#endif
-                    destConn.ExecuteNonQuery($"ATTACH DATABASE \"{srcDataSource}\" AS {from};");
+                
 
-                    using (var transaction = destConn.BeginTransaction())
-                    {
-                        try
-                        {
-                            destConn.ExecuteNonQuery(
-@$"INSERT INTO {to}.Log (
-    Log_CN,
-    CruiseID,
-    LogID,
-    TreeID,
-    LogNumber,
-    Grade,
-    SeenDefect,
-    PercentRecoverable,
-    Length,
-    ExportGrade,
-    SmallEndDiameter,
-    LargeEndDiameter,
-    GrossBoardFoot,
-    NetBoardFoot,
-    GrossCubicFoot,
-    NetCubicFoot,
-    BoardFootRemoved,
-    CubicFootRemoved,
-    DIBClass,
-    BarkThickness,
-    CreatedBy,
-    Created_TS,
-    ModifiedBy,
-    Modified_TS
-)
-SELECT
-    l.Log_CN,
-    t.CruiseID,
-    l.LogID,
-    l.TreeID,
-    l.LogNumber,
-    l.Grade,
-    l.SeenDefect,
-    l.PercentRecoverable,
-    l.Length,
-    l.ExportGrade,
-    l.SmallEndDiameter,
-    l.LargeEndDiameter,
-    l.GrossBoardFoot,
-    l.NetBoardFoot,
-    l.GrossCubicFoot,
-    l.NetCubicFoot,
-    l.BoardFootRemoved,
-    l.CubicFootRemoved,
-    l.DIBClass,
-    l.BarkThickness,
-    l.CreatedBy,
-    l.Created_TS,
-    l.ModifiedBy,
-    l.Modified_TS
-FROM {from}.Log AS l
-JOIN Tree AS t USING (TreeID);");
+                var lgeViewDef = new LogGradeErrorViewDefinition();
+                db.Execute(lgeViewDef.CreateView);
 
-                            destConn.ExecuteNonQuery(
-@$"INSERT INTO {to}.Stem (
-    Stem_CN,
-    StemID,
-    CruiseID,
-    TreeID,
-    Diameter,
-    DiameterType,
-    CreatedBy,
-    Created_TS,
-    ModifiedBy,
-    Modified_TS
-)
-SELECT
-    s.Stem_CN,
-    s.StemID,
-    t.CruiseID,
-    s.TreeID,
-    s.Diameter,
-    s.DiameterType,
-    s.CreatedBy,
-    s.Created_TS,
-    s.ModifiedBy,
-    s.Modified_TS
-FROM {from}.Stem AS s
-JOIN Tree AS t USING (TreeID);");
+                SetDatabaseVersion(db, targetVersion);
+                db.CommitTransaction();
 
-                            transaction.Commit();
-                        }
-                        catch
-                        {
-                            transaction.Rollback();
-                            throw;
-                        }
-                    }
-                }
-                finally
-                {
-                    newDatastore.ReleaseConnection();
-                    ds.ReleaseConnection();
-                }
-
-                // use back up rutine to replace old database with
-                // migrated contents
-                newDatastore.BackupDatabase(ds);
+                db.Execute($"PRAGMA foreign_keys={fKeys};");
             }
+            catch (Exception e)
+            {
+                db.RollbackTransaction();
+                throw new SchemaUpdateException(curVersion, targetVersion, e);
+            }
+
         }
 
         // update 3.3.0 notes
@@ -504,130 +473,6 @@ JOIN StratumDefault AS sd USING (StratumDefaultID);");
                 // migrated contents
                 newDatastore.BackupDatabase(ds);
             }
-        }
-
-        public static void RecreateView(CruiseDatastore datastore, IViewDefinition viewDef)
-        {
-            var viewName = viewDef.ViewName;
-            datastore.Execute($"DROP VIEW {viewName};");
-            datastore.Execute(viewDef.CreateView);
-        }
-
-        public static void Migrate(CruiseDatastore sourceDS, CruiseDatastore destinationDS, IEnumerable<string> excluding = null, bool excludeLookupTables = false)
-        {
-            var destConn = destinationDS.OpenConnection();
-            var sourceConn = sourceDS.OpenConnection();
-
-            try
-            {
-                Migrate(sourceConn, destConn, excluding);
-            }
-            finally
-            {
-                destinationDS.ReleaseConnection();
-                sourceDS.ReleaseConnection();
-            }
-        }
-
-        public static void Migrate(DbConnection sourceConn, DbConnection destConn, IEnumerable<string> excluding = null, bool excludeLookupTables = false)
-        {
-            var to = "main"; // alias used by the source database
-            var from = "fromdb";
-
-            // get the initial state of foreign keys, used to restore foreign key setting at end of merge process
-            var foreignKeys = destConn.ExecuteScalar<string>("PRAGMA foreign_keys;", null, null);
-            destConn.ExecuteNonQuery("PRAGMA foreign_keys = off;");
-
-#if SYSTEM_DATA_SQLITE
-            var srcDataSource = ((System.Data.SQLite.SQLiteConnection)sourceConn).FileName;
-#else
-            var srcDataSource = sourceConn.DataSource;
-#endif
-            destConn.ExecuteNonQuery($"ATTACH DATABASE \"{srcDataSource}\" AS {from};");
-            try
-            {
-                using (var transaction = destConn.BeginTransaction())
-                {
-                    // get list of all tables that are in both databases
-                    IEnumerable<string> tables = ListTablesIntersect(destConn, sourceConn);
-                    try
-                    {
-                        foreach (var table in tables)
-                        {
-                            if (excludeLookupTables && table.StartsWith("LK_"))
-                            { continue; }
-                            if (excluding?.Contains(table) ?? false)
-                            { continue; }
-
-                            if (table == "Globals")
-                            {
-                                destConn.ExecuteNonQuery(
-                $@"INSERT OR IGNORE INTO {to}.{table} (""Block"", ""Key"", ""Value"")
-SELECT ""Block"", ""Key"", ""Value""
-FROM {from}.{table}
-WHERE ""Block"" != 'Database' AND ""Key"" != 'Version';", null, transaction);
-                                continue;
-                            }
-                            else
-                            {
-                                // get the interscetion of fields in table from both databases
-                                // encased in double quotes just incase any field names are sql keywords
-                                string[] both = ListFieldsIntersect(sourceConn, destConn, table);
-                                var fields = string.Join(",", both);
-
-                                destConn.ExecuteNonQuery(
-                $@"INSERT OR IGNORE INTO {to}.{table} ({fields})
-SELECT {fields} FROM {from}.{table};"
-                                    , null, transaction);
-                            }
-                        }
-
-                        transaction.Commit();
-                    }
-                    catch (Exception e)
-                    {
-                        transaction.Rollback();
-                        Logger.LogException(e);
-                        throw;
-                    }
-                    finally
-                    {
-                        sourceConn.ExecuteNonQuery($"PRAGMA foreign_keys = {foreignKeys};");
-                    }
-                }
-            }
-            finally
-            {
-                destConn.ExecuteNonQuery($"DETACH DATABASE {from};");
-            }
-        }
-
-        public static string[] ListFieldsIntersect(DbConnection sourceConn, DbConnection destConn, string table)
-        {
-            var sourceFields = sourceConn.QueryScalar2<string>($@"SELECT '""' || Name || '""' FROM pragma_table_info('{table}');");
-
-            var destFields = destConn.QueryScalar2<string>($@"SELECT '""' || Name || '""' FROM pragma_table_info('{table}');");
-
-            var both = sourceFields.Intersect(destFields).ToArray();
-            return both;
-        }
-
-        public static string[] ListTablesIntersect(DbConnection conn1, DbConnection conn2)
-        {
-            var query = "SELECT name FROM sqlite_master WHERE type='table' AND name NOT LIKE 'sqlite^_%' ESCAPE '^';";
-
-            var tables1 = conn1.QueryScalar2<string>(query);
-
-            var tables2 = conn2.QueryScalar2<string>(query);
-
-            return tables1.Intersect(tables2).ToArray();
-        }
-
-        public static void SetDatabaseVersion(CruiseDatastore db, string newVersion)
-        {
-            string command = String.Format("UPDATE Globals SET Value = '{0}' WHERE Block = 'Database' AND Key = 'Version';", newVersion);
-            db.Execute(command);
-            db.LogMessage($"Updated structure version to {newVersion}");
         }
     }
 }

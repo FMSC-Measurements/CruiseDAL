@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 
 namespace CruiseDAL.Schema.Cruise.Lookup
 {
@@ -10,19 +6,23 @@ namespace CruiseDAL.Schema.Cruise.Lookup
     {
         public string TableName => "LK_District";
 
-        public string CreateTable =>
-@"CREATE TABLE LK_District (
+        public string CreateTable => GetCreateTable(TableName);
+
+        public string GetCreateTable(string tableName)
+        {
+            return $@"CREATE TABLE {tableName} (
     LK_District_CN INTEGER PRIMARY KEY AUTOINCREMENT,
     Region TEXT NOT NULL COLLATE NOCASE,
     Forest TEXT NOT NULL COLLATE NOCASE,
-    District TEXT NOT NULL COLLATE NOCASE, 
+    District TEXT NOT NULL COLLATE NOCASE,
     FriendlyName TEXT NOT NULL COLLATE NOCASE,
-    
+
     FOREIGN KEY (Region) REFERENCES LK_Region (Region) ON DELETE CASCADE,
     FOREIGN KEY (Forest, Region) REFERENCES LK_Forest (Forest, Region) ON DELETE CASCADE,
 
     UNIQUE (Forest, Region, District)
 );";
+        }
 
         public string InitializeTable =>
 @"INSERT INTO LK_District (Region, Forest, District, FriendlyName)

@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using System.Collections.Generic;
 
 namespace CruiseDAL.Schema
 {
@@ -9,10 +6,13 @@ namespace CruiseDAL.Schema
     {
         public string TableName => "PlotLocation";
 
-        public string CreateTable =>
-@"CREATE TABLE PlotLocation (
+        public string CreateTable => GetCreateTable(TableName);
+
+        public string GetCreateTable(string tableName)
+        {
+            return $@"CREATE TABLE {tableName} (
     PlotLocation_CN INTEGER PRIMARY KEY AUTOINCREMENT,
-    PlotID TEXT NOT NULL COLLATE NOCASE, 
+    PlotID TEXT NOT NULL COLLATE NOCASE,
     Latitude REAL NOT NULL,
     Longitude REAL NOT NULL,
     CreatedBy TEXT DEFAULT 'none',
@@ -24,15 +24,16 @@ namespace CruiseDAL.Schema
 
     CHECK (Latitude BETWEEN -90.0 AND 90.0),
     CHECK (Longitude BETWEEN -180.0 AND 180.0),
-    
+
     FOREIGN KEY (PlotID) REFERENCES Plot (PlotID) ON DELETE CASCADE
 );";
+        }
 
         public string InitializeTable => null;
 
         public string CreateTombstoneTable =>
 @"CREATE TABLE PlotLocation_Tombstone (
-    PlotID TEXT NOT NULL COLLATE NOCASE, 
+    PlotID TEXT NOT NULL COLLATE NOCASE,
     Latitude REAL NOT NULL,
     Longitude REAL NOT NULL,
     CreatedBy TEXT,
@@ -44,10 +45,10 @@ namespace CruiseDAL.Schema
 
         public string CreateIndexes => null;
 
-        public IEnumerable<string> CreateTriggers => new[] 
-        { 
-            CREATE_TRIGGER_PlotLocation_OnUpdate, 
-            CREATE_TRIGGER_PlotLocation_OnDelete 
+        public IEnumerable<string> CreateTriggers => new[]
+        {
+            CREATE_TRIGGER_PlotLocation_OnUpdate,
+            CREATE_TRIGGER_PlotLocation_OnDelete
         };
 
         public const string CREATE_TRIGGER_PlotLocation_OnUpdate =
@@ -63,7 +64,7 @@ BEGIN
 END;";
 
         public const string CREATE_TRIGGER_PlotLocation_OnDelete =
-@"CREATE TRIGGER PlotLocation_OnDelete 
+@"CREATE TRIGGER PlotLocation_OnDelete
 BEFORE DELETE ON PlotLocation
 FOR EACH ROW
 BEGIN
@@ -87,6 +88,5 @@ BEGIN
         CURRENT_TIMESTAMP
     );
 END;";
-
     }
 }

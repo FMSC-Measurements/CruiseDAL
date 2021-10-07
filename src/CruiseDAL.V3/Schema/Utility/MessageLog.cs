@@ -11,8 +11,12 @@ namespace CruiseDAL.Schema
         // the primary key for MessageLog is Message_CN instead of MessageLog_CN
         // this is for compatibility with the older cruise schema
 
-        public string CreateTable =>
-@"CREATE TABLE MessageLog(
+        public string CreateTable => GetCreateTable(TableName);
+
+
+        public string GetCreateTable(string tableName)
+        {
+return $@"CREATE TABLE {tableName} (
     Message_CN INTEGER PRIMARY KEY AUTOINCREMENT,
     Program TEXT COLLATE NOCASE,
     Message TEXT,
@@ -20,6 +24,7 @@ namespace CruiseDAL.Schema
     Time TEXT DEFAULT (time('now', 'localtime')),
     Level TEXT COLLATE NOCASE DEFAULT 'N'
 );";
+        }
 
         public string InitializeTable => null;
 

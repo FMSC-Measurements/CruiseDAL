@@ -6,8 +6,11 @@ namespace CruiseDAL.Schema
     {
         public string TableName => "TreeDefaultValue";
 
-        public string CreateTable =>
-@"CREATE TABLE TreeDefaultValue (
+        public string CreateTable => GetCreateTable(TableName);
+
+        public string GetCreateTable(string tableName)
+        {
+            return $@"CREATE TABLE {tableName} (
     TreeDefaultValue_CN INTEGER PRIMARY KEY AUTOINCREMENT,
     CruiseID TEXT NOT NULL COLLATE NOCASE,
     SpeciesCode TEXT COLLATE NOCASE,
@@ -36,6 +39,7 @@ namespace CruiseDAL.Schema
     --FOREIGN KEY (SpeciesCode, CruiseID) REFERENCES Species (SpeciesCode, CruiseID) ON UPDATE CASCADE ON DELETE CASCADE
     --FOREIGN KEY (PrimaryProduct) REFERENCES LK_Product (Product)
 );";
+        }
 
         public string InitializeTable => null;
 

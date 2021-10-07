@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.Linq;
 
 namespace CruiseDAL.Schema
 {
@@ -7,8 +6,11 @@ namespace CruiseDAL.Schema
     {
         public string TableName => "FixCNTTallyPopulation";
 
-        public string CreateTable =>
-@"CREATE TABLE FixCNTTallyPopulation (
+        public string CreateTable => GetCreateTable(TableName);
+
+        public string GetCreateTable(string tableName)
+        {
+            return $@"CREATE TABLE {tableName} (
     FixCNTTallyPopulation_CN INTEGER PRIMARY KEY AUTOINCREMENT,
     CruiseID TEXT NOT NULL COLLATE NOCASE,
     StratumCode TEXT NOT NULL COLLATE NOCASE,
@@ -27,6 +29,7 @@ namespace CruiseDAL.Schema
 
     FOREIGN KEY (StratumCode, SampleGroupCode, SpeciesCode, LiveDead, CruiseID) REFERENCES SubPopulation (StratumCode, SampleGroupCode, SpeciesCode, LiveDead, CruiseID) ON DELETE CASCADE ON UPDATE CASCADE
 );";
+        }
 
         public string InitializeTable => null;
 

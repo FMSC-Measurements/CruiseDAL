@@ -6,8 +6,11 @@ namespace CruiseDAL.Schema
     {
         public string TableName => "SubPopulation";
 
-        public string CreateTable =>
-@"CREATE TABLE SubPopulation (
+        public string CreateTable => GetCreateTable(TableName);
+
+        public string GetCreateTable(string tableName)
+        {
+            return $@"CREATE TABLE {tableName} (
     Subpopulation_CN INTEGER PRIMARY KEY AUTOINCREMENT,
     SubPopulationID TEXT NOT NULL COLLATE NOCASE,
     CruiseID TEXT NOT NULL COLLATE NOCASE,
@@ -29,6 +32,7 @@ namespace CruiseDAL.Schema
     FOREIGN KEY (StratumCode, SampleGroupCode, CruiseID) REFERENCES SampleGroup (StratumCode, SampleGroupCode, CruiseID) ON DELETE CASCADE ON UPDATE CASCADE,
     FOREIGN KEY (SpeciesCode, CruiseID) REFERENCES Species (SpeciesCode, CruiseID) ON UPDATE CASCADE
 );";
+        }
 
         public string InitializeTable => null;
 
@@ -49,7 +53,7 @@ namespace CruiseDAL.Schema
     UNIQUE(SubPopulationID)
 );
 
-CREATE INDEX NIX_SubPopulation_Tombstone_CruiseID_StratumCode_SampleGroupCode_SpeciesCode_LiveDead ON SubPopulation_Tombstone 
+CREATE INDEX NIX_SubPopulation_Tombstone_CruiseID_StratumCode_SampleGroupCode_SpeciesCode_LiveDead ON SubPopulation_Tombstone
 (CruiseID, StratumCode, SampleGroupCode, SpeciesCode, LiveDead);";
 
         public string CreateIndexes =>
@@ -60,12 +64,12 @@ CREATE INDEX NIX_Subpopulation_StratumCode_SampleGroupCode_CruiseID ON Subpopula
         public IEnumerable<string> CreateTriggers => new[] { CREATE_TRIGGER_SubPopulation_OnUpdate, CREATE_TRIGGER_SubPopulation_OnDelete };
 
         public const string CREATE_TRIGGER_SubPopulation_OnUpdate =
-@"CREATE TRIGGER SubPopulation_OnUpdate 
-AFTER UPDATE OF 
-    LiveDead 
+@"CREATE TRIGGER SubPopulation_OnUpdate
+AFTER UPDATE OF
+    LiveDead
 ON SubPopulation
 FOR EACH ROW
-BEGIN 
+BEGIN
     UPDATE SubPopulation SET Modified_TS = CURRENT_TIMESTAMP WHERE Subpopulation_CN = old.Subpopulation_CN;
 END;";
 

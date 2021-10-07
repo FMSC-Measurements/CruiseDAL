@@ -6,8 +6,11 @@ namespace CruiseDAL.Schema
     {
         public string TableName => "Stratum";
 
-        public string CreateTable =>
-@"CREATE TABLE Stratum (
+        public string CreateTable => GetCreateTable(TableName);
+
+        public string GetCreateTable(string tableName)
+        {
+            return $@"CREATE TABLE {tableName} (
     Stratum_CN INTEGER PRIMARY KEY AUTOINCREMENT,
     StratumID TEXT NOT NULL COLLATE NOCASE,
     StratumCode TEXT NOT NULL COLLATE NOCASE,
@@ -29,8 +32,8 @@ namespace CruiseDAL.Schema
     Modified_TS DATETIME,
 
     FOREIGN KEY (CruiseID) REFERENCES Cruise (CruiseID) ON DELETE CASCADE,
-    FOREIGN KEY (FixCNTField) REFERENCES TreeField (Field), 
-    FOREIGN KEY (Method) REFERENCES LK_CruiseMethod (Method), 
+    FOREIGN KEY (FixCNTField) REFERENCES TreeField (Field),
+    FOREIGN KEY (Method) REFERENCES LK_CruiseMethod (Method),
 
     UNIQUE(StratumID),
     UNIQUE(StratumCode, CruiseID),
@@ -39,6 +42,7 @@ namespace CruiseDAL.Schema
     CHECK (StratumID LIKE '________-____-____-____-____________'),
     CHECK (length(StratumCode) > 0)
 );";
+        }
 
         public string InitializeTable => null;
 
@@ -65,7 +69,7 @@ namespace CruiseDAL.Schema
     UNIQUE(StratumID)
 );
 
-CREATE INDEX NIX_Stratum_Tombstone_CruiseID_StratumCode ON Stratum_Tombstone 
+CREATE INDEX NIX_Stratum_Tombstone_CruiseID_StratumCode ON Stratum_Tombstone
 (CruiseID, StratumCode);";
 
         public string CreateIndexes => null;

@@ -12,8 +12,12 @@ namespace CruiseDAL.Schema
         public const string DBTYPE_BOOLEAN = "BOOLEAN";
         public const string DBTYPE_INTEGER = "INTIGER";
 
-        public string CreateTable =>
-@"CREATE TABLE TreeField (
+        public string CreateTable => GetCreateTable(TableName);
+
+
+        public string GetCreateTable(string tableName)
+        {
+return $@"CREATE TABLE {tableName} (
     TreeField_CN INTEGER PRIMARY KEY AUTOINCREMENT,
     Field TEXT COLLATE NOCASE,
     DefaultHeading TEXT NOT NULL,
@@ -23,6 +27,7 @@ namespace CruiseDAL.Schema
     UNIQUE (Field),
     CHECK (DbType IN ('REAL', 'TEXT', 'BOOLEAN', 'INTEGER'))
 );";
+        }
 
         public string InitializeTable =>
 @"INSERT INTO TreeField ( Field, DefaultHeading, DbType, IsTreeMeasurmentField)
@@ -63,6 +68,5 @@ VALUES
         public string CreateIndexes => null;
 
         public IEnumerable<string> CreateTriggers => Enumerable.Empty<string>();
-
     }
 }

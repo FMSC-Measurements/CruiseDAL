@@ -6,8 +6,12 @@ namespace CruiseDAL.Schema
     {
         public string TableName => "StratumTemplateTreeFieldSetup";
 
-        public string CreateTable =>
-@"CREATE TABLE StratumTemplateTreeFieldSetup (
+        public string CreateTable => GetCreateTable(TableName);
+
+
+        public string GetCreateTable(string tableName)
+        {
+return $@"CREATE TABLE {tableName} (
     StratumTemplateTreeFieldSetup_CN INTEGER PRIMARY KEY AUTOINCREMENT,
     StratumTemplateName TEXT NOT NULL COLLATE NOCASE,
     CruiseID TEXT NOT NULL COLLATE NOCASE,
@@ -31,6 +35,7 @@ namespace CruiseDAL.Schema
     FOREIGN KEY (StratumTemplateName, CruiseID) REFERENCES StratumTemplate (StratumTemplateName, CruiseID) ON DELETE CASCADE ON UPDATE CASCADE,
     FOREIGN KEY (Field) REFERENCES TreeField (Field)
 );";
+        }
 
         public string InitializeTable => null;
 

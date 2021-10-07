@@ -8,8 +8,11 @@ namespace CruiseDAL.Schema
 
         // values stored in the tree table are value we don't expect to change after the initial insert of the record
         // for changable values use the treeMeasurments table or treeFieldValue table
-        public string CreateTable =>
-@"CREATE TABLE Tree (
+        public string CreateTable => GetCreateTable(TableName);
+
+        public string GetCreateTable(string tableName)
+        {
+            return $@"CREATE TABLE {tableName} (
     Tree_CN INTEGER PRIMARY KEY AUTOINCREMENT,
     CruiseID TEXT NOT NULL COLLATE NOCASE,
     TreeID TEXT NOT NULL ,
@@ -44,6 +47,7 @@ namespace CruiseDAL.Schema
     FOREIGN KEY (SpeciesCode, CruiseID)
         REFERENCES Species (SpeciesCode, CruiseID)
 )";
+        }
 
         public string InitializeTable => null;
 
@@ -67,10 +71,10 @@ namespace CruiseDAL.Schema
     Deleted_TS DATETIME
 );
 
-CREATE INDEX NIX_Tree_Tombstone_TreeID ON Tree_Tombstone 
+CREATE INDEX NIX_Tree_Tombstone_TreeID ON Tree_Tombstone
 (TreeID);
 
-CREATE INDEX NIX_Tree_Tombstone_CruiseID_CuttingUnitCode_PlotNumber_TreeNumber ON Tree_Tombstone 
+CREATE INDEX NIX_Tree_Tombstone_CruiseID_CuttingUnitCode_PlotNumber_TreeNumber ON Tree_Tombstone
 (CruiseID, CuttingUnitCode, PlotNumber, TreeNumber);";
 
         public string CreateIndexes =>

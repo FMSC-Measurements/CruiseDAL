@@ -10,8 +10,11 @@ namespace CruiseDAL.Schema
 
         public string TableName => "SampleGroup";
 
-        public string CreateTable =>
-$@"CREATE TABLE SampleGroup (
+        public string CreateTable => GetCreateTable(TableName);
+
+        public string GetCreateTable(string tableName)
+        {
+            return $@"CREATE TABLE {tableName} (
     SampleGroup_CN INTEGER PRIMARY KEY AUTOINCREMENT,
     SampleGroupID  TEXT NOT NULL COLLATE NOCASE,
     CruiseID TEXT NOT NULL COLLATE NOCASE,
@@ -43,12 +46,11 @@ $@"CREATE TABLE SampleGroup (
     CHECK (length(SampleGroupCode) > 0)
     CHECK (TallyBySubPop IN (0, 1)),
     CHECK (UseExternalSampler IN (0, 1)),
-    CHECK (SampleSelectorType IS NULL 
+    CHECK (SampleSelectorType IS NULL
         OR SampleSelectorType IN (
-            '{SAMPLESELECTORTYPE_SYSTEMATICSELECTER}', 
-            '{SAMPLESELECTORTYPE_BLOCKSELECTER}', 
+            '{SAMPLESELECTORTYPE_SYSTEMATICSELECTER}',
+            '{SAMPLESELECTORTYPE_BLOCKSELECTER}',
             '{SAMPLESELECTORTYPE_CLICKERSELECTER}')),
-    
 
     UNIQUE (SampleGroupID),
     UNIQUE (StratumCode, SampleGroupCode, CruiseID),
@@ -58,6 +60,7 @@ $@"CREATE TABLE SampleGroup (
     FOREIGN KEY (PrimaryProduct) REFERENCES LK_Product (Product),
     FOREIGN KEY (SecondaryProduct) REFERENCES LK_Product (Product)
 );";
+        }
 
         public string InitializeTable => null;
 
@@ -96,13 +99,13 @@ $@"CREATE TABLE SampleGroup (
     UNIQUE(SampleGroupID)
 );
 
-CREATE INDEX NIX_SampleGroup_Tombstone_CruiseID_SampleGroupCode_StratumCode ON SampleGroup_Tombstone 
+CREATE INDEX NIX_SampleGroup_Tombstone_CruiseID_SampleGroupCode_StratumCode ON SampleGroup_Tombstone
 (CruiseID, SampleGroupCode, StratumCode);";
 
-        public IEnumerable<string> CreateTriggers => new[] 
-        { 
-            CREATE_TRIGGER_SAMPLEGROUP_ONUPDATE, 
-            CREATE_TRIGGER_SampleGoup_OnDelete 
+        public IEnumerable<string> CreateTriggers => new[]
+        {
+            CREATE_TRIGGER_SAMPLEGROUP_ONUPDATE,
+            CREATE_TRIGGER_SampleGoup_OnDelete
         };
 
         public const string CREATE_TRIGGER_SAMPLEGROUP_ONUPDATE =

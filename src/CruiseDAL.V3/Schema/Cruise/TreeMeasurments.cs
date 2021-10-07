@@ -46,8 +46,11 @@ namespace CruiseDAL.Schema
 
         public string TableName => "TreeMeasurment";
 
-        public string CreateTable =>
-@"CREATE TABLE TreeMeasurment (
+        public string CreateTable => GetCreateTable(TableName);
+
+        public string GetCreateTable(string tableName)
+        {
+            return $@"CREATE TABLE {tableName} (
     TreeMeasurment_CN INTEGER PRIMARY KEY AUTOINCREMENT,
     TreeID TEXT NOT NULL,
 
@@ -98,6 +101,7 @@ namespace CruiseDAL.Schema
 
     FOREIGN KEY (TreeID) REFERENCES Tree (TreeID) ON DELETE CASCADE ON UPDATE CASCADE
 )";
+        }
 
         public string InitializeTable => null;
 
@@ -150,15 +154,15 @@ namespace CruiseDAL.Schema
     Deleted_TS DATETIME
 );
 
-CREATE INDEX NIX_TreeMeasurment_Tombstone_TreeID ON TreeMeasurment_Tombstone 
+CREATE INDEX NIX_TreeMeasurment_Tombstone_TreeID ON TreeMeasurment_Tombstone
 (TreeID);";
 
         public string CreateIndexes => null;
 
-        public IEnumerable<string> CreateTriggers => new[] 
-        { 
-            CREATE_TRIGGER_TREEMEASURMENTS_ONUPDATE, 
-            CREATE_TRIGGER_TreeMeasurment_OnDelete 
+        public IEnumerable<string> CreateTriggers => new[]
+        {
+            CREATE_TRIGGER_TREEMEASURMENTS_ONUPDATE,
+            CREATE_TRIGGER_TreeMeasurment_OnDelete
         };
 
         public const string CREATE_TRIGGER_TREEMEASURMENTS_ONUPDATE =

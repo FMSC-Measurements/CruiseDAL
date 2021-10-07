@@ -6,8 +6,11 @@ namespace CruiseDAL.Schema
     {
         public string TableName => "TreeAuditRule";
 
-        public string CreateTable =>
-@"CREATE TABLE TreeAuditRule (
+        public string CreateTable => GetCreateTable(TableName);
+
+        public string GetCreateTable(string tableName)
+        {
+            return $@"CREATE TABLE {tableName} (
     TreeAuditRule_CN INTEGER PRIMARY KEY AUTOINCREMENT,
     TreeAuditRuleID TEXT NOT NULL,
     CruiseID TEXT NOT NULL COLLATE NOCASE,
@@ -23,11 +26,12 @@ namespace CruiseDAL.Schema
     FOREIGN KEY (CruiseID) REFERENCES Cruise (CruiseID) ON DELETE CASCADE,
     FOREIGN KEY (Field) REFERENCES TreeField (Field)
 );";
+        }
 
         public string InitializeTable => null;
 
         public string CreateTombstoneTable =>
-@"CREATE TABLE TreeAuditRule_Tombstone ( 
+@"CREATE TABLE TreeAuditRule_Tombstone (
     TreeAuditRuleID TEXT NOT NULL,
     CruiseID TEXT NOT NULL COLLATE NOCASE,
     Field TEXT NOT NULL COLLATE NOCASE,
@@ -40,7 +44,6 @@ namespace CruiseDAL.Schema
 @"CREATE INDEX NIX_TreeAuditRule_Field ON TreeAuditRule ('Field');";
 
         public IEnumerable<string> CreateTriggers => new[] { CREATE_TRIGGER_TreeAuditRule_OnDelete };
-
 
         public const string CREATE_TRIGGER_TreeAuditRule_OnDelete =
 @"CREATE TRIGGER TreeAuditRule_OnDelete
@@ -60,9 +63,8 @@ BEGIN
         OLD.Field,
         OLD.Min,
         OLD.Max,
-        OLD.Description 
+        OLD.Description
     );
 END;";
-
     }
 }

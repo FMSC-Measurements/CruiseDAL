@@ -11,7 +11,7 @@ namespace CruiseDAL
 {
     public class CruiseDatastoreBuilder_V3 : IDatastoreBuilder
     {
-        public static Version DATABASE_VERSION = new Version("3.3.4");
+        public static Version DATABASE_VERSION = new Version("3.4.0");
 
         public static readonly IEnumerable<ITableDefinition> TABLE_DEFINITIONS =
         new ITableDefinition[]
@@ -38,7 +38,7 @@ namespace CruiseDAL
 
             // design
             new SaleTableDefinition(),
-            new CruiseTableDefinition(),
+            new CruiseTableDefinition_3_4_0(),
 
             new CuttingUnitTableDefinition(),
             new StratumTableDefinition(),
@@ -95,7 +95,7 @@ namespace CruiseDAL
         public static readonly IEnumerable<IViewDefinition> VIEW_DEFINITIONS =
             new IViewDefinition[]
             {
-                new TallyPopulationViewDefinition(),
+                new TallyPopulationViewDefinition_3_3_2(),
                 new TallyLedgerViewDefinition(),
                 new TreeErrorViewDefinition(),
                 new LogGradeErrorViewDefinition(),

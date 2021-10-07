@@ -7,13 +7,18 @@ namespace CruiseDAL.Schema
     {
         public string TableName => "Globals";
 
-        public string CreateTable =>
-@"CREATE TABLE Globals (
+        public string CreateTable => GetCreateTable(TableName);
+
+
+        public string GetCreateTable(string tableName)
+        {
+return $@"CREATE TABLE {tableName} (
     Block TEXT DEFAULT '' COLLATE NOCASE,
     Key TEXT COLLATE NOCASE,
     Value TEXT,
     UNIQUE (Block, Key)
 );";
+        }
 
         // db version is set in the db builder instead of in the table initializer
         public string InitializeTable => null;

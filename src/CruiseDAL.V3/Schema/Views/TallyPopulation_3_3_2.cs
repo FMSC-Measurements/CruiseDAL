@@ -1,6 +1,6 @@
 ﻿namespace CruiseDAL.Schema
 {
-    public class TallyPopulationViewDefinition : IViewDefinition
+    public class TallyPopulationViewDefinition_3_3_2 : IViewDefinition
     {
         public string ViewName => "TallyPopulation";
 

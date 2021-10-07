@@ -6,15 +6,18 @@ namespace CruiseDAL.Schema
     {
         public string TableName => "CuttingUnit";
 
-        public string CreateTable =>
-@"CREATE TABLE CuttingUnit(
+        public string CreateTable => GetCreateTable(TableName);
+
+        public string GetCreateTable(string tableName)
+        {
+            return $@"CREATE TABLE {tableName} (
     CuttingUnit_CN INTEGER PRIMARY KEY AUTOINCREMENT,
     CuttingUnitID TEXT NOT NULL COLLATE NOCASE,
     CuttingUnitCode TEXT NOT NULL COLLATE NOCASE,
     CruiseID TEXT NOT NULL COLLATE NOCASE,
     Area REAL DEFAULT 0.0,
     Description TEXT,
-    Remarks TEXT, 
+    Remarks TEXT,
     LoggingMethod TEXT COLLATE NOCASE,
     PaymentUnit TEXT,
     Rx TEXT,
@@ -32,6 +35,7 @@ namespace CruiseDAL.Schema
     CHECK (CuttingUnitID LIKE '________-____-____-____-____________'),
     CHECK (length(CuttingUnitCode) > 0)
 );";
+        }
 
         public string InitializeTable => null;
 
@@ -55,7 +59,7 @@ namespace CruiseDAL.Schema
     UNIQUE(CuttingUnitID)
 );
 
-CREATE INDEX NIX_CuttingUnit_Tombstone_CruiseID_CuttingUnitCode ON CuttingUnit_Tombstone 
+CREATE INDEX NIX_CuttingUnit_Tombstone_CruiseID_CuttingUnitCode ON CuttingUnit_Tombstone
 (CruiseID, CuttingUnitCode);";
 
         public string CreateIndexes => null;

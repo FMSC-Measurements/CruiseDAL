@@ -6,13 +6,18 @@ namespace CruiseDAL.Schema
     {
         public string TableName => "LK_Region";
 
-        public string CreateTable =>
-@"CREATE TABLE LK_Region (
+        public string CreateTable => GetCreateTable(TableName);
+
+
+        public string GetCreateTable(string tableName)
+        {
+return $@"CREATE TABLE {tableName} (
     LK_Region_CN INTEGER PRIMARY KEY AUTOINCREMENT,
     Region TEXT NOT NULL COLLATE NOCASE,
     FriendlyName TEXT NOT NULL COLLATE NOCASE,
     UNIQUE (Region)
 );";
+        }
 
         public string InitializeTable =>
 @"INSERT INTO LK_Region (Region, FriendlyName)

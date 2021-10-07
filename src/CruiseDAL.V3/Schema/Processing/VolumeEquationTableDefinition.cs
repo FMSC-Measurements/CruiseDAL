@@ -6,8 +6,12 @@ namespace CruiseDAL.Schema
     {
         public string TableName => "VolumeEquation";
 
-        public string CreateTable =>
-@"CREATE TABLE VolumeEquation (
+		public string CreateTable => GetCreateTable(TableName);
+
+
+		public string GetCreateTable(string tableName)
+        {
+return $@"CREATE TABLE {tableName} (
 	VolumeEquation_CN INTEGER PRIMARY KEY AUTOINCREMENT,
 	CruiseID TEXT NOT NULL COLLATE NOCASE,
 	Species TEXT NOT NULL,
@@ -41,8 +45,10 @@ namespace CruiseDAL.Schema
 
 	UNIQUE (CruiseID, Species, PrimaryProduct, VolumeEquationNumber)
 );";
+		}
 
-        public string InitializeTable => null;
+
+		public string InitializeTable => null;
 
         public string CreateTombstoneTable =>
 @"CREATE TABLE VolumeEquation_Tombstone (

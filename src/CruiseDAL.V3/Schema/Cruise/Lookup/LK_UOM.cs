@@ -6,13 +6,17 @@ namespace CruiseDAL.Schema
     {
         public string TableName => "LK_UOM";
 
-        public string CreateTable =>
-@"CREATE TABLE LK_UOM (
+        public string CreateTable => GetCreateTable(TableName);
+
+        public string GetCreateTable(string tableName)
+        {
+return $@"CREATE TABLE {tableName} (
     LK_UOM_CN INTEGER PRIMARY KEY AUTOINCREMENT,
     UOM TEXT NOT NULL COLLATE NOCASE,
     FriendlyName TEXT NOT NULL COLLATE NOCASE,
     UNIQUE (UOM)
 );";
+        }
 
         public string InitializeTable =>
 @"INSERT INTO LK_UOM (UOM, FriendlyName)

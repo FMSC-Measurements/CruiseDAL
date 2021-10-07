@@ -10,8 +10,11 @@ namespace CruiseDAL.Schema
     {
         public string TableName => "ValueEquation";
 
-        public string CreateTable =>
-@"CREATE TABLE ValueEquation (
+        public string CreateTable => GetCreateTable(TableName);
+
+        public string GetCreateTable(string tableName)
+        {
+return $@"CREATE TABLE {tableName} (
     CruiseID TEXT NOT NULL COLLATE NOCASE,
     Species TEXT NOT NULL,
     PrimaryProduct TEXT NOT NULL,
@@ -33,6 +36,7 @@ namespace CruiseDAL.Schema
 
     FOREIGN KEY (CruiseID) REFERENCES Cruise (CruiseID) ON DELETE CASCADE
 );";
+        }
 
         public string InitializeTable => null;
 

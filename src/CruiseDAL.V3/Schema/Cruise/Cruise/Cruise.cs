@@ -6,8 +6,13 @@ namespace CruiseDAL.Schema
     {
         public string TableName => "Cruise";
 
-        public string CreateTable =>
-@"CREATE TABLE Cruise (
+        public string CreateTable => GetCreateTable();
+
+        public string GetCreateTable() => GetCreateTable(TableName);
+
+        public string GetCreateTable(string tableName)
+        {
+            return $@"CREATE TABLE {tableName} (
     Cruise_CN INTEGER PRIMARY KEY AUTOINCREMENT,
     CruiseID TEXT NOT NULL COLLATE NOCASE,
     SaleID TEXT NOT NULL COLLATE NOCASE,
@@ -18,7 +23,7 @@ namespace CruiseDAL.Schema
     MeasurementYear TEXT COLLATE NOCASE,
     LogGradingEnabled BOOLEAN Default 0,
     UseCrossStrataPlotTreeNumbering BOOLEAN Default 0,
-    TemplateFile TEXT, 
+    TemplateFile TEXT,
     CreatedBy TEXT DEFAULT 'none',
     Created_TS DATETIME DEFAULT (CURRENT_TIMESTAMP),
     ModifiedBy TEXT,
@@ -35,6 +40,7 @@ namespace CruiseDAL.Schema
     FOREIGN KEY (DefaultUOM) REFERENCES LK_UOM (UOM),
     FOREIGN KEY (Purpose) REFERENCES LK_Purpose (Purpose)
 );";
+        }
 
         public string InitializeTable => null;
 

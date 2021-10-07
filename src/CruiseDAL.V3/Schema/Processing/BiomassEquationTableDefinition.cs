@@ -6,8 +6,12 @@ namespace CruiseDAL.Schema
     {
         public string TableName => "BiomassEquation";
 
-        public string CreateTable =>
-@"CREATE TABLE BiomassEquation (
+		public string CreateTable => GetCreateTable(TableName);
+
+
+		public string GetCreateTable(string tableName)
+        {
+return $@"CREATE TABLE {tableName} (
 	CruiseID TEXT NOT NULL COLLATE NOCASE,
 	Species TEXT NOT NULL,
 	Product TEXT NOT NULL,
@@ -31,8 +35,10 @@ namespace CruiseDAL.Schema
 	FOREIGN KEY (CruiseID) REFERENCES Cruise (CruiseID) ON DELETE CASCADE
 
 );";
+		}
 
-        public string InitializeTable => null;
+
+		public string InitializeTable => null;
 
         public string CreateTombstoneTable => null;
 

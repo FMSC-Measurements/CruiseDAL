@@ -6,8 +6,11 @@ namespace CruiseDAL.Schema
     {
         public string TableName => "Log";
 
-        public string CreateTable =>
-@"CREATE TABLE Log (
+        public string CreateTable => GetCreateTable(TableName);
+
+        public string GetCreateTable(string tableName)
+        {
+            return $@"CREATE TABLE {tableName} (
     Log_CN INTEGER PRIMARY KEY AUTOINCREMENT,
     CruiseID TEXT NOT NULL,
     LogID TEXT NOT NULL,
@@ -41,6 +44,7 @@ namespace CruiseDAL.Schema
     FOREIGN KEY (TreeID) REFERENCES Tree (TreeID) ON DELETE CASCADE,
     FOREIGN KEY (CruiseID) REFERENCES Cruise (CruiseID)
 );";
+        }
 
         public string InitializeTable => null;
 
@@ -72,7 +76,7 @@ namespace CruiseDAL.Schema
     Deleted_TS DATETIME
 );
 
-CREATE INDEX NIX_Log_Tombstone_TreeID_LogNumber ON Log_Tombstone 
+CREATE INDEX NIX_Log_Tombstone_TreeID_LogNumber ON Log_Tombstone
 (TreeID, LogNumber);
 
 CREATE INDEX NIX_Log_Tombstone_LogID ON Log_Tombstone
@@ -87,14 +91,14 @@ CREATE INDEX NIX_Log_Tombstone_CruiseID ON Log_Tombstone
 CREATE INDEX NIX_Log_TreeID ON Log (TreeID);
 CREATE INDEX NIX_Log_CruiseID ON Log (CruiseID);";
 
-        public IEnumerable<string> CreateTriggers => new[] 
+        public IEnumerable<string> CreateTriggers => new[]
         {
-            CREATE_TRIGGER_LOG_ONUPDATE, 
-            CREATE_TRIGGER_Log_OnDelete 
+            CREATE_TRIGGER_LOG_ONUPDATE,
+            CREATE_TRIGGER_Log_OnDelete
         };
 
         public const string CREATE_TRIGGER_LOG_ONUPDATE =
-@"CREATE TRIGGER Log_OnUpdate 
+@"CREATE TRIGGER Log_OnUpdate
 AFTER UPDATE OF
     LogNumber,
     Grade,

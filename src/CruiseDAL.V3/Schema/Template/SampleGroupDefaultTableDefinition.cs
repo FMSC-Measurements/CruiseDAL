@@ -6,8 +6,12 @@ namespace CruiseDAL.Schema
     {
         public string TableName => "SampleGroupDefault";
 
-        public string CreateTable =>
-@"CREATE TABLE SampleGroupDefault (
+        public string CreateTable => GetCreateTable(TableName);
+
+
+        public string GetCreateTable(string tableName)
+        {
+return $@"CREATE TABLE {tableName} (
     SampleGroupDefault_CN INTEGER PRIMARY KEY AUTOINCREMENT,
     SampleGroupDefaultID TEXT NOT NULL COLLATE NOCASE,
     Region  TEXT COLLATE NOCASE,
@@ -41,6 +45,7 @@ namespace CruiseDAL.Schema
 
     UNIQUE (SampleGroupDefaultID)
 );";
+        }
 
         public string InitializeTable => null;
 
