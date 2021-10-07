@@ -176,13 +176,13 @@ namespace CruiseDAL.V3.Sync
         private void SyncSale(string cruiseID, DbConnection source, DbConnection destination, CruiseSyncOptions options)
         {
             var sourceSale = source.From<Sale>()
-                .Join("Cruise AS c", "USING (SaleID)")
+                .Join("Cruise AS c", "USING (SaleNumber)")
                 .Where("CruiseID = @p1")
                 .Query(cruiseID).FirstOrDefault();
 
             var match = destination.From<Sale>()
-                .Where("SaleID = @p1")
-                .Query(sourceSale.SaleID).FirstOrDefault();
+                .Where("SaleNumber = @p1")
+                .Query(sourceSale.SaleNumber).FirstOrDefault();
 
             if (match == null)
             {
@@ -193,7 +193,7 @@ namespace CruiseDAL.V3.Sync
                 var srcMod = sourceSale.Modified_TS;
                 var destMod = match.Modified_TS;
 
-                if (ShouldUpdate(srcMod, destMod, options.Design))
+                if (sourceSale.SaleID == match.SaleID && ShouldUpdate(srcMod, destMod, options.Design))
                 {
                     destination.Update(sourceSale, whereExpression: "SaleID = @SaleID");
                 }
