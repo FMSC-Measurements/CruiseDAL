@@ -67,10 +67,22 @@ namespace CruiseDAL.V3.Sync
                 destination.Insert(unit);
             }
 
+            var unit_tmbs = source.From<CuttingUnit_Tombstone>().Where("CruiseID = @p1;").Query(cruiseID);
+            foreach (var unitt in unit_tmbs)
+            {
+                destination.Insert(unitt);
+            }
+
             var strata = source.From<Stratum>().Where("CruiseID =  @p1;").Query(cruiseID);
             foreach (var st in strata)
             {
                 destination.Insert(st);
+            }
+
+            var stratatmb = source.From<Stratum_Tombstone>().Where("CruiseID = @p1;").Query(cruiseID);
+            foreach(var sttmb in stratatmb)
+            {
+                destination.Insert(sttmb);
             }
 
             var unitStrata = source.From<CuttingUnit_Stratum>().Where("CruiseID = @p1;").Query(cruiseID);
@@ -79,10 +91,22 @@ namespace CruiseDAL.V3.Sync
                 destination.Insert(cust);
             }
 
+            var unitStratatmb = source.From<CuttingUnit_Stratum_Tombstone>().Where("CruiseID = @p1;").Query(cruiseID);
+            foreach( var custtmb in unitStratatmb)
+            {
+                destination.Insert(custtmb);
+            }
+
             var samplegroups = source.From<SampleGroup>().Where("CruiseID = @p1;").Query(cruiseID);
             foreach (var sg in samplegroups)
             {
                 destination.Insert(sg);
+            }
+
+            var samplegroupstmb = source.From<SampleGroup_Tombstone>().Where("CruiseID = @p1;").Query(cruiseID);
+            foreach(var sgtmb in samplegroupstmb)
+            {
+                destination.Insert(sgtmb);
             }
 
             var samplerStates = source.From<SamplerState>().Where("CruiseID =  @p1;").Query(cruiseID);
@@ -101,6 +125,12 @@ namespace CruiseDAL.V3.Sync
             foreach (var subpop in subpopulations)
             {
                 destination.Insert(subpop);
+            }
+
+            var subpopulationstmb = source.From<SubPopulation_Tombstone>().Where("CruiseID = @p1;").Query(cruiseID);
+            foreach(var subpoptmb in subpopulationstmb)
+            {
+                destination.Insert(subpoptmb);
             }
 
             var tallyDescriptions = source.From<TallyDescription>().Where("CruiseID = @p1;").Query(cruiseID);
@@ -127,16 +157,30 @@ namespace CruiseDAL.V3.Sync
                 destination.Insert(p);
             }
 
+            var plotstmb = source.From<Plot_Tombstone>().Where("CruiseID = @p1;").Query(cruiseID);
+            foreach(var ptmb in plotstmb)
+            {
+                destination.Insert(ptmb);
+            }
+
             var plotLocations = source.From<PlotLocation>().Join("Plot AS p", "USING(PlotID)").Where("p.CruiseID = @p1;").Query(cruiseID);
             foreach (var pl in plotLocations)
             {
                 destination.Insert(pl);
             }
 
+            //var plotLocationstmb = source.From<PlotLocation_Tombstone>()
+
             var plotStrata = source.From<Plot_Stratum>().Where("CruiseID =  @p1;").Query(cruiseID);
             foreach (var pst in plotStrata)
             {
                 destination.Insert(pst);
+            }
+
+            var plotStratatmb = source.From<Plot_Stratum_Tombstone>().Where("CruiseID = @p1;").Query(cruiseID);
+            foreach(var pstmb in plotStratatmb)
+            {
+                destination.Insert(pstmb);
             }
 
             var trees = source.From<Tree>().Where("CruiseID = @p1;").Query(cruiseID);
@@ -145,10 +189,30 @@ namespace CruiseDAL.V3.Sync
                 destination.Insert(t);
             }
 
+            var treetmb = source.From<Tree_Tombstone>().Where("CruiseID = @p1;").Query(cruiseID);
+            foreach(var ttmb in treetmb)
+            {
+                destination.Insert(ttmb);
+
+                var tmtmb = source.From<TreeMeasurment_Tombstone>().Where("TreeID = @p1;").Query(ttmb.TreeID).FirstOrDefault();
+                if (tmtmb != null) { destination.Insert(tmtmb); }
+
+                var treeFieldValuestmb = source.From<TreeFieldValue_Tombstone>().Where("TreeID = @p1;").Query(ttmb.TreeID);
+                foreach(var tfvtmb in treeFieldValuestmb)
+                {
+                    destination.Insert(tfvtmb);
+                }
+
+                var tltmb = source.From<TreeLocation_Tombstone>().Where("TreeID = @p1;").Query(ttmb.TreeID).FirstOrDefault();
+                if(tltmb != null) { destination.Insert(tltmb); }
+            }
+
             var treeMeasurments = source.From<TreeMeasurment>().Join("Tree AS t", "USING(TreeID)").Where("t.CruiseID = @p1;").Query(cruiseID);
             foreach (var tm in treeMeasurments)
             {
                 destination.Insert(tm);
+
+                
             }
 
             var treeFieldValues = source.From<TreeFieldValue>().Join("Tree AS t", "USING(TreeID)").Where("t.CruiseID = @p1;").Query(cruiseID);
@@ -169,10 +233,22 @@ namespace CruiseDAL.V3.Sync
                 destination.Insert(l);
             }
 
+            var logstmb = source.From<Log_Tombstone>().Where("CruiseID = @p1;").Query(cruiseID);
+            foreach(var ltmb in logstmb)
+            {
+                destination.Insert(ltmb);
+            }
+
             var stems = source.From<Stem>().Join("Tree AS t", "USING(TreeID)").Where("t.CruiseID = @p1;").Query(cruiseID);
             foreach (var s in stems)
             {
                 destination.Insert(s);
+            }
+
+            var stemstmb = source.From<Stem_Tombstone>().Where("CruiseID = @p1;").Query(cruiseID);
+            foreach(var stmb in stemstmb)
+            {
+                destination.Insert(stmb);
             }
 
             var tallyLedgers = source.From<TallyLedger>().Where("CruiseID = @p1;").Query(cruiseID);
@@ -181,10 +257,22 @@ namespace CruiseDAL.V3.Sync
                 destination.Insert(tl);
             }
 
+            var tallyLedgerstmb = source.From<TallyLedger_Tombstone>().Where("CruiseID = @p1;").Query(cruiseID);
+            foreach(var tltmb in tallyLedgerstmb)
+            {
+                destination.Insert(tltmb);
+            }
+
             var logFieldSetups = source.From<LogFieldSetup>().Where("CruiseID = @p1;").Query(cruiseID);
             foreach (var lfs in logFieldSetups)
             {
                 destination.Insert(lfs);
+            }
+
+            var logFieldSetupstmb = source.From<LogFieldSetup_Tombstone>().Where("CruiseID = @p1;").Query(cruiseID);
+            foreach(var lfstmb in logFieldSetupstmb)
+            {
+                destination.Insert(lfstmb);
             }
 
             var logFieldHeadings = source.From<LogFieldHeading>().Where("CruiseID = @p1").Query(cruiseID);
@@ -199,6 +287,12 @@ namespace CruiseDAL.V3.Sync
                 destination.Insert(tfs);
             }
 
+            var treeFieldSetuptmb = source.From<TreeFieldSetup_Tombstone>().Where("CruiseID = @p1;").Query(cruiseID);
+            foreach(var tfstmb in treeFieldSetuptmb)
+            {
+                destination.Insert(tfstmb);
+            }
+
             var treeFieldHeadings = source.From<TreeFieldHeading>().Where("CruiseID = @p1").Query(cruiseID);
             foreach(var tfh in treeFieldHeadings)
             {
@@ -211,10 +305,22 @@ namespace CruiseDAL.V3.Sync
                 destination.Insert(tar);
             }
 
+            var treeAuditRulestmb = source.From<TreeAuditRule_Tombstone>().Where("CruiseID = @p1;").Query(cruiseID);
+            foreach(var tartmb in treeAuditRulestmb)
+            {
+                destination.Insert(tartmb);
+            }
+
             var treeAuditRuleSelector = source.From<TreeAuditRuleSelector>().Where("CruiseID = @p1;").Query(cruiseID);
             foreach (var tars in treeAuditRuleSelector)
             {
                 destination.Insert(tars);
+            }
+
+            var treeAuditRuleSelectorstmb = source.From<TreeAuditRuleSelector_Tombstone>().Where("CruiseID = @p1;").Query(cruiseID);
+            foreach(var tarstmb in treeAuditRuleSelectorstmb)
+            {
+                destination.Insert(tarstmb);
             }
 
             var treeAuditResolutions = source.From<TreeAuditResolution>().Where("CruiseID = @p1").Query(cruiseID);
@@ -223,16 +329,34 @@ namespace CruiseDAL.V3.Sync
                 destination.Insert(taRes);
             }
 
+            var treeAuditResolutionstmb = source.From<TreeAuditResolution_Tombstone>().Where("CruiseID = @p1;").Query(cruiseID);
+            foreach(var taRestmb in treeAuditResolutionstmb)
+            {
+                destination.Insert(taRestmb);
+            }
+
             var logGradeAuditRules = source.From<LogGradeAuditRule>().Where("CruiseID = @p1").Query(cruiseID);
             foreach(var lgar in logGradeAuditRules)
             {
                 destination.Insert(lgar);
             }
 
+            var logGradeAuditRulestmb = source.From<LogGradeAuditRule_Tombstone>().Where("CruiseID = @p1;").Query(cruiseID);
+            foreach(var lgartmb in logGradeAuditRulestmb)
+            {
+                destination.Insert(lgartmb);
+            }
+
             var treeDefaultValues = source.From<TreeDefaultValue>().Where("CruiseID = @p1").Query(cruiseID);
             foreach(var tdv in treeDefaultValues)
             {
                 destination.Insert(tdv);
+            }
+
+            var treeDefaultValuestmb = source.From<TreeDefaultValue_Tombstone>().Where("CruiseID = @p1;").Query(cruiseID);
+            foreach(var tdvtmb in treeDefaultValuestmb)
+            {
+                destination.Insert(tdvtmb);
             }
 
 
@@ -261,6 +385,43 @@ namespace CruiseDAL.V3.Sync
             foreach(var volumeEq in volumeEqs)
             {
                 destination.Insert(volumeEq);
+            }
+
+            // template
+            var stratumTemplates = source.From<StratumTemplate>().Where("CruiseID = @p1").Query(cruiseID);
+            foreach(var st in stratumTemplates)
+            {
+                destination.Insert(st);
+            }
+
+            var stratumTemplatestmb = source.From<StratumTemplate_Tombstone>().Where("CruiseID = @p1;").Query(cruiseID);
+            foreach(var sttmb in stratumTemplatestmb)
+            {
+                destination.Insert(sttmb);
+            }
+
+            var stTemplateTfs = source.From<StratumTemplateTreeFieldSetup>().Where("CruiseID = @p1").Query(cruiseID);
+            foreach(var sttfs in stTemplateTfs)
+            {
+                destination.Insert(sttfs);
+            }
+
+            var stTemplateTfstmb = source.From<StratumTemplateTreeFieldSetup_Tombstone>().Where("CruiseID = @p1;").Query(cruiseID);
+            foreach(var sttfstmb in stTemplateTfstmb)
+            {
+                destination.Insert(sttfstmb);
+            }
+
+            var stTemplateLfs = source.From<StratumTemplateLogFieldSetup>().Where("CruiseID = @p1").Query(cruiseID);
+            foreach(var stlfs in stTemplateLfs)
+            {
+                destination.Insert(stlfs);
+            }
+
+            var stTemplateLfstmb = source.From<StratumTemplateLogFieldSetup_Tombstone>().Where("CruiseID = @p1;").Query(cruiseID);
+            foreach(var stlfstmb in stTemplateLfstmb)
+            {
+                destination.Insert(stlfstmb);
             }
         }
     }
