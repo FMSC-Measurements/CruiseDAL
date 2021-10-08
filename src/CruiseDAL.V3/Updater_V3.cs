@@ -1,7 +1,6 @@
 ﻿using CruiseDAL.Schema;
 using CruiseDAL.Schema.Views;
 using FMSC.ORM;
-using FMSC.ORM.Core;
 using FMSC.ORM.Logging;
 using System;
 using System.Collections.Generic;
@@ -15,7 +14,10 @@ namespace CruiseDAL
 
         public void Update(CruiseDatastore db)
         {
+            db.OpenConnection(); // make sure connection stays open during update process
+
             var version = db.DatabaseVersion;
+
             if (version == "3.0.0"
                 || version == "3.0.1"
                 || version == "3.0.2"
@@ -39,25 +41,40 @@ namespace CruiseDAL
             {
                 UpdateTo_3_3_0(db);
             }
-            if (db.DatabaseVersion == "3.3.0")
+
+            try
             {
-                UpdateTo_3_3_1(db);
+                var v = new Version(version);
+                if (v.Major == 3 && v.Minor < 4)
+                {
+                    db.Execute("DROP TRIGGER TreeLocation_OnUpdate;");
+                    db.Execute(TreeLocationTableDefinition.CREATE_TRIGGER_TreeLocation_ONUPDATE);
+                }
+
+                if (db.DatabaseVersion == "3.3.0")
+                {
+                    UpdateTo_3_3_1(db);
+                }
+                if (db.DatabaseVersion == "3.3.1")
+                {
+                    UpdateTo_3_3_2(db);
+                }
+                if (db.DatabaseVersion == "3.3.2")
+                {
+                    UpdateTo_3_3_3(db);
+                }
+                if (db.DatabaseVersion == "3.3.3")
+                {
+                    UpdateTo_3_3_4(db);
+                }
+                if (db.DatabaseVersion == "3.3.4")
+                {
+                    UpdateTo_3_4_0(db);
+                }
             }
-            if (db.DatabaseVersion == "3.3.1")
+            finally
             {
-                UpdateTo_3_3_2(db);
-            }
-            if (db.DatabaseVersion == "3.3.2")
-            {
-                UpdateTo_3_3_3(db);
-            }
-            if (db.DatabaseVersion == "3.3.3")
-            {
-                UpdateTo_3_3_4(db);
-            }
-            if (db.DatabaseVersion == "3.3.4")
-            {
-                UpdateTo_3_4_0(db);
+                db.ReleaseConnection();
             }
         }
 
@@ -132,7 +149,6 @@ namespace CruiseDAL
 
                 SetDatabaseVersion(db, targetVersion);
                 db.CommitTransaction();
-
             }
             catch (Exception e)
             {
@@ -218,9 +234,6 @@ namespace CruiseDAL
             db.BeginTransaction();
             try
             {
-                db.Execute("DROP TRIGGER TreeLocation_OnUpdate;");
-                db.Execute(TreeLocationTableDefinition.CREATE_TRIGGER_TreeLocation_ONUPDATE);
-
                 // need to drop any views associated with tables we are rebuilding
                 db.Execute("DROP VIEW LogGradeError;");
 
@@ -243,8 +256,6 @@ namespace CruiseDAL
                     new KeyValuePair<string, string>("CruiseID", "(SELECT CruiseID FROM Tree WHERE Tree.TreeID = Stem.TreeID)"),
                 });
 
-                
-
                 var lgeViewDef = new LogGradeErrorViewDefinition();
                 db.Execute(lgeViewDef.CreateView);
 
@@ -258,7 +269,6 @@ namespace CruiseDAL
                 db.RollbackTransaction();
                 throw new SchemaUpdateException(curVersion, targetVersion, e);
             }
-
         }
 
         // update 3.3.0 notes

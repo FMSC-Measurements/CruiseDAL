@@ -57,9 +57,15 @@ namespace CruiseDAL.V3.Test
                 var orgDbVersion = ds.DatabaseVersion;
                 orgDbVersion.Should().Be(Path.GetFileNameWithoutExtension(fileName));
 
+                var unitCount = ds.GetRowCount("CuttingUnit", "");
+
+
                 var updater = new Updater_V3();
 
                 updater.Update(ds);
+
+                var unitCountAfter = ds.GetRowCount("CuttingUnit", "");
+                unitCountAfter.Should().Be(unitCount);
 
                 var verAfter = ds.DatabaseVersion;
                 verAfter.Should().Be(CruiseDatastoreBuilder_V3.DATABASE_VERSION.ToString());
@@ -78,7 +84,10 @@ namespace CruiseDAL.V3.Test
                 cruise.SaleNumber.Should().Be(sale.SaleNumber);
 
                 var logs = ds.From<Log>().Query().ToArray();
-                logs.Should().OnlyContain(x => string.IsNullOrEmpty(x.CruiseID) == false);
+                if (logs.Any())
+                {
+                    logs.Should().OnlyContain(x => string.IsNullOrEmpty(x.CruiseID) == false);
+                }
 
                 // do integrity check
                 var ic_results = ds.QueryScalar<string>("PRAGMA integrity_check;");
