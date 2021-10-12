@@ -807,7 +807,7 @@ namespace CruiseDAL.V3.Sync
                 var sourceMeasurmentsRecord = source.From<TreeMeasurment>().Where("TreeID = @p1").Query(treeID).FirstOrDefault();
                 if (sourceMeasurmentsRecord != null)
                 {
-                    var hasMeasurmentsRecord = destination.ExecuteScalar<long>("SELECT count(*) FROM TreeMeasurments WHERE TreeID =  @p1;", parameters: new[] { treeID }) > 0;
+                    var hasMeasurmentsRecord = destination.ExecuteScalar<long>("SELECT count(*) FROM TreeMeasurment WHERE TreeID =  @p1;", parameters: new[] { treeID }) > 0;
 
                     if (hasMeasurmentsRecord)
                     {
