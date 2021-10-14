@@ -69,6 +69,18 @@ namespace CruiseDAL.V3.Test.Schema
         }
 
         [Fact]
+        // integrity check should find any UNIQUE, CHECK, and NOT NULL constraint errors
+        public void IntegrityCheck()
+        {
+            using (var database = CreateDatastore())
+            {
+                var ic_results = database.QueryScalar<string>("PRAGMA integrity_check;");
+                ic_results.Should().HaveCount(1);
+                ic_results.Single().Should().Be("ok");
+            }
+        }
+
+        [Fact]
         public void RunForeignKeysCheck()
         {
             using (var database = CreateDatastore())

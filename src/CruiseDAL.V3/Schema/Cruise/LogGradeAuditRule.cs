@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.Linq;
 
 namespace CruiseDAL.Schema
 {
@@ -7,8 +6,11 @@ namespace CruiseDAL.Schema
     {
         public string TableName => "LogGradeAuditRule";
 
-        public string CreateTable =>
-@"CREATE TABLE LogGradeAuditRule(
+        public string CreateTable => GetCreateTable(TableName);
+
+        public string GetCreateTable(string tableName)
+        {
+            return $@"CREATE TABLE {tableName} (
     LogGradeAuditRule_CN INTEGER PRIMARY KEY AUTOINCREMENT,
     CruiseID TEXT NOT NULL COLLATE NOCASE,
     SpeciesCode TEXT COLLATE NOCASE,
@@ -16,10 +18,11 @@ namespace CruiseDAL.Schema
     DefectMax REAL Default 0.0,
 
     -- see indexes for unique constraints
-    
+
     FOREIGN KEY (SpeciesCode, CruiseID) REFERENCES Species (SpeciesCode, CruiseID) ON DELETE CASCADE ON UPDATE CASCADE,
     FOREIGN KEY (CruiseID) REFERENCES Cruise (CruiseID) ON DELETE CASCADE
 );";
+        }
 
         public string InitializeTable => null;
 
@@ -48,8 +51,8 @@ CREATE INDEX UIX_LogGradeAuditRule_CruiseID_SpeciesCode ON LogGradeAuditRule (Cr
         };
 
         public const string CREATE_TRIGGER_LogGradeAuditRule_OnDelete =
-@"CREATE TRIGGER LogGradeAuditRule_OnDelete 
-BEFORE DELETE ON LogGradeAuditRule 
+@"CREATE TRIGGER LogGradeAuditRule_OnDelete
+BEFORE DELETE ON LogGradeAuditRule
 FOR EACH ROW
 BEGIN
     INSERT OR REPLACE INTO LogGradeAuditRule_Tombstone (

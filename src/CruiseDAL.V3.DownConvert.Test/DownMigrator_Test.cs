@@ -81,6 +81,12 @@ namespace CruiseDAL.V3.Test
             };
             fromDb.Insert(tree);
 
+            var tm = new TreeMeasurment
+            {
+                TreeID = tree.TreeID,
+            };
+            fromDb.Insert(tm);
+
 
             using var toDb = new DAL(toPath, true);
 
@@ -290,6 +296,7 @@ ORDER BY cnt.CuttingUnit_CN, cnt.SampleGroup_CN, cnt.TreeDefaultValue_CN;").ToAr
                         .Excluding(x => x.TreeFactor)
                         .Excluding(x => x.PointFactor)
                         .Excluding(x => x.TreeCount) // tree count may get combined into the count tree table
+                        .Excluding(x => x.HiddenPrimary)
                     );
 
                     var reportsAgain = v2again.From<V2.Models.Reports>().Query();

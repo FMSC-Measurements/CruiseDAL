@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using System.Collections.Generic;
 
 namespace CruiseDAL.Schema
 {
@@ -9,8 +6,11 @@ namespace CruiseDAL.Schema
     {
         public string TableName => "TreeLocation";
 
-        public string CreateTable =>
-@"CREATE TABLE TreeLocation (
+        public string CreateTable => GetCreateTable(TableName);
+
+        public string GetCreateTable(string tableName)
+        {
+            return $@"CREATE TABLE {tableName} (
     TreeLocation_CN INTEGER PRIMARY KEY AUTOINCREMENT,
     TreeID TEXT NOT NULL COLLATE NOCASE,
     Latitude REAL NOT NULL,
@@ -37,6 +37,7 @@ namespace CruiseDAL.Schema
 
     FOREIGN KEY (TreeID) REFERENCES Tree (TreeID) ON DELETE CASCADE
 );";
+        }
 
         public string InitializeTable => null;
 
@@ -62,8 +63,8 @@ namespace CruiseDAL.Schema
         public IEnumerable<string> CreateTriggers => new[] { CREATE_TRIGGER_TreeLocation_ONUPDATE, CREATE_TRIGGER_TreeLocation_OnDelete };
 
         public const string CREATE_TRIGGER_TreeLocation_ONUPDATE =
-@"CREATE TRIGGER TreeLocation_OnUpdate 
-AFTER UPDATE OF 
+@"CREATE TRIGGER TreeLocation_OnUpdate
+AFTER UPDATE OF
     Latitude,
     Longitude,
     SS_Latatude,
@@ -72,9 +73,9 @@ AFTER UPDATE OF
     Distance,
     IsEstimate
 ON TreeLocation
-FOR EACH ROW 
-BEGIN 
-    UPDATE TreeLocation SET Modified_TS = CURRENT_TIMESTAMP WHERE Tree_CN = old.Tree_CN; 
+FOR EACH ROW
+BEGIN
+    UPDATE TreeLocation SET Modified_TS = CURRENT_TIMESTAMP WHERE TreeLocation_CN = old.TreeLocation_CN;
 END; ";
 
         public const string CREATE_TRIGGER_TreeLocation_OnDelete =
@@ -114,6 +115,5 @@ BEGIN
         CURRENT_TIMESTAMP
     );
 END;";
-
     }
 }

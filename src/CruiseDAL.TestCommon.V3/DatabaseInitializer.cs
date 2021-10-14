@@ -198,6 +198,7 @@ namespace CruiseDAL.TestCommon
                 CruiseID = cruiseID,
                 SaleID = saleID,
                 CruiseNumber = saleNumber,
+                SaleNumber = saleNumber,
                 DefaultUOM = "01",
             });
 

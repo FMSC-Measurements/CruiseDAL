@@ -1,4 +1,5 @@
 ﻿using CruiseDAL.TestCommon;
+using CruiseDAL.V3.Models;
 using FluentAssertions;
 using FMSC.ORM.Core;
 using FMSC.ORM.SQLite;
@@ -44,6 +45,7 @@ namespace CruiseDAL.V3.Test
         //    }
         //}
 
+        [InlineData("3.2.4.crz3")]
         [InlineData("3.3.0.crz3")]
         [Theory]
         public void Update(string fileName)
@@ -55,9 +57,15 @@ namespace CruiseDAL.V3.Test
                 var orgDbVersion = ds.DatabaseVersion;
                 orgDbVersion.Should().Be(Path.GetFileNameWithoutExtension(fileName));
 
+                var unitCount = ds.GetRowCount("CuttingUnit", "");
+
+
                 var updater = new Updater_V3();
 
                 updater.Update(ds);
+
+                var unitCountAfter = ds.GetRowCount("CuttingUnit", "");
+                unitCountAfter.Should().Be(unitCount);
 
                 var verAfter = ds.DatabaseVersion;
                 verAfter.Should().Be(CruiseDatastoreBuilder_V3.DATABASE_VERSION.ToString());
@@ -68,6 +76,23 @@ namespace CruiseDAL.V3.Test
                     var ti = ds.GetTableInfo(t.TableName);
                     ti.Should().NotBeNullOrEmpty();
                 }
+
+                var sale = ds.From<Sale>().Query().Single();
+                sale.Should().NotBeNull();
+
+                var cruise = ds.From<Cruise>().Query().Single();
+                cruise.SaleNumber.Should().Be(sale.SaleNumber);
+
+                var logs = ds.From<Log>().Query().ToArray();
+                if (logs.Any())
+                {
+                    logs.Should().OnlyContain(x => string.IsNullOrEmpty(x.CruiseID) == false);
+                }
+
+                // do integrity check
+                var ic_results = ds.QueryScalar<string>("PRAGMA integrity_check;");
+                ic_results.Should().HaveCount(1);
+                ic_results.Single().Should().Be("ok");
             }
         }
 

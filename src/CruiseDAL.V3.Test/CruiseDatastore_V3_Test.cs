@@ -46,21 +46,13 @@ namespace CruiseDAL.V3.Test
         [Fact]
         public void Constructor_file_create_test()
         {
-            var filePath = Path.Combine(base.TestTempPath, "testCreate.crz3");
+            var filePath = GetTempFilePath(".crz3", "testCreate");
+            Output.WriteLine(filePath);
+            RegesterFileForCleanUp(filePath);
+            var datastore = new CruiseDatastore_V3(filePath, true);
 
-            try
-            {
-                var datastore = new CruiseDatastore_V3(filePath, true);
 
-                ValidateDAL(datastore);
-            }
-            finally
-            {
-                if (File.Exists(filePath))
-                {
-                    File.Delete(filePath);
-                }
-            }
+            ValidateDAL(datastore);
         }
 
         private void ValidateDAL(CruiseDatastore_V3 db)

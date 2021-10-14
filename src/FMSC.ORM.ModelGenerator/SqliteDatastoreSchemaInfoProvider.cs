@@ -34,6 +34,8 @@ namespace FMSC.ORM.ModelGenerator
             // note: we are only generating types off of tables because sqlite may fail to reflect the type on columns in views
             var tableNames = datastore.QueryScalar<string>("SELECT tbl_name FROM Sqlite_Master WHERE type IN ('table', 'view') AND tbl_name NOT LIKE 'sqlite\\_%' ESCAPE '\\';");
 
+            var conn = datastore.OpenConnection();
+
             foreach (var tableName in tableNames)
             {
                 //var tblInfo = datastore.GetTableInfo(tableName);
@@ -58,13 +60,34 @@ namespace FMSC.ORM.ModelGenerator
 
                 var fields = datastore.Query<FieldInfo>(
 $@"
-SELECT * FROM  
-PRAGMA_TABLE_INFO('{tableName}') AS ti 
-Left JOIN 
-(SELECT *, 1 AS IsFK, [from] as name, group_concat([table]) AS fkReferences FROM PRAGMA_FOREIGN_KEY_LIST('{tableName}') group by name) AS fkl
-using (name);")
+                SELECT * FROM  
+                PRAGMA_TABLE_INFO('{tableName}') AS ti 
+                Left JOIN 
+                (SELECT *, 1 AS IsFK, [from] as name, group_concat([table]) AS fkReferences FROM PRAGMA_FOREIGN_KEY_LIST('{tableName}') group by name) AS fkl
+                using (name);")
                     .Where(x => ignoreColumnNames.Contains(x.FieldName, StringComparer.InvariantCultureIgnoreCase) == false)
                     .ToArray();
+
+                
+
+                // we have better luck getting fild type for views 
+                // by using a datareader
+                foreach(var f in fields)
+                {
+                    var fieldName = f.FieldName;
+                    var command = conn.CreateCommand();
+                    command.CommandText = $"SELECT {fieldName} FROM {tableName};";
+
+                    using var reader = command.ExecuteReader();
+                    var dbType = reader.GetDataTypeName(0);
+
+                    // 
+                    if(dbType == SqliteDataType.BLOB) { continue; }
+
+                    f.DbType = dbType;
+                }
+
+
 
                 var pkField = fields.SingleOrDefault(x => x.IsPK);
 
@@ -79,23 +102,7 @@ $@"SELECT [table], group_concat([from]) AS FromFieldNames, group_concat([to]) AS
                     ForeignKeys = foreignKeys,
                 };
 
-                //var conn = datastore.OpenConnection();
 
-                //using (var reader = conn.ExecuteReader($"SELECT * FROM {tableName};", (object[])null, (System.Data.Common.DbTransaction)null))
-                //{
-                //    var fieldInfoList = new List<FieldInfo>();
-                //    var fieldCount = reader.FieldCount;
-
-                //    for (int i = 0; i < fieldCount; i++)
-                //    {
-                //        var fieldName = reader.GetName(i);
-                //        var runtimeType = reader.GetFieldType(i);
-
-                //        fieldInfoList.Add(new FieldInfo { FieldName = fieldName, RuntimeTimeType = runtimeType });
-                //    }
-
-                //    tableInfo.Fields = fieldInfoList;
-                //}
 
                 yield return tableInfo;
             }

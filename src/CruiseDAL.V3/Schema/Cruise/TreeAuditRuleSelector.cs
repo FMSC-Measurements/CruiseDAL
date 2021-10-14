@@ -6,8 +6,11 @@ namespace CruiseDAL.Schema
     {
         public string TableName => "TreeAuditRuleSelector";
 
-        public string CreateTable =>
-@"CREATE TABLE TreeAuditRuleSelector (
+        public string CreateTable => GetCreateTable(TableName);
+
+        public string GetCreateTable(string tableName)
+        {
+            return $@"CREATE TABLE {tableName} (
     TreeAuditRuleSelector_CN INTEGER PRIMARY KEY AUTOINCREMENT,
     CruiseID TEXT NOT NULL COLLATE NOCASE,
     SpeciesCode TEXT COLLATE NOCASE,
@@ -21,6 +24,7 @@ namespace CruiseDAL.Schema
     FOREIGN KEY (TreeAuditRuleID) REFERENCES TreeAuditRule (TreeAuditRuleID) ON DELETE CASCADE,
     FOREIGN KEY (SpeciesCode, CruiseID) REFERENCES Species (SpeciesCode, CruiseID) ON UPDATE CASCADE
 );";
+        }
 
         public string InitializeTable => null;
 

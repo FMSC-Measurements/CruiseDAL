@@ -12,13 +12,13 @@ namespace CruiseDAL.V3.Models
   public String Field { get; set; }
 
   [Field("ValueInt")]
-  public String ValueInt { get; set; }
+  public Int32? ValueInt { get; set; }
 
   [Field("ValueReal")]
-  public String ValueReal { get; set; }
+  public Double? ValueReal { get; set; }
 
   [Field("ValueBool")]
-  public String ValueBool { get; set; }
+  public Boolean? ValueBool { get; set; }
 
   [Field("ValueText")]
   public String ValueText { get; set; }

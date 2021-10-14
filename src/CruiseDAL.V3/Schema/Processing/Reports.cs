@@ -7,8 +7,12 @@ namespace CruiseDAL.Schema
     {
         public string TableName => "Reports";
 
-        public string CreateTable =>
-@"CREATE TABLE Reports ( 
+        public string CreateTable => GetCreateTable(TableName);
+
+
+        public string GetCreateTable(string tableName)
+        {
+return $@"CREATE TABLE {tableName} ( 
     ReportID TEXT NOT NULL COLLATE NOCASE,
     CruiseID TEXT NOT NULL COLLATE NOCASE,
     Selected BOOLEAN Default 0,
@@ -22,6 +26,7 @@ namespace CruiseDAL.Schema
 
     UNIQUE (ReportID, CruiseID)
 );";
+        }
 
         public string InitializeTable => null;
 

@@ -6,8 +6,11 @@ namespace CruiseDAL.Schema
     {
         public string TableName => "Plot";
 
-        public string CreateTable =>
-@"CREATE TABLE Plot (
+        public string CreateTable => GetCreateTable(TableName);
+
+        public string GetCreateTable(string tableName)
+        {
+            return $@"CREATE TABLE {tableName} (
     Plot_CN INTEGER PRIMARY KEY AUTOINCREMENT,
     PlotID TEXT NOT NULL,
     PlotNumber INTEGER NOT NULL,
@@ -28,6 +31,7 @@ namespace CruiseDAL.Schema
 
     FOREIGN KEY (CuttingUnitCode, CruiseID) REFERENCES CuttingUnit (CuttingUnitCode, CruiseID) ON DELETE CASCADE ON UPDATE CASCADE
 );";
+        }
 
         public string InitializeTable => null;
 
@@ -47,10 +51,10 @@ namespace CruiseDAL.Schema
     Deleted_TS DATETIME
 );
 
-CREATE INDEX NIX_Plot_Tombstone_PlotID ON Plot_Tombstone 
+CREATE INDEX NIX_Plot_Tombstone_PlotID ON Plot_Tombstone
 (PlotID);
 
-CREATE INDEX NIX_Plot_Tombstone_CruiseID_PlotNumber_CuttingUnitCode ON Plot_Tombstone 
+CREATE INDEX NIX_Plot_Tombstone_CruiseID_PlotNumber_CuttingUnitCode ON Plot_Tombstone
 (CruiseID, PlotNumber, CuttingUnitCode);";
 
         public string CreateIndexes =>

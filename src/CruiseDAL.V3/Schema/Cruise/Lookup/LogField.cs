@@ -7,8 +7,11 @@ namespace CruiseDAL.Schema
     {
         public string TableName => "LogField";
 
-        public string CreateTable =>
-@"CREATE TABLE LogField (
+        public string CreateTable => GetCreateTable(TableName);
+
+        public string GetCreateTable(string tableName)
+        {
+return $@"CREATE TABLE {tableName} (
     LogField_CN INTEGER PRIMARY KEY AUTOINCREMENT,
     Field TEXT NOT NULL COLLATE NOCASE,
     DefaultHeading TEXT NOT NULL COLLATE NOCASE,
@@ -16,6 +19,7 @@ namespace CruiseDAL.Schema
     CHECK (length(Field) > 0),
     UNIQUE (Field)
 );";
+        }
 
         public string InitializeTable =>
 @"INSERT INTO LogField

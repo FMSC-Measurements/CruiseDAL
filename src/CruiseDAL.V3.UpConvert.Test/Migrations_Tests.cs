@@ -126,6 +126,7 @@ namespace CruiseDAL.V3.Test
                     "LK_Purpose",
                     "LK_Region",
                     "LK_UOM",
+                    "LK_TallyEntryType",
                     "Species",
                     "TreeField",
                 };

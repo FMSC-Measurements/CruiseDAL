@@ -13,6 +13,7 @@ return $@"INSERT INTO {toDbName}.Cruise (
     CruiseID,
     SaleID,
     CruiseNumber,
+    SaleNumber,
     Purpose,
     DefaultUOM,
     LogGradingEnabled,
@@ -21,8 +22,9 @@ return $@"INSERT INTO {toDbName}.Cruise (
     CreatedBy
 )
 SELECT
-    '{cruiseID}',
-    '{saleID}',
+    '{cruiseID}' AS CruiseID,
+    '{saleID}' AS SaleID,
+    SaleNumber AS CruiseNumber,
     SaleNumber,
     Purpose,
     DefaultUOM,
@@ -35,8 +37,9 @@ FROM {fromDbName}.Sale
 UNION ALL
 
 SELECT 
-    '{cruiseID}',
-    '{saleID}',
+    '{cruiseID}' AS CruiseID,
+    '{saleID}' AS SaleID,
+    '{saleID}' AS CruiseNumber,
     '{saleID}' AS SaleNumber,
     NULL AS Purpose,
     NULL AS DefaultUOM,

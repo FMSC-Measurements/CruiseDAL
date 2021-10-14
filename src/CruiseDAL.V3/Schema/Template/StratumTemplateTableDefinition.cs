@@ -6,8 +6,12 @@ namespace CruiseDAL.Schema
     {
         public string TableName => "StratumTemplate";
 
-        public string CreateTable =>
-@"CREATE TABLE StratumTemplate (
+        public string CreateTable => GetCreateTable(TableName);
+
+
+        public string GetCreateTable(string tableName)
+        {
+return $@"CREATE TABLE {tableName} (
     StratumTemplate_CN INTEGER PRIMARY KEY AUTOINCREMENT,
     StratumTemplateName TEXT NOT NULL COLLATE NOCASE,
     CruiseID TEXT NOT NULL COLLATE NOCASE,
@@ -37,6 +41,7 @@ namespace CruiseDAL.Schema
     UNIQUE (StratumTemplateName, CruiseID)
 );
 ";
+        }
 
         public string InitializeTable => null;
 

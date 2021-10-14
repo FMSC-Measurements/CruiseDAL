@@ -6,13 +6,18 @@ namespace CruiseDAL.Schema.Cruise.Lookup
     {
         public string TableName => "LK_LoggingMethod";
 
-        public string CreateTable =>
-@"CREATE TABLE LK_LoggingMethod (
+        public string CreateTable => GetCreateTable(TableName);
+
+
+        public string GetCreateTable(string tableName)
+        {
+return $@"CREATE TABLE {tableName} (
     LK_LoggingMethod_CN INTEGER PRIMARY KEY AUTOINCREMENT,
     LoggingMethod TEXT NOT NULL COLLATE NOCASE,
     FriendlyName TEXT NOT NULL,
     UNIQUE (LoggingMethod)
 );";
+        }
 
         public string InitializeTable =>
 @"INSERT INTO LK_LoggingMethod (LoggingMethod, FriendlyName)

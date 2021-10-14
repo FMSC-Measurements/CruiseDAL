@@ -6,8 +6,11 @@ namespace CruiseDAL.Schema
     {
         public string TableName => "Plot_Stratum";
 
-        public string CreateTable =>
-@"CREATE TABLE Plot_Stratum (
+        public string CreateTable => GetCreateTable(TableName);
+
+        public string GetCreateTable(string tableName)
+        {
+            return $@"CREATE TABLE {tableName} (
     Plot_Stratum_CN INTEGER PRIMARY KEY AUTOINCREMENT,
     PlotNumber INTEGER NOT NULL,
     CruiseID TEXT NOT NULL COLLATE NOCASE,
@@ -27,6 +30,7 @@ namespace CruiseDAL.Schema
     FOREIGN KEY (StratumCode,  CruiseID) REFERENCES Stratum (StratumCode, CruiseID) ON DELETE CASCADE ON UPDATE CASCADE,
     FOREIGN KEY (PlotNumber, CuttingUnitCode, CruiseID) REFERENCES Plot (PlotNumber, CuttingUnitCode, CruiseID) ON DELETE CASCADE ON UPDATE CASCADE
 );";
+        }
 
         public string InitializeTable => null;
 
@@ -46,7 +50,7 @@ namespace CruiseDAL.Schema
     Deleted_TS DATETIME
 );
 
-CREATE INDEX NIX_Plot_Stratum_Tombstone_CruiseID_PlotNumber_CuttingUnitCode_StratumCode ON Plot_Stratum_Tombstone 
+CREATE INDEX NIX_Plot_Stratum_Tombstone_CruiseID_PlotNumber_CuttingUnitCode_StratumCode ON Plot_Stratum_Tombstone
 (CruiseID, PlotNumber, CuttingUnitCode, StratumCode);";
 
         public string CreateIndexes =>

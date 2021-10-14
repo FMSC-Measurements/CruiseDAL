@@ -6,8 +6,11 @@ namespace CruiseDAL.Schema
     {
         public string TableName => "TreeFieldValue";
 
-        public string CreateTable =>
-@"CREATE TABLE TreeFieldValue (
+        public string CreateTable => GetCreateTable(TableName);
+
+        public string GetCreateTable(string tableName)
+        {
+            return $@"CREATE TABLE {tableName} (
     TreeFieldValue_OID INTEGER PRIMARY KEY AUTOINCREMENT,
     TreeID TEXT NOT NULL,
     Field TEXT NOT NULL COLLATE NOCASE,
@@ -24,6 +27,7 @@ namespace CruiseDAL.Schema
     FOREIGN KEY (Field) REFERENCES TreeField (Field),
     FOREIGN KEY (TreeID) REFERENCES Tree (TreeID) ON DELETE CASCADE
 );";
+        }
 
         public string InitializeTable => null;
 
@@ -43,7 +47,7 @@ namespace CruiseDAL.Schema
     Deleted_TS DATETIME
 );
 
-CREATE INDEX NIX_TreeFieldValue_Tombstone_TreeID_Field ON TreeFieldValue_Tombstone 
+CREATE INDEX NIX_TreeFieldValue_Tombstone_TreeID_Field ON TreeFieldValue_Tombstone
 (TreeID, Field);";
 
         public string CreateIndexes =>
@@ -54,22 +58,22 @@ CREATE INDEX NIX_TreeFieldValue_Field ON TreeFieldValue ('Field');";
         public IEnumerable<string> CreateTriggers => new[] { CREATE_TRIGGER_TreeFieldValue_OnDelete };
 
         public const string CREATE_TRIGGER_TreeFieldValue_OnUpdate =
-@"CREATE TRIGGER TreeFieldValue_OnUpdate 
-AFTER UPDATE OF 
+@"CREATE TRIGGER TreeFieldValue_OnUpdate
+AFTER UPDATE OF
     ValueInt,
     ValueReal,
     ValueBool,
     ValueText
-ON TreeFieldValue 
+ON TreeFieldValue
 FOR EACH ROW
-BEGIN 
+BEGIN
     UPDATE TreeFieldValue SET Modified_TS = CURRENT_TIMESTAMP WHERE TreeFieldValue_OID = old.TreeFieldValue_OID;
 END;";
 
         public const string CREATE_TRIGGER_TreeFieldValue_OnDelete =
-@"CREATE TRIGGER TreeFieldValue_OnDelete 
+@"CREATE TRIGGER TreeFieldValue_OnDelete
 BEFORE DELETE ON TreeFieldValue
-BEGIN 
+BEGIN
     INSERT OR REPLACE INTO TreeFieldValue_Tombstone (
         TreeID,
         Field,
@@ -96,6 +100,5 @@ BEGIN
         CURRENT_TIMESTAMP
     );
 END;";
-
     }
 }

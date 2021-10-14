@@ -6,14 +6,17 @@ namespace CruiseDAL.Schema
     {
         public string TableName => "TreeAuditResolution";
 
-        public string CreateTable =>
-@"CREATE TABLE TreeAuditResolution (
-    TreeAuditResolution_CN INTEGER PRIMARY KEY AUTOINCREMENT, 
+        public string CreateTable => GetCreateTable(TableName);
+
+        public string GetCreateTable(string tableName)
+        {
+            return $@"CREATE TABLE {tableName} (
+    TreeAuditResolution_CN INTEGER PRIMARY KEY AUTOINCREMENT,
     CruiseID TEXT NOT NULL COLLATE NOCASE,
     TreeID TEXT NOT NULL,
     TreeAuditRuleID TEXT NOT NULL,
     Resolution TEXT,    -- description indicating the reason of the resolution. optional
-    Initials TEXT NOT NULL, -- initials of the cruiser that resolved the error. 
+    Initials TEXT NOT NULL, -- initials of the cruiser that resolved the error.
 
     UNIQUE (TreeID, TreeAuditRuleID),
 
@@ -21,6 +24,7 @@ namespace CruiseDAL.Schema
     FOREIGN KEY (TreeID) REFERENCES Tree (TreeID) ON DELETE CASCADE,
     FOREIGN KEY (TreeAuditRuleID) REFERENCES TreeAuditRule (TreeAuditRuleID) ON DELETE CASCADE
 );";
+        }
 
         public string InitializeTable => null;
 
@@ -41,10 +45,10 @@ CREATE INDEX NIX_TreeAuditResolution_TreeID ON TreeAuditResolution ('TreeID');";
         public IEnumerable<string> CreateTriggers => new[] { CREATE_TRIGGER_TreeAuditResolution_OnDelete };
 
         public const string CREATE_TRIGGER_TreeAuditResolution_OnDelete =
-@"CREATE TRIGGER TreeAuditResolution_OnDelete 
+@"CREATE TRIGGER TreeAuditResolution_OnDelete
 BEFORE DELETE ON TreeAuditResolution
-FOR EACH ROW 
-BEGIN 
+FOR EACH ROW
+BEGIN
     INSERT OR REPLACE INTO TreeAuditResolution_Tombstone (
         CruiseID,
         TreeID,
@@ -59,6 +63,5 @@ BEGIN
         OLD.Initials
     );
 END;";
-
     }
 }

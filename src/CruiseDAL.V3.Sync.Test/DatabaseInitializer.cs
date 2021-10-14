@@ -198,6 +198,7 @@ namespace CruiseDAL.V3.Sync
                 CruiseID = cruiseID,
                 SaleID = saleID,
                 CruiseNumber = saleNumber,
+                SaleNumber = saleNumber,
             });
 
             //Cutting Units

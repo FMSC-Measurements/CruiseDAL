@@ -6,8 +6,11 @@ namespace CruiseDAL.Schema
     {
         public string TableName => "LogFieldHeading";
 
-        public string CreateTable =>
-@"CREATE TABLE LogFieldHeading (
+        public string CreateTable => GetCreateTable(TableName);
+
+        public string GetCreateTable(string tableName)
+        {
+            return $@"CREATE TABLE {tableName} (
     LogFieldHeading_CN INTEGER PRIMARY KEY AUTOINCREMENT,
     CruiseID TEXT NOT NULL COLLATE NOCASE,
     Field TEXT NOT NULL COLLATE NOCASE,
@@ -22,6 +25,7 @@ namespace CruiseDAL.Schema
     FOREIGN KEY (Field) REFERENCES LogField (Field) ON DELETE CASCADE,
     FOREIGN KEY (CruiseID) REFERENCES Cruise (CruiseID) ON DELETE CASCADE
 );";
+        }
 
         public string InitializeTable => null;
 

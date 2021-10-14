@@ -6,8 +6,11 @@ namespace CruiseDAL.Schema
     {
         public string TableName => "Stem";
 
-        public string CreateTable =>
-@"CREATE TABLE Stem (
+        public string CreateTable => GetCreateTable(TableName);
+
+        public string GetCreateTable(string tableName)
+        {
+            return $@"CREATE TABLE {tableName} (
     Stem_CN INTEGER PRIMARY KEY AUTOINCREMENT,
     StemID TEXT NOT NULL COLLATE NOCASE,
     CruiseID TEXT NOT NULL COLLATE NOCASE,
@@ -25,6 +28,7 @@ namespace CruiseDAL.Schema
     FOREIGN KEY (TreeID) REFERENCES Tree (TreeID) ON DELETE CASCADE,
     FOREIGN KEY (CruiseID) REFERENCES Cruise (CruiseID)
 );";
+        }
 
         public string InitializeTable => null;
 

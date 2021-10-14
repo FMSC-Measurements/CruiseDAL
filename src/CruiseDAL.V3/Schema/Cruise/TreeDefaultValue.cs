@@ -6,8 +6,11 @@ namespace CruiseDAL.Schema
     {
         public string TableName => "TreeDefaultValue";
 
-        public string CreateTable =>
-@"CREATE TABLE TreeDefaultValue (
+        public string CreateTable => GetCreateTable(TableName);
+
+        public string GetCreateTable(string tableName)
+        {
+            return $@"CREATE TABLE {tableName} (
     TreeDefaultValue_CN INTEGER PRIMARY KEY AUTOINCREMENT,
     CruiseID TEXT NOT NULL COLLATE NOCASE,
     SpeciesCode TEXT COLLATE NOCASE,
@@ -36,6 +39,7 @@ namespace CruiseDAL.Schema
     --FOREIGN KEY (SpeciesCode, CruiseID) REFERENCES Species (SpeciesCode, CruiseID) ON UPDATE CASCADE ON DELETE CASCADE
     --FOREIGN KEY (PrimaryProduct) REFERENCES LK_Product (Product)
 );";
+        }
 
         public string InitializeTable => null;
 
@@ -73,6 +77,8 @@ CREATE INDEX NIX_TreeDefaultValue_Tombstone_CruiseID_SpeciesCode_PrimaryProduct 
 @"CREATE UNIQUE INDEX UIX_TreeDefaultValue_SpeciesCode_PrimaryProduct ON TreeDefaultValue (CruiseID, ifnull(SpeciesCode, '') COLLATE NOCASE, ifnull(PrimaryProduct, '') COLLATE NOCASE);
 
 CREATE INDEX NIX_TreeDefaultValue_SpeciesCode ON TreeDefaultValue ('SpeciesCode');
+
+CREATE INDEX NIX_TreeDefaultValue_PrimaryProduct ON TreeDefaultValue ('PrimaryProduct');
 
 CREATE INDEX NIX_TreeDefaultValue_CruiseID ON TreeDefaultValue ('CruiseID');";
 

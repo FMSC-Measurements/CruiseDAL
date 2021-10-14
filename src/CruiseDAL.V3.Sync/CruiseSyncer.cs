@@ -176,13 +176,13 @@ namespace CruiseDAL.V3.Sync
         private void SyncSale(string cruiseID, DbConnection source, DbConnection destination, CruiseSyncOptions options)
         {
             var sourceSale = source.From<Sale>()
-                .Join("Cruise AS c", "USING (SaleID)")
+                .Join("Cruise AS c", "USING (SaleNumber)")
                 .Where("CruiseID = @p1")
                 .Query(cruiseID).FirstOrDefault();
 
             var match = destination.From<Sale>()
-                .Where("SaleID = @p1")
-                .Query(sourceSale.SaleID).FirstOrDefault();
+                .Where("SaleNumber = @p1")
+                .Query(sourceSale.SaleNumber).FirstOrDefault();
 
             if (match == null)
             {
@@ -193,7 +193,7 @@ namespace CruiseDAL.V3.Sync
                 var srcMod = sourceSale.Modified_TS;
                 var destMod = match.Modified_TS;
 
-                if (ShouldUpdate(srcMod, destMod, options.Design))
+                if (sourceSale.SaleID == match.SaleID && ShouldUpdate(srcMod, destMod, options.Design))
                 {
                     destination.Update(sourceSale, whereExpression: "SaleID = @SaleID");
                 }
@@ -789,7 +789,7 @@ namespace CruiseDAL.V3.Sync
 
         private void SyncTreeData(DbConnection source, DbConnection destination, string treeID, CruiseSyncOptions options)
         {
-            // we are not checking the tombstone tables for TreeMeasurments or TreeFieldValue because at this
+            // we are not checking the tombstone tables for TreeMeasurment or TreeFieldValue because at this
             // point we should already know that the tree has not be deleted.
             // we are assuming that TreeMeasurment or TreeFieldValue records wont be deleted unless the tree has been deleted
             // however that might change for TreeFieldValue records
@@ -807,7 +807,7 @@ namespace CruiseDAL.V3.Sync
                 var sourceMeasurmentsRecord = source.From<TreeMeasurment>().Where("TreeID = @p1").Query(treeID).FirstOrDefault();
                 if (sourceMeasurmentsRecord != null)
                 {
-                    var hasMeasurmentsRecord = destination.ExecuteScalar<long>("SELECT count(*) FROM TreeMeasurments WHERE TreeID =  @p1;", parameters: new[] { treeID }) > 0;
+                    var hasMeasurmentsRecord = destination.ExecuteScalar<long>("SELECT count(*) FROM TreeMeasurment WHERE TreeID =  @p1;", parameters: new[] { treeID }) > 0;
 
                     if (hasMeasurmentsRecord)
                     {

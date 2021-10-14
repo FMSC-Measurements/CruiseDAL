@@ -1,7 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 
 namespace CruiseDAL.Schema
 {
@@ -9,17 +7,21 @@ namespace CruiseDAL.Schema
     {
         public string TableName => "LK_FIA";
 
-        public string CreateTable =>
-@"CREATE TABLE LK_FIA (
+        public string CreateTable => GetCreateTable(TableName);
+
+        public string GetCreateTable(string tableName)
+        {
+            return $@"CREATE TABLE {tableName} (
     LK_FIA_CN INTEGER PRIMARY KEY AUTOINCREMENT,
     FIACode INTEGER NOT NULL,
     CommonName TEXT NOT NULL,
 
     UNIQUE (FIACode)
 );";
+        }
 
         public string InitializeTable =>
-@"INSERT INTO LK_FIA 
+@"INSERT INTO LK_FIA
     (FIACode, CommonName )
 VALUES
     ('10', 'fir spp.'),

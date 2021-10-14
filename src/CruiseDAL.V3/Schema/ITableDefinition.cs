@@ -18,5 +18,8 @@ namespace CruiseDAL.Schema
         string CreateIndexes { get; }
 
         IEnumerable<string> CreateTriggers { get; }
+
+        string GetCreateTable(string tableName);
+
     }
 }

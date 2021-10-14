@@ -5,10 +5,13 @@ namespace CruiseDAL.Schema
 {
     public class TallyHotkeyTableDefinition : ITableDefinition
     {
-        public string TableName => "TallyHotkey";
+        public string TableName => "TallyHotKey";
 
-        public string CreateTable =>
-@"CREATE TABLE TallyHotKey (
+        public string CreateTable => GetCreateTable(TableName);
+
+        public string GetCreateTable(string tableName)
+        {
+            return $@"CREATE TABLE {tableName} (
     TallyHotKey_CN INTEGER PRIMARY KEY AUTOINCREMENT,
     CruiseID TEXT NOT NULL COLLATE NOCASE,
     StratumCode TEXT NOT NULL COLLATE NOCASE,
@@ -29,6 +32,7 @@ namespace CruiseDAL.Schema
     FOREIGN KEY (CruiseID, StratumCode, SampleGroupCode, SpeciesCode, LiveDead)
         REFERENCES Subpopulation (CruiseID, StratumCode, SampleGroupCode, SpeciesCode, LiveDead) ON DELETE CASCADE
 );";
+        }
 
         public string InitializeTable => null;
 

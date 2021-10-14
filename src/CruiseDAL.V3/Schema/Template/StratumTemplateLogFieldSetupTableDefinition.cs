@@ -6,8 +6,12 @@ namespace CruiseDAL.Schema
     {
         public string TableName => "StratumTemplateLogFieldSetup";
 
-        public string CreateTable =>
-@"CREATE TABLE StratumTemplateLogFieldSetup (
+        public string CreateTable => GetCreateTable(TableName);
+
+
+        public string GetCreateTable(string tableName)
+        {
+return $@"CREATE TABLE {tableName} (
     StratumTemplateLogFieldSetup_CN INTEGER PRIMARY KEY AUTOINCREMENT,
     StratumTemplateName TEXT NOT NULL COLLATE NOCASE,
     CruiseID TEXT NOT NULL COLLATE NOCASE,
@@ -24,6 +28,7 @@ namespace CruiseDAL.Schema
     FOREIGN KEY (StratumTemplateName, CruiseID) REFERENCES StratumTemplate (StratumTemplateName, CruiseID) ON DELETE CASCADE ON UPDATE CASCADE,
     FOREIGN KEY (Field) REFERENCES LogField (Field)
 );";
+        }
 
         public string InitializeTable => null;
 

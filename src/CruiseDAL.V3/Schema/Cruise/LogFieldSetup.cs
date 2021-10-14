@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.Linq;
 
 namespace CruiseDAL.Schema
 {
@@ -7,8 +6,11 @@ namespace CruiseDAL.Schema
     {
         public string TableName => "LogFieldSetup";
 
-        public string CreateTable =>
-@"CREATE TABLE LogFieldSetup (
+        public string CreateTable => GetCreateTable(TableName);
+
+        public string GetCreateTable(string tableName)
+        {
+            return $@"CREATE TABLE {tableName} (
     StratumCode TEXT NOT NULL,
     CruiseID TEXT NOT NULL COLLATE NOCASE,
     Field TEXT NOT NULL,
@@ -21,6 +23,7 @@ namespace CruiseDAL.Schema
     FOREIGN KEY (StratumCode, CruiseID) REFERENCES Stratum (StratumCode, CruiseID) ON DELETE CASCADE ON UPDATE CASCADE,
     FOREIGN KEY (Field) REFERENCES LogField (Field)
 );";
+        }
 
         public string InitializeTable => null;
 
@@ -46,7 +49,7 @@ CREATE INDEX NIX_LogFieldSetup_StratumCode_CruiseID ON LogFieldSetup ('StratumCo
         };
 
         public const string CREATE_TRIGGER_LogFieldSetup_OnDelete =
-@"CREATE TRIGGER LogFieldSetup_OnDelete 
+@"CREATE TRIGGER LogFieldSetup_OnDelete
 BEFORE DELETE ON LogFieldSetup
 FOR EACH ROW
 BEGIN

@@ -1,5 +1,4 @@
-﻿using AutoBogus;
-using CruiseDAL.V3.Models;
+﻿using CruiseDAL.V3.Models;
 using FluentAssertions;
 using System;
 using System.Linq;
@@ -87,27 +86,78 @@ namespace CruiseDAL.V3.Sync
 
             var syncOptions = new CruiseSyncOptions();
 
-            var cruiseID = CruiseID;
-            var saleID = SaleID;
+            var init = new DatabaseInitializer();
+            var cruiseID = init.CruiseID;
+            var saleID = init.SaleID;
+            var saleNumber = init.SaleNumber;
 
-            using var fromDb = CreateDatabaseFile(fromPath);
-
-            var cruise = fromDb.From<Cruise>()
-                .Where("CruiseID = @p1")
-                .Query(cruiseID)
-                .FirstOrDefault();
+            using var fromDb = init.CreateDatabaseFile(fromPath);
 
             fromDb.CopyTo(toPath, true);
             using var toDb = new CruiseDatastore_V3(toPath);
 
+            var newCruise = new Cruise
+            {
+                CruiseID = Guid.NewGuid().ToString(),
+                CruiseNumber = "123456789",
+                SaleID = saleID,
+                SaleNumber = saleNumber,
+            };
+            fromDb.Insert(newCruise);
+            newCruise = fromDb.From<Cruise>().Where("CruiseID = @p1")
+                .Query(newCruise.CruiseID).FirstOrDefault();
+
             var syncer = new CruiseSyncer();
-            syncer.Sync(cruiseID, fromDb, toDb, syncOptions);
+            syncer.Sync(newCruise.CruiseID, fromDb, toDb, syncOptions);
 
-            var cruiseAgain = toDb.From<Cruise>()
+            var newCruiseAgain = toDb.From<Cruise>()
                 .Where("CruiseID = @p1")
-                .Query(cruiseID).FirstOrDefault();
+                .Query(newCruise.CruiseID).FirstOrDefault();
 
-            cruiseAgain.Should().BeEquivalentTo(cruise, x => x.Excluding(y => y.Modified_TS));
+            newCruiseAgain.Should().NotBeNull();
+            newCruiseAgain.Should().BeEquivalentTo(newCruise, x => x
+                .Excluding(y => y.Modified_TS));
+        }
+
+        [Fact]
+        public void Sync_Cruise_Add_NonMatchingSaleID()
+        {
+            var fromPath = base.GetTempFilePath(".crz3", "Cruise_Add_fromFile");
+            var toPath = base.GetTempFilePath(".crz3", "Cruise_Add_toFile");
+
+            var syncOptions = new CruiseSyncOptions();
+
+            var init = new DatabaseInitializer();
+            var cruiseID = init.CruiseID;
+            var saleID = init.SaleID;
+            var saleNumber = init.SaleNumber;
+
+            using var fromDb = init.CreateDatabaseFile(fromPath);
+
+            fromDb.CopyTo(toPath, true);
+            using var toDb = new CruiseDatastore_V3(toPath);
+
+            var newCruise = new Cruise
+            {
+                CruiseID = Guid.NewGuid().ToString(),
+                CruiseNumber = "123456789",
+                SaleID = Guid.NewGuid().ToString(),
+                SaleNumber = saleNumber,
+            };
+            fromDb.Insert(newCruise);
+            newCruise = fromDb.From<Cruise>().Where("CruiseID = @p1")
+                .Query(newCruise.CruiseID).FirstOrDefault();
+
+            var syncer = new CruiseSyncer();
+            syncer.Sync(newCruise.CruiseID, fromDb, toDb, syncOptions);
+
+            var newCruiseAgain = toDb.From<Cruise>()
+                .Where("CruiseID = @p1")
+                .Query(newCruise.CruiseID).FirstOrDefault();
+
+            newCruiseAgain.Should().NotBeNull();
+            newCruiseAgain.Should().BeEquivalentTo(newCruise, x => x
+                .Excluding(y => y.Modified_TS));
         }
 
         [Fact]
@@ -929,7 +979,6 @@ namespace CruiseDAL.V3.Sync
 
         public void Sync_Reports_Update()
         {
-
         }
 
         [Fact]
@@ -951,7 +1000,6 @@ namespace CruiseDAL.V3.Sync
 
             fromDb.CopyTo(toPath, true);
             using var toDb = new CruiseDatastore_V3(toPath);
-
 
             var valueEq = new ValueEquation
             {
@@ -987,7 +1035,6 @@ namespace CruiseDAL.V3.Sync
 
             fromDb.CopyTo(toPath, true);
             using var toDb = new CruiseDatastore_V3(toPath);
-
 
             var volEq = new VolumeEquation
             {
@@ -1063,7 +1110,6 @@ namespace CruiseDAL.V3.Sync
             {
                 CruiseID = cruiseID,
                 StratumTemplateName = "something",
-                
             };
             fromDb.Insert(st);
 
@@ -1096,7 +1142,6 @@ namespace CruiseDAL.V3.Sync
             {
                 CruiseID = cruiseID,
                 StratumTemplateName = "something",
-
             };
             fromDb.Insert(st);
 
@@ -1137,7 +1182,6 @@ namespace CruiseDAL.V3.Sync
             {
                 CruiseID = cruiseID,
                 StratumTemplateName = "something",
-
             };
             fromDb.Insert(st);
 

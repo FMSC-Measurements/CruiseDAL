@@ -6,8 +6,11 @@ namespace CruiseDAL.Schema
     {
         public string TableName => "TallyLedger";
 
-        public string CreateTable =>
-@"CREATE TABLE TallyLedger (
+        public string CreateTable => GetCreateTable(TableName);
+
+        public string GetCreateTable(string tableName)
+        {
+            return $@"CREATE TABLE {tableName} (
     TallyLedger_CN INTEGER PRIMARY KEY AUTOINCREMENT,
     TallyLedgerID TEXT NOT NULL,
     CruiseID TEXT NOT NULL COLLATE NOCASE,
@@ -49,6 +52,7 @@ namespace CruiseDAL.Schema
     FOREIGN KEY (TreeID, LiveDead) REFERENCES Tree (TreeID, LiveDead) ON UPDATE CASCADE,
     FOREIGN KEY (TreeID, PlotNumber) REFERENCES Tree (TreeID, PlotNumber) ON UPDATE CASCADE
 );";
+        }
 
         public string InitializeTable => null;
 

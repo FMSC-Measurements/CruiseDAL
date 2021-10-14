@@ -6,18 +6,22 @@ namespace CruiseDAL.Schema.Cruise.Lookup
     {
         public string TableName => "LK_Forest";
 
-        public string CreateTable =>
-@"CREATE TABLE LK_Forest (
+        public string CreateTable => GetCreateTable(TableName);
+
+
+        public string GetCreateTable(string tableName)
+        {
+return $@"CREATE TABLE {tableName} (
     LK_Forest_CN INTEGER PRIMARY KEY AUTOINCREMENT,
     Forest TEXT NOT NULL COLLATE NOCASE, -- needs to be text because one blm forest has non numeric forest number
     Region TEXT NOT NULL COLLATE NOCASE,
     FriendlyName TEXT NOT NULL COLLATE NOCASE,
-    
 
     FOREIGN KEY (Region) REFERENCES LK_Region (Region) ON DELETE CASCADE,
 
     UNIQUE (Forest, Region)
 );";
+        }
 
         public string InitializeTable =>
 @"INSERT INTO LK_Forest (Forest, FriendlyName, Region)

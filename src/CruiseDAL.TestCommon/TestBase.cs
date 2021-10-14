@@ -16,10 +16,13 @@ namespace CruiseDAL.TestCommon
         private List<string> FilesToBeDeleted { get; } = new List<string>();
         protected DbProviderFactory DbProvider { get; private set; }
         protected Stopwatch _stopwatch;
+        protected bool CleanUpTestFiles { get; set; }
 
         public TestBase(ITestOutputHelper output)
         {
             Output = output;
+            CleanUpTestFiles = false;
+
 
             var testTempPath = TestTempPath;
             if (!Directory.Exists(testTempPath))
@@ -36,15 +39,18 @@ namespace CruiseDAL.TestCommon
 
         ~TestBase()
         {
-            foreach (var file in FilesToBeDeleted)
+            if (CleanUpTestFiles)
             {
-                try
+                foreach (var file in FilesToBeDeleted)
                 {
-                    File.Delete(file);
-                }
-                catch
-                {
-                    // do nothing
+                    try
+                    {
+                        File.Delete(file);
+                    }
+                    catch
+                    {
+                        // do nothing
+                    }
                 }
             }
         }

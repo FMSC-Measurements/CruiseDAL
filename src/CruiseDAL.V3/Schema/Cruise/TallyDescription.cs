@@ -7,8 +7,11 @@ namespace CruiseDAL.Schema
     {
         public string TableName => "TallyDescription";
 
-        public string CreateTable =>
-@"CREATE TABLE TallyDescription (
+        public string CreateTable => GetCreateTable(TableName);
+
+        public string GetCreateTable(string tableName)
+        {
+            return $@"CREATE TABLE {tableName} (
     TallyDescription_CN INTEGER PRIMARY KEY AUTOINCREMENT,
     CruiseID TEXT NOT NULL COLLATE NOCASE,
     StratumCode TEXT NOT NULL COLLATE NOCASE,
@@ -24,6 +27,7 @@ namespace CruiseDAL.Schema
     FOREIGN KEY (SpeciesCode, CruiseID) REFERENCES Species (SpeciesCode, CruiseID) ON DELETE CASCADE ON UPDATE CASCADE ,
     FOREIGN KEY (CruiseID, StratumCode, SampleGroupCode, SpeciesCode, LiveDead) REFERENCES Subpopulation (CruiseID, StratumCode, SampleGroupCode, SpeciesCode, LiveDead) ON DELETE CASCADE
 );";
+        }
 
         public string InitializeTable => null;
 

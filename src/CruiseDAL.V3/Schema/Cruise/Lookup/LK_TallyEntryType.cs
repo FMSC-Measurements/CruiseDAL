@@ -6,19 +6,23 @@ namespace CruiseDAL.Schema
     {
         public string TableName => "LK_TallyEntryType";
 
-        public string CreateTable =>
-@"CREATE TABLE LK_TallyEntryType (
+        public string CreateTable => GetCreateTable(TableName);
+
+        public string GetCreateTable(string tableName)
+        {
+return $@"CREATE TABLE {tableName} (
     LK_TallyEntryType_CN  INTEGER PRIMARY KEY AUTOINCREMENT,
     EntryType TEXT NOT NULL COLLATE NOCASE,
 
     UNIQUE (EntryType)
 );
 ";
+        }
 
         public string InitializeTable =>
 @"INSERT INTO LK_TallyEntryType (
     EntryType
-) VALUES 
+) VALUES
     ('tally'),
     ('utility'),
     ('treecount_edit'),
