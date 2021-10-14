@@ -104,6 +104,14 @@ namespace CruiseDAL
                     }
                 }
 
+                db.Execute("CREATE INDEX NIX_TreeDefaultValue_PrimaryProduct ON TreeDefaultValue ('PrimaryProduct');");
+
+                var tree_tdvViewDef = new Tree_TreeDefaultValue();
+                db.Execute(tree_tdvViewDef.CreateView);
+
+                var tm_defViewDef = new TreeMeasurment_DefaultResolved();
+                db.Execute(tm_defViewDef.CreateView);
+
                 SetDatabaseVersion(db, targetVersion);
                 db.CommitTransaction();
 

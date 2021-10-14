@@ -78,6 +78,8 @@ CREATE INDEX NIX_TreeDefaultValue_Tombstone_CruiseID_SpeciesCode_PrimaryProduct 
 
 CREATE INDEX NIX_TreeDefaultValue_SpeciesCode ON TreeDefaultValue ('SpeciesCode');
 
+CREATE INDEX NIX_TreeDefaultValue_PrimaryProduct ON TreeDefaultValue ('PrimaryProduct');
+
 CREATE INDEX NIX_TreeDefaultValue_CruiseID ON TreeDefaultValue ('CruiseID');";
 
         public IEnumerable<string> CreateTriggers => new[] { CREATE_TRIGGER_TREEDEFAULTVALUE_ONUPDATE, CREATE_TRIGGER_TreeDefaultValue_OnDelete };

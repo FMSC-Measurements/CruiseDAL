@@ -1337,10 +1337,10 @@ classDiagram
     class TreeFieldValue_All {
         - TreeID : TEXT
         - Field : TEXT
-        - ValueInt : 
-        - ValueReal : 
-        - ValueBool : 
-        - ValueText : 
+        - ValueInt : INTEGER
+        - ValueReal : REAL
+        - ValueBool : BOOLEAN
+        - ValueText : TEXT
         - CreatedBy : TEXT
         - Created_TS : DATETIME
         - ModifiedBy : TEXT
@@ -1413,6 +1413,44 @@ classDiagram
         - StratumDefaultID : 
         - Field : TEXT
         - FieldOrder : INTEGER
+    }
+
+    class Tree_TreeDefaultValue {
+        - TreeID : TEXT
+        - TreeDefaultValue_CN : INTEGER
+    }
+
+    class TreeMeasurment_DefaultResolved {
+        - TreeID : TEXT
+        - SeenDefectPrimary : 
+        - SeenDefectSecondary : 
+        - RecoverablePrimary : 
+        - HiddenPrimary : 
+        - Grade : 
+        - HeightToFirstLiveLimb : 
+        - PoleLength : 
+        - ClearFace : 
+        - CrownRatio : 
+        - DBH : 
+        - DRC : 
+        - TotalHeight : 
+        - MerchHeightPrimary : 
+        - MerchHeightSecondary : 
+        - FormClass : 
+        - UpperStemDiameter : 
+        - UpperStemHeight : 
+        - DBHDoubleBarkThickness : 
+        - TopDIBPrimary : 
+        - TopDIBSecondary : 
+        - DefectCode : 
+        - DiameterAtDefect : 
+        - VoidPercent : 
+        - Slope : 
+        - Aspect : 
+        - Remarks : 
+        - IsFallBuckScale : 
+        - MetaData : 
+        - Initials : 
     }
 
 
@@ -1580,6 +1618,8 @@ classDiagram
     LK_Product <|-- SampleGroupDefault
     LK_Region <|-- SampleGroupDefault
     LK_UOM <|-- SampleGroupDefault
+
+
 
 
 

@@ -17,6 +17,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="AutoBogus" Version="2.6.0" />
     <PackageReference Include="morelinq" Version="3.3.2" Condition="$(TargetFramework) == 'net452' OR $(TargetFramework) == 'net461' " />
     <PackageReference Include="FluentAssertions" Version="5.6.0" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="15.9.0" />
