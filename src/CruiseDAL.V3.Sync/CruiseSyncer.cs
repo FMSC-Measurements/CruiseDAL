@@ -789,7 +789,7 @@ namespace CruiseDAL.V3.Sync
 
         private void SyncTreeData(DbConnection source, DbConnection destination, string treeID, CruiseSyncOptions options)
         {
-            // we are not checking the tombstone tables for TreeMeasurments or TreeFieldValue because at this
+            // we are not checking the tombstone tables for TreeMeasurment or TreeFieldValue because at this
             // point we should already know that the tree has not be deleted.
             // we are assuming that TreeMeasurment or TreeFieldValue records wont be deleted unless the tree has been deleted
             // however that might change for TreeFieldValue records

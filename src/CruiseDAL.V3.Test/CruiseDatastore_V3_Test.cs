@@ -47,6 +47,7 @@ namespace CruiseDAL.V3.Test
         public void Constructor_file_create_test()
         {
             var filePath = GetTempFilePath(".crz3", "testCreate");
+            Output.WriteLine(filePath);
             RegesterFileForCleanUp(filePath);
             var datastore = new CruiseDatastore_V3(filePath, true);
 
