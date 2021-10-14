@@ -75,73 +75,45 @@ SELECT
                 ELSE (ifnull(tl.TreeCount, 0))
         END)
         AS REAL) AS TreeCount, -- in v2 TreeCount and kpi had a type of REAL
+
     CAST (ifnull(tl.KPI, 0) AS REAL) AS KPI,
     (CASE ifnull(tl.STM, 0) WHEN 0 THEN 'N' WHEN 1 THEN 'Y' END) AS STM,
 
-ifnull(tm.SeenDefectPrimary, 
-            (SELECT tfs.DefaultValueReal FROM {fromDbName}.TreeFieldSetup AS tfs WHERE tfs.CruiseID = t.CruiseID AND t.StratumCode = tfs.StratumCode AND (t.SampleGroupCode = tfs.SampleGroupCode OR tfs.SampleGroupCode IS NULL) AND tfs.Field = 'SeenDefectPrimary' ORDER BY tfs.SampleGroupCode DESC LIMIT 1)),
-        ifnull(tm.SeenDefectSecondary, 
-            (SELECT DefaultValueReal FROM {fromDbName}.TreeFieldSetup AS tfs WHERE tfs.CruiseID = t.CruiseID AND t.StratumCode = tfs.StratumCode AND (t.SampleGroupCode = tfs.SampleGroupCode OR tfs.SampleGroupCode IS NULL) AND tfs.Field = 'SeenDefectSecondary' ORDER BY tfs.SampleGroupCode DESC LIMIT 1)),
-        ifnull(tm.RecoverablePrimary, 
-            (SELECT DefaultValueReal FROM {fromDbName}.TreeFieldSetup AS tfs WHERE tfs.CruiseID = t.CruiseID AND t.StratumCode = tfs.StratumCode AND (t.SampleGroupCode = tfs.SampleGroupCode OR tfs.SampleGroupCode IS NULL) AND tfs.Field = 'RecoverablePrimary' ORDER BY tfs.SampleGroupCode DESC LIMIT 1)),
-        ifnull(tm.HiddenPrimary, 
-            (SELECT DefaultValueReal FROM {fromDbName}.TreeFieldSetup AS tfs WHERE tfs.CruiseID = t.CruiseID AND t.StratumCode = tfs.StratumCode AND (t.SampleGroupCode = tfs.SampleGroupCode OR tfs.SampleGroupCode IS NULL) AND tfs.Field = 'HiddenPrimary' ORDER BY tfs.SampleGroupCode DESC LIMIT 1)),
-        ifnull(tm.Grade, 
-            (SELECT DefaultValueText FROM {fromDbName}.TreeFieldSetup AS tfs WHERE tfs.CruiseID = t.CruiseID AND t.StratumCode = tfs.StratumCode AND (t.SampleGroupCode = tfs.SampleGroupCode OR tfs.SampleGroupCode IS NULL) AND tfs.Field = 'Grade' ORDER BY tfs.SampleGroupCode DESC LIMIT 1)),
+        tm.SeenDefectPrimary, 
+        tm.SeenDefectSecondary, 
+        tm.RecoverablePrimary, 
+        tm.HiddenPrimary, 
+        tm.Grade, 
 
-        ifnull(tm.HeightToFirstLiveLimb, 
-            (SELECT DefaultValueReal FROM {fromDbName}.TreeFieldSetup AS tfs WHERE tfs.CruiseID = t.CruiseID AND t.StratumCode = tfs.StratumCode AND (t.SampleGroupCode = tfs.SampleGroupCode OR tfs.SampleGroupCode IS NULL) AND tfs.Field = 'HeightToFirstLiveLimb' ORDER BY tfs.SampleGroupCode DESC LIMIT 1)),
-        ifnull(tm.PoleLength, 
-            (SELECT DefaultValueReal FROM {fromDbName}.TreeFieldSetup AS tfs WHERE tfs.CruiseID = t.CruiseID AND t.StratumCode = tfs.StratumCode AND (t.SampleGroupCode = tfs.SampleGroupCode OR tfs.SampleGroupCode IS NULL) AND tfs.Field = 'PoleLength' ORDER BY tfs.SampleGroupCode DESC LIMIT 1)),
-        ifnull(tm.ClearFace, 
-            (SELECT DefaultValueText FROM {fromDbName}.TreeFieldSetup AS tfs WHERE tfs.CruiseID = t.CruiseID AND t.StratumCode = tfs.StratumCode AND (t.SampleGroupCode = tfs.SampleGroupCode OR tfs.SampleGroupCode IS NULL) AND tfs.Field = 'ClearFace' ORDER BY tfs.SampleGroupCode DESC LIMIT 1)),
-        ifnull(tm.CrownRatio, 
-            (SELECT DefaultValueReal FROM {fromDbName}.TreeFieldSetup AS tfs WHERE tfs.CruiseID = t.CruiseID AND t.StratumCode = tfs.StratumCode AND (t.SampleGroupCode = tfs.SampleGroupCode OR tfs.SampleGroupCode IS NULL) AND tfs.Field = 'CrownRatio' ORDER BY tfs.SampleGroupCode DESC LIMIT 1)),
-        ifnull(tm.DBH, 
-            (SELECT DefaultValueReal FROM {fromDbName}.TreeFieldSetup AS tfs WHERE tfs.CruiseID = t.CruiseID AND t.StratumCode = tfs.StratumCode AND (t.SampleGroupCode = tfs.SampleGroupCode OR tfs.SampleGroupCode IS NULL) AND tfs.Field = 'DBH' ORDER BY tfs.SampleGroupCode DESC LIMIT 1)),
+        tm.HeightToFirstLiveLimb, 
+        tm.PoleLength, 
+        tm.ClearFace, 
+        tm.CrownRatio, 
+        tm.DBH, 
 
-        ifnull(tm.DRC, 
-            (SELECT DefaultValueReal FROM {fromDbName}.TreeFieldSetup AS tfs WHERE tfs.CruiseID = t.CruiseID AND t.StratumCode = tfs.StratumCode AND (t.SampleGroupCode = tfs.SampleGroupCode OR tfs.SampleGroupCode IS NULL) AND tfs.Field = 'DRC' ORDER BY tfs.SampleGroupCode DESC LIMIT 1)),
-        ifnull(tm.TotalHeight, 
-            (SELECT DefaultValueReal FROM {fromDbName}.TreeFieldSetup AS tfs WHERE tfs.CruiseID = t.CruiseID AND t.StratumCode = tfs.StratumCode AND (t.SampleGroupCode = tfs.SampleGroupCode OR tfs.SampleGroupCode IS NULL) AND tfs.Field = 'TotalHeight' ORDER BY tfs.SampleGroupCode DESC LIMIT 1)),
-        ifnull(tm.MerchHeightPrimary, 
-            (SELECT DefaultValueReal FROM {fromDbName}.TreeFieldSetup AS tfs WHERE tfs.CruiseID = t.CruiseID AND t.StratumCode = tfs.StratumCode AND (t.SampleGroupCode = tfs.SampleGroupCode OR tfs.SampleGroupCode IS NULL) AND tfs.Field = 'MerchHeightPrimary' ORDER BY tfs.SampleGroupCode DESC LIMIT 1)),
-        ifnull(tm.MerchHeightSecondary, 
-            (SELECT DefaultValueReal FROM {fromDbName}.TreeFieldSetup AS tfs WHERE tfs.CruiseID = t.CruiseID AND t.StratumCode = tfs.StratumCode AND (t.SampleGroupCode = tfs.SampleGroupCode OR tfs.SampleGroupCode IS NULL) AND tfs.Field = 'MerchHeightSecondary' ORDER BY tfs.SampleGroupCode DESC LIMIT 1)),
-        ifnull(tm.FormClass, 
-            (SELECT DefaultValueReal FROM {fromDbName}.TreeFieldSetup AS tfs WHERE tfs.CruiseID = t.CruiseID AND t.StratumCode = tfs.StratumCode AND (t.SampleGroupCode = tfs.SampleGroupCode OR tfs.SampleGroupCode IS NULL) AND tfs.Field = 'FormClass' ORDER BY tfs.SampleGroupCode DESC LIMIT 1)),
+        tm.DRC, 
+        tm.TotalHeight, 
+        tm.MerchHeightPrimary, 
+        tm.MerchHeightSecondary, 
+        tm.FormClass, 
 
-        ifnull(tm.UpperStemDiameter, 
-            (SELECT DefaultValueReal FROM {fromDbName}.TreeFieldSetup AS tfs WHERE tfs.CruiseID = t.CruiseID AND t.StratumCode = tfs.StratumCode AND (t.SampleGroupCode = tfs.SampleGroupCode OR tfs.SampleGroupCode IS NULL) AND tfs.Field = 'UpperStemDiameter' ORDER BY tfs.SampleGroupCode DESC LIMIT 1)),
-        ifnull(tm.UpperStemHeight, 
-            (SELECT DefaultValueReal FROM {fromDbName}.TreeFieldSetup AS tfs WHERE tfs.CruiseID = t.CruiseID AND t.StratumCode = tfs.StratumCode AND (t.SampleGroupCode = tfs.SampleGroupCode OR tfs.SampleGroupCode IS NULL) AND tfs.Field = 'UpperStemHeight' ORDER BY tfs.SampleGroupCode DESC LIMIT 1)),
-        ifnull(tm.DBHDoubleBarkThickness, 
-            (SELECT DefaultValueReal FROM {fromDbName}.TreeFieldSetup AS tfs WHERE tfs.CruiseID = t.CruiseID AND t.StratumCode = tfs.StratumCode AND (t.SampleGroupCode = tfs.SampleGroupCode OR tfs.SampleGroupCode IS NULL) AND tfs.Field = 'DBHDoubleBarkThickness' ORDER BY tfs.SampleGroupCode DESC LIMIT 1)),
-        ifnull(tm.TopDIBPrimary, 
-            (SELECT DefaultValueReal FROM {fromDbName}.TreeFieldSetup AS tfs WHERE tfs.CruiseID = t.CruiseID AND t.StratumCode = tfs.StratumCode AND (t.SampleGroupCode = tfs.SampleGroupCode OR tfs.SampleGroupCode IS NULL) AND tfs.Field = 'TopDIBPrimary' ORDER BY tfs.SampleGroupCode DESC LIMIT 1)),
-        ifnull(tm.TopDIBSecondary, 
-            (SELECT DefaultValueReal FROM {fromDbName}.TreeFieldSetup AS tfs WHERE tfs.CruiseID = t.CruiseID AND t.StratumCode = tfs.StratumCode AND (t.SampleGroupCode = tfs.SampleGroupCode OR tfs.SampleGroupCode IS NULL) AND tfs.Field = 'TopDIBSecondary' ORDER BY tfs.SampleGroupCode DESC LIMIT 1)),
+        tm.UpperStemDiameter, 
+        tm.UpperStemHeight, 
+        tm.DBHDoubleBarkThickness, 
+        tm.TopDIBPrimary, 
+        tm.TopDIBSecondary, 
 
-        ifnull(tm.DefectCode, 
-            (SELECT DefaultValueText FROM {fromDbName}.TreeFieldSetup AS tfs WHERE tfs.CruiseID = t.CruiseID AND t.StratumCode = tfs.StratumCode AND (t.SampleGroupCode = tfs.SampleGroupCode OR tfs.SampleGroupCode IS NULL) AND tfs.Field = 'DefectCode' ORDER BY tfs.SampleGroupCode DESC LIMIT 1)),
-        ifnull(tm.DiameterAtDefect, 
-            (SELECT DefaultValueReal FROM {fromDbName}.TreeFieldSetup AS tfs WHERE tfs.CruiseID = t.CruiseID AND t.StratumCode = tfs.StratumCode AND (t.SampleGroupCode = tfs.SampleGroupCode OR tfs.SampleGroupCode IS NULL) AND tfs.Field = 'DiameterAtDefect' ORDER BY tfs.SampleGroupCode DESC LIMIT 1)),
-        ifnull(tm.VoidPercent, 
-            (SELECT DefaultValueReal FROM {fromDbName}.TreeFieldSetup AS tfs WHERE tfs.CruiseID = t.CruiseID AND t.StratumCode = tfs.StratumCode AND (t.SampleGroupCode = tfs.SampleGroupCode OR tfs.SampleGroupCode IS NULL) AND tfs.Field = 'VoidPercent' ORDER BY tfs.SampleGroupCode DESC LIMIT 1)),
-        ifnull(tm.Slope, 
-            (SELECT DefaultValueReal FROM {fromDbName}.TreeFieldSetup AS tfs WHERE tfs.CruiseID = t.CruiseID AND t.StratumCode = tfs.StratumCode AND (t.SampleGroupCode = tfs.SampleGroupCode OR tfs.SampleGroupCode IS NULL) AND tfs.Field = 'Slope' ORDER BY tfs.SampleGroupCode DESC LIMIT 1)),
-        ifnull(tm.Aspect, 
-            (SELECT DefaultValueReal FROM {fromDbName}.TreeFieldSetup AS tfs WHERE tfs.CruiseID = t.CruiseID AND t.StratumCode = tfs.StratumCode AND (t.SampleGroupCode = tfs.SampleGroupCode OR tfs.SampleGroupCode IS NULL) AND tfs.Field = 'Aspect' ORDER BY tfs.SampleGroupCode DESC LIMIT 1)),
+        tm.DefectCode, 
+        tm.DiameterAtDefect, 
+        tm.VoidPercent, 
+        tm.Slope, 
+        tm.Aspect, 
 
-        ifnull(tm.Remarks, 
-            (SELECT DefaultValueText FROM {fromDbName}.TreeFieldSetup AS tfs WHERE tfs.CruiseID = t.CruiseID AND t.StratumCode = tfs.StratumCode AND (t.SampleGroupCode = tfs.SampleGroupCode OR tfs.SampleGroupCode IS NULL) AND tfs.Field = 'Remarks' ORDER BY tfs.SampleGroupCode DESC LIMIT 1)),
-        ifnull(tm.IsFallBuckScale, 
-            (SELECT DefaultValueText FROM {fromDbName}.TreeFieldSetup AS tfs WHERE tfs.CruiseID = t.CruiseID AND t.StratumCode = tfs.StratumCode AND (t.SampleGroupCode = tfs.SampleGroupCode OR tfs.SampleGroupCode IS NULL) AND tfs.Field = 'IsFallBuckScale' ORDER BY tfs.SampleGroupCode DESC LIMIT 1)),
+        tm.Remarks, 
+        tm.IsFallBuckScale, 
 
-        ifnull(tm.MetaData, 
-            (SELECT DefaultValueText FROM {fromDbName}.TreeFieldSetup AS tfs WHERE tfs.CruiseID = t.CruiseID AND t.StratumCode = tfs.StratumCode AND (t.SampleGroupCode = tfs.SampleGroupCode OR tfs.SampleGroupCode IS NULL) AND tfs.Field = 'MetaData' ORDER BY tfs.SampleGroupCode DESC LIMIT 1)),
-        ifnull(tm.Initials, 
-            (SELECT DefaultValueText FROM {fromDbName}.TreeFieldSetup AS tfs WHERE tfs.CruiseID = t.CruiseID AND t.StratumCode = tfs.StratumCode AND (t.SampleGroupCode = tfs.SampleGroupCode OR tfs.SampleGroupCode IS NULL) AND tfs.Field = 'Initials' ORDER BY tfs.SampleGroupCode DESC LIMIT 1))
+        tm.MetaData, 
+        tm.Initials 
 
 FROM {fromDbName}.Tree AS t
 JOIN {fromDbName}.SampleGroup AS sg USING (StratumCode, SampleGroupCode, CruiseID)
@@ -153,7 +125,7 @@ LEFT JOIN {toDbName}.TreeDefaultValue AS tdv ON
             AND tdv.LiveDead = t.LiveDead
             AND tdv.PrimaryProduct = sg.PrimaryProduct
 LEFT JOIN {fromDbName}.TallyLedger_Tree_Totals AS tl ON tl.TreeID = t.TreeID
-LEFT JOIN {fromDbName}.TreeMeasurment AS tm ON t.TreeID = tm.TreeID
+LEFT JOIN {fromDbName}.TreeMeasurment_DefaultResolved AS tm USING (TreeID)
 WHERE t.CruiseID = '{cruiseID}'
 ;";
         }
