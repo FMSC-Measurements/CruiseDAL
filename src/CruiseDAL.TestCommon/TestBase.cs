@@ -16,13 +16,15 @@ namespace CruiseDAL.TestCommon
         private List<string> FilesToBeDeleted { get; } = new List<string>();
         protected DbProviderFactory DbProvider { get; private set; }
         protected Stopwatch _stopwatch;
+        private Random _rand;
+
         protected bool CleanUpTestFiles { get; set; }
+        protected Random Rand => _rand ??= new Random();
 
         public TestBase(ITestOutputHelper output)
         {
             Output = output;
             CleanUpTestFiles = false;
-
 
             var testTempPath = TestTempPath;
             if (!Directory.Exists(testTempPath))
@@ -68,9 +70,16 @@ namespace CruiseDAL.TestCommon
         public string TestFilesDirectory => Path.Combine(TestExecutionDirectory, "TestFiles");
         public string ResourceDirectory => Path.Combine(TestExecutionDirectory, "Resources");
 
-        public string GetTempFilePath(string extention, string fileName = null, [CallerMemberName]string testName = null)
+        public string GetTempFilePathWithExt(string extention, [CallerMemberName] string testName = null)
         {
-            return Path.Combine(TestTempPath, (fileName ?? testName + "_" + Guid.NewGuid().ToString()) + extention);
+            var fileName = testName + "_" + Rand.Next().ToString("x") + "_" + extention;
+            return GetTempFilePath(fileName);
+        }
+
+        public string GetTempFilePath(string fileName)
+        {
+            Output.WriteLine("Generated Temp File Path: " + fileName);
+            return Path.Combine(TestTempPath, fileName);
         }
 
         public string GetTestFile(string fileName) => InitializeTestFile(fileName);

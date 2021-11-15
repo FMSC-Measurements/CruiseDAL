@@ -191,7 +191,7 @@ namespace CruiseDAL.TestCommon
             {
                 SaleID = saleID,
                 SaleNumber = saleNumber,
-            }); ;
+            });
 
             db.Insert(new Cruise()
             {
