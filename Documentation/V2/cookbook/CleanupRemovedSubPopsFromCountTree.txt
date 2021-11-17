@@ -1,0 +1,4 @@
+DELETE FROM CountTree WHERE CountTree_CN IN
+(SELECT CountTree_CN FROM CountTree
+LEFT JOIN SampleGroupTreeDefaultValue AS sgtdv USING (SampleGroup_CN, TreeDefaultValue_CN)
+WHERE sgtdv.rowid IS NULL)

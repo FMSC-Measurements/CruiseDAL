@@ -6,33 +6,50 @@
         {
             return
 $@"
-WITH tallyLedgerGrouped AS (
-    SELECT CruiseID, CuttingUnitCode, StratumCode, SampleGroupCode, ifnull(SpeciesCode, '') AS SpeciesCode, ifnull(LiveDead, '') AS LiveDead,
-    sum(TreeCount) AS TreeCount, sum(KPI) AS SumKPI,
-    min(TallyLedger_CN) AS CountTree_CN
-    FROM {fromDbName}.TallyLedger
-    WHERE CruiseID = '{cruiseID}'
-    GROUP BY CruiseID, CuttingUnitCode, StratumCode, SampleGroupCode, SpeciesCode, LiveDead
-),
+WITH 
 
  tallyPopulationTallyLedger AS (
     SELECT
     tp.CruiseID,
-    tl.CountTree_CN,
     cust.CuttingUnitCode,
     tp.StratumCode,
     tp.SampleGroupCode,
     tp.SpeciesCode,
     tp.LiveDead,
-    ifnull(tl.TreeCount, 0) AS TreeCount, ifnull(tl.SumKPI, 0) AS SumKPI
-    FROM TallyPopulation AS tp
-    JOIN CuttingUnit_Stratum AS cust USING (StratumCode, CruiseID)
-    LEFT JOIN tallyLedgerGrouped AS tl ON cust.CuttingUnitCode = tl.CuttingUnitCode
-        AND cust.CruiseID = tl.CruiseID
+    ifnull(sum(tl.TreeCount), 0)  AS TreeCount, 
+    ifnull(sum(tl.KPI), 0) AS SumKPI
+    --ifnull(tl.TreeCount, 0)  AS TreeCount, 
+    --ifnull(tl.KPI, 0) AS SumKPI
+    FROM {fromDbName}.TallyPopulation AS tp
+    JOIN {fromDbName}.Stratum AS st USING (StratumCode, CruiseID)
+    JOIN {fromDbName}.CuttingUnit_Stratum AS cust USING (StratumCode, CruiseID)
+    JOIN {fromDbName}.LK_CruiseMethod AS cm USING (Method)
+    LEFT JOIN {fromDbName}.TallyLedger AS tl ON 
+        cust.CuttingUnitCode = tl.CuttingUnitCode
+        AND tp.CruiseID = tl.CruiseID
         AND tl.StratumCode = tp.StratumCode
         AND tl.SampleGroupCode = tp.SampleGroupCode
-        AND tl.SpeciesCode = ifnull(tp.SpeciesCode,'')
-        AND tl.LiveDead = ifnull(tp.LiveDead, '')
+        AND (tp.SpeciesCode IS NULL OR ifnull(tp.SpeciesCode,'') = ifnull(tl.SpeciesCode,''))
+        AND (tp.LiveDead IS NULL OR ifnull(tp.LiveDead, '') = ifnull(tl.LiveDead, ''))
+    WHERE cm.IsPlotMethod IS FALSE
+    GROUP BY tp.CruiseID, cust.CuttingUnitCode, tp.StratumCode, tp.SampleGroupCode, tp.SpeciesCode, tp.LiveDead
+
+    UNION ALL
+
+    SELECT
+    tp.CruiseID,
+    cust.CuttingUnitCode,
+    tp.StratumCode,
+    tp.SampleGroupCode,
+    tp.SpeciesCode,
+    tp.LiveDead,
+    0  AS TreeCount, 
+    0 AS SumKPI
+    FROM {fromDbName}.TallyPopulation AS tp
+    JOIN {fromDbName}.Stratum AS st USING (StratumCode, CruiseID)
+    JOIN {fromDbName}.CuttingUnit_Stratum AS cust USING (StratumCode, CruiseID)
+    JOIN {fromDbName}.LK_CruiseMethod AS cm USING (Method)
+    WHERE cm.IsPlotMethod IS TRUE
 )
 
 INSERT INTO {toDbName}.CountTree (

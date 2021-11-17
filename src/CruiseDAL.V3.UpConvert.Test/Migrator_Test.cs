@@ -149,7 +149,7 @@ namespace CruiseDAL.V3.Test
         [Fact]
         public void EnsureCanMigrate_NoDupTDVs()
         {
-            var v2Path = GetTempFilePath(".cruise");
+            var v2Path = GetTempFilePathWithExt(".cruise");
 
             var init = new DatabaseInitializer_V2
             {
@@ -175,7 +175,7 @@ namespace CruiseDAL.V3.Test
         [Fact]
         public void EnsureCanMigrate_DupTDVs()
         {
-            var v2Path = GetTempFilePath(".cruise");
+            var v2Path = GetTempFilePathWithExt(".cruise");
 
             var init = new DatabaseInitializer_V2
             {

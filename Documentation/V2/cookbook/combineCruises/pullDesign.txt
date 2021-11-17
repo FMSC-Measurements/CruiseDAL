@@ -1,16 +1,145 @@
 BEGIN;
 
 INSERT INTO main.CuttingUnit 
-SELECT * FROM fromDB.CuttingUnit;
+(
+	CuttingUnit_CN,
+	Code,
+	Area,
+	Description,
+	LoggingMethod,
+	PaymentUnit,
+	TallyHistory,
+	Rx,
+	CreatedBy,
+	CreatedDate,
+	ModifiedBy ,
+	ModifiedDate ,
+	RowVersion		
+)
+SELECT 
+	CuttingUnit_CN,
+	Code,
+	Area,
+	Description,
+	LoggingMethod,
+	PaymentUnit,
+	TallyHistory,
+	Rx,
+	CreatedBy,
+	CreatedDate,
+	ModifiedBy ,
+	ModifiedDate ,
+	RowVersion	 
+FROM fromDB.CuttingUnit;
 
-INSERT INTO main.Stratum 
-SELECT * FROM fromDB.Stratum;
+INSERT INTO main.Stratum (
+	Stratum_CN,
+	Code,
+	Description,
+	Method,
+	BasalAreaFactor,
+	FixedPlotSize,
+	KZ3PPNT,
+	SamplingFrequency,
+	Hotkey,
+	FBSCode,
+	YieldComponent,
+	VolumeFactor,
+	Month,
+	Year,
+	CreatedBy,
+	CreatedDate,
+	ModifiedBy ,
+	ModifiedDate ,
+	RowVersion
+)	
+SELECT 
+	Stratum_CN,
+	Code,
+	Description,
+	Method,
+	BasalAreaFactor,
+	FixedPlotSize,
+	KZ3PPNT,
+	SamplingFrequency,
+	Hotkey,
+	FBSCode,
+	YieldComponent,
+	VolumeFactor,
+	Month,
+	Year,
+	CreatedBy,
+	CreatedDate,
+	ModifiedBy ,
+	ModifiedDate ,
+	RowVersion 
+	FROM fromDB.Stratum;
 
-INSERT INTO main.CuttingUnitStratum
-SELECT * FROM fromDB.CuttingUnitStratum;
+INSERT INTO main.CuttingUnitStratum (
+	CuttingUnit_CN,
+	Stratum_CN,
+	StratumArea
+)
+SELECT 
+	CuttingUnit_CN,
+	Stratum_CN,
+	StratumArea
+FROM fromDB.CuttingUnitStratum;
 
-INSERT INTO main.SampleGroup
-SELECT * FROM fromDB.SampleGroup;
+INSERT INTO main.SampleGroup (
+	SampleGroup_CN,
+	Stratum_CN,
+	Code,
+	CutLeave,
+	UOM,
+	PrimaryProduct,
+	SecondaryProduct,
+	BiomassProduct,
+	DefaultLiveDead,
+	SamplingFrequency,
+	InsuranceFrequency,
+	KZ,
+	BigBAF,
+	SmallFPS,
+	TallyMethod,
+	Description,
+	SampleSelectorType,
+	SampleSelectorState,
+	MinKPI,
+	MaxKPI,
+	CreatedBy,
+	CreatedDate,
+	ModifiedBy,
+	ModifiedDate,
+	RowVersion
+)
+SELECT 
+	SampleGroup_CN,
+	Stratum_CN,
+	Code,
+	CutLeave,
+	UOM,
+	PrimaryProduct,
+	SecondaryProduct,
+	BiomassProduct,
+	DefaultLiveDead,
+	SamplingFrequency,
+	InsuranceFrequency,
+	KZ,
+	BigBAF,
+	SmallFPS,
+	TallyMethod,
+	Description,
+	SampleSelectorType,
+	SampleSelectorState,
+	MinKPI,
+	MaxKPI,
+	CreatedBy,
+	CreatedDate,
+	ModifiedBy,
+	ModifiedDate,
+	RowVersion
+FROM fromDB.SampleGroup;
 
 INSERT INTO main.TreeFieldSetup
 SELECT * FROM fromDB.TreeFieldSetup;
