@@ -377,61 +377,7 @@ ORDER BY cnt.CuttingUnit_CN, cnt.SampleGroup_CN, cnt.TreeDefaultValue_CN;").ToAr
             }
         }
 
-        [Theory]
-        [InlineData("7Wolf.cruise")]
-        [InlineData("0432 C53East TS.cruise")]
-        public void CountTree_Test_only_positiveTreeCounts(string fileName)
-        {
-            var (orgFile, crz3File, origAgain) = SetUpTestFile(fileName);
 
-            using (var dbv2 = new CruiseDatastore(orgFile))
-            using (var dbv2Again = new CruiseDatastore(origAgain))
-            {
-                var countTreeV2Again = dbv2Again.From<V2.Models.CountTree>()
-                    .Where("TreeCount > 0")
-                    .Query();
-                countTreeV2Again.Should().NotBeEmpty();
-
-                var countTreeV2 = dbv2.From<V2.Models.CountTree>()
-                    .Where("TreeCount > 0")
-                    .GroupBy("CuttingUnit_CN", "SampleGroup_CN", "ifnull(TreeDefaultValue_CN, '')")
-                    .Query();
-                countTreeV2.Should().NotBeEmpty();
-
-                countTreeV2Again.Should().HaveSameCount(countTreeV2);
-                countTreeV2Again.Should().BeEquivalentTo(countTreeV2,
-                    x => x.Excluding(y => y.Tally_CN)
-                    .Excluding(y => y.CountTree_CN));
-            }
-        }
-
-        [Theory]
-        [InlineData("7Wolf.cruise")]
-        [InlineData("0432 C53East TS.cruise")]
-        public void CountTreeDO_Test_only_positiveTreeCounts(string fileName)
-        {
-            var (orgFile, crz3File, origAgain) = SetUpTestFile(fileName);
-
-            using (var dbv2 = new DAL(orgFile))
-            using (var dbv2Again = new DAL(origAgain))
-            {
-                var countTreeV2Again = dbv2Again.From<CountTreeDO>()
-                    .Where("TreeCount > 0")
-                    .Query();
-                countTreeV2Again.Should().NotBeEmpty();
-
-                var countTreeV2 = dbv2.From<CountTreeDO>()
-                    .Where("TreeCount > 0")
-                    .GroupBy("CuttingUnit_CN", "SampleGroup_CN", "ifnull(TreeDefaultValue_CN, '')")
-                    .Query();
-                countTreeV2.Should().NotBeEmpty();
-
-                countTreeV2Again.Should().HaveSameCount(countTreeV2);
-                //countTreeV3.Should().BeEquivalentTo(countTreeV2,
-                //    x => x.Excluding(y => y.Tally_CN)
-                //    .Excluding(y => y.CountTree_CN));
-            }
-        }
 
         [Theory]
         [InlineData("7Wolf.cruise")]
@@ -488,7 +434,7 @@ ORDER BY cnt.CuttingUnit_CN, cnt.SampleGroup_CN, cnt.TreeDefaultValue_CN;").ToAr
         [Fact]
         public void EnsureCanMigrate_HasTDVs()
         {
-            var v3Path = GetTempFilePath(".crz3");
+            var v3Path = GetTempFilePathWithExt(".crz3");
 
             var init = new DatabaseInitializer
             {
@@ -508,7 +454,7 @@ ORDER BY cnt.CuttingUnit_CN, cnt.SampleGroup_CN, cnt.TreeDefaultValue_CN;").ToAr
         [Fact]
         public void EnsureCanMigrate_DoesntHasTDVs()
         {
-            var v3Path = GetTempFilePath(".crz3");
+            var v3Path = GetTempFilePathWithExt(".crz3");
 
             var init = new DatabaseInitializer
             {
