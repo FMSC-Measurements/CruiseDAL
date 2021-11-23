@@ -89,6 +89,12 @@ return $@"CREATE TABLE {tableName} (
         public IEnumerable<string> CreateTriggers =>
             new[]
             {
+				CREATE_TRIGGER_VolumeEquation_OnUpdate,
+				CREATE_TRIGGER_VolumeEquation_OnDelete,
+				CREATE_TRIGGE_VolumeEquation_OnInsert_ClearTombstone,
+            };
+
+		public const string CREATE_TRIGGER_VolumeEquation_OnUpdate =
 @"CREATE TRIGGER VolumeEquation_OnUpdate
 AFTER UPDATE OF
 		StumpHeight,
@@ -115,8 +121,9 @@ ON VolumeEquation
 FOR EACH ROW
 BEGIN
 	UPDATE VolumeEquation SET Modified_TS = CURRENT_TIMESTAMP WHERE VolumeEquation_CN = OLD.VolumeEquation_CN;
-END;",
+END;";
 
+		public const string CREATE_TRIGGER_VolumeEquation_OnDelete =
 @"CREATE TRIGGER VolumeEquation_OnDelete
 BEFORE DELETE ON VolumeEquation
 FOR EACH ROW
@@ -183,7 +190,20 @@ BEGIN
 		CURRENT_TIMESTAMP
 	);
 END;
-",
-            };
-    }
+";
+
+		public const string CREATE_TRIGGE_VolumeEquation_OnInsert_ClearTombstone =
+@"CREATE TRIGGER VolumeEquation_OnInsert_ClearTombstone
+AFTER INSERT ON VolumeEquation
+FOR EACH ROW
+BEGIN
+	DELETE FROM VolumeEquation_Tombstone 
+		WHERE CruiseID = NEW.CruiseID
+		AND Species = NEW.Species
+		AND PrimaryProduct = NEW.PrimaryProduct
+		AND VolumeEquationNumber = NEW.VolumeEquationNumber;
+END;
+";
+
+	}
 }

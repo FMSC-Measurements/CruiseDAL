@@ -45,7 +45,7 @@ return $@"CREATE TABLE {tableName} (
 );
 
 CREATE INDEX Reports_Tombstone_ReportID ON Reports_Tombstone
-(ReportID);
+(ReportID, CruiseID);
 ";
 
         public string CreateIndexes => null;
@@ -79,7 +79,17 @@ BEGIN
         CURRENT_TIMESTAMP
     );
 END;
-";
+"; 
+        public const string CREATE_TRIGGER_Reports_OnInsert_ClearTombstone =
+@"CREATE TOMBSTONE Reports_OnInsert_ClearTombstone
+AFTER INSERT ON Reports
+FOR EACH ROW
+BEGIN
+    DELETE FROM Reports_Tombstone 
+        WHERE CruiseID = NEW.CruiseID
+        AND ReportID = NEW.ReportID
+        
+"
     }
 
 }

@@ -58,7 +58,10 @@ CREATE INDEX NIX_TreeFieldSetup_SampleGroupCode_StratumCode_CruiseID ON TreeFiel
 CREATE UNIQUE INDEX UIX_TreeFieldSetup_SampleGroupCode_StratumCode_Field_CruiseID ON TreeFieldSetup
     (ifnull(SampleGroupCode, ''), StratumCode, Field, CruiseID);";
 
-        public IEnumerable<string> CreateTriggers => new[] { CREATE_TRIGGER_TreeFieldSetup_OnDelete };
+        public IEnumerable<string> CreateTriggers => new[] { 
+            CREATE_TRIGGER_TreeFieldSetup_OnDelete,
+            CREATE_TRIGGER_TreeFieldSetup_OnInsert_ClearTombstone,
+        };
 
         public const string CREATE_TRIGGER_TreeFieldSetup_OnDelete =
     @"CREATE TRIGGER TreeFieldSetup_OnDelete
@@ -86,5 +89,17 @@ BEGIN
         OLD.DefaultValueText
     );
 END;";
+
+        public const string CREATE_TRIGGER_TreeFieldSetup_OnInsert_ClearTombstone =
+@"CREATE TRIGGER TreeFieldSetup_OnInsert_ClearTombstone 
+AFTER INSERT ON TreeFieldSetup
+BEGIN 
+    DELETE FROM TreeFieldSetup_Tombstone
+        WHERE CruiseID = NEW.CruiseID
+        AND StratumCode = NEW.StratumCode
+        AND ifnull(SampleGroupCode, '') = ifnull(NEW.SampleGroupCode, '')
+        AND ifnull(Field, '') = ifnull(NEW.Field, '');
+END;
+";
     }
 }

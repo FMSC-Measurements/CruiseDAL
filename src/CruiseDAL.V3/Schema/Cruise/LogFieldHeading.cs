@@ -33,6 +33,14 @@ namespace CruiseDAL.Schema
 
         public string CreateIndexes => null;
 
+        
+
+        public IEnumerable<string> CreateTriggers =>
+            new[]
+            {
+                Create_Trigger_LogFieldHeading_OnUpdate,
+            };
+
         public string Create_Trigger_LogFieldHeading_OnUpdate =
 @"CREATE TRIGGER LogFieldHeading_OnUpdate
 AFTER UPDATE OF
@@ -43,10 +51,6 @@ BEGIN
     UPDATE LogFieldHeading SET Modified_TS = CURRENT_TIMESTAMP WHERE LogFieldHeading_CN = OLD.LogFieldHeading_CN;
 END;";
 
-        public IEnumerable<string> CreateTriggers =>
-            new[]
-            {
-                Create_Trigger_LogFieldHeading_OnUpdate,
-            };
+        
     }
 }
