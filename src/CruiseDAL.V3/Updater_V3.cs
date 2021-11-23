@@ -94,11 +94,13 @@ namespace CruiseDAL
             db.BeginTransaction();
             try
             {
+
                 //Rebuild Plot_Stratum table
+                db.Execute("DROP VIEW main.PlotError");
                 RebuildTable(db, new Plot_StratumTableDefinition_3_4_1());
+                db.Execute(new PlotErrorViewDefinition().CreateView);
 
                 //create a bunch of clearTombstone triggers
-                db.Execute(Plot_StratumTableDefinition_3_4_1.CREATE_TRIGGER_Stratum_OnInsert_ClearTombstones);
                 db.Execute(CuttingUnit_StratumTableDefinition.CREATE_TRIGGER_CuttingUnit_Stratum_OnInsert_ClearTombstone);
                 db.Execute(LogFieldSetupTableDefinition.CREATE_TRIGGER_LogFieldSetup_OnInsert_ClearTombstone);
                 db.Execute(SubPopulationTableDefinition.CREATE_TRIGGER_SubPopulation_OnInsert_ClearTombstone);

@@ -29,7 +29,7 @@ namespace CruiseDAL.Schema
 
     UNIQUE (PlotNumber, CuttingUnitCode, StratumCode, CruiseID),
     CHECK (IsEmpty IN (0, 1)),
-    CHECK (CountOrMeasure IN ('C', 'M') OR CountMeasure IS NULL),
+    CHECK (CountOrMeasure IN ('C', 'M') OR CountOrMeasure IS NULL),
     CHECK ((TreeCount IS 0 AND AverageHeight IS 0 AND KPI IS 0) OR (TreeCount > 0 AND AverageHeight > 0 AND KPI > 0)) 
 
     FOREIGN KEY (StratumCode,  CruiseID) REFERENCES Stratum (StratumCode, CruiseID) ON DELETE CASCADE ON UPDATE CASCADE,
@@ -69,7 +69,7 @@ CREATE INDEX NIX_Plot_Stratum_PlotNumber_CuttingUnitCode_CruiseID ON Plot_Stratu
         public IEnumerable<string> CreateTriggers => new[] { 
             CREATE_TRIGGER_PLOT_STRATUM_ONUPDATE, 
             CREATE_TRIGGER_Plot_Stratum_OnDelete, 
-            CREATE_TRIGGER_Stratum_OnInsert_ClearTombstones 
+            CREATE_TRIGGER_Stratum_OnInsert_ClearTombstones, 
         };
 
         public const string CREATE_TRIGGER_PLOT_STRATUM_ONUPDATE =
@@ -139,7 +139,7 @@ END;";
         // this trigger ensures that if a plot_stratum is re-added that an tombstone record is cleared
 
         public const string CREATE_TRIGGER_Stratum_OnInsert_ClearTombstones =
-@"CREATE TRIGGER Plot_Stratum_OnInsert_ClearTombstones (
+@"CREATE TRIGGER Plot_Stratum_OnInsert_ClearTombstones
 AFTER INSERT ON Plot_Stratum 
 FOR EACH ROW
 BEGIN 

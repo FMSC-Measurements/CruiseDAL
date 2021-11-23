@@ -82,17 +82,17 @@ BEGIN
         CURRENT_TIMESTAMP
     );
 END;
-"; 
+";
         public const string CREATE_TRIGGER_Reports_OnInsert_ClearTombstone =
-@"CREATE TOMBSTONE Reports_OnInsert_ClearTombstone
+@"CREATE TRIGGER Reports_OnInsert_ClearTombstone
 AFTER INSERT ON Reports
 FOR EACH ROW
 BEGIN
     DELETE FROM Reports_Tombstone 
         WHERE CruiseID = NEW.CruiseID
-        AND ReportID = NEW.ReportID
-        
-"
+        AND ReportID = NEW.ReportID;
+END;    
+";
     }
 
 }
