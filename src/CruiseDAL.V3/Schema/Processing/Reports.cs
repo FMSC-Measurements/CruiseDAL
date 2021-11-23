@@ -44,13 +44,16 @@ return $@"CREATE TABLE {tableName} (
     Deleted_TS DATETIME
 );
 
-CREATE INDEX Reports_Tombstone_ReportID ON Reports_Tombstone
+CREATE INDEX Reports_Tombstone_ReportID_CruiseID ON Reports_Tombstone
 (ReportID, CruiseID);
 ";
 
         public string CreateIndexes => null;
 
-        public IEnumerable<string> CreateTriggers => new[] { CREATE_TRIGGER_Reports_OnDelete };
+        public IEnumerable<string> CreateTriggers => new[] { 
+            CREATE_TRIGGER_Reports_OnDelete, 
+            CREATE_TRIGGER_Reports_OnInsert_ClearTombstone 
+        };
 
         public string CREATE_TRIGGER_Reports_OnDelete =
 @"CREATE TRIGGER Reports_OnDelete 
