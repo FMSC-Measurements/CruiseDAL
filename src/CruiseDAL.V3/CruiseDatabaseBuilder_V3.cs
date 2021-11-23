@@ -44,7 +44,7 @@ namespace CruiseDAL
             new StratumTableDefinition(),
             new CuttingUnit_StratumTableDefinition(),
             new PlotTableDefinition(),
-            new Plot_StratumTableDefinition(),
+            new Plot_StratumTableDefinition_3_4_1(),
             new PlotLocationTableDefinition(),
             new SampleGroupTableDefinition(),
 
