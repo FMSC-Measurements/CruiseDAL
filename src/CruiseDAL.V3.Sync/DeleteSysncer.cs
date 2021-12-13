@@ -121,7 +121,7 @@ namespace CruiseDAL.V3.Sync
                 }
                 else
                 {
-                    destination.Insert(i);
+                    destination.Insert(i, option: Backpack.SqlBuilder.OnConflictOption.Replace);
                 }
             }
         }
@@ -144,7 +144,7 @@ namespace CruiseDAL.V3.Sync
                 }
                 else
                 {
-                    destination.Insert(i);
+                    destination.Insert(i, option: Backpack.SqlBuilder.OnConflictOption.Replace);
                 }
             }
         }
@@ -167,7 +167,7 @@ namespace CruiseDAL.V3.Sync
                 }
                 else
                 {
-                    destination.Insert(i);
+                    destination.Insert(i, option: Backpack.SqlBuilder.OnConflictOption.Replace);
                 }
             }
         }
@@ -190,7 +190,7 @@ namespace CruiseDAL.V3.Sync
                 }
                 else
                 {
-                    destination.Insert(i);
+                    destination.Insert(i, option: Backpack.SqlBuilder.OnConflictOption.Replace);
                 }
             }
         }
@@ -213,7 +213,7 @@ namespace CruiseDAL.V3.Sync
                 }
                 else
                 {
-                    destination.Insert(i);
+                    destination.Insert(i, option: Backpack.SqlBuilder.OnConflictOption.Replace);
                 }
             }
         }
@@ -243,7 +243,7 @@ namespace CruiseDAL.V3.Sync
                 }
                 else
                 {
-                    destination.Insert(i);
+                    destination.Insert(i, option: Backpack.SqlBuilder.OnConflictOption.Replace);
                 }
             }
         }
@@ -267,7 +267,7 @@ namespace CruiseDAL.V3.Sync
                 }
                 else
                 {
-                    destination.Insert(i);
+                    destination.Insert(i, option: Backpack.SqlBuilder.OnConflictOption.Replace);
                 }
             }
         }
@@ -291,7 +291,7 @@ namespace CruiseDAL.V3.Sync
                 }
                 else
                 {
-                    destination.Insert(i);
+                    destination.Insert(i, option: Backpack.SqlBuilder.OnConflictOption.Replace);
                 }
             }
         }
@@ -315,7 +315,7 @@ namespace CruiseDAL.V3.Sync
                 }
                 else
                 {
-                    destination.Insert(i);
+                    destination.Insert(i, option: Backpack.SqlBuilder.OnConflictOption.Replace);
                 }
             }
         }
@@ -339,7 +339,7 @@ namespace CruiseDAL.V3.Sync
                 }
                 else
                 {
-                    destination.Insert(i);
+                    destination.Insert(i, option: Backpack.SqlBuilder.OnConflictOption.Replace);
                 }
             }
         }
@@ -363,7 +363,7 @@ namespace CruiseDAL.V3.Sync
                 }
                 else
                 {
-                    destination.Insert(i);
+                    destination.Insert(i, option: Backpack.SqlBuilder.OnConflictOption.Replace);
                 }
             }
         }
@@ -388,7 +388,7 @@ namespace CruiseDAL.V3.Sync
                 }
                 else
                 {
-                    destination.Insert(i);
+                    destination.Insert(i, option: Backpack.SqlBuilder.OnConflictOption.Replace);
                 }
             }
         }
@@ -412,7 +412,7 @@ namespace CruiseDAL.V3.Sync
                 }
                 else
                 {
-                    destination.Insert(i);
+                    destination.Insert(i, option: Backpack.SqlBuilder.OnConflictOption.Replace);
                 }
             }
         }
@@ -436,7 +436,7 @@ namespace CruiseDAL.V3.Sync
                 }
                 else
                 {
-                    destination.Insert(i);
+                    destination.Insert(i, option: Backpack.SqlBuilder.OnConflictOption.Replace);
                 }
             }
         }
@@ -461,7 +461,7 @@ namespace CruiseDAL.V3.Sync
                 }
                 else
                 {
-                    destination.Insert(i);
+                    destination.Insert(i, option: Backpack.SqlBuilder.OnConflictOption.Replace);
                 }
             }
         }
@@ -485,7 +485,7 @@ namespace CruiseDAL.V3.Sync
                 }
                 else
                 {
-                    destination.Insert(i);
+                    destination.Insert(i, option: Backpack.SqlBuilder.OnConflictOption.Replace);
                 }
             }
         }
@@ -509,7 +509,7 @@ namespace CruiseDAL.V3.Sync
                 }
                 else
                 {
-                    destination.Insert(i);
+                    destination.Insert(i, option: Backpack.SqlBuilder.OnConflictOption.Replace);
                 }
             }
         }
@@ -533,7 +533,7 @@ namespace CruiseDAL.V3.Sync
                 }
                 else
                 {
-                    destination.Insert(i);
+                    destination.Insert(i, option: Backpack.SqlBuilder.OnConflictOption.Replace);
                 }
             }
         }
@@ -558,7 +558,7 @@ namespace CruiseDAL.V3.Sync
                 }
                 else
                 {
-                    destination.Insert(i);
+                    destination.Insert(i, option: Backpack.SqlBuilder.OnConflictOption.Replace);
                 }
             }
         }
