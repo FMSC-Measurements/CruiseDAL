@@ -36,7 +36,12 @@ SELECT
     Field,
     min(Heading),
     '{deviceID}'
-FROM { fromDbName}.TreeFieldSetup AS tfs
+FROM 
+    (
+        SELECT Field, Heading FROM {fromDbName}.TreeFieldSetup
+        UNION ALL
+        SELECT Field, Heading FROM {fromDbName}.TreeFieldSetupDefault
+    )
 JOIN {toDbName}.TreeField AS tf USING (Field)
 WHERE length(Heading) > 1
 GROUP BY Field; ";
