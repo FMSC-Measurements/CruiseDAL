@@ -250,7 +250,7 @@ namespace CruiseDAL.V3.Sync
 
         private void SyncCuttingUnits(string cruiseID, DbConnection source, DbConnection destination, CruiseSyncOptions options)
         {
-            var where = "CruiseID = @CruiseID AND CuttingUnitCode =  @CuttingUnitCode";
+            var where = "CruiseID = @CruiseID AND CuttingUnitID =  @CuttingUnitID";
             var sourceUnits = source.From<CuttingUnit>().Where("CruiseID = @p1").Query(cruiseID);
 
             foreach (var i in sourceUnits)
@@ -306,7 +306,7 @@ namespace CruiseDAL.V3.Sync
 
         private void SyncStrata(string cruiseID, DbConnection source, DbConnection destination, CruiseSyncOptions options)
         {
-            var where = "CruiseID = @CruiseID AND StratumCode = @StratumCode";
+            var where = "CruiseID = @CruiseID AND StratumID = @StratumID";
 
             var sourceItems = source.From<Stratum>().Where("CruiseID = @p1").Query(cruiseID);
 
@@ -344,7 +344,7 @@ namespace CruiseDAL.V3.Sync
 
         private void SyncSampleGroup(string cruiseID, DbConnection source, DbConnection destination, CruiseSyncOptions options)
         {
-            var where = "CruiseID = @CruiseID AND StratumCode = @StratumCode AND SampleGroupCode = @SampleGroupCode";
+            var where = "CruiseID = @CruiseID AND StratumCode = @StratumCode AND SampleGroupID = @SampleGroupID";
 
             var stratumCodes = destination.QueryScalar<string>("SELECT StratumCode FROM Stratum WHERE CruiseID = @p1", new[] { cruiseID });
             foreach (var stCode in stratumCodes)
