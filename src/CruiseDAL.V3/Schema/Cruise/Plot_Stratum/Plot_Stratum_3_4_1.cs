@@ -30,7 +30,7 @@ namespace CruiseDAL.Schema
     UNIQUE (PlotNumber, CuttingUnitCode, StratumCode, CruiseID),
     CHECK (IsEmpty IN (0, 1)),
     CHECK (CountOrMeasure IN ('C', 'M') OR CountOrMeasure IS NULL),
-    CHECK ((TreeCount IS 0 AND AverageHeight IS 0 AND KPI IS 0) OR (TreeCount > 0 AND AverageHeight > 0 AND KPI > 0)) 
+    --CHECK ((TreeCount IS 0 AND AverageHeight IS 0.0 AND KPI IS 0.0) OR (TreeCount > 0 AND AverageHeight > 0.0 AND KPI > 0.0)) 
 
     FOREIGN KEY (StratumCode,  CruiseID) REFERENCES Stratum (StratumCode, CruiseID) ON DELETE CASCADE ON UPDATE CASCADE,
     FOREIGN KEY (PlotNumber, CuttingUnitCode, CruiseID) REFERENCES Plot (PlotNumber, CuttingUnitCode, CruiseID) ON DELETE CASCADE ON UPDATE CASCADE
