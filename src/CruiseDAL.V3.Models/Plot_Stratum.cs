@@ -23,6 +23,15 @@ namespace CruiseDAL.V3.Models
   [Field("IsEmpty")]
   public Boolean? IsEmpty { get; set; }
 
+  [Field("CountOrMeasure")]
+  public String CountOrMeasure { get; set; }
+
+  [Field("TreeCount")]
+  public Int32? TreeCount { get; set; }
+
+  [Field("AverageHeight")]
+  public Double? AverageHeight { get; set; }
+
   [Field("KPI")]
   public Double? KPI { get; set; }
 
