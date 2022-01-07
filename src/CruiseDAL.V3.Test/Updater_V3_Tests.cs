@@ -97,6 +97,19 @@ namespace CruiseDAL.V3.Test
         }
 
         [Fact]
+        public void UpdateFrom340_To_342()
+        {
+            var filePath = InitializeTestFile("UpdateFrom340_To_342.crz3");
+
+            using var ds = new CruiseDatastore(filePath);
+
+            var updater = new Updater_V3();
+            updater.Update(ds);
+
+            ds.Invoking(x => x.Execute("DELETE FROM Plot_Stratum;")).Should().NotThrow<FMSC.ORM.SQLException>();
+        }
+
+        [Fact]
         public void ListTablesIntersect()
         {
             using (var srcDB = new SQLiteDatastore())

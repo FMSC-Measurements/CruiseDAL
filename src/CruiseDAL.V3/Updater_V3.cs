@@ -75,10 +75,46 @@ namespace CruiseDAL
                 {
                     UpdateTo_3_4_1(db);
                 }
+                if (db.DatabaseVersion == "3.4.1")
+                {
+                    UpdateTo_3_4_2(db);
+                }
             }
             finally
             {
                 db.ReleaseConnection();
+            }
+        }
+
+        // UpdateTo_3_4_1 forgot to add CountOrMeasure, TreeCount, and AverageHeight fields to 
+        // the Plot_Stratum table. This update checks to see if they need to be added and adds them 
+        // if missing
+        private void UpdateTo_3_4_2(CruiseDatastore db)
+        {
+            var curVersion = db.DatabaseVersion;
+            var targetVersion = "3.4.2";
+
+            if(db.CheckFieldExists("Plot_Stratum_Tombstone", "CountOrMeasure") is false)
+            {
+                db.BeginTransaction();
+                try
+                {
+                    db.Execute("ALTER TABLE Plot_Stratum_Tombstone ADD COLUMN CountOrMeasure TEXT COLLATE NOCASE;");
+                    db.Execute("ALTER TABLE Plot_Stratum_Tombstone ADD COLUMN TreeCount INTEGER Default 0;");
+                    db.Execute("ALTER TABLE Plot_Stratum_Tombstone ADD COLUMN AverageHeight REAL Default 0.0;");
+
+                    SetDatabaseVersion(db, targetVersion);
+                    db.CommitTransaction();
+                }
+                catch (Exception e)
+                {
+                    db.RollbackTransaction();
+                    throw new SchemaUpdateException(curVersion, targetVersion, e);
+                }
+            }
+            else
+            {
+                SetDatabaseVersion(db, targetVersion);
             }
         }
 
