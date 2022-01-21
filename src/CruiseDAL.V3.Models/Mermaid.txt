@@ -336,6 +336,9 @@ classDiagram
         - CuttingUnitCode : TEXT <<FK>>
         - StratumCode : TEXT <<FK>>
         - IsEmpty : BOOLEAN
+        - CountOrMeasure : TEXT
+        - TreeCount : INTEGER
+        - AverageHeight : REAL
         - KPI : REAL
         - ThreePRandomValue : INTEGER
         - CreatedBy : TEXT
@@ -350,6 +353,9 @@ classDiagram
         - CuttingUnitCode : TEXT
         - StratumCode : TEXT
         - IsEmpty : BOOLEAN
+        - CountOrMeasure : TEXT
+        - TreeCount : INTEGER
+        - AverageHeight : REAL
         - KPI : REAL
         - ThreePRandomValue : INTEGER
         - CreatedBy : TEXT

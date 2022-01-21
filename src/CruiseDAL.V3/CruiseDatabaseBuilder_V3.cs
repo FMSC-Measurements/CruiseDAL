@@ -11,7 +11,7 @@ namespace CruiseDAL
 {
     public class CruiseDatastoreBuilder_V3 : IDatastoreBuilder
     {
-        public static Version DATABASE_VERSION = new Version("3.4.0");
+        public static Version DATABASE_VERSION = new Version("3.4.2");
 
         public static readonly IEnumerable<ITableDefinition> TABLE_DEFINITIONS =
         new ITableDefinition[]
@@ -44,7 +44,7 @@ namespace CruiseDAL
             new StratumTableDefinition(),
             new CuttingUnit_StratumTableDefinition(),
             new PlotTableDefinition(),
-            new Plot_StratumTableDefinition(),
+            new Plot_StratumTableDefinition_3_4_1(),
             new PlotLocationTableDefinition(),
             new SampleGroupTableDefinition(),
 

@@ -46,6 +46,7 @@ CREATE INDEX NIX_LogFieldSetup_StratumCode_CruiseID ON LogFieldSetup ('StratumCo
         public IEnumerable<string> CreateTriggers => new[]
         {
             CREATE_TRIGGER_LogFieldSetup_OnDelete,
+            CREATE_TRIGGER_LogFieldSetup_OnInsert_ClearTombstone,
         };
 
         public const string CREATE_TRIGGER_LogFieldSetup_OnDelete =
@@ -71,5 +72,17 @@ BEGIN
         CURRENT_TIMESTAMP
     );
 END;";
+
+        public const string CREATE_TRIGGER_LogFieldSetup_OnInsert_ClearTombstone =
+@"CREATE TRIGGER LogFieldSetup_OnInsert_ClearTombstone 
+AFTER INSERT ON LogFieldSetup
+FOR EACH ROW 
+BEGIN 
+    DELETE FROM LogFieldSetup_Tombstone 
+        WHERE CruiseID = NEW.CruiseID
+        AND StratumCode = NEW.StratumCode
+        AND Field = NEW.Field;
+END;
+";
     }
 }

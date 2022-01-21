@@ -71,10 +71,93 @@ namespace CruiseDAL
                 {
                     UpdateTo_3_4_0(db);
                 }
+                if (db.DatabaseVersion == "3.4.0")
+                {
+                    UpdateTo_3_4_1(db);
+                }
+                if (db.DatabaseVersion == "3.4.1")
+                {
+                    UpdateTo_3_4_2(db);
+                }
             }
             finally
             {
                 db.ReleaseConnection();
+            }
+        }
+
+        // UpdateTo_3_4_1 forgot to add CountOrMeasure, TreeCount, and AverageHeight fields to 
+        // the Plot_Stratum table. This update checks to see if they need to be added and adds them 
+        // if missing
+        private void UpdateTo_3_4_2(CruiseDatastore db)
+        {
+            var curVersion = db.DatabaseVersion;
+            var targetVersion = "3.4.2";
+
+            if(db.CheckFieldExists("Plot_Stratum_Tombstone", "CountOrMeasure") is false)
+            {
+                db.BeginTransaction();
+                try
+                {
+                    db.Execute("ALTER TABLE Plot_Stratum_Tombstone ADD COLUMN CountOrMeasure TEXT COLLATE NOCASE;");
+                    db.Execute("ALTER TABLE Plot_Stratum_Tombstone ADD COLUMN TreeCount INTEGER Default 0;");
+                    db.Execute("ALTER TABLE Plot_Stratum_Tombstone ADD COLUMN AverageHeight REAL Default 0.0;");
+
+                    SetDatabaseVersion(db, targetVersion);
+                    db.CommitTransaction();
+                }
+                catch (Exception e)
+                {
+                    db.RollbackTransaction();
+                    throw new SchemaUpdateException(curVersion, targetVersion, e);
+                }
+            }
+            else
+            {
+                SetDatabaseVersion(db, targetVersion);
+            }
+        }
+
+        // Add TreeCount, Average Height, and CountOrMeasure fields to plot stratum
+        private void UpdateTo_3_4_1(CruiseDatastore db)
+        {
+            var curVersion = db.DatabaseVersion;
+            var targetVersion = "3.4.1";
+
+            var fKeys = db.ExecuteScalar<string>("PRAGMA foreign_keys;");
+            db.Execute("PRAGMA foreign_keys=OFF;");
+
+            db.BeginTransaction();
+            try
+            {
+
+                //Rebuild Plot_Stratum table
+                db.Execute("DROP VIEW main.PlotError");
+                RebuildTable(db, new Plot_StratumTableDefinition_3_4_1());
+                db.Execute(new PlotErrorViewDefinition().CreateView);
+
+                //create a bunch of clearTombstone triggers
+                db.Execute(CuttingUnit_StratumTableDefinition.CREATE_TRIGGER_CuttingUnit_Stratum_OnInsert_ClearTombstone);
+                db.Execute(LogFieldSetupTableDefinition.CREATE_TRIGGER_LogFieldSetup_OnInsert_ClearTombstone);
+                db.Execute(SubPopulationTableDefinition.CREATE_TRIGGER_SubPopulation_OnInsert_ClearTombstone);
+                db.Execute(TreeAuditRuleSelectorTableDefinition.CREATE_TRIGGER_TreeAuditRuleSelector_OnInsert_ClearTombstone);
+                db.Execute(TreeFieldSetupTableDefinition.CREATE_TRIGGER_TreeFieldSetup_OnInsert_ClearTombstone);
+                db.Execute(ReportsTableDefinition.CREATE_TRIGGER_Reports_OnInsert_ClearTombstone);
+                db.Execute(VolumeEquationTableDefinition.CREATE_TRIGGE_VolumeEquation_OnInsert_ClearTombstone);
+
+                // recreate index on Reports_Tombstone
+                db.Execute("DROP INDEX Reports_Tombstone_ReportID;");
+                db.Execute("CREATE INDEX Reports_Tombstone_ReportID_CruiseID ON Reports_Tombstone (ReportID, CruiseID);");
+
+                SetDatabaseVersion(db, targetVersion);
+                db.CommitTransaction();
+
+                db.Execute($"PRAGMA foreign_keys={fKeys};");
+            }
+            catch (Exception e)
+            {
+                db.RollbackTransaction();
+                throw new SchemaUpdateException(curVersion, targetVersion, e);
             }
         }
 

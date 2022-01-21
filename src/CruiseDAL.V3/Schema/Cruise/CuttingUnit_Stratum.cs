@@ -55,7 +55,8 @@ CREATE INDEX NIX_CuttingUnit_Stratum_CuttingUnitCode_CruiseID ON CuttingUnit_Str
         public IEnumerable<string> CreateTriggers => new[]
         {
             CREATE_TRIGGER_CuttingUnit_Stratum_OnUpdate,
-            CREATE_TRIGGER_CuttingUnit_Stratum_OnDelete
+            CREATE_TRIGGER_CuttingUnit_Stratum_OnDelete,
+            CREATE_TRIGGER_CuttingUnit_Stratum_OnInsert_ClearTombstone,
         };
 
         public const string CREATE_TRIGGER_CuttingUnit_Stratum_OnUpdate =
@@ -95,5 +96,17 @@ BEGIN
         CURRENT_TIMESTAMP
     );
 END;";
+
+        public const string CREATE_TRIGGER_CuttingUnit_Stratum_OnInsert_ClearTombstone =
+@"CREATE TRIGGER CuttingUnit_Stratum_OnInsert_ClearTombstone
+AFTER INSERT ON CuttingUnit_Stratum
+FOR EACH ROW
+BEGIN
+    DELETE FROM CuttingUnit_Stratum_Tombstone
+        WHERE CruiseID = NEW.CruiseID
+        AND CuttingUnitCode = NEW.CuttingUnitCode
+        AND StratumCode = NEW.StratumCode;
+END;
+";
     }
 }

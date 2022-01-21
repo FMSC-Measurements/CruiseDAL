@@ -36,3 +36,18 @@ Tables that need to track should have the following columns
  - Created_TS
  - ModifiedBy
  - Modified_TS
+ 
+ 
+ 
+ # Change Tracking
+ ## Tombstone Tables
+  - Naming Convention: `BaseTableName_Tombstone`
+  - Records coppied over to tombstone table on delete from base table using trigger named `BaseTableName_OnDelete`
+  - No tombstones tables for Lookup Tables
+  
+## Mapping Table Tombstones
+Because the existance of a record in a mapping table is the 'state' that is being stored, and that state must be binary.
+And generaly we don't give mapping records unique IDs because of their nature. We arn't concerned that a mapping record is unique, we 
+just care if it exists or not. 
+Re-adding a mapping record should trigger clearing any matching mapping record from the tombstone table. 
+  

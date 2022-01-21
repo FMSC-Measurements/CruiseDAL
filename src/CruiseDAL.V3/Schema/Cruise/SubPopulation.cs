@@ -61,7 +61,11 @@ CREATE INDEX NIX_SubPopulation_Tombstone_CruiseID_StratumCode_SampleGroupCode_Sp
 
 CREATE INDEX NIX_Subpopulation_StratumCode_SampleGroupCode_CruiseID ON Subpopulation (StratumCode, SampleGroupCode,  CruiseID);";
 
-        public IEnumerable<string> CreateTriggers => new[] { CREATE_TRIGGER_SubPopulation_OnUpdate, CREATE_TRIGGER_SubPopulation_OnDelete };
+        public IEnumerable<string> CreateTriggers => new[] { 
+            CREATE_TRIGGER_SubPopulation_OnUpdate, 
+            CREATE_TRIGGER_SubPopulation_OnDelete, 
+            CREATE_TRIGGER_SubPopulation_OnInsert_ClearTombstone,
+        };
 
         public const string CREATE_TRIGGER_SubPopulation_OnUpdate =
 @"CREATE TRIGGER SubPopulation_OnUpdate
@@ -104,5 +108,19 @@ BEGIN
         CURRENT_TIMESTAMP
     );
 END;";
+
+        public const string CREATE_TRIGGER_SubPopulation_OnInsert_ClearTombstone =
+@"CREATE TRIGGER SubPopulation_OnInsert_ClearTombstone
+AFTER INSERT ON SubPopulation 
+FOR EACH ROW
+BEGIN
+    DELETE FROM SubPopulation_Tombstone 
+        WHERE CruiseID = NEW.CruiseID
+        AND StratumCode = NEW.StratumCode
+        AND SampleGroupCode = NEW.SampleGroupCode
+        AND SpeciesCode = NEW.SpeciesCode
+        AND LiveDead = NEW.LiveDead;
+END;
+";
     }
 }

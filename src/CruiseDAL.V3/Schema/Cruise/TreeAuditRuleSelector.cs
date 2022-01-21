@@ -51,7 +51,10 @@ CREATE INDEX NIX_TreeAuditRuleSelector_SpeciesCode ON TreeAuditRuleSelector ('Sp
 
 CREATE INDEX NIX_TreeAuditRuleSelector_TreeAuditRuleID ON TreeAuditRuleSelector ('TreeAuditRuleID');";
 
-        public IEnumerable<string> CreateTriggers => new[] { CREATE_TRIGGER_TreeAuditRuleSelector_OnDelete };
+        public IEnumerable<string> CreateTriggers => new[] { 
+            CREATE_TRIGGER_TreeAuditRuleSelector_OnDelete,
+            CREATE_TRIGGER_TreeAuditRuleSelector_OnInsert_ClearTombstone,
+        };
 
         public const string CREATE_TRIGGER_TreeAuditRuleSelector_OnDelete =
 @"CREATE TRIGGER TreeAuditRuleSelector_OnDelete
@@ -71,5 +74,17 @@ BEGIN
         OLD.TreeAuditRuleID
     );
 END;";
+
+        public const string CREATE_TRIGGER_TreeAuditRuleSelector_OnInsert_ClearTombstone =
+@"CREATE TRIGGER TreeAuditRuleSelector_OnInsert_ClearTombstone 
+AFTER INSERT ON TreeAuditRuleSelector
+BEGIN
+    DELETE FROM TreeAuditRuleSelector_Tombstone 
+        WHERE CruiseID = NEW.CruiseID
+        AND ifnull(SpeciesCode, '') = ifnull(NEW.SpeciesCode, '')
+        AND ifnull(LiveDead, '') = ifnull(NEW.LiveDead, '')
+        AND ifnull(PrimaryProduct, '') = ifnull(NEW.PrimaryProduct, '');
+END;
+";
     }
 }
