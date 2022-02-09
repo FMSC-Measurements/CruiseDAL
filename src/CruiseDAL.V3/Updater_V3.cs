@@ -79,10 +79,35 @@ namespace CruiseDAL
                 {
                     UpdateTo_3_4_2(db);
                 }
+                if(db.DatabaseVersion == "3.4.2")
+                {
+                    UpdateTo_3_4_3(db);
+                }
             }
             finally
             {
                 db.ReleaseConnection();
+            }
+        }
+
+        // add validation on tree for DBH and DRC
+        private void UpdateTo_3_4_3(CruiseDatastore db)
+        {
+            var curVersion = db.DatabaseVersion;
+            var targetVersion = "3.4.3";
+
+            db.BeginTransaction();
+            try
+            {
+                db.Execute("DROP VIEW TreeError;");
+                db.Execute(TreeErrorViewDefinition.v3_4_3);
+                SetDatabaseVersion(db, targetVersion);
+                db.CommitTransaction();
+            }
+            catch (Exception e)
+            {
+                db.RollbackTransaction();
+                throw new SchemaUpdateException(curVersion, targetVersion, e);
             }
         }
 
