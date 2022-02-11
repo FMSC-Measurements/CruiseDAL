@@ -1265,7 +1265,8 @@ namespace CruiseDAL.V3.Sync
 
             foreach (var i in sourceItems)
             {
-                var match = destination.From<LogFieldHeading>().Where(where).Query2(i).FirstOrDefault();
+                var match = destination.From<LogFieldHeading>()
+                    .Where(where).Query2(i).FirstOrDefault();
 
                 if (match == null)
                 {
@@ -1290,7 +1291,7 @@ namespace CruiseDAL.V3.Sync
             foreach(var i in sourceItems)
             {
                 var match = destination.From<BiomassEquation>()
-                    .Where(where).Query(i).FirstOrDefault();
+                    .Where(where).Query2(i).FirstOrDefault();
 
                 if(match == null)
                 {
