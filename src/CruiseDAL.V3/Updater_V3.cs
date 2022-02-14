@@ -44,11 +44,19 @@ namespace CruiseDAL
 
             try
             {
-                var v = new Version(version);
-                if (v.Major == 3 && v.Minor < 4)
+                try
                 {
-                    db.Execute("DROP TRIGGER TreeLocation_OnUpdate;");
-                    db.Execute(TreeLocationTableDefinition.CREATE_TRIGGER_TreeLocation_ONUPDATE);
+                    var v = new Version(version);
+                    if (v.Major == 3 && v.Minor < 4)
+                    {
+                        db.Execute("DROP TRIGGER TreeLocation_OnUpdate;");
+                        db.Execute(TreeLocationTableDefinition.CREATE_TRIGGER_TreeLocation_ONUPDATE);
+                    }
+                }
+                // handel exception thrown when parsing version code
+                catch(ArgumentException ex)
+                {
+                    throw new SchemaUpdateException(version, null, ex);
                 }
 
                 if (db.DatabaseVersion == "3.3.0")
