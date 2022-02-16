@@ -24,7 +24,6 @@ SELECT
     'FScruiser' AS Program,
     te.IsResolved AS Suppress
 FROM {fromDbName}.TreeError AS te
-JOIN {fromDbName}.TreeField AS tf ON te.Field = tf.Field
 JOIN {fromDbName}.Tree AS t USING (TreeID)
 WHERE te.CruiseID = '{cruiseID}'
 

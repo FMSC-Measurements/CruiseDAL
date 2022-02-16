@@ -47,10 +47,10 @@ namespace CruiseDAL.Schema
     -- everything below are tree fKey references. there are a few, but because some tree values can be null we need to have them as seperate references
 
     FOREIGN KEY (TreeID) REFERENCES Tree (TreeID) ON DELETE CASCADE,
-    FOREIGN KEY (TreeID, CuttingUnitCode, StratumCode, SampleGroupCode) REFERENCES Tree (TreeID, CuttingUnitCode, StratumCode, SampleGroupCode) ON UPDATE CASCADE,
-    FOREIGN KEY (TreeID, SpeciesCode) REFERENCES Tree (TreeID, SpeciesCode) ON UPDATE CASCADE,
-    FOREIGN KEY (TreeID, LiveDead) REFERENCES Tree (TreeID, LiveDead) ON UPDATE CASCADE,
-    FOREIGN KEY (TreeID, PlotNumber) REFERENCES Tree (TreeID, PlotNumber) ON UPDATE CASCADE
+    --FOREIGN KEY (TreeID, CuttingUnitCode, StratumCode, SampleGroupCode) REFERENCES Tree (TreeID, CuttingUnitCode, StratumCode, SampleGroupCode),
+    --FOREIGN KEY (TreeID, SpeciesCode) REFERENCES Tree (TreeID, SpeciesCode),
+    --FOREIGN KEY (TreeID, LiveDead) REFERENCES Tree (TreeID, LiveDead),
+    FOREIGN KEY (TreeID, PlotNumber) REFERENCES Tree (TreeID, PlotNumber)
 );";
         }
 

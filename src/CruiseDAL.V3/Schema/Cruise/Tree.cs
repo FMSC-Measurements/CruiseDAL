@@ -92,9 +92,9 @@ CREATE INDEX NIX_Tree_CuttingUnitCode_CruiseID ON Tree ('CuttingUnitCode', 'Crui
 
 CREATE UNIQUE INDEX UIX_Tree_TreeID_CuttingUnitCode_SampleGroupCode_StratumCode ON Tree (TreeID, CuttingUnitCode, SampleGroupCode, StratumCode);
 
-CREATE UNIQUE INDEX UIX_Tree_TreeID_SpeciesCode ON Tree (TreeID, SpeciesCode);
+--CREATE UNIQUE INDEX UIX_Tree_TreeID_SpeciesCode ON Tree (TreeID, SpeciesCode);
 
-CREATE UNIQUE INDEX UIX_Tree_TreeID_LiveDead ON Tree (TreeID, LiveDead);
+--CREATE UNIQUE INDEX UIX_Tree_TreeID_LiveDead ON Tree (TreeID, LiveDead);
 
 CREATE UNIQUE INDEX UIX_Tree_TreeID_PlotNumber ON Tree (TreeID, PlotNumber);
 
@@ -104,7 +104,15 @@ CREATE UNIQUE INDEX UIX_Tree_TreeNumber_CuttingUnitCode_PlotNumber_StratumCode_C
 CREATE UNIQUE INDEX UIX_Tree_TreeNumber_CuttingUnitCode_CruiseID ON Tree
     (TreeNumber, CuttingUnitCode, CruiseID) WHERE PlotNumber IS NULL;";
 
-        public IEnumerable<string> CreateTriggers => new[] { CREATE_TRIGGER_TREE_ONUPDATE, CREATE_TRIGGER_Tree_OnDelete };
+        public IEnumerable<string> CreateTriggers => new[] 
+        { 
+            CREATE_TRIGGER_TREE_ONUPDATE, 
+            CREATE_TRIGGER_TREE_Cascade_Species_Updates,
+            CREATE_TRIGGER_TREE_Cascade_LiveDead_Updates,
+            CREATE_TRIGGER_TREE_Cascade_SampleGroupCode_Updates,
+            CREATE_TRIGGER_TREE_Cascade_StratumCode_Updates,
+            CREATE_TRIGGER_Tree_OnDelete 
+        };
 
         public const string CREATE_TRIGGER_TREE_ONUPDATE =
 @"CREATE TRIGGER Tree_OnUpdate
@@ -123,6 +131,56 @@ FOR EACH ROW
 BEGIN
     UPDATE Tree SET Modified_TS = CURRENT_TIMESTAMP WHERE Tree_CN = old.Tree_CN;
 END;";
+
+        public const string CREATE_TRIGGER_TREE_Cascade_Species_Updates =
+@"CREATE TRIGGER Tree_Cascade_Species_Updates
+AFTER UPDATE OF
+    SpeciesCode
+ON Tree
+FOR EACH ROW 
+BEGIN
+    UPDATE TallyLedger SET
+        SpeciesCode = NEW.SpeciesCode
+    WHERE TreeID = NEW.TreeID;
+END;
+";
+
+        public const string CREATE_TRIGGER_TREE_Cascade_LiveDead_Updates =
+@"CREATE TRIGGER Tree_Cascade_LiveDead_Updates
+AFTER UPDATE OF
+    LiveDead
+ON Tree
+FOR EACH ROW 
+BEGIN
+    UPDATE TallyLedger SET
+        LiveDead = NEW.LiveDead
+    WHERE TreeID = NEW.TreeID;
+END;
+";
+        public const string CREATE_TRIGGER_TREE_Cascade_SampleGroupCode_Updates =
+@"CREATE TRIGGER Tree_Cascade_SampleGroup_Updates
+AFTER UPDATE OF
+    SampleGroupCode
+ON Tree
+FOR EACH ROW 
+BEGIN
+    UPDATE TallyLedger SET
+        SampleGroupCode = NEW.SampleGroupCode
+    WHERE TreeID = NEW.TreeID;
+END;
+";
+        public const string CREATE_TRIGGER_TREE_Cascade_StratumCode_Updates =
+@"CREATE TRIGGER Tree_Cascade_Stratum_Updates
+AFTER UPDATE OF
+    StratumCode
+ON Tree
+FOR EACH ROW 
+BEGIN
+    UPDATE TallyLedger SET
+        StratumCode = NEW.StratumCode
+    WHERE TreeID = NEW.TreeID;
+END;
+";
 
         public const string CREATE_TRIGGER_Tree_OnDelete =
 @"CREATE TRIGGER Tree_OnDelete

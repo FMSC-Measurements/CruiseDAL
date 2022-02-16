@@ -44,11 +44,19 @@ namespace CruiseDAL
 
             try
             {
-                var v = new Version(version);
-                if (v.Major == 3 && v.Minor < 4)
+                try
                 {
-                    db.Execute("DROP TRIGGER TreeLocation_OnUpdate;");
-                    db.Execute(TreeLocationTableDefinition.CREATE_TRIGGER_TreeLocation_ONUPDATE);
+                    var v = new Version(version);
+                    if (v.Major == 3 && v.Minor < 4)
+                    {
+                        db.Execute("DROP TRIGGER TreeLocation_OnUpdate;");
+                        db.Execute(TreeLocationTableDefinition.CREATE_TRIGGER_TreeLocation_ONUPDATE);
+                    }
+                }
+                // handel exception thrown when parsing version code
+                catch(ArgumentException ex)
+                {
+                    throw new SchemaUpdateException(version, null, ex);
                 }
 
                 if (db.DatabaseVersion == "3.3.0")
@@ -79,10 +87,79 @@ namespace CruiseDAL
                 {
                     UpdateTo_3_4_2(db);
                 }
+                if(db.DatabaseVersion == "3.4.2")
+                {
+                    UpdateTo_3_4_3(db);
+                }
+                if(db.DatabaseVersion == "3.4.3")
+                {
+                    UpdateTo_3_4_4(db);
+                }
             }
             finally
             {
                 db.ReleaseConnection();
+            }
+        }
+
+        // remove foreign keys from TallyLedger table used to keep SpeciesCode, LiveDead, StratumCode and SampleGroupCode
+        // in sync between Tree and TallyLedger tables and replace them with triggers
+        // this works better in situations where either SpeciesCode or LiveDead were initialy null
+        // also removing indexes used to support those foreign keys from tree table
+        private void UpdateTo_3_4_4(CruiseDatastore db)
+        {
+            var curVersion = db.DatabaseVersion;
+            var targetVersion = "3.4.4";
+
+            var fKeys = db.ExecuteScalar<string>("PRAGMA foreign_keys;");
+            db.Execute("PRAGMA foreign_keys=OFF;");
+
+            db.BeginTransaction();
+            try
+            {
+                db.Execute("DROP VIEW TallyLedger_Totals;");
+                db.Execute("DROP VIEW TallyLedger_Tree_Totals;");
+                db.Execute("DROP VIEW TallyLedger_Plot_Totals;");
+                RebuildTable(db, new TallyLedgerTableDefinition());
+                db.Execute(new TallyLedgerViewDefinition().CreateView);
+
+                db.Execute(TreeTableDefinition.CREATE_TRIGGER_TREE_Cascade_Species_Updates);
+                db.Execute(TreeTableDefinition.CREATE_TRIGGER_TREE_Cascade_LiveDead_Updates);
+                db.Execute(TreeTableDefinition.CREATE_TRIGGER_TREE_Cascade_SampleGroupCode_Updates);
+                db.Execute(TreeTableDefinition.CREATE_TRIGGER_TREE_Cascade_StratumCode_Updates);
+                db.Execute("DROP INDEX UIX_Tree_TreeID_SpeciesCode;");
+                db.Execute("DROP INDEX UIX_Tree_TreeID_LiveDead;");
+
+                SetDatabaseVersion(db, targetVersion);
+                db.CommitTransaction();
+
+                db.Execute($"PRAGMA foreign_keys={fKeys};");
+            }
+            catch (Exception e)
+            {
+                db.RollbackTransaction();
+                throw new SchemaUpdateException(curVersion, targetVersion, e);
+            }
+        }
+
+        // add validation on tree for DBH and DRC
+        private void UpdateTo_3_4_3(CruiseDatastore db)
+        {
+            var curVersion = db.DatabaseVersion;
+            var targetVersion = "3.4.3";
+
+            db.BeginTransaction();
+            try
+            {
+                db.Execute("DROP VIEW TreeError;");
+                db.Execute(TreeErrorViewDefinition.v3_4_3);
+                SetDatabaseVersion(db, targetVersion);
+                db.CommitTransaction();
+            }
+            catch (Exception e)
+            {
+                db.RollbackTransaction();
+                throw new SchemaUpdateException(curVersion, targetVersion, e);
             }
         }
 

@@ -432,7 +432,7 @@ ORDER BY cnt.CuttingUnit_CN, cnt.SampleGroup_CN, cnt.TreeDefaultValue_CN;").ToAr
         }
 
         [Fact]
-        public void EnsureCanMigrate_HasTDVs()
+        public void EnsureCanMigrate_CheckAllSubPopsHaveTDV_HasTDVs()
         {
             var v3Path = GetTempFilePathWithExt(".crz3");
 
@@ -441,18 +441,18 @@ ORDER BY cnt.CuttingUnit_CN, cnt.SampleGroup_CN, cnt.TreeDefaultValue_CN;").ToAr
                 TreeDefaults = new[]
                 {
                     new TreeDefaultValue {SpeciesCode = "sp1", PrimaryProduct = "01"},
+                    new TreeDefaultValue {SpeciesCode = "sp2", PrimaryProduct = "01"},
+                    new TreeDefaultValue {SpeciesCode = "sp3", PrimaryProduct = "01"},
                 }
             };
             using var v3db = init.CreateDatabase();
 
-            var migrator = new DownMigrator();
-            var result = migrator.EnsureCanMigrate(init.CruiseID, v3db, out var msg);
-            result.Should().BeTrue();
-            msg.Should().BeNull();
+            var result = DownMigrator.CheckAllSubPopsHavTDV(init.CruiseID, v3db);
+            result.Should().BeEmpty();
         }
 
         [Fact]
-        public void EnsureCanMigrate_DoesntHasTDVs()
+        public void EnsureCanMigrate_CheckAllSubPopsHaveTDV_DoesntHasTDVs()
         {
             var v3Path = GetTempFilePathWithExt(".crz3");
 
@@ -462,10 +462,8 @@ ORDER BY cnt.CuttingUnit_CN, cnt.SampleGroup_CN, cnt.TreeDefaultValue_CN;").ToAr
             };
             using var v3db = init.CreateDatabase();
 
-            var migrator = new DownMigrator();
-            var result = migrator.EnsureCanMigrate(init.CruiseID, v3db, out var msg);
-            result.Should().BeFalse();
-            msg.Should().NotBeNullOrEmpty();
+            var result = DownMigrator.CheckAllSubPopsHavTDV(init.CruiseID, v3db);
+            result.Should().NotBeNullOrEmpty();
         }
 
 
