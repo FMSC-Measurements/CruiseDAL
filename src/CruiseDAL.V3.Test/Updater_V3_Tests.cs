@@ -74,7 +74,7 @@ namespace CruiseDAL.V3.Test
                 foreach (var t in tableDefs)
                 {
                     var ti = ds.GetTableInfo(t.TableName);
-                    ti.Should().NotBeNullOrEmpty();
+                    ti.Should().NotBeNullOrEmpty(t.TableName);
                 }
 
                 var sale = ds.From<Sale>().Query().Single();

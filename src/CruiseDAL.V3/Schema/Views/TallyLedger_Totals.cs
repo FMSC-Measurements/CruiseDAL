@@ -58,7 +58,7 @@ GROUP BY
 SELECT 
     tl.CruiseID,
     tl.TreeID,
-    sum(tl.STM) AS STM, 
+    max(tl.STM) AS STM, 
     sum(tl.TreeCount) AS TreeCount,
     sum(tl.KPI) AS KPI
 FROM TallyLedger AS tl

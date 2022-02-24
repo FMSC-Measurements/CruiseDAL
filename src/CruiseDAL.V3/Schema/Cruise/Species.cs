@@ -31,6 +31,25 @@ namespace CruiseDAL.Schema
 
         public string CreateIndexes => null;
 
-        public IEnumerable<string> CreateTriggers => Enumerable.Empty<string>();
+        public IEnumerable<string> CreateTriggers => new[] { CREATE_TRIGGER_Species_OnUpdate_ContractSpecies,};
+
+        public const string CREATE_TRIGGER_Species_OnUpdate_ContractSpecies =
+@"CREATE TRIGGER Species_OnUpdate_ContractSpecies 
+AFTER UPDATE OF ContractSpecies 
+ON Species
+FOR EACH ROW
+BEGIN
+    INSERT OR REPLACE INTO Species_Product (
+        CruiseID, 
+        SpeciesCode, 
+        PrimaryProduct, 
+        ContractSpecies
+    ) VALUES (
+        NEW.CruiseID,
+        NEW.SpeciesCode,
+        NULL,
+        NEW.ContractSpecies
+    );
+END;";
     }
 }

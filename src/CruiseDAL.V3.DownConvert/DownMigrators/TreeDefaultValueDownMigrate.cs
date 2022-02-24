@@ -16,13 +16,19 @@ ON TreeDefaultValue (Species, PrimaryProduct, LiveDead);
 
 
 WITH 
+
 tdvExpandSpecies AS (
     SELECT 
         tdv.CruiseID,
         tdv.TreeDefaultValue_CN,
         tdv.PrimaryProduct,
         sp.SpeciesCode,
-        sp.ContractSpecies,
+        (SELECT ContractSpecies FROM {fromDbName}.Species_Product 
+            WHERE CruiseID = tdv.CruiseID 
+                AND SpeciesCode = sp.SpeciesCode 
+                AND PrimaryProduct IS NULL OR PrimaryProduct = tdv.PrimaryProduct
+                ORDER BY PrimaryProduct DESC -- nulls and empty strings last
+                LIMIT 1 ) AS ContractSpecies,
         sp.FIACode,
         tdv.CullPrimary,
         tdv.CullPrimaryDead,
@@ -50,7 +56,12 @@ tdvExpandProduct AS (
         tdv.TreeDefaultValue_CN,
         prod.Product AS PrimaryProduct,
         tdv.SpeciesCode,
-        sp.ContractSpecies,
+        (SELECT ContractSpecies FROM {fromDbName}.Species_Product 
+            WHERE CruiseID = tdv.CruiseID 
+                AND SpeciesCode = tdv.SpeciesCode 
+                AND PrimaryProduct IS NULL OR PrimaryProduct = prod.Product
+                ORDER BY PrimaryProduct DESC -- nulls and empty strings last
+                LIMIT 1 ) AS ContractSpecies,
         sp.FIACode,
         tdv.CullPrimary,
         tdv.CullPrimaryDead,
@@ -79,7 +90,12 @@ tdvExpandProdAndSp AS (
         tdv.TreeDefaultValue_CN,
         prod.Product AS PrimaryProduct,
         sp.SpeciesCode,
-        sp.ContractSpecies,
+        (SELECT ContractSpecies FROM {fromDbName}.Species_Product 
+            WHERE CruiseID = tdv.CruiseID 
+                AND SpeciesCode = sp.SpeciesCode 
+                AND PrimaryProduct IS NULL OR PrimaryProduct = prod.Product
+                ORDER BY PrimaryProduct DESC -- nulls and empty strings last
+                LIMIT 1 ) AS ContractSpecies,
         sp.FIACode,
         tdv.CullPrimary,
         tdv.CullPrimaryDead,
@@ -108,7 +124,12 @@ tdvProdAndSpDefined AS (
         tdv.TreeDefaultValue_CN,
         tdv.PrimaryProduct,
         tdv.SpeciesCode,
-        sp.ContractSpecies,
+        (SELECT ContractSpecies FROM {fromDbName}.Species_Product 
+            WHERE CruiseID = tdv.CruiseID 
+                AND SpeciesCode = tdv.SpeciesCode 
+                AND PrimaryProduct IS NULL OR PrimaryProduct = tdv.PrimaryProduct
+                ORDER BY PrimaryProduct DESC -- nulls and empty strings last
+                LIMIT 1 ) AS ContractSpecies,
         sp.FIACode,
         tdv.CullPrimary,
         tdv.CullPrimaryDead,
