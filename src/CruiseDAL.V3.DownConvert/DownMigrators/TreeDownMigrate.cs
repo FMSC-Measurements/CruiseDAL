@@ -70,9 +70,11 @@ SELECT
     t.TreeNumber,
     t.CountOrMeasure,
     CAST (
-        (CASE WHEN plt.Plot_Stratum_CN IS NULL
-                THEN 0
-                ELSE (ifnull(tl.TreeCount, 0))
+        (CASE WHEN plt.Plot_Stratum_CN IS NOT NULL THEN (ifnull(tl.TreeCount, 0)) -- for all plot trees tree counts need to be on the tree record. Generaly this is 1 but can be greater for FixCNT
+              WHEN st.Method == '100' THEN 1 -- for 100pct tree count should always be 1, this might be overkill hard coding it in here
+              ELSE 0 -- for all other tree methods give tree count of 0 at the tree level, 
+                     -- because we are doing all counts at the count tree level. 
+                     -- This is not fully consistant with v2 behavior, but v2 behavior wasn't very consistant its self. 
         END)
         AS REAL) AS TreeCount, -- in v2 TreeCount and kpi had a type of REAL
 

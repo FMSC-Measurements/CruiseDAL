@@ -31,8 +31,25 @@ WITH
         AND tl.SampleGroupCode = tp.SampleGroupCode
         AND (tp.SpeciesCode IS NULL OR ifnull(tp.SpeciesCode,'') = ifnull(tl.SpeciesCode,''))
         AND (tp.LiveDead IS NULL OR ifnull(tp.LiveDead, '') = ifnull(tl.LiveDead, ''))
-    WHERE cm.IsPlotMethod IS FALSE
+    WHERE cm.IsPlotMethod IS FALSE AND cm.Method != '100'
     GROUP BY tp.CruiseID, cust.CuttingUnitCode, tp.StratumCode, tp.SampleGroupCode, tp.SpeciesCode, tp.LiveDead
+
+    UNION ALL
+
+    SELECT
+    tp.CruiseID,
+    cust.CuttingUnitCode,
+    tp.StratumCode,
+    tp.SampleGroupCode,
+    tp.SpeciesCode,
+    tp.LiveDead,
+    0  AS TreeCount, 
+    0 AS SumKPI
+    FROM {fromDbName}.TallyPopulation AS tp
+    JOIN {fromDbName}.Stratum AS st USING (StratumCode, CruiseID)
+    JOIN {fromDbName}.CuttingUnit_Stratum AS cust USING (StratumCode, CruiseID)
+    JOIN {fromDbName}.LK_CruiseMethod AS cm USING (Method)
+    WHERE cm.Method == '100'
 
     UNION ALL
 
