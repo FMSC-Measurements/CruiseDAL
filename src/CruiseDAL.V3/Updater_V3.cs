@@ -95,10 +95,52 @@ namespace CruiseDAL
                 {
                     UpdateTo_3_4_4(db);
                 }
+                if(db.DatabaseVersion == "3.4.4")
+                {
+                    UpdateTo_3_5_0(db);
+                }
             }
             finally
             {
                 db.ReleaseConnection();
+            }
+        }
+
+        private void UpdateTo_3_5_0(CruiseDatastore db)
+        {
+            var curVersion = db.DatabaseVersion;
+            var targetVersion = "3.5.0";
+
+            db.BeginTransaction();
+            try
+            {
+                // create Species_Product table
+                CreateTable(db, new Species_ProductTableDefinition());
+
+                // populate Species_Product table from Species table
+                db.Execute("INSERT INTO Species_Product (" +
+                    "CruiseID, " +
+                    "SpeciesCode, " +
+                    "PrimaryProduct, " +
+                    "ContractSpecies " +
+                    ") " +
+                    "SELECT CruiseID, SpeciesCode, null AS PrimaryProduct, ContractSpecies " +
+                    "FROM Species WHERE ContractSpecies IS NOT NULL;");
+
+                // add Trigger to keep Species and Species_Product in sync
+                db.Execute(SpeciesTableDefinition.CREATE_TRIGGER_Species_OnUpdate_ContractSpecies);
+
+                // rebuild TallyLedger_Tree_Totals view
+                db.Execute("DROP VIEW TallyLedger_Tree_Totals;");
+                db.Execute(TallyLedgerViewDefinition.CREATE_VIEW_TallyLedger_Tree_Totals);
+
+                SetDatabaseVersion(db, targetVersion);
+                db.CommitTransaction();
+            }
+            catch (Exception e)
+            {
+                db.RollbackTransaction();
+                throw new SchemaUpdateException(curVersion, targetVersion, e);
             }
         }
 
