@@ -22,7 +22,7 @@
     
     <!--  -->
     <CruiseDALUpconvertVersion>$(CruiseDALv3SchemaVersion).$(CruiseDALIncrementalVersion)00</CruiseDALUpconvertVersion>
-    <CruiseDALDownconvertVersion>$(CruiseDALv3SchemaVersion).$(CruiseDALIncrementalVersion)00</CruiseDALDownconvertVersion>
+    <CruiseDALDownconvertVersion>$(CruiseDALv3SchemaVersion).$(CruiseDALIncrementalVersion)01</CruiseDALDownconvertVersion>
   </PropertyGroup>
 
   <PropertyGroup Label="CustomProperties">

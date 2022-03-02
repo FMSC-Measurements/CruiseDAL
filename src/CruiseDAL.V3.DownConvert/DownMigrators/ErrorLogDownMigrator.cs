@@ -14,18 +14,25 @@ $@"INSERT INTO {toDbName}.ErrorLog (
     Program,
     Suppress
 )
-SELECT
-    -- -1 * ((((t.Tree_CN << 4) + (tf.TreeField_CN & 15)) << 4) + 1) AS RowID,
+
+SELECT 
     'Tree' AS TableName,
-    t.Tree_CN AS CN_Number,
+    t.Tree_CN AS CN_Number, 
     te.Field AS ColumnName,
     te.Level,
     te.Message AS Message,
     'FScruiser' AS Program,
     te.IsResolved AS Suppress
-FROM {fromDbName}.TreeError AS te
+FROM
+    (
+        SELECT 
+            *,
+            ROW_NUMBER() OVER (PARTITION BY TreeID, Field ORDER BY IsResolved ASC) AS Rank
+        FROM {fromDbName}.TreeError 
+        WHERE CruiseID = '{cruiseID}'
+    ) AS te
 JOIN {fromDbName}.Tree AS t USING (TreeID)
-WHERE te.CruiseID = '{cruiseID}'
+WHERE Rank = 1
 
 UNION ALL
 
