@@ -40,28 +40,30 @@ SELECT
     t.CruiseID,
     TreeID,
     TreeAuditRuleID,
-    tars.Field AS Field,
+    tar.Field AS Field,
     (CASE WHEN res.TreeAuditResolution_CN IS NULL THEN 0 ELSE 1 END)  AS IsResolved, 
     (CASE
-    WHEN tars.Min IS NOT NULL AND (tfv.ValueReal < tars.Min) THEN tars.Field || ' must be greater than ' || tars.Min
-    WHEN tars.Max IS NOT NULL AND (tfv.ValueReal > tars.Max) THEN tars.Field || ' must be less than ' || tars.Max
+    WHEN tar.Min IS NOT NULL AND (tfv.ValueReal < tar.Min) THEN tar.Field || ' must be greater than ' || tar.Min
+    WHEN tar.Max IS NOT NULL AND (tfv.ValueReal > tar.Max) THEN tar.Field || ' must be less than ' || tar.Max
     ELSE 'Validation Error' END) AS Message,
     res.Resolution
 FROM measureTrees AS t
 JOIN TreeFieldSetup AS tfs USING (StratumCode, CruiseID)
 JOIN TreeFieldValue_All AS tfv USING (TreeID, Field)
 -- get audit rule
-JOIN treeAuditRuleSelector_Epanded tars
-        ON (tars.SpeciesCode IS NULL OR tars.SpeciesCode = t.SpeciesCode)
-        AND (tars.LiveDead IS NULL OR tars.LiveDead = t.LiveDead)
-        AND (tars.PrimaryProduct IS NULL OR tars.PrimaryProduct = t.PrimaryProduct)
-        AND tars.Field = tfs.Field
-        AND tars.CruiseID = t.CruiseID
+JOIN TreeAuditRule AS tar
+    ON tar.Field = tfs.Field AND tar.CruiseID = t.CruiseID
+        AND EXISTS (SELECT * FROM TreeAuditRuleSelector AS tars WHERE 
+            (tars.SpeciesCode IS NULL OR tars.SpeciesCode = t.SpeciesCode)
+            AND (tars.LiveDead IS NULL OR tars.LiveDead = t.LiveDead)
+            AND (tars.PrimaryProduct IS NULL OR tars.PrimaryProduct = t.PrimaryProduct)
+            AND tars.TreeAuditRuleID = tar.TreeAuditRuleID
+            AND tars.CruiseID = t.CruiseID)
 LEFT JOIN TreeAuditResolution AS res USING (TreeAuditRuleID, TreeID)
 WHERE
     (tfv.ValueReal IS NOT NULL AND
-    (tars.Min IS NOT NULL AND tfv.ValueReal < tars.Min)
-    OR (tars.Max IS NOT NULL AND tfv.ValueReal > tars.Max));";
+    (tar.Min IS NOT NULL AND tfv.ValueReal < tar.Min)
+    OR (tar.Max IS NOT NULL AND tfv.ValueReal > tar.Max));";
 
     }
 }
