@@ -10,9 +10,9 @@ SELECT
     t.TreeID,
     (SELECT TreeDefaultValue_CN FROM TreeDefaultValue AS tdv
         WHERE  tdv.CruiseID = t.CruiseID
-            AND SpeciesCode = t.SpeciesCode OR SpeciesCode IS NULL
-            AND PrimaryProduct = sg.PrimaryProduct OR PrimaryProduct IS NULL
-        ORDER BY PrimaryProduct DESC, SpeciesCode DESC
+            AND (tdv.SpeciesCode = t.SpeciesCode OR SpeciesCode IS NULL)
+            AND (tdv.PrimaryProduct = sg.PrimaryProduct OR tdv.PrimaryProduct IS NULL)
+        ORDER BY tdv.PrimaryProduct DESC, tdv.SpeciesCode DESC
         LIMIT 1
     ) AS TreeDefaultValue_CN
 FROM Tree AS t

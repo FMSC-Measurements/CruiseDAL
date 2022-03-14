@@ -15,8 +15,16 @@ namespace CruiseDAL.Schema
 SELECT
         tm.TreeID,
 
+        -- for each tree field we will resolve the value by taking the first non-null value in the following order
+            -- first try reading the value from the TreeMeasurments table, treating the default value (0.0, 0, '') depending on data type as null
+            -- next we will try getting the default value from the TreeFieldSetup table, by matching with either the stratum level or samplegroup level field setup
+            -- if the field is a field in the TreeDefaultValues table we will get populate the value from the tree default value table
+            -- last we will use the value in the TreeMeasurments table which we know is the default value for the field...
+                -- note: should we just force the 
+
+
         -- MEASURMENT FIELDS
-        coalesce(nullif(tm.SeenDefectPrimary, 0.0), 
+        coalesce(nullif(tm.SeenDefectPrimary, 0.0),
                 (SELECT tfs.DefaultValueReal FROM TreeFieldSetup AS tfs WHERE tfs.CruiseID = t.CruiseID AND t.StratumCode = tfs.StratumCode AND (t.SampleGroupCode = tfs.SampleGroupCode OR tfs.SampleGroupCode IS NULL) AND tfs.Field = 'SeenDefectPrimary' ORDER BY tfs.SampleGroupCode DESC LIMIT 1),
                 tm.SeenDefectPrimary) AS SeenDefectPrimary,
         coalesce(nullif(tm.SeenDefectSecondary, 0.0), 
