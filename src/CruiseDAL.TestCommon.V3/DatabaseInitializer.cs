@@ -233,7 +233,7 @@ namespace CruiseDAL.TestCommon
             {
                 sg.SampleGroupID = Guid.NewGuid().ToString();
                 sg.CruiseID = cruiseID;
-                sg.PrimaryProduct = "01";
+                sg.PrimaryProduct ??= "01";
                 db.Insert(sg);
             }
 
