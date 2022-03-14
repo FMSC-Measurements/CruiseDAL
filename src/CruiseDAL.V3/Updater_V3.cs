@@ -54,7 +54,7 @@ namespace CruiseDAL
                     }
                 }
                 // handel exception thrown when parsing version code
-                catch(ArgumentException ex)
+                catch (ArgumentException ex)
                 {
                     throw new SchemaUpdateException(version, null, ex);
                 }
@@ -87,22 +87,50 @@ namespace CruiseDAL
                 {
                     UpdateTo_3_4_2(db);
                 }
-                if(db.DatabaseVersion == "3.4.2")
+                if (db.DatabaseVersion == "3.4.2")
                 {
                     UpdateTo_3_4_3(db);
                 }
-                if(db.DatabaseVersion == "3.4.3")
+                if (db.DatabaseVersion == "3.4.3")
                 {
                     UpdateTo_3_4_4(db);
                 }
-                if(db.DatabaseVersion == "3.4.4")
+                if (db.DatabaseVersion == "3.4.4")
                 {
                     UpdateTo_3_5_0(db);
+                }
+                if (db.DatabaseVersion == "3.5.0")
+                {
+                    UpdateTo_3_5_1(db);
                 }
             }
             finally
             {
                 db.ReleaseConnection();
+            }
+        }
+
+        private void UpdateTo_3_5_1(CruiseDatastore db)
+        {
+            var curVersion = db.DatabaseVersion;
+            var targetVersion = "3.5.1";
+
+            db.BeginTransaction();
+            try
+            {
+                db.Execute("DROP VIEW Tree_TreeDefaultValue;");
+                db.Execute("DROP VIEW TreeAuditError");
+
+                db.Execute(Tree_TreeDefaultValue.CREATE_VIEW_3_5_1);
+                db.Execute(TreeAuditErrorViewDefinition.CREATE_VIEW_3_5_1);
+
+                SetDatabaseVersion(db, targetVersion);
+                db.CommitTransaction();
+            }
+            catch (Exception e)
+            {
+                db.RollbackTransaction();
+                throw new SchemaUpdateException(curVersion, targetVersion, e);
             }
         }
 
@@ -205,15 +233,15 @@ namespace CruiseDAL
             }
         }
 
-        // UpdateTo_3_4_1 forgot to add CountOrMeasure, TreeCount, and AverageHeight fields to 
-        // the Plot_Stratum table. This update checks to see if they need to be added and adds them 
+        // UpdateTo_3_4_1 forgot to add CountOrMeasure, TreeCount, and AverageHeight fields to
+        // the Plot_Stratum table. This update checks to see if they need to be added and adds them
         // if missing
         private void UpdateTo_3_4_2(CruiseDatastore db)
         {
             var curVersion = db.DatabaseVersion;
             var targetVersion = "3.4.2";
 
-            if(db.CheckFieldExists("Plot_Stratum_Tombstone", "CountOrMeasure") is false)
+            if (db.CheckFieldExists("Plot_Stratum_Tombstone", "CountOrMeasure") is false)
             {
                 db.BeginTransaction();
                 try
@@ -249,7 +277,6 @@ namespace CruiseDAL
             db.BeginTransaction();
             try
             {
-
                 //Rebuild Plot_Stratum table
                 db.Execute("DROP VIEW main.PlotError");
                 RebuildTable(db, new Plot_StratumTableDefinition_3_4_1());

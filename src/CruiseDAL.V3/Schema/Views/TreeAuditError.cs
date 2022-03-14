@@ -4,7 +4,9 @@
     {
         public string ViewName => "TreeAuditError";
 
-        public string CreateView =>
+        public string CreateView => CREATE_VIEW_3_5_1;
+
+        public const string CREATE_VIEW_3_5_1 =
 @"CREATE VIEW TreeAuditError AS
 WITH
 -- return just measure trees
@@ -41,7 +43,7 @@ SELECT
     TreeID,
     TreeAuditRuleID,
     tar.Field AS Field,
-    (CASE WHEN res.TreeAuditResolution_CN IS NULL THEN 0 ELSE 1 END)  AS IsResolved, 
+    (CASE WHEN res.TreeAuditResolution_CN IS NULL THEN 0 ELSE 1 END)  AS IsResolved,
     (CASE
     WHEN tar.Min IS NOT NULL AND (tfv.ValueReal < tar.Min) THEN tar.Field || ' must be greater than ' || tar.Min
     WHEN tar.Max IS NOT NULL AND (tfv.ValueReal > tar.Max) THEN tar.Field || ' must be less than ' || tar.Max
@@ -53,7 +55,7 @@ JOIN TreeFieldValue_All AS tfv USING (TreeID, Field)
 -- get audit rule
 JOIN TreeAuditRule AS tar
     ON tar.Field = tfs.Field AND tar.CruiseID = t.CruiseID
-        AND EXISTS (SELECT * FROM TreeAuditRuleSelector AS tars WHERE 
+        AND EXISTS (SELECT * FROM TreeAuditRuleSelector AS tars WHERE
             (tars.SpeciesCode IS NULL OR tars.SpeciesCode = t.SpeciesCode)
             AND (tars.LiveDead IS NULL OR tars.LiveDead = t.LiveDead)
             AND (tars.PrimaryProduct IS NULL OR tars.PrimaryProduct = t.PrimaryProduct)
@@ -64,6 +66,5 @@ WHERE
     (tfv.ValueReal IS NOT NULL AND
     (tar.Min IS NOT NULL AND tfv.ValueReal < tar.Min)
     OR (tar.Max IS NOT NULL AND tfv.ValueReal > tar.Max));";
-
     }
 }

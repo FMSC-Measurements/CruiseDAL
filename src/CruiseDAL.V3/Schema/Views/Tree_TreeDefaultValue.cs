@@ -4,7 +4,9 @@
     {
         public string ViewName => "Tree_TreeDefaultValue";
 
-        public string CreateView =>
+        public string CreateView => CREATE_VIEW_3_5_1;
+
+        public const string CREATE_VIEW_3_5_1 =
 @"CREATE VIEW Tree_TreeDefaultValue AS
 SELECT
     t.TreeID,
