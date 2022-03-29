@@ -21,6 +21,10 @@ namespace CruiseDAL.V3.Sync
 
     // TODO sync Species_Product
 
+    // TODO need to noodle some more on how conflicts with tree is going to work with tally ledger records. 
+            // when resolving with Chose Dest or Chose Source we probably shouldn't sync TallyLedgers assocated with not not-picked record
+            // one possible solution for now would be to only allow resolution with Modify Dest or Modify Source
+
     public class CruiseSyncer
     {
         private ILogger _logger;
@@ -42,7 +46,7 @@ namespace CruiseDAL.V3.Sync
             return hasCruise;
         }
 
-        public void Sync(string cruiseID, CruiseDatastore source, CruiseDatastore destination, CruiseSyncOptions options)
+        public void Sync(string cruiseID, CruiseDatastore source, CruiseDatastore destination, CruiseSyncOptions options, ConflictResolutionOptions conflictOptions)
         {
             var sourceConn = source.OpenConnection();
             try
@@ -50,7 +54,7 @@ namespace CruiseDAL.V3.Sync
                 var destConn = destination.OpenConnection();
                 try
                 {
-                    Sync(cruiseID, sourceConn, destConn, options);
+                    Sync(cruiseID, sourceConn, destConn, options, conflictOptions);
                 }
                 finally
                 {
@@ -65,7 +69,7 @@ namespace CruiseDAL.V3.Sync
 
         public Task SyncAsync(string cruiseID, DbConnection source, DbConnection destination, CruiseSyncOptions options, ConflictResolutionOptions conflictOptions, IProgress<float> progress = null)
         {
-            return Task.Run(() => Sync(cruiseID, source, destination, options, progress));
+            return Task.Run(() => Sync(cruiseID, source, destination, options, conflictOptions, progress));
         }
 
         public void Sync(string cruiseID, DbConnection source, DbConnection destination, CruiseSyncOptions options, ConflictResolutionOptions conflictOptions, IProgress<float> progress = null)
@@ -141,12 +145,12 @@ namespace CruiseDAL.V3.Sync
                 SyncNonPlotTrees(cruiseID, source, destination, options, excludeOptions, conflictOptions);
                 progress?.Report(p++ / steps);
 
-                SyncTallyLedger(cruiseID, source, destination, options, excludeOptions, conflictOptions);
+                SyncTallyLedger(cruiseID, source, destination, options, excludeOptions);
                 progress?.Report(p++ / steps);
 
                 SyncLog(cruiseID, source, destination, options, excludeOptions, conflictOptions);
                 progress?.Report(p++ / steps);
-                SyncStem(cruiseID, source, destination, options, excludeOptions, conflictOptions);
+                SyncStem(cruiseID, source, destination, options, excludeOptions);
                 progress?.Report(p++ / steps);
 
                 //processing
@@ -987,7 +991,7 @@ namespace CruiseDAL.V3.Sync
                             }
                         case Conflict.ConflictResolutionType.ModifySource:
                             {
-                                tree.PlotNumber = ((Tree)(treeConflictOpt.SourceRec)).TreeNumber;
+                                tree.TreeNumber = ((Tree)(treeConflictOpt.SourceRec)).TreeNumber;
                                 break;
                             }
                         case Conflict.ConflictResolutionType.ModifyDest:
@@ -1086,7 +1090,7 @@ namespace CruiseDAL.V3.Sync
                                 }
                             case Conflict.ConflictResolutionType.ModifySource:
                                 {
-                                    i.PlotNumber = ((Tree)(treeConflictOpt.SourceRec)).TreeNumber;
+                                    i.TreeNumber = ((Tree)(treeConflictOpt.SourceRec)).TreeNumber;
                                     break;
                                 }
                             case Conflict.ConflictResolutionType.ModifyDest:
@@ -1347,8 +1351,8 @@ namespace CruiseDAL.V3.Sync
                                     destination.ExecuteNonQuery2(
                                         "PRAGMA foreign_keys=off; " +
                                         "BEGIN; " + // disable FKeys so that cascading deletes dont trigger 
-                                        "DELETE FROM Tree WHERE TreeID = @p1; " +
-                                        "DELETE FROM Tree_Tombstone WHERE TreeID = @p1; " +
+                                        "DELETE FROM Log WHERE LogID = @p1; " +
+                                        "DELETE FROM Log_Tombstone WHERE LogID = @p1; " +
                                         "COMMIT; " +
                                         "PRAGMA foreign_keys=on;", logConflictOpt.DestRecID);
                                     break;
@@ -1359,12 +1363,12 @@ namespace CruiseDAL.V3.Sync
                                 }
                             case Conflict.ConflictResolutionType.ModifySource:
                                 {
-                                    tree.PlotNumber = ((Tree)(logConflictOpt.SourceRec)).TreeNumber;
+                                    log.LogNumber = ((Log)(logConflictOpt.SourceRec)).LogNumber;
                                     break;
                                 }
                             case Conflict.ConflictResolutionType.ModifyDest:
                                 {
-                                    destination.ExecuteNonQuery2(MODIFY_TREE_COMMAND, logConflictOpt.DestRecID);
+                                    destination.ExecuteNonQuery2(MODIFY_LOG_COMMAND, logConflictOpt.DestRecID);
                                     break;
                                 }
                         }

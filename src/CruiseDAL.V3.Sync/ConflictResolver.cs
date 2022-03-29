@@ -1,8 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
+using System.Data.Common;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using FMSC.ORM.Core;
 
 namespace CruiseDAL.V3.Sync
 {
@@ -15,7 +18,7 @@ namespace CruiseDAL.V3.Sync
         protected const string MODIFY_TREE_COMMAND = "UPDATE Tree SET TreeNumber = @TreeNumber WHERE TreeID = @TreeID;";
         protected const string MODIFY_LOG_COMMAND = "UPDATE Log SET LogNumber = @LogNumber WHERE LogID = @LogID;";
 
-        public void ResolveUnitConflicts(CruiseDatastore_V3 source, CruiseDatastore_V3 destination, IEnumerable<Conflict> conflicts)
+        public void ResolveUnitConflicts(DbConnection source, DbConnection destination, IEnumerable<Conflict> conflicts)
         {
             foreach (var conflict in conflicts)
             {
@@ -23,7 +26,7 @@ namespace CruiseDAL.V3.Sync
                 {
                     case Conflict.ConflictResolutionType.ChoseSource:
                         {
-                            destination.Execute("DELETE FROM CuttingUnit WHERE CuttingUnitID = @p1", conflict.DestRecID);
+                            destination.ExecuteNonQuery2("DELETE FROM CuttingUnit WHERE CuttingUnitID = @p1", conflict.DestRecID);
                             break;
                         }
                     case Conflict.ConflictResolutionType.ChoseDest:
@@ -32,19 +35,19 @@ namespace CruiseDAL.V3.Sync
                         }
                     case Conflict.ConflictResolutionType.ModifySource:
                         {
-                            source.Execute2(MODIFY_CUTTINGUNIT_COMMAND, conflict.SourceRec);
+                            source.ExecuteNonQuery2(MODIFY_CUTTINGUNIT_COMMAND, conflict.SourceRec);
                             break;
                         }
                     case Conflict.ConflictResolutionType.ModifyDest:
                         {
-                            destination.Execute2(MODIFY_CUTTINGUNIT_COMMAND, conflict.DestRec);
+                            destination.ExecuteNonQuery2(MODIFY_CUTTINGUNIT_COMMAND, conflict.DestRec);
                             break;
                         }
                 }
             }
         }
 
-        public void ResolveStratumConflicts(CruiseDatastore_V3 source, CruiseDatastore_V3 destination, IEnumerable<Conflict> conflicts)
+        public void ResolveStratumConflicts(DbConnection source, DbConnection destination, IEnumerable<Conflict> conflicts)
         {
             foreach (var conflict in conflicts)
             {
@@ -52,7 +55,7 @@ namespace CruiseDAL.V3.Sync
                 {
                     case Conflict.ConflictResolutionType.ChoseSource:
                         {
-                            destination.Execute("DELETE FROM Stratum WHERE StratumID = @p1", conflict.DestRecID);
+                            destination.ExecuteNonQuery2("DELETE FROM Stratum WHERE StratumID = @p1", conflict.DestRecID);
                             break;
                         }
                     case Conflict.ConflictResolutionType.ChoseDest:
@@ -61,19 +64,19 @@ namespace CruiseDAL.V3.Sync
                         }
                     case Conflict.ConflictResolutionType.ModifySource:
                         {
-                            source.Execute2(MODIFY_STRATUM_COMMAND, conflict.SourceRec);
+                            source.ExecuteNonQuery2(MODIFY_STRATUM_COMMAND, conflict.SourceRec);
                             break;
                         }
                     case Conflict.ConflictResolutionType.ModifyDest:
                         {
-                            destination.Execute2(MODIFY_STRATUM_COMMAND, conflict.DestRec);
+                            destination.ExecuteNonQuery2(MODIFY_STRATUM_COMMAND, conflict.DestRec);
                             break;
                         }
                 }
             }
         }
 
-        public void ResolveSampleGroupConflicts(CruiseDatastore_V3 source, CruiseDatastore_V3 destination, IEnumerable<Conflict> conflicts)
+        public void ResolveSampleGroupConflicts(DbConnection source, DbConnection destination, IEnumerable<Conflict> conflicts)
         {
             foreach (var conflict in conflicts)
             {
@@ -81,7 +84,7 @@ namespace CruiseDAL.V3.Sync
                 {
                     case Conflict.ConflictResolutionType.ChoseSource:
                         {
-                            destination.Execute("DELETE FROM SampleGroup WHERE SampleGroupID = @p1", conflict.DestRecID);
+                            destination.ExecuteNonQuery2("DELETE FROM SampleGroup WHERE SampleGroupID = @p1", conflict.DestRecID);
                             break;
                         }
                     case Conflict.ConflictResolutionType.ChoseDest:
@@ -90,19 +93,19 @@ namespace CruiseDAL.V3.Sync
                         }
                     case Conflict.ConflictResolutionType.ModifySource:
                         {
-                            source.Execute2(MODIFY_SAMPLEGROUP_COMMAND, conflict.SourceRec);
+                            source.ExecuteNonQuery2(MODIFY_SAMPLEGROUP_COMMAND, conflict.SourceRec);
                             break;
                         }
                     case Conflict.ConflictResolutionType.ModifyDest:
                         {
-                            destination.Execute2(MODIFY_SAMPLEGROUP_COMMAND, conflict.DestRec);
+                            destination.ExecuteNonQuery2(MODIFY_SAMPLEGROUP_COMMAND, conflict.DestRec);
                             break;
                         }
                 }
             }
         }
 
-        public void ResolvePlotConflicts(CruiseDatastore_V3 source, CruiseDatastore_V3 destination, IEnumerable<Conflict> conflicts)
+        public void ResolvePlotConflicts(DbConnection source, DbConnection destination, IEnumerable<Conflict> conflicts)
         {
             foreach (var conflict in conflicts)
             {
@@ -110,7 +113,7 @@ namespace CruiseDAL.V3.Sync
                 {
                     case Conflict.ConflictResolutionType.ChoseSource:
                         {
-                            destination.Execute("DELETE FROM Plot WHERE PlotID = @p1", conflict.DestRecID);
+                            destination.ExecuteNonQuery2("DELETE FROM Plot WHERE PlotID = @p1", conflict.DestRecID);
                             break;
                         }
                     case Conflict.ConflictResolutionType.ChoseDest:
@@ -119,19 +122,19 @@ namespace CruiseDAL.V3.Sync
                         }
                     case Conflict.ConflictResolutionType.ModifySource:
                         {
-                            source.Execute2(MODIFY_PLOT_COMMAND, conflict.SourceRec);
+                            source.ExecuteNonQuery2(MODIFY_PLOT_COMMAND, conflict.SourceRec);
                             break;
                         }
                     case Conflict.ConflictResolutionType.ModifyDest:
                         {
-                            destination.Execute2(MODIFY_PLOT_COMMAND, conflict.DestRec);
+                            destination.ExecuteNonQuery2(MODIFY_PLOT_COMMAND, conflict.DestRec);
                             break;
                         }
                 }
             }
         }
 
-        public void ResolveTreeConflicts(CruiseDatastore_V3 source, CruiseDatastore_V3 destination, IEnumerable<Conflict> conflicts)
+        public void ResolveTreeConflicts(DbConnection source, DbConnection destination, IEnumerable<Conflict> conflicts)
         {
             foreach (var conflict in conflicts)
             {
@@ -139,7 +142,7 @@ namespace CruiseDAL.V3.Sync
                 {
                     case Conflict.ConflictResolutionType.ChoseSource:
                         {
-                            destination.Execute("DELETE Tree WHERE TreeID = @p1;", conflict.DestRecID);
+                            destination.ExecuteNonQuery2("DELETE Tree WHERE TreeID = @p1;", conflict.DestRecID);
                             break;
                         }
                     case Conflict.ConflictResolutionType.ChoseDest:
@@ -148,19 +151,19 @@ namespace CruiseDAL.V3.Sync
                         }
                     case Conflict.ConflictResolutionType.ModifySource:
                         {
-                            source.Execute2(MODIFY_TREE_COMMAND, conflict.SourceRec);
+                            source.ExecuteNonQuery2(MODIFY_TREE_COMMAND, conflict.SourceRec);
                             break;
                         }
                     case Conflict.ConflictResolutionType.ModifyDest:
                         {
-                            destination.Execute2(MODIFY_TREE_COMMAND, conflict.DestRec);
+                            destination.ExecuteNonQuery2(MODIFY_TREE_COMMAND, conflict.DestRec);
                             break;
                         }
                 }
             }
         }
 
-        public void ResolveLogConflicts(CruiseDatastore_V3 source, CruiseDatastore_V3 destination, IEnumerable<Conflict> conflicts)
+        public void ResolveLogConflicts(DbConnection source, DbConnection destination, IEnumerable<Conflict> conflicts)
         {
             foreach (var conflict in conflicts)
             {
@@ -168,7 +171,7 @@ namespace CruiseDAL.V3.Sync
                 {
                     case Conflict.ConflictResolutionType.ChoseSource:
                         {
-                            destination.Execute("DELETE Log WHERE LogID = @p1;", conflict.DestRecID);
+                            destination.ExecuteNonQuery2("DELETE Log WHERE LogID = @p1;", conflict.DestRecID);
                             break;
                         }
                     case Conflict.ConflictResolutionType.ChoseDest:
@@ -177,13 +180,13 @@ namespace CruiseDAL.V3.Sync
                         }
                     case Conflict.ConflictResolutionType.ModifySource:
                         {
-                            source.Execute2(MODIFY_LOG_COMMAND, conflict.SourceRec);
+                            source.ExecuteNonQuery2(MODIFY_LOG_COMMAND, conflict.SourceRec);
 
                             break;
                         }
                     case Conflict.ConflictResolutionType.ModifyDest:
                         {
-                            destination.Execute2(MODIFY_LOG_COMMAND, conflict.DestRec);
+                            destination.ExecuteNonQuery2(MODIFY_LOG_COMMAND, conflict.DestRec);
                             break;
                         }
                 }
