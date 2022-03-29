@@ -44,30 +44,33 @@ namespace FMSC.ORM.ModelGenerator
             Parser.Default.ParseArguments<Options>(args)
                 .WithParsed(o =>
                 {
-                    if (o.ds)
+                if (o.ds)
+                {
+                    if (o.TargetAssembly != null)
                     {
-                        if (o.TargetAssembly != null)
-                        {
-                            var datastore = CreateDatastore(o.TargetAssembly, o.TypeName, o.Params);
+                        var datastore = CreateDatastore(o.TargetAssembly, o.TypeName, o.Params);
 
-                            var ignoreColmns = (string.IsNullOrWhiteSpace(o.IgnoreColumns) == false) ?
-                                o.IgnoreColumns.Split(',')
-                                : (string[])null;
+                        var ignoreColmns = (string.IsNullOrWhiteSpace(o.IgnoreColumns) == false) ?
+                            o.IgnoreColumns.Split(',')
+                            : (string[])null;
 
-                            var nonPersistedColumns = (string.IsNullOrWhiteSpace(o.NonPersistedColumns) == false) ?
-                                o.IgnoreColumns.Split(',')
-                                : (string[])null;
+                        var nonPersistedColumns = (string.IsNullOrWhiteSpace(o.NonPersistedColumns) == false) ?
+                            o.IgnoreColumns.Split(',')
+                            : (string[])null;
 
-                            var schemaProvider = new SqliteDatastoreSchemaInfoProvider(datastore, ignoreColmns);
+                        var schemaProvider = new SqliteDatastoreSchemaInfoProvider(datastore, ignoreColmns);
 
-                            var modelGenerator = new CSModelGenerator();
-                            modelGenerator.GenerateFiles(schemaProvider, o.Namespace, o.OutputDirectory, nonPersistedColumns);
+                        var modelGenerator = new CSModelGenerator();
+                        modelGenerator.GenerateFiles(schemaProvider, o.Namespace, o.OutputDirectory, nonPersistedColumns);
 
-                            //var plantUMLGenerator = new PlantUMLGenerator();
-                            //plantUMLGenerator.GenerateFiles(schemaProvider, o.Namespace, o.OutputDirectory, nonPersistedColumns);
+                        //var plantUMLGenerator = new PlantUMLGenerator();
+                        //plantUMLGenerator.GenerateFiles(schemaProvider, o.Namespace, o.OutputDirectory, nonPersistedColumns);
 
-                            var mermadeGenerator = new MermaidGenerator();
-                            mermadeGenerator.GenerateFiles(schemaProvider, o.Namespace, o.OutputDirectory, nonPersistedColumns);
+                        var mermadeGenerator = new MermaidGenerator();
+                        mermadeGenerator.GenerateFiles(schemaProvider, o.Namespace, o.OutputDirectory, nonPersistedColumns);
+
+                        var ddlGenerator = new DDLGenerator();
+                        ddlGenerator.GenerateFiles(schemaProvider, o.Namespace, o.OutputDirectory, nonPersistedColumns);
                         }
                     }
                 });

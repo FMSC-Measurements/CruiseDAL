@@ -4,6 +4,7 @@ using FMSC.ORM.Core;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 
 namespace FMSC.ORM.ModelGenerator
 {
@@ -32,7 +33,7 @@ namespace FMSC.ORM.ModelGenerator
             ignoreColumnNames = ignoreColumnNames ?? Enumerable.Empty<string>();
 
             // note: we are only generating types off of tables because sqlite may fail to reflect the type on columns in views
-            var tableNames = datastore.QueryScalar<string>("SELECT tbl_name FROM Sqlite_Master WHERE type IN ('table', 'view') AND tbl_name NOT LIKE 'sqlite\\_%' ESCAPE '\\';");
+            var tableNames = datastore.QueryScalar<string>("SELECT tbl_name FROM Sqlite_Master WHERE type IN ('table', 'view') AND tbl_name NOT LIKE 'sqlite\\_%' ESCAPE '\\' ORDER BY tbl_name;");
 
             var conn = datastore.OpenConnection();
 
@@ -94,12 +95,31 @@ $@"
                 var foreignKeys = datastore.Query<ForeignKeyInfo>(
 $@"SELECT [table], group_concat([from]) AS FromFieldNames, group_concat([to]) AS ToFieldNames FROM PRAGMA_FOREIGN_KEY_LIST('{tableName}') GROUP BY [table];").ToArray();
 
+
+                var tableDDLs = datastore.QueryScalar<string>(
+                    "SELECT sql FROM sqlite_master WHERE tbl_name = @p1 AND type = 'table' " +
+                    "UNION ALL " +
+                    "SELECT sql FROM sqlite_master WHERE tbl_name = @p1 AND type = 'trigger' " +
+                    "UNION ALL " +
+                    "SELECT sql FROM sqlite_master WHERE tbl_name = @p1 AND type = 'view' " +
+                    "UNION ALL " +
+                    "SELECT sql FROM sqlite_master WHERE tbl_name = @p1 AND type = 'index'; ",
+                    tableName);
+
+                var ddlSb = new StringBuilder();
+                foreach(var tableDDL in tableDDLs)
+                {
+                    ddlSb.AppendLine(tableDDL);
+                    ddlSb.AppendLine();
+                }
+
                 var tableInfo = new TableInfo()
                 {
                     TableName = tableName,
                     Fields = fields,
                     PrimaryKeyField = pkField,
                     ForeignKeys = foreignKeys,
+                    DDL = ddlSb.ToString(),
                 };
 
 
