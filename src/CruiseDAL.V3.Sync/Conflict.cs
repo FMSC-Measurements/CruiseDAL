@@ -8,7 +8,7 @@ namespace CruiseDAL.V3.Sync
 {
     public class Conflict
     {
-        public enum ConflictResolutionType { NotSet, ChoseSource, ChoseDest, ModifySource, ModifyDest }
+        public enum ConflictResolutionType { NotSet, ChoseSource, ChoseDest, ModifySource, ModifyDest, MergeDataChoseSource, MergeDataChoseDest }
 
         public string Table { get; set; }
 
@@ -19,6 +19,8 @@ namespace CruiseDAL.V3.Sync
         public object SourceRec { get; set; }
 
         public object DestRec { get; set; }
+
+        public IEnumerable<Conflict> DownstreamConflicts { get; set; }
 
         public bool MergeChildren { get; set; }
 

@@ -1,28 +1,31 @@
 ﻿using CruiseDAL.V3.Models;
+using FMSC.ORM.Core;
 using System;
 using System.Collections.Generic;
+using System.Data.Common;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace CruiseDAL.V3.Sync
 {
     public class ConflictChecker
     {
-        
-
-        public IEnumerable<Conflict> CheckCuttingUnits(CruiseDatastore_V3 source, CruiseDatastore_V3 destination, string cruiseID)
+        public IEnumerable<Conflict> CheckCuttingUnits(DbConnection source, DbConnection destination, string cruiseID)
         {
             var sourceItems = source.From<CuttingUnit>().Where("CruiseID = @p1").Query(cruiseID);
 
-            foreach(var item in sourceItems)
+            foreach (var item in sourceItems)
             {
                 var conflictItem = destination.From<CuttingUnit>()
                     .Where("CruiseID = @CruiseID AND CuttingUnitCode = @CuttingUnitCode AND CuttingUnitID != @CuttingUnitID")
                     .Query2(item).FirstOrDefault();
 
-                if(conflictItem != null)
+                if (conflictItem != null)
                 {
+                    var unitCode = item.CuttingUnitCode;
+                    var treeConflicts = CheckTreesByUnitCode(source, destination, cruiseID, unitCode);
+                    var plotTreeConflicts = CheckPlotTreesByUnitCode(source, destination, cruiseID, unitCode);
+                    var plotConflicts = CheckPlot
+
                     yield return new Conflict
                     {
                         Table = nameof(CuttingUnit),
@@ -35,7 +38,7 @@ namespace CruiseDAL.V3.Sync
             }
         }
 
-        public IEnumerable<Conflict> CheckStrata(CruiseDatastore_V3 source, CruiseDatastore_V3 destination, string cruiseID)
+        public IEnumerable<Conflict> CheckStrata(DbConnection source, DbConnection destination, string cruiseID)
         {
             var sourceItems = source.From<Stratum>().Where("CruiseID = @p1").Query(cruiseID);
 
@@ -59,79 +62,238 @@ namespace CruiseDAL.V3.Sync
             }
         }
 
-        public IEnumerable<Conflict> CheckSampleGroups(CruiseDatastore_V3 source, CruiseDatastore_V3 destination, string cruiseID)
+        public IEnumerable<Conflict> CheckSampleGroups(DbConnection source, DbConnection destination, string cruiseID)
         {
-            var sourceItems = source.From<SampleGroup>().Where("CruiseID = @p1").Query(cruiseID);
+            var sourceItems = source.Query<SampleGroup, StratumKey>(
+                "SELECT sg.*, st.StratumID FROM SampleGroup AS sg " +
+                "JOIN Stratum AS st USING (CruiseID, StratumCode) " +
+                "WHERE CruiseID = @p1;",
+                paramaters: new[] { cruiseID });
 
-            foreach (var item in sourceItems)
+            foreach (var (sg, st) in sourceItems)
             {
                 var conflictItem = destination.From<SampleGroup>()
-                    .Where("CruiseID = @CruiseID AND SampleGroupCode = @SampleGroupCode AND StratumCode = @StratumCode AND SampleGroupID != @SampleGroupID")
-                    .Query2(item).FirstOrDefault();
+                    .Join("Stratum AS st", "USING (CruiseID, StratumCode)")
+                    .Where("CruiseID = @p1 AND SampleGroupCode = @p2 AND st.StratumID = @p3 AND SampleGroupID != @p4")
+                    .Query(cruiseID, sg.SampleGroupCode, st.StratumID, sg.SampleGroupID).FirstOrDefault();
 
                 if (conflictItem != null)
                 {
                     yield return new Conflict
                     {
                         Table = nameof(SampleGroup),
-                        SourctRecID = item.SampleGroupID,
+                        SourctRecID = sg.SampleGroupID,
                         DestRecID = conflictItem.SampleGroupID,
-                        SourceRec = item,
+                        SourceRec = sg,
                         DestRec = conflictItem,
                     };
                 }
             }
         }
 
-        public IEnumerable<Conflict> CheckPlots(CruiseDatastore_V3 source, CruiseDatastore_V3 destination, string cruiseID)
+        public IEnumerable<Conflict> CheckPlots(DbConnection source, DbConnection destination, string cruiseID)
         {
-            var sourceItems = source.From<Plot>().Where("CruiseID = @p1").Query(cruiseID);
+            //var sourceItems = source.From<Plot>().Where("CruiseID = @p1").Query(cruiseID);
 
-            foreach (var item in sourceItems)
+            var sourceItems = source.Query<Plot, CuttingUnitKey>(
+                "SELECT p.*, cu.CuttingUnitID FROM Plot AS p " +
+                "JOIN CuttingUnit AS cu USING (CruiseID, CuttingUnitCode) " +
+                "WHERE CruiseID = @p1;",
+                paramaters: new[] { cruiseID });
+
+            foreach (var (plot, unit) in sourceItems)
             {
                 var conflictItem = destination.From<Plot>()
-                    .Where("CruiseID = @CruiseID AND PlotNumber = @PlotNumber AND PlotID != @PlotID")
-                    .Query2(item).FirstOrDefault();
+                    .Join("CuttingUnit AS cu", "USING (CruiseID, CuttingUnitCode)")
+                    .Where("CruiseID = @p1  AND PlotNumber = @p2 AND CuttingUnitID = @p3  AND PlotID != @p4")
+                    .Query(cruiseID, plot.PlotNumber, unit.CuttingUnitID, plot.PlotID).FirstOrDefault();
 
                 if (conflictItem != null)
                 {
                     yield return new Conflict
                     {
                         Table = nameof(Plot),
-                        SourctRecID = item.PlotID,
+                        SourctRecID = plot.PlotID,
                         DestRecID = conflictItem.PlotID,
-                        SourceRec = item,
+                        SourceRec = plot,
                         DestRec = conflictItem,
                     };
                 }
             }
         }
 
-        public IEnumerable<Conflict> CheckTrees(CruiseDatastore_V3 source, CruiseDatastore_V3 destination, string cruiseID)
+        public IEnumerable<Conflict> CheckPlotsByUnitCode(DbConnection source, DbConnection destination, string cruiseID, string unitCode)
         {
-            var sourceItems = source.From<Tree>().Where("CruiseID = @p1").Query(cruiseID);
+            //var sourceItems = source.From<Plot>().Where("CruiseID = @p1").Query(cruiseID);
 
-            foreach (var item in sourceItems)
+            var sourceItems = source.Query<Plot>(
+                "SELECT p.* FROM Plot AS p " +
+                "WHERE CruiseID = @p1 AND CuttingUnitCode = @p2;",
+                paramaters: new[] { cruiseID, unitCode });
+
+            foreach (var plot in sourceItems)
+            {
+                var conflictItem = destination.From<Plot>()
+                    .Where("CruiseID = @p1  AND PlotNumber = @p2 AND CuttingUnitCode = @p3  AND PlotID != @p4")
+                    .Query(cruiseID, plot.PlotNumber, plot.CuttingUnitCode, plot.PlotID).FirstOrDefault();
+
+                if (conflictItem != null)
+                {
+                    yield return new Conflict
+                    {
+                        Table = nameof(Plot),
+                        SourctRecID = plot.PlotID,
+                        DestRecID = conflictItem.PlotID,
+                        SourceRec = plot,
+                        DestRec = conflictItem,
+                    };
+                }
+            }
+        }
+
+        public IEnumerable<Conflict> CheckTrees(DbConnection source, DbConnection destination, string cruiseID)
+        {
+            //var sourceItems = source.From<Tree>().Where("CruiseID = @p1").Query(cruiseID);
+            var sourceItems = source.Query<Tree, CuttingUnitKey>(
+                "SELECT t.*, cu.CuttingUnitID FROM Tree AS t " +
+                "JOIN CuttingUnit AS cu USING (CruiseID, CuttingUnitCode) " +
+                "WHERE CruiseID = @p1" +
+                "   AND PlotNumber IS NULL;", paramaters: new[] { cruiseID }).ToArray();
+
+            foreach (var (tree, unit) in sourceItems)
             {
                 var conflictItem = destination.From<Tree>()
-                    .Where("CruiseID = @CruiseID AND TreeNumber = @TreeNumber AND CuttingUnitCode = @CuttingUnitCode AND ifnull(PlotNumber, 0) = ifnull(@PlotNumber, 0) AND TreeID != @TreeID")
-                    .Query2(item).FirstOrDefault();
+                    .Join("CuttingUnit AS cu", "USING (CruiseID, CuttingUnitCode)")
+                    .Where("CruiseID = @p1 AND TreeNumber = @p2 AND cu.CuttingUnitID = @p3 AND TreeID != @p4 AND PlotNumber IS NULL")
+                    .Query(cruiseID, tree.TreeNumber, unit.CuttingUnitID, tree.TreeID).FirstOrDefault();
 
                 if (conflictItem != null)
                 {
                     yield return new Conflict
                     {
                         Table = nameof(Tree),
-                        SourctRecID = item.TreeID,
+                        SourctRecID = tree.TreeID,
                         DestRecID = conflictItem.TreeID,
-                        SourceRec = item,
+                        SourceRec = tree,
                         DestRec = conflictItem,
                     };
                 }
             }
         }
 
-        public IEnumerable<Conflict> CheckLogs(CruiseDatastore_V3 source, CruiseDatastore_V3 destination, string cruiseID)
+        public IEnumerable<Conflict> CheckTreesByUnitCode(DbConnection source, DbConnection destination, string cruiseID, string cuttingUnitCode)
+        {
+            var sourceItems = source.Query<Tree>(
+                "SELECT t.* FROM Tree AS t " +
+                "WHERE CruiseID = @p1 AND CuttingUnitCode = @p2" +
+                "   AND PlotNumber IS NULL;", paramaters: new[] { cruiseID, cuttingUnitCode }).ToArray();
+
+            foreach (var tree in sourceItems)
+            {
+                var conflictItem = destination.From<Tree>()
+                    .Where("CruiseID = @p1 AND TreeNumber = @p2 AND CuttingUnitCode = @p3 AND TreeID != @p4 AND PlotNumber IS NULL")
+                    .Query(cruiseID, tree.TreeNumber, cuttingUnitCode, tree.TreeID).FirstOrDefault();
+
+                if (conflictItem != null)
+                {
+                    yield return new Conflict
+                    {
+                        Table = nameof(Tree),
+                        SourctRecID = tree.TreeID,
+                        DestRecID = conflictItem.TreeID,
+                        SourceRec = tree,
+                        DestRec = conflictItem,
+                    };
+                }
+            }
+        }
+
+        public IEnumerable<Conflict> CheckPlotTreesByUnitCode(DbConnection source, DbConnection destination, string cruiseID, string cuttingUnitCode)
+        {
+            var sourceItems = source.Query<Tree>(
+                "SELECT t.* FROM Tree AS t " +
+                "WHERE CruiseID = @p1 AND CuttingUnitCode = @p2" +
+                "   AND PlotNumber IS NOT NULL;", paramaters: new[] { cruiseID, cuttingUnitCode }).ToArray();
+
+            foreach (var tree in sourceItems)
+            {
+                var conflictItem = destination.From<Tree>()
+                    .Where("CruiseID = @p1 AND TreeNumber = @p2 AND CuttingUnitCode = @p3 AND TreeID != @p4 AND PlotNumber = @p5")
+                    .Query(cruiseID, tree.TreeNumber, cuttingUnitCode, tree.TreeID, tree.PlotNumber).FirstOrDefault();
+
+                if (conflictItem != null)
+                {
+                    yield return new Conflict
+                    {
+                        Table = nameof(Tree),
+                        SourctRecID = tree.TreeID,
+                        DestRecID = conflictItem.TreeID,
+                        SourceRec = tree,
+                        DestRec = conflictItem,
+                    };
+                }
+            }
+        }
+
+        public IEnumerable<Conflict> CheckPlotTreesByUnitCodePlotNumber(DbConnection source, DbConnection destination, string cruiseID, string cuttingUnitCode, int plotNumber)
+        {
+            var sourceItems = source.Query<Tree>(
+                "SELECT t.* FROM Tree AS t " +
+                "WHERE CruiseID = @p1 AND CuttingUnitCode = @p2 AND PlotNumber = @p3" +
+                "   AND PlotNumber IS NOT NULL;", paramaters: new object[] { cruiseID, cuttingUnitCode, plotNumber }).ToArray();
+
+            foreach (var tree in sourceItems)
+            {
+                var conflictItem = destination.From<Tree>()
+                    .Where("CruiseID = @p1 AND TreeNumber = @p2 AND CuttingUnitCode = @p3 AND TreeID != @p4 AND PlotNumber = @p5")
+                    .Query(cruiseID, tree.TreeNumber, cuttingUnitCode, tree.TreeID, tree.PlotNumber).FirstOrDefault();
+
+                if (conflictItem != null)
+                {
+                    yield return new Conflict
+                    {
+                        Table = nameof(Tree),
+                        SourctRecID = tree.TreeID,
+                        DestRecID = conflictItem.TreeID,
+                        SourceRec = tree,
+                        DestRec = conflictItem,
+                    };
+                }
+            }
+        }
+
+        public IEnumerable<Conflict> CheckPlotTrees(DbConnection source, DbConnection destination, string cruiseID)
+        {
+            //var sourceItems = source.From<Tree>().Where("CruiseID = @p1").Query(cruiseID);
+            var sourceItems = source.Query<Tree, UnitPlotKey>(
+                "SELECT t.*, cu.CuttingUnitID FROM Tree AS t " +
+                "JOIN CuttingUnit AS cu USING (CruiseID, CuttingUnitCode) " +
+                "JOIN Plot AS p USING (CruiseID, PlotNumber) " +
+                "WHERE CruiseID = @p1" +
+                "   AND PlotNumber IS NOT NULL;", paramaters: new[] { cruiseID }).ToArray();
+
+            foreach (var (tree, unitPlot) in sourceItems)
+            {
+                var conflictItem = destination.From<Tree>()
+                    .Join("Plot AS p", "USING (CruiseID, PlotNumber)")
+                    .Where("CruiseID = @p1 AND TreeNumber = @p2 AND p.PlotID = @p3 AND TreeID != @p4")
+                    .Query(cruiseID, tree.TreeNumber, unitPlot.PlotID, tree.TreeID).FirstOrDefault();
+
+                if (conflictItem != null)
+                {
+                    yield return new Conflict
+                    {
+                        Table = nameof(Tree),
+                        SourctRecID = tree.TreeID,
+                        DestRecID = conflictItem.TreeID,
+                        SourceRec = tree,
+                        DestRec = conflictItem,
+                    };
+                }
+            }
+        }
+
+        public IEnumerable<Conflict> CheckLogs(DbConnection source, DbConnection destination, string cruiseID)
         {
             var sourceItems = source.From<Log>().Where("CruiseID = @p1").Query(cruiseID);
 
@@ -153,8 +315,36 @@ namespace CruiseDAL.V3.Sync
             }
         }
 
+        private class CuttingUnitKey
+        {
+            public string CuttingUnitCode { get; set; }
+            public string CuttingUnitID { get; set; }
+        }
 
+        private class StratumKey
+        {
+            public string StratumCode { get; set; }
+            public string StratumID { get; set; }
+        }
+
+        private class SampleGroupKey
+        {
+            public string SampleGroupCode { get; set; }
+            public string SampleGroupID { get; set; }
+        }
+
+        private class PlotKey
+        {
+            public int PlotNumber { get; set; }
+            public string PlotID { get; set; }
+        }
+
+        private class UnitPlotKey
+        {
+            public string CuttingUnitCode { get; set; }
+            public string CuttingUnitID { get; set; }
+            public int PlotNumber { get; set; }
+            public string PlotID { get; set; }
+        }
     }
-
-
 }
