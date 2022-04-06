@@ -14,16 +14,24 @@ namespace CruiseDAL.V3.Sync
     // or do we have to check unit, stratum, samplegroup, plot ID exclude lists. we probably should but thats a lot of 
     // extra work. I'm good with just checking the excludeTreeID and the excludeLogID list for now
 
-    // TODO once stems have actualy been implemented we need to recheck all that
+    // TODO once stems have actually been implemented we need to recheck all that
 
-    // TODO for records like plotLocation and treeLocation, if we only sync records by enumerating the reccords in 
+    // TODO for records like plotLocation and treeLocation, if we only sync records by enumerating the records in 
     //      the destination database, do we need to check the exclude list
 
     // TODO sync Species_Product
 
     // TODO need to noodle some more on how conflicts with tree is going to work with tally ledger records. 
-            // when resolving with Chose Dest or Chose Source we probably shouldn't sync TallyLedgers assocated with not not-picked record
+            // when resolving with Chose Dest or Chose Source we probably shouldn't sync TallyLedgers associated with not not-picked record
             // one possible solution for now would be to only allow resolution with Modify Dest or Modify Source
+
+    // TODO there are two ways to handle the ChoseSrourc/ChoseDest resolution. We can leave or merge any child records. I think we need both options. But Chose and Merge should be the default option
+        // situations where we need merge child records:
+        //      - user added units to files separately, went to cruise and how has tree data in both files. That tree data needs to make it to the final file
+        // situations where we need chose but no merge(overwrite child data):
+        //      - user added paper data to files separately and now has full duplicate data one two files. 
+
+    // when resolving with a 'chose' resolution, can we simplify the choice the user makes by just allowing them to chose the newest version of the record
 
     public class CruiseSyncer
     {
@@ -74,12 +82,14 @@ namespace CruiseDAL.V3.Sync
 
         public void Sync(string cruiseID, DbConnection source, DbConnection destination, CruiseSyncOptions options, ConflictResolutionOptions conflictOptions, IProgress<float> progress = null)
         {
-            var excludeOptions = new SyncExcludeOptions(options.ExcludeUnitIDs,
-                options.ExcludeStrataIDs,
-                options.ExcludeSampleGroupIDs,
-                options.ExcludePlotIDs,
-                options.ExcludeTreeIDs,
-                options.ExcludeLogIDs);
+            //var excludeOptions = new SyncExcludeOptions(options.ExcludeUnitIDs,
+            //    options.ExcludeStrataIDs,
+            //    options.ExcludeSampleGroupIDs,
+            //    options.ExcludePlotIDs,
+            //    options.ExcludeTreeIDs,
+            //    options.ExcludeLogIDs);
+
+            var excludeOptions = new SyncExcludeOptions();
 
             var steps = 34;
             float p = 0.0f;
@@ -284,7 +294,7 @@ namespace CruiseDAL.V3.Sync
             var where = "CruiseID = @CruiseID AND CuttingUnitID =  @CuttingUnitID";
             var sourceUnits = source.From<CuttingUnit>().Where("CruiseID = @p1").Query(cruiseID);
 
-            var excludeUnitIDs = excludeOptions.ExcludeUnitIDs;
+            //var excludeUnitIDs = excludeOptions.ExcludeUnitIDs;
             var unitConflictOptions = conflictOptions.CuttingUnit;
 
             foreach (var i in sourceUnits)
@@ -295,13 +305,13 @@ namespace CruiseDAL.V3.Sync
                     {
                         case Conflict.ConflictResolutionType.ChoseSource:
                             {
-                                destination.ExecuteNonQuery2(
+                                destination.ExecuteNonQuery(
                                     "PRAGMA foreign_keys=off; " +
-                                    "BEGIN; " + // disable FKeys so that cascading deletes dont trigger 
+                                    "BEGIN; " + // disable FKeys so that cascading deletes don't trigger 
                                     "DELETE FROM CuttingUnit WHERE CuttingUnitID = @p1;" +
                                     "DELETE FROM CuttingUnit_Tombstone WHERE CuttingUnitID = @p1;" +
                                     "COMMIT; " +
-                                    "PRAGMA foreign_keys=on;", unitConflictOpt.DestRecID);
+                                    "PRAGMA foreign_keys=on;", new[] { unitConflictOpt.DestRecID });
                                 break;
                             }
                         case Conflict.ConflictResolutionType.ChoseDest:
@@ -315,7 +325,7 @@ namespace CruiseDAL.V3.Sync
                             }
                         case Conflict.ConflictResolutionType.ModifyDest:
                             {
-                                destination.ExecuteNonQuery2(MODIFY_CUTTINGUNIT_COMMAND, unitConflictOpt.DestRecID);
+                                destination.ExecuteNonQuery2(MODIFY_CUTTINGUNIT_COMMAND, unitConflictOpt.DestRec);
                                 break;
                             }
                     }
@@ -398,13 +408,13 @@ namespace CruiseDAL.V3.Sync
                     {
                         case Conflict.ConflictResolutionType.ChoseSource:
                             {
-                                destination.ExecuteNonQuery2(
+                                destination.ExecuteNonQuery(
                                     "PRAGMA foreign_keys=off; " +
                                     "BEGIN; " + // disable FKeys so that cascading deletes dont trigger 
                                     "DELETE FROM Stratum WHERE StratumID = @p1;" +
                                     "DELETE FROM Stratum_Tombstone WHERE StratumID = @p1;" +
                                     "COMMIT; " +
-                                    "PRAGMA foreign_keys=on;", stratumConflictOpt.DestRecID);
+                                    "PRAGMA foreign_keys=on;", new[] { stratumConflictOpt.DestRecID });
                                 break;
                             }
                         case Conflict.ConflictResolutionType.ChoseDest:
@@ -462,7 +472,7 @@ namespace CruiseDAL.V3.Sync
                 .Where("CruiseID = @p1").Query(cruiseID).ToArray();
 
             //var excludeStrataIDs = excludeOptions.ExcludeStrataIDs;
-            var excludeSampleGroupIDs = excludeOptions.ExcludeSampleGroupIDs;
+            //var excludeSampleGroupIDs = excludeOptions.ExcludeSampleGroupIDs;
             var sampleGroupConflictOptions = conflictOptions.SampleGroup;
 
             foreach (var st in strata)
@@ -476,7 +486,7 @@ namespace CruiseDAL.V3.Sync
                     .Query(cruiseID, st.StratumCode);
                 foreach (var sg in sampleGroups)
                 {
-                    if (excludeSampleGroupIDs.Contains(sg.SampleGroupID)) { continue; }
+                    //if (excludeSampleGroupIDs.Contains(sg.SampleGroupID)) { continue; }
 
                     if (sampleGroupConflictOptions.TryGetValue(sg.SampleGroupID, out var sgConflictOpt) && sgConflictOpt != null)
                     {
@@ -484,13 +494,13 @@ namespace CruiseDAL.V3.Sync
                         {
                             case Conflict.ConflictResolutionType.ChoseSource:
                                 {
-                                    destination.ExecuteNonQuery2(
+                                    destination.ExecuteNonQuery(
                                         "PRAGMA foreign_keys=off; " +
                                         "BEGIN; " + // disable FKeys so that cascading deletes dont trigger 
                                         "DELETE FROM SampleGroup WHERE SampleGroupID = @p1;" +
                                         "DELETE FROM SampleGroup_Tombstone WHERE SampleGroupID = @p1;" +
                                         "COMMIT; " +
-                                        "PRAGMA foreign_keys=on;", sgConflictOpt.DestRecID);
+                                        "PRAGMA foreign_keys=on;", new[] { sgConflictOpt.DestRecID });
                                     break;
                                 }
                             case Conflict.ConflictResolutionType.ChoseDest:
@@ -504,7 +514,7 @@ namespace CruiseDAL.V3.Sync
                                 }
                             case Conflict.ConflictResolutionType.ModifyDest:
                                 {
-                                    destination.ExecuteNonQuery2(MODIFY_SAMPLEGROUP_COMMAND, sgConflictOpt.DestRecID);
+                                    destination.ExecuteNonQuery2(MODIFY_SAMPLEGROUP_COMMAND, sgConflictOpt.DestRec);
                                     break;
                                 }
                         }
@@ -702,7 +712,7 @@ namespace CruiseDAL.V3.Sync
             var where = "CruiseID = @CruiseID AND PlotID = @PlotID";
 
             //var excludeUnitIDs = new HashSet<string>(options.ExcludeUnitIDs);
-            var excludePlotIDs = new HashSet<string>(options.ExcludePlotIDs);
+            //var excludePlotIDs = new HashSet<string>(options.ExcludePlotIDs);
 
             var plotConflictOptions = conflictOptions.Plot;
 
@@ -717,7 +727,7 @@ namespace CruiseDAL.V3.Sync
                     .Query(cu.CuttingUnitCode, cruiseID).ToArray();
                 foreach (var plot in plots)
                 {
-                    if (excludePlotIDs.Contains(plot.PlotID)) { continue; }
+                    //if (excludePlotIDs.Contains(plot.PlotID)) { continue; }
 
                     if (plotConflictOptions.TryGetValue(plot.PlotID, out var plotConflictOpt) && plotConflictOpt != null)
                     {
@@ -725,13 +735,13 @@ namespace CruiseDAL.V3.Sync
                         {
                             case Conflict.ConflictResolutionType.ChoseSource:
                                 {
-                                    destination.ExecuteNonQuery2(
+                                    destination.ExecuteNonQuery(
                                         "PRAGMA foreign_keys=off; " +
                                         "BEGIN; " + // disable FKeys so that cascading deletes dont trigger 
                                         "DELETE FROM Plot WHERE PlotID = @p1;" +
                                         "DELETE FROM Plot_Tombstone WHERE PlotID = @p1;" +
                                         "COMMIT; " +
-                                        "PRAGMA foreign_keys=on;", plotConflictOpt.DestRecID);
+                                        "PRAGMA foreign_keys=on;", new[] { plotConflictOpt.DestRecID });
                                     break;
                                 }
                             case Conflict.ConflictResolutionType.ChoseDest:
@@ -745,7 +755,7 @@ namespace CruiseDAL.V3.Sync
                                 }
                             case Conflict.ConflictResolutionType.ModifyDest:
                                 {
-                                    destination.ExecuteNonQuery2(MODIFY_PLOT_COMMAND, plotConflictOpt.DestRecID);
+                                    destination.ExecuteNonQuery2(MODIFY_PLOT_COMMAND, plotConflictOpt.DestRec);
                                     break;
                                 }
                         }
@@ -867,7 +877,7 @@ namespace CruiseDAL.V3.Sync
                     //if (excludePlotIDs.Contains(p.PlotID)) { continue; }
 
                     var sourceItems = source.From<Plot_Stratum>()
-                        .Where("CruiseID = @p1 AND CuttingUnitCode = @p2, AND PlotNumber = @p3")
+                        .Where("CruiseID = @p1 AND CuttingUnitCode = @p2 AND PlotNumber = @p3")
                         .Query(cruiseID, cu.CuttingUnitCode, p.PlotNumber).ToArray();
                     foreach (var i in sourceItems)
                     {
@@ -961,14 +971,14 @@ namespace CruiseDAL.V3.Sync
 
             var syncFlags = options.TreeFlags;
 
-            var excludeTreeIDs = excludeOptions.ExcludeTreeIDs;
+            //var excludeTreeIDs = excludeOptions.ExcludeTreeIDs;
 
             var treeConflictOptions = conflictOptions.Tree;
 
             var sourceTrees = source.From<Tree>().Where("CruiseID = @p1 AND CuttingUnitCode = @p2 AND PlotNumber = @p3").Query(cruiseID, unitCode, plotNumber).ToArray();
             foreach (var tree in sourceTrees)
             {
-                if (excludeTreeIDs.Contains(tree.TreeID)) { continue; }
+                //if (excludeTreeIDs.Contains(tree.TreeID)) { continue; }
 
                 if (treeConflictOptions.TryGetValue(tree.TreeID, out var treeConflictOpt) && treeConflictOpt != null)
                 {
@@ -976,13 +986,13 @@ namespace CruiseDAL.V3.Sync
                     {
                         case Conflict.ConflictResolutionType.ChoseSource:
                             {
-                                destination.ExecuteNonQuery2(
+                                destination.ExecuteNonQuery(
                                     "PRAGMA foreign_keys=off; " +
                                     "BEGIN; " + // disable FKeys so that cascading deletes dont trigger 
                                     "DELETE FROM Tree WHERE TreeID = @p1; " +
                                     "DELETE FROM Tree_Tombstone WHERE TreeID = @p1; " +
                                     "COMMIT; " +
-                                    "PRAGMA foreign_keys=on;", treeConflictOpt.DestRecID);
+                                    "PRAGMA foreign_keys=on;", new[] { treeConflictOpt.DestRecID });
                                 break;
                             }
                         case Conflict.ConflictResolutionType.ChoseDest:
@@ -996,7 +1006,7 @@ namespace CruiseDAL.V3.Sync
                             }
                         case Conflict.ConflictResolutionType.ModifyDest:
                             {
-                                destination.ExecuteNonQuery2(MODIFY_TREE_COMMAND, treeConflictOpt.DestRecID);
+                                destination.ExecuteNonQuery2(MODIFY_TREE_COMMAND, treeConflictOpt.DestRec);
                                 break;
                             }
                     }
@@ -1050,7 +1060,7 @@ namespace CruiseDAL.V3.Sync
             //var excludeUnitIDs = new HashSet<string>(options.ExcludeUnitIDs);
             //var excludeStratumIDs = new HashSet<string>(options.ExcludeStrataIDs);
             //var excludeSampleGroupIDs = new HashSet<string>(options.ExcludeSampleGroupIDs);
-            var excludeTreeIDs = new HashSet<string>(options.ExcludeTreeIDs);
+            //var excludeTreeIDs = new HashSet<string>(options.ExcludeTreeIDs);
 
             var treeConflictOptions = conflictOptions.Tree;
 
@@ -1067,7 +1077,7 @@ namespace CruiseDAL.V3.Sync
                     .Query(cruiseID, cu.CuttingUnitCode);
                 foreach (var i in sourceTrees)
                 {
-                    if (excludeTreeIDs.Contains(i.TreeID)) { continue; }
+                    //if (excludeTreeIDs.Contains(i.TreeID)) { continue; }
 
                     if (treeConflictOptions.TryGetValue(i.TreeID, out var treeConflictOpt) && treeConflictOpt != null)
                     {
@@ -1075,13 +1085,13 @@ namespace CruiseDAL.V3.Sync
                         {
                             case Conflict.ConflictResolutionType.ChoseSource:
                                 {
-                                    destination.ExecuteNonQuery2(
+                                    destination.ExecuteNonQuery(
                                         "PRAGMA foreign_keys=off; " +
                                         "BEGIN; " + // disable FKeys so that cascading deletes dont trigger 
                                         "DELETE FROM Tree WHERE TreeID = @p1; " +
                                         "DELETE FROM Tree_Tombstone WHERE TreeID = @p1; " +
                                         "COMMIT; " +
-                                        "PRAGMA foreign_keys=on;", treeConflictOpt.DestRecID);
+                                        "PRAGMA foreign_keys=on;", new[] { treeConflictOpt.DestRecID });
                                     break;
                                 }
                             case Conflict.ConflictResolutionType.ChoseDest:
@@ -1095,7 +1105,7 @@ namespace CruiseDAL.V3.Sync
                                 }
                             case Conflict.ConflictResolutionType.ModifyDest:
                                 {
-                                    destination.ExecuteNonQuery2(MODIFY_TREE_COMMAND, treeConflictOpt.DestRecID);
+                                    destination.ExecuteNonQuery2(MODIFY_TREE_COMMAND, treeConflictOpt.DestRec);
                                     break;
                                 }
                         }
@@ -1254,7 +1264,7 @@ namespace CruiseDAL.V3.Sync
         {
             var syncFlags = options.TreeFlags;
 
-            var excludeTreeIDs = new HashSet<string>(options.ExcludeTreeIDs);
+            //var excludeTreeIDs = new HashSet<string>(options.ExcludeTreeIDs);
 
             var sourceTallyLedgers = source.From<TallyLedger>()
                 .Where("CruiseID = @p1 AND CuttingUnitCode = @p2 AND PlotNumber = @p3")
@@ -1263,7 +1273,7 @@ namespace CruiseDAL.V3.Sync
             foreach (var tl in sourceTallyLedgers)
             {
                 var treeID = tl.TreeID;
-                if (!string.IsNullOrEmpty(treeID) && excludeTreeIDs.Contains(treeID)) { continue; }
+                //if (!string.IsNullOrEmpty(treeID) && excludeTreeIDs.Contains(treeID)) { continue; }
 
                 var hasRecord = destination.ExecuteScalar<long>("SELECT count(*) FROM TallyLedger WHERE TallyLedgerID = @p1;", parameters: new[] { tl.TallyLedgerID }) > 0;
                 var hasTombstone = destination.ExecuteScalar<long>("SELECT count(*) FROM TallyLedger_Tombstone WHERE TallyLedgerID = @p1;", parameters: new[] { tl.TallyLedgerID }) > 0;
@@ -1323,8 +1333,8 @@ namespace CruiseDAL.V3.Sync
         {
             var where = "TreeID = @TreeID AND LogNumber = @LogNumber";
 
-            var excludeTreeIDs = new HashSet<string>(options.ExcludeTreeIDs);
-            var excludeLogIDs = new HashSet<string>(options.ExcludeLogIDs);
+            //var excludeTreeIDs = new HashSet<string>(options.ExcludeTreeIDs);
+            //var excludeLogIDs = new HashSet<string>(options.ExcludeLogIDs);
 
             var logConflictOptions = conflictOptions.Log;
 
@@ -1333,14 +1343,14 @@ namespace CruiseDAL.V3.Sync
             var treeIDs = destination.QueryScalar<string>("SELECT TreeID FROM Tree WHERE CruiseID = @p1", new[] { cruiseID });
             foreach (var treeID in treeIDs)
             {
-                if (excludeTreeIDs.Contains(treeID)) { continue; }
+                //if (excludeTreeIDs.Contains(treeID)) { continue; }
 
                 var logs = source.From<Log>()
                     .Where("TreeID = @p1")
                     .Query(treeID);
                 foreach (var log in logs)
                 {
-                    if (excludeLogIDs.Contains(log.LogID)) { continue; }
+                    //if (excludeLogIDs.Contains(log.LogID)) { continue; }
 
                     if (logConflictOptions.TryGetValue(log.LogID, out var logConflictOpt) && logConflictOpt != null)
                     {
@@ -1348,13 +1358,13 @@ namespace CruiseDAL.V3.Sync
                         {
                             case Conflict.ConflictResolutionType.ChoseSource:
                                 {
-                                    destination.ExecuteNonQuery2(
+                                    destination.ExecuteNonQuery(
                                         "PRAGMA foreign_keys=off; " +
                                         "BEGIN; " + // disable FKeys so that cascading deletes dont trigger 
                                         "DELETE FROM Log WHERE LogID = @p1; " +
                                         "DELETE FROM Log_Tombstone WHERE LogID = @p1; " +
                                         "COMMIT; " +
-                                        "PRAGMA foreign_keys=on;", logConflictOpt.DestRecID);
+                                        "PRAGMA foreign_keys=on;", new[] { logConflictOpt.DestRecID });
                                     break;
                                 }
                             case Conflict.ConflictResolutionType.ChoseDest:
@@ -1368,7 +1378,7 @@ namespace CruiseDAL.V3.Sync
                                 }
                             case Conflict.ConflictResolutionType.ModifyDest:
                                 {
-                                    destination.ExecuteNonQuery2(MODIFY_LOG_COMMAND, logConflictOpt.DestRecID);
+                                    destination.ExecuteNonQuery2(MODIFY_LOG_COMMAND, logConflictOpt.DestRec);
                                     break;
                                 }
                         }
@@ -1459,10 +1469,10 @@ namespace CruiseDAL.V3.Sync
         {
             var where = "CruiseID = @CruiseID AND TallyLedgerID = @TallyLedgerID";
 
-            var excludeUnitIDs = new HashSet<string>(options.ExcludeUnitIDs);
-            var excludeStratumIDs = new HashSet<string>(options.ExcludeStrataIDs);
-            var excludeSampleGroupIDs = new HashSet<string>(options.ExcludeSampleGroupIDs);
-            var excludeTreeIDs = new HashSet<string>(options.ExcludeTreeIDs);
+            //var excludeUnitIDs = new HashSet<string>(options.ExcludeUnitIDs);
+            //var excludeStratumIDs = new HashSet<string>(options.ExcludeStrataIDs);
+            //var excludeSampleGroupIDs = new HashSet<string>(options.ExcludeSampleGroupIDs);
+            //var excludeTreeIDs = new HashSet<string>(options.ExcludeTreeIDs);
 
             var sourceItems = source.From<TallyLedger>().Where("CruiseID = @p1").Query(cruiseID);
 
@@ -1490,7 +1500,7 @@ namespace CruiseDAL.V3.Sync
         {
             var where = "CruiseID = @CruiseID AND StratumCode = @StratumCode AND Field = @Field";
 
-            var excludeStratumIDs = new HashSet<string>();
+            //var excludeStratumIDs = new HashSet<string>();
 
             var strata = destination.From<Stratum>()
                 .Where("CruiseID = @p1")
@@ -1499,7 +1509,7 @@ namespace CruiseDAL.V3.Sync
             foreach (var st in strata)
             {
 
-                var sourceItems = source.From<LogFieldSetup>().Where("CruiseID = @p1 AND StratumCode = @p2 AND SampleGroupCode IS NULL").Query(cruiseID);
+                var sourceItems = source.From<LogFieldSetup>().Where("CruiseID = @p1 AND StratumCode = @p2").Query(cruiseID, st.StratumCode);
 
                 foreach (var i in sourceItems)
                 {
