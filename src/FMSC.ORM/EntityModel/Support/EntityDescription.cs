@@ -36,7 +36,8 @@ namespace FMSC.ORM.EntityModel.Support
                 }
                 else
                 {
-                    var source = new TableOrSubQuery(eAttr.Name);
+                    var tableName = eAttr.Name ?? type.Name;
+                    var source = new TableOrSubQuery(tableName);
 
                     // to provide backwards compatibility
                     // check if it is a EntitySourceAttr
