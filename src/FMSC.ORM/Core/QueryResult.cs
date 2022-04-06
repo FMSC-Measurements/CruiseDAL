@@ -32,4 +32,34 @@ namespace FMSC.ORM.Core
             return this.GetEnumerator();
         }
     }
+
+    public class QueryResult<TResult1, TResult2> : IEnumerable<Tuple<TResult1, TResult2>> 
+        where TResult1 : new()
+        where TResult2 : new()
+    {
+        public DbCommand Command { get; }
+        public DbConnection Connection { get; }
+        public DbTransaction Transaction { get; }
+        public IExceptionProcessor ExceptionProcessor { get; }
+
+        public QueryResult(DbConnection connection, DbCommand command, DbTransaction transaction = null, IExceptionProcessor exceptionProcessor = null)
+        {
+            Connection = connection ?? throw new ArgumentNullException(nameof(connection));
+            Command = command ?? throw new ArgumentNullException(nameof(command));
+            Transaction = transaction;
+            ExceptionProcessor = exceptionProcessor;
+        }
+
+        public IEnumerator<Tuple<TResult1, TResult2>> GetEnumerator()
+        {
+            var exceptionProcessor = ExceptionProcessor;
+            var reader = Connection.ExecuteReader(Command, Transaction, exceptionProcessor);
+            return new QueryEnumerator<TResult1, TResult2>(reader, exceptionProcessor);
+        }
+
+        IEnumerator IEnumerable.GetEnumerator()
+        {
+            return this.GetEnumerator();
+        }
+    }
 }

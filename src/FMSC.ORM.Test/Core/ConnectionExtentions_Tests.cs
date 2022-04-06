@@ -58,6 +58,44 @@ namespace FMSC.ORM.Core
             }
         }
 
+        [Theory]
+        [InlineData(true)]
+        [InlineData(false)]
+        public void Query_MultiType_Test(bool nulls)
+        {
+            using (var ds = new SQLiteDatastore())
+            {
+                ds.CreateDatastore(new TestDBBuilder());
+
+                var t1 = new TableOne
+                { Data = "something" };
+                ds.Insert(t1);
+
+                var t2 = new TableTwo
+                {
+                    Data = "somethingElse",
+                    TableOne_ID = t1.TableOne_ID,
+                };
+                ds.Insert(t2);
+
+                using (var connection = ds.OpenConnection())
+                {
+                    var query = connection.Query<TableTwo, TableOne>("SELECT t2.*, t1.* FROM TableTwo AS t2 JOIN TableOne AS t1 USING (TableOne_ID);");
+
+                    var results = query.ToArray();
+                    results.Should().HaveCount(1);
+
+                    var (t2Again, t1Again) = query.SingleOrDefault();
+
+                    t2Again.Should().NotBeNull();
+                    t1Again.Should().NotBeNull();
+
+                    t2Again.Should().BeEquivalentTo(t2);
+                    t1Again.Should().BeEquivalentTo(t1);
+                }
+            }
+        }
+
         private POCOMultiTypeObject CreateRandomPoco(bool nullableSetNull = false)
         {
             var randomizer = new Bogus.Randomizer();

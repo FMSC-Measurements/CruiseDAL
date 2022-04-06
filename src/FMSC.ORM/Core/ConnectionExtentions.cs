@@ -244,6 +244,18 @@ namespace FMSC.ORM.Core
             return new QueryResult<TResult>(connection, command, transaction, exceptionProcessor);
             
         }
+        public static IEnumerable<Tuple<TResult1, TResult2>> Query<TResult1, TResult2>(this DbConnection connection, string commandText, object[] paramaters = null, DbTransaction transaction = null, IExceptionProcessor exceptionProcessor = null) 
+            where TResult1 : new()
+            where TResult2 : new()
+        {
+            //var discription = GlobalEntityDescriptionLookup.Instance.LookUpEntityByType(typeof(TResult));
+
+            var command = connection.CreateCommand();
+            command.CommandText = commandText;
+            command.SetParams(paramaters);
+
+            return new QueryResult<TResult1, TResult2>(connection, command, transaction, exceptionProcessor);
+        }
 
         public static IEnumerable<TResult> Query2<TResult>(this DbConnection connection, string commandText, object paramaters = null, DbTransaction transaction = null, IExceptionProcessor exceptionProcessor = null) where TResult : new()
         {
@@ -254,6 +266,19 @@ namespace FMSC.ORM.Core
             command.AddParams(paramaters);
 
             return new QueryResult<TResult>(connection, command, transaction, exceptionProcessor);
+        }
+
+        public static IEnumerable<Tuple<TResult1, TResult2>> Query2<TResult1, TResult2>(this DbConnection connection, string commandText, object paramaters = null, DbTransaction transaction = null, IExceptionProcessor exceptionProcessor = null) 
+            where TResult1 : new()
+            where TResult2 : new()
+        {
+            //var discription = GlobalEntityDescriptionLookup.Instance.LookUpEntityByType(typeof(TResult));
+
+            var command = connection.CreateCommand();
+            command.CommandText = commandText;
+            command.AddParams(paramaters);
+
+            return new QueryResult<TResult1, TResult2>(connection, command, transaction, exceptionProcessor);
         }
 
         #endregion Query

@@ -3,6 +3,7 @@ using FMSC.ORM.Util;
 using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Linq;
 
 namespace FMSC.ORM.EntityModel.Support
 {
@@ -26,6 +27,10 @@ namespace FMSC.ORM.EntityModel.Support
             var fieldCount = reader.FieldCount;
             var fields = new string[fieldCount];
             var ordinalLookup = new Dictionary<string, int>(fieldCount);
+
+            // TODO look into using schema table to get table names in cases where columns comes from multiple tables
+            //var schemaTable = reader.GetSchemaTable();
+            //var stRows = schemaTable.Rows.OfType<DataRow>().ToArray();
 
             for (int i = 0; i < fieldCount; i++)
             {

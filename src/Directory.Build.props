@@ -8,7 +8,7 @@
   </PropertyGroup>
 
   <PropertyGroup Label="ProjectVersions">
-    <FMSCORMversion>2.6.11.1</FMSCORMversion>
+    <FMSCORMversion>2.6.12.0</FMSCORMversion>
 
     <CruiseDALv2SchemaVersion>2.7.3</CruiseDALv2SchemaVersion>
     <CruiseDALv3SchemaVersion>3.5.1</CruiseDALv3SchemaVersion>
