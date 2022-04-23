@@ -15,6 +15,7 @@ namespace CruiseDAL.Schema
 @"CREATE VIEW TallyLedger_Totals AS
 SELECT 
     tl.CruiseID,
+    tl.CuttingUnitCode,
     tl.StratumCode,
     tl.SampleGroupCode,
     tl.SpeciesCode,
@@ -35,6 +36,7 @@ GROUP BY
 @"CREATE VIEW TallyLedger_Plot_Totals AS
 SELECT 
     tl.CruiseID,
+    tl.CuttingUnitCode,
     tl.StratumCode,
     tl.SampleGroupCode,
     tl.SpeciesCode,

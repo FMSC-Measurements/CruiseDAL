@@ -32,6 +32,7 @@ namespace CruiseDAL.V3.Sync
         //      - user added paper data to files separately and now has full duplicate data one two files. 
 
     // when resolving with a 'chose' resolution, can we simplify the choice the user makes by just allowing them to chose the newest version of the record
+    // if when checking all downstream conflicts, if all records are the same, can we auto resolve the conflict but going with latest modified
 
     public class CruiseSyncer
     {
@@ -54,7 +55,7 @@ namespace CruiseDAL.V3.Sync
             return hasCruise;
         }
 
-        public void Sync(string cruiseID, CruiseDatastore source, CruiseDatastore destination, CruiseSyncOptions options, ConflictResolutionOptions conflictOptions)
+        public void Sync(string cruiseID, CruiseDatastore source, CruiseDatastore destination, CruiseSyncOptions options)
         {
             var sourceConn = source.OpenConnection();
             try
@@ -62,7 +63,7 @@ namespace CruiseDAL.V3.Sync
                 var destConn = destination.OpenConnection();
                 try
                 {
-                    Sync(cruiseID, sourceConn, destConn, options, conflictOptions);
+                    Sync(cruiseID, sourceConn, destConn, options);
                 }
                 finally
                 {
@@ -75,12 +76,12 @@ namespace CruiseDAL.V3.Sync
             }
         }
 
-        public Task SyncAsync(string cruiseID, DbConnection source, DbConnection destination, CruiseSyncOptions options, ConflictResolutionOptions conflictOptions, IProgress<float> progress = null)
+        public Task SyncAsync(string cruiseID, DbConnection source, DbConnection destination, CruiseSyncOptions options, IProgress<double> progress = null)
         {
-            return Task.Run(() => Sync(cruiseID, source, destination, options, conflictOptions, progress));
+            return Task.Run(() => Sync(cruiseID, source, destination, options, progress));
         }
 
-        public void Sync(string cruiseID, DbConnection source, DbConnection destination, CruiseSyncOptions options, ConflictResolutionOptions conflictOptions, IProgress<float> progress = null)
+        public void Sync(string cruiseID, DbConnection source, DbConnection destination, CruiseSyncOptions options, IProgress<double> progress = null)
         {
             //var excludeOptions = new SyncExcludeOptions(options.ExcludeUnitIDs,
             //    options.ExcludeStrataIDs,
@@ -92,103 +93,103 @@ namespace CruiseDAL.V3.Sync
             var excludeOptions = new SyncExcludeOptions();
 
             var steps = 34;
-            float p = 0.0f;
+            double p = 0.0;
             var transaction = destination.BeginTransaction();
             try
             {
                 // core
-                SyncSale(cruiseID, source, destination, options, excludeOptions);
-                progress?.Report(p++ / steps);
-                SyncCruise(cruiseID, source, destination, options, excludeOptions);
-                progress?.Report(p++ / steps);
+                SyncSale(cruiseID, source, destination, options);
+                progress?.Report(++p / steps);
+                SyncCruise(cruiseID, source, destination, options);
+                progress?.Report(++p / steps);
 
-                SyncDevice(cruiseID, source, destination, options, excludeOptions);
-                progress?.Report(p++ / steps);
+                SyncDevice(cruiseID, source, destination, options);
+                progress?.Report(++p / steps);
 
                 // design
-                SyncCuttingUnits(cruiseID, source, destination, options, excludeOptions, conflictOptions);
-                progress?.Report(p++ / steps);
-                SyncStrata(cruiseID, source, destination, options, excludeOptions, conflictOptions);
-                progress?.Report(p++ / steps);
-                SyncCuttingUnit_Stratum(cruiseID, source, destination, options, excludeOptions);
-                progress?.Report(p++ / steps);
-                SyncSampleGroup(cruiseID, source, destination, options, excludeOptions, conflictOptions);
-                progress?.Report(p++ / steps);
-                SyncSamplerState(cruiseID, source, destination, options, excludeOptions);
-                progress?.Report(p++ / steps);
-                SyncSpecies(cruiseID, source, destination, options, excludeOptions);
-                progress?.Report(p++ / steps);
-                SyncSubPopulation(cruiseID, source, destination, options, excludeOptions);
-                progress?.Report(p++ / steps);
-                SyncFixCNTTallyPopulation(cruiseID, source, destination, options, excludeOptions);
-                progress?.Report(p++ / steps);
+                SyncCuttingUnits(cruiseID, source, destination, options);
+                progress?.Report(++p / steps);
+                SyncStrata(cruiseID, source, destination, options);
+                progress?.Report(++p / steps);
+                SyncCuttingUnit_Stratum(cruiseID, source, destination, options);
+                progress?.Report(++p / steps);
+                SyncSampleGroup(cruiseID, source, destination, options);
+                progress?.Report(++p / steps);
+                SyncSamplerState(cruiseID, source, destination, options);
+                progress?.Report(++p / steps);
+                SyncSpecies(cruiseID, source, destination, options);
+                progress?.Report(++p / steps);
+                SyncSubPopulation(cruiseID, source, destination, options);
+                progress?.Report(++p / steps);
+                SyncFixCNTTallyPopulation(cruiseID, source, destination, options);
+                progress?.Report(++p / steps);
 
                 // field setup
-                SyncLogFieldSetup(cruiseID, source, destination, options, excludeOptions);
-                progress?.Report(p++ / steps);
-                SyncTreeFieldSetup(cruiseID, source, destination, options, excludeOptions);
-                progress?.Report(p++ / steps);
-                SyncTreeFieldHeading(cruiseID, source, destination, options, excludeOptions);
-                progress?.Report(p++ / steps);
-                SyncLogFieldHeading(cruiseID, source, destination, options, excludeOptions);
-                progress?.Report(p++ / steps);
+                SyncLogFieldSetup(cruiseID, source, destination, options);
+                progress?.Report(++p / steps);
+                SyncTreeFieldSetup(cruiseID, source, destination, options);
+                progress?.Report(++p / steps);
+                SyncTreeFieldHeading(cruiseID, source, destination, options);
+                progress?.Report(++p / steps);
+                SyncLogFieldHeading(cruiseID, source, destination, options);
+                progress?.Report(++p / steps);
 
                 // validation
-                SyncTreeAuditRule(cruiseID, source, destination, options, excludeOptions);
-                progress?.Report(p++ / steps);
-                SyncTreeAuditRuleSelector(cruiseID, source, destination, options, excludeOptions);
-                progress?.Report(p++ / steps);
-                SyncTreeAuditResolution(cruiseID, source, destination, options, excludeOptions);
-                progress?.Report(p++ / steps);
+                SyncTreeAuditRule(cruiseID, source, destination, options);
+                progress?.Report(++p / steps);
+                SyncTreeAuditRuleSelector(cruiseID, source, destination, options);
+                progress?.Report(++p / steps);
+                SyncTreeAuditResolution(cruiseID, source, destination, options);
+                progress?.Report(++p / steps);
                 //SyncLogGradeAuditRules(cruiseID, source, destination, options);
-                //progress?.Report(p++ / steps);
+                //progress?.Report(++p / steps);
 
                 // field data
-                SyncPlots(cruiseID, source, destination, options, excludeOptions, conflictOptions);
-                progress?.Report(p++ / steps);
-                SyncPlotLocation(cruiseID, source, destination, options, excludeOptions);
-                progress?.Report(p++ / steps);
-                SyncPlot_Strata(cruiseID, source, destination, options, excludeOptions);
-                progress?.Report(p++ / steps);
-                SyncPlotTree(cruiseID, source, destination, options, excludeOptions, conflictOptions);
-                progress?.Report(p++ / steps);
-                SyncNonPlotTrees(cruiseID, source, destination, options, excludeOptions, conflictOptions);
-                progress?.Report(p++ / steps);
+                SyncPlots(cruiseID, source, destination, options);
+                progress?.Report(++p / steps);
+                SyncPlotLocation(cruiseID, source, destination, options);
+                progress?.Report(++p / steps);
+                SyncPlot_Strata(cruiseID, source, destination, options);
+                progress?.Report(++p / steps);
+                SyncPlotTree(cruiseID, source, destination, options);
+                progress?.Report(++p / steps);
+                SyncNonPlotTrees(cruiseID, source, destination, options);
+                progress?.Report(++p / steps);
 
-                SyncTallyLedger(cruiseID, source, destination, options, excludeOptions);
-                progress?.Report(p++ / steps);
+                SyncTallyLedger(cruiseID, source, destination, options);
+                progress?.Report(++p / steps);
 
-                SyncLog(cruiseID, source, destination, options, excludeOptions, conflictOptions);
-                progress?.Report(p++ / steps);
-                SyncStem(cruiseID, source, destination, options, excludeOptions);
-                progress?.Report(p++ / steps);
+                SyncLog(cruiseID, source, destination, options);
+                progress?.Report(++p / steps);
+                SyncStem(cruiseID, source, destination, options);
+                progress?.Report(++p / steps);
 
                 //processing
-                SyncBiomassEquations(cruiseID, source, destination, options, excludeOptions);
-                progress?.Report(p++ / steps);
+                SyncBiomassEquations(cruiseID, source, destination, options);
+                progress?.Report(++p / steps);
 
-                SyncReports(cruiseID, source, destination, options, excludeOptions);
-                progress?.Report(p++ / steps);
+                SyncReports(cruiseID, source, destination, options);
+                progress?.Report(++p / steps);
 
-                SyncValueEquations(cruiseID, source, destination, options, excludeOptions);
-                progress?.Report(p++ / steps);
+                SyncValueEquations(cruiseID, source, destination, options);
+                progress?.Report(++p / steps);
 
-                SyncVolumeEquations(cruiseID, source, destination, options, excludeOptions);
-                progress?.Report(p++ / steps);
+                SyncVolumeEquations(cruiseID, source, destination, options);
+                progress?.Report(++p / steps);
 
                 // TreeDefaultValue
-                SyncTreeDefaultValues(cruiseID, source, destination, options, excludeOptions);
-                progress?.Report(p++ / steps);
+                SyncTreeDefaultValues(cruiseID, source, destination, options);
+                progress?.Report(++p / steps);
 
                 // template
-                SyncStratumTemplates(cruiseID, source, destination, options, excludeOptions);
-                progress?.Report(p++ / steps);
+                SyncStratumTemplates(cruiseID, source, destination, options);
+                progress?.Report(++p / steps);
 
-                SyncStratumTemplateTreeFieldSetups(cruiseID, source, destination, options, excludeOptions);
-                progress?.Report(p++ / steps);
+                SyncStratumTemplateTreeFieldSetups(cruiseID, source, destination, options);
+                progress?.Report(++p / steps);
 
-                SyncStratumTemplateLogFieldSetups(cruiseID, source, destination, options, excludeOptions);
-                progress?.Report(p++ / steps);
+                SyncStratumTemplateLogFieldSetups(cruiseID, source, destination, options);
+                progress?.Report(++p / steps);
 
                 transaction.Commit();
             }
@@ -214,7 +215,7 @@ namespace CruiseDAL.V3.Sync
             }
         }
 
-        private void SyncSale(string cruiseID, DbConnection source, DbConnection destination, CruiseSyncOptions options, SyncExcludeOptions excludeOptions)
+        private void SyncSale(string cruiseID, DbConnection source, DbConnection destination, CruiseSyncOptions options)
         {
             var sourceSale = source.From<Sale>()
                 .Join("Cruise AS c", "USING (SaleNumber)")
@@ -241,7 +242,7 @@ namespace CruiseDAL.V3.Sync
             }
         }
 
-        private void SyncCruise(string cruiseID, DbConnection source, DbConnection destination, CruiseSyncOptions options, SyncExcludeOptions excludeOptions)
+        private void SyncCruise(string cruiseID, DbConnection source, DbConnection destination, CruiseSyncOptions options)
         {
             var where = "CruiseID = @CruiseID";
 
@@ -274,7 +275,7 @@ namespace CruiseDAL.V3.Sync
             }
         }
 
-        private void SyncDevice(string cruiseID, DbConnection source, DbConnection destination, CruiseSyncOptions options, SyncExcludeOptions excludeOptions)
+        private void SyncDevice(string cruiseID, DbConnection source, DbConnection destination, CruiseSyncOptions options)
         {
             var sourceItems = source.From<Device>().Where("CruiseID = @p1").Query(cruiseID);
 
@@ -289,47 +290,20 @@ namespace CruiseDAL.V3.Sync
             }
         }
 
-        private void SyncCuttingUnits(string cruiseID, DbConnection source, DbConnection destination, CruiseSyncOptions options, SyncExcludeOptions excludeOptions, ConflictResolutionOptions conflictOptions)
+        private void SyncCuttingUnits(string cruiseID, DbConnection source, DbConnection destination, CruiseSyncOptions options)
         {
             var where = "CruiseID = @CruiseID AND CuttingUnitID =  @CuttingUnitID";
             var sourceUnits = source.From<CuttingUnit>().Where("CruiseID = @p1").Query(cruiseID);
 
             //var excludeUnitIDs = excludeOptions.ExcludeUnitIDs;
-            var unitConflictOptions = conflictOptions.CuttingUnit;
+            //var unitConflictOptions = conflictOptions.CuttingUnit;
 
             foreach (var i in sourceUnits)
             {
-                if (unitConflictOptions.TryGetValue(i.CuttingUnitID, out var unitConflictOpt) && unitConflictOpt != null)
-                {
-                    switch (unitConflictOpt.ConflictResolution)
-                    {
-                        case Conflict.ConflictResolutionType.ChoseSource:
-                            {
-                                destination.ExecuteNonQuery(
-                                    "PRAGMA foreign_keys=off; " +
-                                    "BEGIN; " + // disable FKeys so that cascading deletes don't trigger 
-                                    "DELETE FROM CuttingUnit WHERE CuttingUnitID = @p1;" +
-                                    "DELETE FROM CuttingUnit_Tombstone WHERE CuttingUnitID = @p1;" +
-                                    "COMMIT; " +
-                                    "PRAGMA foreign_keys=on;", new[] { unitConflictOpt.DestRecID });
-                                break;
-                            }
-                        case Conflict.ConflictResolutionType.ChoseDest:
-                            {
-                                continue; // skip syncing source record if resolution is to Chose Destination record
-                            }
-                        case Conflict.ConflictResolutionType.ModifySource:
-                            {
-                                i.CuttingUnitCode = ((CuttingUnit)(unitConflictOpt.SourceRec)).CuttingUnitCode;
-                                break;
-                            }
-                        case Conflict.ConflictResolutionType.ModifyDest:
-                            {
-                                destination.ExecuteNonQuery2(MODIFY_CUTTINGUNIT_COMMAND, unitConflictOpt.DestRec);
-                                break;
-                            }
-                    }
-                }
+                //if (unitConflictOptions.TryGetValue(i.CuttingUnitID, out var unitConflictOpt) && unitConflictOpt != null)
+                //{
+                    
+                //}
 
                 var match = destination.From<CuttingUnit>()
                     .Where(where)
@@ -361,7 +335,7 @@ namespace CruiseDAL.V3.Sync
             }
         }
 
-        private void SyncCuttingUnit_Stratum(string cruiseID, DbConnection source, DbConnection destination, CruiseSyncOptions options, SyncExcludeOptions excludeOptions)
+        private void SyncCuttingUnit_Stratum(string cruiseID, DbConnection source, DbConnection destination, CruiseSyncOptions options)
         {
             var where = "CuttingUnitCode = @CuttingUnitCode AND StratumCode = @StratumCode  AND CruiseID = @CruiseID";
             var sourceItems = source.From<CuttingUnit_Stratum>().Where("CruiseID = @p1").Query(cruiseID);
@@ -390,49 +364,19 @@ namespace CruiseDAL.V3.Sync
             }
         }
 
-        private void SyncStrata(string cruiseID, DbConnection source, DbConnection destination, CruiseSyncOptions options, SyncExcludeOptions excludeOptions, ConflictResolutionOptions conflictOptions)
+        private void SyncStrata(string cruiseID, DbConnection source, DbConnection destination, CruiseSyncOptions options)
         {
             var where = "CruiseID = @CruiseID AND StratumID = @StratumID";
 
             var sourceItems = source.From<Stratum>().Where("CruiseID = @p1").Query(cruiseID);
 
             //var excludeStrataIDs = excludeOptions.ExcludeStrataIDs;
-            var strataConflictOptions = conflictOptions.Stratum;
+            //var strataConflictOptions = conflictOptions.Stratum;
 
             foreach (var i in sourceItems)
             {
                 //if (excludeStrataIDs.Contains(i.StratumID)) { continue; }
-                if(strataConflictOptions.TryGetValue(i.StratumID, out var stratumConflictOpt) && stratumConflictOpt != null)
-                {
-                    switch (stratumConflictOpt.ConflictResolution)
-                    {
-                        case Conflict.ConflictResolutionType.ChoseSource:
-                            {
-                                destination.ExecuteNonQuery(
-                                    "PRAGMA foreign_keys=off; " +
-                                    "BEGIN; " + // disable FKeys so that cascading deletes dont trigger 
-                                    "DELETE FROM Stratum WHERE StratumID = @p1;" +
-                                    "DELETE FROM Stratum_Tombstone WHERE StratumID = @p1;" +
-                                    "COMMIT; " +
-                                    "PRAGMA foreign_keys=on;", new[] { stratumConflictOpt.DestRecID });
-                                break;
-                            }
-                        case Conflict.ConflictResolutionType.ChoseDest:
-                            {
-                                continue; // skip syncing source record if resolution is to Chose Destination record
-                            }
-                        case Conflict.ConflictResolutionType.ModifySource:
-                            {
-                                i.StratumCode = ((Stratum)(stratumConflictOpt.SourceRec)).StratumCode;
-                                break;
-                            }
-                        case Conflict.ConflictResolutionType.ModifyDest:
-                            {
-                                destination.ExecuteNonQuery2(MODIFY_STRATUM_COMMAND, stratumConflictOpt.DestRec);
-                                break;
-                            }
-                    }
-                }
+
 
                 var match = destination.From<Stratum>()
                     .Where(where)
@@ -464,7 +408,7 @@ namespace CruiseDAL.V3.Sync
             }
         }
 
-        private void SyncSampleGroup(string cruiseID, DbConnection source, DbConnection destination, CruiseSyncOptions options, SyncExcludeOptions excludeOptions, ConflictResolutionOptions conflictOptions)
+        private void SyncSampleGroup(string cruiseID, DbConnection source, DbConnection destination, CruiseSyncOptions options)
         {
             var where = "CruiseID = @CruiseID AND StratumCode = @StratumCode AND SampleGroupID = @SampleGroupID";
 
@@ -473,7 +417,7 @@ namespace CruiseDAL.V3.Sync
 
             //var excludeStrataIDs = excludeOptions.ExcludeStrataIDs;
             //var excludeSampleGroupIDs = excludeOptions.ExcludeSampleGroupIDs;
-            var sampleGroupConflictOptions = conflictOptions.SampleGroup;
+            //var sampleGroupConflictOptions = conflictOptions.SampleGroup;
 
             foreach (var st in strata)
             {
@@ -487,38 +431,6 @@ namespace CruiseDAL.V3.Sync
                 foreach (var sg in sampleGroups)
                 {
                     //if (excludeSampleGroupIDs.Contains(sg.SampleGroupID)) { continue; }
-
-                    if (sampleGroupConflictOptions.TryGetValue(sg.SampleGroupID, out var sgConflictOpt) && sgConflictOpt != null)
-                    {
-                        switch (sgConflictOpt.ConflictResolution)
-                        {
-                            case Conflict.ConflictResolutionType.ChoseSource:
-                                {
-                                    destination.ExecuteNonQuery(
-                                        "PRAGMA foreign_keys=off; " +
-                                        "BEGIN; " + // disable FKeys so that cascading deletes dont trigger 
-                                        "DELETE FROM SampleGroup WHERE SampleGroupID = @p1;" +
-                                        "DELETE FROM SampleGroup_Tombstone WHERE SampleGroupID = @p1;" +
-                                        "COMMIT; " +
-                                        "PRAGMA foreign_keys=on;", new[] { sgConflictOpt.DestRecID });
-                                    break;
-                                }
-                            case Conflict.ConflictResolutionType.ChoseDest:
-                                {
-                                    continue; // skip syncing source record if resolution is to Chose Destination record
-                                }
-                            case Conflict.ConflictResolutionType.ModifySource:
-                                {
-                                    sg.SampleGroupCode = ((SampleGroup)(sgConflictOpt.SourceRec)).SampleGroupCode;
-                                    break;
-                                }
-                            case Conflict.ConflictResolutionType.ModifyDest:
-                                {
-                                    destination.ExecuteNonQuery2(MODIFY_SAMPLEGROUP_COMMAND, sgConflictOpt.DestRec);
-                                    break;
-                                }
-                        }
-                    }
 
                     var match = destination.From<SampleGroup>()
                         .Where(where)
@@ -554,7 +466,7 @@ namespace CruiseDAL.V3.Sync
             }
         }
 
-        private void SyncSamplerState(string cruiseID, DbConnection source, DbConnection destination, CruiseSyncOptions options, SyncExcludeOptions excludeOptions)
+        private void SyncSamplerState(string cruiseID, DbConnection source, DbConnection destination, CruiseSyncOptions options)
         {
             var where = "CruiseID = @CruiseID AND StratumCode = @StratumCode AND SampleGroupCode = @SampleGroupCode AND DeviceID = @DeviceID";
 
@@ -599,7 +511,7 @@ namespace CruiseDAL.V3.Sync
             }
         }
 
-        private void SyncSpecies(string cruiseID, DbConnection source, DbConnection desination, CruiseSyncOptions options, SyncExcludeOptions excludeOptions)
+        private void SyncSpecies(string cruiseID, DbConnection source, DbConnection desination, CruiseSyncOptions options)
         {
             var sourceItems = source.From<Species>().Where("CruiseID = @p1").Query(cruiseID);
             foreach (var i in sourceItems)
@@ -613,7 +525,7 @@ namespace CruiseDAL.V3.Sync
             }
         }
 
-        private void SyncSubPopulation(string cruiseID, DbConnection source, DbConnection destination, CruiseSyncOptions options, SyncExcludeOptions excludeOptions)
+        private void SyncSubPopulation(string cruiseID, DbConnection source, DbConnection destination, CruiseSyncOptions options)
         {
             var where = "CruiseID = @CruiseID AND StratumCode = @StratumCode AND SampleGroupCode = @SampleGroupCode AND SpeciesCode = @SpeciesCode AND LiveDead = @LiveDead";
 
@@ -651,7 +563,7 @@ namespace CruiseDAL.V3.Sync
             }
         }
 
-        private void SyncFixCNTTallyPopulation(string cruiseID, DbConnection source, DbConnection destination, CruiseSyncOptions options, SyncExcludeOptions excludeOptions)
+        private void SyncFixCNTTallyPopulation(string cruiseID, DbConnection source, DbConnection destination, CruiseSyncOptions options)
         {
             var where = "CruiseID = @CruiseID AND StratumCode = @StratumCode AND SampleGroupCode = @SampleGroupCode AND SpeciesCode = @SpeciesCode AND LiveDead = @LiveDead";
 
@@ -707,14 +619,14 @@ namespace CruiseDAL.V3.Sync
 
         }
 
-        private void SyncPlots(string cruiseID, DbConnection source, DbConnection destination, CruiseSyncOptions options, SyncExcludeOptions excludeOptions, ConflictResolutionOptions conflictOptions)
+        private void SyncPlots(string cruiseID, DbConnection source, DbConnection destination, CruiseSyncOptions options)
         {
             var where = "CruiseID = @CruiseID AND PlotID = @PlotID";
 
             //var excludeUnitIDs = new HashSet<string>(options.ExcludeUnitIDs);
             //var excludePlotIDs = new HashSet<string>(options.ExcludePlotIDs);
 
-            var plotConflictOptions = conflictOptions.Plot;
+            //var plotConflictOptions = conflictOptions.Plot;
 
             var cuttingUnits = destination.From<CuttingUnit>()
                 .Where("CruiseID = @p1").Query(cruiseID).ToArray();
@@ -729,37 +641,10 @@ namespace CruiseDAL.V3.Sync
                 {
                     //if (excludePlotIDs.Contains(plot.PlotID)) { continue; }
 
-                    if (plotConflictOptions.TryGetValue(plot.PlotID, out var plotConflictOpt) && plotConflictOpt != null)
-                    {
-                        switch (plotConflictOpt.ConflictResolution)
-                        {
-                            case Conflict.ConflictResolutionType.ChoseSource:
-                                {
-                                    destination.ExecuteNonQuery(
-                                        "PRAGMA foreign_keys=off; " +
-                                        "BEGIN; " + // disable FKeys so that cascading deletes dont trigger 
-                                        "DELETE FROM Plot WHERE PlotID = @p1;" +
-                                        "DELETE FROM Plot_Tombstone WHERE PlotID = @p1;" +
-                                        "COMMIT; " +
-                                        "PRAGMA foreign_keys=on;", new[] { plotConflictOpt.DestRecID });
-                                    break;
-                                }
-                            case Conflict.ConflictResolutionType.ChoseDest:
-                                {
-                                    continue; // skip syncing source record if resolution is to Chose Destination record
-                                }
-                            case Conflict.ConflictResolutionType.ModifySource:
-                                {
-                                    plot.PlotNumber = ((Plot)(plotConflictOpt.SourceRec)).PlotNumber;
-                                    break;
-                                }
-                            case Conflict.ConflictResolutionType.ModifyDest:
-                                {
-                                    destination.ExecuteNonQuery2(MODIFY_PLOT_COMMAND, plotConflictOpt.DestRec);
-                                    break;
-                                }
-                        }
-                    }
+                    //if (plotConflictOptions.TryGetValue(plot.PlotID, out var plotConflictOpt) && plotConflictOpt != null)
+                    //{
+
+                    //}
 
                     var match = destination.From<Plot>()
                         .Where(where)
@@ -792,7 +677,7 @@ namespace CruiseDAL.V3.Sync
             }
         }
 
-        private void SyncPlotLocation(string cruiseID, DbConnection source, DbConnection destination, CruiseSyncOptions options, SyncExcludeOptions excludeOptions)
+        private void SyncPlotLocation(string cruiseID, DbConnection source, DbConnection destination, CruiseSyncOptions options)
         {
             var where = "PlotID = @PlotID";
 
@@ -852,7 +737,7 @@ namespace CruiseDAL.V3.Sync
             }
         }
 
-        private void SyncPlot_Strata(string cruiseID, DbConnection source, DbConnection destination, CruiseSyncOptions options, SyncExcludeOptions excludeOptions)
+        private void SyncPlot_Strata(string cruiseID, DbConnection source, DbConnection destination, CruiseSyncOptions options)
         {
             var where = "CruiseID = @CruiseID AND CuttingUnitCode = @CuttingUnitCode AND PlotNumber = @PlotNumber AND StratumCode = @StratumCode";
 
@@ -919,7 +804,7 @@ namespace CruiseDAL.V3.Sync
             
         }
 
-        private void SyncPlotTree(string cruiseID, DbConnection source, DbConnection destination, CruiseSyncOptions options, SyncExcludeOptions excludeOptions, ConflictResolutionOptions conflictOptions)
+        private void SyncPlotTree(string cruiseID, DbConnection source, DbConnection destination, CruiseSyncOptions options)
         {
             var syncFlags = options.TreeFlags;
             var allOrNone = options.PlotTreeAllOrNone;
@@ -928,7 +813,7 @@ namespace CruiseDAL.V3.Sync
             //var excludePlotIDs = new HashSet<string>(options.ExcludePlotIDs);
 
             // read units from the destination because we only should care about syncing units that have already been merged
-            // incase we decided not to merge a unit earlier in the sync process
+            // in case we decided not to merge a unit earlier in the sync process
             var cuttingUnits = destination.From<CuttingUnit>()
                 .Where("CruiseID = @p1")
                 .Query(cruiseID).ToArray();
@@ -952,8 +837,8 @@ namespace CruiseDAL.V3.Sync
                     if (allOrNone == false
                         || (srcPlotMod.CompareTo(destPlotMod) > 0))
                     {
-                        SyncPlotTreeMeasurmentData(source, destination, cruiseID, unitCode, plotNumber, options, excludeOptions, conflictOptions);
-                        SyncPlotTallyLedger(source, destination, cruiseID, unitCode, plotNumber, options, excludeOptions);
+                        SyncPlotTreeMeasurmentData(source, destination, cruiseID, unitCode, plotNumber, options);
+                        SyncPlotTallyLedger(source, destination, cruiseID, unitCode, plotNumber, options);
                     }
                 }
             }
@@ -965,7 +850,7 @@ namespace CruiseDAL.V3.Sync
                         new object[] { cruiseID, unitCode, plotNumber });
         }
 
-        private void SyncPlotTreeMeasurmentData(DbConnection source, DbConnection destination, string cruiseID, string unitCode, int plotNumber, CruiseSyncOptions options, SyncExcludeOptions excludeOptions, ConflictResolutionOptions conflictOptions)
+        private void SyncPlotTreeMeasurmentData(DbConnection source, DbConnection destination, string cruiseID, string unitCode, int plotNumber, CruiseSyncOptions options)
         {
             const string where = "CruiseID = @CruiseID AND TreeID = @TreeID";
 
@@ -973,44 +858,17 @@ namespace CruiseDAL.V3.Sync
 
             //var excludeTreeIDs = excludeOptions.ExcludeTreeIDs;
 
-            var treeConflictOptions = conflictOptions.Tree;
+            //var treeConflictOptions = conflictOptions.Tree;
 
             var sourceTrees = source.From<Tree>().Where("CruiseID = @p1 AND CuttingUnitCode = @p2 AND PlotNumber = @p3").Query(cruiseID, unitCode, plotNumber).ToArray();
             foreach (var tree in sourceTrees)
             {
                 //if (excludeTreeIDs.Contains(tree.TreeID)) { continue; }
 
-                if (treeConflictOptions.TryGetValue(tree.TreeID, out var treeConflictOpt) && treeConflictOpt != null)
-                {
-                    switch (treeConflictOpt.ConflictResolution)
-                    {
-                        case Conflict.ConflictResolutionType.ChoseSource:
-                            {
-                                destination.ExecuteNonQuery(
-                                    "PRAGMA foreign_keys=off; " +
-                                    "BEGIN; " + // disable FKeys so that cascading deletes dont trigger 
-                                    "DELETE FROM Tree WHERE TreeID = @p1; " +
-                                    "DELETE FROM Tree_Tombstone WHERE TreeID = @p1; " +
-                                    "COMMIT; " +
-                                    "PRAGMA foreign_keys=on;", new[] { treeConflictOpt.DestRecID });
-                                break;
-                            }
-                        case Conflict.ConflictResolutionType.ChoseDest:
-                            {
-                                continue; // skip syncing source record if resolution is to Chose Destination record
-                            }
-                        case Conflict.ConflictResolutionType.ModifySource:
-                            {
-                                tree.TreeNumber = ((Tree)(treeConflictOpt.SourceRec)).TreeNumber;
-                                break;
-                            }
-                        case Conflict.ConflictResolutionType.ModifyDest:
-                            {
-                                destination.ExecuteNonQuery2(MODIFY_TREE_COMMAND, treeConflictOpt.DestRec);
-                                break;
-                            }
-                    }
-                }
+                //if (treeConflictOptions.TryGetValue(tree.TreeID, out var treeConflictOpt) && treeConflictOpt != null)
+                //{
+
+                //}
 
                 var match = destination.From<Tree>()
                     .Where(where)
@@ -1035,7 +893,7 @@ namespace CruiseDAL.V3.Sync
                         destination.Insert(tree, persistKeyvalue: false);
 
                         // only sync tree data if we have synced the new tree record
-                        SyncTreeData(source, destination, tree.TreeID, options, excludeOptions);
+                        SyncTreeData(source, destination, tree.TreeID, options);
                     }
                 }
                 else
@@ -1048,12 +906,12 @@ namespace CruiseDAL.V3.Sync
                         destination.Update(match, whereExpression: where);
                     }
 
-                    SyncTreeData(source, destination, tree.TreeID, options, excludeOptions);
+                    SyncTreeData(source, destination, tree.TreeID, options);
                 }
             }
         }
 
-        private void SyncNonPlotTrees(string cruiseID, DbConnection source, DbConnection destination, CruiseSyncOptions options, SyncExcludeOptions excludeOptions, ConflictResolutionOptions conflictOptions)
+        private void SyncNonPlotTrees(string cruiseID, DbConnection source, DbConnection destination, CruiseSyncOptions options)
         {
             var where = "CruiseID = @CruiseID AND TreeID = @TreeID";
 
@@ -1062,7 +920,7 @@ namespace CruiseDAL.V3.Sync
             //var excludeSampleGroupIDs = new HashSet<string>(options.ExcludeSampleGroupIDs);
             //var excludeTreeIDs = new HashSet<string>(options.ExcludeTreeIDs);
 
-            var treeConflictOptions = conflictOptions.Tree;
+            //var treeConflictOptions = conflictOptions.Tree;
 
             var cuttingUnitCodes = destination.QueryScalar<string>("SELECT CuttingUnitCode FROM main.CuttingUnit WHERE CruiseID = @p1;", new[] { cruiseID });
 
@@ -1079,37 +937,10 @@ namespace CruiseDAL.V3.Sync
                 {
                     //if (excludeTreeIDs.Contains(i.TreeID)) { continue; }
 
-                    if (treeConflictOptions.TryGetValue(i.TreeID, out var treeConflictOpt) && treeConflictOpt != null)
-                    {
-                        switch (treeConflictOpt.ConflictResolution)
-                        {
-                            case Conflict.ConflictResolutionType.ChoseSource:
-                                {
-                                    destination.ExecuteNonQuery(
-                                        "PRAGMA foreign_keys=off; " +
-                                        "BEGIN; " + // disable FKeys so that cascading deletes dont trigger 
-                                        "DELETE FROM Tree WHERE TreeID = @p1; " +
-                                        "DELETE FROM Tree_Tombstone WHERE TreeID = @p1; " +
-                                        "COMMIT; " +
-                                        "PRAGMA foreign_keys=on;", new[] { treeConflictOpt.DestRecID });
-                                    break;
-                                }
-                            case Conflict.ConflictResolutionType.ChoseDest:
-                                {
-                                    continue; // skip syncing source record if resolution is to Chose Destination record
-                                }
-                            case Conflict.ConflictResolutionType.ModifySource:
-                                {
-                                    i.TreeNumber = ((Tree)(treeConflictOpt.SourceRec)).TreeNumber;
-                                    break;
-                                }
-                            case Conflict.ConflictResolutionType.ModifyDest:
-                                {
-                                    destination.ExecuteNonQuery2(MODIFY_TREE_COMMAND, treeConflictOpt.DestRec);
-                                    break;
-                                }
-                        }
-                    }
+                    //if (treeConflictOptions.TryGetValue(i.TreeID, out var treeConflictOpt) && treeConflictOpt != null)
+                    //{
+                        
+                    //}
 
                     //var stratumID = source.ExecuteScalar<string>("SELECT StratumID FROM Stratum WHERE CruiseID = @p1 AND StratumCode = @p2", new[] { cruiseID, i.StratumCode });
                     //if (excludeStratumIDs.Contains(stratumID)) { continue; }
@@ -1133,7 +964,7 @@ namespace CruiseDAL.V3.Sync
                         {
                             destination.Insert(i, persistKeyvalue: false);
 
-                            SyncTreeData(source, destination, i.TreeID, options, excludeOptions);
+                            SyncTreeData(source, destination, i.TreeID, options);
                         }
                     }
                     else
@@ -1146,13 +977,13 @@ namespace CruiseDAL.V3.Sync
                             destination.Update(i, whereExpression: where);
                         }
 
-                        SyncTreeData(source, destination, i.TreeID, options, excludeOptions);
+                        SyncTreeData(source, destination, i.TreeID, options);
                     }
                 }
             }
         }
 
-        private void SyncTreeData(DbConnection source, DbConnection destination, string treeID, CruiseSyncOptions options, SyncExcludeOptions excludeOptions)
+        private void SyncTreeData(DbConnection source, DbConnection destination, string treeID, CruiseSyncOptions options)
         {
             // we are not checking the tombstone tables for TreeMeasurment or TreeFieldValue because at this
             // point we should already know that the tree has not be deleted.
@@ -1162,7 +993,7 @@ namespace CruiseDAL.V3.Sync
             var srcLatestTimeStamp = GetTreeDataModified(source, treeID);
             var destLatestTimeStamp = GetTreeDataModified(destination, treeID);
 
-            // we are comparing the agregate time stamps, per tree, across the files.
+            // we are comparing the aggregate time stamps, per tree, across the files.
             // This means changes to tree data in any of the tables that contain tree data
             // can cause the given tree record to be updated in the sync.
 
@@ -1184,15 +1015,15 @@ namespace CruiseDAL.V3.Sync
                     }
                 }
 
-                SyncTreeLocation(source, destination, treeID, options, excludeOptions);
+                SyncTreeLocation(source, destination, treeID, options);
 
-                SyncTreeFieldValue(source, destination, treeID, options, excludeOptions);
+                SyncTreeFieldValue(source, destination, treeID, options);
             }
         }
 
         public static DateTime? GetTreeDataModified(DbConnection db, string treeID)
         {
-            // get the latest time stamp on the tree by agregating the Created Timestamp and Modified Timestamps
+            // get the latest time stamp on the tree by aggregating the Created Timestamp and Modified Timestamps
             // from both the TreeMeasurment record and the TreeFieldValues records.
             return db.ExecuteScalar<DateTime>(
 @" SELECT max(mod) FROM (
@@ -1204,7 +1035,7 @@ namespace CruiseDAL.V3.Sync
 );", parameters: new[] { treeID });
         }
 
-        private void SyncTreeLocation(DbConnection source, DbConnection destination, string treeID, CruiseSyncOptions options, SyncExcludeOptions excludeOptions)
+        private void SyncTreeLocation(DbConnection source, DbConnection destination, string treeID, CruiseSyncOptions options)
         {
             var treeLocationRecord = source.From<TreeLocation>()
                 .Where("TreeID = @p1")
@@ -1243,7 +1074,7 @@ namespace CruiseDAL.V3.Sync
             }
         }
 
-        private void SyncTreeFieldValue(DbConnection source, DbConnection destination, string treeID, CruiseSyncOptions options, SyncExcludeOptions excludeOptions)
+        private void SyncTreeFieldValue(DbConnection source, DbConnection destination, string treeID, CruiseSyncOptions options)
         {
             var treeFieldValues = source.From<TreeFieldValue>().Where("TreeID =  @p1").Query(treeID);
             foreach (var tfv in treeFieldValues)
@@ -1260,7 +1091,7 @@ namespace CruiseDAL.V3.Sync
             }
         }
 
-        private void SyncPlotTallyLedger(DbConnection source, DbConnection destination, string cruiseID, string unitCode, int plotNumber, CruiseSyncOptions options, SyncExcludeOptions excludeOptions)
+        private void SyncPlotTallyLedger(DbConnection source, DbConnection destination, string cruiseID, string unitCode, int plotNumber, CruiseSyncOptions options)
         {
             var syncFlags = options.TreeFlags;
 
@@ -1288,7 +1119,7 @@ namespace CruiseDAL.V3.Sync
         // TODO remove unused method. I think this method is no longer used because we are now syncing TreeMeasurment records 
         // as part of the SyncTreeData method that gets called in SyncNonPlotTrees
         // and in the SyncPlotTreeMeasurmentData method hat gets called in SyncPlotTrees
-        private void SyncTreeMeasurment(string cruiseID, DbConnection source, DbConnection destination, CruiseSyncOptions options, SyncExcludeOptions excludeOptions)
+        private void SyncTreeMeasurment(string cruiseID, DbConnection source, DbConnection destination, CruiseSyncOptions options)
         {
             var where = "CruiseID = @CruiseID AND TreeID = @TreeID";
 
@@ -1329,14 +1160,14 @@ namespace CruiseDAL.V3.Sync
             }
         }
 
-        private void SyncLog(string cruiseID, DbConnection source, DbConnection destination, CruiseSyncOptions options, SyncExcludeOptions excludeOptions, ConflictResolutionOptions conflictOptions)
+        private void SyncLog(string cruiseID, DbConnection source, DbConnection destination, CruiseSyncOptions options)
         {
             var where = "TreeID = @TreeID AND LogNumber = @LogNumber";
 
             //var excludeTreeIDs = new HashSet<string>(options.ExcludeTreeIDs);
             //var excludeLogIDs = new HashSet<string>(options.ExcludeLogIDs);
 
-            var logConflictOptions = conflictOptions.Log;
+            //var logConflictOptions = conflictOptions.Log;
 
             // only sync for trees that are already in the destination
             // just incase we decide earlier not to sync some trees
@@ -1352,37 +1183,10 @@ namespace CruiseDAL.V3.Sync
                 {
                     //if (excludeLogIDs.Contains(log.LogID)) { continue; }
 
-                    if (logConflictOptions.TryGetValue(log.LogID, out var logConflictOpt) && logConflictOpt != null)
-                    {
-                        switch (logConflictOpt.ConflictResolution)
-                        {
-                            case Conflict.ConflictResolutionType.ChoseSource:
-                                {
-                                    destination.ExecuteNonQuery(
-                                        "PRAGMA foreign_keys=off; " +
-                                        "BEGIN; " + // disable FKeys so that cascading deletes dont trigger 
-                                        "DELETE FROM Log WHERE LogID = @p1; " +
-                                        "DELETE FROM Log_Tombstone WHERE LogID = @p1; " +
-                                        "COMMIT; " +
-                                        "PRAGMA foreign_keys=on;", new[] { logConflictOpt.DestRecID });
-                                    break;
-                                }
-                            case Conflict.ConflictResolutionType.ChoseDest:
-                                {
-                                    continue; // skip syncing source record if resolution is to Chose Destination record
-                                }
-                            case Conflict.ConflictResolutionType.ModifySource:
-                                {
-                                    log.LogNumber = ((Log)(logConflictOpt.SourceRec)).LogNumber;
-                                    break;
-                                }
-                            case Conflict.ConflictResolutionType.ModifyDest:
-                                {
-                                    destination.ExecuteNonQuery2(MODIFY_LOG_COMMAND, logConflictOpt.DestRec);
-                                    break;
-                                }
-                        }
-                    }
+                    //if (logConflictOptions.TryGetValue(log.LogID, out var logConflictOpt) && logConflictOpt != null)
+                    //{
+
+                    //}
 
                     var match = destination.From<Log>()
                         .Where(where)
@@ -1416,7 +1220,7 @@ namespace CruiseDAL.V3.Sync
             }
         }
 
-        private void SyncStem(string cruiseID, DbConnection source, DbConnection destination, CruiseSyncOptions options, SyncExcludeOptions excludeOptions)
+        private void SyncStem(string cruiseID, DbConnection source, DbConnection destination, CruiseSyncOptions options)
         {
             var allOrNone = options.StemAllOrNone;
             var where = "CruiseID = @CruiseID AND StemID = @StemID";
@@ -1465,7 +1269,7 @@ namespace CruiseDAL.V3.Sync
             }
         }
 
-        private void SyncTallyLedger(string cruiseID, DbConnection source, DbConnection destination, CruiseSyncOptions options, SyncExcludeOptions excludeOptions)
+        private void SyncTallyLedger(string cruiseID, DbConnection source, DbConnection destination, CruiseSyncOptions options)
         {
             var where = "CruiseID = @CruiseID AND TallyLedgerID = @TallyLedgerID";
 
@@ -1496,7 +1300,7 @@ namespace CruiseDAL.V3.Sync
             }
         }
 
-        private void SyncLogFieldSetup(string cruiseID, DbConnection source, DbConnection destination, CruiseSyncOptions options, SyncExcludeOptions excludeOptions)
+        private void SyncLogFieldSetup(string cruiseID, DbConnection source, DbConnection destination, CruiseSyncOptions options)
         {
             var where = "CruiseID = @CruiseID AND StratumCode = @StratumCode AND Field = @Field";
 
@@ -1534,7 +1338,7 @@ namespace CruiseDAL.V3.Sync
 
         }
 
-        private void SyncTreeFieldSetup(string cruiseID, DbConnection source, DbConnection destination, CruiseSyncOptions options, SyncExcludeOptions excludeOptions)
+        private void SyncTreeFieldSetup(string cruiseID, DbConnection source, DbConnection destination, CruiseSyncOptions options)
         {
             var where = "CruiseID = @CruiseID AND StratumCode = @StratumCode AND coalesce(SampleGroupCode, '') = coalesce(@SampleGroupCode, '') AND Field = @Field";
 
@@ -1560,7 +1364,7 @@ namespace CruiseDAL.V3.Sync
             }
         }
 
-        private void SyncTreeAuditRule(string cruiseID, DbConnection source, DbConnection destination, CruiseSyncOptions options, SyncExcludeOptions excludeOptions)
+        private void SyncTreeAuditRule(string cruiseID, DbConnection source, DbConnection destination, CruiseSyncOptions options)
         {
             var where = "TreeAuditRuleID = @TreeAuditRuleID";
 
@@ -1587,7 +1391,7 @@ namespace CruiseDAL.V3.Sync
             }
         }
 
-        private void SyncTreeAuditRuleSelector(string cruiseID, DbConnection source, DbConnection destination, CruiseSyncOptions options, SyncExcludeOptions excludeOptions)
+        private void SyncTreeAuditRuleSelector(string cruiseID, DbConnection source, DbConnection destination, CruiseSyncOptions options)
         {
             var where = "TreeAuditRuleID = @TreeAuditRuleID AND ifnull(SpeciesCode, '') = ifnull(@SpeciesCode, '') AND ifnull(LiveDead, '') = ifnull(@LiveDead, '') AND ifnull(PrimaryProduct, '') = ifnull(@PrimaryProduct, '')";
 
@@ -1613,7 +1417,7 @@ namespace CruiseDAL.V3.Sync
             }
         }
 
-        private void SyncTreeAuditResolution(string cruiseID, DbConnection source, DbConnection destination, CruiseSyncOptions options, SyncExcludeOptions excludeOptions)
+        private void SyncTreeAuditResolution(string cruiseID, DbConnection source, DbConnection destination, CruiseSyncOptions options)
         {
             var where = "TreeAuditRuleID = @TreeAuditRuleID AND TreeID = @TreeID";
 
@@ -1666,7 +1470,7 @@ namespace CruiseDAL.V3.Sync
         //    }
         //}
 
-        private void SyncTreeFieldHeading(string cruiseID, DbConnection source, DbConnection destination, CruiseSyncOptions options, SyncExcludeOptions excludeOptions)
+        private void SyncTreeFieldHeading(string cruiseID, DbConnection source, DbConnection destination, CruiseSyncOptions options)
         {
             var where = "CruiseID = @CruiseID AND Field = @Field";
             var sourceItems = source.From<TreeFieldHeading>().Where("CruiseID = @p1").Query(cruiseID);
@@ -1689,7 +1493,7 @@ namespace CruiseDAL.V3.Sync
             }
         }
 
-        private void SyncLogFieldHeading(string cruiseID, DbConnection source, DbConnection destination, CruiseSyncOptions options, SyncExcludeOptions excludeOptions)
+        private void SyncLogFieldHeading(string cruiseID, DbConnection source, DbConnection destination, CruiseSyncOptions options)
         {
             var where = "CruiseID = @CruiseID AND Field = @Field";
             var sourceItems = source.From<LogFieldHeading>().Where("CruiseID = @p1").Query(cruiseID);
@@ -1713,7 +1517,7 @@ namespace CruiseDAL.V3.Sync
             }
         }
 
-        private void SyncBiomassEquations(string cruiseID, DbConnection source, DbConnection destination, CruiseSyncOptions options, SyncExcludeOptions excludeOptions)
+        private void SyncBiomassEquations(string cruiseID, DbConnection source, DbConnection destination, CruiseSyncOptions options)
         {
             var where = "CruiseID = @CruiseID AND Species = @Species AND Product = @Product AND Component = @Component AND LiveDead = @LiveDead";
             var sourceItems = source.From<BiomassEquation>()
@@ -1738,7 +1542,7 @@ namespace CruiseDAL.V3.Sync
             }
         }
 
-        private void SyncReports(string cruiseID, DbConnection source, DbConnection destination, CruiseSyncOptions options, SyncExcludeOptions excludeOptions)
+        private void SyncReports(string cruiseID, DbConnection source, DbConnection destination, CruiseSyncOptions options)
         {
             var where = "CruiseID = @CruiseID AND ReportID = @ReportID";
             var sourceItems = source.From<Reports>()
@@ -1763,7 +1567,7 @@ namespace CruiseDAL.V3.Sync
             }
         }
 
-        private void SyncValueEquations(string cruiseID, DbConnection source, DbConnection destination, CruiseSyncOptions options, SyncExcludeOptions excludeOptions)
+        private void SyncValueEquations(string cruiseID, DbConnection source, DbConnection destination, CruiseSyncOptions options)
         {
             var where = "CruiseID = @CruiseID AND Species = @Species AND PrimaryProduct = @PrimaryProduct AND ValueEquationNumber = @ValueEquationNumber";
             var sourceItems = source.From<ValueEquation>()
@@ -1788,7 +1592,7 @@ namespace CruiseDAL.V3.Sync
             }
         }
 
-        private void SyncVolumeEquations(string cruiseID, DbConnection source, DbConnection destination, CruiseSyncOptions options, SyncExcludeOptions excludeOptions)
+        private void SyncVolumeEquations(string cruiseID, DbConnection source, DbConnection destination, CruiseSyncOptions options)
         {
             var where = "CruiseID = @CruiseID AND Species = @Species AND PrimaryProduct =  @PrimaryProduct AND VolumeEquationNumber = @VolumeEquationNumber";
             var sourceItems = source.From<VolumeEquation>()
@@ -1812,7 +1616,7 @@ namespace CruiseDAL.V3.Sync
             }
         }
 
-        private void SyncTreeDefaultValues(string cruiseID, DbConnection source, DbConnection destination, CruiseSyncOptions options, SyncExcludeOptions excludeOptions)
+        private void SyncTreeDefaultValues(string cruiseID, DbConnection source, DbConnection destination, CruiseSyncOptions options)
         {
             var where = "CruiseID = @CruiseID AND coalesce(SpeciesCode, '') = coalesce(@SpeciesCode, '') AND coalesce(PrimaryProduct, '') = coalesce(@PrimaryProduct, '')";
             var sourceItems = source.From<TreeDefaultValue>()
@@ -1843,7 +1647,7 @@ namespace CruiseDAL.V3.Sync
             }
         }
 
-        private void SyncStratumTemplates(string cruiseID, DbConnection source, DbConnection destination, CruiseSyncOptions options, SyncExcludeOptions excludeOptions)
+        private void SyncStratumTemplates(string cruiseID, DbConnection source, DbConnection destination, CruiseSyncOptions options)
         {
             var where = "CruiseID = @CruiseID AND StratumTemplateName = @StratumTemplateName";
             var sourceItems = source.From<StratumTemplate>()
@@ -1874,7 +1678,7 @@ namespace CruiseDAL.V3.Sync
             }
         }
 
-        private void SyncStratumTemplateTreeFieldSetups(string cruiseID, DbConnection source, DbConnection destination, CruiseSyncOptions options, SyncExcludeOptions excludeOptions)
+        private void SyncStratumTemplateTreeFieldSetups(string cruiseID, DbConnection source, DbConnection destination, CruiseSyncOptions options)
         {
             var where = "CruiseID = @CruiseID AND StratumTemplateName = @StratumTemplateName AND Field = @Field";
             var sourceItems = source.From<StratumTemplateTreeFieldSetup>()
@@ -1905,7 +1709,7 @@ namespace CruiseDAL.V3.Sync
             }
         }
 
-        private void SyncStratumTemplateLogFieldSetups(string cruiseID, DbConnection source, DbConnection destination, CruiseSyncOptions options, SyncExcludeOptions excludeOptions)
+        private void SyncStratumTemplateLogFieldSetups(string cruiseID, DbConnection source, DbConnection destination, CruiseSyncOptions options)
         {
             var where = "CruiseID = @CruiseID AND StratumTemplateName = @StratumTemplateName AND Field = @Field";
             var sourceItems = source.From<StratumTemplateLogFieldSetup>()

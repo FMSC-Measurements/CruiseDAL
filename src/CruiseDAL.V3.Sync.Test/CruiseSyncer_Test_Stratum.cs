@@ -14,8 +14,8 @@ namespace CruiseDAL.V3.Sync
         [Fact]
         public void Sync_Stratum_Add()
         {
-            var fromPath = base.GetTempFilePath(".crz3", "Stratum_Add_fromFile");
-            var toPath = base.GetTempFilePath(".crz3", "Stratum_Add_toFile");
+            var fromPath = GetTempFilePathWithExt(".crz3", "Stratum_Add_fromFile");
+            var toPath = GetTempFilePathWithExt(".crz3", "Stratum_Add_toFile");
 
             var syncOptions = new CruiseSyncOptions();
 
@@ -48,8 +48,8 @@ namespace CruiseDAL.V3.Sync
         [Fact]
         public void Sync_Stratum_Update()
         {
-            var fromPath = base.GetTempFilePath(".crz3", "Stratum_Updated_fromFile");
-            var toPath = base.GetTempFilePath(".crz3", "Stratum_Update_toFile");
+            var fromPath = GetTempFilePathWithExt(".crz3", "Stratum_Updated_fromFile");
+            var toPath = GetTempFilePathWithExt(".crz3", "Stratum_Update_toFile");
 
             var syncOptions = new CruiseSyncOptions();
 
@@ -89,8 +89,8 @@ namespace CruiseDAL.V3.Sync
         [Fact]
         public void Sync_Stratum_Update_StratumCode()
         {
-            var fromPath = base.GetTempFilePath(".crz3", "Stratum_Updated_stCode_fromFile");
-            var toPath = base.GetTempFilePath(".crz3", "Stratum_Update_stCode_toFile");
+            var fromPath = GetTempFilePathWithExt(".crz3", "Stratum_Updated_stCode_fromFile");
+            var toPath = GetTempFilePathWithExt(".crz3", "Stratum_Update_stCode_toFile");
 
             var syncOptions = new CruiseSyncOptions();
 

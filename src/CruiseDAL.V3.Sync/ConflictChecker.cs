@@ -4,11 +4,27 @@ using System;
 using System.Collections.Generic;
 using System.Data.Common;
 using System.Linq;
+using CruiseDAL.V3.Sync.Util;
+
 
 namespace CruiseDAL.V3.Sync
 {
     public class ConflictChecker
     {
+        // downstream conflicts:
+        // downstream conflicts are conflicts that will need to be resolved if a conflict is resolved using the
+        // chose resolution option. The chose resolution option may require additional conflict resolution
+        // if child data has conflicting natural keys. 
+
+        // we don't need to worry about more one level down from a parent record with downstream conflicts
+        // at least with cruise data when we go more than 
+        // e.g. trees with-in plots or logs with-in trees
+        // if there is a nested conflict on a plot. we don't need to worry about conflicts on the trees within the plot
+        // if the user resolves with a modify resolution, then the trees wont be in conflict
+        // if the user resolves with a chose resolution, then we want to take all the trees from the chosen file. I can't think of any situation
+        //      where we would want to mix tree from two files on a plot. this is sorta using the 'All or Nothing' resolution option
+
+
         public IEnumerable<Conflict> CheckCuttingUnits(DbConnection source, DbConnection destination, string cruiseID)
         {
             var sourceItems = source.From<CuttingUnit>().Where("CruiseID = @p1").Query(cruiseID);
@@ -22,17 +38,23 @@ namespace CruiseDAL.V3.Sync
                 if (conflictItem != null)
                 {
                     var unitCode = item.CuttingUnitCode;
-                    var treeConflicts = CheckTreesByUnitCode(source, destination, cruiseID, unitCode);
-                    var plotTreeConflicts = CheckPlotTreesByUnitCode(source, destination, cruiseID, unitCode);
-                    var plotConflicts = CheckPlot
+                    var treeConflicts = CheckTreesByUnitCode(source, destination, cruiseID, unitCode).ToArray();
+                    var plotConflicts = CheckPlotsByUnitCode(source, destination, cruiseID, unitCode).ToArray();
+                    var downstreamConflicts = treeConflicts.Concat(plotConflicts).ToArray();
+
+
 
                     yield return new Conflict
                     {
                         Table = nameof(CuttingUnit),
+                        Identity = Identify(item),
                         SourctRecID = item.CuttingUnitID,
                         DestRecID = conflictItem.CuttingUnitID,
                         SourceRec = item,
                         DestRec = conflictItem,
+                        DownstreamConflicts = downstreamConflicts,
+                        SourceMod = DateMath.Max(item.Created_TS.Value, item.Modified_TS),
+                        DestMod = DateMath.Max(conflictItem.Created_TS.Value, conflictItem.Modified_TS),
                     };
                 }
             }
@@ -53,10 +75,13 @@ namespace CruiseDAL.V3.Sync
                     yield return new Conflict
                     {
                         Table = nameof(Stratum),
+                        Identity = Identify(item),
                         SourctRecID = item.StratumID,
                         DestRecID = conflictItem.StratumID,
                         SourceRec = item,
                         DestRec = conflictItem,
+                        SourceMod = DateMath.Max(item.Created_TS.Value, item.Modified_TS),
+                        DestMod = DateMath.Max(conflictItem.Created_TS.Value, conflictItem.Modified_TS),
                     };
                 }
             }
@@ -82,10 +107,13 @@ namespace CruiseDAL.V3.Sync
                     yield return new Conflict
                     {
                         Table = nameof(SampleGroup),
+                        Identity = Identify(sg),
                         SourctRecID = sg.SampleGroupID,
                         DestRecID = conflictItem.SampleGroupID,
                         SourceRec = sg,
                         DestRec = conflictItem,
+                        SourceMod = DateMath.Max(sg.Created_TS.Value, sg.Modified_TS),
+                        DestMod = DateMath.Max(conflictItem.Created_TS.Value, conflictItem.Modified_TS),
                     };
                 }
             }
@@ -110,19 +138,25 @@ namespace CruiseDAL.V3.Sync
 
                 if (conflictItem != null)
                 {
+                    var treeConflicts = CheckPlotTreesByUnitCodePlotNumber(source, destination, cruiseID, plot.CuttingUnitCode, plot.PlotNumber).ToArray();
+
                     yield return new Conflict
                     {
                         Table = nameof(Plot),
+                        Identity = Identify(plot),
                         SourctRecID = plot.PlotID,
                         DestRecID = conflictItem.PlotID,
                         SourceRec = plot,
                         DestRec = conflictItem,
+                        DownstreamConflicts = treeConflicts,
+                        SourceMod = DateMath.Max(plot.Created_TS.Value, plot.Modified_TS),
+                        DestMod = DateMath.Max(conflictItem.Created_TS.Value, conflictItem.Modified_TS),
                     };
                 }
             }
         }
 
-        public IEnumerable<Conflict> CheckPlotsByUnitCode(DbConnection source, DbConnection destination, string cruiseID, string unitCode)
+        protected IEnumerable<Conflict> CheckPlotsByUnitCode(DbConnection source, DbConnection destination, string cruiseID, string unitCode)
         {
             //var sourceItems = source.From<Plot>().Where("CruiseID = @p1").Query(cruiseID);
 
@@ -142,10 +176,13 @@ namespace CruiseDAL.V3.Sync
                     yield return new Conflict
                     {
                         Table = nameof(Plot),
+                        Identity = Identify(plot),
                         SourctRecID = plot.PlotID,
                         DestRecID = conflictItem.PlotID,
                         SourceRec = plot,
                         DestRec = conflictItem,
+                        SourceMod = DateMath.Max(plot.Created_TS.Value, plot.Modified_TS),
+                        DestMod = DateMath.Max(conflictItem.Created_TS.Value, conflictItem.Modified_TS),
                     };
                 }
             }
@@ -172,16 +209,19 @@ namespace CruiseDAL.V3.Sync
                     yield return new Conflict
                     {
                         Table = nameof(Tree),
+                        Identity = Identify(tree),
                         SourctRecID = tree.TreeID,
                         DestRecID = conflictItem.TreeID,
                         SourceRec = tree,
                         DestRec = conflictItem,
+                        SourceMod = DateMath.Max(tree.Created_TS.Value, tree.Modified_TS),
+                        DestMod = DateMath.Max(conflictItem.Created_TS.Value, conflictItem.Modified_TS),
                     };
                 }
             }
         }
 
-        public IEnumerable<Conflict> CheckTreesByUnitCode(DbConnection source, DbConnection destination, string cruiseID, string cuttingUnitCode)
+        protected IEnumerable<Conflict> CheckTreesByUnitCode(DbConnection source, DbConnection destination, string cruiseID, string cuttingUnitCode)
         {
             var sourceItems = source.Query<Tree>(
                 "SELECT t.* FROM Tree AS t " +
@@ -199,16 +239,19 @@ namespace CruiseDAL.V3.Sync
                     yield return new Conflict
                     {
                         Table = nameof(Tree),
+                        Identity = Identify(tree),
                         SourctRecID = tree.TreeID,
                         DestRecID = conflictItem.TreeID,
                         SourceRec = tree,
                         DestRec = conflictItem,
+                        SourceMod = DateMath.Max(tree.Created_TS.Value, tree.Modified_TS),
+                        DestMod = DateMath.Max(conflictItem.Created_TS.Value, conflictItem.Modified_TS),
                     };
                 }
             }
         }
 
-        public IEnumerable<Conflict> CheckPlotTreesByUnitCode(DbConnection source, DbConnection destination, string cruiseID, string cuttingUnitCode)
+        protected IEnumerable<Conflict> CheckPlotTreesByUnitCode(DbConnection source, DbConnection destination, string cruiseID, string cuttingUnitCode)
         {
             var sourceItems = source.Query<Tree>(
                 "SELECT t.* FROM Tree AS t " +
@@ -226,16 +269,19 @@ namespace CruiseDAL.V3.Sync
                     yield return new Conflict
                     {
                         Table = nameof(Tree),
+                        Identity = Identify(tree),
                         SourctRecID = tree.TreeID,
                         DestRecID = conflictItem.TreeID,
                         SourceRec = tree,
                         DestRec = conflictItem,
+                        SourceMod = DateMath.Max(tree.Created_TS.Value, tree.Modified_TS),
+                        DestMod = DateMath.Max(conflictItem.Created_TS.Value, conflictItem.Modified_TS),
                     };
                 }
             }
         }
 
-        public IEnumerable<Conflict> CheckPlotTreesByUnitCodePlotNumber(DbConnection source, DbConnection destination, string cruiseID, string cuttingUnitCode, int plotNumber)
+        protected IEnumerable<Conflict> CheckPlotTreesByUnitCodePlotNumber(DbConnection source, DbConnection destination, string cruiseID, string cuttingUnitCode, int plotNumber)
         {
             var sourceItems = source.Query<Tree>(
                 "SELECT t.* FROM Tree AS t " +
@@ -253,10 +299,13 @@ namespace CruiseDAL.V3.Sync
                     yield return new Conflict
                     {
                         Table = nameof(Tree),
+                        Identity = Identify(tree),
                         SourctRecID = tree.TreeID,
                         DestRecID = conflictItem.TreeID,
                         SourceRec = tree,
                         DestRec = conflictItem,
+                        SourceMod = DateMath.Max(tree.Created_TS.Value, tree.Modified_TS),
+                        DestMod = DateMath.Max(conflictItem.Created_TS.Value, conflictItem.Modified_TS),
                     };
                 }
             }
@@ -284,10 +333,13 @@ namespace CruiseDAL.V3.Sync
                     yield return new Conflict
                     {
                         Table = nameof(Tree),
+                        Identity = Identify(tree),
                         SourctRecID = tree.TreeID,
                         DestRecID = conflictItem.TreeID,
                         SourceRec = tree,
                         DestRec = conflictItem,
+                        SourceMod = tree.Created_TS.Value.Max(tree.Modified_TS),
+                        DestMod = conflictItem.Created_TS.Value.Max(conflictItem.Modified_TS),
                     };
                 }
             }
@@ -308,12 +360,119 @@ namespace CruiseDAL.V3.Sync
                     yield return new Conflict
                     {
                         Table = nameof(Log),
+                        Identity = Identify(item),
                         SourctRecID = item.LogID,
                         DestRecID = conflictItem.LogID,
+                        SourceRec = item,
+                        DestRec = conflictItem,
+                        SourceMod = DateMath.Max(item.Created_TS.Value, item.Modified_TS),
+                        DestMod = DateMath.Max(conflictItem.Created_TS.Value, conflictItem.Modified_TS),
                     };
                 }
             }
         }
+
+        public IEnumerable<Conflict> CheckLogsByUnitCodeTreeNumber(DbConnection source, DbConnection destination, string cruiseID, string cuttingUnitCode, int treeNumber)
+        {
+            
+            var sourceItems = source.From<Log>()
+                .Join("Tree", "USING (TreeID)")
+                .Where("CruiseID = @p1 AND CuttingUnitCode = @p2 AND TreeNumber = @p3 AND PlotNumber IS NULL")
+                .Query(cruiseID, cuttingUnitCode, treeNumber);
+
+            foreach (var item in sourceItems)
+            {
+                var conflictItem = destination.From<Log>()
+                    .Join("Tree", "USING (TreeID)")
+                    .Where("CruiseID = @p1 AND LogNumber = @p2 AND CuttingUnitCode = @p3 AND TreeNumber = @p4  AND LogID != @LogID")
+                    .Query(cruiseID, item.LogNumber, cuttingUnitCode, treeNumber).FirstOrDefault();
+
+                if (conflictItem != null)
+                {
+                    yield return new Conflict
+                    {
+                        Table = nameof(Log),
+                        Identity = Identify(item),
+                        SourctRecID = item.LogID,
+                        SourceRec = item,
+                        DestRec = conflictItem,
+                        DestRecID = conflictItem.LogID,
+                        SourceMod = DateMath.Max(item.Created_TS.Value, item.Modified_TS),
+                        DestMod = DateMath.Max(conflictItem.Created_TS.Value, conflictItem.Modified_TS),
+                    };
+                }
+            }
+        }
+
+        public IEnumerable<Conflict> CheckLogsByUnitCodePlotTreeNumber(DbConnection source, DbConnection destination, string cruiseID, string cuttingUnitCode, int treeNumber, int plotNumber)
+        {
+
+            var sourceItems = source.From<Log>()
+                .Join("Tree", "USING (TreeID)")
+                .Where("CruiseID = @p1 AND CuttingUnitCode = @p2 AND TreeNumber = @p3 AND PlotNumber = @p4")
+                .Query(cruiseID, cuttingUnitCode, treeNumber, plotNumber);
+
+            foreach (var item in sourceItems)
+            {
+                var conflictItem = destination.From<Log>()
+                    .Join("Tree", "USING (TreeID)")
+                    .Where("CruiseID = @p1 AND LogNumber = @p2 AND CuttingUnitCode = @p3 AND TreeNumber = @p4 AND PlotNumber = @p5  AND LogID != @p6")
+                    .Query(cruiseID, item.LogNumber, cuttingUnitCode, treeNumber, plotNumber, item.LogID).FirstOrDefault();
+
+                if (conflictItem != null)
+                {
+                    yield return new Conflict
+                    {
+                        Table = nameof(Log),
+                        Identity = Identify(item),
+                        SourctRecID = item.LogID,
+                        DestRecID = conflictItem.LogID,
+                        SourceRec = item,
+                        DestRec = conflictItem,
+                        SourceMod = DateMath.Max(item.Created_TS.Value, item.Modified_TS),
+                        DestMod = DateMath.Max(conflictItem.Created_TS.Value, conflictItem.Modified_TS),
+                    };
+                }
+            }
+        }
+
+        protected string Identify(CuttingUnit cu)
+        {
+            return $"Unit: {cu.CuttingUnitCode}";
+        }
+
+        protected string Identify(Stratum st)
+        {
+            return $"Stratum: {st.StratumCode}";
+        }
+
+        protected string Identify(SampleGroup sg)
+        {
+            return $"Sample Group: {sg.SampleGroupCode}, Stratum:{sg.StratumCode}";
+        }
+
+        protected string Identify(Plot p)
+        {
+            return $"Plot: {p.PlotNumber}, Unit: {p.CuttingUnitCode}";
+        }
+
+        protected string Identify(Tree t)
+        {
+            if (t.PlotNumber.HasValue)
+            {
+                return $"Tree: {t.TreeNumber}, Plot: {t.PlotNumber.Value}, Unit: {t.CuttingUnitCode}";
+            }
+            else
+            {
+                return $"Tree: {t.TreeNumber}, Unit: {t.CuttingUnitCode}";
+            }
+        }
+
+        protected string Identify(Log l)
+        {
+            return $"Log: {l.LogNumber}";
+        }
+
 
         private class CuttingUnitKey
         {

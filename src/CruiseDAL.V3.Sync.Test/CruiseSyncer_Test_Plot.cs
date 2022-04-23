@@ -14,8 +14,8 @@ namespace CruiseDAL.V3.Sync
         [Fact]
         public void Sync_Plot_Add()
         {
-            var fromPath = base.GetTempFilePath(".crz3", "Sync_Plot_Add_fromFile");
-            var toPath = base.GetTempFilePath(".crz3", "Sync_Plot_Add_toFile");
+            var fromPath = GetTempFilePathWithExt(".crz3", "Sync_Plot_Add_fromFile");
+            var toPath = GetTempFilePathWithExt(".crz3", "Sync_Plot_Add_toFile");
 
             var syncOptions = new CruiseSyncOptions()
             {
@@ -50,8 +50,8 @@ namespace CruiseDAL.V3.Sync
         [Fact]
         public void Sync_Plot_Update()
         {
-            var fromPath = base.GetTempFilePath(".crz3", "Sync_Plot_Update_fromFile");
-            var toPath = base.GetTempFilePath(".crz3", "Sync_Plot_Update_toFile");
+            var fromPath = GetTempFilePathWithExt(".crz3", "Sync_Plot_Update_fromFile");
+            var toPath = GetTempFilePathWithExt(".crz3", "Sync_Plot_Update_toFile");
 
             var syncOptions = new CruiseSyncOptions()
             {
@@ -96,8 +96,8 @@ namespace CruiseDAL.V3.Sync
         [Fact]
         public void Sync_Plot_Update_PlotNumber()
         {
-            var fromPath = base.GetTempFilePath(".crz3", "Sync_Plot_Update_plotNum_fromFile");
-            var toPath = base.GetTempFilePath(".crz3", "Sync_Plot_Update_plotNum_toFile");
+            var fromPath = GetTempFilePathWithExt(".crz3", "Sync_Plot_Update_plotNum_fromFile");
+            var toPath = GetTempFilePathWithExt(".crz3", "Sync_Plot_Update_plotNum_toFile");
 
             var syncOptions = new CruiseSyncOptions()
             {

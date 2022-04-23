@@ -1,4 +1,5 @@
-﻿using CruiseDAL.V3.Models;
+﻿using CruiseDAL.TestCommon;
+using CruiseDAL.V3.Models;
 using CruiseDAL.V3.Sync.Util;
 using System;
 using System.Linq;

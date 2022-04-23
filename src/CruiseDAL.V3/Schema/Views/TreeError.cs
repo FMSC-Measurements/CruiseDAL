@@ -37,9 +37,13 @@ WITH
         'e' AS Level,
         'Aleast One Height Parameter Must Be Greater Than 0' AS Message,
         'heights' AS Field
-    FROM TreeMeasurment AS tm
-    JOIN Tree AS t USING (TreeID)
-    WHERE t.CountOrMeasure = 'M' AND tm.TotalHeight <=0 AND tm.MerchHeightPrimary <= 0 AND tm.MerchHeightSecondary <= 0 AND tm.UpperStemHeight <= 0 ),
+    FROM Tree AS t
+    LEFT JOIN TreeMeasurment AS tm
+    WHERE t.CountOrMeasure = 'M'  
+        AND ifnull(tm.TotalHeight, 0) <=0 
+        AND ifnull(tm.MerchHeightPrimary, 0) <= 0 
+        AND ifnull(tm.MerchHeightSecondary, 0) <= 0 
+        AND ifnull(tm.UpperStemHeight, 0) <= 0),
 
     treeError_diameters AS (
     SELECT

@@ -1,0 +1,74 @@
+# Plot Conflict Senarios
+Senario:
+ User enters plots and tree data for a given existing unit from paper into two files.
+Variations:
+  - User enters more tree data on a plot into one file. 
+  - User enters an aditional plot into one file.
+Setup
+ File A contains
+	Plots: 
+		PlotNumber
+		1,
+		2,
+	Trees:
+		Plot Number |Tree Number
+		1			|1
+		1			|2
+		2			|1
+ File B contains
+	Plots: 
+		PlotNumber
+		1
+		2
+	Trees:
+		Plot Number |Tree Number
+		1			|1
+		1			|2
+		2			|1
+
+Conflict Analisis:
+	Each plot that exists in both files will generate a conflict. As well
+	the trees in those plots will generate downstream conflicts.
+	We can analize the plot conflict and downstream conflicts and check them for sameness.
+	If all downstream conflicts are same, then we can determin that a chose resolution is best.
+	- for plot record. we may not be able to resonably compare the remarks field due to the dificulty of 		having exact same plot remarks
+
+Analisis:
+	The data in both files should be the same. 
+	With the posibility that one file contains more tree records on a given plot.
+	The user has two options 
+	Chosing to take all the data for a plot based on which plot record is newer is probably the best option
+	
+	
+Senario:
+	User colects plots into two files, but forgets to enter corect plot numbers and gets conflicts on plot numbers
+	
+Setup
+ File A contains
+	Plots: 
+		PlotNumber
+		1,
+		2,
+	Trees:
+		Plot Number |Tree Number
+		1			|1
+		1			|2
+		2			|1
+ File B contains
+	Plots: 
+		PlotNumber
+		1
+		2
+	Trees:
+		Plot Number |Tree Number
+		1			|1
+		1			|2
+		2			|1
+	
+Conflict Analisis:
+	Each plot that exists in both files will generate a conflict. As well
+	the trees in those plots will generate downstream conflicts.
+	Plots and downstream conflicts will generaly fail checks for sameness, because measurments will be different.
+	Unless there were no samples on the trees, but then the tally-pop on those trees should not be exact.
+	Since the child data is different we can conclude that these are seperate plots and a modify resolution should 
+	be chosen.

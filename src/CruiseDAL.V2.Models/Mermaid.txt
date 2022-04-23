@@ -1,222 +1,24 @@
 classDiagram
-    class Sale {
-    * Sale_CN
-    -----
-        - SaleNumber : TEXT
-        - Name : TEXT
-        - Purpose : TEXT
-        - Region : TEXT
-        - Forest : TEXT
-        - District : TEXT
-        - MeasurementYear : TEXT
-        - CalendarYear : INTEGER
-        - LogGradingEnabled : BOOLEAN
-        - Remarks : TEXT
-        - DefaultUOM : TEXT
-    }
-
-    class CuttingUnit {
-    * CuttingUnit_CN
-    -----
-        - Code : TEXT
-        - Area : REAL
-        - Description : TEXT
-        - LoggingMethod : TEXT
-        - PaymentUnit : TEXT
-        - TallyHistory : TEXT
-        - Rx : TEXT
-    }
-
-    class Stratum {
-    * Stratum_CN
-    -----
-        - Code : TEXT
-        - Description : TEXT
-        - Method : TEXT
-        - BasalAreaFactor : REAL
-        - FixedPlotSize : REAL
-        - KZ3PPNT : INTEGER
-        - SamplingFrequency : INTEGER
-        - Hotkey : TEXT
-        - FBSCode : TEXT
-        - YieldComponent : TEXT
-        - VolumeFactor : REAL
-        - Month : INTEGER
-        - Year : INTEGER
-    }
-
-    class CuttingUnitStratum {
-        - CuttingUnit_CN : INTEGER <<FK>>
-        - Stratum_CN : INTEGER <<FK>>
-        - StratumArea : REAL
-    }
-
-    class SampleGroup {
-    * SampleGroup_CN
-    -----
-        - Stratum_CN : INTEGER <<FK>>
-        - Code : TEXT
-        - CutLeave : TEXT
-        - UOM : TEXT
-        - PrimaryProduct : TEXT
-        - SecondaryProduct : TEXT
-        - BiomassProduct : TEXT
-        - DefaultLiveDead : TEXT
-        - SamplingFrequency : INTEGER
-        - InsuranceFrequency : INTEGER
-        - KZ : INTEGER
-        - BigBAF : REAL
-        - SmallFPS : REAL
-        - TallyMethod : TEXT
-        - Description : TEXT
-        - SampleSelectorType : TEXT
-        - SampleSelectorState : TEXT
-        - MinKPI : INTEGER
-        - MaxKPI : INTEGER
-    }
-
-    class SamplerState {
-    * SamplerState_CN
-    -----
-        - SampleGroup_CN : INTEGER <<FK>>
-        - SampleSelectorType : TEXT
-        - BlockState : TEXT
-        - SystematicIndex : INTEGER
-        - Counter : INTEGER
-        - InsuranceIndex : 
-        - InsuranceCounter : 
-    }
-
-    class TreeDefaultValue {
-    * TreeDefaultValue_CN
-    -----
-        - PrimaryProduct : TEXT
+    class BiomassEquation {
         - Species : TEXT
+        - Product : TEXT
+        - Component : TEXT
         - LiveDead : TEXT
         - FIAcode : INTEGER
-        - CullPrimary : REAL
-        - HiddenPrimary : REAL
-        - CullSecondary : REAL
-        - HiddenSecondary : REAL
-        - Recoverable : REAL
-        - ContractSpecies : TEXT
-        - TreeGrade : TEXT
-        - MerchHeightLogLength : INTEGER
-        - MerchHeightType : TEXT
-        - FormClass : REAL
-        - BarkThicknessRatio : REAL
-        - AverageZ : REAL
-        - ReferenceHeightPercent : REAL
-    }
-
-    class SampleGroupTreeDefaultValue {
-        - TreeDefaultValue_CN : INTEGER <<FK>>
-        - SampleGroup_CN : INTEGER <<FK>>
-    }
-
-    class Plot {
-    * Plot_CN
-    -----
-        - Plot_GUID : TEXT
-        - Stratum_CN : INTEGER <<FK>>
-        - CuttingUnit_CN : INTEGER <<FK>>
-        - PlotNumber : INTEGER
-        - IsEmpty : TEXT
-        - Slope : REAL
-        - KPI : REAL
-        - Aspect : REAL
-        - Remarks : TEXT
-        - XCoordinate : REAL
-        - YCoordinate : REAL
-        - ZCoordinate : REAL
+        - Equation : TEXT
+        - PercentMoisture : REAL
+        - PercentRemoved : REAL
         - MetaData : TEXT
-        - Blob : BLOB
-        - ThreePRandomValue : INTEGER
+        - WeightFactorPrimary : REAL
+        - WeightFactorSecondary : REAL
     }
 
-    class Tree {
-    * Tree_CN
+    class Component {
+    * Component_CN
     -----
-        - Tree_GUID : TEXT
-        - TreeDefaultValue_CN : INTEGER <<FK>>
-        - Stratum_CN : INTEGER <<FK>>
-        - SampleGroup_CN : INTEGER <<FK>>
-        - CuttingUnit_CN : INTEGER <<FK>>
-        - Plot_CN : INTEGER <<FK>>
-        - TreeNumber : INTEGER
-        - Species : TEXT
-        - CountOrMeasure : TEXT
-        - TreeCount : REAL
-        - KPI : REAL
-        - STM : TEXT
-        - SeenDefectPrimary : REAL
-        - SeenDefectSecondary : REAL
-        - RecoverablePrimary : REAL
-        - HiddenPrimary : REAL
-        - Initials : TEXT
-        - LiveDead : TEXT
-        - Grade : TEXT
-        - HeightToFirstLiveLimb : REAL
-        - PoleLength : REAL
-        - ClearFace : TEXT
-        - CrownRatio : REAL
-        - DBH : REAL
-        - DRC : REAL
-        - TotalHeight : REAL
-        - MerchHeightPrimary : REAL
-        - MerchHeightSecondary : REAL
-        - FormClass : REAL
-        - UpperStemDiameter : REAL
-        - UpperStemHeight : REAL
-        - DBHDoubleBarkThickness : REAL
-        - TopDIBPrimary : REAL
-        - TopDIBSecondary : REAL
-        - DefectCode : TEXT
-        - DiameterAtDefect : REAL
-        - VoidPercent : REAL
-        - Slope : REAL
-        - Aspect : REAL
-        - Remarks : TEXT
-        - XCoordinate : DOUBLE
-        - YCoordinate : DOUBLE
-        - ZCoordinate : DOUBLE
-        - MetaData : TEXT
-        - IsFallBuckScale : INTEGER
-        - ExpansionFactor : REAL
-        - TreeFactor : REAL
-        - PointFactor : REAL
-    }
-
-    class Log {
-    * Log_CN
-    -----
-        - Log_GUID : TEXT
-        - Tree_CN : INTEGER <<FK>>
-        - LogNumber : TEXT
-        - Grade : TEXT
-        - SeenDefect : REAL
-        - PercentRecoverable : REAL
-        - Length : INTEGER
-        - ExportGrade : TEXT
-        - SmallEndDiameter : REAL
-        - LargeEndDiameter : REAL
-        - GrossBoardFoot : REAL
-        - NetBoardFoot : REAL
-        - GrossCubicFoot : REAL
-        - NetCubicFoot : REAL
-        - BoardFootRemoved : REAL
-        - CubicFootRemoved : REAL
-        - DIBClass : REAL
-        - BarkThickness : REAL
-    }
-
-    class Stem {
-    * Stem_CN
-    -----
-        - Stem_GUID : TEXT
-        - Tree_CN : INTEGER <<FK>>
-        - Diameter : REAL
-        - DiameterType : TEXT
+        - GUID : TEXT
+        - LastMerge : DATETIME
+        - FileName : TEXT
     }
 
     class CountTree {
@@ -231,21 +33,39 @@ classDiagram
         - SumKPI : INTEGER
     }
 
-    class Tally {
-    * Tally_CN
+    class CruiseMethods {
+    * CruiseMethods_CN
     -----
-        - Hotkey : TEXT
-        - Description : TEXT
-        - IndicatorValue : TEXT
-        - IndicatorType : TEXT
+        - Code : TEXT
+        - FriendlyValue : TEXT
     }
 
-    class TreeEstimate {
-    * TreeEstimate_CN
+    class CuttingUnit {
+    * CuttingUnit_CN
     -----
-        - CountTree_CN : INTEGER
-        - TreeEstimate_GUID : TEXT
-        - KPI : REAL
+        - Code : TEXT
+        - Area : REAL
+        - Description : TEXT
+        - LoggingMethod : TEXT
+        - PaymentUnit : TEXT
+        - TallyHistory : TEXT
+        - Rx : TEXT
+    }
+
+    class CuttingUnitStratum {
+        - CuttingUnit_CN : INTEGER <<FK>>
+        - Stratum_CN : INTEGER <<FK>>
+        - StratumArea : REAL
+    }
+
+    class ErrorLog {
+        - TableName : TEXT
+        - CN_Number : INTEGER
+        - ColumnName : TEXT
+        - Level : TEXT
+        - Message : TEXT
+        - Program : TEXT
+        - Suppress : BOOLEAN
     }
 
     class FixCNTTallyClass {
@@ -266,113 +86,19 @@ classDiagram
         - Max : INTEGER
     }
 
-    class VolumeEquation {
-        - Species : TEXT
-        - PrimaryProduct : TEXT
-        - VolumeEquationNumber : TEXT
-        - StumpHeight : REAL
-        - TopDIBPrimary : REAL
-        - TopDIBSecondary : REAL
-        - CalcTotal : INTEGER
-        - CalcBoard : INTEGER
-        - CalcCubic : INTEGER
-        - CalcCord : INTEGER
-        - CalcTopwood : INTEGER
-        - CalcBiomass : INTEGER
-        - Trim : REAL
-        - SegmentationLogic : INTEGER
-        - MinLogLengthPrimary : REAL
-        - MaxLogLengthPrimary : REAL
-        - MinMerchLength : REAL
-        - Model : TEXT
-        - CommonSpeciesName : TEXT
-        - MerchModFlag : INTEGER
-        - EvenOddSegment : INTEGER
-    }
-
-    class BiomassEquation {
-        - Species : TEXT
-        - Product : TEXT
-        - Component : TEXT
-        - LiveDead : TEXT
-        - FIAcode : INTEGER
-        - Equation : TEXT
-        - PercentMoisture : REAL
-        - PercentRemoved : REAL
-        - MetaData : TEXT
-        - WeightFactorPrimary : REAL
-        - WeightFactorSecondary : REAL
-    }
-
-    class ValueEquation {
-        - Species : TEXT
-        - PrimaryProduct : TEXT
-        - ValueEquationNumber : TEXT
-        - Grade : TEXT
-        - Coefficient1 : REAL
-        - Coefficient2 : REAL
-        - Coefficient3 : REAL
-        - Coefficient4 : REAL
-        - Coefficient5 : REAL
-        - Coefficient6 : REAL
-    }
-
-    class QualityAdjEquation {
-        - Species : TEXT
-        - QualityAdjEq : TEXT
-        - Year : INTEGER
-        - Grade : TEXT
-        - Coefficient1 : REAL
-        - Coefficient2 : REAL
-        - Coefficient3 : REAL
-        - Coefficient4 : REAL
-        - Coefficient5 : REAL
-        - Coefficient6 : REAL
-    }
-
-    class Reports {
-        - ReportID : TEXT
-        - Selected : BOOLEAN
-        - Title : TEXT
-    }
-
-    class TreeCalculatedValues {
-    * TreeCalcValues_CN
+    class Forests {
+    * Forest_CN
     -----
-        - Tree_CN : INTEGER <<FK>>
-        - TotalCubicVolume : REAL
-        - GrossBDFTPP : REAL
-        - NetBDFTPP : REAL
-        - GrossCUFTPP : REAL
-        - NetCUFTPP : REAL
-        - CordsPP : REAL
-        - GrossBDFTRemvPP : REAL
-        - GrossCUFTRemvPP : REAL
-        - GrossBDFTSP : REAL
-        - NetBDFTSP : REAL
-        - GrossCUFTSP : REAL
-        - NetCUFTSP : REAL
-        - CordsSP : REAL
-        - GrossCUFTRemvSP : REAL
-        - NumberlogsMS : REAL
-        - NumberlogsTPW : REAL
-        - GrossBDFTRP : REAL
-        - GrossCUFTRP : REAL
-        - CordsRP : REAL
-        - GrossBDFTIntl : REAL
-        - NetBDFTIntl : REAL
-        - BiomassMainStemPrimary : REAL
-        - BiomassMainStemSecondary : REAL
-        - ValuePP : REAL
-        - ValueSP : REAL
-        - ValueRP : REAL
-        - BiomassProd : REAL
-        - Biomasstotalstem : REAL
-        - Biomasslivebranches : REAL
-        - Biomassdeadbranches : REAL
-        - Biomassfoliage : REAL
-        - BiomassTip : REAL
-        - TipwoodVolume : REAL
+        - Region_CN : INTEGER <<FK>>
+        - State : TEXT
+        - Name : TEXT
+        - Number : INTEGER
+    }
+
+    class Globals {
+        - Block : TEXT
+        - Key : TEXT
+        - Value : TEXT
     }
 
     class LCD {
@@ -432,6 +158,116 @@ classDiagram
         - SumWgtBFT : DOUBLE
         - SumWgtTip : DOUBLE
         - SumTipwood : DOUBLE
+    }
+
+    class Log {
+    * Log_CN
+    -----
+        - Log_GUID : TEXT
+        - Tree_CN : INTEGER <<FK>>
+        - LogNumber : TEXT
+        - Grade : TEXT
+        - SeenDefect : REAL
+        - PercentRecoverable : REAL
+        - Length : INTEGER
+        - ExportGrade : TEXT
+        - SmallEndDiameter : REAL
+        - LargeEndDiameter : REAL
+        - GrossBoardFoot : REAL
+        - NetBoardFoot : REAL
+        - GrossCubicFoot : REAL
+        - NetCubicFoot : REAL
+        - BoardFootRemoved : REAL
+        - CubicFootRemoved : REAL
+        - DIBClass : REAL
+        - BarkThickness : REAL
+    }
+
+    class LogFieldSetup {
+        - Stratum_CN : INTEGER <<FK>>
+        - Field : TEXT
+        - FieldOrder : INTEGER
+        - ColumnType : TEXT
+        - Heading : TEXT
+        - Width : REAL
+        - Format : TEXT
+        - Behavior : TEXT
+    }
+
+    class LogFieldSetupDefault {
+    * LogFieldSetupDefault_CN
+    -----
+        - Field : TEXT
+        - FieldName : TEXT
+        - FieldOrder : INTEGER
+        - ColumnType : TEXT
+        - Heading : TEXT
+        - Width : REAL
+        - Format : TEXT
+        - Behavior : TEXT
+    }
+
+    class LogGradeAuditRule {
+        - Species : TEXT
+        - DefectMax : REAL
+        - ValidGrades : TEXT
+    }
+
+    class LogMatrix {
+        - ReportNumber : TEXT
+        - GradeDescription : TEXT
+        - LogSortDescription : TEXT
+        - Species : TEXT
+        - LogGrade1 : TEXT
+        - LogGrade2 : TEXT
+        - LogGrade3 : TEXT
+        - LogGrade4 : TEXT
+        - LogGrade5 : TEXT
+        - LogGrade6 : TEXT
+        - SEDlimit : TEXT
+        - SEDminimum : DOUBLE
+        - SEDmaximum : DOUBLE
+    }
+
+    class LogStock {
+    * LogStock_CN
+    -----
+        - Tree_CN : INTEGER <<FK>>
+        - LogNumber : TEXT
+        - Grade : TEXT
+        - SeenDefect : REAL
+        - PercentRecoverable : REAL
+        - Length : INTEGER
+        - ExportGrade : TEXT
+        - SmallEndDiameter : REAL
+        - LargeEndDiameter : REAL
+        - GrossBoardFoot : REAL
+        - NetBoardFoot : REAL
+        - GrossCubicFoot : REAL
+        - NetCubicFoot : REAL
+        - BoardFootRemoved : REAL
+        - CubicFootRemoved : REAL
+        - DIBClass : REAL
+        - BarkThickness : REAL
+        - BoardUtil : REAL
+        - CubicUtil : REAL
+    }
+
+    class LoggingMethods {
+    * LoggingMethods_CN
+    -----
+        - Code : TEXT
+        - FriendlyValue : TEXT
+    }
+
+    class MessageLog {
+    * Message_CN
+    -----
+        - Program : TEXT
+        - Message : TEXT
+        - Date : TEXT
+        - Time : TEXT
+        - Level : TEXT
     }
 
     class POP {
@@ -509,28 +345,116 @@ classDiagram
         - ProratedEstimatedTrees : DOUBLE
     }
 
-    class LogStock {
-    * LogStock_CN
+    class Plot {
+    * Plot_CN
     -----
-        - Tree_CN : INTEGER <<FK>>
-        - LogNumber : TEXT
+        - Plot_GUID : TEXT
+        - Stratum_CN : INTEGER <<FK>>
+        - CuttingUnit_CN : INTEGER <<FK>>
+        - PlotNumber : INTEGER
+        - IsEmpty : TEXT
+        - Slope : REAL
+        - KPI : REAL
+        - Aspect : REAL
+        - Remarks : TEXT
+        - XCoordinate : REAL
+        - YCoordinate : REAL
+        - ZCoordinate : REAL
+        - MetaData : TEXT
+        - Blob : BLOB
+        - ThreePRandomValue : INTEGER
+    }
+
+    class ProductCodes {
+    * ProductCodes_CN
+    -----
+        - Code : TEXT
+        - FriendlyValue : TEXT
+    }
+
+    class QualityAdjEquation {
+        - Species : TEXT
+        - QualityAdjEq : TEXT
+        - Year : INTEGER
         - Grade : TEXT
-        - SeenDefect : REAL
-        - PercentRecoverable : REAL
-        - Length : INTEGER
-        - ExportGrade : TEXT
-        - SmallEndDiameter : REAL
-        - LargeEndDiameter : REAL
-        - GrossBoardFoot : REAL
-        - NetBoardFoot : REAL
-        - GrossCubicFoot : REAL
-        - NetCubicFoot : REAL
-        - BoardFootRemoved : REAL
-        - CubicFootRemoved : REAL
-        - DIBClass : REAL
-        - BarkThickness : REAL
-        - BoardUtil : REAL
-        - CubicUtil : REAL
+        - Coefficient1 : REAL
+        - Coefficient2 : REAL
+        - Coefficient3 : REAL
+        - Coefficient4 : REAL
+        - Coefficient5 : REAL
+        - Coefficient6 : REAL
+    }
+
+    class Regions {
+    * Region_CN
+    -----
+        - Number : INTEGER
+        - Name : TEXT
+    }
+
+    class Regression {
+    * Regression_CN
+    -----
+        - rVolume : TEXT
+        - rVolType : TEXT
+        - rSpeices : TEXT
+        - rProduct : TEXT
+        - rLiveDead : TEXT
+        - CoefficientA : REAL
+        - CoefficientB : REAL
+        - CoefficientC : REAL
+        - TotalTrees : INTEGER
+        - MeanSE : REAL
+        - Rsquared : REAL
+        - RegressModel : TEXT
+        - rMinDbh : REAL
+        - rMaxDbh : REAL
+    }
+
+    class Reports {
+        - ReportID : TEXT
+        - Selected : BOOLEAN
+        - Title : TEXT
+    }
+
+    class Sale {
+    * Sale_CN
+    -----
+        - SaleNumber : TEXT
+        - Name : TEXT
+        - Purpose : TEXT
+        - Region : TEXT
+        - Forest : TEXT
+        - District : TEXT
+        - MeasurementYear : TEXT
+        - CalendarYear : INTEGER
+        - LogGradingEnabled : BOOLEAN
+        - Remarks : TEXT
+        - DefaultUOM : TEXT
+    }
+
+    class SampleGroup {
+    * SampleGroup_CN
+    -----
+        - Stratum_CN : INTEGER <<FK>>
+        - Code : TEXT
+        - CutLeave : TEXT
+        - UOM : TEXT
+        - PrimaryProduct : TEXT
+        - SecondaryProduct : TEXT
+        - BiomassProduct : TEXT
+        - DefaultLiveDead : TEXT
+        - SamplingFrequency : INTEGER
+        - InsuranceFrequency : INTEGER
+        - KZ : INTEGER
+        - BigBAF : REAL
+        - SmallFPS : REAL
+        - TallyMethod : TEXT
+        - Description : TEXT
+        - SampleSelectorType : TEXT
+        - SampleSelectorState : TEXT
+        - MinKPI : INTEGER
+        - MaxKPI : INTEGER
     }
 
     class SampleGroupStats {
@@ -574,6 +498,50 @@ classDiagram
         - SampleGroupStats_CN : INTEGER <<FK>>
     }
 
+    class SampleGroupTreeDefaultValue {
+        - TreeDefaultValue_CN : INTEGER <<FK>>
+        - SampleGroup_CN : INTEGER <<FK>>
+    }
+
+    class SamplerState {
+    * SamplerState_CN
+    -----
+        - SampleGroup_CN : INTEGER <<FK>>
+        - SampleSelectorType : TEXT
+        - BlockState : TEXT
+        - SystematicIndex : INTEGER
+        - Counter : INTEGER
+        - InsuranceIndex : 
+        - InsuranceCounter : 
+    }
+
+    class Stem {
+    * Stem_CN
+    -----
+        - Stem_GUID : TEXT
+        - Tree_CN : INTEGER <<FK>>
+        - Diameter : REAL
+        - DiameterType : TEXT
+    }
+
+    class Stratum {
+    * Stratum_CN
+    -----
+        - Code : TEXT
+        - Description : TEXT
+        - Method : TEXT
+        - BasalAreaFactor : REAL
+        - FixedPlotSize : REAL
+        - KZ3PPNT : INTEGER
+        - SamplingFrequency : INTEGER
+        - Hotkey : TEXT
+        - FBSCode : TEXT
+        - YieldComponent : TEXT
+        - VolumeFactor : REAL
+        - Month : INTEGER
+        - Year : INTEGER
+    }
+
     class StratumStats {
     * StratumStats_CN
     -----
@@ -598,44 +566,66 @@ classDiagram
         - Used : INTEGER
     }
 
-    class Regression {
-    * Regression_CN
+    class Tally {
+    * Tally_CN
     -----
-        - rVolume : TEXT
-        - rVolType : TEXT
-        - rSpeices : TEXT
-        - rProduct : TEXT
-        - rLiveDead : TEXT
-        - CoefficientA : REAL
-        - CoefficientB : REAL
-        - CoefficientC : REAL
-        - TotalTrees : INTEGER
-        - MeanSE : REAL
-        - Rsquared : REAL
-        - RegressModel : TEXT
-        - rMinDbh : REAL
-        - rMaxDbh : REAL
+        - Hotkey : TEXT
+        - Description : TEXT
+        - IndicatorValue : TEXT
+        - IndicatorType : TEXT
     }
 
-    class LogMatrix {
-        - ReportNumber : TEXT
-        - GradeDescription : TEXT
-        - LogSortDescription : TEXT
-        - Species : TEXT
-        - LogGrade1 : TEXT
-        - LogGrade2 : TEXT
-        - LogGrade3 : TEXT
-        - LogGrade4 : TEXT
-        - LogGrade5 : TEXT
-        - LogGrade6 : TEXT
-        - SEDlimit : TEXT
-        - SEDminimum : DOUBLE
-        - SEDmaximum : DOUBLE
-    }
-
-    class TreeDefaultValueTreeAuditValue {
-        - TreeAuditValue_CN : INTEGER <<FK>>
+    class Tree {
+    * Tree_CN
+    -----
+        - Tree_GUID : TEXT
         - TreeDefaultValue_CN : INTEGER <<FK>>
+        - Stratum_CN : INTEGER <<FK>>
+        - SampleGroup_CN : INTEGER <<FK>>
+        - CuttingUnit_CN : INTEGER <<FK>>
+        - Plot_CN : INTEGER <<FK>>
+        - TreeNumber : INTEGER
+        - Species : TEXT
+        - CountOrMeasure : TEXT
+        - TreeCount : REAL
+        - KPI : REAL
+        - STM : TEXT
+        - SeenDefectPrimary : REAL
+        - SeenDefectSecondary : REAL
+        - RecoverablePrimary : REAL
+        - HiddenPrimary : REAL
+        - Initials : TEXT
+        - LiveDead : TEXT
+        - Grade : TEXT
+        - HeightToFirstLiveLimb : REAL
+        - PoleLength : REAL
+        - ClearFace : TEXT
+        - CrownRatio : REAL
+        - DBH : REAL
+        - DRC : REAL
+        - TotalHeight : REAL
+        - MerchHeightPrimary : REAL
+        - MerchHeightSecondary : REAL
+        - FormClass : REAL
+        - UpperStemDiameter : REAL
+        - UpperStemHeight : REAL
+        - DBHDoubleBarkThickness : REAL
+        - TopDIBPrimary : REAL
+        - TopDIBSecondary : REAL
+        - DefectCode : TEXT
+        - DiameterAtDefect : REAL
+        - VoidPercent : REAL
+        - Slope : REAL
+        - Aspect : REAL
+        - Remarks : TEXT
+        - XCoordinate : DOUBLE
+        - YCoordinate : DOUBLE
+        - ZCoordinate : DOUBLE
+        - MetaData : TEXT
+        - IsFallBuckScale : INTEGER
+        - ExpansionFactor : REAL
+        - TreeFactor : REAL
+        - PointFactor : REAL
     }
 
     class TreeAuditValue {
@@ -648,39 +638,83 @@ classDiagram
         - Required : BOOLEAN
     }
 
-    class LogGradeAuditRule {
-        - Species : TEXT
-        - DefectMax : REAL
-        - ValidGrades : TEXT
+    class TreeCalculatedValues {
+    * TreeCalcValues_CN
+    -----
+        - Tree_CN : INTEGER <<FK>>
+        - TotalCubicVolume : REAL
+        - GrossBDFTPP : REAL
+        - NetBDFTPP : REAL
+        - GrossCUFTPP : REAL
+        - NetCUFTPP : REAL
+        - CordsPP : REAL
+        - GrossBDFTRemvPP : REAL
+        - GrossCUFTRemvPP : REAL
+        - GrossBDFTSP : REAL
+        - NetBDFTSP : REAL
+        - GrossCUFTSP : REAL
+        - NetCUFTSP : REAL
+        - CordsSP : REAL
+        - GrossCUFTRemvSP : REAL
+        - NumberlogsMS : REAL
+        - NumberlogsTPW : REAL
+        - GrossBDFTRP : REAL
+        - GrossCUFTRP : REAL
+        - CordsRP : REAL
+        - GrossBDFTIntl : REAL
+        - NetBDFTIntl : REAL
+        - BiomassMainStemPrimary : REAL
+        - BiomassMainStemSecondary : REAL
+        - ValuePP : REAL
+        - ValueSP : REAL
+        - ValueRP : REAL
+        - BiomassProd : REAL
+        - Biomasstotalstem : REAL
+        - Biomasslivebranches : REAL
+        - Biomassdeadbranches : REAL
+        - Biomassfoliage : REAL
+        - BiomassTip : REAL
+        - TipwoodVolume : REAL
     }
 
-    class LogFieldSetup {
-        - Stratum_CN : INTEGER <<FK>>
-        - Field : TEXT
-        - FieldOrder : INTEGER
-        - ColumnType : TEXT
-        - Heading : TEXT
-        - Width : REAL
-        - Format : TEXT
-        - Behavior : TEXT
+    class TreeDefaultValue {
+    * TreeDefaultValue_CN
+    -----
+        - PrimaryProduct : TEXT
+        - Species : TEXT
+        - LiveDead : TEXT
+        - FIAcode : INTEGER
+        - CullPrimary : REAL
+        - HiddenPrimary : REAL
+        - CullSecondary : REAL
+        - HiddenSecondary : REAL
+        - Recoverable : REAL
+        - ContractSpecies : TEXT
+        - TreeGrade : TEXT
+        - MerchHeightLogLength : INTEGER
+        - MerchHeightType : TEXT
+        - FormClass : REAL
+        - BarkThicknessRatio : REAL
+        - AverageZ : REAL
+        - ReferenceHeightPercent : REAL
+    }
+
+    class TreeDefaultValueTreeAuditValue {
+        - TreeAuditValue_CN : INTEGER <<FK>>
+        - TreeDefaultValue_CN : INTEGER <<FK>>
+    }
+
+    class TreeEstimate {
+    * TreeEstimate_CN
+    -----
+        - CountTree_CN : INTEGER
+        - TreeEstimate_GUID : TEXT
+        - KPI : REAL
     }
 
     class TreeFieldSetup {
         - Stratum_CN : INTEGER <<FK>>
         - Field : TEXT
-        - FieldOrder : INTEGER
-        - ColumnType : TEXT
-        - Heading : TEXT
-        - Width : REAL
-        - Format : TEXT
-        - Behavior : TEXT
-    }
-
-    class LogFieldSetupDefault {
-    * LogFieldSetupDefault_CN
-    -----
-        - Field : TEXT
-        - FieldName : TEXT
         - FieldOrder : INTEGER
         - ColumnType : TEXT
         - Heading : TEXT
@@ -703,82 +737,11 @@ classDiagram
         - Behavior : TEXT
     }
 
-    class CruiseMethods {
-    * CruiseMethods_CN
-    -----
-        - Code : TEXT
-        - FriendlyValue : TEXT
-    }
-
-    class LoggingMethods {
-    * LoggingMethods_CN
-    -----
-        - Code : TEXT
-        - FriendlyValue : TEXT
-    }
-
-    class ProductCodes {
-    * ProductCodes_CN
-    -----
-        - Code : TEXT
-        - FriendlyValue : TEXT
-    }
-
     class UOMCodes {
     * UOMCodes_CN
     -----
         - Code : TEXT
         - FriendlyValue : TEXT
-    }
-
-    class Regions {
-    * Region_CN
-    -----
-        - Number : INTEGER
-        - Name : TEXT
-    }
-
-    class Forests {
-    * Forest_CN
-    -----
-        - Region_CN : INTEGER <<FK>>
-        - State : TEXT
-        - Name : TEXT
-        - Number : INTEGER
-    }
-
-    class ErrorLog {
-        - TableName : TEXT
-        - CN_Number : INTEGER
-        - ColumnName : TEXT
-        - Level : TEXT
-        - Message : TEXT
-        - Program : TEXT
-        - Suppress : BOOLEAN
-    }
-
-    class MessageLog {
-    * Message_CN
-    -----
-        - Program : TEXT
-        - Message : TEXT
-        - Date : TEXT
-        - Time : TEXT
-        - Level : TEXT
-    }
-
-    class Globals {
-        - Block : TEXT
-        - Key : TEXT
-        - Value : TEXT
-    }
-
-    class Component {
-    * Component_CN
-    -----
-        - GUID : TEXT
-        - LastMerge : DATETIME
-        - FileName : TEXT
     }
 
     class Util_Tombstone {
@@ -789,33 +752,45 @@ classDiagram
         - DeletedDate : DATETIME NON
     }
 
+    class ValueEquation {
+        - Species : TEXT
+        - PrimaryProduct : TEXT
+        - ValueEquationNumber : TEXT
+        - Grade : TEXT
+        - Coefficient1 : REAL
+        - Coefficient2 : REAL
+        - Coefficient3 : REAL
+        - Coefficient4 : REAL
+        - Coefficient5 : REAL
+        - Coefficient6 : REAL
+    }
+
+    class VolumeEquation {
+        - Species : TEXT
+        - PrimaryProduct : TEXT
+        - VolumeEquationNumber : TEXT
+        - StumpHeight : REAL
+        - TopDIBPrimary : REAL
+        - TopDIBSecondary : REAL
+        - CalcTotal : INTEGER
+        - CalcBoard : INTEGER
+        - CalcCubic : INTEGER
+        - CalcCord : INTEGER
+        - CalcTopwood : INTEGER
+        - CalcBiomass : INTEGER
+        - Trim : REAL
+        - SegmentationLogic : INTEGER
+        - MinLogLengthPrimary : REAL
+        - MaxLogLengthPrimary : REAL
+        - MinMerchLength : REAL
+        - Model : TEXT
+        - CommonSpeciesName : TEXT
+        - MerchModFlag : INTEGER
+        - EvenOddSegment : INTEGER
+    }
 
 
 
-
-    CuttingUnit <|-- CuttingUnitStratum
-    Stratum <|-- CuttingUnitStratum
-
-    Stratum <|-- SampleGroup
-
-    SampleGroup <|-- SamplerState
-
-
-    SampleGroup <|-- SampleGroupTreeDefaultValue
-    TreeDefaultValue <|-- SampleGroupTreeDefaultValue
-
-    CuttingUnit <|-- Plot
-    Stratum <|-- Plot
-
-    CuttingUnit <|-- Tree
-    Plot <|-- Tree
-    SampleGroup <|-- Tree
-    Stratum <|-- Tree
-    TreeDefaultValue <|-- Tree
-
-    Tree <|-- Log
-
-    Tree <|-- Stem
 
     Component <|-- CountTree
     CuttingUnit <|-- CountTree
@@ -825,50 +800,75 @@ classDiagram
 
 
 
+    CuttingUnit <|-- CuttingUnitStratum
+    Stratum <|-- CuttingUnitStratum
+
+
     Stratum <|-- FixCNTTallyClass
 
     FixCNTTallyClass <|-- FixCNTTallyPopulation
     SampleGroup <|-- FixCNTTallyPopulation
     TreeDefaultValue <|-- FixCNTTallyPopulation
 
+    Regions <|-- Forests
 
 
 
+    Tree <|-- Log
 
-
-    Tree <|-- TreeCalculatedValues
+    Stratum <|-- LogFieldSetup
 
 
 
 
     Tree <|-- LogStock
 
+
+
+
+
+    CuttingUnit <|-- Plot
+    Stratum <|-- Plot
+
+
+
+
+
+
+
+    Stratum <|-- SampleGroup
+
     StratumStats <|-- SampleGroupStats
 
     SampleGroupStats <|-- SampleGroupStatsTreeDefaultValue
     TreeDefaultValue <|-- SampleGroupStatsTreeDefaultValue
 
+    SampleGroup <|-- SampleGroupTreeDefaultValue
+    TreeDefaultValue <|-- SampleGroupTreeDefaultValue
+
+    SampleGroup <|-- SamplerState
+
+    Tree <|-- Stem
+
+
     Stratum <|-- StratumStats
 
+
+    CuttingUnit <|-- Tree
+    Plot <|-- Tree
+    SampleGroup <|-- Tree
+    Stratum <|-- Tree
+    TreeDefaultValue <|-- Tree
+
+
+    Tree <|-- TreeCalculatedValues
 
 
     TreeAuditValue <|-- TreeDefaultValueTreeAuditValue
     TreeDefaultValue <|-- TreeDefaultValueTreeAuditValue
 
 
-
-    Stratum <|-- LogFieldSetup
-
     Stratum <|-- TreeFieldSetup
-
-
-
-
-
-
-
-
-    Regions <|-- Forests
 
 
 

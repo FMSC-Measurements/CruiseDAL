@@ -43,6 +43,8 @@ return $@"CREATE TABLE {tableName} (
     ModifiedBy TEXT,
     Modified_TS DATETIME,
 
+	FOREIGN KEY (CruiseID) REFERENCES Cruise (CruiseID) ON DELETE CASCADE,
+
 	UNIQUE (CruiseID, Species, PrimaryProduct, VolumeEquationNumber)
 );";
 		}

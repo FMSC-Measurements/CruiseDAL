@@ -1,0 +1,18 @@
+- do we need to have cuttingUnitID and StratumID in the CuttingUnit_Stratum table
+if CuttingUnitCode and StratumCode are different from Source to destination
+
+- PlotLocation_Tombstone needs CruiseID or we need to join with Plot_tombstone to get cruiseID
+	- one solution would be to sync deletes in the same method as plots
+	then we would have the plot ID without needing to join with Plot_tombstone
+	A plotLocation_Tombstone should not exist without a plot_tombstone
+	this would also be a good solution for FixCNTSubPop
+	, TreeMeasurements, TreeLocation, TreeFieldValue
+
+ - sync should ensure tree has not been deleted or fail gracefully 
+ when syncing/inserting treelocation
+
+ - should we remove deletion tracking for TreeMeasurments, TreeLocation, TreeFieldValue, PlotLocation
+   These records shouldn't have a way for the user to delete them. Maybe we should keep deletion tracking
+   for the purpose of being able to recover data but not use deletion tracking in the sync process
+
+ - Log and Stem tombstone table needs a cruiseID field or the tombstone table does

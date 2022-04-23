@@ -10,13 +10,13 @@ namespace CruiseDAL.V3.Sync
     {
         public ConflictResolutionOptions()
         {
-            CuttingUnit = new Dictionary<string, Conflict>();
-            Stratum = new Dictionary<string, Conflict>();
-            SampleGroup = new Dictionary<string, Conflict>();
-            Plot = new Dictionary<string, Conflict>();
-            Tree = new Dictionary<string, Conflict>();
-            PlotTree = new Dictionary<string, Conflict>();
-            Log = new Dictionary<string, Conflict>();
+            CuttingUnit = Enumerable.Empty<Conflict>();
+            Stratum = Enumerable.Empty<Conflict>();
+            SampleGroup = Enumerable.Empty<Conflict>();
+            Plot = Enumerable.Empty<Conflict>();
+            Tree = Enumerable.Empty<Conflict>();
+            PlotTree = Enumerable.Empty<Conflict>();
+            Log = Enumerable.Empty<Conflict>();
         }
 
         public ConflictResolutionOptions(IEnumerable<Conflict> cuttingUnit,
@@ -27,27 +27,54 @@ namespace CruiseDAL.V3.Sync
             IEnumerable<Conflict> plotTree,
             IEnumerable<Conflict> log)
         {
-            CuttingUnit = cuttingUnit.ToDictionary(x => x.SourctRecID, x => x);
-            Stratum = strata.ToDictionary(x => x.SourctRecID, x => x);
-            SampleGroup = sampleGroup.ToDictionary(x => x.SourctRecID, x => x);
-            Plot = plot.ToDictionary(x => x.SourctRecID, x => x);
-            Tree = tree.ToDictionary(x => x.SourctRecID, x => x);
-            PlotTree = plotTree.ToDictionary(x => x.SourctRecID, x => x);
-            Log = log.ToDictionary(x => x.SourctRecID, x => x);
+            CuttingUnit = cuttingUnit.ToArray();
+            Stratum = strata.ToArray();
+            SampleGroup = sampleGroup.ToArray();
+            Plot = plot.ToArray();
+            Tree = tree.ToArray();
+            PlotTree = plotTree.ToArray();
+            Log = log.ToArray();
         }
 
-        public Dictionary<string, Conflict> CuttingUnit { get; set; }
+        public IEnumerable<Conflict> CuttingUnit { get; set; }
 
-        public Dictionary<string, Conflict> Stratum { get; set; }
+        public IEnumerable<Conflict> Stratum { get; set; }
 
-        public Dictionary<string, Conflict> SampleGroup { get; set; }
+        public IEnumerable<Conflict> SampleGroup { get; set; }
 
-        public Dictionary<string, Conflict> Plot { get; set; }
+        public IEnumerable<Conflict> Plot { get; set; }
 
-        public Dictionary<string, Conflict> Tree { get; set; }
+        public IEnumerable<Conflict> Tree { get; set; }
 
-        public Dictionary<string, Conflict> PlotTree { get; set; }
+        public IEnumerable<Conflict> PlotTree { get; set; }
 
-        public Dictionary<string, Conflict> Log { get; set; }
+        public IEnumerable<Conflict> Log { get; set; }
+
+
+        public bool AllHasResolutions()
+        {
+            var units = !CuttingUnit.Any() || CuttingUnit.All(x => x.ConflictResolution != ConflictResolutionType.NotSet);
+            var strata = !Stratum.Any() || Stratum.All(x => x.ConflictResolution != ConflictResolutionType.NotSet);
+            var sgs = !SampleGroup.Any() || SampleGroup.All(x => x.ConflictResolution != ConflictResolutionType.NotSet);
+            var plots = !Plot.Any() || Plot.All(x => x.ConflictResolution != ConflictResolutionType.NotSet);
+            var trees = !Tree.Any() || Tree.All(x => x.ConflictResolution != ConflictResolutionType.NotSet);
+            var plotTrees = !PlotTree.Any() || PlotTree.All(x => x.ConflictResolution != ConflictResolutionType.NotSet);
+            var logs = !Log.Any() || Log.All(x => x.ConflictResolution != ConflictResolutionType.NotSet);
+
+            return units && strata && sgs && plots && trees && plotTrees && logs;
+        }
+
+        public bool HasAny()
+        {
+            var units = CuttingUnit.Any();
+            var strata = Stratum.Any();
+            var sgs = SampleGroup.Any();
+            var plots = Plot.Any();
+            var trees = Tree.Any();
+            var plotTrees = PlotTree.Any();
+            var logs = Log.Any();
+
+            return units || strata || sgs || plots || trees || plotTrees || logs;
+        }
     }
 }

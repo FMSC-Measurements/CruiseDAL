@@ -1,3 +1,23 @@
+# Database Versioning
+ ## Major Version Incremtnes
+Major version increments will be used to indicate broad breaking changes. Significant removal or renaming of tables or view. 
+It may be possible for breaking changes to be made if it is on a field, table or view that is not in use, for a period of time or never was utilized.
+
+## Minor Version Increments
+Minor version increments are used to indicate a significant changes but arn't expected to break reacent version. 
+Examples of changes that may require a minor version increment:
+ - Adding a table
+ - Removing a depreciated field 
+ - Removing a depreciated table
+ - Removing a depreciated view
+ 
+## Patch Version Increments
+Patch version increments are used to indicate a minor change
+Examples of changes:
+ - Adding a field
+ - Add/Modify a field constraint
+ - Add/Modify a Trigger
+
 # Tables 
 ## Singular Names 
 Table names should be singular, for example, "Customer" instead of "Customers". This avoids errors due to pluralization of English nouns. For instance some nouns are the same in their plural form i.e. Species, Geese. While others change significantly i.e. person becomes persions. 

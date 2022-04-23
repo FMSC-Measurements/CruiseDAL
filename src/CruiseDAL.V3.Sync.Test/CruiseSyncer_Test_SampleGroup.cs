@@ -14,8 +14,8 @@ namespace CruiseDAL.V3.Sync
         [Fact]
         public void Sync_SampleGroup_Add()
         {
-            var fromPath = base.GetTempFilePath(".crz3", "SampleGroup_Add_fromFile");
-            var toPath = base.GetTempFilePath(".crz3", "SampleGroup_Add_toFile");
+            var fromPath = GetTempFilePathWithExt(".crz3", "SampleGroup_Add_fromFile");
+            var toPath = GetTempFilePathWithExt(".crz3", "SampleGroup_Add_toFile");
 
             var syncOptions = new CruiseSyncOptions();
 
@@ -48,8 +48,8 @@ namespace CruiseDAL.V3.Sync
         [Fact]
         public void Sync_SampleGroup_Update()
         {
-            var fromPath = base.GetTempFilePath(".crz3", "SampleGroup_Update_fromFile");
-            var toPath = base.GetTempFilePath(".crz3", "SampleGroup_Update_toFile");
+            var fromPath = GetTempFilePathWithExt(".crz3", "SampleGroup_Update_fromFile");
+            var toPath = GetTempFilePathWithExt(".crz3", "SampleGroup_Update_toFile");
 
             var syncOptions = new CruiseSyncOptions();
 
@@ -89,8 +89,8 @@ namespace CruiseDAL.V3.Sync
         [Fact]
         public void Sync_SampleGroup_Update_SampleGroupCode()
         {
-            var fromPath = base.GetTempFilePath(".crz3", "SampleGroup_Update_SGCode_fromFile");
-            var toPath = base.GetTempFilePath(".crz3", "SampleGroup_Update_SGCode_toFile");
+            var fromPath = GetTempFilePathWithExt(".crz3", "SampleGroup_Update_SGCode_fromFile");
+            var toPath = GetTempFilePathWithExt(".crz3", "SampleGroup_Update_SGCode_toFile");
 
             var syncOptions = new CruiseSyncOptions();
 

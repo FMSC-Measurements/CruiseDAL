@@ -14,8 +14,8 @@ namespace CruiseDAL.V3.Sync
         [Fact]
         public void Sync_CuttingUnit_Add()
         {
-            var fromPath = base.GetTempFilePath(".crz3", "CuttingUnit_Add_fromFile");
-            var toPath = base.GetTempFilePath(".crz3", "CuttingUnit_Add_toFile");
+            var fromPath = GetTempFilePathWithExt(".crz3", "CuttingUnit_Add_fromFile");
+            var toPath = GetTempFilePathWithExt(".crz3", "CuttingUnit_Add_toFile");
 
             var syncOptions = new CruiseSyncOptions();
 
@@ -47,8 +47,8 @@ namespace CruiseDAL.V3.Sync
         [Fact]
         public void Sync_CuttingUnit_Update()
         {
-            var fromPath = base.GetTempFilePath(".crz3", "CuttingUnit_Updated_fromFile");
-            var toPath = base.GetTempFilePath(".crz3", "CuttingUnit_Update_toFile");
+            var fromPath = GetTempFilePathWithExt(".crz3", "CuttingUnit_Updated_fromFile");
+            var toPath = GetTempFilePathWithExt(".crz3", "CuttingUnit_Update_toFile");
 
             var syncOptions = new CruiseSyncOptions();
 
@@ -92,8 +92,8 @@ namespace CruiseDAL.V3.Sync
         [Fact]
         public void Sync_CuttingUnit_Update_CuttingUnitCode()
         {
-            var fromPath = base.GetTempFilePath(".crz3", "CuttingUnit_Updated_code_fromFile");
-            var toPath = base.GetTempFilePath(".crz3", "CuttingUnit_Update_code_toFile");
+            var fromPath = GetTempFilePathWithExt(".crz3", "CuttingUnit_Updated_code_fromFile");
+            var toPath = GetTempFilePathWithExt(".crz3", "CuttingUnit_Update_code_toFile");
 
             var syncOptions = new CruiseSyncOptions();
 

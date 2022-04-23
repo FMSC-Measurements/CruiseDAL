@@ -14,8 +14,8 @@ namespace CruiseDAL.V3.Sync
         [Fact]
         public void Sync_BiomassEquation_Add()
         {
-            var fromPath = base.GetTempFilePath(".crz3", "Sync_BiomassEquations_Add_fromFile");
-            var toPath = base.GetTempFilePath(".crz3", "Sync_BiomassEquations_Add_toFile");
+            var fromPath = GetTempFilePathWithExt(".crz3", "Sync_BiomassEquations_Add_fromFile");
+            var toPath = GetTempFilePathWithExt(".crz3", "Sync_BiomassEquations_Add_toFile");
 
             var syncOptions = new CruiseSyncOptions()
             {

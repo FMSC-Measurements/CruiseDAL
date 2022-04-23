@@ -1,4 +1,5 @@
-﻿using CruiseDAL.V3.Models;
+﻿using CruiseDAL.TestCommon;
+using CruiseDAL.V3.Models;
 using FluentAssertions;
 using System;
 using Xunit;
@@ -16,8 +17,8 @@ namespace CruiseDAL.V3.Sync
         public void Sync_Unit_Delete()
         {
             var init = new DatabaseInitializer();
-            var fromPath = base.GetTempFilePath(".crz3", "Sync_Unit_Delete_fromFile");
-            var toPath = base.GetTempFilePath(".crz3", "Sync_Unit_Delete_toFile");
+            var fromPath = GetTempFilePathWithExt(".crz3", "Sync_Unit_Delete_fromFile");
+            var toPath = GetTempFilePathWithExt(".crz3", "Sync_Unit_Delete_toFile");
 
             using var fromDb = init.CreateDatabaseFile(fromPath);
             var cruiseID = init.CruiseID;
@@ -48,8 +49,8 @@ namespace CruiseDAL.V3.Sync
         public void Sync_Stratum_Delete()
         {
             var init = new DatabaseInitializer();
-            var fromPath = base.GetTempFilePath(".crz3", "Sync_Stratum_Delete_fromFile");
-            var toPath = base.GetTempFilePath(".crz3", "Sync_Stratum_Delete_toFile");
+            var fromPath = GetTempFilePathWithExt(".crz3", "Sync_Stratum_Delete_fromFile");
+            var toPath = GetTempFilePathWithExt(".crz3", "Sync_Stratum_Delete_toFile");
 
             using var fromDb = init.CreateDatabaseFile(fromPath);
             var cruiseID = init.CruiseID;
@@ -80,8 +81,8 @@ namespace CruiseDAL.V3.Sync
         public void Sync_SampleGroup_Delete()
         {
             var init = new DatabaseInitializer();
-            var fromPath = base.GetTempFilePath(".crz3", "Sync_SampleGroup_Delete_fromFile");
-            var toPath = base.GetTempFilePath(".crz3", "Sync_SampleGroup_Delete_toFile");
+            var fromPath = GetTempFilePathWithExt(".crz3", "Sync_SampleGroup_Delete_fromFile");
+            var toPath = GetTempFilePathWithExt(".crz3", "Sync_SampleGroup_Delete_toFile");
 
             using var fromDb = init.CreateDatabaseFile(fromPath);
             var cruiseID = init.CruiseID;

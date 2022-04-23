@@ -36,18 +36,5 @@ namespace CruiseDAL.V3.Sync
         public bool PlotTreeAllOrNone { get; set; } = false;
 
         public bool NonPlotTreeAllOrNone { get; set; } = false;
-
-        public IEnumerable<string> ExcludeUnitIDs { get; set; }
-
-        public IEnumerable<string> ExcludeStrataIDs { get; set; }
-
-        public IEnumerable<string> ExcludeSampleGroupIDs { get; set; }
-
-        public IEnumerable<string> ExcludePlotIDs { get; set; }
-
-        public IEnumerable<string> ExcludeTreeIDs { get; set; }
-
-        public IEnumerable<string> ExcludeLogIDs { get; set; }
-
     }
 }
