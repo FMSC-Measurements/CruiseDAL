@@ -1,8 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace CruiseDAL.V3.Sync
 {
@@ -50,18 +47,32 @@ namespace CruiseDAL.V3.Sync
 
         public IEnumerable<Conflict> Log { get; set; }
 
-
         public bool AllHasResolutions()
         {
-            var units = !CuttingUnit.Any() || CuttingUnit.All(x => x.ConflictResolution != ConflictResolutionType.NotSet);
-            var strata = !Stratum.Any() || Stratum.All(x => x.ConflictResolution != ConflictResolutionType.NotSet);
-            var sgs = !SampleGroup.Any() || SampleGroup.All(x => x.ConflictResolution != ConflictResolutionType.NotSet);
-            var plots = !Plot.Any() || Plot.All(x => x.ConflictResolution != ConflictResolutionType.NotSet);
-            var trees = !Tree.Any() || Tree.All(x => x.ConflictResolution != ConflictResolutionType.NotSet);
-            var plotTrees = !PlotTree.Any() || PlotTree.All(x => x.ConflictResolution != ConflictResolutionType.NotSet);
-            var logs = !Log.Any() || Log.All(x => x.ConflictResolution != ConflictResolutionType.NotSet);
+            var units = ValidateConflicts(CuttingUnit);
+            var strata = ValidateConflicts(Stratum);
+            var sgs = ValidateConflicts(SampleGroup);
+            var plots = ValidateConflicts(Plot);
+            var trees = ValidateConflicts(Tree);
+            var plotTrees = ValidateConflicts(PlotTree);
+            var logs = ValidateConflicts(Log);
 
             return units && strata && sgs && plots && trees && plotTrees && logs;
+        }
+
+        bool ValidateConflicts(IEnumerable<Conflict> conflicts)
+        {
+            return !conflicts.Any()
+                || conflicts.All(HasValidResolution);
+
+            bool HasValidResolution(Conflict c)
+            {
+                return c.ConflictResolution != ConflictResolutionType.NotSet
+                    && (c.ConflictResolution != ConflictResolutionType.ChoseSourceMergeData 
+                        || c.ConflictResolution != ConflictResolutionType.ChoseDestMergeData)
+                            || ((c.DownstreamConflicts == null || !c.DownstreamConflicts.Any())
+                                || c.DownstreamConflicts.All(x => x.ConflictResolution != ConflictResolutionType.NotSet));
+            }
         }
 
         public bool HasAny()
