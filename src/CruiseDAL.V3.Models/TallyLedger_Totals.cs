@@ -8,6 +8,9 @@ namespace CruiseDAL.V3.Models
   [Field("CruiseID")]
   public String CruiseID { get; set; }
 
+  [Field("CuttingUnitCode")]
+  public String CuttingUnitCode { get; set; }
+
   [Field("StratumCode")]
   public String StratumCode { get; set; }
 

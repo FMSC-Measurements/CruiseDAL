@@ -877,6 +877,7 @@ classDiagram
 
     class TallyLedger_Plot_Totals {
         - CruiseID : TEXT
+        - CuttingUnitCode : TEXT
         - StratumCode : TEXT
         - SampleGroupCode : TEXT
         - SpeciesCode : TEXT
@@ -911,6 +912,7 @@ classDiagram
 
     class TallyLedger_Totals {
         - CruiseID : TEXT
+        - CuttingUnitCode : TEXT
         - StratumCode : TEXT
         - SampleGroupCode : TEXT
         - SpeciesCode : TEXT
@@ -1406,7 +1408,7 @@ classDiagram
     class VolumeEquation {
     * VolumeEquation_CN
     -----
-        - CruiseID : TEXT
+        - CruiseID : TEXT <<FK>>
         - Species : TEXT
         - PrimaryProduct : TEXT
         - VolumeEquationNumber : TEXT
@@ -1653,4 +1655,5 @@ classDiagram
 
     Cruise <|-- ValueEquation
 
+    Cruise <|-- VolumeEquation
 

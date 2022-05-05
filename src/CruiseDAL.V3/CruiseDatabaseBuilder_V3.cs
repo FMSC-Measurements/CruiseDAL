@@ -97,7 +97,9 @@ namespace CruiseDAL
             new IViewDefinition[]
             {
                 new TallyPopulationViewDefinition_3_3_2(),
-                new TallyLedgerViewDefinition(),
+                new TallyLedger_TotalsViewDefinition(),
+                new TallyLedger_Plot_TotalsViewDefinition(),
+                new TallyLedger_Tree_TotalsViewDefinition(),
                 new TreeErrorViewDefinition(),
                 new LogGradeErrorViewDefinition(),
                 new PlotErrorViewDefinition(),
