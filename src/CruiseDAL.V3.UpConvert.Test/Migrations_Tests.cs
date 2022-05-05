@@ -115,7 +115,7 @@ namespace CruiseDAL.V3.Test
             var (origFile, testFile) = SetUpTestFile(fileName);
         }
 
-        [SkippableTheory]
+        [SkippableTheory(typeof(Xunit.SkipException))]
         [ClassData(typeof(TableNamesTestDataProvider))]
         public void RunDelete_WithConvertedFile(string tableName)
         {

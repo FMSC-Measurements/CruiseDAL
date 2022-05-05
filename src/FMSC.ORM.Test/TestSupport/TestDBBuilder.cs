@@ -42,10 +42,38 @@ namespace FMSC.ORM.TestSupport
     Data TEXT
 );";
 
-        public void BuildDatabase(DbConnection connection, DbTransaction transaction, IExceptionProcessor exceptionProcessor = null)
+		public const string CREATE_TABLEONE =
+@"CREATE TABLE TableOne
+(
+	TableOne_ID INTEGER Primary Key AUTOINCREMENT,
+	Data TEXT
+);";
+
+		public const string CREATE_TABLETWO =
+@"CREATE TABLE TableTwo
+(
+	TableTwo_ID INTEGER Primary Key AUTOINCREMENT,
+	TableOne_ID INTEGER FORIEGN KEY REFERENCES TableOne (TableOne_ID),
+	Data TEXT
+)";
+
+		// same as table two except we add cascading delete on the fKey
+		public const string CREATE_TABLETHREE =
+@"CREATE TABLE TableThree
+(
+	TableThree_ID INTEGER Primary Key AUTOINCREMENT,
+	TableOne_ID INTEGER FORIEGN KEY REFERENCES TableOne (TableOne_ID) ON DELETE CASCADE,
+	Data TEXT
+)";
+
+
+		public void BuildDatabase(DbConnection connection, DbTransaction transaction, IExceptionProcessor exceptionProcessor = null)
         {
             connection.ExecuteNonQuery(CREATE_MULTIPROPTABLE, transaction: transaction, exceptionProcessor: exceptionProcessor);
             connection.ExecuteNonQuery(CREATE_AUTOINCREMENT_TABLE, transaction: transaction, exceptionProcessor: exceptionProcessor);
-        }
+			connection.ExecuteNonQuery(CREATE_TABLEONE, transaction: transaction, exceptionProcessor: exceptionProcessor);
+			connection.ExecuteNonQuery(CREATE_TABLETWO, transaction: transaction, exceptionProcessor: exceptionProcessor);
+			connection.ExecuteNonQuery(CREATE_TABLETHREE, transaction: transaction, exceptionProcessor: exceptionProcessor);
+		}
     }
 }

@@ -36,6 +36,5 @@ namespace CruiseDAL.V3.Sync
         public bool PlotTreeAllOrNone { get; set; } = false;
 
         public bool NonPlotTreeAllOrNone { get; set; } = false;
-
     }
 }

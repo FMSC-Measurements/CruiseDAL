@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Bogus;
+using System;
 using System.Collections.Generic;
 using System.Data.Common;
 using System.Diagnostics;
@@ -16,10 +17,10 @@ namespace CruiseDAL.TestCommon
         private List<string> FilesToBeDeleted { get; } = new List<string>();
         protected DbProviderFactory DbProvider { get; private set; }
         protected Stopwatch _stopwatch;
-        private Random _rand;
+        private Randomizer _rand;
 
         protected bool CleanUpTestFiles { get; set; }
-        protected Random Rand => _rand ??= new Random();
+        protected Randomizer Rand => _rand ??= new Randomizer();
 
         public TestBase(ITestOutputHelper output)
         {
@@ -72,7 +73,7 @@ namespace CruiseDAL.TestCommon
 
         public string GetTempFilePathWithExt(string extention, [CallerMemberName] string testName = null)
         {
-            var fileName = testName + "_" + Rand.Next().ToString("x") + "_" + extention;
+            var fileName = testName + "_" + Rand.Int().ToString("x") + "_" + extention;
             return GetTempFilePath(fileName);
         }
 

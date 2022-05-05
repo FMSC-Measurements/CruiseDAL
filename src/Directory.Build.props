@@ -8,11 +8,11 @@
   </PropertyGroup>
 
   <PropertyGroup Label="ProjectVersions">
-    <FMSCORMversion>2.6.11.1</FMSCORMversion>
+    <FMSCORMversion>2.6.12.0</FMSCORMversion>
 
     <CruiseDALv2SchemaVersion>2.7.3</CruiseDALv2SchemaVersion>
-    <CruiseDALv3SchemaVersion>3.5.1</CruiseDALv3SchemaVersion>
-    <CruiseDALIncrementalVersion>103</CruiseDALIncrementalVersion>
+    <CruiseDALv3SchemaVersion>3.5.2</CruiseDALv3SchemaVersion>
+    <CruiseDALIncrementalVersion>104</CruiseDALIncrementalVersion>
     <CruiseDALCoreVersion>3.0.0.$(CruiseDALIncrementalVersion)</CruiseDALCoreVersion>
     <CruiseDALV2Version>$(CruiseDALv2SchemaVersion).$(CruiseDALIncrementalVersion)</CruiseDALV2Version>
     <CruiseDALV3Version>$(CruiseDALv3SchemaVersion).$(CruiseDALIncrementalVersion)</CruiseDALV3Version>

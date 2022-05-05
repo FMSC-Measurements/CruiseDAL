@@ -14,8 +14,8 @@ namespace CruiseDAL.V3.Sync
         [Fact]
         public void Sync_CuttingUnit_Add()
         {
-            var fromPath = base.GetTempFilePath(".crz3", "CuttingUnit_Add_fromFile");
-            var toPath = base.GetTempFilePath(".crz3", "CuttingUnit_Add_toFile");
+            var fromPath = GetTempFilePathWithExt(".crz3", "CuttingUnit_Add_fromFile");
+            var toPath = GetTempFilePathWithExt(".crz3", "CuttingUnit_Add_toFile");
 
             var syncOptions = new CruiseSyncOptions();
 
@@ -47,8 +47,8 @@ namespace CruiseDAL.V3.Sync
         [Fact]
         public void Sync_CuttingUnit_Update()
         {
-            var fromPath = base.GetTempFilePath(".crz3", "CuttingUnit_Updated_fromFile");
-            var toPath = base.GetTempFilePath(".crz3", "CuttingUnit_Update_toFile");
+            var fromPath = GetTempFilePathWithExt(".crz3", "CuttingUnit_Updated_fromFile");
+            var toPath = GetTempFilePathWithExt(".crz3", "CuttingUnit_Update_toFile");
 
             var syncOptions = new CruiseSyncOptions();
 
@@ -73,7 +73,7 @@ namespace CruiseDAL.V3.Sync
 
             // modify cutting unit value and save to source database
             cuttingUnit.Area = Rand.Int();
-            cuttingUnit.Description = Rand.String();
+            cuttingUnit.Description = Rand.Words();
             cuttingUnit.LoggingMethod = "401";
             cuttingUnit.PaymentUnit = Rand.AlphaNumeric(3);
             cuttingUnit.Rx = Rand.AlphaNumeric(3);
@@ -92,8 +92,8 @@ namespace CruiseDAL.V3.Sync
         [Fact]
         public void Sync_CuttingUnit_Update_CuttingUnitCode()
         {
-            var fromPath = base.GetTempFilePath(".crz3", "CuttingUnit_Updated_code_fromFile");
-            var toPath = base.GetTempFilePath(".crz3", "CuttingUnit_Update_code_toFile");
+            var fromPath = GetTempFilePathWithExt(".crz3", "CuttingUnit_Updated_code_fromFile");
+            var toPath = GetTempFilePathWithExt(".crz3", "CuttingUnit_Update_code_toFile");
 
             var syncOptions = new CruiseSyncOptions();
 

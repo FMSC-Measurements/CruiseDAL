@@ -1,0 +1,4343 @@
+-- ************** BiomassEquation **************
+CREATE TABLE BiomassEquation (
+	CruiseID TEXT NOT NULL COLLATE NOCASE,
+	Species TEXT NOT NULL,
+	Product TEXT NOT NULL,
+	Component TEXT NOT NULL,
+	LiveDead TEXT NOT NULL,
+	FIAcode INTEGER NOT NULL,
+	Equation TEXT,
+	PercentMoisture REAL Default 0.0,
+	PercentRemoved REAL Default 0.0,
+	MetaData TEXT,
+	WeightFactorPrimary REAL Default 0.0,
+	WeightFactorSecondary REAL Default 0.0,
+
+    CreatedBy TEXT DEFAULT 'none',
+    Created_TS DATETIME DEFAULT (CURRENT_TIMESTAMP),
+    ModifiedBy TEXT,
+    Modified_TS DATETIME,
+
+	UNIQUE (CruiseID, Species, Product, Component, LiveDead),
+
+	FOREIGN KEY (CruiseID) REFERENCES Cruise (CruiseID) ON DELETE CASCADE
+
+)
+
+
+
+
+-- ************** Cruise **************
+CREATE TABLE Cruise (
+    Cruise_CN INTEGER PRIMARY KEY AUTOINCREMENT,
+    CruiseID TEXT NOT NULL COLLATE NOCASE,
+    SaleID TEXT NOT NULL COLLATE NOCASE,
+    SaleNumber TEXT NOT NULL COLLATE NOCASE,
+    CruiseNumber TEXT NOT NULL COLLATE NOCASE,
+    Purpose TEXT,
+    Remarks TEXT,
+    DefaultUOM TEXT COLLATE NOCASE,
+    MeasurementYear TEXT COLLATE NOCASE,
+    LogGradingEnabled BOOLEAN Default 0,
+    UseCrossStrataPlotTreeNumbering BOOLEAN Default 0,
+    TemplateFile TEXT,
+    CreatedBy TEXT DEFAULT 'none',
+    Created_TS DATETIME DEFAULT (CURRENT_TIMESTAMP),
+    ModifiedBy TEXT,
+    Modified_TS DATETIME,
+
+    UNIQUE (CruiseID),
+    UNIQUE (CruiseNumber),
+
+    CHECK (CruiseID LIKE '________-____-____-____-____________'),
+    CHECK (LogGradingEnabled IN (0, 1)),
+    CHECK (UseCrossStrataPlotTreeNumbering IN (0, 1)),
+
+    FOREIGN KEY (SaleNumber) REFERENCES Sale (SaleNumber) ON DELETE CASCADE,
+    FOREIGN KEY (DefaultUOM) REFERENCES LK_UOM (UOM),
+    FOREIGN KEY (Purpose) REFERENCES LK_Purpose (Purpose)
+)
+
+CREATE TRIGGER OnUpdateCruise
+AFTER UPDATE OF
+    CruiseNumber,
+    Purpose,
+    Remarks,
+    DefaultUOM,
+    MeasurementYear,
+    LogGradingEnabled
+ON Cruise
+BEGIN
+    UPDATE Cruise SET Modified_TS = CURRENT_TIMESTAMP WHERE Cruise_CN = old.Cruise_CN;
+END
+
+
+
+
+
+CREATE INDEX NIX_Cruise_SaleNumber ON Cruise (SaleNumber)
+
+
+-- ************** CuttingUnit **************
+CREATE TABLE CuttingUnit (
+    CuttingUnit_CN INTEGER PRIMARY KEY AUTOINCREMENT,
+    CuttingUnitID TEXT NOT NULL COLLATE NOCASE,
+    CuttingUnitCode TEXT NOT NULL COLLATE NOCASE,
+    CruiseID TEXT NOT NULL COLLATE NOCASE,
+    Area REAL DEFAULT 0.0,
+    Description TEXT,
+    Remarks TEXT,
+    LoggingMethod TEXT COLLATE NOCASE,
+    PaymentUnit TEXT,
+    Rx TEXT,
+    CreatedBy TEXT DEFAULT 'none',
+    Created_TS DATETIME DEFAULT (CURRENT_TIMESTAMP),
+    ModifiedBy TEXT,
+    Modified_TS DATETIME ,
+
+    UNIQUE(CuttingUnitID),
+    UNIQUE(CuttingUnitCode, CruiseID),
+
+    FOREIGN KEY (CruiseID) REFERENCES Cruise (CruiseID) ON DELETE CASCADE,
+    FOREIGN KEY (LoggingMethod) REFERENCES LK_LoggingMethod (LoggingMethod),
+
+    CHECK (CuttingUnitID LIKE '________-____-____-____-____________'),
+    CHECK (length(CuttingUnitCode) > 0)
+)
+
+CREATE TRIGGER CuttingUnit_OnUpdate
+AFTER UPDATE OF
+    CuttingUnitCode,
+    Area,
+    Description,
+    LoggingMethod,
+    PaymentUnit,
+    Rx
+ON CuttingUnit
+FOR EACH ROW
+BEGIN
+    UPDATE CuttingUnit SET Modified_TS = CURRENT_TIMESTAMP WHERE CuttingUnit_CN = old.CuttingUnit_CN;
+END
+
+CREATE TRIGGER CuttingUnit_OnDelete
+BEFORE DELETE ON CuttingUnit
+FOR EACH ROW
+BEGIN
+    INSERT OR REPLACE INTO CuttingUnit_Tombstone (
+        CuttingUnitID,
+        CuttingUnitCode,
+        CruiseID,
+        Area,
+        LoggingMethod,
+        PaymentUnit,
+        Rx,
+        CreatedBy,
+        Created_TS,
+        ModifiedBy,
+        Modified_TS,
+        Deleted_TS
+    ) VALUES (
+        OLD.CuttingUnitID,
+        OLD.CuttingUnitCode,
+        OLD.CruiseID,
+        OLD.Area,
+        OLD.LoggingMethod,
+        OLD.PaymentUnit,
+        OLD.Rx,
+        OLD.CreatedBy,
+        OLD.Created_TS,
+        OLD.ModifiedBy,
+        OLD.Modified_TS,
+        CURRENT_TIMESTAMP
+    );
+END
+
+
+
+
+
+
+-- ************** CuttingUnit_Stratum **************
+CREATE TABLE CuttingUnit_Stratum (
+    CuttingUnit_Stratum_CN INTEGER PRIMARY KEY AUTOINCREMENT,
+    CruiseID TEXT NOT NULL COLLATE NOCASE,
+    CuttingUnitCode TEXT NOT NULL COLLATE NOCASE,
+    StratumCode TEXT NOT NULL COLLATE NOCASE,
+    StratumArea REAL, --can be null of user hasn't subdevided area
+    CreatedBy TEXT DEFAULT 'none',
+    Created_TS DATETIME DEFAULT (CURRENT_TIMESTAMP),
+    ModifiedBy TEXT,
+    Modified_TS DATETIME,
+
+    UNIQUE (CuttingUnitCode, StratumCode, CruiseID),
+
+    FOREIGN KEY (CuttingUnitCode, CruiseID) REFERENCES CuttingUnit (CuttingUnitCode, CruiseID) ON DELETE CASCADE ON UPDATE CASCADE,
+    FOREIGN KEY (StratumCode, CruiseID) REFERENCES Stratum (StratumCode, CruiseID) ON DELETE CASCADE ON UPDATE CASCADE
+)
+
+CREATE TRIGGER CuttingUnit_Stratum_OnUpdate
+AFTER UPDATE OF
+    StratumArea
+ON CuttingUnit_Stratum
+FOR EACH ROW
+BEGIN
+    UPDATE CuttingUnit_Stratum SET Modified_TS = CURRENT_TIMESTAMP WHERE CuttingUnit_Stratum_CN = OLD.CuttingUnit_Stratum_CN;
+END
+
+CREATE TRIGGER CuttingUnit_Stratum_OnDelete
+BEFORE DELETE ON CuttingUnit_Stratum
+FOR EACH ROW
+BEGIN
+    INSERT OR REPLACE INTO CuttingUnit_Stratum_Tombstone (
+        CruiseID,
+        CuttingUnitCode,
+        StratumCode,
+        StratumArea,
+        CreatedBy,
+        Created_TS,
+        ModifiedBy,
+        Modified_TS,
+        Deleted_TS
+    ) VALUES (
+        OLD.CruiseID,
+        OLD.CuttingUnitCode,
+        OLD.StratumCode,
+        OLD.StratumArea,
+        OLD.CreatedBy,
+        OLD.Created_TS,
+        OLD.ModifiedBy,
+        OLD.Modified_TS,
+        CURRENT_TIMESTAMP
+    );
+END
+
+CREATE TRIGGER CuttingUnit_Stratum_OnInsert_ClearTombstone
+AFTER INSERT ON CuttingUnit_Stratum
+FOR EACH ROW
+BEGIN
+    DELETE FROM CuttingUnit_Stratum_Tombstone
+        WHERE CruiseID = NEW.CruiseID
+        AND CuttingUnitCode = NEW.CuttingUnitCode
+        AND StratumCode = NEW.StratumCode;
+END
+
+
+
+CREATE INDEX NIX_CuttingUnit_Stratum_StratumCode_CruiseID ON CuttingUnit_Stratum (StratumCode, CruiseID)
+
+CREATE INDEX NIX_CuttingUnit_Stratum_CuttingUnitCode_CruiseID ON CuttingUnit_Stratum (CuttingUnitCode, CruiseID)
+
+
+-- ************** CuttingUnit_Stratum_Tombstone **************
+CREATE TABLE CuttingUnit_Stratum_Tombstone (
+    CruiseID TEXT NOT NULL COLLATE NOCASE,
+    CuttingUnitCode TEXT NOT NULL COLLATE NOCASE,
+    StratumCode TEXT NOT NULL COLLATE NOCASE,
+    StratumArea REAL,
+    CreatedBy TEXT,
+    Created_TS DATETIME,
+    ModifiedBy TEXT,
+    Modified_TS DATETIME,
+    Deleted_TS DATETIME
+)
+
+CREATE INDEX NIX_CuttingUnit_Stratum_Tombstone_CruiseID_CuttingUnitCode_StratumCode ON CuttingUnit_Stratum_Tombstone
+(CuttingUnitCode, StratumCode, CruiseID)
+
+
+-- ************** CuttingUnit_Tombstone **************
+CREATE TABLE CuttingUnit_Tombstone (
+    CuttingUnitID TEXT NOT NULL COLLATE NOCASE,
+    CuttingUnitCode TEXT NOT NULL COLLATE NOCASE,
+    CruiseID TEXT NOT NULL COLLATE NOCASE,
+    Area REAL,
+    Description TEXT,
+    Remarks TEXT,
+    LoggingMethod TEXT,
+    PaymentUnit TEXT,
+    Rx TEXT,
+    CreatedBy TEXT,
+    Created_TS DATETIME,
+    ModifiedBy TEXT,
+    Modified_TS DATETIME,
+    Deleted_TS DATETIME,
+
+    UNIQUE(CuttingUnitID)
+)
+
+
+
+CREATE INDEX NIX_CuttingUnit_Tombstone_CruiseID_CuttingUnitCode ON CuttingUnit_Tombstone
+(CruiseID, CuttingUnitCode)
+
+
+-- ************** Device **************
+CREATE TABLE Device (
+    DeviceID TEXT NOT NULL COLLATE NOCASE,
+    CruiseID TEXT NOT NULL COLLATE NOCASE,
+    Name TEXT,
+
+    FOREIGN KEY (CruiseID) REFERENCES Cruise (CruiseID) ON DELETE CASCADE,
+
+    UNIQUE (DeviceID, CruiseID)
+)
+
+
+
+CREATE INDEX NIX_Device_CruiseID ON Device (CruiseID)
+
+CREATE INDEX NIX_Device_DeviceID ON Device (DeviceID)
+
+
+-- ************** FixCNTTallyPopulation **************
+CREATE TABLE FixCNTTallyPopulation (
+    FixCNTTallyPopulation_CN INTEGER PRIMARY KEY AUTOINCREMENT,
+    CruiseID TEXT NOT NULL COLLATE NOCASE,
+    StratumCode TEXT NOT NULL COLLATE NOCASE,
+    SampleGroupCode TEXT NOT NULL COLLATE NOCASE,
+    SpeciesCode TEXT NOT NULL COLLATE NOCASE,
+    LiveDead TEXT NOT NULL COLLATE NOCASE,
+    IntervalSize INTEGER Default 0,
+    Min INTEGER Default 0,
+    Max INTEGER Default 0,
+    CreatedBy TEXT DEFAULT 'none',
+    Created_TS DATETIME DEFAULT (CURRENT_TIMESTAMP),
+    ModifiedBy TEXT,
+    Modified_TS DATETIME,
+
+    UNIQUE (CruiseID, StratumCode, SampleGroupCode, SpeciesCode, LiveDead),
+
+    FOREIGN KEY (StratumCode, SampleGroupCode, SpeciesCode, LiveDead, CruiseID) REFERENCES SubPopulation (StratumCode, SampleGroupCode, SpeciesCode, LiveDead, CruiseID) ON DELETE CASCADE ON UPDATE CASCADE
+)
+
+CREATE TRIGGER FixCNTTallyPopulation_OnUpdate
+AFTER UPDATE OF
+    IntervalSize,
+    Min,
+    Max
+ON FixCNTTallyPopulation
+FOR EACH ROW
+BEGIN
+    UPDATE FixCNTTallyPopulation SET Modified_TS = CURRENT_TIMESTAMP WHERE FixCNTTallyPopulation_CN = old.FixCNTTallyPopulation_CN;
+END
+
+
+
+CREATE INDEX NIX_FixCNTTallyPopulation_StratumCode_CruiseID ON FixCNTTallyPopulation (StratumCode, CruiseID)
+
+CREATE INDEX NIX_FixCNTTallyPopulation_StratumCode_SampleGroupCode_SpeciesCode_LiveDead_CruiseID ON FixCNTTallyPopulation (StratumCode, SampleGroupCode, SpeciesCode, LiveDead, CruiseID)
+
+
+-- ************** Globals **************
+CREATE TABLE Globals (
+    Block TEXT DEFAULT '' COLLATE NOCASE,
+    Key TEXT COLLATE NOCASE,
+    Value TEXT,
+    UNIQUE (Block, Key)
+)
+
+
+
+
+-- ************** LK_CruiseMethod **************
+CREATE TABLE LK_CruiseMethod (
+    LK_CruiseMethod_CN INTEGER PRIMARY KEY AUTOINCREMENT,
+    Method TEXT NOT NULL COLLATE NOCASE,
+    FriendlyName TEXT NOT NULL,
+    IsPlotMethod BOOLEAN NOT NULL,
+    UNIQUE (Method)
+)
+
+
+
+
+-- ************** LK_District **************
+CREATE TABLE LK_District (
+    LK_District_CN INTEGER PRIMARY KEY AUTOINCREMENT,
+    Region TEXT NOT NULL COLLATE NOCASE,
+    Forest TEXT NOT NULL COLLATE NOCASE,
+    District TEXT NOT NULL COLLATE NOCASE,
+    FriendlyName TEXT NOT NULL COLLATE NOCASE,
+
+    FOREIGN KEY (Region) REFERENCES LK_Region (Region) ON DELETE CASCADE,
+    FOREIGN KEY (Forest, Region) REFERENCES LK_Forest (Forest, Region) ON DELETE CASCADE,
+
+    UNIQUE (Forest, Region, District)
+)
+
+
+
+
+-- ************** LK_FIA **************
+CREATE TABLE LK_FIA (
+    LK_FIA_CN INTEGER PRIMARY KEY AUTOINCREMENT,
+    FIACode INTEGER NOT NULL,
+    CommonName TEXT NOT NULL,
+
+    UNIQUE (FIACode)
+)
+
+
+
+
+-- ************** LK_Forest **************
+CREATE TABLE LK_Forest (
+    LK_Forest_CN INTEGER PRIMARY KEY AUTOINCREMENT,
+    Forest TEXT NOT NULL COLLATE NOCASE, -- needs to be text because one blm forest has non numeric forest number
+    Region TEXT NOT NULL COLLATE NOCASE,
+    FriendlyName TEXT NOT NULL COLLATE NOCASE,
+
+    FOREIGN KEY (Region) REFERENCES LK_Region (Region) ON DELETE CASCADE,
+
+    UNIQUE (Forest, Region)
+)
+
+
+
+
+-- ************** LK_LoggingMethod **************
+CREATE TABLE LK_LoggingMethod (
+    LK_LoggingMethod_CN INTEGER PRIMARY KEY AUTOINCREMENT,
+    LoggingMethod TEXT NOT NULL COLLATE NOCASE,
+    FriendlyName TEXT NOT NULL,
+    UNIQUE (LoggingMethod)
+)
+
+
+
+
+-- ************** LK_Product **************
+CREATE TABLE LK_Product (
+    LK_Product_CN INTEGER PRIMARY KEY AUTOINCREMENT,
+    Product TEXT NOT NULL COLLATE NOCASE,
+    FriendlyName TEXT NOT NULL COLLATE NOCASE,
+    UNIQUE (Product)
+)
+
+
+
+
+-- ************** LK_Purpose **************
+CREATE TABLE LK_Purpose (
+    LK_Purpose_CN INTEGER PRIMARY KEY AUTOINCREMENT,
+    Purpose TEXT NOT NULL COLLATE NOCASE,
+    ShortCode TEXT NOT NULL COLLATE NOCASE, -- currently short code is only used in V2 file names
+    UNIQUE (Purpose)
+)
+
+
+
+
+-- ************** LK_Region **************
+CREATE TABLE LK_Region (
+    LK_Region_CN INTEGER PRIMARY KEY AUTOINCREMENT,
+    Region TEXT NOT NULL COLLATE NOCASE,
+    FriendlyName TEXT NOT NULL COLLATE NOCASE,
+    UNIQUE (Region)
+)
+
+
+
+
+-- ************** LK_TallyEntryType **************
+CREATE TABLE LK_TallyEntryType (
+    LK_TallyEntryType_CN  INTEGER PRIMARY KEY AUTOINCREMENT,
+    EntryType TEXT NOT NULL COLLATE NOCASE,
+
+    UNIQUE (EntryType)
+)
+
+
+
+
+-- ************** LK_UOM **************
+CREATE TABLE LK_UOM (
+    LK_UOM_CN INTEGER PRIMARY KEY AUTOINCREMENT,
+    UOM TEXT NOT NULL COLLATE NOCASE,
+    FriendlyName TEXT NOT NULL COLLATE NOCASE,
+    UNIQUE (UOM)
+)
+
+
+
+
+-- ************** Log **************
+CREATE TABLE Log (
+    Log_CN INTEGER PRIMARY KEY AUTOINCREMENT,
+    CruiseID TEXT NOT NULL,
+    LogID TEXT NOT NULL,
+    TreeID TEXT NOT NULL,
+    LogNumber TEXT NOT NULL,
+    Grade TEXT COLLATE NOCASE,
+    SeenDefect REAL Default 0.0,
+    PercentRecoverable REAL Default 0.0,
+    Length INTEGER Default 0,
+    ExportGrade TEXT,
+    SmallEndDiameter REAL Default 0.0,
+    LargeEndDiameter REAL Default 0.0,
+    GrossBoardFoot REAL Default 0.0,
+    NetBoardFoot REAL Default 0.0,
+    GrossCubicFoot REAL Default 0.0,
+    NetCubicFoot REAL Default 0.0,
+    BoardFootRemoved REAL Default 0.0,
+    CubicFootRemoved REAL Default 0.0,
+    DIBClass REAL Default 0.0,
+    BarkThickness REAL Default 0.0,
+    CreatedBy TEXT DEFAULT 'none',
+    Created_TS DATETIME DEFAULT (CURRENT_TIMESTAMP),
+    ModifiedBy TEXT,
+    Modified_TS DATETIME,
+
+    UNIQUE (LogID),
+    UNIQUE (TreeID, LogNumber),
+
+    CHECK (LogID LIKE '________-____-____-____-____________'),
+
+    FOREIGN KEY (TreeID) REFERENCES Tree (TreeID) ON DELETE CASCADE,
+    FOREIGN KEY (CruiseID) REFERENCES Cruise (CruiseID)
+)
+
+CREATE TRIGGER Log_OnUpdate
+AFTER UPDATE OF
+    LogNumber,
+    Grade,
+    SeenDefect,
+    PercentRecoverable,
+    Length,
+    ExportGrade,
+    SmallEndDiameter,
+    LargeEndDiameter,
+    GrossBoardFoot,
+    NetBoardFoot,
+    GrossCubicFoot,
+    NetCubicFoot,
+    BoardFootRemoved,
+    CubicFootRemoved,
+    DIBClass,
+    BarkThickness
+ON Log
+FOR EACH ROW
+BEGIN
+    UPDATE Log SET Modified_TS = CURRENT_TIMESTAMP WHERE Log_CN = old.Log_CN;
+END
+
+CREATE TRIGGER Log_OnDelete
+BEFORE DELETE ON Log
+FOR EACH ROW
+BEGIN
+    INSERT OR REPLACE INTO Log_Tombstone (
+        CruiseID,
+        LogID,
+        TreeID,
+        LogNumber,
+        Grade,
+        SeenDefect,
+        SeenDefect,
+        PercentRecoverable,
+        Length,
+        ExportGrade,
+        SmallEndDiameter,
+        LargeEndDiameter,
+        GrossBoardFoot,
+        NetBoardFoot,
+        GrossCubicFoot,
+        NetCubicFoot,
+        BoardFootRemoved,
+        CubicFootRemoved,
+        DIBClass,
+        BarkThickness,
+        CreatedBy,
+        Created_TS,
+        ModifiedBy,
+        Modified_TS,
+        Deleted_TS
+    ) VALUES (
+        OLD.CruiseID,
+        OLD.LogID,
+        OLD.TreeID,
+        OLD.LogNumber,
+        OLD.Grade,
+        OLD.SeenDefect,
+        OLD.SeenDefect,
+        OLD.PercentRecoverable,
+        OLD.Length,
+        OLD.ExportGrade,
+        OLD.SmallEndDiameter,
+        OLD.LargeEndDiameter,
+        OLD.GrossBoardFoot,
+        OLD.NetBoardFoot,
+        OLD.GrossCubicFoot,
+        OLD.NetCubicFoot,
+        OLD.BoardFootRemoved,
+        OLD.CubicFootRemoved,
+        OLD.DIBClass,
+        OLD.BarkThickness,
+        OLD.CreatedBy,
+        OLD.Created_TS,
+        OLD.ModifiedBy,
+        OLD.Modified_TS,
+        CURRENT_TIMESTAMP
+    );
+END
+
+
+
+
+
+CREATE INDEX NIX_Log_LogNumber ON Log (LogNumber)
+
+CREATE INDEX NIX_Log_TreeID ON Log (TreeID)
+
+CREATE INDEX NIX_Log_CruiseID ON Log (CruiseID)
+
+
+-- ************** LogField **************
+CREATE TABLE LogField (
+    LogField_CN INTEGER PRIMARY KEY AUTOINCREMENT,
+    Field TEXT NOT NULL COLLATE NOCASE,
+    DefaultHeading TEXT NOT NULL COLLATE NOCASE,
+    DbType TEXT NOT NULL COLLATE NOCASE,
+    CHECK (length(Field) > 0),
+    UNIQUE (Field)
+)
+
+
+
+
+-- ************** LogFieldHeading **************
+CREATE TABLE LogFieldHeading (
+    LogFieldHeading_CN INTEGER PRIMARY KEY AUTOINCREMENT,
+    CruiseID TEXT NOT NULL COLLATE NOCASE,
+    Field TEXT NOT NULL COLLATE NOCASE,
+    Heading TEXT NOT NULL COLLATE NOCASE,
+    CreatedBy TEXT DEFAULT 'none',
+    Created_TS DATETIME DEFAULT (CURRENT_TIMESTAMP),
+    ModifiedBy TEXT,
+    Modified_TS DATETIME,
+
+    UNIQUE (CruiseID, Field),
+
+    FOREIGN KEY (Field) REFERENCES LogField (Field) ON DELETE CASCADE,
+    FOREIGN KEY (CruiseID) REFERENCES Cruise (CruiseID) ON DELETE CASCADE
+)
+
+CREATE TRIGGER LogFieldHeading_OnUpdate
+AFTER UPDATE OF
+    Heading
+ON LogFieldHeading
+FOR EACH ROW
+BEGIN
+    UPDATE LogFieldHeading SET Modified_TS = CURRENT_TIMESTAMP WHERE LogFieldHeading_CN = OLD.LogFieldHeading_CN;
+END
+
+
+
+
+-- ************** LogFieldSetup **************
+CREATE TABLE LogFieldSetup (
+    StratumCode TEXT NOT NULL,
+    CruiseID TEXT NOT NULL COLLATE NOCASE,
+    Field TEXT NOT NULL,
+    FieldOrder INTEGER Default 0,
+    Heading TEXT,
+    Width REAL Default 0.0,
+
+    UNIQUE (CruiseID, StratumCode, Field),
+
+    FOREIGN KEY (StratumCode, CruiseID) REFERENCES Stratum (StratumCode, CruiseID) ON DELETE CASCADE ON UPDATE CASCADE,
+    FOREIGN KEY (Field) REFERENCES LogField (Field)
+)
+
+CREATE TRIGGER LogFieldSetup_OnDelete
+BEFORE DELETE ON LogFieldSetup
+FOR EACH ROW
+BEGIN
+    INSERT OR REPLACE INTO LogFieldSetup_Tombstone (
+        StratumCode,
+        CruiseID,
+        Field,
+        FieldOrder,
+        Heading,
+        Width,
+        Deleted_TS
+    ) VALUES (
+        OLD.StratumCode,
+        OLD.CruiseID,
+        OLD.Field,
+        OLD.FieldOrder,
+        OLD.Heading,
+        OLD.Width,
+        CURRENT_TIMESTAMP
+    );
+END
+
+CREATE TRIGGER LogFieldSetup_OnInsert_ClearTombstone 
+AFTER INSERT ON LogFieldSetup
+FOR EACH ROW 
+BEGIN 
+    DELETE FROM LogFieldSetup_Tombstone 
+        WHERE CruiseID = NEW.CruiseID
+        AND StratumCode = NEW.StratumCode
+        AND Field = NEW.Field;
+END
+
+
+
+CREATE INDEX NIX_LogFieldSetup_Field ON LogFieldSetup ('Field' COLLATE NOCASE)
+
+CREATE INDEX NIX_LogFieldSetup_StratumCode_CruiseID ON LogFieldSetup ('StratumCode', 'CruiseID')
+
+
+-- ************** LogFieldSetupDefault **************
+CREATE VIEW LogFieldSetupDefault AS
+SELECT
+    StratumTemplateLogFieldSetup_CN AS LogFieldSetupDefault_CN,
+    StratumTemplateName || CruiseID AS StratumDefaultID,
+    Field,
+    FieldOrder
+FROM StratumTemplateLogFieldSetup
+
+
+-- ************** LogFieldSetup_Tombstone **************
+CREATE TABLE LogFieldSetup_Tombstone (
+    StratumCode TEXT NOT NULL,
+    CruiseID TEXT NOT NULL COLLATE NOCASE,
+    Field TEXT NOT NULL,
+    FieldOrder INTEGER,
+    Heading TEXT,
+    Width REAL,
+    Deleted_TS DATETIME
+)
+
+
+-- ************** LogGradeAuditRule **************
+CREATE TABLE LogGradeAuditRule (
+    LogGradeAuditRule_CN INTEGER PRIMARY KEY AUTOINCREMENT,
+    CruiseID TEXT NOT NULL COLLATE NOCASE,
+    SpeciesCode TEXT COLLATE NOCASE,
+    Grade TEXT NOT NULL COLLATE NOCASE CHECK (length(Grade) > 0),
+    DefectMax REAL Default 0.0,
+
+    -- see indexes for unique constraints
+
+    FOREIGN KEY (SpeciesCode, CruiseID) REFERENCES Species (SpeciesCode, CruiseID) ON DELETE CASCADE ON UPDATE CASCADE,
+    FOREIGN KEY (CruiseID) REFERENCES Cruise (CruiseID) ON DELETE CASCADE
+)
+
+CREATE TRIGGER LogGradeAuditRule_OnDelete
+BEFORE DELETE ON LogGradeAuditRule
+FOR EACH ROW
+BEGIN
+    INSERT OR REPLACE INTO LogGradeAuditRule_Tombstone (
+        CruiseID,
+        SpeciesCode,
+        Grade,
+        DefectMax,
+        Deleted_TS
+    ) VALUES (
+        OLD.CruiseID,
+        OLD.SpeciesCode,
+        OLD.Grade,
+        OLD.DefectMax,
+        CURRENT_TIMESTAMP
+    );
+END
+
+CREATE UNIQUE INDEX UIX_LogGradeAuditRule_SpeciesCode_DefectMax_Grade_CruiseID
+ON LogGradeAuditRule
+(ifnull(SpeciesCode, ''), round(DefectMax, 2), Grade, CruiseID)
+
+CREATE INDEX UIX_LogGradeAuditRule_CruiseID_SpeciesCode ON LogGradeAuditRule (CruiseID, SpeciesCode)
+
+
+-- ************** LogGradeAuditRule_Tombstone **************
+CREATE TABLE LogGradeAuditRule_Tombstone (
+    CruiseID TEXT NOT NULL COLLATE NOCASE,
+    SpeciesCode TEXT COLLATE NOCASE,
+    Grade TEXT NOT NULL COLLATE NOCASE,
+    DefectMax REAL,
+    Deleted_TS DATETIME
+)
+
+CREATE INDEX NIX_LogGradeAuditRule_Tombstone_CruiseID_SpeciesCode_Grade ON LogGradeAuditRule_Tombstone
+(CruiseID, (ifnull(SpeciesCode, '')), Grade)
+
+
+-- ************** LogGradeError **************
+CREATE VIEW LogGradeError AS
+SELECT
+    l.Log_CN,
+    l.LogID,
+    t.CruiseID,
+    LogGradeAuditRule_CN,
+    'Species ' || t.SpeciesCode || ', log grade ' || lgar.Grade || 'max defect is ' || lgar.DefectMax AS Message,
+    0 AS IsResolved,
+    null AS Resolution,
+    null AS ResolutionInitials
+FROM Log AS l
+JOIN Tree AS t USING (TreeID)
+JOIN LogGradeAuditRule AS lgar ON
+    t.CruiseID = lgar.CruiseID
+    AND ifnull(lgar.SpeciesCode, '') IN  (t.SpeciesCode, '')
+    AND ifnull(l.Grade, '') = lgar.Grade
+    AND round(l.SeenDefect, 2) > round(lgar.DefectMax, 2)
+
+
+-- ************** Log_Tombstone **************
+CREATE TABLE Log_Tombstone (
+    CruiseID TEXT NOT NULL,
+    LogID TEXT NOT NULL,
+    TreeID TEXT NOT NULL,
+    LogNumber TEXT NOT NULL,
+    Grade TEXT COLLATE NOCASE,
+    SeenDefect REAL,
+    PercentRecoverable REAL,
+    Length INTEGER,
+    ExportGrade TEXT,
+    SmallEndDiameter REAL,
+    LargeEndDiameter REAL,
+    GrossBoardFoot REAL,
+    NetBoardFoot REAL,
+    GrossCubicFoot REAL,
+    NetCubicFoot REAL,
+    BoardFootRemoved REAL,
+    CubicFootRemoved REAL,
+    DIBClass REAL,
+    BarkThickness REAL,
+    CreatedBy TEXT,
+    Created_TS DATETIME,
+    ModifiedBy TEXT,
+    Modified_TS DATETIME,
+    Deleted_TS DATETIME
+)
+
+CREATE INDEX NIX_Log_Tombstone_TreeID_LogNumber ON Log_Tombstone
+(TreeID, LogNumber)
+
+CREATE INDEX NIX_Log_Tombstone_LogID ON Log_Tombstone
+(LogID)
+
+CREATE INDEX NIX_Log_Tombstone_CruiseID ON Log_Tombstone
+(CruiseID)
+
+
+-- ************** MessageLog **************
+CREATE TABLE MessageLog (
+    Message_CN INTEGER PRIMARY KEY AUTOINCREMENT,
+    Program TEXT COLLATE NOCASE,
+    Message TEXT,
+    Date TEXT DEFAULT (date('now', 'localtime')),
+    Time TEXT DEFAULT (time('now', 'localtime')),
+    Level TEXT COLLATE NOCASE DEFAULT 'N'
+)
+
+
+-- ************** Plot **************
+CREATE TABLE Plot (
+    Plot_CN INTEGER PRIMARY KEY AUTOINCREMENT,
+    PlotID TEXT NOT NULL,
+    PlotNumber INTEGER NOT NULL,
+    CruiseID TEXT NOT NULL COLLATE NOCASE,
+    CuttingUnitCode TEXT NOT NULL COLLATE NOCASE,
+    Slope REAL Default 0.0,
+    Aspect REAL Default 0.0,
+    Remarks TEXT,
+    CreatedBy TEXT DEFAULT 'none',
+    Created_TS DATETIME DEFAULT (CURRENT_TIMESTAMP),
+    ModifiedBy TEXT,
+    Modified_TS DATETIME,
+
+    CHECK (PlotID LIKE '________-____-____-____-____________'),
+
+    UNIQUE (PlotID),
+    UNIQUE (PlotNumber, CuttingUnitCode, CruiseID),
+
+    FOREIGN KEY (CuttingUnitCode, CruiseID) REFERENCES CuttingUnit (CuttingUnitCode, CruiseID) ON DELETE CASCADE ON UPDATE CASCADE
+)
+
+CREATE TRIGGER Plot_OnUpdate
+AFTER UPDATE OF
+    CuttingUnitCode,
+    Slope,
+    Aspect,
+    Remarks
+ON Plot
+FOR EACH ROW
+BEGIN
+    UPDATE Plot SET Modified_TS = CURRENT_TIMESTAMP WHERE Plot_CN = old.Plot_CN;
+END
+
+CREATE TRIGGER Plot_OnDelete
+BEFORE DELETE ON Plot
+FOR EACH ROW
+BEGIN
+    INSERT OR REPLACE INTO Plot_Tombstone (
+        PlotID,
+        PlotNumber,
+        CruiseID,
+        CuttingUnitCode,
+        Slope,
+        Aspect,
+        Remarks,
+        CreatedBy,
+        Created_TS,
+        ModifiedBy,
+        Modified_TS,
+        Deleted_TS
+    ) VALUES (
+        OLD.PlotID,
+        OLD.PlotNumber,
+        OLD.CruiseID,
+        OLD.CuttingUnitCode,
+        OLD.Slope,
+        OLD.Aspect,
+        OLD.Remarks,
+        OLD.CreatedBy,
+        OLD.Created_TS,
+        OLD.ModifiedBy,
+        OLD.Modified_TS,
+        CURRENT_TIMESTAMP
+    );
+END
+
+
+
+
+
+CREATE INDEX NIX_Plot_CuttingUnitCode_CruiseID ON Plot (CuttingUnitCode, CruiseID)
+
+CREATE INDEX NIX_Plot_PlotNumber_CruiseID ON Plot (PlotNumber, CruiseID)
+
+
+-- ************** PlotError **************
+CREATE VIEW PlotError AS
+    SELECT
+        p.PlotID, 
+        p.CruiseID,
+        ps.CuttingUnitCode,
+        ps.PlotNumber,
+        ps.StratumCode,
+        ps.Plot_Stratum_CN,
+        'Unit:' || ps.CuttingUnitCode || ' Plot:' || ps.PlotNumber || ' St:' || ps.StratumCode || ' contains trees but is marked as empty' AS Message,
+        'IsEmpty' AS Field,
+        'E' AS Level,
+        0 AS IsResolved,
+        null AS Resolution,
+        null AS ResolutionInitials
+    FROM Plot_Stratum AS ps
+    JOIN Plot AS p USING (CuttingUnitCode, PlotNumber, CruiseID)
+    WHERE IsEmpty != 0
+        AND EXISTS (SELECT * FROM Tree
+            WHERE CuttingUnitCode = ps.CuttingUnitCode
+            AND PlotNumber = ps.PlotNumber AND StratumCode = ps.StratumCode AND CruiseID = ps.CruiseID)
+
+
+-- ************** PlotLocation **************
+CREATE TABLE PlotLocation (
+    PlotLocation_CN INTEGER PRIMARY KEY AUTOINCREMENT,
+    PlotID TEXT NOT NULL COLLATE NOCASE,
+    Latitude REAL NOT NULL,
+    Longitude REAL NOT NULL,
+    CreatedBy TEXT DEFAULT 'none',
+    Created_TS DATETIME DEFAULT (CURRENT_TIMESTAMP),
+    ModifiedBy TEXT,
+    Modified_TS DATETIME,
+
+    UNIQUE (PlotID),
+
+    CHECK (Latitude BETWEEN -90.0 AND 90.0),
+    CHECK (Longitude BETWEEN -180.0 AND 180.0),
+
+    FOREIGN KEY (PlotID) REFERENCES Plot (PlotID) ON DELETE CASCADE
+)
+
+CREATE TRIGGER PlotLocation_OnUpdate
+AFTER UPDATE OF
+    PlotID,
+    Latitude,
+    Longitude
+ON PlotLocation
+FOR EACH ROW
+BEGIN
+    UPDATE PlotLocation SET Modified_TS = CURRENT_TIMESTAMP WHERE PlotLocation_CN = old.PlotLocation_CN;
+END
+
+CREATE TRIGGER PlotLocation_OnDelete
+BEFORE DELETE ON PlotLocation
+FOR EACH ROW
+BEGIN
+    INSERT OR REPLACE INTO PlotLocation_Tombstone (
+        PlotID,
+        Latitude,
+        Longitude,
+        CreatedBy,
+        Created_TS,
+        ModifiedBy,
+        Modified_TS,
+        Deleted_TS
+    ) VALUES (
+        OLD.PlotID,
+        OLD.Latitude,
+        OLD.Longitude,
+        OLD.CreatedBy,
+        OLD.Created_TS,
+        OLD.ModifiedBy,
+        OLD.Modified_TS,
+        CURRENT_TIMESTAMP
+    );
+END
+
+
+
+
+-- ************** PlotLocation_Tombstone **************
+CREATE TABLE PlotLocation_Tombstone (
+    PlotID TEXT NOT NULL COLLATE NOCASE,
+    Latitude REAL NOT NULL,
+    Longitude REAL NOT NULL,
+    CreatedBy TEXT,
+    Created_TS DATETIME,
+    ModifiedBy TEXT,
+    Modified_TS DATETIME,
+    Deleted_TS DATETIME
+)
+
+
+-- ************** Plot_Stratum **************
+CREATE TABLE Plot_Stratum (
+    Plot_Stratum_CN INTEGER PRIMARY KEY AUTOINCREMENT,
+    PlotNumber INTEGER NOT NULL,
+    CruiseID TEXT NOT NULL COLLATE NOCASE,
+    CuttingUnitCode TEXT NOT NULL COLLATE NOCASE,
+    StratumCode TEXT NOT NULL COLLATE NOCASE,
+    IsEmpty BOOLEAN DEFAULT 0,
+    CountOrMeasure TEXT COLLATE NOCASE,     -- for 3ppnt cruise methods but might be expanded to other methods
+    TreeCount INTEGER Default 0,            -- for 3ppnt cruise method
+    AverageHeight REAL Default 0.0,         -- for 3ppnt cruise method
+    KPI REAL DEFAULT 0.0,                   -- for 3ppnt cruise method
+    ThreePRandomValue INTEGER Default 0,    -- for 3ppnt cruise method
+    CreatedBy TEXT DEFAULT 'none',
+    Created_TS DATETIME DEFAULT (CURRENT_TIMESTAMP),
+    ModifiedBy TEXT,
+    Modified_TS DATETIME,
+
+    UNIQUE (PlotNumber, CuttingUnitCode, StratumCode, CruiseID),
+    CHECK (IsEmpty IN (0, 1)),
+    CHECK (CountOrMeasure IN ('C', 'M') OR CountOrMeasure IS NULL),
+    --CHECK ((TreeCount IS 0 AND AverageHeight IS 0.0 AND KPI IS 0.0) OR (TreeCount > 0 AND AverageHeight > 0.0 AND KPI > 0.0)) 
+
+    FOREIGN KEY (StratumCode,  CruiseID) REFERENCES Stratum (StratumCode, CruiseID) ON DELETE CASCADE ON UPDATE CASCADE,
+    FOREIGN KEY (PlotNumber, CuttingUnitCode, CruiseID) REFERENCES Plot (PlotNumber, CuttingUnitCode, CruiseID) ON DELETE CASCADE ON UPDATE CASCADE
+)
+
+CREATE TRIGGER Plot_Stratum_OnUpdate
+AFTER UPDATE OF
+    CuttingUnitCode,
+    PlotNumber,
+    StratumCode,
+    IsEmpty,
+    CountOrMeasure,
+    TreeCount,
+    AverageHeight,
+    KPI,
+    ThreePRandomValue
+ON Plot_Stratum
+FOR EACH ROW
+BEGIN
+    UPDATE Plot_Stratum SET Modified_TS = CURRENT_TIMESTAMP WHERE Plot_Stratum_CN = old.Plot_Stratum_CN;
+END
+
+CREATE TRIGGER Plot_Stratum_OnDelete
+BEFORE DELETE ON Plot_Stratum
+FOR EACH ROW
+BEGIN
+    INSERT OR REPLACE INTO Plot_Stratum_Tombstone (
+        PlotNumber,
+        CruiseID,
+        CuttingUnitCode,
+        StratumCode,
+        IsEmpty,
+        CountOrMeasure,
+        TreeCount,
+        AverageHeight,
+        KPI,
+        ThreePRandomValue,
+        CreatedBy,
+        Created_TS,
+        ModifiedBy,
+        Modified_TS,
+        Deleted_TS
+    ) VALUES (
+        OLD.PlotNumber,
+        OLD.CruiseID,
+        OLD.CuttingUnitCode,
+        OLD.StratumCode,
+        OLD.IsEmpty,
+        OLD.CountOrMeasure,
+        OLD.TreeCount,
+        OLD.AverageHeight,
+        OLD.KPI,
+        OLD.ThreePRandomValue,
+        OLD.CreatedBy,
+        OLD.Created_TS,
+        OLD.ModifiedBy,
+        OLD.Modified_TS,
+        CURRENT_TIMESTAMP
+    );
+END
+
+CREATE TRIGGER Plot_Stratum_OnInsert_ClearTombstones
+AFTER INSERT ON Plot_Stratum 
+FOR EACH ROW
+BEGIN 
+    DELETE FROM Plot_Stratum_Tombstone WHERE 
+        CruiseID = NEW.CruiseID 
+        AND CuttingUnitCode = NEW.CuttingUnitCode 
+        AND StratumCode = NEW.StratumCode 
+        AND PlotNumber = NEW.PlotNumber;
+END
+
+
+
+CREATE INDEX NIX_Plot_Stratum_StratumCode_CruiseID ON Plot_Stratum ('StratumCode', 'CruiseID')
+
+CREATE INDEX NIX_Plot_Stratum_PlotNumber_CuttingUnitCode_CruiseID ON Plot_Stratum ('PlotNumber', 'CuttingUnitCode', 'CruiseID')
+
+
+-- ************** Plot_Stratum_Tombstone **************
+CREATE TABLE Plot_Stratum_Tombstone (
+    PlotNumber INTEGER NOT NULL,
+    CruiseID TEXT NOT NULL COLLATE NOCASE,
+    CuttingUnitCode TEXT NOT NULL COLLATE NOCASE,
+    StratumCode TEXT NOT NULL COLLATE NOCASE,
+    IsEmpty BOOLEAN,
+    CountOrMeasure TEXT COLLATE NOCASE,
+    TreeCount INTEGER Default 0,
+    AverageHeight REAL Default 0.0,
+    KPI REAL,
+    ThreePRandomValue INTEGER,
+    CreatedBy TEXT,
+    Created_TS DATETIME,
+    ModifiedBy TEXT,
+    Modified_TS DATETIME,
+    Deleted_TS DATETIME
+)
+
+CREATE INDEX NIX_Plot_Stratum_Tombstone_CruiseID_PlotNumber_CuttingUnitCode_StratumCode ON Plot_Stratum_Tombstone
+(CruiseID, PlotNumber, CuttingUnitCode, StratumCode)
+
+
+-- ************** Plot_Tombstone **************
+CREATE TABLE Plot_Tombstone (
+    PlotID TEXT NOT NULL,
+    PlotNumber INTEGER NOT NULL,
+    CruiseID TEXT NOT NULL COLLATE NOCASE,
+    CuttingUnitCode TEXT NOT NULL COLLATE NOCASE,
+    Slope REAL,
+    Aspect REAL,
+    Remarks TEXT,
+    CreatedBy TEXT,
+    Created_TS DATETIME,
+    ModifiedBy TEXT,
+    Modified_TS DATETIME,
+    Deleted_TS DATETIME
+)
+
+CREATE INDEX NIX_Plot_Tombstone_PlotID ON Plot_Tombstone
+(PlotID)
+
+CREATE INDEX NIX_Plot_Tombstone_CruiseID_PlotNumber_CuttingUnitCode ON Plot_Tombstone
+(CruiseID, PlotNumber, CuttingUnitCode)
+
+
+-- ************** Reports **************
+CREATE TABLE Reports ( 
+    ReportID TEXT NOT NULL COLLATE NOCASE,
+    CruiseID TEXT NOT NULL COLLATE NOCASE,
+    Selected BOOLEAN Default 0,
+    Title TEXT,
+    CreatedBy TEXT DEFAULT 'none',
+    Created_TS DATETIME DEFAULT (CURRENT_TIMESTAMP),
+    ModifiedBy TEXT,
+    Modified_TS DATETIME,
+
+    FOREIGN KEY (CruiseID) REFERENCES Cruise (CruiseID) ON DELETE CASCADE,
+
+    UNIQUE (ReportID, CruiseID)
+)
+
+CREATE TRIGGER Reports_OnDelete 
+BEFORE DELETE ON Reports 
+FOR EACH ROW 
+BEGIN 
+    INSERT OR REPLACE INTO Reports_Tombstone (
+        ReportID,
+        CruiseID,
+        Selected,
+        Title,
+        CreatedBy,
+        Created_TS,
+        ModifiedBy,
+        Modified_TS,
+        Deleted_TS
+    ) VALUES (
+        OLD.ReportID,
+        OLD.CruiseID,
+        OLD.Selected,
+        OLD.Title,
+        OLD.CreatedBy,
+        OLD.Created_TS,
+        OLD.ModifiedBy,
+        OLD.Modified_TS,
+        CURRENT_TIMESTAMP
+    );
+END
+
+CREATE TRIGGER Reports_OnInsert_ClearTombstone
+AFTER INSERT ON Reports
+FOR EACH ROW
+BEGIN
+    DELETE FROM Reports_Tombstone 
+        WHERE CruiseID = NEW.CruiseID
+        AND ReportID = NEW.ReportID;
+END
+
+
+
+
+-- ************** Reports_Tombstone **************
+CREATE TABLE Reports_Tombstone (
+    ReportID TEXT NOT NULL COLLATE NOCASE,
+    CruiseID TEXT NOT NULL COLLATE NOCASE,
+    Selected BOOLEAN,
+    Title TEXT,
+
+    CreatedBy TEXT,
+    Created_TS DATETIME,
+    ModifiedBy TEXT,
+    Modified_TS DATETIME,
+    Deleted_TS DATETIME
+)
+
+CREATE INDEX Reports_Tombstone_ReportID_CruiseID ON Reports_Tombstone
+(ReportID, CruiseID)
+
+
+-- ************** Sale **************
+CREATE TABLE Sale (
+    Sale_CN INTEGER PRIMARY KEY AUTOINCREMENT,
+    SaleID TEXT NOT NULL COLLATE NOCASE,
+    SaleNumber TEXT NOT NULL,
+    Name TEXT,
+    Region  TEXT COLLATE NOCASE,
+    Forest TEXT COLLATE NOCASE,
+    District TEXT COLLATE NOCASE,
+    CalendarYear INTEGER Default 0,
+    Remarks TEXT,
+    DefaultUOM TEXT,
+    CreatedBy TEXT DEFAULT 'none',
+    Created_TS DATETIME DEFAULT (CURRENT_TIMESTAMP),
+    ModifiedBy TEXT,
+    Modified_TS DATETIME,
+
+    CHECK (SaleID LIKE '________-____-____-____-____________'),
+    UNIQUE(SaleID),
+    UNIQUE(SaleNumber),
+
+    FOREIGN KEY (Region) REFERENCES LK_Region (Region)--,
+    --FOREIGN KEY (Forest, Region) REFERENCES LK_Forest (Forest, Region)
+)
+
+CREATE TRIGGER OnUpdateSale
+AFTER UPDATE OF
+    Sale_CN,
+    SaleNumber,
+    Name,
+    Purpose,
+    Region,
+    Forest,
+    District,
+    MeasurementYear,
+    CalendarYear,
+    LogGradingEnabled,
+    Remarks,
+    DefaultUOM
+ON Sale
+BEGIN
+    UPDATE Sale SET Modified_TS = CURRENT_TIMESTAMP WHERE Sale_CN = old.Sale_CN;
+END
+
+
+
+
+
+
+-- ************** SampleGroup **************
+CREATE TABLE SampleGroup (
+    SampleGroup_CN INTEGER PRIMARY KEY AUTOINCREMENT,
+    SampleGroupID  TEXT NOT NULL COLLATE NOCASE,
+    CruiseID TEXT NOT NULL COLLATE NOCASE,
+    SampleGroupCode TEXT NOT NULL COLLATE NOCASE,
+    StratumCode TEXT NOT NULL COLLATE NOCASE,
+    CutLeave TEXT DEFAULT 'C' COLLATE NOCASE,
+    UOM TEXT COLLATE NOCASE,
+    PrimaryProduct TEXT COLLATE NOCASE,
+    SecondaryProduct TEXT COLLATE NOCASE,
+    BiomassProduct TEXT COLLATE NOCASE,
+    DefaultLiveDead TEXT DEFAULT 'L' COLLATE NOCASE,
+    SamplingFrequency INTEGER Default 0,
+    InsuranceFrequency INTEGER Default 0,
+    KZ INTEGER Default 0,
+    BigBAF INTEGER Default 0,
+    TallyBySubPop BOOLEAN DEFAULT 0,
+    UseExternalSampler BOOLEAN DEFAULT 0, -- depreciated decided to implement using SampleSelectorType
+    SampleSelectorType TEXT COLLATE NOCASE,
+    Description TEXT,
+    MinKPI INTEGER Default 0,
+    MaxKPI INTEGER Default 0,
+    SmallFPS REAL DEFAULT 0.0,
+    CreatedBy TEXT DEFAULT 'none',
+    Created_TS DATETIME DEFAULT (CURRENT_TIMESTAMP),
+    ModifiedBy TEXT,
+    Modified_TS DATETIME,
+
+    CHECK (SampleGroupID LIKE '________-____-____-____-____________'),
+    CHECK (length(SampleGroupCode) > 0)
+    CHECK (TallyBySubPop IN (0, 1)),
+    CHECK (UseExternalSampler IN (0, 1)),
+    CHECK (SampleSelectorType IS NULL
+        OR SampleSelectorType IN (
+            'SystematicSelecter',
+            'BlockSelecter',
+            'ClickerSelecter')),
+
+    UNIQUE (SampleGroupID),
+    UNIQUE (StratumCode, SampleGroupCode, CruiseID),
+
+    FOREIGN KEY (StratumCode, CruiseID) REFERENCES Stratum (StratumCode, CruiseID) ON DELETE CASCADE ON UPDATE CASCADE,
+    FOREIGN KEY (UOM) REFERENCES LK_UOM (UOM),
+    FOREIGN KEY (PrimaryProduct) REFERENCES LK_Product (Product),
+    FOREIGN KEY (SecondaryProduct) REFERENCES LK_Product (Product)
+)
+
+CREATE TRIGGER SampleGroup_OnUpdate
+AFTER UPDATE OF
+    SampleGroupCode,
+    StratumCode,
+    CutLeave,
+    UOM,
+    PrimaryProduct,
+    SecondaryProduct,
+    BiomassProduct,
+    DefaultLiveDead,
+    SamplingFrequency,
+    InsuranceFrequency,
+    KZ,
+    BigBAF,
+    TallyBySubPop,
+    SampleSelectorType,
+    Description,
+    MinKPI,
+    MaxKPI,
+    SmallFPS
+ON SampleGroup
+FOR EACH ROW
+BEGIN
+    UPDATE SampleGroup SET Modified_TS = CURRENT_TIMESTAMP WHERE SampleGroup_CN = old.SampleGroup_CN;
+END
+
+CREATE TRIGGER SampleGroup_OnDelete
+BEFORE DELETE ON SampleGroup
+FOR EACH ROW
+BEGIN
+    INSERT OR REPLACE INTO SampleGroup_Tombstone (
+        SampleGroupID,
+        CruiseID,
+        SampleGroupCode,
+        StratumCode,
+        CutLeave,
+        UOM,
+        PrimaryProduct,
+        SecondaryProduct,
+        BiomassProduct,
+        DefaultLiveDead,
+        SamplingFrequency,
+        InsuranceFrequency,
+        KZ,
+        BigBAF,
+        TallyBySubPop,
+        UseExternalSampler,
+        SampleSelectorType,
+        Description,
+        MinKPI,
+        MaxKPI,
+        SmallFPS,
+        CreatedBy,
+        Created_TS,
+        ModifiedBy,
+        Modified_TS,
+        Deleted_TS
+    ) VALUES (
+        OLD.SampleGroupID,
+        OLD.CruiseID,
+        OLD.SampleGroupCode,
+        OLD.StratumCode,
+        OLD.CutLeave,
+        OLD.UOM,
+        OLD.PrimaryProduct,
+        OLD.SecondaryProduct,
+        OLD.BiomassProduct,
+        OLD.DefaultLiveDead,
+        OLD.SamplingFrequency,
+        OLD.InsuranceFrequency,
+        OLD.KZ,
+        OLD.BigBAF,
+        OLD.TallyBySubPop,
+        OLD.UseExternalSampler,
+        OLD.SampleSelectorType,
+        OLD.Description,
+        OLD.MinKPI,
+        OLD.MaxKPI,
+        OLD.SmallFPS,
+        OLD.CreatedBy,
+        OLD.Created_TS,
+        OLD.ModifiedBy,
+        OLD.Modified_TS,
+        CURRENT_TIMESTAMP
+    );
+END
+
+
+
+
+
+CREATE INDEX NIX_SampleGroup_StratumCode_CruiseID ON SampleGroup (StratumCode, CruiseID)
+
+
+-- ************** SampleGroupDefault **************
+CREATE TABLE SampleGroupDefault (
+    SampleGroupDefault_CN INTEGER PRIMARY KEY AUTOINCREMENT,
+    SampleGroupDefaultID TEXT NOT NULL COLLATE NOCASE,
+    Region  TEXT COLLATE NOCASE,
+    Forest TEXT COLLATE NOCASE,
+    District TEXT COLLATE NOCASE,
+    SampleGroupCode TEXT COLLATE NOCASE,
+    CutLeave TEXT COLLATE NOCASE,
+    UOM TEXT COLLATE NOCASE,
+    PrimaryProduct TEXT COLLATE NOCASE,
+    SecondaryProduct TEXT COLLATE NOCASE,
+    BiomassProduct TEXT COLLATE NOCASE,
+    DefaultLiveDead TEXT COLLATE NOCASE,
+    SamplingFrequency INTEGER Default 0,
+    InsuranceFrequency INTEGER Default 0,
+    KZ INTEGER,
+    BigBAF INTEGER,
+    TallyBySubPop BOOLEAN,
+    UseExternalSampler BOOLEAN,
+    TallyMethod TEXT COLLATE NOCASE,
+    Description TEXT,
+    MinKPI INTEGER,
+    MaxKPI INTEGER,
+    SmallFPS REAL,
+
+    FOREIGN KEY (Region) REFERENCES LK_Region (Region),
+    FOREIGN KEY (Region, Forest) REFERENCES LK_Forest (Region, Forest),
+    FOREIGN KEY (Region, Forest, District) REFERENCES LK_District (Region, Forest, District),
+    FOREIGN KEY (UOM) REFERENCES LK_UOM (UOM),
+    FOREIGN KEY (PrimaryProduct) REFERENCES LK_Product (Product),
+    FOREIGN KEY (SecondaryProduct) REFERENCES LK_Product (Product),
+
+    UNIQUE (SampleGroupDefaultID)
+)
+
+
+
+CREATE INDEX UIX_SampleGroupDefault_Region_Forest_District_SampleGroupCode_PrimaryProduct
+    ON SampleGroupDefault
+    (ifnull(Region, ''), ifnull(Forest, ''), ifnull(District, ''), ifnull(SampleGroupCode, ''), ifnull(PrimaryProduct, ''))
+
+
+-- ************** SampleGroup_Tombstone **************
+CREATE TABLE SampleGroup_Tombstone (
+    SampleGroupID  TEXT NOT NULL COLLATE NOCASE,
+    CruiseID TEXT NOT NULL COLLATE NOCASE,
+    SampleGroupCode TEXT NOT NULL COLLATE NOCASE,
+    StratumCode TEXT NOT NULL COLLATE NOCASE,
+    CutLeave TEXT COLLATE NOCASE,
+    UOM TEXT COLLATE NOCASE,
+    PrimaryProduct TEXT COLLATE NOCASE,
+    SecondaryProduct TEXT COLLATE NOCASE,
+    BiomassProduct TEXT,
+    DefaultLiveDead TEXT COLLATE NOCASE,
+    SamplingFrequency INTEGER Default 0,
+    InsuranceFrequency INTEGER Default 0,
+    KZ INTEGER,
+    BigBAF INTEGER,
+    TallyBySubPop BOOLEAN,
+    UseExternalSampler BOOLEAN,
+    SampleSelectorType TEXT COLLATE NOCASE,
+    Description TEXT,
+    MinKPI INTEGER,
+    MaxKPI INTEGER,
+    SmallFPS REAL,
+    CreatedBy TEXT,
+    Created_TS DATETIME,
+    ModifiedBy TEXT,
+    Modified_TS DATETIME,
+    Deleted_TS DATETIME,
+
+    UNIQUE(SampleGroupID)
+)
+
+
+
+CREATE INDEX NIX_SampleGroup_Tombstone_CruiseID_SampleGroupCode_StratumCode ON SampleGroup_Tombstone
+(CruiseID, SampleGroupCode, StratumCode)
+
+
+-- ************** SamplerState **************
+CREATE TABLE SamplerState (
+    SamplerState_CN INTEGER PRIMARY KEY AUTOINCREMENT,
+    DeviceID TEXT NOT NULL COLLATE NOCASE,
+    CruiseID TEXT NOT NULL COLLATE NOCASE,
+    StratumCode TEXT NOT NULL COLLATE NOCASE,
+    SampleGroupCode TEXT NOT NULL COLLATE NOCASE,
+    SampleSelectorType TEXT COLLATE NOCASE, -- should not change after record creation
+    BlockState TEXT,
+    SystematicIndex INTEGER DEFAULT 0,      -- should not change after record creation
+    Counter INTEGER DEFAULT 0,
+    InsuranceIndex DEFAULT -1,              -- should not change after record creation
+    InsuranceCounter DEFAULT -1,
+    CreatedBy TEXT DEFAULT 'none',
+    Created_TS DATETIME DEFAULT (CURRENT_TIMESTAMP),
+    ModifiedBy TEXT,
+    Modified_TS DATETIME,
+
+    UNIQUE (CruiseID, DeviceID, StratumCode, SampleGroupCode),
+
+    FOREIGN KEY (DeviceID, CruiseID) REFERENCES Device (DeviceID, CruiseID) ON DELETE CASCADE,
+    FOREIGN KEY (StratumCode, SampleGroupCode, CruiseID) REFERENCES SampleGroup (StratumCode, SampleGroupCode, CruiseID) ON DELETE CASCADE ON UPDATE CASCADE
+)
+
+CREATE TRIGGER SamplerState_OnUpdate
+AFTER UPDATE OF
+    BlockState,
+    Counter,
+    InsuranceCounter
+ON SamplerState
+FOR EACH ROW
+BEGIN
+    UPDATE SamplerState SET Modified_TS = CURRENT_TIMESTAMP WHERE SamplerState_CN = old.SamplerState_CN;
+END
+
+
+
+
+-- ************** Species **************
+CREATE TABLE Species (
+    Species_cn INTEGER PRIMARY KEY AUTOINCREMENT,
+    SpeciesCode TEXT COLLATE NOCASE,
+    CruiseID TEXT NOT NULL COLLATE NOCASE,
+    ContractSpecies TEXT,
+    FIACode TEXT COLLATE NOCASE,
+    CHECK (length(SpeciesCode) > 0),
+
+    --FOREIGN KEY (FIACode) REFERENCES LK_FIA (FIACode),
+
+    UNIQUE (SpeciesCode, CruiseID)
+)
+
+CREATE TRIGGER Species_OnUpdate_ContractSpecies 
+AFTER UPDATE OF ContractSpecies 
+ON Species
+FOR EACH ROW
+BEGIN
+    INSERT OR REPLACE INTO Species_Product (
+        CruiseID, 
+        SpeciesCode, 
+        PrimaryProduct, 
+        ContractSpecies
+    ) VALUES (
+        NEW.CruiseID,
+        NEW.SpeciesCode,
+        NULL,
+        NEW.ContractSpecies
+    );
+END
+
+
+
+
+-- ************** Species_Product **************
+CREATE TABLE Species_Product (
+    Species_Product_CN INTEGER PRIMARY KEY AUTOINCREMENT,
+    CruiseID TEXT NOT NULL COLLATE NOCASE,
+    SpeciesCode TEXT NOT NULL COLLATE NOCASE,
+    PrimaryProduct TEXT COLLATE NOCASE,
+    ContractSpecies TEXT NOT NULL COLLATE NOCASE,
+
+    FOREIGN KEY (SpeciesCode, CruiseID) REFERENCES Species (SpeciesCode, CruiseID) ON DELETE CASCADE ON UPDATE CASCADE,
+    FOREIGN KEY (PrimaryProduct) REFERENCES LK_Product (Product)
+)
+
+CREATE UNIQUE INDEX UIX_Species_Product_CruiseID_SpeciesCode_PrimaryProduct ON Species_Product
+(CruiseID, SpeciesCode, ifnull(PrimaryProduct, '') COLLATE NOCASE)
+
+
+-- ************** Stem **************
+CREATE TABLE Stem (
+    Stem_CN INTEGER PRIMARY KEY AUTOINCREMENT,
+    StemID TEXT NOT NULL COLLATE NOCASE,
+    CruiseID TEXT NOT NULL COLLATE NOCASE,
+    TreeID TEXT NOT NULL COLLATE NOCASE,
+    Diameter REAL Default 0.0,
+    DiameterType TEXT,
+    CreatedBy TEXT DEFAULT 'none',
+    Created_TS DATETIME DEFAULT (CURRENT_TIMESTAMP),
+    ModifiedBy TEXT,
+    Modified_TS DATETIME,
+
+    CHECK(StemID LIKE '________-____-____-____-____________'),
+
+    UNIQUE (StemID),
+    FOREIGN KEY (TreeID) REFERENCES Tree (TreeID) ON DELETE CASCADE,
+    FOREIGN KEY (CruiseID) REFERENCES Cruise (CruiseID)
+)
+
+CREATE TRIGGER Stem_On_Update
+AFTER UPDATE OF
+    TreeID,
+    Diameter,
+    DiameterType
+ON Stem
+FOR EACH ROW
+BEGIN
+    UPDATE Stem SET Modified_TS = CURRENT_TIMESTAMP WHERE Stem_CN = old.Stem_CN;
+END
+
+CREATE TRIGGER Stem_OnDelete
+BEFORE DELETE ON Stem
+FOR EACH ROW
+BEGIN
+    INSERT OR REPLACE INTO Stem_Tombstone (
+        StemID,
+        CruiseID,
+        TreeID,
+        Diameter,
+        DiameterType,
+        CreatedBy,
+        Created_TS,
+        ModifiedBy,
+        Modified_TS,
+        Deleted_TS
+    ) VALUES (
+        OLD.StemID,
+        OLD.CruiseID,
+        OLD.TreeID,
+        OLD.Diameter,
+        OLD.DiameterType,
+        OLD.CreatedBy,
+        OLD.Created_TS,
+        OLD.ModifiedBy,
+        OLD.Modified_TS,
+        CURRENT_TIMESTAMP
+    );
+END
+
+
+
+CREATE INDEX NIX_Stem_TreeID ON Stem (TreeID)
+
+CREATE INDEX NIX_Stem_CruiseID ON Stem (CruiseID)
+
+
+-- ************** Stem_Tombstone **************
+CREATE TABLE Stem_Tombstone (
+    StemID TEXT NOT NULL COLLATE NOCASE,
+    CruiseID TEXT NOT NULL COLLATE NOCASE,
+    TreeID TEXT NOT NULL COLLATE NOCASE,
+    Diameter REAL,
+    DiameterType TEXT,
+    CreatedBy TEXT,
+    Created_TS DATETIME,
+    ModifiedBy TEXT,
+    Modified_TS DATETIME,
+    Deleted_TS DATETIME
+)
+
+CREATE INDEX NIX_Stem_Tombstone_TreeID ON Stem_Tombstone (TreeID)
+
+CREATE INDEX NIX_Stem_Tombstone_CruiseID ON Stem_Tombstone (CruiseID)
+
+
+-- ************** Stratum **************
+CREATE TABLE Stratum (
+    Stratum_CN INTEGER PRIMARY KEY AUTOINCREMENT,
+    StratumID TEXT NOT NULL COLLATE NOCASE,
+    StratumCode TEXT NOT NULL COLLATE NOCASE,
+    CruiseID TEXT NOT NULL COLLATE NOCASE,
+    Description TEXT,
+    Method TEXT COLLATE NOCASE,
+    BasalAreaFactor REAL DEFAULT 0.0,
+    FixedPlotSize REAL DEFAULT 0.0,
+    KZ3PPNT INTEGER DEFAULT 0,
+    SamplingFrequency INTEGER DEFAULT 0,
+    Hotkey TEXT COLLATE NOCASE,
+    FBSCode TEXT COLLATE NOCASE,
+    YieldComponent TEXT DEFAULT 'CL' COLLATE NOCASE,
+
+    FixCNTField TEXT COLLATE NOCASE,
+    CreatedBy TEXT DEFAULT 'none',
+    Created_TS DATETIME DEFAULT (CURRENT_TIMESTAMP),
+    ModifiedBy TEXT,
+    Modified_TS DATETIME,
+
+    FOREIGN KEY (CruiseID) REFERENCES Cruise (CruiseID) ON DELETE CASCADE,
+    FOREIGN KEY (FixCNTField) REFERENCES TreeField (Field),
+    FOREIGN KEY (Method) REFERENCES LK_CruiseMethod (Method),
+
+    UNIQUE(StratumID),
+    UNIQUE(StratumCode, CruiseID),
+
+    CHECK (YieldComponent IN ('CL', 'CD', 'NL', 'ND')),
+    CHECK (StratumID LIKE '________-____-____-____-____________'),
+    CHECK (length(StratumCode) > 0)
+)
+
+CREATE TRIGGER Stratum_OnUpdate
+AFTER UPDATE OF
+    Code,
+    Description,
+    Method,
+    BasalAreaFactor,
+    FixedPlotSize,
+    KZ3PPNT,
+    SamplingFrequency,
+    HotKey,
+    FBSCode,
+    YieldComponent
+ON Stratum
+FOR EACH ROW
+BEGIN
+    UPDATE Stratum SET Modified_TS = CURRENT_TIMESTAMP WHERE Stratum_CN = old.Stratum_CN;
+END
+
+CREATE TRIGGER Stratum_OnDelete
+BEFORE DELETE ON Stratum
+FOR EACH ROW
+BEGIN
+    INSERT OR REPLACE INTO Stratum_Tombstone (
+        StratumID,
+        StratumCode,
+        CruiseID,
+        Description,
+        Method,
+        BasalAreaFactor,
+        FixedPlotSize,
+        KZ3PPNT,
+        SamplingFrequency,
+        Hotkey,
+        FBSCode,
+        YieldComponent,
+        CreatedBy,
+        Created_TS,
+        ModifiedBy,
+        Modified_TS,
+        Deleted_TS
+    ) VALUES (
+        OLD.StratumID,
+        OLD.StratumCode,
+        OLD.CruiseID,
+        OLD.Description,
+        OLD.Method,
+        OLD.BasalAreaFactor,
+        OLD.FixedPlotSize,
+        OLD.KZ3PPNT,
+        OLD.SamplingFrequency,
+        OLD.Hotkey,
+        OLD.FBSCode,
+        OLD.YieldComponent,
+        OLD.CreatedBy,
+        OLD.Created_TS,
+        OLD.ModifiedBy,
+        OLD.Modified_TS,
+        CURRENT_TIMESTAMP
+    );
+END
+
+
+
+
+
+
+-- ************** StratumDefault **************
+CREATE VIEW StratumDefault AS
+    SELECT
+        0 AS StratumDefault_CN,
+        StratumTemplateName || CruiseID AS StratumDefaultID,
+        NULL AS Region,
+        NULL AS Forest,
+        NULL AS District,
+        StratumCode,
+        StratumTemplateName AS Description,
+        Method,
+        BasalAreaFactor,
+        FixedPlotSize,
+        KZ3PPNT,
+        SamplingFrequency,
+        Hotkey,
+        FBSCode,
+        YieldComponent,
+        FixCNTField
+FROM StratumTemplate
+
+
+-- ************** StratumTemplate **************
+CREATE TABLE StratumTemplate (
+    StratumTemplate_CN INTEGER PRIMARY KEY AUTOINCREMENT,
+    StratumTemplateName TEXT NOT NULL COLLATE NOCASE,
+    CruiseID TEXT NOT NULL COLLATE NOCASE,
+    StratumCode TEXT COLLATE NOCASE,
+    Method TEXT COLLATE NOCASE,
+    BasalAreaFactor REAL,
+    FixedPlotSize REAL,
+    KZ3PPNT INTEGER,
+    SamplingFrequency INTEGER,
+    Hotkey TEXT,
+    FBSCode TEXT,
+    YieldComponent TEXT,
+    FixCNTField TEXT COLLATE NOCASE,
+
+    CreatedBy TEXT DEFAULT 'none',
+    Created_TS DATETIME DEFAULT (CURRENT_TIMESTAMP),
+    ModifiedBy TEXT,
+    Modified_TS DATETIME,
+
+    CHECK (YieldComponent IN ('CL', 'CD', 'NL', 'ND') OR YieldComponent IS NULL),
+    CHECK (length(StratumCode) > 0 OR StratumCode IS NULL),
+
+    FOREIGN KEY (CruiseID) REFERENCES Cruise (CruiseID) ON DELETE CASCADE,
+    FOREIGN KEY (FixCNTField) REFERENCES TreeField (Field),
+    FOREIGN KEY (Method) REFERENCES LK_CruiseMethod (Method),
+
+    UNIQUE (StratumTemplateName, CruiseID)
+)
+
+CREATE TRIGGER StratumTemplate_OnDelete 
+BEFORE DELETE ON StratumTemplate 
+FOR EACH ROW
+BEGIN
+    INSERT OR REPLACE INTO StratumTemplate_Tombstone (
+        StratumTemplateName,
+        CruiseID,
+        StratumCode,
+        Method,
+        BasalAreaFactor,
+        FixedPlotSize,
+        KZ3PPNT,
+        SamplingFrequency,
+        Hotkey,
+        FBSCode,
+        YieldComponent,
+        FixCNTField,
+        CreatedBy,
+        Created_TS,
+        ModifiedBy,
+        Modified_TS,
+        Deleted_TS
+    ) VALUES (
+        OLD.StratumTemplateName,
+        OLD.CruiseID,
+        OLD.StratumCode,
+        OLD.Method,
+        OLD.BasalAreaFactor,
+        OLD.FixedPlotSize,
+        OLD.KZ3PPNT,
+        OLD.SamplingFrequency,
+        OLD.Hotkey,
+        OLD.FBSCode,
+        OLD.YieldComponent,
+        OLD.FixCNTField,
+        OLD.CreatedBy,
+        OLD.Created_TS,
+        OLD.ModifiedBy,
+        OLD.Modified_TS,
+        CURRENT_TIMESTAMP
+    );
+END
+
+CREATE TRIGGER StratumTemplate_OnUpdate
+AFTER UPDATE OF 
+    StratumCode,
+    Method,
+    BasalAreaFactor,
+    FixedPlotSize,
+    KZ3PPNT,
+    SamplingFrequency,
+    Hotkey,
+    FBSCode,
+    YieldComponent,
+    FixCNTField
+ON StratumTemplate
+FOR EACH ROW
+BEGIN
+    UPDATE StratumTemplate SET Modified_TS = CURRENT_TIMESTAMP WHERE StratumTemplate_CN = OLD.StratumTemplate_CN;
+END
+
+
+
+
+-- ************** StratumTemplateLogFieldSetup **************
+CREATE TABLE StratumTemplateLogFieldSetup (
+    StratumTemplateLogFieldSetup_CN INTEGER PRIMARY KEY AUTOINCREMENT,
+    StratumTemplateName TEXT NOT NULL COLLATE NOCASE,
+    CruiseID TEXT NOT NULL COLLATE NOCASE,
+    Field TEXT NOT NULL COLLATE NOCASE,
+    FieldOrder INTEGER Default 0,
+
+    CreatedBy TEXT DEFAULT 'none',
+    Created_TS DATETIME DEFAULT (CURRENT_TIMESTAMP),
+    ModifiedBy TEXT,
+    Modified_TS DATETIME,
+
+    UNIQUE (StratumTemplateName, CruiseID, Field),    
+
+    FOREIGN KEY (StratumTemplateName, CruiseID) REFERENCES StratumTemplate (StratumTemplateName, CruiseID) ON DELETE CASCADE ON UPDATE CASCADE,
+    FOREIGN KEY (Field) REFERENCES LogField (Field)
+)
+
+CREATE TRIGGER StratumTemplateLogFieldSetup_OnUpdate
+AFTER UPDATE OF 
+    FieldOrder
+ON StratumTemplateLogFieldSetup
+FOR EACH ROW
+BEGIN
+    UPDATE StratumTemplateLogFieldSetup SET Modified_TS = CURRENT_TIMESTAMP WHERE StratumTemplateLogFieldSetup_CN = OLD.StratumTemplateLogFieldSetup_CN;
+END
+
+CREATE TRIGGER StratumTemplateLogFieldSetup_OnDelete
+BEFORE DELETE ON StratumTemplateLogFieldSetup
+FOR EACH ROW
+BEGIN
+    INSERT OR REPLACE INTO StratumTemplateLogFieldSetup_Tombstone (
+        StratumTemplateName,
+        CruiseID,
+        Field,
+        FieldOrder,
+        CreatedBy,
+        Created_TS,
+        ModifiedBy,
+        Modified_TS,
+        Deleted_TS
+    ) VALUES (
+        OLD.StratumTemplateName,
+        OLD.CruiseID,
+        OLD.Field,
+        OLD.FieldOrder,
+        OLD.CreatedBy,
+        OLD.Created_TS,
+        OLD.ModifiedBy,
+        OLD.Modified_TS,
+        CURRENT_TIMESTAMP
+    );
+END
+
+
+
+CREATE INDEX NIX_StratumTemplateLogFileSetup_StratumTemplateName_CruiseID ON StratumTemplateLogFieldSetup
+(StratumTemplateName, CruiseID)
+
+
+-- ************** StratumTemplateLogFieldSetup_Tombstone **************
+CREATE TABLE StratumTemplateLogFieldSetup_Tombstone (
+    StratumTemplateName TEXT NOT NULL COLLATE NOCASE,
+    CruiseID TEXT NOT NULL COLLATE NOCASE,
+    Field TEXT NOT NULL COLLATE NOCASE,
+    FieldOrder INTEGER,
+    CreatedBy TEXT,
+    Created_TS DATETIME,
+    ModifiedBy TEXT,
+    Modified_TS DATETIME,
+    Deleted_TS DATETIME
+)
+
+CREATE INDEX NIX_StratumTemplateLogFieldSetup_Tombstone_StratumTemplateName_Field ON StratumTemplateLogFieldSetup_Tombstone
+(StratumTemplateName, CruiseID, Field)
+
+
+-- ************** StratumTemplateTreeFieldSetup **************
+CREATE TABLE StratumTemplateTreeFieldSetup (
+    StratumTemplateTreeFieldSetup_CN INTEGER PRIMARY KEY AUTOINCREMENT,
+    StratumTemplateName TEXT NOT NULL COLLATE NOCASE,
+    CruiseID TEXT NOT NULL COLLATE NOCASE,
+    Field TEXT NOT NULL COLLATE NOCASE,
+    FieldOrder INTEGER Default 0,
+    IsHidden BOOLEAN Default 0,
+    IsLocked BOOLEAN Default 0,
+    -- value type determined by TreeField.DbType
+    DefaultValueInt INTEGER,
+    DefaultValueReal REAL,
+    DefaultValueBool BOOLEAN,
+    DefaultValueText TEXT,
+
+    CreatedBy TEXT DEFAULT 'none',
+    Created_TS DATETIME DEFAULT (CURRENT_TIMESTAMP),
+    ModifiedBy TEXT,
+    Modified_TS DATETIME,
+
+    UNIQUE (Field, StratumTemplateName, CruiseID),
+
+    FOREIGN KEY (StratumTemplateName, CruiseID) REFERENCES StratumTemplate (StratumTemplateName, CruiseID) ON DELETE CASCADE ON UPDATE CASCADE,
+    FOREIGN KEY (Field) REFERENCES TreeField (Field)
+)
+
+CREATE TRIGGER StratumTemplateTreeFieldSetup_OnUpdate
+AFTER UPDATE OF
+    FieldOrder,
+    IsHidden,
+    IsLocked,
+    DefaultValueInt,
+    DefaultValueReal,
+    DefaultValueBool,
+    DefaultValueText
+ON StratumTemplateTreeFieldSetup
+FOR EACH ROW
+BEGIN
+    UPDATE StratumTemplateTreeFieldSetup SET Modified_TS = CURRENT_TIMESTAMP WHERE StratumTemplateTreeFieldSetup_CN = OLD.StratumTemplateTreeFieldSetup_CN;
+END
+
+CREATE TRIGGER StratumTemplateTreeFieldSetup_OnDelete
+BEFORE DELETE ON StratumTemplateTreeFieldSetup
+FOR EACH ROW
+BEGIN
+    INSERT OR REPLACE INTO StratumTemplateTreeFieldSetup_Tombstone (
+        StratumTemplateName,
+        CruiseID,
+        Field,
+        FieldOrder,
+        IsHidden,
+        IsLocked,
+        DefaultValueInt,
+        DefaultValueReal,
+        DefaultValueBool,
+        DefaultValueText,
+        CreatedBy,
+        Created_TS,
+        ModifiedBy,
+        Modified_TS,
+        Deleted_TS
+    ) VALUES (
+        OLD.StratumTemplateName,
+        OLD.CruiseID,
+        OLD.Field,
+        OLD.FieldOrder,
+        OLD.IsHidden,
+        OLD.IsLocked,
+        OLD.DefaultValueInt,
+        OLD.DefaultValueReal,
+        OLD.DefaultValueBool,
+        OLD.DefaultValueText,
+        OLD.CreatedBy,
+        OLD.Created_TS,
+        OLD.ModifiedBy,
+        OLD.Modified_TS,
+        CURRENT_TIMESTAMP
+    );
+END
+
+
+
+CREATE INDEX NIX_StratumTemplateTreeFieldSetup_StratumTemplateName_CruiseID ON StratumTemplateTreeFieldSetup (StratumTemplateName, CruiseID)
+
+
+-- ************** StratumTemplateTreeFieldSetup_Tombstone **************
+CREATE TABLE StratumTemplateTreeFieldSetup_Tombstone (
+    StratumTemplateName TEXT NOT NULL COLLATE NOCASE,
+    CruiseID TEXT NOT NULL COLLATE NOCASE,
+    Field TEXT NOT NULL COLLATE NOCASE,
+    FieldOrder INTEGER,
+    IsHidden BOOLEAN,
+    IsLocked BOOLEAN,
+    -- value type determined by TreeField.DbType
+    DefaultValueInt INTEGER,
+    DefaultValueReal REAL,
+    DefaultValueBool BOOLEAN,
+    DefaultValueText TEXT,
+
+    CreatedBy TEXT,
+    Created_TS DATETIME,
+    ModifiedBy TEXT,
+    Modified_TS DATETIME,
+    Deleted_TS DATETIME
+)
+
+CREATE INDEX NIX_StratumTemplateTreeFieldSetup_Tombstone_StratumTemplateName_CruiseID_Field ON StratumTemplateTreeFieldSetup_Tombstone
+(StratumTemplateName, CruiseID, Field)
+
+
+-- ************** StratumTemplate_Tombstone **************
+CREATE TABLE StratumTemplate_Tombstone (
+    StratumTemplateName TEXT NOT NULL COLLATE NOCASE,
+    CruiseID TEXT NOT NULL COLLATE NOCASE,
+    StratumCode TEXT COLLATE NOCASE,
+    Method TEXT COLLATE NOCASE,
+    BasalAreaFactor REAL,
+    FixedPlotSize REAL,
+    KZ3PPNT INTEGER,
+    SamplingFrequency INTEGER,
+    Hotkey TEXT,
+    FBSCode TEXT,
+    YieldComponent TEXT,
+    FixCNTField TEXT COLLATE NOCASE,
+
+    CreatedBy TEXT,
+    Created_TS DATETIME,
+    ModifiedBy TEXT,
+    Modified_TS DATETIME,
+    Deleted_TS DATETIME
+)
+
+CREATE INDEX NIX_StratumTemplate_Tombstone_CruiseID_StratumTemplateName ON StratumTemplate_Tombstone 
+(CruiseID, StratumTemplateName)
+
+
+-- ************** Stratum_Tombstone **************
+CREATE TABLE Stratum_Tombstone (
+    StratumID TEXT NOT NULL COLLATE NOCASE,
+    StratumCode TEXT NOT NULL COLLATE NOCASE,
+    CruiseID TEXT NOT NULL COLLATE NOCASE,
+    Description TEXT,
+    Method TEXT COLLATE NOCASE,
+    BasalAreaFactor REAL,
+    FixedPlotSize REAL,
+    KZ3PPNT INTEGER,
+    SamplingFrequency INTEGER,
+    Hotkey TEXT,
+    FBSCode TEXT,
+    YieldComponent TEXT,
+    CreatedBy TEXT,
+    Created_TS DATETIME,
+    ModifiedBy TEXT,
+    Modified_TS DATETIME,
+    Deleted_TS DATETIME,
+
+    UNIQUE(StratumID)
+)
+
+
+
+CREATE INDEX NIX_Stratum_Tombstone_CruiseID_StratumCode ON Stratum_Tombstone
+(CruiseID, StratumCode)
+
+
+-- ************** SubPopulation **************
+CREATE TABLE SubPopulation (
+    Subpopulation_CN INTEGER PRIMARY KEY AUTOINCREMENT,
+    SubPopulationID TEXT NOT NULL COLLATE NOCASE,
+    CruiseID TEXT NOT NULL COLLATE NOCASE,
+    StratumCode TEXT NOT NULL COLLATE NOCASE,
+    SampleGroupCode TEXT NOT NULL COLLATE NOCASE,
+    SpeciesCode TEXT NOT NULL COLLATE NOCASE,
+    LiveDead TEXT NOT NULL COLLATE NOCASE,
+    CreatedBy TEXT DEFAULT 'none',
+    Created_TS DATETIME DEFAULT (CURRENT_TIMESTAMP),
+    ModifiedBy TEXT,
+    Modified_TS DATETIME,
+
+    UNIQUE (SubPopulationID),
+    UNIQUE (CruiseID, StratumCode, SampleGroupCode, SpeciesCode, LiveDead),
+
+    CHECK (SubPopulationID LIKE '________-____-____-____-____________'),
+    CHECK (LiveDead IN ('L', 'D')),
+
+    FOREIGN KEY (StratumCode, SampleGroupCode, CruiseID) REFERENCES SampleGroup (StratumCode, SampleGroupCode, CruiseID) ON DELETE CASCADE ON UPDATE CASCADE,
+    FOREIGN KEY (SpeciesCode, CruiseID) REFERENCES Species (SpeciesCode, CruiseID) ON UPDATE CASCADE
+)
+
+CREATE TRIGGER SubPopulation_OnUpdate
+AFTER UPDATE OF
+    LiveDead
+ON SubPopulation
+FOR EACH ROW
+BEGIN
+    UPDATE SubPopulation SET Modified_TS = CURRENT_TIMESTAMP WHERE Subpopulation_CN = old.Subpopulation_CN;
+END
+
+CREATE TRIGGER SubPopulation_OnDelete
+BEFORE DELETE ON SubPopulation
+FOR EACH ROW
+BEGIN
+    INSERT OR REPLACE INTO SubPopulation_Tombstone (
+        SubPopulationID,
+        CruiseID,
+        StratumCode,
+        SampleGroupCode,
+        SpeciesCode,
+        LiveDead,
+        CreatedBy,
+        Created_TS,
+        ModifiedBy,
+        Modified_TS,
+        Deleted_TS
+    ) VALUES (
+        OLD.SubPopulationID,
+        OLD.CruiseID,
+        OLD.StratumCode,
+        OLD.SampleGroupCode,
+        OLD.SpeciesCode,
+        OLD.LiveDead,
+        OLD.CreatedBy,
+        OLD.Created_TS,
+        OLD.ModifiedBy,
+        OLD.Modified_TS,
+        CURRENT_TIMESTAMP
+    );
+END
+
+CREATE TRIGGER SubPopulation_OnInsert_ClearTombstone
+AFTER INSERT ON SubPopulation 
+FOR EACH ROW
+BEGIN
+    DELETE FROM SubPopulation_Tombstone 
+        WHERE CruiseID = NEW.CruiseID
+        AND StratumCode = NEW.StratumCode
+        AND SampleGroupCode = NEW.SampleGroupCode
+        AND SpeciesCode = NEW.SpeciesCode
+        AND LiveDead = NEW.LiveDead;
+END
+
+
+
+
+
+CREATE INDEX NIX_Subpopulation_SpeciesCode_CruiseID ON Subpopulation (SpeciesCode, CruiseID)
+
+CREATE INDEX NIX_Subpopulation_StratumCode_SampleGroupCode_CruiseID ON Subpopulation (StratumCode, SampleGroupCode,  CruiseID)
+
+
+-- ************** SubPopulation_Tombstone **************
+CREATE TABLE SubPopulation_Tombstone (
+    SubPopulationID TEXT NOT NULL COLLATE NOCASE,
+    CruiseID TEXT NOT NULL COLLATE NOCASE,
+    StratumCode TEXT NOT NULL COLLATE NOCASE,
+    SampleGroupCode TEXT NOT NULL COLLATE NOCASE,
+    SpeciesCode TEXT NOT NULL COLLATE NOCASE,
+    LiveDead TEXT NOT NULL COLLATE NOCASE,
+    CreatedBy TEXT,
+    Created_TS DATETIME,
+    ModifiedBy TEXT,
+    Modified_TS DATETIME,
+    Deleted_TS DATETIME,
+
+    UNIQUE(SubPopulationID)
+)
+
+
+
+CREATE INDEX NIX_SubPopulation_Tombstone_CruiseID_StratumCode_SampleGroupCode_SpeciesCode_LiveDead ON SubPopulation_Tombstone
+(CruiseID, StratumCode, SampleGroupCode, SpeciesCode, LiveDead)
+
+
+-- ************** TallyDescription **************
+CREATE TABLE TallyDescription (
+    TallyDescription_CN INTEGER PRIMARY KEY AUTOINCREMENT,
+    CruiseID TEXT NOT NULL COLLATE NOCASE,
+    StratumCode TEXT NOT NULL COLLATE NOCASE,
+    SampleGroupCode TEXT NOT NULL COLLATE NOCASE,
+    SpeciesCode TEXT COLLATE NOCASE,
+    LiveDead TEXT COLLATE NOCASE,
+    Description TEXT NOT NULL COLLATE NOCASE,
+
+    CHECK (LiveDead IN ('L', 'D') OR LiveDead IS NULL),
+    CHECK ((SpeciesCode IS NOT NULL AND LiveDead IS NOT NULL) OR (SpeciesCode IS NULL AND LiveDead IS NULL)),
+
+    FOREIGN KEY (StratumCode, SampleGroupCode, CruiseID) REFERENCES SampleGroup (StratumCode, SampleGroupCode, CruiseID) ON DELETE CASCADE ON UPDATE CASCADE,
+    FOREIGN KEY (SpeciesCode, CruiseID) REFERENCES Species (SpeciesCode, CruiseID) ON DELETE CASCADE ON UPDATE CASCADE ,
+    FOREIGN KEY (CruiseID, StratumCode, SampleGroupCode, SpeciesCode, LiveDead) REFERENCES Subpopulation (CruiseID, StratumCode, SampleGroupCode, SpeciesCode, LiveDead) ON DELETE CASCADE
+)
+
+CREATE UNIQUE INDEX UIX_TallyDescription_StratumCode_SampleGroupCode_SpeciesCode_LiveDead_CruiseID
+ON TallyDescription
+(CruiseID, StratumCode, SampleGroupCode, ifnull(SpeciesCode, '') COLLATE NOCASE, ifnull(LiveDead, '') COLLATE NOCASE)
+
+CREATE INDEX NIX_TallyDescription_SpeciesCode_CruiseID ON TallyDescription ('SpeciesCode', 'CruiseID')
+
+
+-- ************** TallyHotKey **************
+CREATE TABLE TallyHotKey (
+    TallyHotKey_CN INTEGER PRIMARY KEY AUTOINCREMENT,
+    CruiseID TEXT NOT NULL COLLATE NOCASE,
+    StratumCode TEXT NOT NULL COLLATE NOCASE,
+    SampleGroupCode TEXT NOT NULL COLLATE NOCASE,
+    SpeciesCode TEXT COLLATE NOCASE,
+    LiveDead TEXT COLLATE NOCASE,
+    HotKey TEXT COLLATE NOCASE,
+
+    UNIQUE (StratumCode, HotKey) ON CONFLICT REPLACE,
+
+    CHECK (LiveDead IN ('L', 'D') OR LiveDead IS NULL),
+    CHECK ((SpeciesCode IS NOT NULL AND LiveDead IS NOT NULL) OR (SpeciesCode IS NULL AND LiveDead IS NULL)),
+
+    FOREIGN KEY (StratumCode, SampleGroupCode, CruiseID)
+        REFERENCES SampleGroup (StratumCode, SampleGroupCode, CruiseID) ON DELETE CASCADE ON UPDATE CASCADE,
+    FOREIGN KEY (SpeciesCode, CruiseID)
+        REFERENCES Species (SpeciesCode, CruiseID) ON DELETE CASCADE ON UPDATE CASCADE,
+    FOREIGN KEY (CruiseID, StratumCode, SampleGroupCode, SpeciesCode, LiveDead)
+        REFERENCES Subpopulation (CruiseID, StratumCode, SampleGroupCode, SpeciesCode, LiveDead) ON DELETE CASCADE
+)
+
+
+
+CREATE INDEX NIX_TallyHotKey_SpeciesCode ON 'TallyHotKey'('SpeciesCode', 'CruiseID')
+
+CREATE INDEX NIX_TallyHotKey_StratumCode_SampleGroupCode_SpeciesCode_LiveDead_CruiseID
+ON TallyHotKey
+(StratumCode, SampleGroupCode, ifnull(SpeciesCode, '') COLLATE NOCASE, ifnull(LiveDead, '') COLLATE NOCASE)
+
+
+-- ************** TallyLedger **************
+CREATE TABLE TallyLedger (
+    TallyLedger_CN INTEGER PRIMARY KEY AUTOINCREMENT,
+    TallyLedgerID TEXT NOT NULL,
+    CruiseID TEXT NOT NULL COLLATE NOCASE,
+    TreeID TEXT,
+    CuttingUnitCode TEXT NOT NULL COLLATE NOCASE,
+    StratumCode TEXT NOT NULL COLLATE NOCASE,
+    SampleGroupCode TEXT NOT NULL COLLATE NOCASE,
+    PlotNumber INTEGER,
+    SpeciesCode TEXT COLLATE NOCASE,
+    LiveDead TEXT COLLATE NOCASE,
+    TreeCount INTEGER NOT NULL,
+    KPI INTEGER Default 0,
+    STM BOOLEAN DEFAULT 0,
+    ThreePRandomValue INTEGER Default 0,
+    Signature TEXT COLLATE NOCASE,
+    Reason TEXT,
+    Remarks TEXT,
+    EntryType TEXT COLLATE NOCASE,
+
+    CreatedBy TEXT DEFAULT 'none',
+    Created_TS DATETIME DEFAULT (CURRENT_TIMESTAMP),
+
+    CHECK (LiveDead IN ('L', 'D') OR LiveDead IS NULL),
+    CHECK (STM IN (0, 1)),
+
+    UNIQUE (TallyLedgerID),
+
+    FOREIGN KEY (EntryType) REFERENCES LK_TallyEntryType (EntryType),
+    FOREIGN KEY (CuttingUnitCode, CruiseID) REFERENCES CuttingUnit (CuttingUnitCode, CruiseID) ON DELETE CASCADE ON UPDATE CASCADE,
+    FOREIGN KEY (SampleGroupCode, StratumCode, CruiseID) REFERENCES SampleGroup (SampleGroupCode, StratumCode, CruiseID) ON DELETE CASCADE ON UPDATE CASCADE,
+    FOREIGN KEY (SpeciesCode,CruiseID) REFERENCES Species (SpeciesCode, CruiseID) ON DELETE CASCADE ON UPDATE CASCADE,
+    FOREIGN KEY (PlotNumber, CuttingUnitCode, CruiseID) REFERENCES Plot (PlotNumber, CuttingUnitCode, CruiseID) ON DELETE CASCADE ON UPDATE CASCADE,
+
+    -- everything below are tree fKey references. there are a few, but because some tree values can be null we need to have them as seperate references
+
+    FOREIGN KEY (TreeID) REFERENCES Tree (TreeID) ON DELETE CASCADE,
+    --FOREIGN KEY (TreeID, CuttingUnitCode, StratumCode, SampleGroupCode) REFERENCES Tree (TreeID, CuttingUnitCode, StratumCode, SampleGroupCode),
+    --FOREIGN KEY (TreeID, SpeciesCode) REFERENCES Tree (TreeID, SpeciesCode),
+    --FOREIGN KEY (TreeID, LiveDead) REFERENCES Tree (TreeID, LiveDead),
+    FOREIGN KEY (TreeID, PlotNumber) REFERENCES Tree (TreeID, PlotNumber)
+)
+
+CREATE TRIGGER TallyLedger_OnDelete
+BEFORE DELETE ON TallyLedger
+FOR EACH ROW
+BEGIN
+    INSERT OR REPLACE INTO TallyLedger_Tombstone (
+        TallyLedgerID,
+        CruiseID,
+        TreeID,
+        CuttingUnitCode,
+        StratumCode,
+        SampleGroupCode,
+        PlotNumber,
+        SpeciesCode,
+        LiveDead,
+        TreeCount,
+        KPI,
+        STM,
+        ThreePRandomValue,
+        Signature,
+        Reason,
+        Remarks,
+        EntryType,
+
+        CreatedBy,
+        Created_TS,
+        Deleted_TS
+    ) VALUES (
+        OLD.TallyLedgerID,
+        OLD.CruiseID,
+        OLD.TreeID,
+        OLD.CuttingUnitCode,
+        OLD.StratumCode,
+        OLD.SampleGroupCode,
+        OLD.PlotNumber,
+        OLD.SpeciesCode,
+        OLD.LiveDead,
+        OLD.TreeCount,
+        OLD.KPI,
+        OLD.STM,
+        OLD.ThreePRandomValue,
+        OLD.Signature,
+        OLD.Reason,
+        OLD.Remarks,
+        OLD.EntryType,
+
+        OLD.CreatedBy,
+        OLD.Created_TS,
+        CURRENT_TIMESTAMP
+    );
+END
+
+
+
+CREATE INDEX NIX_TallyLedger_TreeID ON TallyLedger ('TreeID')
+
+CREATE INDEX NIX_TallyLedger_SampleGroupCode_StratumCode_CruiseID ON TallyLedger ('SampleGroupCode', 'StratumCode', 'CruiseID')
+
+CREATE INDEX NIX_TallyLedger_StratumCode_CruiseID ON TallyLedger ('StratumCode', 'CruiseID')
+
+CREATE INDEX NIX_TallyLedger_CuttingUnitCode_CruiseID ON TallyLedger ('CuttingUnitCode', 'CruiseID')
+
+CREATE INDEX NIX_TallyLedger_Created_TS ON TallyLedger (Created_TS)
+
+
+-- ************** TallyLedger_Plot_Totals **************
+CREATE VIEW TallyLedger_Plot_Totals AS
+SELECT
+    tl.CruiseID,
+    tl.CuttingUnitCode,
+    tl.StratumCode,
+    tl.SampleGroupCode,
+    tl.SpeciesCode,
+    tl.LiveDead,
+    tl.PlotNumber,
+    sum(tl.TreeCount) AS TreeCount,
+    sum(tl.KPI) AS KPI
+FROM TallyLedger AS tl
+GROUP BY
+    CruiseID,
+    CuttingUnitCode,
+    StratumCode,
+    SampleGroupCode,
+    ifnull(SpeciesCode, ''),
+    ifnull(LiveDead, ''),
+    ifnull(PlotNumber, -1)
+
+
+-- ************** TallyLedger_Tombstone **************
+CREATE TABLE TallyLedger_Tombstone (
+    TallyLedgerID TEXT NOT NULL,
+    CruiseID TEXT NOT NULL COLLATE NOCASE,
+    TreeID TEXT,
+    CuttingUnitCode TEXT NOT NULL COLLATE NOCASE,
+    StratumCode TEXT NOT NULL COLLATE NOCASE,
+    SampleGroupCode TEXT NOT NULL COLLATE NOCASE,
+    PlotNumber INTEGER,
+    SpeciesCode TEXT COLLATE NOCASE,
+    LiveDead TEXT COLLATE NOCASE,
+    TreeCount INTEGER NOT NULL,
+    KPI INTEGER,
+    STM BOOLEAN,
+    ThreePRandomValue INTEGER,
+    Signature TEXT COLLATE NOCASE,
+    Reason TEXT,
+    Remarks TEXT,
+    EntryType TEXT COLLATE NOCASE,
+
+    CreatedBy TEXT,
+    Created_TS DATETIME,
+    Deleted_TS DATETIME
+)
+
+CREATE INDEX NIX_TallyLedger_Tombstone_TallyLedgerID ON TallyLedger_Tombstone
+(TallyLedgerID)
+
+
+-- ************** TallyLedger_Totals **************
+CREATE VIEW TallyLedger_Totals AS
+SELECT
+    tl.CruiseID,
+    tl.CuttingUnitCode,
+    tl.StratumCode,
+    tl.SampleGroupCode,
+    tl.SpeciesCode,
+    tl.LiveDead,
+    sum(tl.TreeCount) AS TreeCount,
+    sum(tl.KPI) AS KPI
+FROM TallyLedger AS tl
+GROUP BY
+    CruiseID,
+    CuttingUnitCode,
+    StratumCode,
+    SampleGroupCode,
+    ifnull(SpeciesCode, ''),
+    ifnull(LiveDead, '')
+
+
+-- ************** TallyLedger_Tree_Totals **************
+CREATE VIEW TallyLedger_Tree_Totals AS
+SELECT
+    tl.CruiseID,
+    tl.TreeID,
+    max(tl.STM) AS STM,
+    sum(tl.TreeCount) AS TreeCount,
+    sum(tl.KPI) AS KPI
+FROM TallyLedger AS tl
+WHERE  TreeID IS NOT NULL
+GROUP BY
+    CruiseID,
+    TreeID
+
+
+-- ************** TallyPopulation **************
+CREATE VIEW TallyPopulation AS
+
+-- Tally By SubPop tally pops
+SELECT
+    sp.CruiseID,
+    sp.StratumCode,
+    sp.SampleGroupCode,
+    sp.SpeciesCode,
+    sp.LiveDead,
+    ifnull(td.Description, '') AS Description,
+    ifnull(thk.HotKey, '') AS HotKey
+FROM SubPopulation AS sp
+JOIN SampleGroup AS sg USING (StratumCode, SampleGroupCode, CruiseID)
+JOIN Stratum AS st USING (StratumCode, CruiseID)
+LEFT JOIN TallyHotKey AS thk USING (StratumCode, SampleGroupCode, SpeciesCode, LiveDead, CruiseID)
+LEFT JOIN TallyDescription AS td USING (StratumCode, SampleGroupCode, SpeciesCode, LiveDead, CruiseID)
+WHERE sg.TallyBySubPop != 0  OR st.Method IN ('3P', 'F3P', 'P3P', 'S3P')
+
+UNION ALL
+
+-- Tally by SG tally pops
+SELECT
+    sg.CruiseID,
+    sg.StratumCode,
+    sg.SampleGroupCode,
+    null AS SpeciesCode,
+    null AS LiveDead,
+    ifnull(td.Description,'') AS Description,
+    ifnull(thk.HotKey, '') AS HotKey
+FROM SampleGroup AS sg
+JOIN Stratum AS st USING (StratumCode, CruiseID)
+LEFT JOIN TallyHotKey AS thk ON
+        thk.CruiseID = sg.CruiseID
+        AND thk.StratumCode = sg.StratumCode
+        AND thk.SampleGroupCode = sg.SampleGroupCode
+        AND ifnull(thk.SpeciesCode, '') = ''
+        AND ifnull(thk.LiveDead, '') = ''
+LEFT JOIN TallyDescription AS td ON
+        thk.CruiseID = sg.CruiseID
+        AND td.StratumCode = sg.StratumCode
+        AND td.SampleGroupCode = sg.SampleGroupCode
+        AND ifnull(td.SpeciesCode, '') = ''
+        AND ifnull(td.LiveDead, '') = ''
+WHERE sg.TallyBySubPop == 0 AND st.Method NOT IN ('3P', 'F3P', 'P3P', 'S3P')
+
+
+-- ************** Tree **************
+CREATE TABLE Tree (
+    Tree_CN INTEGER PRIMARY KEY AUTOINCREMENT,
+    CruiseID TEXT NOT NULL COLLATE NOCASE,
+    TreeID TEXT NOT NULL ,
+    CuttingUnitCode TEXT NOT NULL COLLATE NOCASE,
+    StratumCode TEXT NOT NULL COLLATE NOCASE,
+    SampleGroupCode TEXT NOT NULL COLLATE NOCASE,
+    SpeciesCode TEXT COLLATE NOCASE,
+    LiveDead TEXT COLLATE NOCASE,
+    PlotNumber INTEGER,
+    TreeNumber INTEGER NOT NULL,
+    CountOrMeasure TEXT DEFAULT 'M' COLLATE NOCASE, -- field is for compatibility with older schema. because plot cruising still requires a tree record to record non measure trees                               // initials of the cruiser taking measurments
+
+    CreatedBy TEXT DEFAULT 'none',
+    Created_TS DATETIME DEFAULT (CURRENT_TIMESTAMP),
+    ModifiedBy TEXT,
+    Modified_TS DATETIME,
+
+    UNIQUE (TreeID),
+
+    CHECK (TreeID LIKE '________-____-____-____-____________'),
+    CHECK (CountOrMeasure IN ('C', 'M', 'I')),
+    CHECK (LiveDead IN ('L', 'D') OR LiveDead IS NULL),
+
+    FOREIGN KEY (CuttingUnitCode, CruiseID)
+        REFERENCES CuttingUnit (CuttingUnitCode, CruiseID) ON DELETE CASCADE ON UPDATE CASCADE,
+    FOREIGN KEY (SampleGroupCode, StratumCode, CruiseID)
+        REFERENCES SampleGroup (SampleGroupCode, StratumCode, CruiseID) ON DELETE CASCADE ON UPDATE CASCADE,
+    FOREIGN KEY (PlotNumber, CuttingUnitCode, CruiseID)
+        REFERENCES Plot (PlotNumber, CuttingUnitCode, CruiseID) ON DELETE CASCADE ON UPDATE CASCADE,
+    --FOREIGN KEY (Species, LiveDead, SampleGroupCode, StratumCode)
+    --    REFERENCES SubPopulation (Species, LiveDead, SampleGroupCode, StratumCode),
+    FOREIGN KEY (SpeciesCode, CruiseID)
+        REFERENCES Species (SpeciesCode, CruiseID)
+)
+
+CREATE TRIGGER Tree_OnUpdate
+AFTER UPDATE OF
+    TreeID,
+    CuttingUnitCode,
+    StratumCode,
+    SampleGroupCode,
+    SpeciesCode,
+    LiveDead,
+    PlotNumber,
+    TreeNumber,
+    CountOrMeasure
+ON Tree
+FOR EACH ROW
+BEGIN
+    UPDATE Tree SET Modified_TS = CURRENT_TIMESTAMP WHERE Tree_CN = old.Tree_CN;
+END
+
+CREATE TRIGGER Tree_Cascade_Species_Updates
+AFTER UPDATE OF
+    SpeciesCode
+ON Tree
+FOR EACH ROW 
+BEGIN
+    UPDATE TallyLedger SET
+        SpeciesCode = NEW.SpeciesCode
+    WHERE TreeID = NEW.TreeID;
+END
+
+CREATE TRIGGER Tree_Cascade_LiveDead_Updates
+AFTER UPDATE OF
+    LiveDead
+ON Tree
+FOR EACH ROW 
+BEGIN
+    UPDATE TallyLedger SET
+        LiveDead = NEW.LiveDead
+    WHERE TreeID = NEW.TreeID;
+END
+
+CREATE TRIGGER Tree_Cascade_SampleGroup_Updates
+AFTER UPDATE OF
+    SampleGroupCode
+ON Tree
+FOR EACH ROW 
+BEGIN
+    UPDATE TallyLedger SET
+        SampleGroupCode = NEW.SampleGroupCode
+    WHERE TreeID = NEW.TreeID;
+END
+
+CREATE TRIGGER Tree_Cascade_Stratum_Updates
+AFTER UPDATE OF
+    StratumCode
+ON Tree
+FOR EACH ROW 
+BEGIN
+    UPDATE TallyLedger SET
+        StratumCode = NEW.StratumCode
+    WHERE TreeID = NEW.TreeID;
+END
+
+CREATE TRIGGER Tree_OnDelete
+BEFORE DELETE ON Tree
+FOR EACH ROW
+BEGIN
+    INSERT OR REPLACE INTO Tree_Tombstone (
+        CruiseID,
+        TreeID,
+        CuttingUnitCode,
+        StratumCode,
+        SampleGroupCode,
+        SpeciesCode,
+        LiveDead,
+        PlotNumber,
+        TreeNumber,
+        CountOrMeasure,
+
+        CreatedBy,
+        Created_TS,
+        ModifiedBy,
+        Modified_TS,
+        Deleted_TS
+    ) VALUES (
+        OLD.CruiseID,
+        OLD.TreeID,
+        OLD.CuttingUnitCode,
+        OLD.StratumCode,
+        OLD.SampleGroupCode,
+        OLD.SpeciesCode,
+        OLD.LiveDead,
+        OLD.PlotNumber,
+        OLD.TreeNumber,
+        OLD.CountOrMeasure,
+
+        OLD.CreatedBy,
+        OLD.Created_TS,
+        OLD.ModifiedBy,
+        OLD.Modified_TS,
+        CURRENT_TIMESTAMP
+    );
+END
+
+
+
+CREATE INDEX NIX_Tree_TreeNumber_CruiseID ON Tree (TreeNumber, CruiseID)
+
+CREATE INDEX NIX_Tree_SpeciesCode ON Tree ('SpeciesCode')
+
+CREATE INDEX NIX_Tree_PlotNumber_CuttingUnitCode_CruiseID ON Tree ('PlotNumber', 'CuttingUnitCode', 'CruiseID')
+
+CREATE INDEX NIX_Tree_SampleGroupCode_StratumCode_CruiseID ON Tree ('SampleGroupCode', 'StratumCode', 'CruiseID')
+
+CREATE INDEX NIX_Tree_StratumCode_CruiseID ON Tree ('StratumCode', 'CruiseID')
+
+CREATE INDEX NIX_Tree_CuttingUnitCode_CruiseID ON Tree ('CuttingUnitCode', 'CruiseID')
+
+CREATE UNIQUE INDEX UIX_Tree_TreeID_CuttingUnitCode_SampleGroupCode_StratumCode ON Tree (TreeID, CuttingUnitCode, SampleGroupCode, StratumCode)
+
+CREATE UNIQUE INDEX UIX_Tree_TreeID_PlotNumber ON Tree (TreeID, PlotNumber)
+
+CREATE UNIQUE INDEX UIX_Tree_TreeNumber_CuttingUnitCode_PlotNumber_StratumCode_CruiseID ON Tree
+    (TreeNumber, CuttingUnitCode, PlotNumber, StratumCode, CruiseID) WHERE PlotNumber IS NOT NULL
+
+CREATE UNIQUE INDEX UIX_Tree_TreeNumber_CuttingUnitCode_CruiseID ON Tree
+    (TreeNumber, CuttingUnitCode, CruiseID) WHERE PlotNumber IS NULL
+
+
+-- ************** TreeAuditError **************
+CREATE VIEW TreeAuditError AS
+WITH
+-- return just measure trees
+measureTrees AS (
+    SELECT
+        t.Tree_CN,
+        t.CruiseID,
+        t.TreeID,
+        t.StratumCode,
+        t.SpeciesCode,
+        t.LiveDead,
+        sg.PrimaryProduct
+    FROM Tree AS t
+    JOIN SampleGroup AS sg USING (SampleGroupCode, StratumCode, CruiseID)
+    WHERE t.CountOrMeasure = 'M'),
+
+-- expands TreeAuditRuleSelector to include Field, Min, Max
+treeAuditRuleSelector_Epanded AS (
+    SELECT
+        tar.CruiseID,
+        SpeciesCode,
+        LiveDead,
+        PrimaryProduct,
+        tar.Field,
+        Min,
+        Max,
+        tar.TreeAuditRuleID
+    FROM TreeAuditRuleSelector AS tars
+    JOIN TreeAuditRule AS tar USING (TreeAuditRuleID))
+
+SELECT
+    Tree_CN,
+    t.CruiseID,
+    TreeID,
+    TreeAuditRuleID,
+    tar.Field AS Field,
+    (CASE WHEN res.TreeAuditResolution_CN IS NULL THEN 0 ELSE 1 END)  AS IsResolved,
+    (CASE
+    WHEN tar.Min IS NOT NULL AND (tfv.ValueReal < tar.Min) THEN tar.Field || ' must be greater than ' || tar.Min
+    WHEN tar.Max IS NOT NULL AND (tfv.ValueReal > tar.Max) THEN tar.Field || ' must be less than ' || tar.Max
+    ELSE 'Validation Error' END) AS Message,
+    res.Resolution
+FROM measureTrees AS t
+JOIN TreeFieldSetup AS tfs USING (StratumCode, CruiseID)
+JOIN TreeFieldValue_All AS tfv USING (TreeID, Field)
+-- get audit rule
+JOIN TreeAuditRule AS tar
+    ON tar.Field = tfs.Field AND tar.CruiseID = t.CruiseID
+        AND EXISTS (SELECT * FROM TreeAuditRuleSelector AS tars WHERE
+            (tars.SpeciesCode IS NULL OR tars.SpeciesCode = t.SpeciesCode)
+            AND (tars.LiveDead IS NULL OR tars.LiveDead = t.LiveDead)
+            AND (tars.PrimaryProduct IS NULL OR tars.PrimaryProduct = t.PrimaryProduct)
+            AND tars.TreeAuditRuleID = tar.TreeAuditRuleID
+            AND tars.CruiseID = t.CruiseID)
+LEFT JOIN TreeAuditResolution AS res USING (TreeAuditRuleID, TreeID)
+WHERE
+    (tfv.ValueReal IS NOT NULL AND
+    (tar.Min IS NOT NULL AND tfv.ValueReal < tar.Min)
+    OR (tar.Max IS NOT NULL AND tfv.ValueReal > tar.Max))
+
+
+-- ************** TreeAuditResolution **************
+CREATE TABLE TreeAuditResolution (
+    TreeAuditResolution_CN INTEGER PRIMARY KEY AUTOINCREMENT,
+    CruiseID TEXT NOT NULL COLLATE NOCASE,
+    TreeID TEXT NOT NULL,
+    TreeAuditRuleID TEXT NOT NULL,
+    Resolution TEXT,    -- description indicating the reason of the resolution. optional
+    Initials TEXT NOT NULL, -- initials of the cruiser that resolved the error.
+
+    UNIQUE (TreeID, TreeAuditRuleID),
+
+    FOREIGN KEY (CruiseID) REFERENCES Cruise (CruiseID) ON DELETE CASCADE,
+    FOREIGN KEY (TreeID) REFERENCES Tree (TreeID) ON DELETE CASCADE,
+    FOREIGN KEY (TreeAuditRuleID) REFERENCES TreeAuditRule (TreeAuditRuleID) ON DELETE CASCADE
+)
+
+CREATE TRIGGER TreeAuditResolution_OnDelete
+BEFORE DELETE ON TreeAuditResolution
+FOR EACH ROW
+BEGIN
+    INSERT OR REPLACE INTO TreeAuditResolution_Tombstone (
+        CruiseID,
+        TreeID,
+        TreeAuditRuleID,
+        Resolution,
+        Initials
+    ) VALUES (
+        OLD.CruiseID,
+        OLD.TreeID,
+        OLD.TreeAuditRuleID,
+        OLD.Resolution,
+        OLD.Initials
+    );
+END
+
+
+
+CREATE INDEX NIX_TreeAuditResolution_TreeAuditRuleID ON TreeAuditResolution ('TreeAuditRuleID')
+
+CREATE INDEX NIX_TreeAuditResolution_TreeID ON TreeAuditResolution ('TreeID')
+
+
+-- ************** TreeAuditResolution_Tombstone **************
+CREATE TABLE TreeAuditResolution_Tombstone (
+    CruiseID TEXT NOT NULL COLLATE NOCASE,
+    TreeID TEXT NOT NULL,
+    TreeAuditRuleID TEXT NOT NULL,
+    Resolution TEXT,
+    Initials TEXT NOT NULL
+)
+
+
+-- ************** TreeAuditRule **************
+CREATE TABLE TreeAuditRule (
+    TreeAuditRule_CN INTEGER PRIMARY KEY AUTOINCREMENT,
+    TreeAuditRuleID TEXT NOT NULL,
+    CruiseID TEXT NOT NULL COLLATE NOCASE,
+    Field TEXT NOT NULL COLLATE NOCASE,
+    Min REAL,
+    Max REAL,
+    Description TEXT,
+    UNIQUE (TreeAuditRuleID),
+
+    CHECK ((Min IS NULL OR Max IS NULL) OR (Min < Max)),
+    CHECK (TreeAuditRuleID LIKE '________-____-____-____-____________'),
+
+    FOREIGN KEY (CruiseID) REFERENCES Cruise (CruiseID) ON DELETE CASCADE,
+    FOREIGN KEY (Field) REFERENCES TreeField (Field)
+)
+
+CREATE TRIGGER TreeAuditRule_OnDelete
+BEFORE DELETE ON TreeAuditRule
+FOR EACH ROW
+BEGIN
+    INSERT OR REPLACE INTO TreeAuditRule_Tombstone (
+        TreeAuditRuleID,
+        CruiseID,
+        Field,
+        Min,
+        Max,
+        Description
+    ) VALUES (
+        OLD.TreeAuditRuleID,
+        OLD.CruiseID,
+        OLD.Field,
+        OLD.Min,
+        OLD.Max,
+        OLD.Description
+    );
+END
+
+
+
+CREATE INDEX NIX_TreeAuditRule_Field ON TreeAuditRule ('Field')
+
+
+-- ************** TreeAuditRuleSelector **************
+CREATE TABLE TreeAuditRuleSelector (
+    TreeAuditRuleSelector_CN INTEGER PRIMARY KEY AUTOINCREMENT,
+    CruiseID TEXT NOT NULL COLLATE NOCASE,
+    SpeciesCode TEXT COLLATE NOCASE,
+    LiveDead TEXT COLLATE NOCASE,
+    PrimaryProduct TEXT COLLATE NOCASE,
+    TreeAuditRuleID TEXT NOT NULL,
+
+    CHECK (LiveDead IN ('L', 'D') OR LiveDead IS NULL),
+
+    FOREIGN KEY (CruiseID) REFERENCES Cruise (CruiseID) ON DELETE CASCADE,
+    FOREIGN KEY (TreeAuditRuleID) REFERENCES TreeAuditRule (TreeAuditRuleID) ON DELETE CASCADE,
+    FOREIGN KEY (SpeciesCode, CruiseID) REFERENCES Species (SpeciesCode, CruiseID) ON UPDATE CASCADE
+)
+
+CREATE TRIGGER TreeAuditRuleSelector_OnDelete
+BEFORE DELETE ON TreeAuditRuleSelector
+BEGIN
+    INSERT OR REPLACE INTO TreeAuditRuleSelector_Tombstone (
+        CruiseID,
+        SpeciesCode,
+        LiveDead,
+        PrimaryProduct,
+        TreeAuditRuleID
+    ) VALUES (
+        OLD.CruiseID,
+        OLD.SpeciesCode,
+        OLD.LiveDead,
+        OLD.PrimaryProduct,
+        OLD.TreeAuditRuleID
+    );
+END
+
+CREATE TRIGGER TreeAuditRuleSelector_OnInsert_ClearTombstone 
+AFTER INSERT ON TreeAuditRuleSelector
+BEGIN
+    DELETE FROM TreeAuditRuleSelector_Tombstone 
+        WHERE CruiseID = NEW.CruiseID
+        AND ifnull(SpeciesCode, '') = ifnull(NEW.SpeciesCode, '')
+        AND ifnull(LiveDead, '') = ifnull(NEW.LiveDead, '')
+        AND ifnull(PrimaryProduct, '') = ifnull(NEW.PrimaryProduct, '');
+END
+
+CREATE UNIQUE INDEX UIX_TreeAuditRuleSelector_SpeciesCode_LiveDead_PrimaryProduct_TreeAuditRuleID_CruiseID
+ON TreeAuditRuleSelector (
+    CruiseID,
+    ifnull(SpeciesCode, ''),
+    ifnull(LiveDead, ''),
+    ifnull(PrimaryProduct, ''),
+    TreeAuditRuleID
+)
+
+CREATE INDEX NIX_TreeAuditRuleSelector_SpeciesCode ON TreeAuditRuleSelector ('SpeciesCode')
+
+CREATE INDEX NIX_TreeAuditRuleSelector_TreeAuditRuleID ON TreeAuditRuleSelector ('TreeAuditRuleID')
+
+
+-- ************** TreeAuditRuleSelector_Tombstone **************
+CREATE TABLE TreeAuditRuleSelector_Tombstone (
+    CruiseID TEXT NOT NULL COLLATE NOCASE,
+    SpeciesCode TEXT COLLATE NOCASE,
+    LiveDead TEXT COLLATE NOCASE,
+    PrimaryProduct TEXT COLLATE NOCASE,
+    TreeAuditRuleID TEXT NOT NULL
+)
+
+
+-- ************** TreeAuditRule_Tombstone **************
+CREATE TABLE TreeAuditRule_Tombstone (
+    TreeAuditRuleID TEXT NOT NULL,
+    CruiseID TEXT NOT NULL COLLATE NOCASE,
+    Field TEXT NOT NULL COLLATE NOCASE,
+    Min REAL,
+    Max REAL,
+    Description TEXT
+)
+
+
+-- ************** TreeDefaultValue **************
+CREATE TABLE TreeDefaultValue (
+    TreeDefaultValue_CN INTEGER PRIMARY KEY AUTOINCREMENT,
+    CruiseID TEXT NOT NULL COLLATE NOCASE,
+    SpeciesCode TEXT COLLATE NOCASE,
+    PrimaryProduct TEXT COLLATE NOCASE,
+    CullPrimary REAL DEFAULT 0.0,
+    CullPrimaryDead REAL DEFAULT 0.0,
+    HiddenPrimary REAL DEFAULT 0.0,
+    HiddenPrimaryDead REAL DEFAULT 0.0,
+    TreeGrade TEXT DEFAULT '0' COLLATE NOCASE,
+    TreeGradeDead TEXT DEFAULT '0' COLLATE NOCASE,
+    CullSecondary REAL DEFAULT 0.0,
+    HiddenSecondary REAL DEFAULT 0.0,
+    Recoverable REAL DEFAULT 0.0,
+    MerchHeightLogLength INTEGER DEFAULT 0,
+    MerchHeightType TEXT DEFAULT 'F' ,
+    FormClass REAL DEFAULT 0.0,
+    BarkThicknessRatio REAL DEFAULT 0.0,
+    AverageZ REAL DEFAULT 0.0,
+    ReferenceHeightPercent REAL DEFAULT 0.0,
+    CreatedBy TEXT DEFAULT 'none',
+    Created_TS DATETIME DEFAULT (CURRENT_TIMESTAMP),
+    ModifiedBy TEXT,
+    Modified_TS DATETIME,
+
+    FOREIGN KEY (CruiseID) REFERENCES Cruise (CruiseID) ON DELETE CASCADE
+    --FOREIGN KEY (SpeciesCode, CruiseID) REFERENCES Species (SpeciesCode, CruiseID) ON UPDATE CASCADE ON DELETE CASCADE
+    --FOREIGN KEY (PrimaryProduct) REFERENCES LK_Product (Product)
+)
+
+CREATE TRIGGER TreeDefaultValue_OnUpdate
+AFTER UPDATE OF
+    SpeciesCode,
+    PrimaryProduct,
+    CullPrimary,
+    CullPrimaryDead,
+    HiddenPrimary,
+    HiddenPrimaryDead,
+    TreeGrade,
+    TreeGradeDead,
+    CullSecondary,
+    HiddenSecondary,
+    Recoverable,
+    MerchHeightLogLength,
+    MerchHeightType,
+    FormClass,
+    BarkThicknessRatio,
+    AverageZ,
+    ReferenceHeightPercent
+ON TreeDefaultValue
+FOR EACH ROW
+BEGIN
+    UPDATE TreeDefaultValue SET Modified_TS = CURRENT_TIMESTAMP WHERE TreeDefaultValue_CN = new.TreeDefaultValue_CN;
+END
+
+CREATE TRIGGER TreeDefaultValue_OnDelete
+BEFORE DELETE ON TreeDefaultValue
+FOR EACH ROW
+BEGIN
+    INSERT OR REPLACE INTO TreeDefaultValue_Tombstone (
+        CruiseID,
+        SpeciesCode,
+        PrimaryProduct,
+        CullPrimary,
+        CullPrimaryDead,
+        HiddenPrimary,
+        HiddenPrimaryDead,
+        TreeGrade,
+        TreeGradeDead,
+        CullSecondary,
+        HiddenSecondary,
+        Recoverable,
+        MerchHeightLogLength,
+        MerchHeightType,
+        FormClass,
+        BarkThicknessRatio,
+        AverageZ,
+        ReferenceHeightPercent,
+
+        CreatedBy,
+        Created_TS,
+        ModifiedBy,
+        Modified_TS,
+        Deleted_TS
+    ) VALUES (
+        OLD.CruiseID,
+        OLD.SpeciesCode,
+        OLD.PrimaryProduct,
+        OLD.CullPrimary,
+        OLD.CullPrimaryDead,
+        OLD.HiddenPrimary,
+        OLD.HiddenPrimaryDead,
+        OLD.TreeGrade,
+        OLD.TreeGradeDead,
+        OLD.CullSecondary,
+        OLD.HiddenSecondary,
+        OLD.Recoverable,
+        OLD.MerchHeightLogLength,
+        OLD.MerchHeightType,
+        OLD.FormClass,
+        OLD.BarkThicknessRatio,
+        OLD.AverageZ,
+        OLD.ReferenceHeightPercent,
+
+        OLD.CreatedBy,
+        OLD.Created_TS,
+        OLD.ModifiedBy,
+        OLD.Modified_TS,
+        CURRENT_TIMESTAMP
+    );
+END
+
+CREATE UNIQUE INDEX UIX_TreeDefaultValue_SpeciesCode_PrimaryProduct ON TreeDefaultValue (CruiseID, ifnull(SpeciesCode, '') COLLATE NOCASE, ifnull(PrimaryProduct, '') COLLATE NOCASE)
+
+CREATE INDEX NIX_TreeDefaultValue_SpeciesCode ON TreeDefaultValue ('SpeciesCode')
+
+CREATE INDEX NIX_TreeDefaultValue_PrimaryProduct ON TreeDefaultValue ('PrimaryProduct')
+
+CREATE INDEX NIX_TreeDefaultValue_CruiseID ON TreeDefaultValue ('CruiseID')
+
+
+-- ************** TreeDefaultValue_Tombstone **************
+CREATE TABLE TreeDefaultValue_Tombstone (
+    CruiseID TEXT NOT NULL COLLATE NOCASE,
+    SpeciesCode TEXT COLLATE NOCASE,
+    PrimaryProduct TEXT COLLATE NOCASE,
+    CullPrimary REAL,
+    CullPrimaryDead REAL,
+    HiddenPrimary REAL,
+    HiddenPrimaryDead REAL,
+    TreeGrade TEXT COLLATE NOCASE,
+    TreeGradeDead TEXT COLLATE NOCASE,
+    CullSecondary REAL,
+    HiddenSecondary REAL,
+    Recoverable REAL,
+    MerchHeightLogLength INTEGER,
+    MerchHeightType TEXT,
+    FormClass REAL,
+    BarkThicknessRatio REAL,
+    AverageZ REAL,
+    ReferenceHeightPercent REAL,
+    CreatedBy TEXT,
+    Created_TS DATETIME,
+    ModifiedBy TEXT,
+    Modified_TS DATETIME,
+    Deleted_TS DATETIME
+)
+
+CREATE INDEX NIX_TreeDefaultValue_Tombstone_CruiseID_SpeciesCode_PrimaryProduct ON TreeDefaultValue_Tombstone
+(CruiseID, ifnull(SpeciesCode, '') COLLATE NOCASE, ifnull(PrimaryProduct, '') COLLATE NOCASE)
+
+
+-- ************** TreeError **************
+CREATE VIEW TreeError AS
+
+WITH
+    treeError_speciesCode AS (
+    SELECT
+        t.TreeID,
+        t.CruiseID,
+        'e' AS Level,
+        'Species Code Is Missing' AS Message,
+        'SpeciesCode' AS Field
+    FROM Tree AS t
+    WHERE t.SpeciesCode IS NULL OR t.SpeciesCode = ''),
+
+    treeError_liveDead AS (
+    SELECT
+        t.TreeID,
+        t.CruiseID,
+        'e' AS Level,
+        'Live/Dead Value Is Missing' AS Message,
+        'LiveDead' AS Field
+    FROM Tree AS t
+    WHERE t.LiveDead IS NULL OR t.LiveDead = ''),
+
+    treeError_heights AS (
+    SELECT
+        t.TreeID,
+        t.CruiseID,
+        'e' AS Level,
+        'Aleast One Height Parameter Must Be Greater Than 0' AS Message,
+        'heights' AS Field
+    FROM Tree AS t
+    LEFT JOIN TreeMeasurment AS tm USING (TreeID)
+    WHERE t.CountOrMeasure = 'M'  
+        AND ifnull(tm.TotalHeight, 0) <=0 
+        AND ifnull(tm.MerchHeightPrimary, 0) <= 0 
+        AND ifnull(tm.MerchHeightSecondary, 0) <= 0 
+        AND ifnull(tm.UpperStemHeight, 0) <= 0),
+
+    treeError_diameters AS (
+    SELECT
+        t.TreeID,
+        t.CruiseID,
+        'e' AS Level,
+        'DBH or DRC must be greater than 0' AS Message,
+        'diameters' AS Field
+    FROM Tree AS t
+    LEFT JOIN TreeMeasurment AS tm USING (TreeID)
+    WHERE t.CountOrMeasure = 'M' 
+        AND ifnull(tm.DBH, 0) <=0 
+        AND ifnull(tm.DRC, 0) <=0),
+
+    treeError_merchHeightSecondary AS (
+    SELECT
+        t.TreeID,
+        t.CruiseID,
+        'e' AS Level,
+        'Merch Height Secondary Must Be Greater Than or Equal Merch Height Primary' AS Message,
+        'MerchHeightSecondary' AS Field
+    FROM Tree AS t
+    JOIN TreeMeasurment AS tm USING (TreeID)
+    WHERE t.CountOrMeasure = 'M' 
+        AND tm.MerchHeightSecondary > 0 
+        AND tm.MerchHeightSecondary <= tm.MerchHeightPrimary),
+
+    treeError_upperStemHeight AS (
+    SELECT
+        t.TreeID,
+        t.CruiseID,
+        'e' AS Level,
+        'Upper Stem Height Must Be Greater Than or Equal Merch Height Primary' AS Message,
+        'UpperStemHeight' AS Field
+    FROM Tree AS t
+    JOIN TreeMeasurment AS tm USING (TreeID)
+    WHERE t.CountOrMeasure = 'M' 
+        AND tm.UpperStemHeight > 0 
+        AND tm.UpperStemHeight < tm.MerchHeightPrimary),
+
+    treeError_upperStemDiameter AS (
+    SELECT
+        t.TreeID,
+        t.CruiseID,
+        'e' AS Level,
+        'Upper Stem Diameter Must Be Smaller Than DBH' AS Message,
+        'UpperStemDiameter' AS Field
+    FROM Tree AS t
+    JOIN TreeMeasurment AS tm USING (TreeID)
+    WHERE t.CountOrMeasure = 'M' 
+        AND tm.UpperStemDiameter > 0 
+        AND tm.UpperStemDiameter >= tm.DBH),
+
+    treeError_topDIBSecondary AS (
+    SELECT
+        t.TreeID,
+        t.CruiseID,
+        'e' AS Level,
+        'Top DIB Secondary must be less Top DIB Primary' AS Message,
+        'TopDIBSecondary' AS Field
+    FROM Tree AS t
+    JOIN TreeMeasurment AS tm USING (TreeID)
+    WHERE t.CountOrMeasure = 'M' 
+        AND tm.TopDIBSecondary > 0 
+        AND tm.TopDIBSecondary > tm.TopDIBPrimary),
+
+    treeError_seenDefectPrimary AS (
+    SELECT
+        t.TreeID,
+        t.CruiseID,
+        'e' AS Level,
+        'Seen Defect Primary must be greater than Recoverable Primary' AS Message,
+        'SeenDefectPrimary' AS Field
+    FROM Tree AS t
+    JOIN TreeMeasurment AS tm USING (TreeID)
+    WHERE t.CountOrMeasure = 'M' 
+        AND tm.SeenDefectPrimary > 0 
+        AND tm.SeenDefectPrimary < tm.RecoverablePrimary)
+
+SELECT
+	tae.TreeID,
+    tae.CruiseID,
+	tae.TreeAuditRuleID,
+	'W' AS Level,
+	tae.Message,
+	tae.Field,
+    tae.IsResolved,
+	tar.Resolution,
+	tar.Initials AS ResolutionInitials
+FROM TreeAuditError AS tae
+LEFT JOIN TreeAuditResolution AS tar USING (TreeAuditRuleID, TreeID)
+UNION ALL
+SELECT
+    te.TreeID,
+    te.CruiseID,
+    null AS TreeAuditRuleID,
+    'E' AS Level,
+    te.Message,
+    te.Field,
+    0 AS IsResolved,
+    null AS Resolution,
+    null AS ResolutionInitials
+FROM (
+    SELECT * FROM treeError_speciesCode
+    UNION ALL
+    SELECT * FROM treeError_liveDead
+    UNION ALL
+    SELECT * FROM treeError_heights
+    UNION ALL
+    SELECT * FROM treeError_diameters
+    UNION ALL
+    SELECT * FROM treeError_merchHeightSecondary
+    UNION ALL
+    SELECT * FROM treeError_upperStemHeight
+    UNION ALL
+    SELECT * FROM treeError_upperStemDiameter
+    UNION ALL
+    SELECT * FROM treeError_topDIBSecondary
+    UNION ALL
+    SELECT * FROM treeError_seenDefectPrimary
+) AS te
+
+
+-- ************** TreeField **************
+CREATE TABLE TreeField (
+    TreeField_CN INTEGER PRIMARY KEY AUTOINCREMENT,
+    Field TEXT COLLATE NOCASE,
+    DefaultHeading TEXT NOT NULL,
+    DbType TEXT NOT NULL COLLATE NOCASE,
+    IsTreeMeasurmentField BOOLEAN DEFAULT 0,
+
+    UNIQUE (Field),
+    CHECK (DbType IN ('REAL', 'TEXT', 'BOOLEAN', 'INTEGER'))
+)
+
+
+
+
+-- ************** TreeFieldHeading **************
+CREATE TABLE TreeFieldHeading (
+    TreeFieldHeading_CN INTEGER PRIMARY KEY AUTOINCREMENT,
+    CruiseID TEXT NOT NULL COLLATE NOCASE,
+    Field TEXT NOT NULL COLLATE NOCASE,
+    Heading TEXT NOT NULL,
+    CreatedBy TEXT DEFAULT 'none',
+    Created_TS DATETIME DEFAULT (CURRENT_TIMESTAMP),
+    ModifiedBy TEXT,
+    Modified_TS DATETIME,
+
+    UNIQUE (CruiseID, Field),
+
+    FOREIGN KEY (CruiseID) REFERENCES Cruise (CruiseID) ON DELETE CASCADE,
+    FOREIGN KEY (Field) REFERENCES TreeField (Field) ON DELETE CASCADE
+)
+
+CREATE TRIGGER TreeFieldHeading_OnUpdate
+AFTER UPDATE OF
+    Heading
+ON TreeFieldHeading
+FOR EACH ROW
+BEGIN
+    UPDATE TreeFieldHeading SET Modified_TS = CURRENT_TIMESTAMP WHERE TreeFieldHeading_CN = new.TreeFieldHeading_CN;
+END
+
+
+
+
+-- ************** TreeFieldSetup **************
+CREATE TABLE TreeFieldSetup (
+    CruiseID TEXT NOT NULL COLLATE NOCASE,
+    StratumCode TEXT NOT NULL COLLATE NOCASE,
+    SampleGroupCode TEXT COLLATE NOCASE,
+    Field TEXT NOT NULL COLLATE NOCASE,
+    FieldOrder INTEGER Default 0,
+    IsHidden BOOLEAN Default 0,
+    IsLocked BOOLEAN Default 0,
+    -- value type determined by TreeField.DbType
+    DefaultValueInt INTEGER,
+    DefaultValueReal REAL,
+    DefaultValueBool BOOLEAN,
+    DefaultValueText TEXT,
+
+    CHECK (IsHidden IN (0, 1)),
+    CHECK (IsLocked IN (0, 1)),
+
+    FOREIGN KEY (StratumCode, CruiseID) REFERENCES Stratum (StratumCode, CruiseID) ON DELETE CASCADE ON UPDATE CASCADE,
+    FOREIGN KEY (SampleGroupCode, StratumCode, CruiseID) REFERENCES SampleGroup (SampleGroupCode, StratumCode, CruiseID) ON DELETE CASCADE ON UPDATE CASCADE,
+    FOREIGN KEY (Field) REFERENCES TreeField (Field)
+)
+
+CREATE TRIGGER TreeFieldSetup_OnDelete
+BEFORE DELETE ON TreeFieldSetup
+BEGIN
+    INSERT OR REPLACE INTO TreeFieldSetup_Tombstone (
+        CruiseID,
+        StratumCode,
+        SampleGroupCode,
+        Field,
+        FieldOrder,
+        DefaultValueInt,
+        DefaultValueReal,
+        DefaultValueBool,
+        DefaultValueText
+    ) VALUES (
+        OLD.CruiseID,
+        OLD.StratumCode,
+        OLD.SampleGroupCode,
+        OLD.Field,
+        OLD.FieldOrder,
+        OLD.DefaultValueInt,
+        OLD.DefaultValueReal,
+        OLD.DefaultValueBool,
+        OLD.DefaultValueText
+    );
+END
+
+CREATE TRIGGER TreeFieldSetup_OnInsert_ClearTombstone 
+AFTER INSERT ON TreeFieldSetup
+BEGIN 
+    DELETE FROM TreeFieldSetup_Tombstone
+        WHERE CruiseID = NEW.CruiseID
+        AND StratumCode = NEW.StratumCode
+        AND ifnull(SampleGroupCode, '') = ifnull(NEW.SampleGroupCode, '')
+        AND ifnull(Field, '') = ifnull(NEW.Field, '');
+END
+
+CREATE INDEX NIX_TreeFieldSetup_Field ON TreeFieldSetup (Field)
+
+CREATE INDEX NIX_TreeFieldSetup_StratumCode_CruiseID ON TreeFieldSetup (StratumCode, CruiseID)
+
+CREATE INDEX NIX_TreeFieldSetup_SampleGroupCode_StratumCode_CruiseID ON TreeFieldSetup (SampleGroupCode, StratumCode, CruiseID)
+
+CREATE UNIQUE INDEX UIX_TreeFieldSetup_SampleGroupCode_StratumCode_Field_CruiseID ON TreeFieldSetup
+    (ifnull(SampleGroupCode, ''), StratumCode, Field, CruiseID)
+
+
+-- ************** TreeFieldSetupDefault **************
+CREATE VIEW TreeFieldSetupDefault AS
+    SELECT
+    0 AS TreeFieldSetupDefault_CN,
+    StratumTemplateName || CruiseID AS StratumDefaultID,
+    null AS SampleGroupDefaultID,
+    Field,
+    FieldOrder,
+    IsHidden,
+    IsLocked,
+    -- value type determined by TreeField.DbType
+    DefaultValueInt,
+    DefaultValueReal,
+    DefaultValueBool,
+    DefaultValueText
+FROM StratumTemplateTreeFieldSetup
+
+
+-- ************** TreeFieldSetup_Tombstone **************
+CREATE TABLE TreeFieldSetup_Tombstone (
+    CruiseID TEXT NOT NULL COLLATE NOCASE,
+    StratumCode TEXT NOT NULL COLLATE NOCASE,
+    SampleGroupCode TEXT COLLATE NOCASE,
+    Field TEXT NOT NULL COLLATE NOCASE,
+    FieldOrder INTEGER,
+    DefaultValueInt INTEGER,
+    DefaultValueReal REAL,
+    DefaultValueBool BOOLEAN,
+    DefaultValueText TEXT
+)
+
+
+-- ************** TreeFieldValue **************
+CREATE TABLE TreeFieldValue (
+    TreeFieldValue_OID INTEGER PRIMARY KEY AUTOINCREMENT,
+    TreeID TEXT NOT NULL,
+    Field TEXT NOT NULL COLLATE NOCASE,
+    ValueInt INTEGER,
+    ValueReal REAL,
+    ValueBool BOOLEAN,
+    ValueText TEXT,
+
+    CreatedBy TEXT DEFAULT 'none',
+    Created_TS DATETIME DEFAULT (CURRENT_TIMESTAMP),
+    ModifiedBy TEXT,
+    Modified_TS DATETIME,
+
+    FOREIGN KEY (Field) REFERENCES TreeField (Field),
+    FOREIGN KEY (TreeID) REFERENCES Tree (TreeID) ON DELETE CASCADE
+)
+
+CREATE TRIGGER TreeFieldValue_OnDelete
+BEFORE DELETE ON TreeFieldValue
+BEGIN
+    INSERT OR REPLACE INTO TreeFieldValue_Tombstone (
+        TreeID,
+        Field,
+        ValueInt,
+        ValueReal,
+        ValueBool,
+        ValueText,
+        CreatedBy,
+        Created_TS,
+        ModifiedBy,
+        Modified_TS,
+        Deleted_TS
+    ) VALUES (
+        OLD.TreeID,
+        OLD.Field,
+        OLD.ValueInt,
+        OLD.ValueReal,
+        OLD.ValueBool,
+        OLD.ValueText,
+        OLD.CreatedBy,
+        OLD.Created_TS,
+        OLD.ModifiedBy,
+        OLD.Modified_TS,
+        CURRENT_TIMESTAMP
+    );
+END
+
+CREATE INDEX NIX_TreeFieldValue_TreeID ON TreeFieldValue ('TreeID')
+
+CREATE INDEX NIX_TreeFieldValue_Field ON TreeFieldValue ('Field')
+
+
+-- ************** TreeFieldValue_All **************
+CREATE VIEW TreeFieldValue_All AS
+SELECT
+    TreeID,
+    Field,
+    ValueInt,
+    ValueReal,
+    ValueBool,
+    ValueText,
+    CreatedBy,
+    Created_TS,
+    ModifiedBy,
+    Modified_TS
+FROM TreeFieldValue_TreeMeasurment
+UNION ALL
+SELECT
+    TreeID,
+    Field,
+    ValueInt,
+    ValueReal,
+    ValueBool,
+    ValueText,
+    CreatedBy,
+    Created_TS,
+    ModifiedBy,
+    Modified_TS
+FROM TreeFieldValue
+
+
+-- ************** TreeFieldValue_Tombstone **************
+CREATE TABLE TreeFieldValue_Tombstone (
+    TreeID TEXT NOT NULL,
+    Field TEXT NOT NULL COLLATE NOCASE,
+    ValueInt INTEGER,
+    ValueReal REAL,
+    ValueBool BOOLEAN,
+    ValueText TEXT,
+
+    CreatedBy TEXT,
+    Created_TS DATETIME,
+    ModifiedBy TEXT,
+    Modified_TS DATETIME,
+    Deleted_TS DATETIME
+)
+
+CREATE INDEX NIX_TreeFieldValue_Tombstone_TreeID_Field ON TreeFieldValue_Tombstone
+(TreeID, Field)
+
+
+-- ************** TreeFieldValue_TreeMeasurment **************
+CREATE VIEW TreeFieldValue_TreeMeasurment AS
+SELECT
+    tm.TreeID,
+    tf.Field,
+    tf.DbType,
+    (CASE tf.Field
+        WHEN 'SeenDefectPrimary' THEN SeenDefectPrimary
+        WHEN 'SeenDefectSecondary' THEN SeenDefectSecondary
+        WHEN 'RecoverablePrimary' THEN RecoverablePrimary
+        WHEN 'HiddenPrimary' THEN HiddenPrimary
+        WHEN 'HeightToFirstLiveLimb' THEN HeightToFirstLiveLimb
+        WHEN 'PoleLength' THEN PoleLength
+        WHEN 'CrownRatio' THEN CrownRatio
+        WHEN 'DBH' THEN DBH
+        WHEN 'DRC' THEN DRC
+        WHEN 'TotalHeight' THEN TotalHeight
+        WHEN 'MerchHeightPrimary' THEN MerchHeightPrimary
+        WHEN 'MerchHeightSecondary' THEN MerchHeightSecondary
+        WHEN 'FormClass' THEN FormClass
+        WHEN 'UpperStemDiameter' THEN UpperStemDiameter
+        WHEN 'UpperStemHeight' THEN UpperStemHeight
+        WHEN 'DBHDoubleBarkThickness' THEN DBHDoubleBarkThickness
+        WHEN 'TopDIBPrimary' THEN TopDIBPrimary
+        WHEN 'TopDIBSecondary' THEN TopDIBSecondary
+        WHEN 'DiameterAtDefect' THEN DiameterAtDefect
+        WHEN 'VoidPercent' THEN VoidPercent
+        WHEN 'Slope' THEN Slope
+        WHEN 'Aspect' THEN Aspect
+        --WHEN 'XCoordinate' THEN XCoordinate
+        --WHEN 'YCoordinate' THEN YCoordinate
+        --WHEN 'ZCoordinate' THEN ZCoordinate
+        ELSE NULL END) AS ValueReal,
+
+    (CASE tf.Field
+        WHEN 'IsFallBuckScale' THEN IsFallBuckScale
+        ELSE NULL END) AS ValueBool,
+
+    (CASE tf.Field
+        WHEN 'Grade' THEN Grade
+        WHEN 'ClearFace' THEN ClearFace
+        WHEN 'DefectCode' THEN DefectCode
+        WHEN 'Remarks' THEN Remarks
+        WHEN 'MetaData' THEN MetaData
+        WHEN 'Initials' THEN Initials
+        ELSE NULL END) AS ValueText,
+
+    NULL AS ValueInt,
+    tm.CreatedBy,
+    tm.Created_TS,
+    tm.ModifiedBy,
+    tm.Modified_TS
+
+FROM TreeMeasurment AS tm
+CROSS JOIN TreeField AS tf
+WHERE tf.IsTreeMeasurmentField = 1
+
+
+-- ************** TreeFieldValue_TreeMeasurment_Filtered **************
+CREATE VIEW TreeFieldValue_TreeMeasurment_Filtered AS
+SELECT
+    tm.TreeID,
+    tf.Field,
+    tf.DbType,
+    (CASE tf.Field
+        WHEN 'SeenDefectPrimary' THEN SeenDefectPrimary
+        WHEN 'SeenDefectSecondary' THEN SeenDefectSecondary
+        WHEN 'RecoverablePrimary' THEN RecoverablePrimary
+        WHEN 'HiddenPrimary' THEN HiddenPrimary
+        WHEN 'HeightToFirstLiveLimb' THEN HeightToFirstLiveLimb
+        WHEN 'PoleLength' THEN PoleLength
+        WHEN 'CrownRatio' THEN CrownRatio
+        WHEN 'DBH' THEN DBH
+        WHEN 'DRC' THEN DRC
+        WHEN 'TotalHeight' THEN TotalHeight
+        WHEN 'MerchHeightPrimary' THEN MerchHeightPrimary
+        WHEN 'MerchHeightSecondary' THEN MerchHeightSecondary
+        WHEN 'FormClass' THEN FormClass
+        WHEN 'UpperStemDiameter' THEN UpperStemDiameter
+        WHEN 'UpperStemHeight' THEN UpperStemHeight
+        WHEN 'DBHDoubleBarkThickness' THEN DBHDoubleBarkThickness
+        WHEN 'TopDIBPrimary' THEN TopDIBPrimary
+        WHEN 'TopDIBSecondary' THEN TopDIBSecondary
+        WHEN 'DiameterAtDefect' THEN DiameterAtDefect
+        WHEN 'VoidPercent' THEN VoidPercent
+        WHEN 'Slope' THEN Slope
+        WHEN 'Aspect' THEN Aspect
+        --WHEN 'XCoordinate' THEN XCoordinate
+        --WHEN 'YCoordinate' THEN YCoordinate
+        --WHEN 'ZCoordinate' THEN ZCoordinate
+        ELSE NULL END) AS ValueReal,
+
+    (CASE tf.Field
+        WHEN 'IsFallBuckScale' THEN IsFallBuckScale
+        ELSE NULL END) AS ValueBool,
+
+    (CASE tf.Field
+        WHEN 'Grade' THEN Grade
+        WHEN 'ClearFace' THEN ClearFace
+        WHEN 'DefectCode' THEN DefectCode
+        WHEN 'Remarks' THEN Remarks
+        WHEN 'MetaData' THEN MetaData
+        WHEN 'Initials' THEN Initials
+        ELSE NULL END) AS ValueText,
+
+    NULL AS ValueInt,
+    tm.CreatedBy,
+    tm.Created_TS,
+    tm.ModifiedBy,
+    tm.Modified_TS
+
+FROM TreeMeasurment AS tm
+JOIN Tree AS t USING (TreeID)
+CROSS JOIN TreeFieldSetup AS tfs
+JOIN TreeField AS tf USING (Field)
+WHERE tf.IsTreeMeasurmentField = 1
+
+
+-- ************** TreeLocation **************
+CREATE TABLE TreeLocation (
+    TreeLocation_CN INTEGER PRIMARY KEY AUTOINCREMENT,
+    TreeID TEXT NOT NULL COLLATE NOCASE,
+    Latitude REAL NOT NULL,
+    Longitude REAL NOT NULL,
+    SS_Latatude REAL, --side shot latatude
+    SS_Longitude REAL, --side shot longitude
+    Azimuth REAL,
+    Distance REAL,
+    IsEstimate BOOLEAN DEFAULT 0,
+    CreatedBy TEXT DEFAULT 'none',
+    Created_TS DATETIME DEFAULT (CURRENT_TIMESTAMP),
+    ModifiedBy TEXT,
+    Modified_TS DATETIME,
+
+    CHECK  ((SS_Latatude IS NOT NULL AND SS_Longitude IS NOT NULL AND Azimuth IS NOT NULL AND Distance IS NOT NULL)
+        OR (SS_Latatude IS NULL AND SS_Longitude IS NULL AND Azimuth IS NULL AND Distance IS NULL)),
+
+    CHECK (Latitude BETWEEN -90.0 AND 90.0),
+    CHECK (Longitude BETWEEN -180.0 AND 180.0),
+    CHECK (SS_Latatude IS NULL OR SS_Latatude BETWEEN -90.0 AND 90.0),
+    CHECK (SS_Longitude IS NULL OR SS_Longitude BETWEEN -180.0 AND 180.0),
+
+    UNIQUE (TreeID),
+
+    FOREIGN KEY (TreeID) REFERENCES Tree (TreeID) ON DELETE CASCADE
+)
+
+CREATE TRIGGER TreeLocation_OnUpdate
+AFTER UPDATE OF
+    Latitude,
+    Longitude,
+    SS_Latatude,
+    SS_Longitude,
+    Azimuth,
+    Distance,
+    IsEstimate
+ON TreeLocation
+FOR EACH ROW
+BEGIN
+    UPDATE TreeLocation SET Modified_TS = CURRENT_TIMESTAMP WHERE TreeLocation_CN = old.TreeLocation_CN;
+END
+
+CREATE TRIGGER TreeLocation_OnDelete
+BEFORE DELETE ON TreeLocation
+FOR EACH ROW
+BEGIN
+    INSERT OR REPLACE INTO TreeLocation_Tombstone (
+        TreeID,
+        Latitude,
+        Longitude,
+        SS_Latatude, --side shot latatude
+        SS_Longitude, --side shot longitude
+        Azimuth,
+        Distance,
+        IsEstimate,
+
+        CreatedBy,
+        Created_TS,
+        ModifiedBy,
+        Modified_TS,
+        Deleted_TS
+    ) VALUES (
+        OLD.TreeID,
+        OLD.Latitude,
+        OLD.Longitude,
+        OLD.SS_Latatude, --side shot latatude
+        OLD.SS_Longitude, --side shot longitude
+        OLD.Azimuth,
+        OLD.Distance,
+        OLD.IsEstimate,
+
+        OLD.CreatedBy,
+        OLD.Created_TS,
+        OLD.ModifiedBy,
+        OLD.Modified_TS,
+        CURRENT_TIMESTAMP
+    );
+END
+
+
+
+
+-- ************** TreeLocation_Tombstone **************
+CREATE TABLE TreeLocation_Tombstone (
+    TreeID TEXT NOT NULL COLLATE NOCASE,
+    Latitude REAL NOT NULL,
+    Longitude REAL NOT NULL,
+    SS_Latatude REAL, --side shot latatude
+    SS_Longitude REAL, --side shot longitude
+    Azimuth REAL,
+    Distance REAL,
+    IsEstimate BOOLEAN,
+    CreatedBy TEXT,
+    Created_TS DATETIME,
+    ModifiedBy TEXT,
+    Modified_TS DATETIME,
+    Deleted_TS DATETIME
+)
+
+
+-- ************** TreeMeasurment **************
+CREATE TABLE TreeMeasurment (
+    TreeMeasurment_CN INTEGER PRIMARY KEY AUTOINCREMENT,
+    TreeID TEXT NOT NULL,
+
+    SeenDefectPrimary REAL Default 0.0,
+    SeenDefectSecondary REAL Default 0.0,
+    RecoverablePrimary REAL Default 0.0,
+    HiddenPrimary REAL Default 0.0,
+    Grade TEXT,
+
+    HeightToFirstLiveLimb REAL Default 0.0,
+    PoleLength REAL Default 0.0,
+    ClearFace TEXT,
+    CrownRatio REAL Default 0.0,
+    DBH REAL Default 0.0,
+
+    DRC REAL Default 0.0,
+    TotalHeight REAL Default 0.0,
+    MerchHeightPrimary REAL Default 0.0,
+    MerchHeightSecondary REAL Default 0.0,
+    FormClass REAL Default 0.0,
+
+    --UpperStemDOB REAL Default 0.0,
+
+    UpperStemDiameter REAL Default 0.0,
+    UpperStemHeight REAL Default 0.0,
+    DBHDoubleBarkThickness REAL Default 0.0,
+    TopDIBPrimary REAL Default 0.0,
+    TopDIBSecondary REAL Default 0.0,
+
+    DefectCode TEXT,
+    DiameterAtDefect REAL Default 0.0,
+    VoidPercent REAL Default 0.0,
+    Slope REAL Default 0.0,
+    Aspect REAL Default 0.0,
+
+    Remarks TEXT,
+    IsFallBuckScale BOOLEAN Default 0,
+
+    MetaData TEXT,
+    Initials TEXT,
+
+    CreatedBy TEXT DEFAULT 'none',
+    Created_TS DATETIME DEFAULT (CURRENT_TIMESTAMP),
+    ModifiedBy TEXT,
+    Modified_TS DATETIME,
+
+    UNIQUE (TreeID),
+
+    FOREIGN KEY (TreeID) REFERENCES Tree (TreeID) ON DELETE CASCADE ON UPDATE CASCADE
+)
+
+CREATE TRIGGER TREEMEASURMENT_ONUPDATE
+AFTER UPDATE OF
+    SeenDefectPrimary,
+    SeenDefectSecondary,
+    RecoverablePrimary,
+    HiddenPrimary, Grade,
+    HeightToFirstLiveLimb,
+    PoleLength,
+    ClearFace,
+    CrownRatio,
+    DBH,
+    DRC,
+    TotalHeight,
+    MerchHeightPrimary,
+    MerchHeightSecondary,
+    FormClass,
+    --UpperStemDOB,
+    UpperStemDiameter,
+    UpperStemHeight,
+    DBHDoubleBarkThickness,
+    TopDIBPrimary,
+    TopDIBSecondary,
+    DefectCode,
+    DiameterAtDefect,
+    VoidPercent,
+    Slope,
+    Aspect,
+    Remarks,
+    MetaData,
+    IsFallBuckScale,
+    Initials
+ON TreeMeasurment
+FOR EACH ROW
+BEGIN
+    UPDATE TreeMeasurment SET Modified_TS = CURRENT_TIMESTAMP WHERE TreeMeasurment_CN = old.TreeMeasurment_CN;
+END
+
+CREATE TRIGGER TreeMeasurment_OnDelete
+BEFORE DELETE ON TreeMeasurment
+FOR EACH ROW
+BEGIN
+    INSERT OR REPLACE INTO TreeMeasurment_Tombstone (
+        TreeID,
+
+        SeenDefectPrimary,
+        SeenDefectSecondary,
+        RecoverablePrimary,
+        HiddenPrimary,
+        Grade,
+
+        HeightToFirstLiveLimb,
+        PoleLength,
+        ClearFace,
+        CrownRatio,
+        DBH,
+
+        DRC,
+        TotalHeight,
+        MerchHeightPrimary,
+        MerchHeightSecondary,
+        FormClass,
+
+        --UpperStemDOB,
+
+        UpperStemDiameter,
+        UpperStemHeight,
+        DBHDoubleBarkThickness,
+        TopDIBPrimary,
+        TopDIBSecondary,
+
+        DefectCode,
+        DiameterAtDefect,
+        VoidPercent,
+        Slope,
+        Aspect,
+
+        Remarks,
+        IsFallBuckScale,
+
+        MetaData,
+
+        Initials,
+
+        CreatedBy,
+        Created_TS,
+        ModifiedBy,
+        Modified_TS,
+        Deleted_TS
+    ) VALUES (
+        OLD.TreeID,
+
+        OLD.SeenDefectPrimary,
+        OLD.SeenDefectSecondary,
+        OLD.RecoverablePrimary,
+        OLD.HiddenPrimary,
+        OLD.Grade,
+
+        OLD.HeightToFirstLiveLimb,
+        OLD.PoleLength,
+        OLD.ClearFace,
+        OLD.CrownRatio,
+        OLD.DBH,
+
+        OLD.DRC,
+        OLD.TotalHeight,
+        OLD.MerchHeightPrimary,
+        OLD.MerchHeightSecondary,
+        OLD.FormClass,
+
+        --UpperStemDOB,
+
+        OLD.UpperStemDiameter,
+        OLD.UpperStemHeight,
+        OLD.DBHDoubleBarkThickness,
+        OLD.TopDIBPrimary,
+        OLD.TopDIBSecondary,
+
+        OLD.DefectCode,
+        OLD.DiameterAtDefect,
+        OLD.VoidPercent,
+        OLD.Slope,
+        OLD.Aspect,
+
+        OLD.Remarks,
+        OLD.IsFallBuckScale,
+
+        OLD.MetaData,
+
+        OLD.Initials,
+
+        OLD.CreatedBy,
+        OLD.Created_TS,
+        OLD.ModifiedBy,
+        OLD.Modified_TS,
+        CURRENT_TIMESTAMP
+    );
+END
+
+
+
+
+-- ************** TreeMeasurment_DefaultResolved **************
+CREATE VIEW TreeMeasurment_DefaultResolved AS 
+SELECT
+        tm.TreeID,
+
+        -- for each tree field we will resolve the value by taking the first non-null value in the following order
+            -- first try reading the value from the TreeMeasurments table, treating the default value (0.0, 0, '') depending on data type as null
+            -- next we will try getting the default value from the TreeFieldSetup table, by matching with either the stratum level or samplegroup level field setup
+            -- if the field is a field in the TreeDefaultValues table we will get populate the value from the tree default value table
+            -- last we will use the value in the TreeMeasurments table which we know is the default value for the field...
+                -- note: should we just force the 
+
+
+        -- MEASURMENT FIELDS
+        coalesce(nullif(tm.SeenDefectPrimary, 0.0),
+                (SELECT tfs.DefaultValueReal FROM TreeFieldSetup AS tfs WHERE tfs.CruiseID = t.CruiseID AND t.StratumCode = tfs.StratumCode AND (t.SampleGroupCode = tfs.SampleGroupCode OR tfs.SampleGroupCode IS NULL) AND tfs.Field = 'SeenDefectPrimary' ORDER BY tfs.SampleGroupCode DESC LIMIT 1),
+                tm.SeenDefectPrimary) AS SeenDefectPrimary,
+        coalesce(nullif(tm.SeenDefectSecondary, 0.0), 
+                (SELECT DefaultValueReal FROM TreeFieldSetup AS tfs WHERE tfs.CruiseID = t.CruiseID AND t.StratumCode = tfs.StratumCode AND (t.SampleGroupCode = tfs.SampleGroupCode OR tfs.SampleGroupCode IS NULL) AND tfs.Field = 'SeenDefectSecondary' ORDER BY tfs.SampleGroupCode DESC LIMIT 1),
+                tm.SeenDefectSecondary) AS SeenDefectSecondary,
+        coalesce(nullif(tm.RecoverablePrimary, 0.0), 
+                (SELECT DefaultValueReal FROM TreeFieldSetup AS tfs WHERE tfs.CruiseID = t.CruiseID AND t.StratumCode = tfs.StratumCode AND (t.SampleGroupCode = tfs.SampleGroupCode OR tfs.SampleGroupCode IS NULL) AND tfs.Field = 'RecoverablePrimary' ORDER BY tfs.SampleGroupCode DESC LIMIT 1),
+                tdv.Recoverable, -- if tree RecoverablePrimary value not defined get value from TDV
+                tm.RecoverablePrimary) AS RecoverablePrimary,
+
+        coalesce(nullif(tm.HiddenPrimary, 0.0), 
+                (SELECT DefaultValueReal FROM TreeFieldSetup AS tfs WHERE tfs.CruiseID = t.CruiseID AND t.StratumCode = tfs.StratumCode AND (t.SampleGroupCode = tfs.SampleGroupCode OR tfs.SampleGroupCode IS NULL) AND tfs.Field = 'HiddenPrimary' ORDER BY tfs.SampleGroupCode DESC LIMIT 1),
+                CASE WHEN t.LiveDead != 'D' THEN tdv.HiddenPrimary ELSE tdv.HiddenPrimaryDead END, -- if tree HiddenPrimary value not defined get value from TDV
+                tm.HiddenPrimary) AS HiddenPrimary,
+
+        coalesce(nullif(tm.Grade, ''), 
+                (SELECT DefaultValueText FROM TreeFieldSetup AS tfs WHERE tfs.CruiseID = t.CruiseID AND t.StratumCode = tfs.StratumCode AND (t.SampleGroupCode = tfs.SampleGroupCode OR tfs.SampleGroupCode IS NULL) AND tfs.Field = 'Grade' ORDER BY tfs.SampleGroupCode DESC LIMIT 1),
+                CASE WHEN t.LiveDead != 'D' THEN tdv.TreeGrade ELSE tdv.TreeGradeDead END, -- if tree Grade value not defined get value from TDV
+                tm.Grade,
+                '0' ) AS Grade, -- if Grade not defined on tree or in defaults use '0' as default value
+
+        coalesce(nullif(tm.HeightToFirstLiveLimb, 0.0), 
+                (SELECT DefaultValueReal FROM TreeFieldSetup AS tfs WHERE tfs.CruiseID = t.CruiseID AND t.StratumCode = tfs.StratumCode AND (t.SampleGroupCode = tfs.SampleGroupCode OR tfs.SampleGroupCode IS NULL) AND tfs.Field = 'HeightToFirstLiveLimb' ORDER BY tfs.SampleGroupCode DESC LIMIT 1),
+                tm.HeightToFirstLiveLimb) AS HeightToFirstLiveLimb,
+        coalesce(nullif(tm.PoleLength, 0.0), 
+                (SELECT DefaultValueReal FROM TreeFieldSetup AS tfs WHERE tfs.CruiseID = t.CruiseID AND t.StratumCode = tfs.StratumCode AND (t.SampleGroupCode = tfs.SampleGroupCode OR tfs.SampleGroupCode IS NULL) AND tfs.Field = 'PoleLength' ORDER BY tfs.SampleGroupCode DESC LIMIT 1),
+                tm.PoleLength) AS PoleLength,
+        coalesce(nullif(tm.ClearFace, ''), 
+                (SELECT DefaultValueText FROM TreeFieldSetup AS tfs WHERE tfs.CruiseID = t.CruiseID AND t.StratumCode = tfs.StratumCode AND (t.SampleGroupCode = tfs.SampleGroupCode OR tfs.SampleGroupCode IS NULL) AND tfs.Field = 'ClearFace' ORDER BY tfs.SampleGroupCode DESC LIMIT 1),
+                tm.ClearFace) AS ClearFace,
+        coalesce(nullif(tm.CrownRatio, 0.0), 
+                (SELECT DefaultValueReal FROM TreeFieldSetup AS tfs WHERE tfs.CruiseID = t.CruiseID AND t.StratumCode = tfs.StratumCode AND (t.SampleGroupCode = tfs.SampleGroupCode OR tfs.SampleGroupCode IS NULL) AND tfs.Field = 'CrownRatio' ORDER BY tfs.SampleGroupCode DESC LIMIT 1),
+                tm.CrownRatio) AS CrownRatio,
+        coalesce(nullif(tm.DBH, 0.0), 
+                (SELECT DefaultValueReal FROM TreeFieldSetup AS tfs WHERE tfs.CruiseID = t.CruiseID AND t.StratumCode = tfs.StratumCode AND (t.SampleGroupCode = tfs.SampleGroupCode OR tfs.SampleGroupCode IS NULL) AND tfs.Field = 'DBH' ORDER BY tfs.SampleGroupCode DESC LIMIT 1),
+                tm.DBH) AS DBH,
+
+        coalesce(nullif(tm.DRC, 0.0), 
+                (SELECT DefaultValueReal FROM TreeFieldSetup AS tfs WHERE tfs.CruiseID = t.CruiseID AND t.StratumCode = tfs.StratumCode AND (t.SampleGroupCode = tfs.SampleGroupCode OR tfs.SampleGroupCode IS NULL) AND tfs.Field = 'DRC' ORDER BY tfs.SampleGroupCode DESC LIMIT 1),
+                tm.DRC) AS DRC,
+        coalesce(nullif(tm.TotalHeight, 0.0), 
+                (SELECT DefaultValueReal FROM TreeFieldSetup AS tfs WHERE tfs.CruiseID = t.CruiseID AND t.StratumCode = tfs.StratumCode AND (t.SampleGroupCode = tfs.SampleGroupCode OR tfs.SampleGroupCode IS NULL) AND tfs.Field = 'TotalHeight' ORDER BY tfs.SampleGroupCode DESC LIMIT 1),
+                tm.TotalHeight) AS TotalHeight,
+        coalesce(nullif(tm.MerchHeightPrimary, 0.0), 
+                (SELECT DefaultValueReal FROM TreeFieldSetup AS tfs WHERE tfs.CruiseID = t.CruiseID AND t.StratumCode = tfs.StratumCode AND (t.SampleGroupCode = tfs.SampleGroupCode OR tfs.SampleGroupCode IS NULL) AND tfs.Field = 'MerchHeightPrimary' ORDER BY tfs.SampleGroupCode DESC LIMIT 1),
+                tm.MerchHeightPrimary) AS MerchHeightPrimary,
+        coalesce(nullif(tm.MerchHeightSecondary, 0.0), 
+                (SELECT DefaultValueReal FROM TreeFieldSetup AS tfs WHERE tfs.CruiseID = t.CruiseID AND t.StratumCode = tfs.StratumCode AND (t.SampleGroupCode = tfs.SampleGroupCode OR tfs.SampleGroupCode IS NULL) AND tfs.Field = 'MerchHeightSecondary' ORDER BY tfs.SampleGroupCode DESC LIMIT 1),
+                tm.MerchHeightSecondary) AS MerchHeightSecondary,
+        coalesce(nullif(tm.FormClass, 0.0), 
+                (SELECT DefaultValueReal FROM TreeFieldSetup AS tfs WHERE tfs.CruiseID = t.CruiseID AND t.StratumCode = tfs.StratumCode AND (t.SampleGroupCode = tfs.SampleGroupCode OR tfs.SampleGroupCode IS NULL) AND tfs.Field = 'FormClass' ORDER BY tfs.SampleGroupCode DESC LIMIT 1),
+                tdv.FormClass, -- if tree FormClass value not defined get value from TDV
+                tm.FormClass) AS FormClass,
+
+        coalesce(nullif(tm.UpperStemDiameter, 0.0), 
+                (SELECT DefaultValueReal FROM TreeFieldSetup AS tfs WHERE tfs.CruiseID = t.CruiseID AND t.StratumCode = tfs.StratumCode AND (t.SampleGroupCode = tfs.SampleGroupCode OR tfs.SampleGroupCode IS NULL) AND tfs.Field = 'UpperStemDiameter' ORDER BY tfs.SampleGroupCode DESC LIMIT 1),
+                tm.UpperStemDiameter) AS UpperStemDiameter,
+        coalesce(nullif(tm.UpperStemHeight, 0.0), 
+                (SELECT DefaultValueReal FROM TreeFieldSetup AS tfs WHERE tfs.CruiseID = t.CruiseID AND t.StratumCode = tfs.StratumCode AND (t.SampleGroupCode = tfs.SampleGroupCode OR tfs.SampleGroupCode IS NULL) AND tfs.Field = 'UpperStemHeight' ORDER BY tfs.SampleGroupCode DESC LIMIT 1),
+                tm.UpperStemHeight) AS UpperStemHeight,
+        coalesce(nullif(tm.DBHDoubleBarkThickness, 0.0), 
+                (SELECT DefaultValueReal FROM TreeFieldSetup AS tfs WHERE tfs.CruiseID = t.CruiseID AND t.StratumCode = tfs.StratumCode AND (t.SampleGroupCode = tfs.SampleGroupCode OR tfs.SampleGroupCode IS NULL) AND tfs.Field = 'DBHDoubleBarkThickness' ORDER BY tfs.SampleGroupCode DESC LIMIT 1),
+                tm.DBHDoubleBarkThickness) AS DBHDoubleBarkThickness,
+        coalesce(nullif(tm.TopDIBPrimary, 0.0), 
+                (SELECT DefaultValueReal FROM TreeFieldSetup AS tfs WHERE tfs.CruiseID = t.CruiseID AND t.StratumCode = tfs.StratumCode AND (t.SampleGroupCode = tfs.SampleGroupCode OR tfs.SampleGroupCode IS NULL) AND tfs.Field = 'TopDIBPrimary' ORDER BY tfs.SampleGroupCode DESC LIMIT 1),
+                tm.TopDIBPrimary) AS TopDIBPrimary,
+        coalesce(nullif(tm.TopDIBSecondary, 0.0), 
+                (SELECT DefaultValueReal FROM TreeFieldSetup AS tfs WHERE tfs.CruiseID = t.CruiseID AND t.StratumCode = tfs.StratumCode AND (t.SampleGroupCode = tfs.SampleGroupCode OR tfs.SampleGroupCode IS NULL) AND tfs.Field = 'TopDIBSecondary' ORDER BY tfs.SampleGroupCode DESC LIMIT 1),
+                tm.TopDIBSecondary) AS TopDIBSecondary,
+
+        coalesce(nullif(tm.DefectCode, ''), 
+                (SELECT DefaultValueText FROM TreeFieldSetup AS tfs WHERE tfs.CruiseID = t.CruiseID AND t.StratumCode = tfs.StratumCode AND (t.SampleGroupCode = tfs.SampleGroupCode OR tfs.SampleGroupCode IS NULL) AND tfs.Field = 'DefectCode' ORDER BY tfs.SampleGroupCode DESC LIMIT 1),
+                tm.DefectCode) AS DefectCode,
+        coalesce(nullif(tm.DiameterAtDefect, 0.0), 
+                (SELECT DefaultValueReal FROM TreeFieldSetup AS tfs WHERE tfs.CruiseID = t.CruiseID AND t.StratumCode = tfs.StratumCode AND (t.SampleGroupCode = tfs.SampleGroupCode OR tfs.SampleGroupCode IS NULL) AND tfs.Field = 'DiameterAtDefect' ORDER BY tfs.SampleGroupCode DESC LIMIT 1),
+                tm.DiameterAtDefect) AS DiameterAtDefect,
+        coalesce(nullif(tm.VoidPercent, 0.0), 
+                (SELECT DefaultValueReal FROM TreeFieldSetup AS tfs WHERE tfs.CruiseID = t.CruiseID AND t.StratumCode = tfs.StratumCode AND (t.SampleGroupCode = tfs.SampleGroupCode OR tfs.SampleGroupCode IS NULL) AND tfs.Field = 'VoidPercent' ORDER BY tfs.SampleGroupCode DESC LIMIT 1),
+                tm.VoidPercent) AS VoidPercent,
+        coalesce(nullif(tm.Slope, 0.0), 
+                (SELECT DefaultValueReal FROM TreeFieldSetup AS tfs WHERE tfs.CruiseID = t.CruiseID AND t.StratumCode = tfs.StratumCode AND (t.SampleGroupCode = tfs.SampleGroupCode OR tfs.SampleGroupCode IS NULL) AND tfs.Field = 'Slope' ORDER BY tfs.SampleGroupCode DESC LIMIT 1),
+                tm.Slope) AS Slope,
+        coalesce(nullif(tm.Aspect, 0.0), 
+                (SELECT DefaultValueReal FROM TreeFieldSetup AS tfs WHERE tfs.CruiseID = t.CruiseID AND t.StratumCode = tfs.StratumCode AND (t.SampleGroupCode = tfs.SampleGroupCode OR tfs.SampleGroupCode IS NULL) AND tfs.Field = 'Aspect' ORDER BY tfs.SampleGroupCode DESC LIMIT 1),
+                tm.Aspect) AS Aspect,
+
+        coalesce(nullif(tm.Remarks, ''), 
+                (SELECT DefaultValueText FROM TreeFieldSetup AS tfs WHERE tfs.CruiseID = t.CruiseID AND t.StratumCode = tfs.StratumCode AND (t.SampleGroupCode = tfs.SampleGroupCode OR tfs.SampleGroupCode IS NULL) AND tfs.Field = 'Remarks' ORDER BY tfs.SampleGroupCode DESC LIMIT 1),
+                tm.Remarks) AS Remarks,
+        coalesce(nullif(tm.IsFallBuckScale, 0), 
+                (SELECT DefaultValueText FROM TreeFieldSetup AS tfs WHERE tfs.CruiseID = t.CruiseID AND t.StratumCode = tfs.StratumCode AND (t.SampleGroupCode = tfs.SampleGroupCode OR tfs.SampleGroupCode IS NULL) AND tfs.Field = 'IsFallBuckScale' ORDER BY tfs.SampleGroupCode DESC LIMIT 1),
+                tm.IsFallBuckScale) AS IsFallBuckScale,
+
+        coalesce(nullif(tm.MetaData, ''), 
+                (SELECT DefaultValueText FROM TreeFieldSetup AS tfs WHERE tfs.CruiseID = t.CruiseID AND t.StratumCode = tfs.StratumCode AND (t.SampleGroupCode = tfs.SampleGroupCode OR tfs.SampleGroupCode IS NULL) AND tfs.Field = 'MetaData' ORDER BY tfs.SampleGroupCode DESC LIMIT 1),
+                tm.MetaData) AS MetaData, 
+        coalesce(nullif(tm.Initials, ''), 
+                (SELECT DefaultValueText FROM TreeFieldSetup AS tfs WHERE tfs.CruiseID = t.CruiseID AND t.StratumCode = tfs.StratumCode AND (t.SampleGroupCode = tfs.SampleGroupCode OR tfs.SampleGroupCode IS NULL) AND tfs.Field = 'Initials' ORDER BY tfs.SampleGroupCode DESC LIMIT 1),
+                tm.Initials) AS Initials
+
+FROM TreeMeasurment AS tm
+JOIN Tree AS t USING (TreeID)
+JOIN Tree_TreeDefaultValue USING (TreeID)
+LEFT JOIN TreeDefaultValue AS tdv USING (TreeDefaultValue_CN)
+
+
+-- ************** TreeMeasurment_Tombstone **************
+CREATE TABLE TreeMeasurment_Tombstone (
+    TreeID TEXT NOT NULL,
+
+    SeenDefectPrimary REAL,
+    SeenDefectSecondary REAL,
+    RecoverablePrimary REAL,
+    HiddenPrimary REAL,
+    Grade TEXT,
+
+    HeightToFirstLiveLimb REAL,
+    PoleLength REAL,
+    ClearFace TEXT,
+    CrownRatio REAL,
+    DBH REAL,
+
+    DRC REAL,
+    TotalHeight REAL,
+    MerchHeightPrimary REAL,
+    MerchHeightSecondary REAL,
+    FormClass REAL,
+
+    --UpperStemDOB REAL,
+
+    UpperStemDiameter REAL,
+    UpperStemHeight REAL,
+    DBHDoubleBarkThickness REAL,
+    TopDIBPrimary REAL,
+    TopDIBSecondary REAL,
+
+    DefectCode TEXT,
+    DiameterAtDefect REAL,
+    VoidPercent REAL,
+    Slope REAL,
+    Aspect REAL,
+
+    Remarks TEXT,
+    IsFallBuckScale BOOLEAN,
+
+    MetaData TEXT,
+    Initials TEXT,
+
+    CreatedBy TEXT,
+    Created_TS DATETIME,
+    ModifiedBy TEXT,
+    Modified_TS DATETIME,
+    Deleted_TS DATETIME
+)
+
+CREATE INDEX NIX_TreeMeasurment_Tombstone_TreeID ON TreeMeasurment_Tombstone
+(TreeID)
+
+
+-- ************** Tree_Tombstone **************
+CREATE TABLE Tree_Tombstone (
+    CruiseID TEXT NOT NULL COLLATE NOCASE,
+    TreeID TEXT NOT NULL ,
+    CuttingUnitCode TEXT NOT NULL COLLATE NOCASE,
+    StratumCode TEXT NOT NULL COLLATE NOCASE,
+    SampleGroupCode TEXT NOT NULL COLLATE NOCASE,
+    SpeciesCode TEXT COLLATE NOCASE,
+    LiveDead TEXT COLLATE NOCASE,
+    PlotNumber INTEGER,
+    TreeNumber INTEGER NOT NULL,
+    CountOrMeasure TEXT COLLATE NOCASE,
+
+    CreatedBy TEXT,
+    Created_TS DATETIME,
+    ModifiedBy TEXT,
+    Modified_TS DATETIME,
+    Deleted_TS DATETIME
+)
+
+CREATE INDEX NIX_Tree_Tombstone_TreeID ON Tree_Tombstone
+(TreeID)
+
+CREATE INDEX NIX_Tree_Tombstone_CruiseID_CuttingUnitCode_PlotNumber_TreeNumber ON Tree_Tombstone
+(CruiseID, CuttingUnitCode, PlotNumber, TreeNumber)
+
+
+-- ************** Tree_TreeDefaultValue **************
+CREATE VIEW Tree_TreeDefaultValue AS
+SELECT
+    t.TreeID,
+    (SELECT TreeDefaultValue_CN FROM TreeDefaultValue AS tdv
+        WHERE  tdv.CruiseID = t.CruiseID
+            AND (tdv.SpeciesCode = t.SpeciesCode OR SpeciesCode IS NULL)
+            AND (tdv.PrimaryProduct = sg.PrimaryProduct OR tdv.PrimaryProduct IS NULL)
+        ORDER BY tdv.PrimaryProduct DESC, tdv.SpeciesCode DESC
+        LIMIT 1
+    ) AS TreeDefaultValue_CN
+FROM Tree AS t
+JOIN SampleGroup AS sg USING (SampleGroupCode, StratumCode, CruiseID)
+
+
+-- ************** ValueEquation **************
+CREATE TABLE ValueEquation (
+    CruiseID TEXT NOT NULL COLLATE NOCASE,
+    Species TEXT NOT NULL,
+    PrimaryProduct TEXT NOT NULL,
+    ValueEquationNumber TEXT,
+    Grade TEXT,
+    Coefficient1 REAL Default 0.0,
+    Coefficient2 REAL Default 0.0,
+    Coefficient3 REAL Default 0.0,
+    Coefficient4 REAL Default 0.0,
+    Coefficient5 REAL Default 0.0,
+    Coefficient6 REAL Default 0.0,
+
+    CreatedBy TEXT DEFAULT 'none',
+    Created_TS DATETIME DEFAULT (CURRENT_TIMESTAMP),
+    ModifiedBy TEXT,
+    Modified_TS DATETIME,
+
+    UNIQUE (CruiseID, Species, PrimaryProduct, ValueEquationNumber),
+
+    FOREIGN KEY (CruiseID) REFERENCES Cruise (CruiseID) ON DELETE CASCADE
+)
+
+
+
+
+-- ************** VolumeEquation **************
+CREATE TABLE VolumeEquation (
+	VolumeEquation_CN INTEGER PRIMARY KEY AUTOINCREMENT,
+	CruiseID TEXT NOT NULL COLLATE NOCASE,
+	Species TEXT NOT NULL,
+	PrimaryProduct TEXT NOT NULL,
+	VolumeEquationNumber TEXT NOT NULL,
+	StumpHeight REAL Default 0.0,
+	TopDIBPrimary REAL Default 0.0,
+	TopDIBSecondary REAL Default 0.0,
+	CalcTotal INTEGER Default 0,
+	CalcBoard INTEGER Default 0,
+	CalcCubic INTEGER Default 0,
+	CalcCord INTEGER Default 0,
+	CalcTopwood INTEGER Default 0,
+	CalcBiomass INTEGER Default 0,
+	Trim REAL Default 0.0,
+	SegmentationLogic INTEGER Default 0,
+	MinLogLengthPrimary REAL Default 0.0,
+	MaxLogLengthPrimary REAL Default 0.0,
+	MinLogLengthSecondary REAL Default 0.0,
+	MaxLogLengthSecondary REAL Default 0.0,
+	MinMerchLength REAL Default 0.0,
+	Model TEXT,
+	CommonSpeciesName TEXT,
+	MerchModFlag INTEGER Default 0,
+	EvenOddSegment INTEGER Default 0,
+
+    CreatedBy TEXT DEFAULT 'none',
+    Created_TS DATETIME DEFAULT (CURRENT_TIMESTAMP),
+    ModifiedBy TEXT,
+    Modified_TS DATETIME,
+
+	FOREIGN KEY (CruiseID) REFERENCES Cruise (CruiseID) ON DELETE CASCADE,
+
+	UNIQUE (CruiseID, Species, PrimaryProduct, VolumeEquationNumber)
+)
+
+CREATE TRIGGER VolumeEquation_OnUpdate
+AFTER UPDATE OF
+		StumpHeight,
+		TopDIBPrimary,
+		TopDIBSecondary,
+		CalcTotal,
+		CalcBoard,
+		CalcCubic,
+		CalcCord,
+		CalcTopwood,
+		CalcBiomass,
+		Trim,
+		SegmentationLogic,
+		MinLogLengthPrimary,
+		MaxLogLengthPrimary,
+		MinLogLengthSecondary,
+		MaxLogLengthSecondary,
+		MinMerchLength,
+		Model,
+		CommonSpeciesName,
+		MerchModFlag,
+		EvenOddSegment
+ON VolumeEquation
+FOR EACH ROW
+BEGIN
+	UPDATE VolumeEquation SET Modified_TS = CURRENT_TIMESTAMP WHERE VolumeEquation_CN = OLD.VolumeEquation_CN;
+END
+
+CREATE TRIGGER VolumeEquation_OnDelete
+BEFORE DELETE ON VolumeEquation
+FOR EACH ROW
+BEGIN
+	INSERT OR REPLACE INTO VolumeEquation_Tombstone (
+		CruiseID,
+		Species,
+		PrimaryProduct,
+		VolumeEquationNumber,
+		StumpHeight,
+		TopDIBPrimary,
+		TopDIBSecondary,
+		CalcTotal,
+		CalcBoard,
+		CalcCubic,
+		CalcCord,
+		CalcTopwood,
+		CalcBiomass,
+		Trim,
+		SegmentationLogic,
+		MinLogLengthPrimary,
+		MaxLogLengthPrimary,
+		MinLogLengthSecondary,
+		MaxLogLengthSecondary,
+		MinMerchLength,
+		Model,
+		CommonSpeciesName,
+		MerchModFlag,
+		EvenOddSegment,
+		CreatedBy,
+		Created_TS,
+		ModifiedBy,
+		Modified_TS,
+		Deleted_TS
+	) VALUES (
+		OLD.CruiseID,
+		OLD.Species,
+		OLD.PrimaryProduct,
+		OLD.VolumeEquationNumber,
+		OLD.StumpHeight,
+		OLD.TopDIBPrimary,
+		OLD.TopDIBSecondary,
+		OLD.CalcTotal,
+		OLD.CalcBoard,
+		OLD.CalcCubic,
+		OLD.CalcCord,
+		OLD.CalcTopwood,
+		OLD.CalcBiomass,
+		OLD.Trim,
+		OLD.SegmentationLogic,
+		OLD.MinLogLengthPrimary,
+		OLD.MaxLogLengthPrimary,
+		OLD.MinLogLengthSecondary,
+		OLD.MaxLogLengthSecondary,
+		OLD.MinMerchLength,
+		OLD.Model,
+		OLD.CommonSpeciesName,
+		OLD.MerchModFlag,
+		OLD.EvenOddSegment,
+		OLD.CreatedBy,
+		OLD.Created_TS,
+		OLD.ModifiedBy,
+		OLD.Modified_TS,
+		CURRENT_TIMESTAMP
+	);
+END
+
+CREATE TRIGGER VolumeEquation_OnInsert_ClearTombstone
+AFTER INSERT ON VolumeEquation
+FOR EACH ROW
+BEGIN
+	DELETE FROM VolumeEquation_Tombstone 
+		WHERE CruiseID = NEW.CruiseID
+		AND Species = NEW.Species
+		AND PrimaryProduct = NEW.PrimaryProduct
+		AND VolumeEquationNumber = NEW.VolumeEquationNumber;
+END
+
+
+
+CREATE INDEX NIX_VolumeEquation_CruiseID ON VolumeEquation (CruiseID)
+
+
+-- ************** VolumeEquation_Tombstone **************
+CREATE TABLE VolumeEquation_Tombstone (
+	CruiseID TEXT NOT NULL COLLATE NOCASE,
+	Species TEXT NOT NULL,
+	PrimaryProduct TEXT NOT NULL,
+	VolumeEquationNumber TEXT NOT NULL,
+	StumpHeight REAL,
+	TopDIBPrimary REAL,
+	TopDIBSecondary REAL,
+	CalcTotal INTEGER,
+	CalcBoard INTEGER,
+	CalcCubic INTEGER,
+	CalcCord INTEGER,
+	CalcTopwood INTEGER,
+	CalcBiomass INTEGER,
+	Trim REAL,
+	SegmentationLogic INTEGER,
+	MinLogLengthPrimary REAL,
+	MaxLogLengthPrimary REAL,
+	MinLogLengthSecondary REAL,
+	MaxLogLengthSecondary REAL,
+	MinMerchLength REAL,
+	Model TEXT,
+	CommonSpeciesName TEXT,
+	MerchModFlag INTEGER,
+	EvenOddSegment INTEGER,
+    CreatedBy TEXT,
+    Created_TS DATETIME,
+    ModifiedBy TEXT,
+    Modified_TS DATETIME,
+	Deleted_TS DATETIME
+)
+
+

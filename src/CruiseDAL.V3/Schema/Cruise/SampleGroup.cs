@@ -31,7 +31,7 @@ namespace CruiseDAL.Schema
     KZ INTEGER Default 0,
     BigBAF INTEGER Default 0,
     TallyBySubPop BOOLEAN DEFAULT 0,
-    UseExternalSampler BOOLEAN DEFAULT 0,
+    UseExternalSampler BOOLEAN DEFAULT 0, -- depreciated decided to implement using SampleSelectorType
     SampleSelectorType TEXT COLLATE NOCASE,
     Description TEXT,
     MinKPI INTEGER Default 0,

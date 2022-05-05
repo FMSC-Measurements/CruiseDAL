@@ -1,0 +1,65 @@
+# Handeling deletes
+Deletes should be handled prior to doing conflict checks. 
+This surves two purposes. 
+ - when syncing multiple crew files, if we resolve a conflict by deleting a conflicting record
+	then we won't need to resolve that conflict again. because the conflicting record should either
+	already be deleted (if it was in the established file) or be tombstoned and marked for deletion 
+	if in the crew files. 
+ - if in the established file we delete a record and modify (or add) a record to take the place of the old record
+	this will not generate a conflict because we delete the conflicting record before we do our checks
+	
+Since conflict checking and conflict resolution-sync are two operations 
+And conflict checking need not be a operation that modifys the state of either file
+So if we don't store or carry over the state of the database after the conflict check operation
+We will need to rerun the delete operation prior to running conflict resolution-sync
+
+
+# Conflict Resolution Options
+
+## Chose Record to Keep
+This conflict resolution type is where we chose either one of the conflicting records to 
+go into the destination file. 
+
+Three options on which record to chose
+ - source
+ - dest
+ - newest
+
+There are also some other options on how we handle this resolution options
+ - keep all child records from one file but none from the other
+ - merge child records from both files. some child records may be in conflict
+	when chose newest is selected we can resolve downstream conflicts using the same logic
+	
+### Downstream conflicts
+When chosing to merge data on a conflicted redord we may need to handle additional conflicts 
+on any data that belongs to the conflicted records. By default these downstream conflicts can 
+be resolved using the conflict resolution of the parent record (chose source, chose dest, chose newest)
+
+## Modify
+This is the easyest conflict resolution option to implement
+We are modifying the record value that is making the record a conflict, 
+and all child records aswell. We don't need to wory about downstream conflicts
+
+We will modify the record in the source or dest before doing the sync.
+We can isolate these chages from  flowing back to the original file (source file) by using
+an in memory version of the source file, or creating a copy of the source file. 
+
+
+# Atomic Sync
+We should work to make the file sync an atomic operation
+it may be hard to encaplolate the entire sync operation in a single transaction.
+
+One solution to allow for Atomic sync would be to work on a in-memory copy of the database.
+Another would be to work on a copy of the database. The Backupdatabase method should make this easy. 
+
+One reason why atomic sync is important is because some operations put the database in an invalid state.
+The chose and merge conflict resolution option requires us to disable cascading deletes. When chosing the source 
+record we need to delete the dest record before inserting the source record in its place. 
+
+
+# Disableing Cascading Deletes
+The chose and merge conflict resolution option may require us to turn off ForeignKeys to disable cascading deletes
+ForeignKeys can not be disabled inside a transaction or savepoint. 
+Using `PRAGMA defer_foreign_keys` doesn't appear to allow suspending cascading deletes
+
+
