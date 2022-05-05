@@ -846,7 +846,7 @@ namespace CruiseDAL.V3.Sync
 
         public static DateTime GetPlotTreeModified(DbConnection db, string cruiseID, string unitCode, int plotNumber)
         {
-            return db.ExecuteScalar<DateTime>("SELECT  max( max(Created_TS), max(Modified_TS)) FROM Tree WHERE CruiseID = @p1 AND CuttingUnitCode = @p2 AND PlotNumber = @p3",
+            return db.ExecuteScalar<DateTime>("SELECT  max( max(Created_TS), ifnull(max(Modified_TS), datetime(0))) FROM Tree WHERE CruiseID = @p1 AND CuttingUnitCode = @p2 AND PlotNumber = @p3",
                         new object[] { cruiseID, unitCode, plotNumber });
         }
 
@@ -1027,11 +1027,11 @@ namespace CruiseDAL.V3.Sync
             // from both the TreeMeasurment record and the TreeFieldValues records.
             return db.ExecuteScalar<DateTime>(
 @" SELECT max(mod) FROM (
-        SELECT max( tm.Created_TS, tm.Modified_TS) AS mod FROM TreeMeasurment AS tm WHERE tm.TreeID = @p1
+        SELECT max( tm.Created_TS, ifnull(tm.Modified_TS, datetime(0))) AS mod FROM TreeMeasurment AS tm WHERE tm.TreeID = @p1
         UNION ALL
-        SELECT max( tfv.Created_TS, tfv.Modified_TS) AS mod FROM TreeFieldValue AS tfv WHERE tfv.TreeID = @p1
+        SELECT max( tfv.Created_TS, ifnull(tfv.Modified_TS, datetime(0))) AS mod FROM TreeFieldValue AS tfv WHERE tfv.TreeID = @p1
         UNION ALL
-        SELECT max( tl.Created_TS, tl.Modified_TS) AS mod FROM TreeLocation AS tl WHERE tl.TreeID = @p1
+        SELECT max( tl.Created_TS, ifnull(tl.Modified_TS, datetime(0))) AS mod FROM TreeLocation AS tl WHERE tl.TreeID = @p1
 );", parameters: new[] { treeID });
         }
 
