@@ -68,7 +68,7 @@ namespace CruiseDAL.V3.Sync
                 .Where("SaleID = @p1")
                 .Query(saleID)
                 .FirstOrDefault();
-            sale.Remarks = Rand.String();
+            sale.Remarks = Rand.Words();
             fromDb.Update(sale);
 
             var syncer = new CruiseSyncer();
@@ -181,7 +181,7 @@ namespace CruiseDAL.V3.Sync
                 .Where("CruiseID = @p1")
                 .Query(cruiseID)
                 .FirstOrDefault();
-            cruise.Remarks = Rand.String();
+            cruise.Remarks = Rand.Words();
             fromDb.Update(cruise);
 
             var syncer = new CruiseSyncer();
@@ -275,6 +275,13 @@ namespace CruiseDAL.V3.Sync
             fromDb.CopyTo(toPath, true);
             using var toDb = new CruiseDatastore_V3(toPath);
 
+            var sp = new Species
+            {
+                CruiseID = cruiseID,
+                SpeciesCode = "mySp",
+            };
+            fromDb.Insert(sp);
+
             var sampleGroup = SampleGroups[0];
             var subPopID = Guid.NewGuid().ToString();
             var newSubpopulation = new SubPopulation()
@@ -283,7 +290,7 @@ namespace CruiseDAL.V3.Sync
                 SubPopulationID = subPopID,
                 StratumCode = sampleGroup.StratumCode,
                 SampleGroupCode = sampleGroup.SampleGroupCode,
-                SpeciesCode = Species[3],
+                SpeciesCode = sp.SpeciesCode,
                 LiveDead = "L",
             };
             fromDb.Insert(newSubpopulation);

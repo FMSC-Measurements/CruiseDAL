@@ -58,7 +58,7 @@ namespace FMSC.ORM.Core
             }
         }
 
-        [Theory]
+        [Theory(Skip = "reading two fields with the same name from seperate tables not supported")]
         [InlineData(true)]
         [InlineData(false)]
         public void Query_MultiType_Test(bool nulls)

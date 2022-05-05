@@ -104,7 +104,7 @@ namespace CruiseDAL.V3.Test.Schema
             }
         }
 
-        [SkippableTheory]
+        [SkippableTheory(typeof(Xunit.SkipException))]
         [ClassData(typeof(TableNamesTestDataProvider))]
         public void RunDelete_WithData(string tableName)
         {

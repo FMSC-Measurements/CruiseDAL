@@ -74,7 +74,7 @@ namespace CruiseDAL.V3.Sync
             using var toDb = new CruiseDatastore_V3(toPath);
 
             // modify stratum value and save to source database
-            stratum.Hotkey = Rand.String();
+            stratum.Hotkey = Rand.Word();
             fromDb.Update(stratum);
 
             // run sync

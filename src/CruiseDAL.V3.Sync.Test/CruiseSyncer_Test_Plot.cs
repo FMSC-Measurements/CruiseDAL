@@ -76,7 +76,7 @@ namespace CruiseDAL.V3.Sync
             fromDb.CopyTo(toPath, true);
             using var toDb = new CruiseDatastore_V3(toPath);
 
-            plot.Remarks = Rand.String();
+            plot.Remarks = Rand.Words();
             plot.Slope = Rand.Double();
             plot.PlotNumber = Rand.Int();
             fromDb.Update(plot);

@@ -73,7 +73,7 @@ namespace CruiseDAL.V3.Sync
 
             // modify cutting unit value and save to source database
             cuttingUnit.Area = Rand.Int();
-            cuttingUnit.Description = Rand.String();
+            cuttingUnit.Description = Rand.Words();
             cuttingUnit.LoggingMethod = "401";
             cuttingUnit.PaymentUnit = Rand.AlphaNumeric(3);
             cuttingUnit.Rx = Rand.AlphaNumeric(3);

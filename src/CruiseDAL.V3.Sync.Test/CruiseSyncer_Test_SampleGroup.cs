@@ -74,7 +74,7 @@ namespace CruiseDAL.V3.Sync
             using var toDb = new CruiseDatastore_V3(toPath);
 
             // modify sample group value on source database
-            sampleGroup.Description = Rand.String();
+            sampleGroup.Description = Rand.Words();
             fromDb.Update(sampleGroup);
 
             // run sync
