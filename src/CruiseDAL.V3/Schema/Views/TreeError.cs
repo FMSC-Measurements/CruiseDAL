@@ -32,13 +32,13 @@ WITH
 
     treeError_heights AS (
     SELECT
-        tm.TreeID,
+        t.TreeID,
         t.CruiseID,
         'e' AS Level,
         'Aleast One Height Parameter Must Be Greater Than 0' AS Message,
         'heights' AS Field
     FROM Tree AS t
-    LEFT JOIN TreeMeasurment AS tm
+    LEFT JOIN TreeMeasurment AS tm USING (TreeID)
     WHERE t.CountOrMeasure = 'M'  
         AND ifnull(tm.TotalHeight, 0) <=0 
         AND ifnull(tm.MerchHeightPrimary, 0) <= 0 
@@ -47,69 +47,81 @@ WITH
 
     treeError_diameters AS (
     SELECT
-        tm.TreeID,
+        t.TreeID,
         t.CruiseID,
         'e' AS Level,
         'DBH or DRC must be greater than 0' AS Message,
         'diameters' AS Field
-    FROM TreeMeasurment AS tm
-    JOIN Tree AS t USING (TreeID)
-    WHERE t.CountOrMeasure = 'M' AND tm.DBH <=0 AND tm.DRC <=0),
+    FROM Tree AS t
+    LEFT JOIN TreeMeasurment AS tm USING (TreeID)
+    WHERE t.CountOrMeasure = 'M' 
+        AND ifnull(tm.DBH, 0) <=0 
+        AND ifnull(tm.DRC, 0) <=0),
 
     treeError_merchHeightSecondary AS (
     SELECT
-        tm.TreeID,
+        t.TreeID,
         t.CruiseID,
         'e' AS Level,
         'Merch Height Secondary Must Be Greater Than or Equal Merch Height Primary' AS Message,
         'MerchHeightSecondary' AS Field
-    FROM TreeMeasurment AS tm
-    JOIN Tree AS t USING (TreeID)
-    WHERE t.CountOrMeasure = 'M' AND tm.MerchHeightSecondary > 0 AND tm.MerchHeightSecondary <= tm.MerchHeightPrimary),
+    FROM Tree AS t
+    JOIN TreeMeasurment AS tm USING (TreeID)
+    WHERE t.CountOrMeasure = 'M' 
+        AND tm.MerchHeightSecondary > 0 
+        AND tm.MerchHeightSecondary <= tm.MerchHeightPrimary),
 
     treeError_upperStemHeight AS (
     SELECT
-        tm.TreeID,
+        t.TreeID,
         t.CruiseID,
         'e' AS Level,
         'Upper Stem Height Must Be Greater Than or Equal Merch Height Primary' AS Message,
         'UpperStemHeight' AS Field
-    FROM TreeMeasurment AS tm
-    JOIN Tree AS t USING (TreeID)
-    WHERE t.CountOrMeasure = 'M' AND tm.UpperStemHeight > 0 AND tm.UpperStemHeight < tm.MerchHeightPrimary),
+    FROM Tree AS t
+    JOIN TreeMeasurment AS tm USING (TreeID)
+    WHERE t.CountOrMeasure = 'M' 
+        AND tm.UpperStemHeight > 0 
+        AND tm.UpperStemHeight < tm.MerchHeightPrimary),
 
     treeError_upperStemDiameter AS (
     SELECT
-        tm.TreeID,
+        t.TreeID,
         t.CruiseID,
         'e' AS Level,
         'Upper Stem Diameter Must Be Smaller Than DBH' AS Message,
         'UpperStemDiameter' AS Field
-    FROM TreeMeasurment AS tm
-    JOIN Tree AS t USING (TreeID)
-    WHERE t.CountOrMeasure = 'M' AND tm.UpperStemDiameter > 0 AND tm.UpperStemDiameter >= tm.DBH),
+    FROM Tree AS t
+    JOIN TreeMeasurment AS tm USING (TreeID)
+    WHERE t.CountOrMeasure = 'M' 
+        AND tm.UpperStemDiameter > 0 
+        AND tm.UpperStemDiameter >= tm.DBH),
 
     treeError_topDIBSecondary AS (
     SELECT
-        tm.TreeID,
+        t.TreeID,
         t.CruiseID,
         'e' AS Level,
         'Top DIB Secondary must be less Top DIB Primary' AS Message,
         'TopDIBSecondary' AS Field
-    FROM TreeMeasurment AS tm
-    JOIN Tree AS t USING (TreeID)
-    WHERE t.CountOrMeasure = 'M' AND tm.TopDIBSecondary > 0 AND tm.TopDIBSecondary > tm.TopDIBPrimary),
+    FROM Tree AS t
+    JOIN TreeMeasurment AS tm USING (TreeID)
+    WHERE t.CountOrMeasure = 'M' 
+        AND tm.TopDIBSecondary > 0 
+        AND tm.TopDIBSecondary > tm.TopDIBPrimary),
 
     treeError_seenDefectPrimary AS (
     SELECT
-        tm.TreeID,
+        t.TreeID,
         t.CruiseID,
         'e' AS Level,
         'Seen Defect Primary must be greater than Recoverable Primary' AS Message,
         'SeenDefectPrimary' AS Field
-    FROM TreeMeasurment AS tm
-    JOIN Tree AS t USING (TreeID)
-    WHERE t.CountOrMeasure = 'M' AND tm.SeenDefectPrimary > 0 AND tm.SeenDefectPrimary < tm.RecoverablePrimary)
+    FROM Tree AS t
+    JOIN TreeMeasurment AS tm USING (TreeID)
+    WHERE t.CountOrMeasure = 'M' 
+        AND tm.SeenDefectPrimary > 0 
+        AND tm.SeenDefectPrimary < tm.RecoverablePrimary)
 
 SELECT
 	tae.TreeID,

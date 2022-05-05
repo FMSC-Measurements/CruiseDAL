@@ -18,7 +18,7 @@ namespace CruiseDAL.V3.Test.Schema.Views
         }
 
         [Fact]
-        public void TreeError_MeasureTree()
+        public void TreeError_MeasureTree_No_TreeMeasurmentRecord()
         {
             var init = new DatabaseInitializer();
 
@@ -38,7 +38,113 @@ namespace CruiseDAL.V3.Test.Schema.Views
             db.Insert(tree);
 
             var treeErrors = db.From<TreeError>().Query().ToArray();
-            treeErrors.Should().NotBeEmpty();
+            treeErrors.Should().Contain(x => x.Field == "heights");
+            treeErrors.Should().Contain(x => x.Field == "diameters");
+
+        }
+
+        [Fact]
+        public void TreeError_MeasureTree_WithHeights()
+        {
+            var init = new DatabaseInitializer();
+
+            using var db = init.CreateDatabase();
+
+            var tree = new Tree
+            {
+                // just requited fields
+                CruiseID = init.CruiseID,
+                TreeID = Guid.NewGuid().ToString(),
+                CuttingUnitCode = "u1",
+                StratumCode = "st1",
+                SampleGroupCode = "sg1",
+
+                CountOrMeasure = "M",
+            };
+            db.Insert(tree);
+
+            var tm = new TreeMeasurment
+            {
+                TreeID = tree.TreeID,
+                TotalHeight = 101,
+            };
+            db.Insert(tm);
+
+            var treeErrors = db.From<TreeError>().Query().ToArray();
+            treeErrors.Should().NotContain(x => x.Field == "heights");
+        }
+
+        [Fact]
+        public void TreeError_MeasureTree_NoValues()
+        {
+            var init = new DatabaseInitializer();
+
+            using var db = init.CreateDatabase();
+
+            var tree = new Tree
+            {
+                // just requited fields
+                CruiseID = init.CruiseID,
+                TreeID = Guid.NewGuid().ToString(),
+                CuttingUnitCode = "u1",
+                StratumCode = "st1",
+                SampleGroupCode = "sg1",
+
+                CountOrMeasure = "M",
+            };
+            db.Insert(tree);
+
+            var tm = new TreeMeasurment
+            {
+                TreeID = tree.TreeID,
+            };
+            db.Insert(tm);
+
+            var treeErrors = db.From<TreeError>().Query().ToArray();
+            treeErrors.Should().Contain(x => x.Field == "SpeciesCode");
+            treeErrors.Should().Contain(x => x.Field == "LiveDead");
+            treeErrors.Should().Contain(x => x.Field == "heights");
+            treeErrors.Should().Contain(x => x.Field == "diameters");
+        }
+
+        [Fact]
+        public void TreeError_MeasureTree_SeenDefectPrimary()
+        {
+            var init = new DatabaseInitializer();
+
+            using var db = init.CreateDatabase();
+
+            var tree = new Tree
+            {
+                // just requited fields
+                CruiseID = init.CruiseID,
+                TreeID = Guid.NewGuid().ToString(),
+                CuttingUnitCode = "u1",
+                StratumCode = "st1",
+                SampleGroupCode = "sg1",
+
+                CountOrMeasure = "M",
+            };
+            db.Insert(tree);
+
+            var tm = new TreeMeasurment
+            {
+                TreeID = tree.TreeID,
+                RecoverablePrimary = 103,
+                SeenDefectPrimary = 102,
+            };
+            db.Insert(tm);
+
+            var treeErrors = db.From<TreeError>().Query().ToArray();
+            treeErrors.Should().Contain(x => x.Field == "SeenDefectPrimary");
+
+            tm.SeenDefectPrimary = 103;
+            db.Update(tm);
+
+            treeErrors = db.From<TreeError>().Query().ToArray();
+            treeErrors.Should().NotContain(x => x.Field == "SeenDefectPrimary");
+
+
         }
     }
 }
