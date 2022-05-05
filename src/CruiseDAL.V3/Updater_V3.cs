@@ -130,7 +130,9 @@ namespace CruiseDAL
                 db.Execute("DELETE FROM VolumeEquation WHERE CruiseID NOT IN (SELECT CruiseID FROM Cruise)");
                 RebuildTable(db, new VolumeEquationTableDefinition());
 
-
+                RecreateView(db, new TallyLedger_TotalsViewDefinition());
+                RecreateView(db, new TallyLedger_Plot_TotalsViewDefinition());
+                RecreateView(db, new TreeErrorViewDefinition());
 
                 SetDatabaseVersion(db, targetVersion);
                 db.CommitTransaction();
@@ -193,8 +195,7 @@ namespace CruiseDAL
                 db.Execute(SpeciesTableDefinition.CREATE_TRIGGER_Species_OnUpdate_ContractSpecies);
 
                 // rebuild TallyLedger_Tree_Totals view
-                db.Execute("DROP VIEW TallyLedger_Tree_Totals;");
-                db.Execute(TallyLedgerViewDefinition.CREATE_VIEW_TallyLedger_Tree_Totals);
+                RecreateView(db, new TallyLedger_Tree_TotalsViewDefinition());
 
                 SetDatabaseVersion(db, targetVersion);
                 db.CommitTransaction();
@@ -225,7 +226,9 @@ namespace CruiseDAL
                 db.Execute("DROP VIEW TallyLedger_Tree_Totals;");
                 db.Execute("DROP VIEW TallyLedger_Plot_Totals;");
                 RebuildTable(db, new TallyLedgerTableDefinition());
-                db.Execute(new TallyLedgerViewDefinition().CreateView);
+                db.Execute(new TallyLedger_TotalsViewDefinition().CreateView);
+                db.Execute(new TallyLedger_Tree_TotalsViewDefinition().CreateView);
+                db.Execute(new TallyLedger_Plot_TotalsViewDefinition().CreateView);
 
                 db.Execute(TreeTableDefinition.CREATE_TRIGGER_TREE_Cascade_Species_Updates);
                 db.Execute(TreeTableDefinition.CREATE_TRIGGER_TREE_Cascade_LiveDead_Updates);
