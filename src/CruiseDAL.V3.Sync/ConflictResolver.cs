@@ -122,23 +122,39 @@ namespace CruiseDAL.V3.Sync
             {
                 case ConflictResolutionType.ChoseSource:
                     {
-                        destination.ExecuteNonQuery(
-                            "DELETE FROM Stratum WHERE StratumID = @p1; ", new[] { conflict.DestRecID });
-                        break;
+                        throw new NotSupportedException();
+
+                        //destination.ExecuteNonQuery(
+                        //    "DELETE FROM Stratum WHERE StratumID = @p1; ", new[] { conflict.DestRecID });
+                        //break;
                     }
                 case ConflictResolutionType.ChoseSourceMergeData:
                     {
-                        throw new NotSupportedException();
+                        destination.ExecuteNonQuery(
+                            "PRAGMA foreign_keys=off; " +
+                            "BEGIN; " + // disable FKeys so that cascading deletes don't trigger 
+                            "DELETE FROM Stratum WHERE StratumID = @p1;" +
+                            "COMMIT; " +
+                            "PRAGMA foreign_keys=on;", new[] { conflict.DestRecID });
+                        break;
                     }
                 case ConflictResolutionType.ChoseDest:
                     {
-                        source.ExecuteNonQuery(
-                            "DELETE FROM Stratum WHERE StratumID = @p1; ", new[] { conflict.SourctRecID });
-                        break;
+                        throw new NotSupportedException();
+
+                        //source.ExecuteNonQuery(
+                        //    "DELETE FROM Stratum WHERE StratumID = @p1; ", new[] { conflict.SourctRecID });
+                        //break;
                     }
                 case ConflictResolutionType.ChoseDestMergeData:
                     {
-                        throw new NotSupportedException();
+                        source.ExecuteNonQuery(
+                            "PRAGMA foreign_keys=off; " +
+                            "BEGIN; " + // disable FKeys so that cascading deletes don't trigger 
+                            "DELETE FROM Stratum WHERE StratumID = @p1;" +
+                            "COMMIT; " +
+                            "PRAGMA foreign_keys=on;", new[] { conflict.SourctRecID });
+                        break;
                     }
                 case ConflictResolutionType.ModifySource:
                     {
@@ -163,6 +179,9 @@ namespace CruiseDAL.V3.Sync
 
         protected void ResolveSampleGroupConflict(DbConnection source, DbConnection destination, Conflict conflict)
         {
+            // TODO we don't want sample group conflict resolutions to clear and child field data, because we are treating field data
+            // as belonging to its containing unit/plot. do we consider this type of confile resolution to be chose or chose and merge?
+
             var resolution = conflict.ConflictResolution;
 
             if (resolution == ConflictResolutionType.ChoseLatest)
@@ -176,23 +195,55 @@ namespace CruiseDAL.V3.Sync
             {
                 case ConflictResolutionType.ChoseSource:
                     {
+                        // for sample groups we don't want to cascade deletes down to trees, tally ledgers, subpops, or sampler states
                         destination.ExecuteNonQuery(
-                            "DELETE FROM SampleGroup WHERE SampleGroupID = @p1;", new[] { conflict.DestRecID });
+                            "PRAGMA foreign_keys=off; " +
+                            "BEGIN; " + // disable FKeys so that cascading deletes don't trigger 
+                            "DELETE FROM SampleGroup WHERE SampleGroupID = @p1;" +
+                            "COMMIT; " +
+                            "PRAGMA foreign_keys=on;", new[] { conflict.DestRecID });
                         break;
+
+                        //destination.ExecuteNonQuery(
+                        //    "DELETE FROM SampleGroup WHERE SampleGroupID = @p1;", new[] { conflict.DestRecID });
+                        //break;
                     }
                 case ConflictResolutionType.ChoseSourceMergeData:
                     {
+                        destination.ExecuteNonQuery(
+                            "PRAGMA foreign_keys=off; " +
+                            "BEGIN; " + // disable FKeys so that cascading deletes don't trigger 
+                            "DELETE FROM SampleGroup WHERE SampleGroupID = @p1;" +
+                            "COMMIT; " +
+                            "PRAGMA foreign_keys=on;", new[] { conflict.DestRecID });
+                        break;
+
                         throw new NotSupportedException();
                     }
                 case ConflictResolutionType.ChoseDest:
                     {
-                        source.ExecuteNonQuery2(
-                            "DELETE FROM SampleGroup WHERE SampleGroupID = @p1;", new[] { conflict.SourceRec });
+                        // for sample groups we don't want to cascade deletes down to trees, tally ledgers, subpops, or sampler states
+                        source.ExecuteNonQuery(
+                            "PRAGMA foreign_keys=off; " +
+                            "BEGIN; " + // disable FKeys so that cascading deletes don't trigger 
+                            "DELETE FROM SampleGroup WHERE SampleGroupID = @p1;" +
+                            "COMMIT; " +
+                            "PRAGMA foreign_keys=on;", new[] { conflict.SourctRecID });
                         break;
+
+                        //source.ExecuteNonQuery2(
+                        //    "DELETE FROM SampleGroup WHERE SampleGroupID = @p1;", new[] { conflict.SourceRec });
+                        //break;
                     }
                 case ConflictResolutionType.ChoseDestMergeData:
                     {
-                        throw new NotSupportedException();
+                        source.ExecuteNonQuery(
+                            "PRAGMA foreign_keys=off; " +
+                            "BEGIN; " + // disable FKeys so that cascading deletes don't trigger 
+                            "DELETE FROM SampleGroup WHERE SampleGroupID = @p1;" +
+                            "COMMIT; " +
+                            "PRAGMA foreign_keys=on;", new[] { conflict.SourctRecID });
+                        break;
                     }
                 case ConflictResolutionType.ModifySource:
                     {

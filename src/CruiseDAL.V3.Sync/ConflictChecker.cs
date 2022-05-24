@@ -72,6 +72,8 @@ namespace CruiseDAL.V3.Sync
 
                 if (conflictItem != null)
                 {
+                    var sgConflicts = CheckSampleGroupsByStratumCode(source, destination, item.StratumCode, cruiseID).ToArray();
+
                     yield return new Conflict
                     {
                         Table = nameof(Stratum),
@@ -82,6 +84,7 @@ namespace CruiseDAL.V3.Sync
                         DestRec = conflictItem,
                         SourceMod = DateMath.Max(item.Created_TS.Value, item.Modified_TS),
                         DestMod = DateMath.Max(conflictItem.Created_TS.Value, conflictItem.Modified_TS),
+                        DownstreamConflicts = sgConflicts,
                     };
                 }
             }
@@ -101,6 +104,37 @@ namespace CruiseDAL.V3.Sync
                     .Join("Stratum AS st", "USING (CruiseID, StratumCode)")
                     .Where("CruiseID = @p1 AND SampleGroupCode = @p2 AND st.StratumID = @p3 AND SampleGroupID != @p4")
                     .Query(cruiseID, sg.SampleGroupCode, st.StratumID, sg.SampleGroupID).FirstOrDefault();
+
+                if (conflictItem != null)
+                {
+                    yield return new Conflict
+                    {
+                        Table = nameof(SampleGroup),
+                        Identity = Identify(sg),
+                        SourctRecID = sg.SampleGroupID,
+                        DestRecID = conflictItem.SampleGroupID,
+                        SourceRec = sg,
+                        DestRec = conflictItem,
+                        SourceMod = DateMath.Max(sg.Created_TS.Value, sg.Modified_TS),
+                        DestMod = DateMath.Max(conflictItem.Created_TS.Value, conflictItem.Modified_TS),
+                    };
+                }
+            }
+        }
+
+        public IEnumerable<Conflict> CheckSampleGroupsByStratumCode(DbConnection source, DbConnection destination, string stratumCode, string cruiseID)
+        {
+            var sourceItems = source.Query<SampleGroup>(
+                "SELECT sg.*, st.StratumID FROM SampleGroup AS sg " +
+                "WHERE CruiseID = @p1 AND StratumCode = @p2;",
+                paramaters: new[] { cruiseID, stratumCode });
+
+            foreach (var sg in sourceItems)
+            {
+                var conflictItem = destination.From<SampleGroup>()
+                    .Join("Stratum AS st", "USING (CruiseID, StratumCode)")
+                    .Where("CruiseID = @p1 AND SampleGroupCode = @p2 AND sg.StratumCode = @p3 AND SampleGroupID != @p4")
+                    .Query(cruiseID, sg.SampleGroupCode, stratumCode, sg.SampleGroupID).FirstOrDefault();
 
                 if (conflictItem != null)
                 {
