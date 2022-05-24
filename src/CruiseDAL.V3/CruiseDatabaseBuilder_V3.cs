@@ -39,7 +39,7 @@ namespace CruiseDAL
 
             // design
             new SaleTableDefinition(),
-            new CruiseTableDefinition_3_4_0(),
+            new CruiseTableDefinition_3_5_3(),
 
             new CuttingUnitTableDefinition(),
             new StratumTableDefinition(),

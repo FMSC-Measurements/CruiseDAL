@@ -226,16 +226,36 @@ namespace CruiseDAL.V3.Sync
                 .Where("SaleNumber = @p1")
                 .Query(sourceSale.SaleNumber).FirstOrDefault();
 
-            if (match == null)
+            var saleIDMatch = destination.From<Sale>()
+                .Where("SaleID = @p1")
+                .Query(sourceSale.SaleID).FirstOrDefault();
+
+            if (match == null && saleIDMatch == null)
             {
-                destination.Insert(sourceSale, persistKeyvalue: false);
+                if (options.Sale.HasFlag(SyncFlags.Insert))
+                {
+                    
+                    destination.Insert(sourceSale, persistKeyvalue: false);
+                }
             }
-            else
+            else if(saleIDMatch == null)
             {
+                //we have a saleNumber match but no SaleID match, e.g. merging a cruise into a database containing a cruise with the same sale number
                 var srcMod = sourceSale.Modified_TS;
                 var destMod = match.Modified_TS;
 
-                if (sourceSale.SaleID == match.SaleID && ShouldUpdate(srcMod, destMod, options.Design))
+                if (ShouldUpdate(srcMod, destMod, options.Sale))
+                {
+                    destination.Update(sourceSale, whereExpression: "SaleNumber = @SaleNumber");
+                }
+            }
+            else
+            {
+                // we have a saleID match, but maybe not a sale number match
+                var srcMod = sourceSale.Modified_TS;
+                var destMod = saleIDMatch.Modified_TS;
+
+                if (ShouldUpdate(srcMod, destMod, options.Sale))
                 {
                     destination.Update(sourceSale, whereExpression: "SaleID = @SaleID");
                 }
