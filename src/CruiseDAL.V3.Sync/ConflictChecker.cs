@@ -25,6 +25,18 @@ namespace CruiseDAL.V3.Sync
         //      where we would want to mix tree from two files on a plot. this is sorta using the 'All or Nothing' resolution option
 
 
+        public ConflictResolutionOptions CheckConflicts(DbConnection source, DbConnection destination, string cruiseID)
+        {
+            return new ConflictResolutionOptions(
+                CheckCuttingUnits(source, destination, cruiseID),
+                CheckStrata(source, destination, cruiseID),
+                CheckSampleGroups(source, destination, cruiseID),
+                CheckPlots(source, destination, cruiseID),
+                CheckTrees(source, destination, cruiseID),
+                CheckPlotTrees(source, destination, cruiseID),
+                CheckLogs(source, destination, cruiseID));
+        }
+
         public IEnumerable<Conflict> CheckCuttingUnits(DbConnection source, DbConnection destination, string cruiseID)
         {
             var sourceItems = source.From<CuttingUnit>().Where("CruiseID = @p1").Query(cruiseID);
