@@ -1,0 +1,66 @@
+BEGIN;
+
+INSERT INTO main.TreeDefaultValues
+(
+	TreeDefaultValue_CN,
+	PrimaryProduct,
+	Species,
+	LiveDead,
+	FIAcode,
+	CullPrimary,
+	HiddenPrimary,
+	CullSecondary,
+	HiddenSecondary,
+	Recoverable,
+	Chargeable,
+	ContractSpecies,
+	TreeGrade,
+	MerchHeightLogLength,
+	MerchHeightType,
+	FormClass,
+	BarkThicknessRatio,
+	AverageZ,
+	ReferenceHeightPercent,
+	CreatedBy,
+	CreatedDate,
+	ModifiedBy,
+	ModifiedDate,
+	RowVersion
+)
+SELECT 
+	TreeDefaultValue_CN,
+	PrimaryProduct,
+	Species,
+	LiveDead,
+	FIAcode,
+	CullPrimary,
+	HiddenPrimary,
+	CullSecondary,
+	HiddenSecondary,
+	Recoverable,
+	Chargeable,
+	ContractSpecies,
+	TreeGrade,
+	MerchHeightLogLength,
+	MerchHeightType,
+	FormClass,
+	BarkThicknessRatio,
+	AverageZ,
+	ReferenceHeightPercent,
+	CreatedBy,
+	CreatedDate,
+	ModifiedBy,
+	ModifiedDate,
+	RowVersion
+FROM fromDB.TreeDefaultValue;
+
+INSERT INTO main.SampleGroupTreeDefaultValue (
+	SampleGroup_CN, 
+	TreeDefaultValue_CN
+)
+SELECT 
+	SampleGroup_CN,
+	TreeDefaultValue_CN
+FROM fromDB.SampleGroupTreeDefaultValue;
+
+COMMIT;

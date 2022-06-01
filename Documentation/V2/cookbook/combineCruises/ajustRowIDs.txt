@@ -4,6 +4,8 @@
 DELETE FROM SampleGroupStatsTreeDefaultValue;
 DELETE FROM SampleGroupStats;
 DELETE FROM StratumStats;
+DELETE FROM TreeCalculatedValues;
+DELETE FROM LogStock;
 
 PRAGMA foreign_keys = off;
 

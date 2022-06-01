@@ -1,0 +1,15 @@
+-- check for dupes
+select tdv2.rowid, tdv.rowid, tdv.*  from TreeDefaultValue as tdv
+join TreeDefaultValue as tdv2 using (Species, PrimaryProduct, LiveDead)
+where tdv.rowid != tdv2.rowid 
+--and tdv2.rowID < tdv.rowid
+
+
+delete from TreeDefaultValue 
+Where TreeDefaultValue_CN IN
+(
+select tdv.rowid  from TreeDefaultValue as tdv
+join TreeDefaultValue as tdv2 using (Species, PrimaryProduct, LiveDead)
+where tdv.rowid != tdv2.rowid 
+and tdv2.rowID < tdv.rowid);
+

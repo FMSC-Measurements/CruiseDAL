@@ -1,0 +1,55 @@
+BEFIN; 
+
+INSERT INTO main.VolumeEquation 
+(
+	Species,
+	PrimaryProduct,
+	VolumeEquationNumber,
+	StumpHeight,
+	TopDIBPrimary,
+	TopDIBSecondary,
+	CalcTotal,
+	CalcBoard,
+	CalcCubic,
+	CalcCord,
+	CalcTopwood,
+	CalcBiomass,
+	Trim,
+	SegmentationLogic,
+	MinLogLengthPrimary,
+	MaxLogLengthPrimary,
+	MinLogLengthSecondary,
+	MaxLogLengthSecondary,
+	MinMerchLength,
+	Model,
+	CommonSpeciesName,
+	MerchModFlag,
+	EvenOddSegment
+)
+SELECT 
+	Species,
+	PrimaryProduct,
+	VolumeEquationNumber,
+	StumpHeight,
+	TopDIBPrimary,
+	TopDIBSecondary,
+	CalcTotal,
+	CalcBoard,
+	CalcCubic,
+	CalcCord,
+	CalcTopwood,
+	CalcBiomass,
+	Trim,
+	SegmentationLogic,
+	MinLogLengthPrimary,
+	MaxLogLengthPrimary,
+	MinLogLengthSecondary,
+	MaxLogLengthSecondary,
+	MinMerchLength,
+	Model,
+	CommonSpeciesName,
+	MerchModFlag,
+	EvenOddSegment
+FROM fromDB.VolumeEquation;
+
+COMMIT;
