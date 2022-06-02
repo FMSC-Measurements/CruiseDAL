@@ -5,16 +5,22 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Xunit;
+using Xunit.Abstractions;
+using FluentAssertions;
 
 namespace CruiseDAL.V3.Sync
 {
-    public class CruiseCopier_Test
+    public class CruiseCopier_Test : TestBase
     {
+        public CruiseCopier_Test(ITestOutputHelper output) : base(output)
+        {
+        }
+
         [Fact]
         public void Copy()
         {
             var initializer = new DatabaseInitializer();
-            using (var srcDb = initializer.CreateDatabase())
+            using (var srcDb = initializer.CreateDatabaseWithAllTables())
             using (var destDb = new CruiseDatastore_V3())
             {
                 var copier = new CruiseCopier();
