@@ -43,10 +43,10 @@ namespace CruiseDAL.V3.Sync
 
         public void Copy(DbConnection source, DbConnection destination, string cruiseID)
         {
-            if (destination.ExecuteScalar<int>("SELECT count(*) FROM Sale JOIN Cruise USING (SaleID) WHERE CruiseID = @p1;", new[] { cruiseID }) == 0)
+            if (destination.ExecuteScalar<int>("SELECT count(*) FROM Sale JOIN Cruise USING (SaleNumber) WHERE CruiseID = @p1;", new[] { cruiseID }) == 0)
             {
                 var sale = source.From<Sale>()
-                    .Join("Cruise AS cr", "USING (SaleID)")
+                    .Join("Cruise AS cr", "USING (SaleNumber)")
                     .Where("CruiseID = @p1")
                     .Query(cruiseID).FirstOrDefault();
                 destination.Insert(sale);
