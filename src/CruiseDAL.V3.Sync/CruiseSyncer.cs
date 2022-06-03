@@ -1182,7 +1182,7 @@ namespace CruiseDAL.V3.Sync
 
         private void SyncLog(string cruiseID, DbConnection source, DbConnection destination, CruiseSyncOptions options)
         {
-            var where = "TreeID = @TreeID AND LogNumber = @LogNumber";
+            var where = "LogID = @LogID";
 
             //var excludeTreeIDs = new HashSet<string>(options.ExcludeTreeIDs);
             //var excludeLogIDs = new HashSet<string>(options.ExcludeLogIDs);
@@ -1191,7 +1191,9 @@ namespace CruiseDAL.V3.Sync
 
             // only sync for trees that are already in the destination
             // just incase we decide earlier not to sync some trees
-            var treeIDs = destination.QueryScalar<string>("SELECT TreeID FROM Tree WHERE CruiseID = @p1", new[] { cruiseID });
+            var treeIDs = destination.QueryScalar<string>(
+                "SELECT TreeID FROM Tree WHERE CruiseID = @p1 " +
+                "AND TreeID IN (SELECT TreeID FROM Log);", new[] { cruiseID });
             foreach (var treeID in treeIDs)
             {
                 //if (excludeTreeIDs.Contains(treeID)) { continue; }

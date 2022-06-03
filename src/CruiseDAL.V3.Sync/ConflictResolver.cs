@@ -421,13 +421,13 @@ namespace CruiseDAL.V3.Sync
             {
                 case ConflictResolutionType.ChoseSource:
                     {
-                        destination.ExecuteNonQuery("DELETE Log WHERE LogID = @p1;", new[] { conflict.DestRecID });
+                        destination.ExecuteNonQuery("DELETE FROM Log WHERE LogID = @p1;", new[] { conflict.DestRecID });
                         break;
                     }
 
                 case ConflictResolutionType.ChoseDest:
                     {
-                        source.ExecuteNonQuery("DELETE Log WHERE LogID = @p1;", new[] { conflict.SourctRecID });
+                        source.ExecuteNonQuery("DELETE FROM Log WHERE LogID = @p1;", new[] { conflict.SourctRecID });
                         break;
                     }
                 // mere resolutions not supported because there are no child record types for logs
