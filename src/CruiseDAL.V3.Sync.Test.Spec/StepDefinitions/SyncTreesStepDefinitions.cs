@@ -5,72 +5,11 @@ using TechTalk.SpecFlow.Infrastructure;
 namespace CruiseDAL.V3.Sync.Test.Spec.StepDefinitions
 {
     [Binding]
-    public class SyncTreesStepDefinitions : BindingDefinitionBase
+    public class SyncTreesStepDefinitions : SyncStepDefinitionBase
     {
-        protected IDictionary<string, string> IDLookup { get; } = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
-
-        protected IDictionary<string, CruiseDatastore_V3> DatabaseLookup { get; } = new Dictionary<string, CruiseDatastore_V3>(StringComparer.OrdinalIgnoreCase);
-        public string CruiseID { get; }
-        //protected CruiseDatastore_V3 SrcDatabase { get; set; }
-        //protected CruiseDatastore_V3 DestDatabase { get; set; }
-
-        protected ConflictResolutionOptions ConflictResults { get; set; }
-
-        protected Cruise DefaultCruise { get; }
-        protected Sale DefaultSale { get; }
-
         public SyncTreesStepDefinitions(ISpecFlowOutputHelper output, ScenarioContext senarioContext, FeatureContext featureContext) :
             base(output, senarioContext, featureContext)
         {
-            //var senarioName = senarioContext.ScenarioInfo.Title.Replace(' ', '_');
-
-            //var srcFileName = senarioName + "_srcFile.crz3";
-            //var destFileName = senarioName + "_destFile.crz3";
-            //var srcFilePath = base.GetTempFilePath(srcFileName);
-            //var destFilePath = base.GetTempFilePath(destFileName);
-
-            CruiseID = Guid.NewGuid().ToString();
-            //SrcDatabase = new CruiseDatastore_V3(srcFilePath, true);
-            //DestDatabase = new CruiseDatastore_V3(destFilePath, true);
-
-            var saleID = Guid.NewGuid().ToString();
-            var sale = DefaultSale = new Sale
-            {
-                SaleID = saleID,
-                SaleNumber = "12345",
-            };
-            //SrcDatabase.Insert(sale);
-            //DestDatabase.Insert(sale);
-
-            var cruise = DefaultCruise = new Cruise
-            {
-                CruiseID = CruiseID,
-                CruiseNumber = "12345",
-                SaleNumber = sale.SaleNumber,
-                SaleID = saleID,
-            };
-            //SrcDatabase.Insert(cruise);
-            //DestDatabase.Insert(cruise);
-        }
-
-        protected string GetOrGenerateRecordID(string alias)
-        {
-            var idLookup = IDLookup;
-            if (idLookup.ContainsKey(alias))
-            {
-                return idLookup[alias];
-            }
-            else
-            {
-                var id = Guid.NewGuid().ToString();
-                idLookup.Add(alias, id);
-                return id;
-            }
-        }
-
-        protected string GetRedordID(string alias)
-        {
-            return IDLookup[alias];
         }
 
         [Given(@"the following cruise files exist:")]
@@ -94,12 +33,7 @@ namespace CruiseDAL.V3.Sync.Test.Spec.StepDefinitions
             }
         }
 
-        public CruiseDatastore_V3 GetDatabase(string alias)
-        {
-            if (string.IsNullOrEmpty(alias)) { throw new ArgumentException($"'{nameof(alias)}' cannot be null or empty.", nameof(alias)); }
-
-            return DatabaseLookup[alias];
-        }
+        
 
         [Given(@"in '([^']*)' the following units exist:")]
         public void GivenInTheFollowingUnitsExist(string dbNamesArg, Table table)
@@ -293,13 +227,13 @@ namespace CruiseDAL.V3.Sync.Test.Spec.StepDefinitions
             var databases = databasesNames.Select(x => DatabaseLookup[x]).ToArray();
             databases.Should().NotBeEmpty();
 
-            foreach(var row in table.Rows)
+            foreach (var row in table.Rows)
             {
                 var treeID = GetRedordID(row["TreeID"]);
                 var logNumber = row[nameof(Log.LogNumber)];
 
                 string logID;
-                if(row.TryGetValue(nameof(Log.LogID), out var logIDAlias) && !string.IsNullOrEmpty(logIDAlias))
+                if (row.TryGetValue(nameof(Log.LogID), out var logIDAlias) && !string.IsNullOrEmpty(logIDAlias))
                 {
                     logID = GetOrGenerateRecordID(logIDAlias);
                 }
@@ -316,13 +250,12 @@ namespace CruiseDAL.V3.Sync.Test.Spec.StepDefinitions
                     LogID = logID,
                 };
 
-                foreach(var db in databases)
+                foreach (var db in databases)
                 {
                     db.Insert(log);
                 }
             }
         }
-
 
         [When(@"I conflict check '([^']*)' file against '([^']*)'")]
         public void WhenIConflictCheckFileAgainst(string source, string dest)
@@ -383,12 +316,18 @@ namespace CruiseDAL.V3.Sync.Test.Spec.StepDefinitions
             {
                 conf.ConflictResolution = resolution;
             }
+        }
 
-            var srcDb = GetDatabase("source");
-            var destDb = GetDatabase("dest");
+        [When(@"I run conflict resolution of '([^']*)' file against '([^']*)'")]
+        public void WhenIRunConflictResolutionOfFileAgainst(string source, string dest)
+        {
+            var srcDb = GetDatabase(source);
+            var destDb = GetDatabase(dest);
             var srcConn = srcDb.OpenConnection();
             var destConn = destDb.OpenConnection();
 
+            var conflictResults = ConflictResults;
+            conflictResults.AllHasResolutions().Should().BeTrue();
             try
             {
                 var conflictResolver = new ConflictResolver();
@@ -400,6 +339,7 @@ namespace CruiseDAL.V3.Sync.Test.Spec.StepDefinitions
                 destDb.ReleaseConnection();
             }
         }
+
 
         [When(@"sync '([^']*)' into '([^']*)'")]
         public void WhenSyncInto(string source, string dest)
