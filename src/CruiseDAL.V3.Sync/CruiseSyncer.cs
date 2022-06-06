@@ -1027,7 +1027,7 @@ namespace CruiseDAL.V3.Sync
 
                     if (hasMeasurmentsRecord)
                     {
-                        destination.Update(sourceMeasurmentsRecord, whereExpression: "WHERE TreeID =  @TreeID");
+                        destination.Update(sourceMeasurmentsRecord, whereExpression: "TreeID =  @TreeID");
                     }
                     else
                     {
