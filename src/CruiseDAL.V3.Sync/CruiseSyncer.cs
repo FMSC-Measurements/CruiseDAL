@@ -1190,17 +1190,18 @@ namespace CruiseDAL.V3.Sync
             //var logConflictOptions = conflictOptions.Log;
 
             // only sync for trees that are already in the destination
-            // just incase we decide earlier not to sync some trees
+            // just in case we decide earlier not to sync some trees
+            // DONT try to make this query more efficient by only selecting for tree IDs in the log table
+            //      we may have trees in the dest file that don't have logs YET that we want to add
             var treeIDs = destination.QueryScalar<string>(
-                "SELECT TreeID FROM Tree WHERE CruiseID = @p1 " +
-                "AND TreeID IN (SELECT TreeID FROM Log);", new[] { cruiseID });
+                "SELECT TreeID FROM Tree WHERE CruiseID = @p1;", new[] { cruiseID }).ToArray();
             foreach (var treeID in treeIDs)
             {
                 //if (excludeTreeIDs.Contains(treeID)) { continue; }
 
                 var logs = source.From<Log>()
                     .Where("TreeID = @p1")
-                    .Query(treeID);
+                    .Query(treeID).ToArray();
                 foreach (var log in logs)
                 {
                     //if (excludeLogIDs.Contains(log.LogID)) { continue; }
