@@ -11,6 +11,7 @@
   <ItemGroup>
     <Compile Include="$(MSBuildThisFileDirectory)SqlTestHelper.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)TestBase.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)TestLogger.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Util\IEnumerableExtentions.cs" />
   </ItemGroup>
 </Project>

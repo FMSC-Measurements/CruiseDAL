@@ -1,4 +1,5 @@
-﻿using CruiseDAL.V3.Models;
+﻿
+using CruiseDAL.V3.Models;
 using System.Reflection;
 using TechTalk.SpecFlow.Infrastructure;
 
@@ -14,6 +15,19 @@ namespace CruiseDAL.V3.Sync.Test.Spec.StepDefinitions
             SenarioContext = senarioContext ?? throw new ArgumentNullException(nameof(senarioContext));
             FeatureContext = featureContext ?? throw new ArgumentNullException(nameof(featureContext));
 
+            
+        }
+
+        [BeforeScenario]
+        public void SetupSenario()
+        {
+            //var logger = new TestLogger(Output);
+            //FMSC.ORM.Logging.LoggerProvider.Register(logger);
+
+            IDLookup = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
+            DatabaseLookup = new Dictionary<string, CruiseDatastore_V3>(StringComparer.OrdinalIgnoreCase);
+
+            // setup Scenario Artifact Directory
             var featureName = FeatureContext.FeatureInfo.Title.Replace(" ", "");
             var senarioName = SenarioContext.ScenarioInfo.Title.Replace(" ", "");
             SenarioArtifactDir = Path.Combine(TestTempPath, featureName, senarioName);
@@ -22,14 +36,9 @@ namespace CruiseDAL.V3.Sync.Test.Spec.StepDefinitions
                 Directory.CreateDirectory(SenarioArtifactDir);
                 Output.WriteLine("Artifact Dir at " + SenarioArtifactDir);
             }
-        }
 
-        [BeforeScenario]
-        public void SetupSenario()
-        {
-            IDLookup = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
-            DatabaseLookup = new Dictionary<string, CruiseDatastore_V3>(StringComparer.OrdinalIgnoreCase);
 
+            // Initialize Cruise and Sale records 
             CruiseID = Guid.NewGuid().ToString();
 
             var saleID = Guid.NewGuid().ToString();
@@ -100,7 +109,7 @@ namespace CruiseDAL.V3.Sync.Test.Spec.StepDefinitions
 
         protected string TestTempPath => _testTempPath ??= Path.Combine(Path.GetTempPath(), "TestTemp", this.GetType().FullName);
 
-        protected string SenarioArtifactDir { get; }
+        protected string SenarioArtifactDir { get; private set; }
 
         protected string GetTempFilePath(string fileName)
         {
@@ -119,6 +128,7 @@ namespace CruiseDAL.V3.Sync.Test.Spec.StepDefinitions
             else
             {
                 var id = Guid.NewGuid().ToString();
+                Output.WriteLine($"Generated ID: {alias}=>{id}");
                 idLookup.Add(alias, id);
                 return id;
             }

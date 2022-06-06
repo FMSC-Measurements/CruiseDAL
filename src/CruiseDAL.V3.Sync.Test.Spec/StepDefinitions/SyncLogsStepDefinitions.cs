@@ -31,7 +31,7 @@ namespace CruiseDAL.V3.Sync.Test.Spec.StepDefinitions
                 var srcRecID = GetRedordID(row[0]);
                 var destRecID = GetRedordID(row[1]);
 
-                logConflicts.Should().Contain(x => x.SourctRecID == srcRecID && x.DestRecID == destRecID);
+                logConflicts.Should().Contain(x => x.SourceRecID == srcRecID && x.DestRecID == destRecID);
             }
         }
 
@@ -48,8 +48,8 @@ namespace CruiseDAL.V3.Sync.Test.Spec.StepDefinitions
             }
         }
 
-        [Then(@"'([^']*)' contains logIDs:")]
-        public void ThenContainsLogIDs(string dbAlias, Table table)
+        [Then(@"'([^']*)' contains logs:")]
+        public void ThenContainsLogs(string dbAlias, Table table)
         {
             var db = GetDatabase(dbAlias);
 
@@ -57,9 +57,14 @@ namespace CruiseDAL.V3.Sync.Test.Spec.StepDefinitions
 
             foreach (var row in table.Rows)
             {
-                var alias = row[0];
+                var alias = row[nameof(Log.LogID)];
                 var logID = GetRedordID(alias);
-                logs.Should().Contain(x => x.LogID == logID, alias);
+                row.TryGetValue(nameof(Log.LogNumber), out var logNumber);
+
+                logs.Should().Contain(
+                    x => x.LogID == logID 
+                        && (string.IsNullOrEmpty(logNumber) || x.LogNumber == logNumber), 
+                    because: alias);
             }
             logs.Count().Should().Be(table.RowCount);
         }

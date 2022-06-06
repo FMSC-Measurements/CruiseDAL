@@ -1,6 +1,6 @@
 ﻿Feature: SyncLogs
 
-Background:
+Background: Single Tree Three Logs: One Shared, One In Conflict and One Unique
 	Given the following cruise files exist:
 		| FileAlias |
 		| source    |
@@ -35,11 +35,13 @@ Background:
 		| TreeID | LogNumber | LogID |
 		| tree1  | 1         | log1  |
 		| tree1  | 2         | log2d |
+		| tree1  | 3         | log3  |
 
 	* in 'source' the following logs exist:
 		| TreeID | LogNumber | LogID |
 		| tree1  | 1         | log1  |
 		| tree1  | 2         | log2s |
+		| tree1  | 4         | log4  |
 
 Scenario: Checking For Conflict Shows Logs With the Same Log Number on the Same Tree With Different LogIDs
 	When I conflict check 'source' file against 'dest'
@@ -53,30 +55,36 @@ Scenario: Resolve LogConflicts With ChoseDest
 	And I resolve all log conflicts with 'ChoseDest'
 	And I run conflict resolution of 'source' file against 'dest'
 	And sync 'source' into 'dest'
-	Then 'dest' contains logIDs:
+	Then 'dest' contains logs:
 		| LogID |
 		| log1  |
 		| log2d |
+		| log3  |
+		| log4  |
 
 Scenario: Resolve LogConflicts With ChoseSource
 	When I conflict check 'source' file against 'dest'
 	And I resolve all log conflicts with 'ChoseSource'
 	And I run conflict resolution of 'source' file against 'dest'
 	And sync 'source' into 'dest'
-	Then 'dest' contains logIDs:
+	Then 'dest' contains logs:
 		| LogID |
 		| log1  |
 		| log2s |
+		| log3  |
+		| log4  |
 
 Scenario: Resolve Conflict With ModifyDest
 	When I conflict check 'source' file against 'dest'
 	And I resolve log conflicts with ModifyDest using:
 		| DestRecID | LogNumber |
-		| log2d     | 3         |
+		| log2d     | 5         |
 	And I run conflict resolution of 'source' file against 'dest'
 	And sync 'source' into 'dest'
-	Then 'dest' contains logIDs:
-		| LogID |
-		| log1  |
-		| log2d |
-		| log2s |
+	Then 'dest' contains logs:
+		| LogID | LogNumber |
+		| log1  | 1         |
+		| log2d | 5         |
+		| log2s | 2         |
+		| log3  | 3         |
+		| log4  | 4         |

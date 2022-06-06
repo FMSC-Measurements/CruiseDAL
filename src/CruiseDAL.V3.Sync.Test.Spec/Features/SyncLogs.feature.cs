@@ -160,6 +160,10 @@ namespace CruiseDAL.V3.Sync.Test.Spec.Features
                         "tree1",
                         "2",
                         "log2d"});
+            table7.AddRow(new string[] {
+                        "tree1",
+                        "3",
+                        "log3"});
 #line 34
  testRunner.And("in \'dest\' the following logs exist:", ((string)(null)), table7, "* ");
 #line hidden
@@ -175,7 +179,11 @@ namespace CruiseDAL.V3.Sync.Test.Spec.Features
                         "tree1",
                         "2",
                         "log2s"});
-#line 39
+            table8.AddRow(new string[] {
+                        "tree1",
+                        "4",
+                        "log4"});
+#line 40
  testRunner.And("in \'source\' the following logs exist:", ((string)(null)), table8, "* ");
 #line hidden
         }
@@ -196,7 +204,7 @@ namespace CruiseDAL.V3.Sync.Test.Spec.Features
             System.Collections.Specialized.OrderedDictionary argumentsOfScenario = new System.Collections.Specialized.OrderedDictionary();
             TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("Checking For Conflict Shows Logs With the Same Log Number on the Same Tree With D" +
                     "ifferent LogIDs", null, tagsOfScenario, argumentsOfScenario, this._featureTags);
-#line 44
+#line 46
 this.ScenarioInitialize(scenarioInfo);
 #line hidden
             bool isScenarioIgnored = default(bool);
@@ -219,10 +227,10 @@ this.ScenarioInitialize(scenarioInfo);
 #line 3
 this.FeatureBackground();
 #line hidden
-#line 45
+#line 47
  testRunner.When("I conflict check \'source\' file against \'dest\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
 #line hidden
-#line 46
+#line 48
  testRunner.Then("Log Conflict List has 1 conflict(s)", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line hidden
                 TechTalk.SpecFlow.Table table9 = new TechTalk.SpecFlow.Table(new string[] {
@@ -231,7 +239,7 @@ this.FeatureBackground();
                 table9.AddRow(new string[] {
                             "log2s",
                             "log2d"});
-#line 47
+#line 49
  testRunner.And("Log Conflict List has conflicts:", ((string)(null)), table9, "And ");
 #line hidden
             }
@@ -246,7 +254,7 @@ this.FeatureBackground();
             string[] tagsOfScenario = ((string[])(null));
             System.Collections.Specialized.OrderedDictionary argumentsOfScenario = new System.Collections.Specialized.OrderedDictionary();
             TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("Resolve LogConflicts With ChoseDest", null, tagsOfScenario, argumentsOfScenario, this._featureTags);
-#line 51
+#line 53
 this.ScenarioInitialize(scenarioInfo);
 #line hidden
             bool isScenarioIgnored = default(bool);
@@ -269,16 +277,16 @@ this.ScenarioInitialize(scenarioInfo);
 #line 3
 this.FeatureBackground();
 #line hidden
-#line 52
+#line 54
  testRunner.When("I conflict check \'source\' file against \'dest\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
 #line hidden
-#line 53
+#line 55
  testRunner.And("I resolve all log conflicts with \'ChoseDest\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line hidden
-#line 54
+#line 56
  testRunner.And("I run conflict resolution of \'source\' file against \'dest\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line hidden
-#line 55
+#line 57
  testRunner.And("sync \'source\' into \'dest\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line hidden
                 TechTalk.SpecFlow.Table table10 = new TechTalk.SpecFlow.Table(new string[] {
@@ -287,8 +295,12 @@ this.FeatureBackground();
                             "log1"});
                 table10.AddRow(new string[] {
                             "log2d"});
-#line 56
- testRunner.Then("\'dest\' contains logIDs:", ((string)(null)), table10, "Then ");
+                table10.AddRow(new string[] {
+                            "log3"});
+                table10.AddRow(new string[] {
+                            "log4"});
+#line 58
+ testRunner.Then("\'dest\' contains logs:", ((string)(null)), table10, "Then ");
 #line hidden
             }
             this.ScenarioCleanup();
@@ -302,7 +314,7 @@ this.FeatureBackground();
             string[] tagsOfScenario = ((string[])(null));
             System.Collections.Specialized.OrderedDictionary argumentsOfScenario = new System.Collections.Specialized.OrderedDictionary();
             TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("Resolve LogConflicts With ChoseSource", null, tagsOfScenario, argumentsOfScenario, this._featureTags);
-#line 61
+#line 65
 this.ScenarioInitialize(scenarioInfo);
 #line hidden
             bool isScenarioIgnored = default(bool);
@@ -325,16 +337,16 @@ this.ScenarioInitialize(scenarioInfo);
 #line 3
 this.FeatureBackground();
 #line hidden
-#line 62
+#line 66
  testRunner.When("I conflict check \'source\' file against \'dest\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
 #line hidden
-#line 63
+#line 67
  testRunner.And("I resolve all log conflicts with \'ChoseSource\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line hidden
-#line 64
+#line 68
  testRunner.And("I run conflict resolution of \'source\' file against \'dest\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line hidden
-#line 65
+#line 69
  testRunner.And("sync \'source\' into \'dest\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line hidden
                 TechTalk.SpecFlow.Table table11 = new TechTalk.SpecFlow.Table(new string[] {
@@ -343,8 +355,12 @@ this.FeatureBackground();
                             "log1"});
                 table11.AddRow(new string[] {
                             "log2s"});
-#line 66
- testRunner.Then("\'dest\' contains logIDs:", ((string)(null)), table11, "Then ");
+                table11.AddRow(new string[] {
+                            "log3"});
+                table11.AddRow(new string[] {
+                            "log4"});
+#line 70
+ testRunner.Then("\'dest\' contains logs:", ((string)(null)), table11, "Then ");
 #line hidden
             }
             this.ScenarioCleanup();
@@ -358,7 +374,7 @@ this.FeatureBackground();
             string[] tagsOfScenario = ((string[])(null));
             System.Collections.Specialized.OrderedDictionary argumentsOfScenario = new System.Collections.Specialized.OrderedDictionary();
             TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("Resolve Conflict With ModifyDest", null, tagsOfScenario, argumentsOfScenario, this._featureTags);
-#line 71
+#line 77
 this.ScenarioInitialize(scenarioInfo);
 #line hidden
             bool isScenarioIgnored = default(bool);
@@ -381,7 +397,7 @@ this.ScenarioInitialize(scenarioInfo);
 #line 3
 this.FeatureBackground();
 #line hidden
-#line 72
+#line 78
  testRunner.When("I conflict check \'source\' file against \'dest\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
 #line hidden
                 TechTalk.SpecFlow.Table table12 = new TechTalk.SpecFlow.Table(new string[] {
@@ -389,26 +405,36 @@ this.FeatureBackground();
                             "LogNumber"});
                 table12.AddRow(new string[] {
                             "log2d",
-                            "3"});
-#line 73
+                            "5"});
+#line 79
  testRunner.And("I resolve log conflicts with ModifyDest using:", ((string)(null)), table12, "And ");
 #line hidden
-#line 76
+#line 82
  testRunner.And("I run conflict resolution of \'source\' file against \'dest\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line hidden
-#line 77
+#line 83
  testRunner.And("sync \'source\' into \'dest\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line hidden
                 TechTalk.SpecFlow.Table table13 = new TechTalk.SpecFlow.Table(new string[] {
-                            "LogID"});
+                            "LogID",
+                            "LogNumber"});
                 table13.AddRow(new string[] {
-                            "log1"});
+                            "log1",
+                            "1"});
                 table13.AddRow(new string[] {
-                            "log2d"});
+                            "log2d",
+                            "5"});
                 table13.AddRow(new string[] {
-                            "log2s"});
-#line 78
- testRunner.Then("\'dest\' contains logIDs:", ((string)(null)), table13, "Then ");
+                            "log2s",
+                            "2"});
+                table13.AddRow(new string[] {
+                            "log3",
+                            "3"});
+                table13.AddRow(new string[] {
+                            "log4",
+                            "4"});
+#line 84
+ testRunner.Then("\'dest\' contains logs:", ((string)(null)), table13, "Then ");
 #line hidden
             }
             this.ScenarioCleanup();

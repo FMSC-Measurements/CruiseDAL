@@ -1,4 +1,4 @@
-﻿Feature: SyncTrees
+﻿Feature: Sync Trees With No Downstream Conflicts
 Sync Tree Records between two cruise files
 
 Background:
@@ -32,27 +32,28 @@ Background:
 		| CuttingUnitCode | StratumCode | SampleGroupCode | SpeciesCode | TreeNumber | TreeID |
 		| u1              | st1         | sg1             | sp1         | 1          | tree1  |
 		| u1              | st1         | sg1             | sp1         | 2          | tree2d |
-		| u1              | st1         | sg1             | sp1         | 3          | tree3d |
+		| u1              | st1         | sg1             | sp1         | 3          | tree3  |
 
 	* in 'source' the following trees exist:
 		| CuttingUnitCode | StratumCode | SampleGroupCode | SpeciesCode | TreeNumber | TreeID |
 		| u1              | st1         | sg1             | sp1         | 1          | tree1  |
 		| u1              | st1         | sg1             | sp1         | 2          | tree2s |
-		| u1              | st1         | sg1             | sp1         | 4          | tree4s |
+		| u1              | st1         | sg1             | sp1         | 4          | tree4  |
 
 	* in 'dest' the following logs exist:
-		| TreeID | LogNumber | LogID |
-		| tree1  | 1         | log1  |
+		| TreeID | LogNumber | LogID    |
+		| tree1  | 1         | log1_t1  |
 
 	* in 'source' the following logs exist:
-		| TreeID | LogNumber | LogID |
-		| tree1  | 1         | log1  |
+		| TreeID | LogNumber | LogID   |
+		| tree1  | 1         | log1_t1 |
 
 
 Scenario: Check For Conflicts shows trees with same tree number but different TreeIDs
 	When I conflict check 'source' file against 'dest'
 	Then TreeConflicts has 1 conflict(s)
 	And TreeConflicts has no downstream conflicts
+	And Log Conflict List has 0 conflict(s)
 	And TreeConflicts records has:
 		| SourctRecID | DestRecID |
 		| tree2s      | tree2d    |
@@ -62,21 +63,51 @@ Scenario: Resolve Tree Conflicts With ChoseDest
 	And I resolve all tree conflicts with 'ChoseDest'
 	And I run conflict resolution of 'source' file against 'dest'
 	And sync 'source' into 'dest'
-	Then 'dest' contains treeIDs:
+	Then 'dest' contains trees:
 		| TreeID |
 		| tree1  |
 		| tree2d |
-		| tree3d |
-		| tree4s |
+		| tree3  |
+		| tree4  |
 
 Scenario: Resolve Tree Conflicts With ChoseSource
 	When I conflict check 'source' file against 'dest'
 	And I resolve all tree conflicts with 'ChoseSource'
 	And I run conflict resolution of 'source' file against 'dest'
 	And sync 'source' into 'dest'
-	Then 'dest' contains treeIDs:
+	Then 'dest' contains trees:
 		| TreeID |
 		| tree1  |
 		| tree2s |
-		| tree3d |
-		| tree4s |
+		| tree3  |
+		| tree4  |
+
+Scenario: Resolve Conflict With ModifyDest
+	When I conflict check 'source' file against 'dest'
+	And I resolve tree conflicts with ModifyDest using:
+		| DestRecID | TreeNumber |
+		| tree2d    | 5          |
+	And I run conflict resolution of 'source' file against 'dest'
+	And sync 'source' into 'dest'
+	Then 'dest' contains trees:
+		| TreeID | TreeNumber |
+		| tree1  | 1          |
+		| tree2d | 5          |
+		| tree2s | 2          |
+		| tree3  | 3          |
+		| tree4  | 4          |
+
+Scenario: Resolve Conflict With ModifySource
+	When I conflict check 'source' file against 'dest'
+	And I resolve tree conflicts with ModifySource using:
+		| SourceRecID | TreeNumber |
+		| tree2s      | 5          |
+	And I run conflict resolution of 'source' file against 'dest'
+	And sync 'source' into 'dest'
+	Then 'dest' contains trees:
+		| TreeID | TreeNumber |
+		| tree1  | 1          |
+		| tree2d | 2          |
+		| tree2s | 5          |
+		| tree3  | 3          |
+		| tree4  | 4          |

@@ -302,7 +302,18 @@ namespace CruiseDAL.V3.Sync.Test.Spec.StepDefinitions
                 var srcRecID = GetRedordID(row[0]);
                 var destRecID = GetRedordID(row[1]);
 
-                treeConflicts.Should().Contain(x => x.SourctRecID == srcRecID && x.DestRecID == destRecID);
+                var treeConflict = treeConflicts.Single(x => x.SourceRecID == srcRecID && x.DestRecID == destRecID);
+                //treeConflict.Should().NotBeNull();
+
+                if(row.TryGetValue("DownstreamConflictCount", out var downstreamConfCountStr))
+                {
+                    var downstreamConfCount = Convert.ToInt32(downstreamConfCountStr);
+                    if (downstreamConfCount > 0)
+                    {
+                        treeConflict.DownstreamConflicts.Count().Should().Be(downstreamConfCount);
+                    }
+                }
+
             }
         }
 
@@ -353,17 +364,64 @@ namespace CruiseDAL.V3.Sync.Test.Spec.StepDefinitions
             syncer.Sync(CruiseID, srcDb, destDb, syncOptions);
         }
 
-        [Then(@"'([^']*)' contains treeIDs:")]
+        [Then(@"'([^']*)' contains trees:")]
         public void ThenContainsTreeIDs(string dbAlias, Table table)
         {
             var db = GetDatabase(dbAlias);
 
+            var trees = db.From<Tree>().Query().ToArray();
             foreach (var row in table.Rows)
             {
-                var treeID = GetRedordID(row[0]);
-                db.From<Tree>().Where("TreeID = @p1").Count(treeID).Should().Be(1);
+                var treeIDAlias = row[nameof(Tree.TreeID)];
+                var treeID = GetRedordID(treeIDAlias);
+                
+                row.TryGetValue(nameof(Tree.TreeNumber), out var treeNumberStr);
+                trees.Should().Contain(
+                    x => x.TreeID == treeID
+                        && (treeNumberStr == null || x.TreeNumber == int.Parse(treeNumberStr))
+                    , because: treeIDAlias);
+
+                //db.From<Tree>().Where("TreeID = @p1").Count(treeID).Should().Be(1);
             }
-            db.From<Tree>().Count().Should().Be(table.RowCount);
+            trees.Count().Should().Be(table.RowCount);
         }
+
+        [When(@"I resolve tree conflicts with ModifyDest using:")]
+        public void WhenIResolveTreeConflictsWithModifyDestUsing(Table table)
+        {
+            var treeConflicts = ConflictResults.Tree;
+
+            foreach(var row in table.Rows)
+            {
+                var destRecIDAlias = row[nameof(Conflict.DestRecID)];
+                var destRecID = GetRedordID(destRecIDAlias);
+
+                var conflict = treeConflicts.Single(x => x.DestRecID == destRecID);
+                conflict.ConflictResolution = ConflictResolutionType.ModifyDest;
+
+                var newTreeNumber = int.Parse(row[nameof(Tree.TreeNumber)]);
+                ((Tree)conflict.DestRec).TreeNumber = newTreeNumber;
+            }
+        }
+
+        [When(@"I resolve tree conflicts with ModifySource using:")]
+        public void WhenIResolveTreeConflictsWithModifySourceUsing(Table table)
+        {
+            var treeConflicts = ConflictResults.Tree;
+
+            foreach (var row in table.Rows)
+            {
+                var srcRecIDAlias = row[nameof(Conflict.SourceRecID)];
+                var srcRecID = GetRedordID(srcRecIDAlias);
+
+                var conflict = treeConflicts.Single(x => x.SourceRecID == srcRecID);
+                conflict.ConflictResolution = ConflictResolutionType.ModifySource;
+
+                var newTreeNumber = int.Parse(row[nameof(Tree.TreeNumber)]);
+                ((Tree)conflict.SourceRec).TreeNumber = newTreeNumber;
+            }
+        }
+
+
     }
 }
