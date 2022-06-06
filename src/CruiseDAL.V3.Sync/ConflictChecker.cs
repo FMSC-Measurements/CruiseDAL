@@ -252,10 +252,12 @@ namespace CruiseDAL.V3.Sync
 
                 if (conflictItem != null)
                 {
-                    var logConflicts = CheckLogsByUnitCodeTreeNumber(source, destination, cruiseID, tree.CuttingUnitCode, tree.TreeNumber)
-                        .ToArray();
+                    
 
-                    yield return new Conflict
+                    // We aren't checking trees for downstream log, because 
+                    //      logs are linked to trees by TreeID
+
+    yield return new Conflict
                     {
                         Table = nameof(Tree),
                         Identity = Identify(tree),
@@ -265,7 +267,6 @@ namespace CruiseDAL.V3.Sync
                         DestRec = conflictItem,
                         SourceMod = DateMath.Max(tree.Created_TS.Value, tree.Modified_TS),
                         DestMod = DateMath.Max(conflictItem.Created_TS.Value, conflictItem.Modified_TS),
-                        DownstreamConflicts = logConflicts,
                     };
                 }
             }
