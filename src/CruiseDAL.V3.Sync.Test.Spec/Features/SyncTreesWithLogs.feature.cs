@@ -19,7 +19,7 @@ namespace CruiseDAL.V3.Sync.Test.Spec.Features
     
     [System.CodeDom.Compiler.GeneratedCodeAttribute("TechTalk.SpecFlow", "3.9.0.0")]
     [System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-    public partial class SyncTreesWithNoLogsFeature : object, Xunit.IClassFixture<SyncTreesWithNoLogsFeature.FixtureData>, System.IDisposable
+    public partial class SyncTreesWithLogsFeature : object, Xunit.IClassFixture<SyncTreesWithLogsFeature.FixtureData>, System.IDisposable
     {
         
         private static TechTalk.SpecFlow.ITestRunner testRunner;
@@ -28,10 +28,10 @@ namespace CruiseDAL.V3.Sync.Test.Spec.Features
         
         private Xunit.Abstractions.ITestOutputHelper _testOutputHelper;
         
-#line 1 "SyncTrees.feature"
+#line 1 "SyncTreesWithLogs.feature"
 #line hidden
         
-        public SyncTreesWithNoLogsFeature(SyncTreesWithNoLogsFeature.FixtureData fixtureData, CruiseDAL_V3_Sync_Test_Spec_XUnitAssemblyFixture assemblyFixture, Xunit.Abstractions.ITestOutputHelper testOutputHelper)
+        public SyncTreesWithLogsFeature(SyncTreesWithLogsFeature.FixtureData fixtureData, CruiseDAL_V3_Sync_Test_Spec_XUnitAssemblyFixture assemblyFixture, Xunit.Abstractions.ITestOutputHelper testOutputHelper)
         {
             this._testOutputHelper = testOutputHelper;
             this.TestInitialize();
@@ -40,7 +40,7 @@ namespace CruiseDAL.V3.Sync.Test.Spec.Features
         public static void FeatureSetup()
         {
             testRunner = TechTalk.SpecFlow.TestRunnerManager.GetTestRunner();
-            TechTalk.SpecFlow.FeatureInfo featureInfo = new TechTalk.SpecFlow.FeatureInfo(new System.Globalization.CultureInfo("en-US"), "Features", "Sync Trees With No Logs", "Sync Tree Records between two cruise files", ProgrammingLanguage.CSharp, ((string[])(null)));
+            TechTalk.SpecFlow.FeatureInfo featureInfo = new TechTalk.SpecFlow.FeatureInfo(new System.Globalization.CultureInfo("en-US"), "Features", "Sync Trees With Logs", "Sync Tree Records between two cruise files", ProgrammingLanguage.CSharp, ((string[])(null)));
             testRunner.OnFeatureStart(featureInfo);
         }
         
@@ -77,143 +77,159 @@ namespace CruiseDAL.V3.Sync.Test.Spec.Features
         
         public virtual void FeatureBackground()
         {
-#line 4
-#line hidden
-            TechTalk.SpecFlow.Table table51 = new TechTalk.SpecFlow.Table(new string[] {
-                        "FileAlias"});
-            table51.AddRow(new string[] {
-                        "source"});
-            table51.AddRow(new string[] {
-                        "dest"});
 #line 5
- testRunner.Given("the following cruise files exist:", ((string)(null)), table51, "Given ");
 #line hidden
-            TechTalk.SpecFlow.Table table52 = new TechTalk.SpecFlow.Table(new string[] {
+            TechTalk.SpecFlow.Table table67 = new TechTalk.SpecFlow.Table(new string[] {
+                        "FileAlias"});
+            table67.AddRow(new string[] {
+                        "source"});
+            table67.AddRow(new string[] {
+                        "dest"});
+#line 6
+ testRunner.Given("the following cruise files exist:", ((string)(null)), table67, "Given ");
+#line hidden
+            TechTalk.SpecFlow.Table table68 = new TechTalk.SpecFlow.Table(new string[] {
                         "CuttingUnitCode"});
-            table52.AddRow(new string[] {
+            table68.AddRow(new string[] {
                         "u1"});
-            table52.AddRow(new string[] {
+            table68.AddRow(new string[] {
                         "u2"});
-#line 10
- testRunner.And("in \'source, dest\' the following units exist:", ((string)(null)), table52, "* ");
+#line 11
+ testRunner.And("in \'source, dest\' the following units exist:", ((string)(null)), table68, "* ");
 #line hidden
-            TechTalk.SpecFlow.Table table53 = new TechTalk.SpecFlow.Table(new string[] {
+            TechTalk.SpecFlow.Table table69 = new TechTalk.SpecFlow.Table(new string[] {
                         "StratumCode"});
-            table53.AddRow(new string[] {
+            table69.AddRow(new string[] {
                         "st1"});
-            table53.AddRow(new string[] {
+            table69.AddRow(new string[] {
                         "st2"});
-#line 15
- testRunner.And("in \'source, dest\' the following strata exist:", ((string)(null)), table53, "* ");
+#line 16
+ testRunner.And("in \'source, dest\' the following strata exist:", ((string)(null)), table69, "* ");
 #line hidden
-            TechTalk.SpecFlow.Table table54 = new TechTalk.SpecFlow.Table(new string[] {
+            TechTalk.SpecFlow.Table table70 = new TechTalk.SpecFlow.Table(new string[] {
                         "SampleGroupCode",
                         "StratumCode"});
-            table54.AddRow(new string[] {
+            table70.AddRow(new string[] {
                         "sg1",
                         "st1"});
-            table54.AddRow(new string[] {
+            table70.AddRow(new string[] {
                         "sg2",
                         "st1"});
-            table54.AddRow(new string[] {
+            table70.AddRow(new string[] {
                         "sg1",
                         "st2"});
-            table54.AddRow(new string[] {
+            table70.AddRow(new string[] {
                         "sg2",
                         "st2"});
-#line 20
- testRunner.And("in \'source, dest\' file the following sample groups exist:", ((string)(null)), table54, "* ");
+#line 21
+ testRunner.And("in \'source, dest\' file the following sample groups exist:", ((string)(null)), table70, "* ");
 #line hidden
-            TechTalk.SpecFlow.Table table55 = new TechTalk.SpecFlow.Table(new string[] {
+            TechTalk.SpecFlow.Table table71 = new TechTalk.SpecFlow.Table(new string[] {
                         "SpeciesCode"});
-            table55.AddRow(new string[] {
+            table71.AddRow(new string[] {
                         "sp1"});
-#line 27
- testRunner.And("in \'source, dest\' the following species exist:", ((string)(null)), table55, "* ");
+#line 28
+ testRunner.And("in \'source, dest\' the following species exist:", ((string)(null)), table71, "* ");
 #line hidden
-            TechTalk.SpecFlow.Table table56 = new TechTalk.SpecFlow.Table(new string[] {
+            TechTalk.SpecFlow.Table table72 = new TechTalk.SpecFlow.Table(new string[] {
                         "CuttingUnitCode",
                         "StratumCode",
                         "SampleGroupCode",
                         "SpeciesCode",
                         "TreeNumber",
                         "TreeID"});
-            table56.AddRow(new string[] {
+            table72.AddRow(new string[] {
                         "u1",
                         "st1",
                         "sg1",
                         "sp1",
                         "1",
                         "tree1"});
-            table56.AddRow(new string[] {
+            table72.AddRow(new string[] {
                         "u1",
                         "st1",
                         "sg1",
                         "sp1",
                         "2",
                         "tree2d"});
-            table56.AddRow(new string[] {
+            table72.AddRow(new string[] {
                         "u1",
                         "st1",
                         "sg1",
                         "sp1",
                         "3",
                         "tree3"});
-#line 31
- testRunner.And("in \'dest\' the following trees exist:", ((string)(null)), table56, "* ");
+#line 33
+ testRunner.And("in \'dest\' the following trees exist:", ((string)(null)), table72, "* ");
 #line hidden
-            TechTalk.SpecFlow.Table table57 = new TechTalk.SpecFlow.Table(new string[] {
+            TechTalk.SpecFlow.Table table73 = new TechTalk.SpecFlow.Table(new string[] {
                         "CuttingUnitCode",
                         "StratumCode",
                         "SampleGroupCode",
                         "SpeciesCode",
                         "TreeNumber",
                         "TreeID"});
-            table57.AddRow(new string[] {
+            table73.AddRow(new string[] {
                         "u1",
                         "st1",
                         "sg1",
                         "sp1",
                         "1",
                         "tree1"});
-            table57.AddRow(new string[] {
+            table73.AddRow(new string[] {
                         "u1",
                         "st1",
                         "sg1",
                         "sp1",
                         "2",
                         "tree2s"});
-            table57.AddRow(new string[] {
+            table73.AddRow(new string[] {
                         "u1",
                         "st1",
                         "sg1",
                         "sp1",
                         "4",
                         "tree4"});
-#line 37
- testRunner.And("in \'source\' the following trees exist:", ((string)(null)), table57, "* ");
+#line 39
+ testRunner.And("in \'source\' the following trees exist:", ((string)(null)), table73, "* ");
 #line hidden
-            TechTalk.SpecFlow.Table table58 = new TechTalk.SpecFlow.Table(new string[] {
+            TechTalk.SpecFlow.Table table74 = new TechTalk.SpecFlow.Table(new string[] {
                         "TreeID",
                         "LogNumber",
                         "LogID"});
-            table58.AddRow(new string[] {
+            table74.AddRow(new string[] {
                         "tree1",
                         "1",
                         "log1_t1"});
-#line 43
- testRunner.And("in \'dest\' the following logs exist:", ((string)(null)), table58, "* ");
+            table74.AddRow(new string[] {
+                        "tree2d",
+                        "1",
+                        "log1_t2d"});
+            table74.AddRow(new string[] {
+                        "tree2d",
+                        "2",
+                        "log2_t2d"});
+#line 48
+ testRunner.And("in \'dest\' the following logs exist:", ((string)(null)), table74, "* ");
 #line hidden
-            TechTalk.SpecFlow.Table table59 = new TechTalk.SpecFlow.Table(new string[] {
+            TechTalk.SpecFlow.Table table75 = new TechTalk.SpecFlow.Table(new string[] {
                         "TreeID",
                         "LogNumber",
                         "LogID"});
-            table59.AddRow(new string[] {
+            table75.AddRow(new string[] {
                         "tree1",
                         "1",
                         "log1_t1"});
-#line 47
- testRunner.And("in \'source\' the following logs exist:", ((string)(null)), table59, "* ");
+            table75.AddRow(new string[] {
+                        "tree2s",
+                        "1",
+                        "log1_t2s"});
+            table75.AddRow(new string[] {
+                        "tree2s",
+                        "3",
+                        "log3_t2s"});
+#line 55
+ testRunner.And("in \'source\' the following logs exist:", ((string)(null)), table75, "* ");
 #line hidden
         }
         
@@ -222,15 +238,15 @@ namespace CruiseDAL.V3.Sync.Test.Spec.Features
             this.TestTearDown();
         }
         
-        [Xunit.SkippableFactAttribute(DisplayName="Check For Conflicts shows trees with same tree number but different TreeIDs")]
-        [Xunit.TraitAttribute("FeatureTitle", "Sync Trees With No Logs")]
-        [Xunit.TraitAttribute("Description", "Check For Conflicts shows trees with same tree number but different TreeIDs")]
-        public virtual void CheckForConflictsShowsTreesWithSameTreeNumberButDifferentTreeIDs()
+        [Xunit.SkippableFactAttribute(DisplayName="Check For Conflicts")]
+        [Xunit.TraitAttribute("FeatureTitle", "Sync Trees With Logs")]
+        [Xunit.TraitAttribute("Description", "Check For Conflicts")]
+        public virtual void CheckForConflicts()
         {
             string[] tagsOfScenario = ((string[])(null));
             System.Collections.Specialized.OrderedDictionary argumentsOfScenario = new System.Collections.Specialized.OrderedDictionary();
-            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("Check For Conflicts shows trees with same tree number but different TreeIDs", null, tagsOfScenario, argumentsOfScenario, this._featureTags);
-#line 52
+            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("Check For Conflicts", null, tagsOfScenario, argumentsOfScenario, this._featureTags);
+#line 62
 this.ScenarioInitialize(scenarioInfo);
 #line hidden
             bool isScenarioIgnored = default(bool);
@@ -250,43 +266,42 @@ this.ScenarioInitialize(scenarioInfo);
             else
             {
                 this.ScenarioStart();
-#line 4
+#line 5
 this.FeatureBackground();
 #line hidden
-#line 53
+#line 63
  testRunner.When("I conflict check \'source\' file against \'dest\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
 #line hidden
-#line 54
+#line 64
  testRunner.Then("TreeConflicts has 1 conflict(s)", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line hidden
-#line 55
- testRunner.And("TreeConflicts has no downstream conflicts", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
-#line hidden
-#line 56
+#line 65
  testRunner.And("Log Conflict List has 0 conflict(s)", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line hidden
-                TechTalk.SpecFlow.Table table60 = new TechTalk.SpecFlow.Table(new string[] {
+                TechTalk.SpecFlow.Table table76 = new TechTalk.SpecFlow.Table(new string[] {
                             "SourceRecID",
-                            "DestRecID"});
-                table60.AddRow(new string[] {
+                            "DestRecID",
+                            "DownstreamConflictCount"});
+                table76.AddRow(new string[] {
                             "tree2s",
-                            "tree2d"});
-#line 57
- testRunner.And("TreeConflicts records has:", ((string)(null)), table60, "And ");
+                            "tree2d",
+                            "0"});
+#line 66
+ testRunner.And("TreeConflicts records has:", ((string)(null)), table76, "And ");
 #line hidden
             }
             this.ScenarioCleanup();
         }
         
         [Xunit.SkippableFactAttribute(DisplayName="Resolve Tree Conflicts With ChoseDest")]
-        [Xunit.TraitAttribute("FeatureTitle", "Sync Trees With No Logs")]
+        [Xunit.TraitAttribute("FeatureTitle", "Sync Trees With Logs")]
         [Xunit.TraitAttribute("Description", "Resolve Tree Conflicts With ChoseDest")]
         public virtual void ResolveTreeConflictsWithChoseDest()
         {
             string[] tagsOfScenario = ((string[])(null));
             System.Collections.Specialized.OrderedDictionary argumentsOfScenario = new System.Collections.Specialized.OrderedDictionary();
             TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("Resolve Tree Conflicts With ChoseDest", null, tagsOfScenario, argumentsOfScenario, this._featureTags);
-#line 61
+#line 70
 this.ScenarioInitialize(scenarioInfo);
 #line hidden
             bool isScenarioIgnored = default(bool);
@@ -306,140 +321,89 @@ this.ScenarioInitialize(scenarioInfo);
             else
             {
                 this.ScenarioStart();
-#line 4
+#line 5
 this.FeatureBackground();
 #line hidden
-#line 62
+#line 71
  testRunner.When("I conflict check \'source\' file against \'dest\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
 #line hidden
-#line 63
+#line 72
  testRunner.And("I resolve all tree conflicts with \'ChoseDest\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line hidden
-#line 64
+#line 73
  testRunner.And("I run conflict resolution of \'source\' file against \'dest\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line hidden
-#line 65
+#line 74
  testRunner.And("sync \'source\' into \'dest\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line hidden
-                TechTalk.SpecFlow.Table table61 = new TechTalk.SpecFlow.Table(new string[] {
+                TechTalk.SpecFlow.Table table77 = new TechTalk.SpecFlow.Table(new string[] {
                             "TreeID"});
-                table61.AddRow(new string[] {
+                table77.AddRow(new string[] {
                             "tree1"});
-                table61.AddRow(new string[] {
+                table77.AddRow(new string[] {
                             "tree2d"});
-                table61.AddRow(new string[] {
+                table77.AddRow(new string[] {
                             "tree3"});
-                table61.AddRow(new string[] {
+                table77.AddRow(new string[] {
                             "tree4"});
-#line 66
- testRunner.Then("\'dest\' contains trees:", ((string)(null)), table61, "Then ");
+#line 75
+ testRunner.Then("\'dest\' contains trees:", ((string)(null)), table77, "Then ");
+#line hidden
+                TechTalk.SpecFlow.Table table78 = new TechTalk.SpecFlow.Table(new string[] {
+                            "LogID",
+                            "LogNumber"});
+                table78.AddRow(new string[] {
+                            "log1_t1",
+                            "1"});
+                table78.AddRow(new string[] {
+                            "log1_t2d",
+                            "1"});
+                table78.AddRow(new string[] {
+                            "log2_t2d",
+                            "2"});
+#line 81
+ testRunner.And("\'dest\' contains logs:", ((string)(null)), table78, "And ");
 #line hidden
             }
             this.ScenarioCleanup();
         }
         
         [Xunit.SkippableFactAttribute(DisplayName="Resolve Tree Conflicts With ChoseSource")]
-        [Xunit.TraitAttribute("FeatureTitle", "Sync Trees With No Logs")]
+        [Xunit.TraitAttribute("FeatureTitle", "Sync Trees With Logs")]
         [Xunit.TraitAttribute("Description", "Resolve Tree Conflicts With ChoseSource")]
         public virtual void ResolveTreeConflictsWithChoseSource()
         {
             string[] tagsOfScenario = ((string[])(null));
             System.Collections.Specialized.OrderedDictionary argumentsOfScenario = new System.Collections.Specialized.OrderedDictionary();
             TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("Resolve Tree Conflicts With ChoseSource", null, tagsOfScenario, argumentsOfScenario, this._featureTags);
-#line 73
-this.ScenarioInitialize(scenarioInfo);
-#line hidden
-            bool isScenarioIgnored = default(bool);
-            bool isFeatureIgnored = default(bool);
-            if ((tagsOfScenario != null))
-            {
-                isScenarioIgnored = tagsOfScenario.Where(__entry => __entry != null).Where(__entry => String.Equals(__entry, "ignore", StringComparison.CurrentCultureIgnoreCase)).Any();
-            }
-            if ((this._featureTags != null))
-            {
-                isFeatureIgnored = this._featureTags.Where(__entry => __entry != null).Where(__entry => String.Equals(__entry, "ignore", StringComparison.CurrentCultureIgnoreCase)).Any();
-            }
-            if ((isScenarioIgnored || isFeatureIgnored))
-            {
-                testRunner.SkipScenario();
-            }
-            else
-            {
-                this.ScenarioStart();
-#line 4
-this.FeatureBackground();
-#line hidden
-#line 74
- testRunner.When("I conflict check \'source\' file against \'dest\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
-#line hidden
-#line 75
- testRunner.And("I resolve all tree conflicts with \'ChoseSource\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
-#line hidden
-#line 76
- testRunner.And("I run conflict resolution of \'source\' file against \'dest\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
-#line hidden
-#line 77
- testRunner.And("sync \'source\' into \'dest\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
-#line hidden
-                TechTalk.SpecFlow.Table table62 = new TechTalk.SpecFlow.Table(new string[] {
-                            "TreeID"});
-                table62.AddRow(new string[] {
-                            "tree1"});
-                table62.AddRow(new string[] {
-                            "tree2s"});
-                table62.AddRow(new string[] {
-                            "tree3"});
-                table62.AddRow(new string[] {
-                            "tree4"});
-#line 78
- testRunner.Then("\'dest\' contains trees:", ((string)(null)), table62, "Then ");
-#line hidden
-            }
-            this.ScenarioCleanup();
-        }
-        
-        [Xunit.SkippableFactAttribute(DisplayName="Resolve Conflict With ModifyDest")]
-        [Xunit.TraitAttribute("FeatureTitle", "Sync Trees With No Logs")]
-        [Xunit.TraitAttribute("Description", "Resolve Conflict With ModifyDest")]
-        public virtual void ResolveConflictWithModifyDest()
-        {
-            string[] tagsOfScenario = ((string[])(null));
-            System.Collections.Specialized.OrderedDictionary argumentsOfScenario = new System.Collections.Specialized.OrderedDictionary();
-            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("Resolve Conflict With ModifyDest", null, tagsOfScenario, argumentsOfScenario, this._featureTags);
-#line 85
-this.ScenarioInitialize(scenarioInfo);
-#line hidden
-            bool isScenarioIgnored = default(bool);
-            bool isFeatureIgnored = default(bool);
-            if ((tagsOfScenario != null))
-            {
-                isScenarioIgnored = tagsOfScenario.Where(__entry => __entry != null).Where(__entry => String.Equals(__entry, "ignore", StringComparison.CurrentCultureIgnoreCase)).Any();
-            }
-            if ((this._featureTags != null))
-            {
-                isFeatureIgnored = this._featureTags.Where(__entry => __entry != null).Where(__entry => String.Equals(__entry, "ignore", StringComparison.CurrentCultureIgnoreCase)).Any();
-            }
-            if ((isScenarioIgnored || isFeatureIgnored))
-            {
-                testRunner.SkipScenario();
-            }
-            else
-            {
-                this.ScenarioStart();
-#line 4
-this.FeatureBackground();
-#line hidden
-#line 86
- testRunner.When("I conflict check \'source\' file against \'dest\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
-#line hidden
-                TechTalk.SpecFlow.Table table63 = new TechTalk.SpecFlow.Table(new string[] {
-                            "DestRecID",
-                            "TreeNumber"});
-                table63.AddRow(new string[] {
-                            "tree2d",
-                            "5"});
 #line 87
- testRunner.And("I resolve tree conflicts with ModifyDest using:", ((string)(null)), table63, "And ");
+this.ScenarioInitialize(scenarioInfo);
+#line hidden
+            bool isScenarioIgnored = default(bool);
+            bool isFeatureIgnored = default(bool);
+            if ((tagsOfScenario != null))
+            {
+                isScenarioIgnored = tagsOfScenario.Where(__entry => __entry != null).Where(__entry => String.Equals(__entry, "ignore", StringComparison.CurrentCultureIgnoreCase)).Any();
+            }
+            if ((this._featureTags != null))
+            {
+                isFeatureIgnored = this._featureTags.Where(__entry => __entry != null).Where(__entry => String.Equals(__entry, "ignore", StringComparison.CurrentCultureIgnoreCase)).Any();
+            }
+            if ((isScenarioIgnored || isFeatureIgnored))
+            {
+                testRunner.SkipScenario();
+            }
+            else
+            {
+                this.ScenarioStart();
+#line 5
+this.FeatureBackground();
+#line hidden
+#line 88
+ testRunner.When("I conflict check \'source\' file against \'dest\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
+#line hidden
+#line 89
+ testRunner.And("I resolve all tree conflicts with \'ChoseSource\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line hidden
 #line 90
  testRunner.And("I run conflict resolution of \'source\' file against \'dest\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
@@ -447,40 +411,47 @@ this.FeatureBackground();
 #line 91
  testRunner.And("sync \'source\' into \'dest\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line hidden
-                TechTalk.SpecFlow.Table table64 = new TechTalk.SpecFlow.Table(new string[] {
-                            "TreeID",
-                            "TreeNumber"});
-                table64.AddRow(new string[] {
-                            "tree1",
-                            "1"});
-                table64.AddRow(new string[] {
-                            "tree2d",
-                            "5"});
-                table64.AddRow(new string[] {
-                            "tree2s",
-                            "2"});
-                table64.AddRow(new string[] {
-                            "tree3",
-                            "3"});
-                table64.AddRow(new string[] {
-                            "tree4",
-                            "4"});
+                TechTalk.SpecFlow.Table table79 = new TechTalk.SpecFlow.Table(new string[] {
+                            "TreeID"});
+                table79.AddRow(new string[] {
+                            "tree1"});
+                table79.AddRow(new string[] {
+                            "tree2s"});
+                table79.AddRow(new string[] {
+                            "tree3"});
+                table79.AddRow(new string[] {
+                            "tree4"});
 #line 92
- testRunner.Then("\'dest\' contains trees:", ((string)(null)), table64, "Then ");
+ testRunner.Then("\'dest\' contains trees:", ((string)(null)), table79, "Then ");
+#line hidden
+                TechTalk.SpecFlow.Table table80 = new TechTalk.SpecFlow.Table(new string[] {
+                            "LogID",
+                            "LogNumber"});
+                table80.AddRow(new string[] {
+                            "log1_t1",
+                            "1"});
+                table80.AddRow(new string[] {
+                            "log1_t2s",
+                            "1"});
+                table80.AddRow(new string[] {
+                            "log3_t2s",
+                            "3"});
+#line 98
+ testRunner.And("\'dest\' contains logs:", ((string)(null)), table80, "And ");
 #line hidden
             }
             this.ScenarioCleanup();
         }
         
-        [Xunit.SkippableFactAttribute(DisplayName="Resolve Conflict With ModifySource")]
-        [Xunit.TraitAttribute("FeatureTitle", "Sync Trees With No Logs")]
-        [Xunit.TraitAttribute("Description", "Resolve Conflict With ModifySource")]
-        public virtual void ResolveConflictWithModifySource()
+        [Xunit.SkippableFactAttribute(DisplayName="Resolve Conflict With ModifyDest")]
+        [Xunit.TraitAttribute("FeatureTitle", "Sync Trees With Logs")]
+        [Xunit.TraitAttribute("Description", "Resolve Conflict With ModifyDest")]
+        public virtual void ResolveConflictWithModifyDest()
         {
             string[] tagsOfScenario = ((string[])(null));
             System.Collections.Specialized.OrderedDictionary argumentsOfScenario = new System.Collections.Specialized.OrderedDictionary();
-            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("Resolve Conflict With ModifySource", null, tagsOfScenario, argumentsOfScenario, this._featureTags);
-#line 100
+            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("Resolve Conflict With ModifyDest", null, tagsOfScenario, argumentsOfScenario, this._featureTags);
+#line 104
 this.ScenarioInitialize(scenarioInfo);
 #line hidden
             bool isScenarioIgnored = default(bool);
@@ -500,47 +471,251 @@ this.ScenarioInitialize(scenarioInfo);
             else
             {
                 this.ScenarioStart();
-#line 4
+#line 5
 this.FeatureBackground();
 #line hidden
-#line 101
+#line 105
  testRunner.When("I conflict check \'source\' file against \'dest\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
 #line hidden
-                TechTalk.SpecFlow.Table table65 = new TechTalk.SpecFlow.Table(new string[] {
-                            "SourceRecID",
+                TechTalk.SpecFlow.Table table81 = new TechTalk.SpecFlow.Table(new string[] {
+                            "DestRecID",
                             "TreeNumber"});
-                table65.AddRow(new string[] {
-                            "tree2s",
+                table81.AddRow(new string[] {
+                            "tree2d",
                             "5"});
-#line 102
- testRunner.And("I resolve tree conflicts with ModifySource using:", ((string)(null)), table65, "And ");
+#line 106
+ testRunner.And("I resolve tree conflicts with ModifyDest using:", ((string)(null)), table81, "And ");
 #line hidden
-#line 105
+#line 109
  testRunner.And("I run conflict resolution of \'source\' file against \'dest\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line hidden
-#line 106
+#line 110
  testRunner.And("sync \'source\' into \'dest\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line hidden
-                TechTalk.SpecFlow.Table table66 = new TechTalk.SpecFlow.Table(new string[] {
+                TechTalk.SpecFlow.Table table82 = new TechTalk.SpecFlow.Table(new string[] {
                             "TreeID",
                             "TreeNumber"});
-                table66.AddRow(new string[] {
+                table82.AddRow(new string[] {
                             "tree1",
                             "1"});
-                table66.AddRow(new string[] {
+                table82.AddRow(new string[] {
                             "tree2d",
-                            "2"});
-                table66.AddRow(new string[] {
-                            "tree2s",
                             "5"});
-                table66.AddRow(new string[] {
+                table82.AddRow(new string[] {
+                            "tree2s",
+                            "2"});
+                table82.AddRow(new string[] {
                             "tree3",
                             "3"});
-                table66.AddRow(new string[] {
+                table82.AddRow(new string[] {
                             "tree4",
                             "4"});
-#line 107
- testRunner.Then("\'dest\' contains trees:", ((string)(null)), table66, "Then ");
+#line 111
+ testRunner.Then("\'dest\' contains trees:", ((string)(null)), table82, "Then ");
+#line hidden
+                TechTalk.SpecFlow.Table table83 = new TechTalk.SpecFlow.Table(new string[] {
+                            "LogID",
+                            "LogNumber"});
+                table83.AddRow(new string[] {
+                            "log1_t1",
+                            "1"});
+                table83.AddRow(new string[] {
+                            "log1_t2d",
+                            "1"});
+                table83.AddRow(new string[] {
+                            "log2_t2d",
+                            "2"});
+                table83.AddRow(new string[] {
+                            "log1_t2s",
+                            "1"});
+                table83.AddRow(new string[] {
+                            "log3_t2s",
+                            "3"});
+#line 118
+ testRunner.And("\'dest\' contains logs:", ((string)(null)), table83, "And ");
+#line hidden
+            }
+            this.ScenarioCleanup();
+        }
+        
+        [Xunit.SkippableFactAttribute(DisplayName="Resolve Conflict With ModifySource")]
+        [Xunit.TraitAttribute("FeatureTitle", "Sync Trees With Logs")]
+        [Xunit.TraitAttribute("Description", "Resolve Conflict With ModifySource")]
+        public virtual void ResolveConflictWithModifySource()
+        {
+            string[] tagsOfScenario = ((string[])(null));
+            System.Collections.Specialized.OrderedDictionary argumentsOfScenario = new System.Collections.Specialized.OrderedDictionary();
+            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("Resolve Conflict With ModifySource", null, tagsOfScenario, argumentsOfScenario, this._featureTags);
+#line 126
+this.ScenarioInitialize(scenarioInfo);
+#line hidden
+            bool isScenarioIgnored = default(bool);
+            bool isFeatureIgnored = default(bool);
+            if ((tagsOfScenario != null))
+            {
+                isScenarioIgnored = tagsOfScenario.Where(__entry => __entry != null).Where(__entry => String.Equals(__entry, "ignore", StringComparison.CurrentCultureIgnoreCase)).Any();
+            }
+            if ((this._featureTags != null))
+            {
+                isFeatureIgnored = this._featureTags.Where(__entry => __entry != null).Where(__entry => String.Equals(__entry, "ignore", StringComparison.CurrentCultureIgnoreCase)).Any();
+            }
+            if ((isScenarioIgnored || isFeatureIgnored))
+            {
+                testRunner.SkipScenario();
+            }
+            else
+            {
+                this.ScenarioStart();
+#line 5
+this.FeatureBackground();
+#line hidden
+#line 127
+ testRunner.When("I conflict check \'source\' file against \'dest\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
+#line hidden
+                TechTalk.SpecFlow.Table table84 = new TechTalk.SpecFlow.Table(new string[] {
+                            "SourceRecID",
+                            "TreeNumber"});
+                table84.AddRow(new string[] {
+                            "tree2s",
+                            "5"});
+#line 128
+ testRunner.And("I resolve tree conflicts with ModifySource using:", ((string)(null)), table84, "And ");
+#line hidden
+#line 131
+ testRunner.And("I run conflict resolution of \'source\' file against \'dest\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line hidden
+#line 132
+ testRunner.And("sync \'source\' into \'dest\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line hidden
+                TechTalk.SpecFlow.Table table85 = new TechTalk.SpecFlow.Table(new string[] {
+                            "TreeID",
+                            "TreeNumber"});
+                table85.AddRow(new string[] {
+                            "tree1",
+                            "1"});
+                table85.AddRow(new string[] {
+                            "tree2d",
+                            "2"});
+                table85.AddRow(new string[] {
+                            "tree2s",
+                            "5"});
+                table85.AddRow(new string[] {
+                            "tree3",
+                            "3"});
+                table85.AddRow(new string[] {
+                            "tree4",
+                            "4"});
+#line 133
+ testRunner.Then("\'dest\' contains trees:", ((string)(null)), table85, "Then ");
+#line hidden
+                TechTalk.SpecFlow.Table table86 = new TechTalk.SpecFlow.Table(new string[] {
+                            "LogID",
+                            "LogNumber"});
+                table86.AddRow(new string[] {
+                            "log1_t1",
+                            "1"});
+                table86.AddRow(new string[] {
+                            "log1_t2d",
+                            "1"});
+                table86.AddRow(new string[] {
+                            "log2_t2d",
+                            "2"});
+                table86.AddRow(new string[] {
+                            "log1_t2s",
+                            "1"});
+                table86.AddRow(new string[] {
+                            "log3_t2s",
+                            "3"});
+#line 140
+ testRunner.And("\'dest\' contains logs:", ((string)(null)), table86, "And ");
+#line hidden
+            }
+            this.ScenarioCleanup();
+        }
+        
+        [Xunit.SkippableFactAttribute(DisplayName="Resolve Conflict With ChoseSourceMergeData Is Not Supported")]
+        [Xunit.TraitAttribute("FeatureTitle", "Sync Trees With Logs")]
+        [Xunit.TraitAttribute("Description", "Resolve Conflict With ChoseSourceMergeData Is Not Supported")]
+        public virtual void ResolveConflictWithChoseSourceMergeDataIsNotSupported()
+        {
+            string[] tagsOfScenario = ((string[])(null));
+            System.Collections.Specialized.OrderedDictionary argumentsOfScenario = new System.Collections.Specialized.OrderedDictionary();
+            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("Resolve Conflict With ChoseSourceMergeData Is Not Supported", null, tagsOfScenario, argumentsOfScenario, this._featureTags);
+#line 148
+this.ScenarioInitialize(scenarioInfo);
+#line hidden
+            bool isScenarioIgnored = default(bool);
+            bool isFeatureIgnored = default(bool);
+            if ((tagsOfScenario != null))
+            {
+                isScenarioIgnored = tagsOfScenario.Where(__entry => __entry != null).Where(__entry => String.Equals(__entry, "ignore", StringComparison.CurrentCultureIgnoreCase)).Any();
+            }
+            if ((this._featureTags != null))
+            {
+                isFeatureIgnored = this._featureTags.Where(__entry => __entry != null).Where(__entry => String.Equals(__entry, "ignore", StringComparison.CurrentCultureIgnoreCase)).Any();
+            }
+            if ((isScenarioIgnored || isFeatureIgnored))
+            {
+                testRunner.SkipScenario();
+            }
+            else
+            {
+                this.ScenarioStart();
+#line 5
+this.FeatureBackground();
+#line hidden
+#line 149
+ testRunner.When("I conflict check \'source\' file against \'dest\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
+#line hidden
+#line 150
+ testRunner.And("I resolve all tree conflicts with \'ChoseSourceMergeData\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line hidden
+#line 151
+ testRunner.Then("running conflict resolution of \'source\' file against \'dest\' not supported", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+#line hidden
+            }
+            this.ScenarioCleanup();
+        }
+        
+        [Xunit.SkippableFactAttribute(DisplayName="Resolve Conflict With ChoseDestMergeData Is Not Supported")]
+        [Xunit.TraitAttribute("FeatureTitle", "Sync Trees With Logs")]
+        [Xunit.TraitAttribute("Description", "Resolve Conflict With ChoseDestMergeData Is Not Supported")]
+        public virtual void ResolveConflictWithChoseDestMergeDataIsNotSupported()
+        {
+            string[] tagsOfScenario = ((string[])(null));
+            System.Collections.Specialized.OrderedDictionary argumentsOfScenario = new System.Collections.Specialized.OrderedDictionary();
+            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("Resolve Conflict With ChoseDestMergeData Is Not Supported", null, tagsOfScenario, argumentsOfScenario, this._featureTags);
+#line 153
+this.ScenarioInitialize(scenarioInfo);
+#line hidden
+            bool isScenarioIgnored = default(bool);
+            bool isFeatureIgnored = default(bool);
+            if ((tagsOfScenario != null))
+            {
+                isScenarioIgnored = tagsOfScenario.Where(__entry => __entry != null).Where(__entry => String.Equals(__entry, "ignore", StringComparison.CurrentCultureIgnoreCase)).Any();
+            }
+            if ((this._featureTags != null))
+            {
+                isFeatureIgnored = this._featureTags.Where(__entry => __entry != null).Where(__entry => String.Equals(__entry, "ignore", StringComparison.CurrentCultureIgnoreCase)).Any();
+            }
+            if ((isScenarioIgnored || isFeatureIgnored))
+            {
+                testRunner.SkipScenario();
+            }
+            else
+            {
+                this.ScenarioStart();
+#line 5
+this.FeatureBackground();
+#line hidden
+#line 154
+ testRunner.When("I conflict check \'source\' file against \'dest\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
+#line hidden
+#line 155
+ testRunner.And("I resolve all tree conflicts with \'ChoseDestMergeData\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line hidden
+#line 156
+ testRunner.Then("running conflict resolution of \'source\' file against \'dest\' not supported", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line hidden
             }
             this.ScenarioCleanup();
@@ -553,12 +728,12 @@ this.FeatureBackground();
             
             public FixtureData()
             {
-                SyncTreesWithNoLogsFeature.FeatureSetup();
+                SyncTreesWithLogsFeature.FeatureSetup();
             }
             
             void System.IDisposable.Dispose()
             {
-                SyncTreesWithNoLogsFeature.FeatureTearDown();
+                SyncTreesWithLogsFeature.FeatureTearDown();
             }
         }
     }

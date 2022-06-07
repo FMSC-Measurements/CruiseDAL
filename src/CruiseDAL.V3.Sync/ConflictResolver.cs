@@ -105,7 +105,8 @@ namespace CruiseDAL.V3.Sync
                     }
             }
 
-            if (conflict.DownstreamConflicts != null && conflict.DownstreamConflicts.Any())
+            if ((resolution == ConflictResolutionType.ChoseSourceMergeData || resolution == ConflictResolutionType.ChoseDestMergeData) 
+                 && conflict.DownstreamConflicts != null && conflict.DownstreamConflicts.Any())
             {
                 foreach (var c in conflict.DownstreamConflicts)
                 {
@@ -338,6 +339,15 @@ namespace CruiseDAL.V3.Sync
                         destination.ExecuteNonQuery2(MODIFY_PLOT_COMMAND, conflict.DestRec);
                         break;
                     }
+            }
+
+            if ((resolution == ConflictResolutionType.ChoseSourceMergeData || resolution == ConflictResolutionType.ChoseDestMergeData)
+                 && conflict.DownstreamConflicts != null && conflict.DownstreamConflicts.Any())
+            {
+                foreach (var c in conflict.DownstreamConflicts)
+                {
+                    ResolveConflict(source, destination, c);
+                }
             }
         }
 

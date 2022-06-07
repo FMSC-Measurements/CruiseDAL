@@ -159,8 +159,13 @@ namespace CruiseDAL.V3.Sync.Test.Spec.StepDefinitions
             }
         }
 
-        protected void InitTrees(Table table, CruiseDatastore_V3 database)
+        [Given(@"in '([^']*)' the following trees exist:")]
+        public void GivenInTheFollowingTreesExist(string dbNamesArg, Table table)
         {
+            var databasesNames = dbNamesArg.Split(",", StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
+            var databases = databasesNames.Select(x => DatabaseLookup[x]).ToArray();
+            databases.Should().NotBeEmpty();
+
             var cruiseID = CruiseID;
 
             foreach (var row in table.Rows)
@@ -174,6 +179,9 @@ namespace CruiseDAL.V3.Sync.Test.Spec.StepDefinitions
                 var sgCode = row["SampleGroupCode"];
                 var spCode = row["SpeciesCode"];
 
+                row.TryGetValue(nameof(Tree.PlotNumber), out var plotNumberStr);
+                var plotNumber = (plotNumberStr != null) ? (int?)int.Parse(plotNumberStr) : null;
+
                 var tree = new Tree
                 {
                     CruiseID = cruiseID,
@@ -183,10 +191,11 @@ namespace CruiseDAL.V3.Sync.Test.Spec.StepDefinitions
                     StratumCode = stCode,
                     SampleGroupCode = sgCode,
                     SpeciesCode = spCode,
+                    PlotNumber = plotNumber,
                 };
-                database.Insert(tree);
 
-                var tallyLedgerID = Guid.NewGuid().ToString();
+                //var tallyLedgerID = Guid.NewGuid().ToString();
+                var tallyLedgerID = treeID; //reuse treeID for tally ledger ID
                 var tallyLedger = new TallyLedger
                 {
                     CruiseID = cruiseID,
@@ -196,27 +205,20 @@ namespace CruiseDAL.V3.Sync.Test.Spec.StepDefinitions
                     StratumCode = stCode,
                     SampleGroupCode = sgCode,
                     SpeciesCode = spCode,
+                    PlotNumber = plotNumber,
                 };
-                database.Insert(tallyLedger);
 
                 var tm = new TreeMeasurment
                 {
                     TreeID = treeID,
                 };
-                database.Insert(tm);
-            }
-        }
 
-        [Given(@"in '([^']*)' the following trees exist:")]
-        public void GivenInTheFollowingTreesExist(string dbNamesArg, Table table)
-        {
-            var databasesNames = dbNamesArg.Split(",", StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
-            var databases = databasesNames.Select(x => DatabaseLookup[x]).ToArray();
-            databases.Should().NotBeEmpty();
-
-            foreach (var database in databases)
-            {
-                InitTrees(table, database);
+                foreach (var db in databases)
+                {
+                    db.Insert(tree);
+                    db.Insert(tallyLedger);
+                    db.Insert(tm);
+                }
             }
         }
 
@@ -299,17 +301,18 @@ namespace CruiseDAL.V3.Sync.Test.Spec.StepDefinitions
 
             foreach (var row in table.Rows)
             {
-                var srcRecID = GetRedordID(row[0]);
-                var destRecID = GetRedordID(row[1]);
+                var srcRecID = GetRedordID(row[nameof(Conflict.SourceRecID)]);
+                var destRecID = GetRedordID(row[nameof(Conflict.DestRecID)]);
 
                 var treeConflict = treeConflicts.Single(x => x.SourceRecID == srcRecID && x.DestRecID == destRecID);
                 //treeConflict.Should().NotBeNull();
 
                 if(row.TryGetValue("DownstreamConflictCount", out var downstreamConfCountStr))
                 {
-                    var downstreamConfCount = Convert.ToInt32(downstreamConfCountStr);
+                    var downstreamConfCount = int.Parse(downstreamConfCountStr);
                     if (downstreamConfCount > 0)
                     {
+                        treeConflict.DownstreamConflicts.Should().NotBeNull();
                         treeConflict.DownstreamConflicts.Count().Should().Be(downstreamConfCount);
                     }
                 }
@@ -365,25 +368,28 @@ namespace CruiseDAL.V3.Sync.Test.Spec.StepDefinitions
         }
 
         [Then(@"'([^']*)' contains trees:")]
-        public void ThenContainsTreeIDs(string dbAlias, Table table)
+        public void ThenContainsTrees(string dbAlias, Table table)
         {
             var db = GetDatabase(dbAlias);
 
             var trees = db.From<Tree>().Query().ToArray();
+            
             foreach (var row in table.Rows)
             {
                 var treeIDAlias = row[nameof(Tree.TreeID)];
                 var treeID = GetRedordID(treeIDAlias);
                 
                 row.TryGetValue(nameof(Tree.TreeNumber), out var treeNumberStr);
-                trees.Should().Contain(
-                    x => x.TreeID == treeID
-                        && (treeNumberStr == null || x.TreeNumber == int.Parse(treeNumberStr))
-                    , because: treeIDAlias);
+                var tree = trees.SingleOrDefault(x =>
+                    x.TreeID == treeID
+                        && (treeNumberStr == null || x.TreeNumber == int.Parse(treeNumberStr)));
 
-                //db.From<Tree>().Where("TreeID = @p1").Count(treeID).Should().Be(1);
+                tree.Should().NotBeNull(because: treeIDAlias);
+
+                db.From<TreeMeasurment>().Where("TreeID = @p1").Count(treeID).Should().Be(1);
+                db.From<TallyLedger>().Where("TreeID = @p1").Count(treeID).Should().Be(1);
             }
-            trees.Count().Should().Be(table.RowCount);
+            trees.Should().HaveCount(table.RowCount);
         }
 
         [When(@"I resolve tree conflicts with ModifyDest using:")]

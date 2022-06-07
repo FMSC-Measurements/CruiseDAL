@@ -18,45 +18,6 @@ namespace CruiseDAL.V3.Sync.Test.Spec.StepDefinitions
             
         }
 
-        [BeforeScenario]
-        public void SetupSenario()
-        {
-            //var logger = new TestLogger(Output);
-            //FMSC.ORM.Logging.LoggerProvider.Register(logger);
-
-            IDLookup = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
-            DatabaseLookup = new Dictionary<string, CruiseDatastore_V3>(StringComparer.OrdinalIgnoreCase);
-
-            // setup Scenario Artifact Directory
-            var featureName = FeatureContext.FeatureInfo.Title.Replace(" ", "");
-            var senarioName = SenarioContext.ScenarioInfo.Title.Replace(" ", "");
-            SenarioArtifactDir = Path.Combine(TestTempPath, featureName, senarioName);
-            if (!Directory.Exists(SenarioArtifactDir))
-            {
-                Directory.CreateDirectory(SenarioArtifactDir);
-                Output.WriteLine("Artifact Dir at " + SenarioArtifactDir);
-            }
-
-
-            // Initialize Cruise and Sale records 
-            CruiseID = Guid.NewGuid().ToString();
-
-            var saleID = Guid.NewGuid().ToString();
-            var sale = DefaultSale = new Sale
-            {
-                SaleID = saleID,
-                SaleNumber = "12345",
-            };
-
-            var cruise = DefaultCruise = new Cruise
-            {
-                CruiseID = CruiseID,
-                CruiseNumber = "12345",
-                SaleNumber = sale.SaleNumber,
-                SaleID = saleID,
-            };
-        }
-
         protected IDictionary<string, string> IDLookup
         {
             get => SenarioContext.Get<IDictionary<string, string>>(nameof(IDLookup));
@@ -93,6 +54,12 @@ namespace CruiseDAL.V3.Sync.Test.Spec.StepDefinitions
             set => SenarioContext.Set(value, nameof(DefaultSale));
         }
 
+        protected string SenarioArtifactDir
+        {
+            get => SenarioContext.Get<string>(nameof(SenarioArtifactDir));
+            set => SenarioContext.Set(value, nameof(SenarioArtifactDir));
+        }
+
         protected ISpecFlowOutputHelper Output { get; }
 
         protected ScenarioContext SenarioContext { get; }
@@ -106,10 +73,7 @@ namespace CruiseDAL.V3.Sync.Test.Spec.StepDefinitions
                 return Path.GetDirectoryName(codeBase);
             }
         }
-
-        protected string TestTempPath => _testTempPath ??= Path.Combine(Path.GetTempPath(), "TestTemp", this.GetType().FullName);
-
-        protected string SenarioArtifactDir { get; private set; }
+        
 
         protected string GetTempFilePath(string fileName)
         {

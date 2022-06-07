@@ -64,8 +64,8 @@ Scenario: Check For Conflicts
 	Then TreeConflicts has 1 conflict(s)
 	And Log Conflict List has 0 conflict(s)
 	And TreeConflicts records has:
-		| SourctRecID | DestRecID | DownstreamConflictCount |
-		| tree2s      | tree2d    | 1                       |
+		| SourceRecID | DestRecID | DownstreamConflictCount |
+		| tree2s      | tree2d    | 0                       |
 
 Scenario: Resolve Tree Conflicts With ChoseDest
 	When I conflict check 'source' file against 'dest'

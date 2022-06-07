@@ -1,4 +1,4 @@
-﻿Feature: Sync Trees With No Downstream Conflicts
+﻿Feature: Sync Trees With No Logs
 Sync Tree Records between two cruise files
 
 Background:
@@ -55,7 +55,7 @@ Scenario: Check For Conflicts shows trees with same tree number but different Tr
 	And TreeConflicts has no downstream conflicts
 	And Log Conflict List has 0 conflict(s)
 	And TreeConflicts records has:
-		| SourctRecID | DestRecID |
+		| SourceRecID | DestRecID |
 		| tree2s      | tree2d    |
 
 Scenario: Resolve Tree Conflicts With ChoseDest

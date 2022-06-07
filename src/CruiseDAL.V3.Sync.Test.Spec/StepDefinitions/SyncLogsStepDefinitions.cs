@@ -28,8 +28,8 @@ namespace CruiseDAL.V3.Sync.Test.Spec.StepDefinitions
 
             foreach (var row in table.Rows)
             {
-                var srcRecID = GetRedordID(row[0]);
-                var destRecID = GetRedordID(row[1]);
+                var srcRecID = GetRedordID(row[nameof(Conflict.SourceRecID)]);
+                var destRecID = GetRedordID(row[nameof(Conflict.DestRecID)]);
 
                 logConflicts.Should().Contain(x => x.SourceRecID == srcRecID && x.DestRecID == destRecID);
             }
