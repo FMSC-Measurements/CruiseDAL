@@ -35,31 +35,7 @@ namespace CruiseDAL.V3.Sync.Test.Spec.StepDefinitions
 
         
 
-        [Given(@"in '([^']*)' the following units exist:")]
-        public void GivenInTheFollowingUnitsExist(string dbNamesArg, Table table)
-        {
-            var cruiseID = CruiseID;
-
-            var databasesNames = dbNamesArg.Split(",", StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
-            var databases = databasesNames.Select(x => DatabaseLookup[x]).ToArray();
-
-            foreach (var row in table.Rows)
-            {
-                var unitCode = row["CuttingUnitCode"];
-
-                var unitID = Guid.NewGuid().ToString();
-                var cuttingUnit = new CuttingUnit
-                {
-                    CruiseID = cruiseID,
-                    CuttingUnitID = unitID,
-                    CuttingUnitCode = unitCode,
-                };
-                //SrcDatabase.Insert(cuttingUnit);
-                //DestDatabase.Insert(cuttingUnit);
-                foreach (var db in databases)
-                { db.Insert(cuttingUnit); }
-            }
-        }
+        
 
         [Given(@"in '([^']*)' the following strata exist:")]
         public void GivenInTheFollowingStrataExist(string dbNamesArg, Table table)
@@ -380,9 +356,11 @@ namespace CruiseDAL.V3.Sync.Test.Spec.StepDefinitions
                 var treeID = GetRedordID(treeIDAlias);
                 
                 row.TryGetValue(nameof(Tree.TreeNumber), out var treeNumberStr);
+                row.TryGetValue(nameof(Tree.CuttingUnitCode), out var cuttingUnitCode);
                 var tree = trees.SingleOrDefault(x =>
                     x.TreeID == treeID
-                        && (treeNumberStr == null || x.TreeNumber == int.Parse(treeNumberStr)));
+                        && (treeNumberStr == null || x.TreeNumber == int.Parse(treeNumberStr))
+                        && (cuttingUnitCode == null || x.CuttingUnitCode == cuttingUnitCode));
 
                 tree.Should().NotBeNull(because: treeIDAlias);
 

@@ -19,7 +19,7 @@ namespace CruiseDAL.V3.Sync.Test.Spec.Features
     
     [System.CodeDom.Compiler.GeneratedCodeAttribute("TechTalk.SpecFlow", "3.9.0.0")]
     [System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-    public partial class SyncPlotsFeature : object, Xunit.IClassFixture<SyncPlotsFeature.FixtureData>, System.IDisposable
+    public partial class SyncCuttingUnitsFeature : object, Xunit.IClassFixture<SyncCuttingUnitsFeature.FixtureData>, System.IDisposable
     {
         
         private static TechTalk.SpecFlow.ITestRunner testRunner;
@@ -28,10 +28,10 @@ namespace CruiseDAL.V3.Sync.Test.Spec.Features
         
         private Xunit.Abstractions.ITestOutputHelper _testOutputHelper;
         
-#line 1 "SyncPlots.feature"
+#line 1 "SyncCuttingUnits.feature"
 #line hidden
         
-        public SyncPlotsFeature(SyncPlotsFeature.FixtureData fixtureData, CruiseDAL_V3_Sync_Test_Spec_XUnitAssemblyFixture assemblyFixture, Xunit.Abstractions.ITestOutputHelper testOutputHelper)
+        public SyncCuttingUnitsFeature(SyncCuttingUnitsFeature.FixtureData fixtureData, CruiseDAL_V3_Sync_Test_Spec_XUnitAssemblyFixture assemblyFixture, Xunit.Abstractions.ITestOutputHelper testOutputHelper)
         {
             this._testOutputHelper = testOutputHelper;
             this.TestInitialize();
@@ -40,7 +40,7 @@ namespace CruiseDAL.V3.Sync.Test.Spec.Features
         public static void FeatureSetup()
         {
             testRunner = TechTalk.SpecFlow.TestRunnerManager.GetTestRunner();
-            TechTalk.SpecFlow.FeatureInfo featureInfo = new TechTalk.SpecFlow.FeatureInfo(new System.Globalization.CultureInfo("en-US"), "Features", "Sync Plots", null, ProgrammingLanguage.CSharp, ((string[])(null)));
+            TechTalk.SpecFlow.FeatureInfo featureInfo = new TechTalk.SpecFlow.FeatureInfo(new System.Globalization.CultureInfo("en-US"), "Features", "Sync Cutting Units", null, ProgrammingLanguage.CSharp, ((string[])(null)));
             testRunner.OnFeatureStart(featureInfo);
         }
         
@@ -77,105 +77,43 @@ namespace CruiseDAL.V3.Sync.Test.Spec.Features
         
         public virtual void FeatureBackground()
         {
-#line 2
+#line 4
 #line hidden
-            TechTalk.SpecFlow.Table table72 = new TechTalk.SpecFlow.Table(new string[] {
+            TechTalk.SpecFlow.Table table1 = new TechTalk.SpecFlow.Table(new string[] {
                         "FileAlias"});
-            table72.AddRow(new string[] {
+            table1.AddRow(new string[] {
                         "source"});
-            table72.AddRow(new string[] {
+            table1.AddRow(new string[] {
                         "dest"});
-#line 3
- testRunner.Given("the following cruise files exist:", ((string)(null)), table72, "Given ");
+#line 5
+ testRunner.Given("the following cruise files exist:", ((string)(null)), table1, "Given ");
 #line hidden
-            TechTalk.SpecFlow.Table table73 = new TechTalk.SpecFlow.Table(new string[] {
-                        "CuttingUnitCode"});
-            table73.AddRow(new string[] {
-                        "u1"});
-            table73.AddRow(new string[] {
-                        "u2"});
-#line 8
- testRunner.And("in \'source, dest\' the following units exist:", ((string)(null)), table73, "* ");
-#line hidden
-            TechTalk.SpecFlow.Table table74 = new TechTalk.SpecFlow.Table(new string[] {
-                        "StratumCode"});
-            table74.AddRow(new string[] {
-                        "st1"});
-            table74.AddRow(new string[] {
-                        "st2"});
-#line 13
- testRunner.And("in \'source, dest\' the following strata exist:", ((string)(null)), table74, "* ");
-#line hidden
-            TechTalk.SpecFlow.Table table75 = new TechTalk.SpecFlow.Table(new string[] {
-                        "SampleGroupCode",
-                        "StratumCode"});
-            table75.AddRow(new string[] {
-                        "sg1",
-                        "st1"});
-            table75.AddRow(new string[] {
-                        "sg2",
-                        "st1"});
-            table75.AddRow(new string[] {
-                        "sg1",
-                        "st2"});
-            table75.AddRow(new string[] {
-                        "sg2",
-                        "st2"});
-#line 18
- testRunner.And("in \'source, dest\' file the following sample groups exist:", ((string)(null)), table75, "* ");
-#line hidden
-            TechTalk.SpecFlow.Table table76 = new TechTalk.SpecFlow.Table(new string[] {
-                        "SpeciesCode"});
-            table76.AddRow(new string[] {
-                        "sp1"});
-#line 25
- testRunner.And("in \'source, dest\' the following species exist:", ((string)(null)), table76, "* ");
-#line hidden
-            TechTalk.SpecFlow.Table table77 = new TechTalk.SpecFlow.Table(new string[] {
-                        "PlotID",
+            TechTalk.SpecFlow.Table table2 = new TechTalk.SpecFlow.Table(new string[] {
                         "CuttingUnitCode",
-                        "PlotNumber",
-                        "Strata"});
-            table77.AddRow(new string[] {
-                        "plot1",
+                        "CuttingUnitID"});
+            table2.AddRow(new string[] {
                         "u1",
-                        "1",
-                        "st1, st2"});
-            table77.AddRow(new string[] {
-                        "plot2d",
-                        "u1",
-                        "2",
-                        "st1, st2"});
-            table77.AddRow(new string[] {
-                        "plot3d",
-                        "u1",
-                        "3",
-                        "st1, st2"});
-#line 29
- testRunner.And("in \'dest\' the following plots exist:", ((string)(null)), table77, "* ");
+                        "unit1"});
+#line 10
+ testRunner.And("in \'source, dest\' the following units exist:", ((string)(null)), table2, "* ");
 #line hidden
-            TechTalk.SpecFlow.Table table78 = new TechTalk.SpecFlow.Table(new string[] {
-                        "PlotID",
+            TechTalk.SpecFlow.Table table3 = new TechTalk.SpecFlow.Table(new string[] {
                         "CuttingUnitCode",
-                        "PlotNumber",
-                        "Strata"});
-            table78.AddRow(new string[] {
-                        "plot1",
-                        "u1",
-                        "1",
-                        "st1, st2"});
-            table78.AddRow(new string[] {
-                        "plot2s",
-                        "u1",
-                        "2",
-                        "st1, st2"});
-            table78.AddRow(new string[] {
-                        "plot4s",
-                        "u1",
-                        "4",
-                        "st1, st2"});
-#line 35
- testRunner.And("in \'source\' the following plots exist:", ((string)(null)), table78, "* ");
+                        "CuttingUnitID"});
+            table3.AddRow(new string[] {
+                        "u2",
+                        "unit2s"});
+#line 15
+ testRunner.And("in \'source\' the following units exist:", ((string)(null)), table3, "* ");
+#line hidden
+            TechTalk.SpecFlow.Table table4 = new TechTalk.SpecFlow.Table(new string[] {
+                        "CuttingUnitCode",
+                        "CuttingUnitID"});
+            table4.AddRow(new string[] {
+                        "u2",
+                        "unit2d"});
+#line 19
+ testRunner.And("in \'dest\' the following units exist:", ((string)(null)), table4, "* ");
 #line hidden
         }
         
@@ -184,15 +122,15 @@ namespace CruiseDAL.V3.Sync.Test.Spec.Features
             this.TestTearDown();
         }
         
-        [Xunit.SkippableFactAttribute(DisplayName="Check For Conflicts show plot with same plot number but different PlotIDs")]
-        [Xunit.TraitAttribute("FeatureTitle", "Sync Plots")]
-        [Xunit.TraitAttribute("Description", "Check For Conflicts show plot with same plot number but different PlotIDs")]
-        public virtual void CheckForConflictsShowPlotWithSamePlotNumberButDifferentPlotIDs()
+        [Xunit.SkippableFactAttribute(DisplayName="Cutting Unit Conflict Check")]
+        [Xunit.TraitAttribute("FeatureTitle", "Sync Cutting Units")]
+        [Xunit.TraitAttribute("Description", "Cutting Unit Conflict Check")]
+        public virtual void CuttingUnitConflictCheck()
         {
             string[] tagsOfScenario = ((string[])(null));
             System.Collections.Specialized.OrderedDictionary argumentsOfScenario = new System.Collections.Specialized.OrderedDictionary();
-            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("Check For Conflicts show plot with same plot number but different PlotIDs", null, tagsOfScenario, argumentsOfScenario, this._featureTags);
-#line 41
+            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("Cutting Unit Conflict Check", null, tagsOfScenario, argumentsOfScenario, this._featureTags);
+#line 23
 this.ScenarioInitialize(scenarioInfo);
 #line hidden
             bool isScenarioIgnored = default(bool);
@@ -212,154 +150,149 @@ this.ScenarioInitialize(scenarioInfo);
             else
             {
                 this.ScenarioStart();
-#line 2
+#line 4
 this.FeatureBackground();
 #line hidden
-#line 42
+#line 24
  testRunner.When("I conflict check \'source\' file against \'dest\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
 #line hidden
-                TechTalk.SpecFlow.Table table79 = new TechTalk.SpecFlow.Table(new string[] {
+                TechTalk.SpecFlow.Table table5 = new TechTalk.SpecFlow.Table(new string[] {
                             "SourceRecID",
                             "DestRecID"});
-                table79.AddRow(new string[] {
-                            "plot2s",
-                            "plot2d"});
+                table5.AddRow(new string[] {
+                            "unit2s",
+                            "unit2d"});
+#line 25
+ testRunner.Then("Cutting Unit Conflicts Has:", ((string)(null)), table5, "Then ");
+#line hidden
+            }
+            this.ScenarioCleanup();
+        }
+        
+        [Xunit.SkippableFactAttribute(DisplayName="Resolve Conflicts With ChoseDest")]
+        [Xunit.TraitAttribute("FeatureTitle", "Sync Cutting Units")]
+        [Xunit.TraitAttribute("Description", "Resolve Conflicts With ChoseDest")]
+        public virtual void ResolveConflictsWithChoseDest()
+        {
+            string[] tagsOfScenario = ((string[])(null));
+            System.Collections.Specialized.OrderedDictionary argumentsOfScenario = new System.Collections.Specialized.OrderedDictionary();
+            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("Resolve Conflicts With ChoseDest", null, tagsOfScenario, argumentsOfScenario, this._featureTags);
+#line 29
+this.ScenarioInitialize(scenarioInfo);
+#line hidden
+            bool isScenarioIgnored = default(bool);
+            bool isFeatureIgnored = default(bool);
+            if ((tagsOfScenario != null))
+            {
+                isScenarioIgnored = tagsOfScenario.Where(__entry => __entry != null).Where(__entry => String.Equals(__entry, "ignore", StringComparison.CurrentCultureIgnoreCase)).Any();
+            }
+            if ((this._featureTags != null))
+            {
+                isFeatureIgnored = this._featureTags.Where(__entry => __entry != null).Where(__entry => String.Equals(__entry, "ignore", StringComparison.CurrentCultureIgnoreCase)).Any();
+            }
+            if ((isScenarioIgnored || isFeatureIgnored))
+            {
+                testRunner.SkipScenario();
+            }
+            else
+            {
+                this.ScenarioStart();
+#line 4
+this.FeatureBackground();
+#line hidden
+#line 30
+ testRunner.When("I conflict check \'source\' file against \'dest\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
+#line hidden
+#line 31
+ testRunner.And("I resolve all Cutting Unit conflicts with \'ChoseDest\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line hidden
+#line 32
+ testRunner.And("I run conflict resolution of \'source\' file against \'dest\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line hidden
+#line 33
+ testRunner.And("sync \'source\' into \'dest\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line hidden
+                TechTalk.SpecFlow.Table table6 = new TechTalk.SpecFlow.Table(new string[] {
+                            "CuttingUnitID"});
+                table6.AddRow(new string[] {
+                            "unit1"});
+                table6.AddRow(new string[] {
+                            "unit2d"});
+#line 34
+ testRunner.Then("\'dest\' contains cutting units:", ((string)(null)), table6, "Then ");
+#line hidden
+            }
+            this.ScenarioCleanup();
+        }
+        
+        [Xunit.SkippableFactAttribute(DisplayName="Resolve Conflicts With ChoseSource")]
+        [Xunit.TraitAttribute("FeatureTitle", "Sync Cutting Units")]
+        [Xunit.TraitAttribute("Description", "Resolve Conflicts With ChoseSource")]
+        public virtual void ResolveConflictsWithChoseSource()
+        {
+            string[] tagsOfScenario = ((string[])(null));
+            System.Collections.Specialized.OrderedDictionary argumentsOfScenario = new System.Collections.Specialized.OrderedDictionary();
+            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("Resolve Conflicts With ChoseSource", null, tagsOfScenario, argumentsOfScenario, this._featureTags);
+#line 39
+this.ScenarioInitialize(scenarioInfo);
+#line hidden
+            bool isScenarioIgnored = default(bool);
+            bool isFeatureIgnored = default(bool);
+            if ((tagsOfScenario != null))
+            {
+                isScenarioIgnored = tagsOfScenario.Where(__entry => __entry != null).Where(__entry => String.Equals(__entry, "ignore", StringComparison.CurrentCultureIgnoreCase)).Any();
+            }
+            if ((this._featureTags != null))
+            {
+                isFeatureIgnored = this._featureTags.Where(__entry => __entry != null).Where(__entry => String.Equals(__entry, "ignore", StringComparison.CurrentCultureIgnoreCase)).Any();
+            }
+            if ((isScenarioIgnored || isFeatureIgnored))
+            {
+                testRunner.SkipScenario();
+            }
+            else
+            {
+                this.ScenarioStart();
+#line 4
+this.FeatureBackground();
+#line hidden
+#line 40
+ testRunner.When("I conflict check \'source\' file against \'dest\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
+#line hidden
+#line 41
+ testRunner.And("I resolve all Cutting Unit conflicts with \'ChoseSource\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line hidden
+#line 42
+ testRunner.And("I run conflict resolution of \'source\' file against \'dest\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line hidden
 #line 43
- testRunner.Then("PlotConflicts has:", ((string)(null)), table79, "Then ");
-#line hidden
-            }
-            this.ScenarioCleanup();
-        }
-        
-        [Xunit.SkippableFactAttribute(DisplayName="Resolve Plot Conflicts with ChoseDest")]
-        [Xunit.TraitAttribute("FeatureTitle", "Sync Plots")]
-        [Xunit.TraitAttribute("Description", "Resolve Plot Conflicts with ChoseDest")]
-        public virtual void ResolvePlotConflictsWithChoseDest()
-        {
-            string[] tagsOfScenario = ((string[])(null));
-            System.Collections.Specialized.OrderedDictionary argumentsOfScenario = new System.Collections.Specialized.OrderedDictionary();
-            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("Resolve Plot Conflicts with ChoseDest", null, tagsOfScenario, argumentsOfScenario, this._featureTags);
-#line 47
-this.ScenarioInitialize(scenarioInfo);
-#line hidden
-            bool isScenarioIgnored = default(bool);
-            bool isFeatureIgnored = default(bool);
-            if ((tagsOfScenario != null))
-            {
-                isScenarioIgnored = tagsOfScenario.Where(__entry => __entry != null).Where(__entry => String.Equals(__entry, "ignore", StringComparison.CurrentCultureIgnoreCase)).Any();
-            }
-            if ((this._featureTags != null))
-            {
-                isFeatureIgnored = this._featureTags.Where(__entry => __entry != null).Where(__entry => String.Equals(__entry, "ignore", StringComparison.CurrentCultureIgnoreCase)).Any();
-            }
-            if ((isScenarioIgnored || isFeatureIgnored))
-            {
-                testRunner.SkipScenario();
-            }
-            else
-            {
-                this.ScenarioStart();
-#line 2
-this.FeatureBackground();
-#line hidden
-#line 48
- testRunner.When("I conflict check \'source\' file against \'dest\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
-#line hidden
-#line 49
- testRunner.And("I resolve all plot conflicts with \'ChoseDest\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
-#line hidden
-#line 50
- testRunner.And("I run conflict resolution of \'source\' file against \'dest\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
-#line hidden
-#line 51
  testRunner.And("sync \'source\' into \'dest\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line hidden
-                TechTalk.SpecFlow.Table table80 = new TechTalk.SpecFlow.Table(new string[] {
-                            "PlotID"});
-                table80.AddRow(new string[] {
-                            "plot1"});
-                table80.AddRow(new string[] {
-                            "plot2d"});
-                table80.AddRow(new string[] {
-                            "plot3d"});
-                table80.AddRow(new string[] {
-                            "plot4s"});
-#line 52
- testRunner.Then("\'dest\' contains plots:", ((string)(null)), table80, "Then ");
-#line hidden
-            }
-            this.ScenarioCleanup();
-        }
-        
-        [Xunit.SkippableFactAttribute(DisplayName="Resolve Plot conflict with ChoseSource")]
-        [Xunit.TraitAttribute("FeatureTitle", "Sync Plots")]
-        [Xunit.TraitAttribute("Description", "Resolve Plot conflict with ChoseSource")]
-        public virtual void ResolvePlotConflictWithChoseSource()
-        {
-            string[] tagsOfScenario = ((string[])(null));
-            System.Collections.Specialized.OrderedDictionary argumentsOfScenario = new System.Collections.Specialized.OrderedDictionary();
-            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("Resolve Plot conflict with ChoseSource", null, tagsOfScenario, argumentsOfScenario, this._featureTags);
-#line 59
-this.ScenarioInitialize(scenarioInfo);
-#line hidden
-            bool isScenarioIgnored = default(bool);
-            bool isFeatureIgnored = default(bool);
-            if ((tagsOfScenario != null))
-            {
-                isScenarioIgnored = tagsOfScenario.Where(__entry => __entry != null).Where(__entry => String.Equals(__entry, "ignore", StringComparison.CurrentCultureIgnoreCase)).Any();
-            }
-            if ((this._featureTags != null))
-            {
-                isFeatureIgnored = this._featureTags.Where(__entry => __entry != null).Where(__entry => String.Equals(__entry, "ignore", StringComparison.CurrentCultureIgnoreCase)).Any();
-            }
-            if ((isScenarioIgnored || isFeatureIgnored))
-            {
-                testRunner.SkipScenario();
-            }
-            else
-            {
-                this.ScenarioStart();
-#line 2
-this.FeatureBackground();
-#line hidden
-#line 60
- testRunner.When("I conflict check \'source\' file against \'dest\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
-#line hidden
-#line 61
- testRunner.And("I resolve all plot conflicts with \'ChoseSource\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
-#line hidden
-#line 62
- testRunner.And("I run conflict resolution of \'source\' file against \'dest\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
-#line hidden
-#line 63
- testRunner.And("sync \'source\' into \'dest\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
-#line hidden
-                TechTalk.SpecFlow.Table table81 = new TechTalk.SpecFlow.Table(new string[] {
-                            "PlotID"});
-                table81.AddRow(new string[] {
-                            "plot1"});
-                table81.AddRow(new string[] {
-                            "plot2s"});
-                table81.AddRow(new string[] {
-                            "plot3d"});
-                table81.AddRow(new string[] {
-                            "plot4s"});
-#line 64
- testRunner.Then("\'dest\' contains plots:", ((string)(null)), table81, "Then ");
+                TechTalk.SpecFlow.Table table7 = new TechTalk.SpecFlow.Table(new string[] {
+                            "CuttingUnitID",
+                            "CuttingUnitCode"});
+                table7.AddRow(new string[] {
+                            "unit1",
+                            "u1"});
+                table7.AddRow(new string[] {
+                            "unit2s",
+                            "u2"});
+#line 44
+ testRunner.Then("\'dest\' contains cutting units:", ((string)(null)), table7, "Then ");
 #line hidden
             }
             this.ScenarioCleanup();
         }
         
         [Xunit.SkippableFactAttribute(DisplayName="Resolve Conflict With ModifyDest")]
-        [Xunit.TraitAttribute("FeatureTitle", "Sync Plots")]
+        [Xunit.TraitAttribute("FeatureTitle", "Sync Cutting Units")]
         [Xunit.TraitAttribute("Description", "Resolve Conflict With ModifyDest")]
         public virtual void ResolveConflictWithModifyDest()
         {
             string[] tagsOfScenario = ((string[])(null));
             System.Collections.Specialized.OrderedDictionary argumentsOfScenario = new System.Collections.Specialized.OrderedDictionary();
             TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("Resolve Conflict With ModifyDest", null, tagsOfScenario, argumentsOfScenario, this._featureTags);
-#line 71
+#line 50
 this.ScenarioInitialize(scenarioInfo);
 #line hidden
             bool isScenarioIgnored = default(bool);
@@ -379,61 +312,55 @@ this.ScenarioInitialize(scenarioInfo);
             else
             {
                 this.ScenarioStart();
-#line 2
+#line 4
 this.FeatureBackground();
 #line hidden
-#line 72
+#line 51
  testRunner.When("I conflict check \'source\' file against \'dest\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
 #line hidden
-                TechTalk.SpecFlow.Table table82 = new TechTalk.SpecFlow.Table(new string[] {
+                TechTalk.SpecFlow.Table table8 = new TechTalk.SpecFlow.Table(new string[] {
                             "DestRecID",
-                            "PlotNumber"});
-                table82.AddRow(new string[] {
-                            "plot2d",
-                            "5"});
-#line 73
- testRunner.And("I resolve plot conflicts with ModifyDest using:", ((string)(null)), table82, "And ");
+                            "CuttingUnitCode"});
+                table8.AddRow(new string[] {
+                            "unit2d",
+                            "u3"});
+#line 52
+ testRunner.And("I resolve CuttingUnit Conflicts with ModifyDest using:", ((string)(null)), table8, "And ");
 #line hidden
-#line 76
+#line 55
  testRunner.And("I run conflict resolution of \'source\' file against \'dest\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line hidden
-#line 77
+#line 56
  testRunner.And("sync \'source\' into \'dest\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line hidden
-                TechTalk.SpecFlow.Table table83 = new TechTalk.SpecFlow.Table(new string[] {
-                            "PlotID",
-                            "PlotNumber"});
-                table83.AddRow(new string[] {
-                            "plot1",
-                            "1"});
-                table83.AddRow(new string[] {
-                            "plot2s",
-                            "2"});
-                table83.AddRow(new string[] {
-                            "plot3d",
-                            "3"});
-                table83.AddRow(new string[] {
-                            "plot4s",
-                            "4"});
-                table83.AddRow(new string[] {
-                            "plot2d",
-                            "5"});
-#line 78
- testRunner.Then("\'dest\' contains plots:", ((string)(null)), table83, "Then ");
+                TechTalk.SpecFlow.Table table9 = new TechTalk.SpecFlow.Table(new string[] {
+                            "CuttingUnitID",
+                            "CuttingUnitCode"});
+                table9.AddRow(new string[] {
+                            "unit1",
+                            "u1"});
+                table9.AddRow(new string[] {
+                            "unit2s",
+                            "u2"});
+                table9.AddRow(new string[] {
+                            "unit2d",
+                            "u3"});
+#line 57
+ testRunner.Then("\'dest\' contains cutting units:", ((string)(null)), table9, "Then ");
 #line hidden
             }
             this.ScenarioCleanup();
         }
         
         [Xunit.SkippableFactAttribute(DisplayName="Resolve Conflict With ModifySource")]
-        [Xunit.TraitAttribute("FeatureTitle", "Sync Plots")]
+        [Xunit.TraitAttribute("FeatureTitle", "Sync Cutting Units")]
         [Xunit.TraitAttribute("Description", "Resolve Conflict With ModifySource")]
         public virtual void ResolveConflictWithModifySource()
         {
             string[] tagsOfScenario = ((string[])(null));
             System.Collections.Specialized.OrderedDictionary argumentsOfScenario = new System.Collections.Specialized.OrderedDictionary();
             TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("Resolve Conflict With ModifySource", null, tagsOfScenario, argumentsOfScenario, this._featureTags);
-#line 86
+#line 64
 this.ScenarioInitialize(scenarioInfo);
 #line hidden
             bool isScenarioIgnored = default(bool);
@@ -453,47 +380,41 @@ this.ScenarioInitialize(scenarioInfo);
             else
             {
                 this.ScenarioStart();
-#line 2
+#line 4
 this.FeatureBackground();
 #line hidden
-#line 87
+#line 65
  testRunner.When("I conflict check \'source\' file against \'dest\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
 #line hidden
-                TechTalk.SpecFlow.Table table84 = new TechTalk.SpecFlow.Table(new string[] {
+                TechTalk.SpecFlow.Table table10 = new TechTalk.SpecFlow.Table(new string[] {
                             "SourceRecID",
-                            "PlotNumber"});
-                table84.AddRow(new string[] {
-                            "plot2s",
-                            "5"});
-#line 88
- testRunner.And("I resolve plot conflicts with ModifySource using:", ((string)(null)), table84, "And ");
+                            "CuttingUnitCode"});
+                table10.AddRow(new string[] {
+                            "unit2s",
+                            "u3"});
+#line 66
+ testRunner.And("I resolve CuttingUnit Conflicts with ModifySource using:", ((string)(null)), table10, "And ");
 #line hidden
-#line 91
+#line 69
  testRunner.And("I run conflict resolution of \'source\' file against \'dest\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line hidden
-#line 92
+#line 70
  testRunner.And("sync \'source\' into \'dest\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line hidden
-                TechTalk.SpecFlow.Table table85 = new TechTalk.SpecFlow.Table(new string[] {
-                            "PlotID",
-                            "PlotNumber"});
-                table85.AddRow(new string[] {
-                            "plot1",
-                            "1"});
-                table85.AddRow(new string[] {
-                            "plot2d",
-                            "2"});
-                table85.AddRow(new string[] {
-                            "plot3d",
-                            "3"});
-                table85.AddRow(new string[] {
-                            "plot4s",
-                            "4"});
-                table85.AddRow(new string[] {
-                            "plot2s",
-                            "5"});
-#line 93
- testRunner.Then("\'dest\' contains plots:", ((string)(null)), table85, "Then ");
+                TechTalk.SpecFlow.Table table11 = new TechTalk.SpecFlow.Table(new string[] {
+                            "CuttingUnitID",
+                            "CuttingUnitCode"});
+                table11.AddRow(new string[] {
+                            "unit1",
+                            "u1"});
+                table11.AddRow(new string[] {
+                            "unit2d",
+                            "u2"});
+                table11.AddRow(new string[] {
+                            "unit2s",
+                            "u3"});
+#line 71
+ testRunner.Then("\'dest\' contains cutting units:", ((string)(null)), table11, "Then ");
 #line hidden
             }
             this.ScenarioCleanup();
@@ -506,12 +427,12 @@ this.FeatureBackground();
             
             public FixtureData()
             {
-                SyncPlotsFeature.FeatureSetup();
+                SyncCuttingUnitsFeature.FeatureSetup();
             }
             
             void System.IDisposable.Dispose()
             {
-                SyncPlotsFeature.FeatureTearDown();
+                SyncCuttingUnitsFeature.FeatureTearDown();
             }
         }
     }

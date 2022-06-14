@@ -109,9 +109,12 @@ namespace CruiseDAL.V3.Sync.Test.Spec.StepDefinitions
                 var plotID = GetRedordID(plotIDAlias);
 
                 row.TryGetValue(nameof(Plot.PlotNumber), out var plotNumberStr);
+                row.TryGetValue(nameof(Plot.CuttingUnitCode), out var cuttingUnitCode);
+
                 plots.Should().Contain(
                     x => x.PlotID == plotID
                         && (plotNumberStr == null || x.PlotNumber == int.Parse(plotNumberStr))
+                        && (cuttingUnitCode == null || x.CuttingUnitCode == cuttingUnitCode)
                     , because: plotIDAlias);
             }
             plots.Should().HaveCount(table.RowCount);
