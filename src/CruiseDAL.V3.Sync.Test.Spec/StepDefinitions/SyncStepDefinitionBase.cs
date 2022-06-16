@@ -1,5 +1,4 @@
-﻿
-using CruiseDAL.V3.Models;
+﻿using CruiseDAL.V3.Models;
 using System.Reflection;
 using TechTalk.SpecFlow.Infrastructure;
 
@@ -14,8 +13,6 @@ namespace CruiseDAL.V3.Sync.Test.Spec.StepDefinitions
             Output = output ?? throw new ArgumentNullException(nameof(output));
             SenarioContext = senarioContext ?? throw new ArgumentNullException(nameof(senarioContext));
             FeatureContext = featureContext ?? throw new ArgumentNullException(nameof(featureContext));
-
-            
         }
 
         protected IDictionary<string, string> IDLookup
@@ -73,7 +70,6 @@ namespace CruiseDAL.V3.Sync.Test.Spec.StepDefinitions
                 return Path.GetDirectoryName(codeBase);
             }
         }
-        
 
         protected string GetTempFilePath(string fileName)
         {

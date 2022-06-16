@@ -185,6 +185,15 @@ namespace CruiseDAL.V3.Sync
                         break;
                     }
             }
+
+            if ((resolution == ConflictResolutionType.ChoseSourceMergeData || resolution == ConflictResolutionType.ChoseDestMergeData)
+                 && conflict.DownstreamConflicts != null && conflict.DownstreamConflicts.Any())
+            {
+                foreach (var c in conflict.DownstreamConflicts)
+                {
+                    ResolveConflict(source, destination, c);
+                }
+            }
         }
 
         public void ResolveSampleGroupConflicts(DbConnection source, DbConnection destination, IEnumerable<Conflict> conflicts)
@@ -389,11 +398,11 @@ namespace CruiseDAL.V3.Sync
                 // references tree using a unique ID, 
                 case ConflictResolutionType.ChoseSourceMergeData:
                     {
-                        throw new NotImplementedException();
+                        throw new NotSupportedException();
                     }
                 case ConflictResolutionType.ChoseDestMergeData:
                     {
-                        throw new NotImplementedException();
+                        throw new NotSupportedException();
                     }
                 case ConflictResolutionType.ModifySource:
                     {
@@ -466,6 +475,11 @@ namespace CruiseDAL.V3.Sync
         {
             switch (conflict.Table)
             {
+                case nameof(SampleGroup):
+                    {
+                        ResolveSampleGroupConflict(source, destination, conflict);
+                        break;
+                    }
                 case nameof(Plot):
                     {
                         ResolvePlotConflict(source, destination, conflict);

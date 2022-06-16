@@ -1,4 +1,3 @@
-using CruiseDAL.Schema;
 using CruiseDAL.V3.Models;
 using TechTalk.SpecFlow.Infrastructure;
 
@@ -10,129 +9,6 @@ namespace CruiseDAL.V3.Sync.Test.Spec.StepDefinitions
         public SyncTreesStepDefinitions(ISpecFlowOutputHelper output, ScenarioContext senarioContext, FeatureContext featureContext) :
             base(output, senarioContext, featureContext)
         {
-        }
-
-        [Given(@"the following cruise files exist:")]
-        public void GivenTheFollowingCruiseFilesExist(Table table)
-        {
-            var databaseLookup = DatabaseLookup;
-            foreach (var row in table.Rows)
-            {
-                var alias = row["FileAlias"];
-                if (databaseLookup.ContainsKey(alias)) { throw new InvalidOperationException("Database Already Exists: " + alias); }
-
-                var filePath = base.GetTempFilePath(alias + ".crz3");
-
-                var database = new CruiseDatastore_V3(filePath, true);
-                Output.WriteLine("Created Database: " + alias);
-                Output.AddAttachment(filePath);
-                databaseLookup.Add(alias, database);
-
-                database.Insert(DefaultSale);
-                database.Insert(DefaultCruise);
-            }
-        }
-
-        
-
-        
-
-        [Given(@"in '([^']*)' the following strata exist:")]
-        public void GivenInTheFollowingStrataExist(string dbNamesArg, Table table)
-        {
-            var cruiseID = CruiseID;
-
-            var databasesNames = dbNamesArg.Split(",", StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
-            var databases = databasesNames.Select(x => DatabaseLookup[x]).ToArray();
-            databases.Should().NotBeEmpty();
-
-            foreach (var row in table.Rows)
-            {
-                var stratumCode = row["StratumCode"];
-                row.TryGetValue("Method", out var method);
-                row.TryGetValue("Units", out var units);
-
-                var stratumID = Guid.NewGuid().ToString();
-                var stratum = new Stratum
-                {
-                    CruiseID = cruiseID,
-                    StratumID = stratumID,
-                    StratumCode = stratumCode,
-                    Method = method ?? CruiseMethods.STR,
-                };
-
-                var unitCodes = units?.Split(",", options: StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
-                foreach (var db in databases)
-                {
-                    db.Insert(stratum);
-
-                    var myUnitCodes = unitCodes;
-                    if (myUnitCodes == null || myUnitCodes.Length == 0)
-                    {
-                        myUnitCodes = db.QueryScalar<string>("SELECT CuttingUnitCode FROM CuttingUnit;").ToArray();
-                    }
-                    foreach (var unitCode in myUnitCodes)
-                    {
-                        var cust = new CuttingUnit_Stratum
-                        {
-                            CruiseID = cruiseID,
-                            CuttingUnitCode = unitCode,
-                            StratumCode = stratumCode,
-                        };
-                        db.Insert(cust);
-                    }
-                }
-            }
-        }
-
-        [Given(@"in '([^']*)' file the following sample groups exist:")]
-        public void GivenInFileTheFollowingSampleGroupsExist(string dbNamesArg, Table table)
-        {
-            var cruiseID = CruiseID;
-
-            var databasesNames = dbNamesArg.Split(",", StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
-            var databases = databasesNames.Select(x => DatabaseLookup[x]).ToArray();
-            databases.Should().NotBeEmpty();
-
-            foreach (var row in table.Rows)
-            {
-                var sampleGroupID = Guid.NewGuid().ToString();
-                var sgCode = row["SampleGroupCode"];
-                var stCode = row["StratumCode"];
-                var sg = new SampleGroup
-                {
-                    CruiseID = cruiseID,
-                    SampleGroupID = sampleGroupID,
-                    SampleGroupCode = sgCode,
-                    StratumCode = stCode,
-                };
-
-                foreach (var db in databases)
-                { db.Insert(sg); }
-            }
-        }
-
-        [Given(@"in '([^']*)' the following species exist:")]
-        public void GivenInTheFollowingSpeciesExist(string dbNamesArg, Table table)
-        {
-            var cruiseID = CruiseID;
-
-            var databasesNames = dbNamesArg.Split(",", StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
-            var databases = databasesNames.Select(x => DatabaseLookup[x]).ToArray();
-            databases.Should().NotBeEmpty();
-
-            foreach (var row in table.Rows)
-            {
-                var spCode = row["SpeciesCode"];
-                var sp = new Species
-                {
-                    CruiseID = cruiseID,
-                    SpeciesCode = spCode,
-                };
-
-                foreach (var db in databases)
-                { db.Insert(sp); }
-            }
         }
 
         [Given(@"in '([^']*)' the following trees exist:")]
@@ -198,63 +74,6 @@ namespace CruiseDAL.V3.Sync.Test.Spec.StepDefinitions
             }
         }
 
-        [Given(@"in '([^']*)' the following logs exist:")]
-        public void GivenInTheFollowingLogsExist(string dbNamesArg, Table table)
-        {
-            var databasesNames = dbNamesArg.Split(",", StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
-            var databases = databasesNames.Select(x => DatabaseLookup[x]).ToArray();
-            databases.Should().NotBeEmpty();
-
-            foreach (var row in table.Rows)
-            {
-                var treeID = GetRedordID(row["TreeID"]);
-                var logNumber = row[nameof(Log.LogNumber)];
-
-                string logID;
-                if (row.TryGetValue(nameof(Log.LogID), out var logIDAlias) && !string.IsNullOrEmpty(logIDAlias))
-                {
-                    logID = GetOrGenerateRecordID(logIDAlias);
-                }
-                else
-                {
-                    logID = Guid.NewGuid().ToString();
-                }
-
-                var log = new Log
-                {
-                    CruiseID = CruiseID,
-                    TreeID = treeID,
-                    LogNumber = logNumber,
-                    LogID = logID,
-                };
-
-                foreach (var db in databases)
-                {
-                    db.Insert(log);
-                }
-            }
-        }
-
-        [When(@"I conflict check '([^']*)' file against '([^']*)'")]
-        public void WhenIConflictCheckFileAgainst(string source, string dest)
-        {
-            var conflictChecker = new ConflictChecker();
-
-            var srcDb = GetDatabase(source);
-            var destDb = GetDatabase(dest);
-            var srcConn = srcDb.OpenConnection();
-            var destConn = destDb.OpenConnection();
-            try
-            {
-                ConflictResults = conflictChecker.CheckConflicts(srcConn, destConn, CruiseID);
-            }
-            finally
-            {
-                srcDb.ReleaseConnection();
-                destDb.ReleaseConnection();
-            }
-        }
-
         [Then(@"TreeConflicts has no downstream conflicts")]
         public void ThenTreeConflictsHasNoDownstreamConflicts()
         {
@@ -283,7 +102,7 @@ namespace CruiseDAL.V3.Sync.Test.Spec.StepDefinitions
                 var treeConflict = treeConflicts.Single(x => x.SourceRecID == srcRecID && x.DestRecID == destRecID);
                 //treeConflict.Should().NotBeNull();
 
-                if(row.TryGetValue("DownstreamConflictCount", out var downstreamConfCountStr))
+                if (row.TryGetValue("DownstreamConflictCount", out var downstreamConfCountStr))
                 {
                     var downstreamConfCount = int.Parse(downstreamConfCountStr);
                     if (downstreamConfCount > 0)
@@ -292,55 +111,7 @@ namespace CruiseDAL.V3.Sync.Test.Spec.StepDefinitions
                         treeConflict.DownstreamConflicts.Count().Should().Be(downstreamConfCount);
                     }
                 }
-
             }
-        }
-
-        [When(@"I resolve all tree conflicts with '([^']*)'")]
-        public void WhenIResolveAllTreeConflictsWith(string resolutionOptionStr)
-        {
-            var resolution = Enum.Parse<ConflictResolutionType>(resolutionOptionStr);
-
-            var conflictResults = ConflictResults;
-            foreach (var conf in conflictResults.Tree)
-            {
-                conf.ConflictResolution = resolution;
-            }
-        }
-
-        [When(@"I run conflict resolution of '([^']*)' file against '([^']*)'")]
-        public void WhenIRunConflictResolutionOfFileAgainst(string source, string dest)
-        {
-            var srcDb = GetDatabase(source);
-            var destDb = GetDatabase(dest);
-            var srcConn = srcDb.OpenConnection();
-            var destConn = destDb.OpenConnection();
-
-            var conflictResults = ConflictResults;
-            conflictResults.AllHasResolutions().Should().BeTrue();
-            try
-            {
-                var conflictResolver = new ConflictResolver();
-                conflictResolver.ResolveConflicts(srcConn, destConn, conflictResults);
-            }
-            finally
-            {
-                srcDb.ReleaseConnection();
-                destDb.ReleaseConnection();
-            }
-        }
-
-
-        [When(@"sync '([^']*)' into '([^']*)'")]
-        public void WhenSyncInto(string source, string dest)
-        {
-            var syncOptions = new CruiseSyncOptions();
-            var syncer = new CruiseSyncer();
-
-            var srcDb = GetDatabase(source);
-            var destDb = GetDatabase(dest);
-
-            syncer.Sync(CruiseID, srcDb, destDb, syncOptions);
         }
 
         [Then(@"'([^']*)' contains trees:")]
@@ -349,12 +120,12 @@ namespace CruiseDAL.V3.Sync.Test.Spec.StepDefinitions
             var db = GetDatabase(dbAlias);
 
             var trees = db.From<Tree>().Query().ToArray();
-            
+
             foreach (var row in table.Rows)
             {
                 var treeIDAlias = row[nameof(Tree.TreeID)];
                 var treeID = GetRedordID(treeIDAlias);
-                
+
                 row.TryGetValue(nameof(Tree.TreeNumber), out var treeNumberStr);
                 row.TryGetValue(nameof(Tree.CuttingUnitCode), out var cuttingUnitCode);
                 var tree = trees.SingleOrDefault(x =>
@@ -375,7 +146,7 @@ namespace CruiseDAL.V3.Sync.Test.Spec.StepDefinitions
         {
             var treeConflicts = ConflictResults.Tree;
 
-            foreach(var row in table.Rows)
+            foreach (var row in table.Rows)
             {
                 var destRecIDAlias = row[nameof(Conflict.DestRecID)];
                 var destRecID = GetRedordID(destRecIDAlias);
@@ -406,6 +177,50 @@ namespace CruiseDAL.V3.Sync.Test.Spec.StepDefinitions
             }
         }
 
+        [When(@"I resolve tree conflicts with ChoseSourceMergeData using:")]
+        public void WhenIResolveTreeConflictsWithChoseSourceMergeDataUsing(Table table)
+        {
+            var treeConflicts = ConflictResults.Tree;
 
+            foreach (var row in table.Rows)
+            {
+                var sourceRecIDAlias = row[nameof(Conflict.SourceRecID)];
+                var sourceRecID = GetRedordID(sourceRecIDAlias);
+
+                var conflict = treeConflicts.Single(x => x.SourceRecID == sourceRecID);
+                conflict.ConflictResolution = ConflictResolutionType.ChoseSourceMergeData;
+
+                var dscResolutionStr = row["DownstreamConflictResolution"];
+                var dscResolution = Enum.Parse<ConflictResolutionType>(dscResolutionStr);
+
+                foreach (var dsc in conflict.DownstreamConflicts)
+                {
+                    dsc.ConflictResolution = dscResolution;
+                }
+            }
+        }
+
+        [Then(@"running conflict resolution of '([^']*)' file against '([^']*)' not supported")]
+        public void ThenRunningConflictResolutionOfFileAgainstNotSupported(string source, string dest)
+        {
+            var srcDb = GetDatabase(source);
+            var destDb = GetDatabase(dest);
+            var srcConn = srcDb.OpenConnection();
+            var destConn = destDb.OpenConnection();
+
+            var conflictResults = ConflictResults;
+            conflictResults.AllHasResolutions().Should().BeTrue();
+            try
+            {
+                var conflictResolver = new ConflictResolver();
+                conflictResolver.Invoking(x => x.ResolveConflicts(srcConn, destConn, conflictResults))
+                    .Should().Throw<NotSupportedException>();
+            }
+            finally
+            {
+                srcDb.ReleaseConnection();
+                destDb.ReleaseConnection();
+            }
+        }
     }
 }

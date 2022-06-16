@@ -19,7 +19,7 @@ namespace CruiseDAL.V3.Sync.Test.Spec.Features
     
     [System.CodeDom.Compiler.GeneratedCodeAttribute("TechTalk.SpecFlow", "3.9.0.0")]
     [System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-    public partial class SyncPlotsFeature : object, Xunit.IClassFixture<SyncPlotsFeature.FixtureData>, System.IDisposable
+    public partial class SyncStrataFeature : object, Xunit.IClassFixture<SyncStrataFeature.FixtureData>, System.IDisposable
     {
         
         private static TechTalk.SpecFlow.ITestRunner testRunner;
@@ -28,10 +28,10 @@ namespace CruiseDAL.V3.Sync.Test.Spec.Features
         
         private Xunit.Abstractions.ITestOutputHelper _testOutputHelper;
         
-#line 1 "SyncPlots.feature"
+#line 1 "SyncStrata.feature"
 #line hidden
         
-        public SyncPlotsFeature(SyncPlotsFeature.FixtureData fixtureData, CruiseDAL_V3_Sync_Test_Spec_XUnitAssemblyFixture assemblyFixture, Xunit.Abstractions.ITestOutputHelper testOutputHelper)
+        public SyncStrataFeature(SyncStrataFeature.FixtureData fixtureData, CruiseDAL_V3_Sync_Test_Spec_XUnitAssemblyFixture assemblyFixture, Xunit.Abstractions.ITestOutputHelper testOutputHelper)
         {
             this._testOutputHelper = testOutputHelper;
             this.TestInitialize();
@@ -40,7 +40,7 @@ namespace CruiseDAL.V3.Sync.Test.Spec.Features
         public static void FeatureSetup()
         {
             testRunner = TechTalk.SpecFlow.TestRunnerManager.GetTestRunner();
-            TechTalk.SpecFlow.FeatureInfo featureInfo = new TechTalk.SpecFlow.FeatureInfo(new System.Globalization.CultureInfo("en-US"), "Features", "Sync Plots", null, ProgrammingLanguage.CSharp, ((string[])(null)));
+            TechTalk.SpecFlow.FeatureInfo featureInfo = new TechTalk.SpecFlow.FeatureInfo(new System.Globalization.CultureInfo("en-US"), "Features", "Sync Strata", null, ProgrammingLanguage.CSharp, ((string[])(null)));
             testRunner.OnFeatureStart(featureInfo);
         }
         
@@ -77,105 +77,47 @@ namespace CruiseDAL.V3.Sync.Test.Spec.Features
         
         public virtual void FeatureBackground()
         {
-#line 2
-#line hidden
-            TechTalk.SpecFlow.Table table110 = new TechTalk.SpecFlow.Table(new string[] {
-                        "FileAlias"});
-            table110.AddRow(new string[] {
-                        "source"});
-            table110.AddRow(new string[] {
-                        "dest"});
 #line 3
- testRunner.Given("the following cruise files exist:", ((string)(null)), table110, "Given ");
 #line hidden
-            TechTalk.SpecFlow.Table table111 = new TechTalk.SpecFlow.Table(new string[] {
-                        "CuttingUnitCode"});
-            table111.AddRow(new string[] {
-                        "u1"});
-            table111.AddRow(new string[] {
-                        "u2"});
-#line 8
- testRunner.And("in \'source, dest\' the following units exist:", ((string)(null)), table111, "* ");
+            TechTalk.SpecFlow.Table table159 = new TechTalk.SpecFlow.Table(new string[] {
+                        "FileAlias"});
+            table159.AddRow(new string[] {
+                        "source"});
+            table159.AddRow(new string[] {
+                        "dest"});
+#line 4
+ testRunner.Given("the following cruise files exist:", ((string)(null)), table159, "Given ");
 #line hidden
-            TechTalk.SpecFlow.Table table112 = new TechTalk.SpecFlow.Table(new string[] {
-                        "StratumCode"});
-            table112.AddRow(new string[] {
-                        "st1"});
-            table112.AddRow(new string[] {
-                        "st2"});
+            TechTalk.SpecFlow.Table table160 = new TechTalk.SpecFlow.Table(new string[] {
+                        "CuttingUnitCode",
+                        "CuttingUnitID"});
+            table160.AddRow(new string[] {
+                        "u1",
+                        "unit1"});
+#line 9
+ testRunner.And("in \'source, dest\' the following units exist:", ((string)(null)), table160, "* ");
+#line hidden
+            TechTalk.SpecFlow.Table table161 = new TechTalk.SpecFlow.Table(new string[] {
+                        "StratumCode",
+                        "Units",
+                        "StratumID"});
+            table161.AddRow(new string[] {
+                        "st1",
+                        "u1",
+                        "stratum1s"});
 #line 13
- testRunner.And("in \'source, dest\' the following strata exist:", ((string)(null)), table112, "* ");
+ testRunner.And("in \'source\' the following strata exist:", ((string)(null)), table161, "* ");
 #line hidden
-            TechTalk.SpecFlow.Table table113 = new TechTalk.SpecFlow.Table(new string[] {
-                        "SampleGroupCode",
-                        "StratumCode"});
-            table113.AddRow(new string[] {
-                        "sg1",
-                        "st1"});
-            table113.AddRow(new string[] {
-                        "sg2",
-                        "st1"});
-            table113.AddRow(new string[] {
-                        "sg1",
-                        "st2"});
-            table113.AddRow(new string[] {
-                        "sg2",
-                        "st2"});
-#line 18
- testRunner.And("in \'source, dest\' file the following sample groups exist:", ((string)(null)), table113, "* ");
-#line hidden
-            TechTalk.SpecFlow.Table table114 = new TechTalk.SpecFlow.Table(new string[] {
-                        "SpeciesCode"});
-            table114.AddRow(new string[] {
-                        "sp1"});
-#line 25
- testRunner.And("in \'source, dest\' the following species exist:", ((string)(null)), table114, "* ");
-#line hidden
-            TechTalk.SpecFlow.Table table115 = new TechTalk.SpecFlow.Table(new string[] {
-                        "PlotID",
-                        "CuttingUnitCode",
-                        "PlotNumber",
-                        "Strata"});
-            table115.AddRow(new string[] {
-                        "plot1",
+            TechTalk.SpecFlow.Table table162 = new TechTalk.SpecFlow.Table(new string[] {
+                        "StratumCode",
+                        "Units",
+                        "StratumID"});
+            table162.AddRow(new string[] {
+                        "st1",
                         "u1",
-                        "1",
-                        "st1, st2"});
-            table115.AddRow(new string[] {
-                        "plot2d",
-                        "u1",
-                        "2",
-                        "st1, st2"});
-            table115.AddRow(new string[] {
-                        "plot3d",
-                        "u1",
-                        "3",
-                        "st1, st2"});
-#line 29
- testRunner.And("in \'dest\' the following plots exist:", ((string)(null)), table115, "* ");
-#line hidden
-            TechTalk.SpecFlow.Table table116 = new TechTalk.SpecFlow.Table(new string[] {
-                        "PlotID",
-                        "CuttingUnitCode",
-                        "PlotNumber",
-                        "Strata"});
-            table116.AddRow(new string[] {
-                        "plot1",
-                        "u1",
-                        "1",
-                        "st1, st2"});
-            table116.AddRow(new string[] {
-                        "plot2s",
-                        "u1",
-                        "2",
-                        "st1, st2"});
-            table116.AddRow(new string[] {
-                        "plot4s",
-                        "u1",
-                        "4",
-                        "st1, st2"});
-#line 35
- testRunner.And("in \'source\' the following plots exist:", ((string)(null)), table116, "* ");
+                        "stratum1d"});
+#line 17
+ testRunner.And("in \'dest\' the following strata exist:", ((string)(null)), table162, "* ");
 #line hidden
         }
         
@@ -184,15 +126,15 @@ namespace CruiseDAL.V3.Sync.Test.Spec.Features
             this.TestTearDown();
         }
         
-        [Xunit.SkippableFactAttribute(DisplayName="Check For Conflicts show plot with same plot number but different PlotIDs")]
-        [Xunit.TraitAttribute("FeatureTitle", "Sync Plots")]
-        [Xunit.TraitAttribute("Description", "Check For Conflicts show plot with same plot number but different PlotIDs")]
-        public virtual void CheckForConflictsShowPlotWithSamePlotNumberButDifferentPlotIDs()
+        [Xunit.SkippableFactAttribute(DisplayName="Check For Conflicts")]
+        [Xunit.TraitAttribute("FeatureTitle", "Sync Strata")]
+        [Xunit.TraitAttribute("Description", "Check For Conflicts")]
+        public virtual void CheckForConflicts()
         {
             string[] tagsOfScenario = ((string[])(null));
             System.Collections.Specialized.OrderedDictionary argumentsOfScenario = new System.Collections.Specialized.OrderedDictionary();
-            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("Check For Conflicts show plot with same plot number but different PlotIDs", null, tagsOfScenario, argumentsOfScenario, this._featureTags);
-#line 41
+            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("Check For Conflicts", null, tagsOfScenario, argumentsOfScenario, this._featureTags);
+#line 21
 this.ScenarioInitialize(scenarioInfo);
 #line hidden
             bool isScenarioIgnored = default(bool);
@@ -212,34 +154,34 @@ this.ScenarioInitialize(scenarioInfo);
             else
             {
                 this.ScenarioStart();
-#line 2
+#line 3
 this.FeatureBackground();
 #line hidden
-#line 42
+#line 22
  testRunner.When("I conflict check \'source\' file against \'dest\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
 #line hidden
-                TechTalk.SpecFlow.Table table117 = new TechTalk.SpecFlow.Table(new string[] {
+                TechTalk.SpecFlow.Table table163 = new TechTalk.SpecFlow.Table(new string[] {
                             "SourceRecID",
                             "DestRecID"});
-                table117.AddRow(new string[] {
-                            "plot2s",
-                            "plot2d"});
-#line 43
- testRunner.Then("PlotConflicts has:", ((string)(null)), table117, "Then ");
+                table163.AddRow(new string[] {
+                            "stratum1s",
+                            "stratum1d"});
+#line 23
+ testRunner.Then("Strata Conflicts Has:", ((string)(null)), table163, "Then ");
 #line hidden
             }
             this.ScenarioCleanup();
         }
         
-        [Xunit.SkippableFactAttribute(DisplayName="Resolve Plot Conflicts with ChoseDest")]
-        [Xunit.TraitAttribute("FeatureTitle", "Sync Plots")]
-        [Xunit.TraitAttribute("Description", "Resolve Plot Conflicts with ChoseDest")]
-        public virtual void ResolvePlotConflictsWithChoseDest()
+        [Xunit.SkippableFactAttribute(DisplayName="Resolve Conflicts With ChoseDest")]
+        [Xunit.TraitAttribute("FeatureTitle", "Sync Strata")]
+        [Xunit.TraitAttribute("Description", "Resolve Conflicts With ChoseDest")]
+        public virtual void ResolveConflictsWithChoseDest()
         {
             string[] tagsOfScenario = ((string[])(null));
             System.Collections.Specialized.OrderedDictionary argumentsOfScenario = new System.Collections.Specialized.OrderedDictionary();
-            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("Resolve Plot Conflicts with ChoseDest", null, tagsOfScenario, argumentsOfScenario, this._featureTags);
-#line 47
+            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("Resolve Conflicts With ChoseDest", null, tagsOfScenario, argumentsOfScenario, this._featureTags);
+#line 27
 this.ScenarioInitialize(scenarioInfo);
 #line hidden
             bool isScenarioIgnored = default(bool);
@@ -259,47 +201,31 @@ this.ScenarioInitialize(scenarioInfo);
             else
             {
                 this.ScenarioStart();
-#line 2
+#line 3
 this.FeatureBackground();
 #line hidden
-#line 48
+#line 28
  testRunner.When("I conflict check \'source\' file against \'dest\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
 #line hidden
-#line 49
- testRunner.And("I resolve all plot conflicts with \'ChoseDest\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line 29
+ testRunner.And("I resolve all Strata conflicts with \'ChoseDest\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line hidden
-#line 50
- testRunner.And("I run conflict resolution of \'source\' file against \'dest\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
-#line hidden
-#line 51
- testRunner.And("sync \'source\' into \'dest\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
-#line hidden
-                TechTalk.SpecFlow.Table table118 = new TechTalk.SpecFlow.Table(new string[] {
-                            "PlotID"});
-                table118.AddRow(new string[] {
-                            "plot1"});
-                table118.AddRow(new string[] {
-                            "plot2d"});
-                table118.AddRow(new string[] {
-                            "plot3d"});
-                table118.AddRow(new string[] {
-                            "plot4s"});
-#line 52
- testRunner.Then("\'dest\' contains plots:", ((string)(null)), table118, "Then ");
+#line 30
+ testRunner.Then("running conflict resolution of \'source\' file against \'dest\' not supported", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line hidden
             }
             this.ScenarioCleanup();
         }
         
-        [Xunit.SkippableFactAttribute(DisplayName="Resolve Plot conflict with ChoseSource")]
-        [Xunit.TraitAttribute("FeatureTitle", "Sync Plots")]
-        [Xunit.TraitAttribute("Description", "Resolve Plot conflict with ChoseSource")]
-        public virtual void ResolvePlotConflictWithChoseSource()
+        [Xunit.SkippableFactAttribute(DisplayName="Resolve Conflicts With ChoseSource")]
+        [Xunit.TraitAttribute("FeatureTitle", "Sync Strata")]
+        [Xunit.TraitAttribute("Description", "Resolve Conflicts With ChoseSource")]
+        public virtual void ResolveConflictsWithChoseSource()
         {
             string[] tagsOfScenario = ((string[])(null));
             System.Collections.Specialized.OrderedDictionary argumentsOfScenario = new System.Collections.Specialized.OrderedDictionary();
-            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("Resolve Plot conflict with ChoseSource", null, tagsOfScenario, argumentsOfScenario, this._featureTags);
-#line 59
+            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("Resolve Conflicts With ChoseSource", null, tagsOfScenario, argumentsOfScenario, this._featureTags);
+#line 33
 this.ScenarioInitialize(scenarioInfo);
 #line hidden
             bool isScenarioIgnored = default(bool);
@@ -319,47 +245,31 @@ this.ScenarioInitialize(scenarioInfo);
             else
             {
                 this.ScenarioStart();
-#line 2
+#line 3
 this.FeatureBackground();
 #line hidden
-#line 60
+#line 34
  testRunner.When("I conflict check \'source\' file against \'dest\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
 #line hidden
-#line 61
- testRunner.And("I resolve all plot conflicts with \'ChoseSource\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line 35
+ testRunner.And("I resolve all Strata conflicts with \'ChoseSource\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line hidden
-#line 62
- testRunner.And("I run conflict resolution of \'source\' file against \'dest\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
-#line hidden
-#line 63
- testRunner.And("sync \'source\' into \'dest\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
-#line hidden
-                TechTalk.SpecFlow.Table table119 = new TechTalk.SpecFlow.Table(new string[] {
-                            "PlotID"});
-                table119.AddRow(new string[] {
-                            "plot1"});
-                table119.AddRow(new string[] {
-                            "plot2s"});
-                table119.AddRow(new string[] {
-                            "plot3d"});
-                table119.AddRow(new string[] {
-                            "plot4s"});
-#line 64
- testRunner.Then("\'dest\' contains plots:", ((string)(null)), table119, "Then ");
+#line 36
+ testRunner.Then("running conflict resolution of \'source\' file against \'dest\' not supported", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line hidden
             }
             this.ScenarioCleanup();
         }
         
         [Xunit.SkippableFactAttribute(DisplayName="Resolve Conflict With ModifyDest")]
-        [Xunit.TraitAttribute("FeatureTitle", "Sync Plots")]
+        [Xunit.TraitAttribute("FeatureTitle", "Sync Strata")]
         [Xunit.TraitAttribute("Description", "Resolve Conflict With ModifyDest")]
         public virtual void ResolveConflictWithModifyDest()
         {
             string[] tagsOfScenario = ((string[])(null));
             System.Collections.Specialized.OrderedDictionary argumentsOfScenario = new System.Collections.Specialized.OrderedDictionary();
             TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("Resolve Conflict With ModifyDest", null, tagsOfScenario, argumentsOfScenario, this._featureTags);
-#line 71
+#line 38
 this.ScenarioInitialize(scenarioInfo);
 #line hidden
             bool isScenarioIgnored = default(bool);
@@ -379,61 +289,52 @@ this.ScenarioInitialize(scenarioInfo);
             else
             {
                 this.ScenarioStart();
-#line 2
+#line 3
 this.FeatureBackground();
 #line hidden
-#line 72
+#line 39
  testRunner.When("I conflict check \'source\' file against \'dest\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
 #line hidden
-                TechTalk.SpecFlow.Table table120 = new TechTalk.SpecFlow.Table(new string[] {
+                TechTalk.SpecFlow.Table table164 = new TechTalk.SpecFlow.Table(new string[] {
                             "DestRecID",
-                            "PlotNumber"});
-                table120.AddRow(new string[] {
-                            "plot2d",
-                            "5"});
-#line 73
- testRunner.And("I resolve plot conflicts with ModifyDest using:", ((string)(null)), table120, "And ");
+                            "StratumCode"});
+                table164.AddRow(new string[] {
+                            "stratum1d",
+                            "st3"});
+#line 40
+ testRunner.And("I resolve Stratum Conflicts with ModifyDest using:", ((string)(null)), table164, "And ");
 #line hidden
-#line 76
+#line 43
  testRunner.And("I run conflict resolution of \'source\' file against \'dest\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line hidden
-#line 77
+#line 44
  testRunner.And("sync \'source\' into \'dest\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line hidden
-                TechTalk.SpecFlow.Table table121 = new TechTalk.SpecFlow.Table(new string[] {
-                            "PlotID",
-                            "PlotNumber"});
-                table121.AddRow(new string[] {
-                            "plot1",
-                            "1"});
-                table121.AddRow(new string[] {
-                            "plot2s",
-                            "2"});
-                table121.AddRow(new string[] {
-                            "plot3d",
-                            "3"});
-                table121.AddRow(new string[] {
-                            "plot4s",
-                            "4"});
-                table121.AddRow(new string[] {
-                            "plot2d",
-                            "5"});
-#line 78
- testRunner.Then("\'dest\' contains plots:", ((string)(null)), table121, "Then ");
+                TechTalk.SpecFlow.Table table165 = new TechTalk.SpecFlow.Table(new string[] {
+                            "StratumID",
+                            "StratumCode"});
+                table165.AddRow(new string[] {
+                            "stratum1s",
+                            "st1"});
+                table165.AddRow(new string[] {
+                            "stratum1d",
+                            "st3"});
+#line 45
+ testRunner.Then("\'dest\' contains strata:", ((string)(null)), table165, "Then ");
 #line hidden
             }
             this.ScenarioCleanup();
         }
         
         [Xunit.SkippableFactAttribute(DisplayName="Resolve Conflict With ModifySource")]
-        [Xunit.TraitAttribute("FeatureTitle", "Sync Plots")]
+        [Xunit.TraitAttribute("FeatureTitle", "Sync Strata")]
         [Xunit.TraitAttribute("Description", "Resolve Conflict With ModifySource")]
         public virtual void ResolveConflictWithModifySource()
         {
             string[] tagsOfScenario = ((string[])(null));
             System.Collections.Specialized.OrderedDictionary argumentsOfScenario = new System.Collections.Specialized.OrderedDictionary();
             TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("Resolve Conflict With ModifySource", null, tagsOfScenario, argumentsOfScenario, this._featureTags);
-#line 86
+#line 50
 this.ScenarioInitialize(scenarioInfo);
 #line hidden
             bool isScenarioIgnored = default(bool);
@@ -453,47 +354,38 @@ this.ScenarioInitialize(scenarioInfo);
             else
             {
                 this.ScenarioStart();
-#line 2
+#line 3
 this.FeatureBackground();
 #line hidden
-#line 87
+#line 51
  testRunner.When("I conflict check \'source\' file against \'dest\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
 #line hidden
-                TechTalk.SpecFlow.Table table122 = new TechTalk.SpecFlow.Table(new string[] {
+                TechTalk.SpecFlow.Table table166 = new TechTalk.SpecFlow.Table(new string[] {
                             "SourceRecID",
-                            "PlotNumber"});
-                table122.AddRow(new string[] {
-                            "plot2s",
-                            "5"});
-#line 88
- testRunner.And("I resolve plot conflicts with ModifySource using:", ((string)(null)), table122, "And ");
+                            "StratumCode"});
+                table166.AddRow(new string[] {
+                            "stratum1s",
+                            "st3"});
+#line 52
+ testRunner.And("I resolve Stratum Conflicts with ModifySource using:", ((string)(null)), table166, "And ");
 #line hidden
-#line 91
+#line 55
  testRunner.And("I run conflict resolution of \'source\' file against \'dest\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line hidden
-#line 92
+#line 56
  testRunner.And("sync \'source\' into \'dest\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line hidden
-                TechTalk.SpecFlow.Table table123 = new TechTalk.SpecFlow.Table(new string[] {
-                            "PlotID",
-                            "PlotNumber"});
-                table123.AddRow(new string[] {
-                            "plot1",
-                            "1"});
-                table123.AddRow(new string[] {
-                            "plot2d",
-                            "2"});
-                table123.AddRow(new string[] {
-                            "plot3d",
-                            "3"});
-                table123.AddRow(new string[] {
-                            "plot4s",
-                            "4"});
-                table123.AddRow(new string[] {
-                            "plot2s",
-                            "5"});
-#line 93
- testRunner.Then("\'dest\' contains plots:", ((string)(null)), table123, "Then ");
+                TechTalk.SpecFlow.Table table167 = new TechTalk.SpecFlow.Table(new string[] {
+                            "StratumID",
+                            "StratumCode"});
+                table167.AddRow(new string[] {
+                            "stratum1s",
+                            "st3"});
+                table167.AddRow(new string[] {
+                            "stratum1d",
+                            "st1"});
+#line 57
+ testRunner.Then("\'dest\' contains strata:", ((string)(null)), table167, "Then ");
 #line hidden
             }
             this.ScenarioCleanup();
@@ -506,12 +398,12 @@ this.FeatureBackground();
             
             public FixtureData()
             {
-                SyncPlotsFeature.FeatureSetup();
+                SyncStrataFeature.FeatureSetup();
             }
             
             void System.IDisposable.Dispose()
             {
-                SyncPlotsFeature.FeatureTearDown();
+                SyncStrataFeature.FeatureTearDown();
             }
         }
     }

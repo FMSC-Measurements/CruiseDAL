@@ -103,7 +103,7 @@ namespace CruiseDAL.V3.Sync.Test.Spec.StepDefinitions
             var db = GetDatabase(dbAlias);
 
             var plots = db.From<Plot>().Query().ToArray();
-            foreach(var row in table.Rows)
+            foreach (var row in table.Rows)
             {
                 var plotIDAlias = row[nameof(Plot.PlotID)];
                 var plotID = GetRedordID(plotIDAlias);
@@ -125,7 +125,7 @@ namespace CruiseDAL.V3.Sync.Test.Spec.StepDefinitions
         {
             var plotConflicts = ConflictResults.Plot;
 
-            foreach(var row in table.Rows)
+            foreach (var row in table.Rows)
             {
                 var destRecAlias = row[nameof(Conflict.DestRecID)];
                 var destRedID = GetRedordID(destRecAlias);
@@ -186,7 +186,6 @@ namespace CruiseDAL.V3.Sync.Test.Spec.StepDefinitions
         //    }
         //}
 
-
         [When(@"I resolve all plot conflicts with '([^']*)' and downstream conflicts with '([^']*)'")]
         public void WhenIResolveAllPlotConflictsWithAndDownstreamConflictsWith(string resolutionOptionStr, string dsResolutionOptionStr)
         {
@@ -198,15 +197,11 @@ namespace CruiseDAL.V3.Sync.Test.Spec.StepDefinitions
             {
                 conf.ConflictResolution = resolution;
 
-                foreach(var dsconf in conf.DownstreamConflicts)
+                foreach (var dsconf in conf.DownstreamConflicts)
                 {
                     dsconf.ConflictResolution = dsResolution;
                 }
             }
         }
-
-
-
-
     }
 }

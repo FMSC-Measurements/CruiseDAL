@@ -54,7 +54,7 @@ Background: Single Tree Three Logs: One Shared, One In Conflict and One Unique
 Scenario: Cutting Unit Conflict Check
 	When I conflict check 'source' file against 'dest'
 	Then Cutting Unit Conflicts Has:
-		| SourceRecID | DestRecID | DownstreamConflictsCount |
+		| SourceRecID | DestRecID | DownstreamConflictCount |
 		| unit2s      | unit2d    | 1                        |
 
 Scenario: Resolve Conflicts With ChoseDest

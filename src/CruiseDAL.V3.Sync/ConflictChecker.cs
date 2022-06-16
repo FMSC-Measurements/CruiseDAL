@@ -137,15 +137,14 @@ namespace CruiseDAL.V3.Sync
         public IEnumerable<Conflict> CheckSampleGroupsByStratumCode(DbConnection source, DbConnection destination, string stratumCode, string cruiseID)
         {
             var sourceItems = source.Query<SampleGroup>(
-                "SELECT sg.*, st.StratumID FROM SampleGroup AS sg " +
+                "SELECT sg.* FROM SampleGroup AS sg " +
                 "WHERE CruiseID = @p1 AND StratumCode = @p2;",
                 paramaters: new[] { cruiseID, stratumCode });
 
             foreach (var sg in sourceItems)
             {
                 var conflictItem = destination.From<SampleGroup>()
-                    .Join("Stratum AS st", "USING (CruiseID, StratumCode)")
-                    .Where("CruiseID = @p1 AND SampleGroupCode = @p2 AND sg.StratumCode = @p3 AND SampleGroupID != @p4")
+                    .Where("CruiseID = @p1 AND SampleGroupCode = @p2 AND SampleGroup.StratumCode = @p3 AND SampleGroupID != @p4")
                     .Query(cruiseID, sg.SampleGroupCode, stratumCode, sg.SampleGroupID).FirstOrDefault();
 
                 if (conflictItem != null)
@@ -272,6 +271,8 @@ namespace CruiseDAL.V3.Sync
             }
         }
 
+
+        // only check non-plot trees
         protected IEnumerable<Conflict> CheckTreesByUnitCode(DbConnection source, DbConnection destination, string cruiseID, string cuttingUnitCode)
         {
             var sourceItems = source.Query<Tree>(

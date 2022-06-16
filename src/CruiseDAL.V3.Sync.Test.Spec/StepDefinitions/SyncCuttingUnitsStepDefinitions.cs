@@ -1,6 +1,4 @@
 using CruiseDAL.V3.Models;
-using System;
-using TechTalk.SpecFlow;
 using TechTalk.SpecFlow.Infrastructure;
 
 namespace CruiseDAL.V3.Sync.Test.Spec.StepDefinitions
@@ -8,7 +6,7 @@ namespace CruiseDAL.V3.Sync.Test.Spec.StepDefinitions
     [Binding]
     public class SyncCuttingUnitsStepDefinitions : SyncStepDefinitionBase
     {
-        public SyncCuttingUnitsStepDefinitions(ISpecFlowOutputHelper output, ScenarioContext senarioContext, FeatureContext featureContext) 
+        public SyncCuttingUnitsStepDefinitions(ISpecFlowOutputHelper output, ScenarioContext senarioContext, FeatureContext featureContext)
             : base(output, senarioContext, featureContext)
         {
         }
@@ -43,9 +41,28 @@ namespace CruiseDAL.V3.Sync.Test.Spec.StepDefinitions
                 //DestDatabase.Insert(cuttingUnit);
                 foreach (var db in databases)
                 { db.Insert(cuttingUnit); }
+
+                // create cutting unit strata
+                if (row.TryGetValue("Strata", out var strataCodesCsv))
+                {
+                    var strataCodes = strataCodesCsv.Split(",", StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
+
+                    foreach (var stCode in strataCodes)
+                    {
+                        var cust = new CuttingUnit_Stratum
+                        {
+                            CuttingUnitCode = unitCode,
+                            StratumCode = stCode,
+                        };
+
+                        foreach (var db in databases)
+                        {
+                            db.Insert(cust);
+                        }
+                    }
+                }
             }
         }
-
 
         [Then(@"Cutting Unit Conflicts Has:")]
         public void ThenCuttingUnitConflictsHas(Table table)
@@ -61,7 +78,7 @@ namespace CruiseDAL.V3.Sync.Test.Spec.StepDefinitions
                 var unitConflict = unitConflicts.Single(x => x.SourceRecID == srcRecID && x.DestRecID == destRecID);
                 //treeConflict.Should().NotBeNull();
 
-                if (row.TryGetValue(nameof(Conflict.DownstreamConflicts) + "Count", out var downstreamConfCountStr))
+                if (row.TryGetValue("DownstreamConflictCount", out var downstreamConfCountStr))
                 {
                     var downstreamConfCount = int.Parse(downstreamConfCountStr);
                     if (downstreamConfCount > 0)
@@ -141,8 +158,22 @@ namespace CruiseDAL.V3.Sync.Test.Spec.StepDefinitions
             }
         }
 
+        [When(@"I resolve unit conflicts with '([^']*)' and downstream conflicts with '([^']*)'")]
+        public void WhenIResolveUnitConflictsWithAndDownstreamConflictsWith(string resolutionOptionStr, string dsResolutionOptionStr)
+        {
+            var resolution = Enum.Parse<ConflictResolutionType>(resolutionOptionStr);
+            var dsResolution = Enum.Parse<ConflictResolutionType>(dsResolutionOptionStr);
 
+            var unitConflicts = ConflictResults.CuttingUnit;
+            foreach (var conf in unitConflicts)
+            {
+                conf.ConflictResolution = resolution;
 
-
+                foreach (var dsconf in conf.DownstreamConflicts)
+                {
+                    dsconf.ConflictResolution = dsResolution;
+                }
+            }
+        }
     }
 }
