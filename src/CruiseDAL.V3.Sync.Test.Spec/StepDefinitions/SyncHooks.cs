@@ -32,6 +32,16 @@ namespace CruiseDAL.V3.Sync.Test.Spec.StepDefinitions
                 Output.WriteLine("Artifact Dir at " + SenarioArtifactDir);
             }
 
+            // Test Execution Dir
+            // in .net 5 and later codeBase throws exception. This is because CodeBase is
+            // depreciated and replaced with "Location" property. However Location returns 
+            // the location of the assembly after shadow-copy of assemblies where CodeBase
+            // returns location before shadow-copy. since the testing framework uses shadow
+            // copy and we want the before shadow-copy location. 
+            var codeBase = new Uri(Assembly.GetExecutingAssembly().CodeBase).LocalPath;
+            TestExecutionDirectory = Path.GetDirectoryName(codeBase);
+
+
             // Initialize Cruise and Sale records
             CruiseID = Guid.NewGuid().ToString();
 

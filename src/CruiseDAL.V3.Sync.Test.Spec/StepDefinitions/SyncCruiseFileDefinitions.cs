@@ -31,6 +31,14 @@ namespace CruiseDAL.V3.Sync.Test.Spec.StepDefinitions
             }
         }
 
+        protected void CopyTemplateData(CruiseDatastore_V3 cruise, string templatePath, string cruiseID)
+        {
+            using var templateDb = new CruiseDatastore_V3(templatePath);
+
+
+
+        }
+
         [When(@"I conflict check '([^']*)' file against '([^']*)'")]
         public void WhenIConflictCheckFileAgainst(string source, string dest)
         {
