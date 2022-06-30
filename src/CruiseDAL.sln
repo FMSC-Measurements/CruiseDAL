@@ -65,6 +65,17 @@ Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "CruiseDAL.TestCommon.V2", "
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CruiseDAL.V3.Sync.Test.Spec", "CruiseDAL.V3.Sync.Test.Spec\CruiseDAL.V3.Sync.Test.Spec.csproj", "{30DDC6BD-E022-4D00-A5ED-03062B698560}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Documentaion", "Documentaion", "{94C5C59E-4852-413E-8F9F-74BFD358A039}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "V3", "V3", "{39761B2E-CAB7-428B-B569-1ED8A2F4B801}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "DbSync", "DbSync", "{89CC4EBA-F7E4-4839-90EF-8DF961C409B2}"
+	ProjectSection(SolutionItems) = preProject
+		..\Documentation\V3\DbSync\ConflictCheckedRecordTypes.md = ..\Documentation\V3\DbSync\ConflictCheckedRecordTypes.md
+		..\Documentation\V3\DbSync\DownstreamConflicts.md = ..\Documentation\V3\DbSync\DownstreamConflicts.md
+		..\Documentation\V3\DbSync\SyncInternalProcess.md = ..\Documentation\V3\DbSync\SyncInternalProcess.md
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SharedMSBuildProjectFiles) = preSolution
 		CruiseDAL.TestCommon\CruiseDAL.TestCommon.projitems*{00ae3e67-f599-4674-9bee-261a027600f7}*SharedItemsImports = 5
@@ -234,6 +245,9 @@ Global
 		{ED86A10A-9D11-4DCB-9D72-196C8732D3B2} = {50484533-C2FF-4C4F-B71C-3BFCFA1DAC59}
 		{884F964B-0730-4A36-AEAC-6E4034070C8C} = {50484533-C2FF-4C4F-B71C-3BFCFA1DAC59}
 		{30DDC6BD-E022-4D00-A5ED-03062B698560} = {50484533-C2FF-4C4F-B71C-3BFCFA1DAC59}
+		{94C5C59E-4852-413E-8F9F-74BFD358A039} = {297B19EA-5FA9-4EB1-8638-519B5EDA1EC1}
+		{39761B2E-CAB7-428B-B569-1ED8A2F4B801} = {94C5C59E-4852-413E-8F9F-74BFD358A039}
+		{89CC4EBA-F7E4-4839-90EF-8DF961C409B2} = {39761B2E-CAB7-428B-B569-1ED8A2F4B801}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {8C6EAB8C-1186-4EFB-BEC1-3597B32E3F4C}
