@@ -17,7 +17,7 @@ SET zip="%parent%tools\zip.cmd"
 
 IF NOT DEFINED build_config SET build_config="Release"
 
-IF NOT DEFINED dateCode (SET dateCode=%date:~10,4%%date:~4,2%%date:~7,2%)
+IF NOT DEFINED dateCode (SET dateCode=%date:~10,4%_%date:~4,2%_%date:~7,2%)
 IF NOT DEFINED packageOutputDir SET packageOutputDir=%parent%..\PackageOutput\%dateCode%
 
 call %msbuild% -t:pack /p:PackageOutputPath=%packageOutputDir%;Configuration=%build_config% "%parent%FMSC.ORM\FMSC.ORM.csproj"
@@ -33,8 +33,8 @@ call %msbuild% -t:pack /p:PackageOutputPath=%packageOutputDir%;Configuration=%bu
 
 ::build and pack CruiseCLI
 call %msbuild% /p:Configuration=%build_config% %parent%CruiseCLI\CruiseCLI.csproj
-pushd %parent%CruiseCLI\bin\Release\netcoreapp3.1
-call %zip% a -tzip -spf %packageOutputDir%\CruiseCLI.zip *.exe *.dll *.runtimeconfig.json *.deps.json runtimes\win-x86\native\*.dll runtimes\win-x64\native\*.dll
+pushd %parent%CruiseCLI\bin\Release\net48
+call %zip% a -tzip -spf %packageOutputDir%\CruiseCLI.zip *.exe *.dll runtimes\win-x86\native\*.dll runtimes\win-x64\native\*.dll
 popd
 
 ::if invoked from windows explorer, pause

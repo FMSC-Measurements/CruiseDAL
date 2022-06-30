@@ -1,0 +1,13 @@
+PRAGMA foreign_keys = off;
+
+BEGIN;
+UPDATE TreeDefaultValue Set TreeDefaultValue_CN = TreeDefaultValue_CN + @Shift;
+UPDATE SampleGroupTreeDefaultValue SET TreeDefaultValue_CN = TreeDefaultValue_CN + @Shift;
+UPDATE CountTree SET TreeDefaultValue_CN = TreeDefaultValue_CN + @Shift WHERE TreeDefaultValue_CN IS NULL;
+UPDATE Tree SET TreeDefaultValue_CN = TreeDefaultValue_CN + @Shift;
+
+UPDATE TreeDefaultValueTreeAuditValue SET TreeDefaultValue_CN = TreeDefaultValue_CN + @Shift;
+
+COMMIT;
+
+PRAGMA foreign_keys = on;

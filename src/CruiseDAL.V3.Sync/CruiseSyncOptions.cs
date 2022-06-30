@@ -11,6 +11,8 @@ namespace CruiseDAL.V3.Sync
 
     public class CruiseSyncOptions
     {
+        public SyncFlags Sale { get; set; } = SyncFlags.InsertUpdate;
+
         public SyncFlags Design { get; set; } = SyncFlags.InsertUpdate;
 
         public SyncFlags TreeFlags { get; set; } = SyncFlags.InsertUpdate;

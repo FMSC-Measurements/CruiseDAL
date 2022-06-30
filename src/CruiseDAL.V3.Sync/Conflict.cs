@@ -15,7 +15,7 @@ namespace CruiseDAL.V3.Sync
 
         public string Identity { get; set; }
 
-        public string SourctRecID { get; set; }
+        public string SourceRecID { get; set; }
 
         public string DestRecID { get; set; }
 

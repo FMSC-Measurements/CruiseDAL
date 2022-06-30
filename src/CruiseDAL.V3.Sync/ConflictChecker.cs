@@ -25,6 +25,18 @@ namespace CruiseDAL.V3.Sync
         //      where we would want to mix tree from two files on a plot. this is sorta using the 'All or Nothing' resolution option
 
 
+        public ConflictResolutionOptions CheckConflicts(DbConnection source, DbConnection destination, string cruiseID)
+        {
+            return new ConflictResolutionOptions(
+                CheckCuttingUnits(source, destination, cruiseID),
+                CheckStrata(source, destination, cruiseID),
+                CheckSampleGroups(source, destination, cruiseID),
+                CheckPlots(source, destination, cruiseID),
+                CheckTrees(source, destination, cruiseID),
+                CheckPlotTrees(source, destination, cruiseID),
+                CheckLogs(source, destination, cruiseID));
+        }
+
         public IEnumerable<Conflict> CheckCuttingUnits(DbConnection source, DbConnection destination, string cruiseID)
         {
             var sourceItems = source.From<CuttingUnit>().Where("CruiseID = @p1").Query(cruiseID);
@@ -48,7 +60,7 @@ namespace CruiseDAL.V3.Sync
                     {
                         Table = nameof(CuttingUnit),
                         Identity = Identify(item),
-                        SourctRecID = item.CuttingUnitID,
+                        SourceRecID = item.CuttingUnitID,
                         DestRecID = conflictItem.CuttingUnitID,
                         SourceRec = item,
                         DestRec = conflictItem,
@@ -72,16 +84,19 @@ namespace CruiseDAL.V3.Sync
 
                 if (conflictItem != null)
                 {
+                    var sgConflicts = CheckSampleGroupsByStratumCode(source, destination, item.StratumCode, cruiseID).ToArray();
+
                     yield return new Conflict
                     {
                         Table = nameof(Stratum),
                         Identity = Identify(item),
-                        SourctRecID = item.StratumID,
+                        SourceRecID = item.StratumID,
                         DestRecID = conflictItem.StratumID,
                         SourceRec = item,
                         DestRec = conflictItem,
                         SourceMod = DateMath.Max(item.Created_TS.Value, item.Modified_TS),
                         DestMod = DateMath.Max(conflictItem.Created_TS.Value, conflictItem.Modified_TS),
+                        DownstreamConflicts = sgConflicts,
                     };
                 }
             }
@@ -108,7 +123,37 @@ namespace CruiseDAL.V3.Sync
                     {
                         Table = nameof(SampleGroup),
                         Identity = Identify(sg),
-                        SourctRecID = sg.SampleGroupID,
+                        SourceRecID = sg.SampleGroupID,
+                        DestRecID = conflictItem.SampleGroupID,
+                        SourceRec = sg,
+                        DestRec = conflictItem,
+                        SourceMod = DateMath.Max(sg.Created_TS.Value, sg.Modified_TS),
+                        DestMod = DateMath.Max(conflictItem.Created_TS.Value, conflictItem.Modified_TS),
+                    };
+                }
+            }
+        }
+
+        public IEnumerable<Conflict> CheckSampleGroupsByStratumCode(DbConnection source, DbConnection destination, string stratumCode, string cruiseID)
+        {
+            var sourceItems = source.Query<SampleGroup>(
+                "SELECT sg.* FROM SampleGroup AS sg " +
+                "WHERE CruiseID = @p1 AND StratumCode = @p2;",
+                paramaters: new[] { cruiseID, stratumCode });
+
+            foreach (var sg in sourceItems)
+            {
+                var conflictItem = destination.From<SampleGroup>()
+                    .Where("CruiseID = @p1 AND SampleGroupCode = @p2 AND SampleGroup.StratumCode = @p3 AND SampleGroupID != @p4")
+                    .Query(cruiseID, sg.SampleGroupCode, stratumCode, sg.SampleGroupID).FirstOrDefault();
+
+                if (conflictItem != null)
+                {
+                    yield return new Conflict
+                    {
+                        Table = nameof(SampleGroup),
+                        Identity = Identify(sg),
+                        SourceRecID = sg.SampleGroupID,
                         DestRecID = conflictItem.SampleGroupID,
                         SourceRec = sg,
                         DestRec = conflictItem,
@@ -144,7 +189,7 @@ namespace CruiseDAL.V3.Sync
                     {
                         Table = nameof(Plot),
                         Identity = Identify(plot),
-                        SourctRecID = plot.PlotID,
+                        SourceRecID = plot.PlotID,
                         DestRecID = conflictItem.PlotID,
                         SourceRec = plot,
                         DestRec = conflictItem,
@@ -177,7 +222,7 @@ namespace CruiseDAL.V3.Sync
                     {
                         Table = nameof(Plot),
                         Identity = Identify(plot),
-                        SourctRecID = plot.PlotID,
+                        SourceRecID = plot.PlotID,
                         DestRecID = conflictItem.PlotID,
                         SourceRec = plot,
                         DestRec = conflictItem,
@@ -206,11 +251,16 @@ namespace CruiseDAL.V3.Sync
 
                 if (conflictItem != null)
                 {
-                    yield return new Conflict
+                    
+
+                    // We aren't checking trees for downstream log, because 
+                    //      logs are linked to trees by TreeID
+
+    yield return new Conflict
                     {
                         Table = nameof(Tree),
                         Identity = Identify(tree),
-                        SourctRecID = tree.TreeID,
+                        SourceRecID = tree.TreeID,
                         DestRecID = conflictItem.TreeID,
                         SourceRec = tree,
                         DestRec = conflictItem,
@@ -221,6 +271,8 @@ namespace CruiseDAL.V3.Sync
             }
         }
 
+
+        // only check non-plot trees
         protected IEnumerable<Conflict> CheckTreesByUnitCode(DbConnection source, DbConnection destination, string cruiseID, string cuttingUnitCode)
         {
             var sourceItems = source.Query<Tree>(
@@ -240,7 +292,7 @@ namespace CruiseDAL.V3.Sync
                     {
                         Table = nameof(Tree),
                         Identity = Identify(tree),
-                        SourctRecID = tree.TreeID,
+                        SourceRecID = tree.TreeID,
                         DestRecID = conflictItem.TreeID,
                         SourceRec = tree,
                         DestRec = conflictItem,
@@ -270,7 +322,7 @@ namespace CruiseDAL.V3.Sync
                     {
                         Table = nameof(Tree),
                         Identity = Identify(tree),
-                        SourctRecID = tree.TreeID,
+                        SourceRecID = tree.TreeID,
                         DestRecID = conflictItem.TreeID,
                         SourceRec = tree,
                         DestRec = conflictItem,
@@ -300,7 +352,7 @@ namespace CruiseDAL.V3.Sync
                     {
                         Table = nameof(Tree),
                         Identity = Identify(tree),
-                        SourctRecID = tree.TreeID,
+                        SourceRecID = tree.TreeID,
                         DestRecID = conflictItem.TreeID,
                         SourceRec = tree,
                         DestRec = conflictItem,
@@ -334,7 +386,7 @@ namespace CruiseDAL.V3.Sync
                     {
                         Table = nameof(Tree),
                         Identity = Identify(tree),
-                        SourctRecID = tree.TreeID,
+                        SourceRecID = tree.TreeID,
                         DestRecID = conflictItem.TreeID,
                         SourceRec = tree,
                         DestRec = conflictItem,
@@ -361,7 +413,7 @@ namespace CruiseDAL.V3.Sync
                     {
                         Table = nameof(Log),
                         Identity = Identify(item),
-                        SourctRecID = item.LogID,
+                        SourceRecID = item.LogID,
                         DestRecID = conflictItem.LogID,
                         SourceRec = item,
                         DestRec = conflictItem,
@@ -377,15 +429,15 @@ namespace CruiseDAL.V3.Sync
             
             var sourceItems = source.From<Log>()
                 .Join("Tree", "USING (TreeID)")
-                .Where("CruiseID = @p1 AND CuttingUnitCode = @p2 AND TreeNumber = @p3 AND PlotNumber IS NULL")
+                .Where("Log.CruiseID = @p1 AND Tree.CuttingUnitCode = @p2 AND Tree.TreeNumber = @p3 AND Tree.PlotNumber IS NULL")
                 .Query(cruiseID, cuttingUnitCode, treeNumber);
 
             foreach (var item in sourceItems)
             {
                 var conflictItem = destination.From<Log>()
                     .Join("Tree", "USING (TreeID)")
-                    .Where("CruiseID = @p1 AND LogNumber = @p2 AND CuttingUnitCode = @p3 AND TreeNumber = @p4  AND LogID != @LogID")
-                    .Query(cruiseID, item.LogNumber, cuttingUnitCode, treeNumber).FirstOrDefault();
+                    .Where("Log.CruiseID = @p1 AND Log.LogNumber = @p2 AND Tree.CuttingUnitCode = @p3 AND Tree.TreeNumber = @p4  AND Log.LogID != @p5")
+                    .Query(cruiseID, item.LogNumber, cuttingUnitCode, treeNumber, item.LogID).FirstOrDefault();
 
                 if (conflictItem != null)
                 {
@@ -393,7 +445,7 @@ namespace CruiseDAL.V3.Sync
                     {
                         Table = nameof(Log),
                         Identity = Identify(item),
-                        SourctRecID = item.LogID,
+                        SourceRecID = item.LogID,
                         SourceRec = item,
                         DestRec = conflictItem,
                         DestRecID = conflictItem.LogID,
@@ -409,14 +461,14 @@ namespace CruiseDAL.V3.Sync
 
             var sourceItems = source.From<Log>()
                 .Join("Tree", "USING (TreeID)")
-                .Where("CruiseID = @p1 AND CuttingUnitCode = @p2 AND TreeNumber = @p3 AND PlotNumber = @p4")
+                .Where("Log.CruiseID = @p1 AND Tree.CuttingUnitCode = @p2 AND Tree.TreeNumber = @p3 AND Tree.PlotNumber = @p4")
                 .Query(cruiseID, cuttingUnitCode, treeNumber, plotNumber);
 
             foreach (var item in sourceItems)
             {
                 var conflictItem = destination.From<Log>()
                     .Join("Tree", "USING (TreeID)")
-                    .Where("CruiseID = @p1 AND LogNumber = @p2 AND CuttingUnitCode = @p3 AND TreeNumber = @p4 AND PlotNumber = @p5  AND LogID != @p6")
+                    .Where("Log.CruiseID = @p1 AND Log.LogNumber = @p2 AND Tree.CuttingUnitCode = @p3 AND Tree.TreeNumber = @p4 AND Tree.PlotNumber = @p5  AND Log.LogID != @p6")
                     .Query(cruiseID, item.LogNumber, cuttingUnitCode, treeNumber, plotNumber, item.LogID).FirstOrDefault();
 
                 if (conflictItem != null)
@@ -425,7 +477,7 @@ namespace CruiseDAL.V3.Sync
                     {
                         Table = nameof(Log),
                         Identity = Identify(item),
-                        SourctRecID = item.LogID,
+                        SourceRecID = item.LogID,
                         DestRecID = conflictItem.LogID,
                         SourceRec = item,
                         DestRec = conflictItem,

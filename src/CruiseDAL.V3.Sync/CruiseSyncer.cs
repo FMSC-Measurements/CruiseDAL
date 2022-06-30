@@ -226,16 +226,36 @@ namespace CruiseDAL.V3.Sync
                 .Where("SaleNumber = @p1")
                 .Query(sourceSale.SaleNumber).FirstOrDefault();
 
-            if (match == null)
+            var saleIDMatch = destination.From<Sale>()
+                .Where("SaleID = @p1")
+                .Query(sourceSale.SaleID).FirstOrDefault();
+
+            if (match == null && saleIDMatch == null)
             {
-                destination.Insert(sourceSale, persistKeyvalue: false);
+                if (options.Sale.HasFlag(SyncFlags.Insert))
+                {
+                    
+                    destination.Insert(sourceSale, persistKeyvalue: false);
+                }
             }
-            else
+            else if(saleIDMatch == null)
             {
+                //we have a saleNumber match but no SaleID match, e.g. merging a cruise into a database containing a cruise with the same sale number
                 var srcMod = sourceSale.Modified_TS;
                 var destMod = match.Modified_TS;
 
-                if (sourceSale.SaleID == match.SaleID && ShouldUpdate(srcMod, destMod, options.Design))
+                if (ShouldUpdate(srcMod, destMod, options.Sale))
+                {
+                    destination.Update(sourceSale, whereExpression: "SaleNumber = @SaleNumber");
+                }
+            }
+            else
+            {
+                // we have a saleID match, but maybe not a sale number match
+                var srcMod = sourceSale.Modified_TS;
+                var destMod = saleIDMatch.Modified_TS;
+
+                if (ShouldUpdate(srcMod, destMod, options.Sale))
                 {
                     destination.Update(sourceSale, whereExpression: "SaleID = @SaleID");
                 }
@@ -1007,7 +1027,7 @@ namespace CruiseDAL.V3.Sync
 
                     if (hasMeasurmentsRecord)
                     {
-                        destination.Update(sourceMeasurmentsRecord, whereExpression: "WHERE TreeID =  @TreeID");
+                        destination.Update(sourceMeasurmentsRecord, whereExpression: "TreeID =  @TreeID");
                     }
                     else
                     {
@@ -1162,7 +1182,7 @@ namespace CruiseDAL.V3.Sync
 
         private void SyncLog(string cruiseID, DbConnection source, DbConnection destination, CruiseSyncOptions options)
         {
-            var where = "TreeID = @TreeID AND LogNumber = @LogNumber";
+            var where = "LogID = @LogID";
 
             //var excludeTreeIDs = new HashSet<string>(options.ExcludeTreeIDs);
             //var excludeLogIDs = new HashSet<string>(options.ExcludeLogIDs);
@@ -1170,15 +1190,18 @@ namespace CruiseDAL.V3.Sync
             //var logConflictOptions = conflictOptions.Log;
 
             // only sync for trees that are already in the destination
-            // just incase we decide earlier not to sync some trees
-            var treeIDs = destination.QueryScalar<string>("SELECT TreeID FROM Tree WHERE CruiseID = @p1", new[] { cruiseID });
+            // just in case we decide earlier not to sync some trees
+            // DONT try to make this query more efficient by only selecting for tree IDs in the log table
+            //      we may have trees in the dest file that don't have logs YET that we want to add
+            var treeIDs = destination.QueryScalar<string>(
+                "SELECT TreeID FROM Tree WHERE CruiseID = @p1;", new[] { cruiseID }).ToArray();
             foreach (var treeID in treeIDs)
             {
                 //if (excludeTreeIDs.Contains(treeID)) { continue; }
 
                 var logs = source.From<Log>()
                     .Where("TreeID = @p1")
-                    .Query(treeID);
+                    .Query(treeID).ToArray();
                 foreach (var log in logs)
                 {
                     //if (excludeLogIDs.Contains(log.LogID)) { continue; }

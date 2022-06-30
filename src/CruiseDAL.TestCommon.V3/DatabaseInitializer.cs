@@ -442,21 +442,21 @@ namespace CruiseDAL.TestCommon
             };
             db.Insert(treeMeasurment);
 
-            var treeField = new TreeField()
-            {
-                Field = "something",
-                DbType = "TEXT",
-                DefaultHeading = "something",
-            };
-            db.Insert(treeField);
+            //var treeField = new TreeField()
+            //{
+            //    Field = "something",
+            //    DbType = "TEXT",
+            //    DefaultHeading = "something",
+            //};
+            //db.Insert(treeField);
 
-            var treeFieldValue = new TreeFieldValue()
-            {
-                TreeID = tree.TreeID,
-                Field = "something",
-                ValueText = "somevalue",
-            };
-            db.Insert(treeFieldValue);
+            //var treeFieldValue = new TreeFieldValue()
+            //{
+            //    TreeID = tree.TreeID,
+            //    Field = "something",
+            //    ValueText = "somevalue",
+            //};
+            //db.Insert(treeFieldValue);
 
             var tares = new TreeAuditResolution()
             {

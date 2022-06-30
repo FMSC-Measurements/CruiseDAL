@@ -108,6 +108,14 @@ namespace CruiseDAL
                 {
                     UpdateTo_3_5_2(db);
                 }
+                if(db.DatabaseVersion == "3.5.2")
+                {
+                    UpdateTo_3_5_3(db);
+                }
+                if (db.DatabaseVersion == "3.5.3")
+                {
+                    UpdateTo_3_5_4(db);
+                }    
             }
             finally
             {
@@ -115,6 +123,60 @@ namespace CruiseDAL
             }
         }
 
+        private void UpdateTo_3_5_4(CruiseDatastore db)
+        {
+            var curVersion = db.DatabaseVersion;
+            var targetVersion = "3.5.4";
+
+            var fKeys = db.ExecuteScalar<string>("PRAGMA foreign_keys;");
+            db.Execute("PRAGMA foreign_keys=OFF;");
+
+            db.BeginTransaction();
+            try
+            {
+                // Rebuild VolumeEquation table adding ForeignKey constraint on CruiseID
+
+                db.Execute("DELETE FROM VolumeEquation WHERE CruiseID NOT IN (SELECT CruiseID FROM Cruise)");
+                RebuildTable(db, new VolumeEquationTableDefinition());
+
+                SetDatabaseVersion(db, targetVersion);
+                db.CommitTransaction();
+
+                db.Execute($"PRAGMA foreign_keys={fKeys};");
+            }
+            catch (Exception e)
+            {
+                db.RollbackTransaction();
+                throw new SchemaUpdateException(curVersion, targetVersion, e);
+            }
+        }
+
+        private void UpdateTo_3_5_3(CruiseDatastore db)
+        {
+            var curVersion = db.DatabaseVersion;
+            var targetVersion = "3.5.3";
+
+            var fKeys = db.ExecuteScalar<string>("PRAGMA foreign_keys;");
+            db.Execute("PRAGMA foreign_keys=OFF;");
+
+            db.BeginTransaction();
+            try
+            {
+                RebuildTable(db, new CruiseTableDefinition_3_5_3());
+
+                SetDatabaseVersion(db, targetVersion);
+                db.CommitTransaction();
+
+                db.Execute($"PRAGMA foreign_keys={fKeys};");
+            }
+            catch (Exception e)
+            {
+                db.RollbackTransaction();
+                throw new SchemaUpdateException(curVersion, targetVersion, e);
+            }
+        }
+
+        // add ON UPDATE CASCADE and remove ON UPDATE DELETE from SaleNumber foreign key
         private void UpdateTo_3_5_2(CruiseDatastore db)
         {
             var curVersion = db.DatabaseVersion;

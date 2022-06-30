@@ -10,7 +10,7 @@ namespace CruiseCLI
     {
         static void Main(string[] args)
         {
-            Console.WriteLine(string.Join(',', args));
+            Console.WriteLine(string.Join(",", args));
 
             try
             {
@@ -59,11 +59,18 @@ namespace CruiseCLI
                     }
 
                 }
+
+                Console.WriteLine("Done");
             }
             catch(Exception e)
             {
                 Console.WriteLine(e.Message);
                 Console.WriteLine(e.StackTrace);
+            }
+
+            if(Environment.UserInteractive)
+            {
+                Console.WriteLine("Hit Enter To Close Window");
                 Console.ReadLine();
             }
         }

@@ -19,6 +19,23 @@ namespace CruiseDAL.V3.Sync
         protected const string MODIFY_TREE_COMMAND = "UPDATE Tree SET TreeNumber = @TreeNumber WHERE TreeID = @TreeID;";
         protected const string MODIFY_LOG_COMMAND = "UPDATE Log SET LogNumber = @LogNumber WHERE LogID = @LogID;";
 
+        public void ResolveConflicts(DbConnection source, DbConnection destination, ConflictResolutionOptions conflictResolution)
+        {
+            ResolveUnitConflicts(source, destination, conflictResolution.CuttingUnit);
+
+            ResolveStratumConflicts(source, destination, conflictResolution.Stratum);
+
+            ResolveSampleGroupConflicts(source, destination, conflictResolution.SampleGroup);
+
+            ResolvePlotConflicts(source, destination, conflictResolution.Plot);
+
+            ResolveTreeConflicts(source, destination, conflictResolution.Tree);
+
+            ResolveTreeConflicts(source, destination, conflictResolution.PlotTree);
+
+            ResolveLogConflicts(source, destination, conflictResolution.Log);
+        }
+
         public void ResolveUnitConflicts(DbConnection source, DbConnection destination, IEnumerable<Conflict> conflicts)
         {
             foreach (var conflict in conflicts)
@@ -63,7 +80,7 @@ namespace CruiseDAL.V3.Sync
                         // leave fKeys on so that all child data gets deleted
                         source.ExecuteNonQuery(
                             "DELETE FROM CuttingUnit WHERE CuttingUnitID = @p1;"
-                            , new[] { conflict.SourctRecID });
+                            , new[] { conflict.SourceRecID });
                         break; // skip syncing source record if resolution is to Chose Destination record
                     }
                 case ConflictResolutionType.ChoseDestMergeData:
@@ -73,7 +90,7 @@ namespace CruiseDAL.V3.Sync
                             "BEGIN; " + // disable FKeys so that cascading deletes don't trigger 
                             "DELETE FROM CuttingUnit WHERE CuttingUnitID = @p1;" +
                             "COMMIT; " +
-                            "PRAGMA foreign_keys=on;", new[] { conflict.SourctRecID });
+                            "PRAGMA foreign_keys=on;", new[] { conflict.SourceRecID });
                         break;
                     }
                 case ConflictResolutionType.ModifySource:
@@ -88,7 +105,8 @@ namespace CruiseDAL.V3.Sync
                     }
             }
 
-            if (conflict.DownstreamConflicts != null && conflict.DownstreamConflicts.Any())
+            if ((resolution == ConflictResolutionType.ChoseSourceMergeData || resolution == ConflictResolutionType.ChoseDestMergeData) 
+                 && conflict.DownstreamConflicts != null && conflict.DownstreamConflicts.Any())
             {
                 foreach (var c in conflict.DownstreamConflicts)
                 {
@@ -122,23 +140,39 @@ namespace CruiseDAL.V3.Sync
             {
                 case ConflictResolutionType.ChoseSource:
                     {
-                        destination.ExecuteNonQuery(
-                            "DELETE FROM Stratum WHERE StratumID = @p1; ", new[] { conflict.DestRecID });
-                        break;
+                        throw new NotSupportedException();
+
+                        //destination.ExecuteNonQuery(
+                        //    "DELETE FROM Stratum WHERE StratumID = @p1; ", new[] { conflict.DestRecID });
+                        //break;
                     }
                 case ConflictResolutionType.ChoseSourceMergeData:
                     {
-                        throw new NotSupportedException();
+                        destination.ExecuteNonQuery(
+                            "PRAGMA foreign_keys=off; " +
+                            "BEGIN; " + // disable FKeys so that cascading deletes don't trigger 
+                            "DELETE FROM Stratum WHERE StratumID = @p1;" +
+                            "COMMIT; " +
+                            "PRAGMA foreign_keys=on;", new[] { conflict.DestRecID });
+                        break;
                     }
                 case ConflictResolutionType.ChoseDest:
                     {
-                        source.ExecuteNonQuery(
-                            "DELETE FROM Stratum WHERE StratumID = @p1; ", new[] { conflict.SourctRecID });
-                        break;
+                        throw new NotSupportedException();
+
+                        //source.ExecuteNonQuery(
+                        //    "DELETE FROM Stratum WHERE StratumID = @p1; ", new[] { conflict.SourctRecID });
+                        //break;
                     }
                 case ConflictResolutionType.ChoseDestMergeData:
                     {
-                        throw new NotSupportedException();
+                        source.ExecuteNonQuery(
+                            "PRAGMA foreign_keys=off; " +
+                            "BEGIN; " + // disable FKeys so that cascading deletes don't trigger 
+                            "DELETE FROM Stratum WHERE StratumID = @p1;" +
+                            "COMMIT; " +
+                            "PRAGMA foreign_keys=on;", new[] { conflict.SourceRecID });
+                        break;
                     }
                 case ConflictResolutionType.ModifySource:
                     {
@@ -150,6 +184,15 @@ namespace CruiseDAL.V3.Sync
                         destination.ExecuteNonQuery2(MODIFY_STRATUM_COMMAND, conflict.DestRec);
                         break;
                     }
+            }
+
+            if ((resolution == ConflictResolutionType.ChoseSourceMergeData || resolution == ConflictResolutionType.ChoseDestMergeData)
+                 && conflict.DownstreamConflicts != null && conflict.DownstreamConflicts.Any())
+            {
+                foreach (var c in conflict.DownstreamConflicts)
+                {
+                    ResolveConflict(source, destination, c);
+                }
             }
         }
 
@@ -163,6 +206,9 @@ namespace CruiseDAL.V3.Sync
 
         protected void ResolveSampleGroupConflict(DbConnection source, DbConnection destination, Conflict conflict)
         {
+            // TODO we don't want sample group conflict resolutions to clear and child field data, because we are treating field data
+            // as belonging to its containing unit/plot. do we consider this type of confile resolution to be chose or chose and merge?
+
             var resolution = conflict.ConflictResolution;
 
             if (resolution == ConflictResolutionType.ChoseLatest)
@@ -176,23 +222,55 @@ namespace CruiseDAL.V3.Sync
             {
                 case ConflictResolutionType.ChoseSource:
                     {
+                        // for sample groups we don't want to cascade deletes down to trees, tally ledgers, subpops, or sampler states
                         destination.ExecuteNonQuery(
-                            "DELETE FROM SampleGroup WHERE SampleGroupID = @p1;", new[] { conflict.DestRecID });
+                            "PRAGMA foreign_keys=off; " +
+                            "BEGIN; " + // disable FKeys so that cascading deletes don't trigger 
+                            "DELETE FROM SampleGroup WHERE SampleGroupID = @p1;" +
+                            "COMMIT; " +
+                            "PRAGMA foreign_keys=on;", new[] { conflict.DestRecID });
                         break;
+
+                        //destination.ExecuteNonQuery(
+                        //    "DELETE FROM SampleGroup WHERE SampleGroupID = @p1;", new[] { conflict.DestRecID });
+                        //break;
                     }
                 case ConflictResolutionType.ChoseSourceMergeData:
                     {
+                        destination.ExecuteNonQuery(
+                            "PRAGMA foreign_keys=off; " +
+                            "BEGIN; " + // disable FKeys so that cascading deletes don't trigger 
+                            "DELETE FROM SampleGroup WHERE SampleGroupID = @p1;" +
+                            "COMMIT; " +
+                            "PRAGMA foreign_keys=on;", new[] { conflict.DestRecID });
+                        break;
+
                         throw new NotSupportedException();
                     }
                 case ConflictResolutionType.ChoseDest:
                     {
-                        source.ExecuteNonQuery2(
-                            "DELETE FROM SampleGroup WHERE SampleGroupID = @p1;", new[] { conflict.SourceRec });
+                        // for sample groups we don't want to cascade deletes down to trees, tally ledgers, subpops, or sampler states
+                        source.ExecuteNonQuery(
+                            "PRAGMA foreign_keys=off; " +
+                            "BEGIN; " + // disable FKeys so that cascading deletes don't trigger 
+                            "DELETE FROM SampleGroup WHERE SampleGroupID = @p1;" +
+                            "COMMIT; " +
+                            "PRAGMA foreign_keys=on;", new[] { conflict.SourceRecID });
                         break;
+
+                        //source.ExecuteNonQuery2(
+                        //    "DELETE FROM SampleGroup WHERE SampleGroupID = @p1;", new[] { conflict.SourceRec });
+                        //break;
                     }
                 case ConflictResolutionType.ChoseDestMergeData:
                     {
-                        throw new NotSupportedException();
+                        source.ExecuteNonQuery(
+                            "PRAGMA foreign_keys=off; " +
+                            "BEGIN; " + // disable FKeys so that cascading deletes don't trigger 
+                            "DELETE FROM SampleGroup WHERE SampleGroupID = @p1;" +
+                            "COMMIT; " +
+                            "PRAGMA foreign_keys=on;", new[] { conflict.SourceRecID });
+                        break;
                     }
                 case ConflictResolutionType.ModifySource:
                     {
@@ -247,7 +325,7 @@ namespace CruiseDAL.V3.Sync
                 case ConflictResolutionType.ChoseDest:
                     {
                         source.ExecuteNonQuery(
-                            "DELETE FROM Plot WHERE PlotID = @p1; ", new[] { conflict.SourctRecID });
+                            "DELETE FROM Plot WHERE PlotID = @p1; ", new[] { conflict.SourceRecID });
                         break;// do nothing, add plotIDs to ExcludePlotIDs
                     }
                 case ConflictResolutionType.ChoseDestMergeData:
@@ -257,7 +335,7 @@ namespace CruiseDAL.V3.Sync
                             "BEGIN; " + // disable FKeys so that cascading deletes don't trigger 
                             "DELETE FROM Plot WHERE PlotID = @p1; " +
                             "COMMIT; " +
-                            "PRAGMA foreign_keys=on;", new[] { conflict.SourctRecID });
+                            "PRAGMA foreign_keys=on;", new[] { conflict.SourceRecID });
                         break;
                     }
                 case ConflictResolutionType.ModifySource:
@@ -270,6 +348,15 @@ namespace CruiseDAL.V3.Sync
                         destination.ExecuteNonQuery2(MODIFY_PLOT_COMMAND, conflict.DestRec);
                         break;
                     }
+            }
+
+            if ((resolution == ConflictResolutionType.ChoseSourceMergeData || resolution == ConflictResolutionType.ChoseDestMergeData)
+                 && conflict.DownstreamConflicts != null && conflict.DownstreamConflicts.Any())
+            {
+                foreach (var c in conflict.DownstreamConflicts)
+                {
+                    ResolveConflict(source, destination, c);
+                }
             }
         }
 
@@ -304,18 +391,18 @@ namespace CruiseDAL.V3.Sync
                 case ConflictResolutionType.ChoseDest:
                     {
                         source.ExecuteNonQuery(
-                            "DELETE FROM Tree WHERE TreeID = @p1; ", new[] { conflict.SourctRecID });
+                            "DELETE FROM Tree WHERE TreeID = @p1; ", new[] { conflict.SourceRecID });
                         break;
                     }
                 // merge resolutions not supported because the only child record type of tree: log
                 // references tree using a unique ID, 
                 case ConflictResolutionType.ChoseSourceMergeData:
                     {
-                        throw new NotImplementedException();
+                        throw new NotSupportedException();
                     }
                 case ConflictResolutionType.ChoseDestMergeData:
                     {
-                        throw new NotImplementedException();
+                        throw new NotSupportedException();
                     }
                 case ConflictResolutionType.ModifySource:
                     {
@@ -353,13 +440,13 @@ namespace CruiseDAL.V3.Sync
             {
                 case ConflictResolutionType.ChoseSource:
                     {
-                        destination.ExecuteNonQuery("DELETE Log WHERE LogID = @p1;", new[] { conflict.DestRecID });
+                        destination.ExecuteNonQuery("DELETE FROM Log WHERE LogID = @p1;", new[] { conflict.DestRecID });
                         break;
                     }
 
                 case ConflictResolutionType.ChoseDest:
                     {
-                        source.ExecuteNonQuery("DELETE Log WHERE LogID = @p1;", new[] { conflict.SourctRecID });
+                        source.ExecuteNonQuery("DELETE FROM Log WHERE LogID = @p1;", new[] { conflict.SourceRecID });
                         break;
                     }
                 // mere resolutions not supported because there are no child record types for logs
@@ -388,6 +475,11 @@ namespace CruiseDAL.V3.Sync
         {
             switch (conflict.Table)
             {
+                case nameof(SampleGroup):
+                    {
+                        ResolveSampleGroupConflict(source, destination, conflict);
+                        break;
+                    }
                 case nameof(Plot):
                     {
                         ResolvePlotConflict(source, destination, conflict);

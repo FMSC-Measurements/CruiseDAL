@@ -20,64 +20,7 @@ namespace CruiseDAL.V3.Sync
         //    var destPath = GetTempFilePath(".crz3");
         //}
 
-        [Fact]
-        public void Sync_Sale_Add()
-        {
-            var fromPath = GetTempFilePathWithExt(".crz3", "Sale_Add_fromFile"); 
-            var toPath = GetTempFilePathWithExt(".crz3", "Sale_Add_toFile");
-
-            var syncOptions = new CruiseSyncOptions();
-
-            var cruiseID = CruiseID;
-            var saleID = SaleID;
-
-            using var fromDb = CreateDatabaseFile(fromPath);
-
-            var sale = fromDb.From<Sale>()
-                .Where("SaleID = @p1")
-                .Query(saleID)
-                .FirstOrDefault();
-
-            using var toDb = new CruiseDatastore_V3(toPath, true);
-
-            var syncer = new CruiseSyncer();
-            syncer.Sync(cruiseID, fromDb, toDb, syncOptions);
-
-            var saleAgain = toDb.From<Sale>().Where("SaleID = @p1").Query(saleID).FirstOrDefault();
-
-            saleAgain.Should().BeEquivalentTo(sale, x => x.Excluding(y => y.Modified_TS));
-        }
-
-        [Fact]
-        public void Sync_Sale_Update()
-        {
-            var fromPath = GetTempFilePathWithExt(".crz3", "Sale_Update_fromFile");
-            var toPath = GetTempFilePathWithExt(".crz3", "Sale_Update_toFile");
-
-            var syncOptions = new CruiseSyncOptions();
-
-            var cruiseID = CruiseID;
-            var saleID = SaleID;
-
-            using var fromDb = CreateDatabaseFile(fromPath);
-
-            fromDb.CopyTo(toPath, true);
-            using var toDb = new CruiseDatastore_V3(toPath);
-
-            var sale = fromDb.From<Sale>()
-                .Where("SaleID = @p1")
-                .Query(saleID)
-                .FirstOrDefault();
-            sale.Remarks = Rand.Words();
-            fromDb.Update(sale);
-
-            var syncer = new CruiseSyncer();
-            syncer.Sync(cruiseID, fromDb, toDb, syncOptions);
-
-            var saleAgain = toDb.From<Sale>().Where("SaleID = @p1").Query(saleID).FirstOrDefault();
-
-            saleAgain.Should().BeEquivalentTo(sale, x => x.Excluding(y => y.Modified_TS));
-        }
+        
 
         [Fact]
         public void Sync_Cruise_Add()

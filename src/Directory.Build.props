@@ -11,12 +11,12 @@
     <FMSCORMversion>2.6.12.0</FMSCORMversion>
 
     <CruiseDALv2SchemaVersion>2.7.3</CruiseDALv2SchemaVersion>
-    <CruiseDALv3SchemaVersion>3.5.2</CruiseDALv3SchemaVersion>
-    <CruiseDALIncrementalVersion>104</CruiseDALIncrementalVersion>
+    <CruiseDALv3SchemaVersion>3.5.4</CruiseDALv3SchemaVersion>
+    <CruiseDALIncrementalVersion>106</CruiseDALIncrementalVersion>
     <CruiseDALCoreVersion>3.0.0.$(CruiseDALIncrementalVersion)</CruiseDALCoreVersion>
     <CruiseDALV2Version>$(CruiseDALv2SchemaVersion).$(CruiseDALIncrementalVersion)</CruiseDALV2Version>
     <CruiseDALV3Version>$(CruiseDALv3SchemaVersion).$(CruiseDALIncrementalVersion)</CruiseDALV3Version>
-    <CruiseDALV3SyncVersion>$(CruiseDALv3SchemaVersion).$(CruiseDALIncrementalVersion)00</CruiseDALV3SyncVersion>
+    <CruiseDALV3SyncVersion>$(CruiseDALv3SchemaVersion).$(CruiseDALIncrementalVersion)01</CruiseDALV3SyncVersion>
     <CruiseDALV3ModelsVersion>$(CruiseDALv3SchemaVersion).$(CruiseDALIncrementalVersion)</CruiseDALV3ModelsVersion>
     <CruiseDALV2ModelsVersion>$(CruiseDALv2SchemaVersion).$(CruiseDALIncrementalVersion)</CruiseDALV2ModelsVersion>
     
@@ -38,7 +38,7 @@
     <ModelGenToolDirectory>$(FMSCORMToolsDirectory)ModelGen\</ModelGenToolDirectory>
   </PropertyGroup>
 
-  <!-- when targeting net461 SqlitePCL.Raw cant find e_sqlite3 becuase of xunit's shadow coppy feature
+  <!-- when targeting net461 SqlitePCL.Raw cant find e_sqlite3 because of xunit's shadow copy feature
   see https://github.com/reactiveui/Akavache/pull/496 and https://github.com/xunit/xunit/issues/1198 -->
   <ItemGroup Condition="$(IsTestProject) == 'true' AND $(TargetFramework) == 'net461'">
     <Content Include="$(MSBuildThisFileDirectory)xunit.runner.json" CopyToOutputDirectory="PreserveNewest" />

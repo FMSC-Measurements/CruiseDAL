@@ -9,10 +9,34 @@ where tree.CuttingUnit_CN = @srcUnit
 AND tree.Stratum_CN = @scrcStratum
 AND EXISTS (select result.SampleGroup_CN FROM samplegroup as result WHERE result.Stratum_CN = @destStratum AND result.Code = (select Code FROM SampleGroup AS t1 WHERE t1.SampleGroup_CN = Tree.SampleGroup_CN));
 
+--update tree 
+--set stratum_CN = @destStratum,
+--sampleGroup_CN = @destSg
+--where tree.CuttingUnit_CN = @srcUnit
+--AND tree.Stratum_CN = @scrcStratum
+--AND tree.SampleGroup_CN = @srcSg;
+
 update plot
 set stratum_CN = @destStratum
-where @scrcStratum
+where Stratum_CN = @scrcStratum
 and CuttingUnit_CN = @srcUnit;
+
+update CuttingUnitStratum
+SET Stratum_CN = @destStratum
+WHERE Stratum_CN = @scrcStratum
+AND CuttingUnit_CN = @srcUnit;
+
+select * from Tree as t
+LEFT JOIN CuttingUnitStratum AS cust using (CuttingUnit_CN, Stratum_CN)
+WHERE cust.RowID IS NULL;
+
+select * from Plot as p
+LEFT JOIN CuttingUnitStratum AS cust using (CuttingUnit_CN, Stratum_CN)
+WHERE cust.RowID IS NULL;
+
+select * from Tree as t
+LEFT JOIN SampleGroupTreeDefaultValue AS sgtdv using (SampleGroup_CN, TreeDefaultValue_CN)
+WHERE sgtdv.RowID IS NULL;
 
 --pragma foreign_key_check;
 
