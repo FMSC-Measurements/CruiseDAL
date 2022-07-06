@@ -1,0 +1,4 @@
+Table,FieldName,DbType,IsPK,IsFK,References,NotNull,Description,Min,Max,RegionsUsing,AdditionalRemarks
+LK_UOM,LK_UOM_CN,INTEGER,X,,,,,,,,
+LK_UOM,UOM,TEXT,,,,X,,,,,
+LK_UOM,FriendlyName,TEXT,,,,X,,,,,

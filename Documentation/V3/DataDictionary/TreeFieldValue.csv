@@ -1,0 +1,12 @@
+Table,FieldName,DbType,IsPK,IsFK,References,NotNull,Description,Min,Max,RegionsUsing,AdditionalRemarks
+TreeFieldValue,TreeFieldValue_OID,INTEGER,X,,,,,,,,
+TreeFieldValue,TreeID,TEXT,,X,Tree,X,,,,,
+TreeFieldValue,Field,TEXT,,X,TreeField,X,,,,,
+TreeFieldValue,ValueInt,INTEGER,,,,,,,,,
+TreeFieldValue,ValueReal,REAL,,,,,,,,,
+TreeFieldValue,ValueBool,BOOLEAN,,,,,,,,,
+TreeFieldValue,ValueText,TEXT,,,,,,,,,
+TreeFieldValue,CreatedBy,TEXT,,,,,,,,,
+TreeFieldValue,Created_TS,DATETIME,,,,,,,,,
+TreeFieldValue,ModifiedBy,TEXT,,,,,,,,,
+TreeFieldValue,Modified_TS,DATETIME,,,,,,,,,

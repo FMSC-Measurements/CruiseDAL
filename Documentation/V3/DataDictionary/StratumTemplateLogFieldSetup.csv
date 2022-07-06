@@ -1,0 +1,10 @@
+Table,FieldName,DbType,IsPK,IsFK,References,NotNull,Description,Min,Max,RegionsUsing,AdditionalRemarks
+StratumTemplateLogFieldSetup,StratumTemplateLogFieldSetup_CN,INTEGER,X,,,,,,,,
+StratumTemplateLogFieldSetup,StratumTemplateName,TEXT,,X,StratumTemplate,X,,,,,
+StratumTemplateLogFieldSetup,CruiseID,TEXT,,X,StratumTemplate,X,,,,,
+StratumTemplateLogFieldSetup,Field,TEXT,,X,LogField,X,,,,,
+StratumTemplateLogFieldSetup,FieldOrder,INTEGER,,,,,,,,,
+StratumTemplateLogFieldSetup,CreatedBy,TEXT,,,,,,,,,
+StratumTemplateLogFieldSetup,Created_TS,DATETIME,,,,,,,,,
+StratumTemplateLogFieldSetup,ModifiedBy,TEXT,,,,,,,,,
+StratumTemplateLogFieldSetup,Modified_TS,DATETIME,,,,,,,,,

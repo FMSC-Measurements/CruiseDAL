@@ -1,0 +1,4 @@
+Table,FieldName,DbType,IsPK,IsFK,References,NotNull,Description,Min,Max,RegionsUsing,AdditionalRemarks
+LK_FIA,LK_FIA_CN,INTEGER,X,,,,,,,,
+LK_FIA,FIACode,INTEGER,,,,X,,,,,
+LK_FIA,CommonName,TEXT,,,,X,,,,,

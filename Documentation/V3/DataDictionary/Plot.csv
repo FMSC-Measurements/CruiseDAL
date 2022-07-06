@@ -1,0 +1,13 @@
+Table,FieldName,DbType,IsPK,IsFK,References,NotNull,Description,Min,Max,RegionsUsing,AdditionalRemarks
+Plot,Plot_CN,INTEGER,X,,,,,,,,
+Plot,PlotID,TEXT,,,,X,,,,,Guid
+Plot,PlotNumber,INTEGER,,,,X,,1,,,
+Plot,CruiseID,TEXT,,X,CuttingUnit,X,,,,,
+Plot,CuttingUnitCode,TEXT,,X,CuttingUnit,X,,,,,
+Plot,Slope,REAL,,,,,,0,200,,
+Plot,Aspect,REAL,,,,,,0,360,,
+Plot,Remarks,TEXT,,,,,,,,,
+Plot,CreatedBy,TEXT,,,,,,,,,
+Plot,Created_TS,DATETIME,,,,,,,,,
+Plot,ModifiedBy,TEXT,,,,,,,,,
+Plot,Modified_TS,DATETIME,,,,,,,,,

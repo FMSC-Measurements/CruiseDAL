@@ -1,0 +1,27 @@
+Table,FieldName,DbType,IsPK,IsFK,References,NotNull,Description,Min,Max,RegionsUsing,AdditionalRemarks
+SampleGroup,SampleGroup_CN,INTEGER,X,,,,,,,,
+SampleGroup,SampleGroupID,TEXT,,,,X,,,,,
+SampleGroup,CruiseID,TEXT,,X,Stratum,X,,,,,
+SampleGroup,SampleGroupCode,TEXT,,,,X,,,,,Min length 1
+SampleGroup,StratumCode,TEXT,,X,Stratum,X,,,,,
+SampleGroup,CutLeave,TEXT,,,,,,,,,
+SampleGroup,UOM,TEXT,,X,LK_UOM,,,,,,
+SampleGroup,PrimaryProduct,TEXT,,X,LK_Product,,,,,,
+SampleGroup,SecondaryProduct,TEXT,,X,LK_Product,,,,,,
+SampleGroup,BiomassProduct,TEXT,,,,,,,,,
+SampleGroup,DefaultLiveDead,TEXT,,,,,,,,,
+SampleGroup,SamplingFrequency,INTEGER,,,,,,,,,
+SampleGroup,InsuranceFrequency,INTEGER,,,,,,,,,
+SampleGroup,KZ,INTEGER,,,,,,,,,
+SampleGroup,BigBAF,INTEGER,,,,,,,,,
+SampleGroup,TallyBySubPop,BOOLEAN,,,,,,,,,"Allowed values 0, 1"
+SampleGroup,UseExternalSampler,BOOLEAN,,,,,,,,,"depreciated, use SampleSelectorType with 'ClickerSelecter' instead"
+SampleGroup,SampleSelectorType,TEXT,,,,,,,,,"Allowed values 'SystematicSelecter','BlockSelecter', 'ClickerSelecter'  "
+SampleGroup,Description,TEXT,,,,,,,,,
+SampleGroup,MinKPI,INTEGER,,,,,,,,,
+SampleGroup,MaxKPI,INTEGER,,,,,,,,,
+SampleGroup,SmallFPS,REAL,,,,,,,,,
+SampleGroup,CreatedBy,TEXT,,,,,,,,,
+SampleGroup,Created_TS,DATETIME,,,,,,,,,
+SampleGroup,ModifiedBy,TEXT,,,,,,,,,
+SampleGroup,Modified_TS,DATETIME,,,,,,,,,

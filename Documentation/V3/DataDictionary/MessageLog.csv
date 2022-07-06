@@ -1,0 +1,7 @@
+Table,FieldName,DbType,IsPK,IsFK,References,NotNull,Description,Min,Max,RegionsUsing,AdditionalRemarks
+MessageLog,Message_CN,INTEGER,X,,,,,,,,
+MessageLog,Program,TEXT,,,,,,,,,
+MessageLog,Message,TEXT,,,,,,,,,
+MessageLog,Date,TEXT,,,,,,,,,
+MessageLog,Time,TEXT,,,,,,,,,
+MessageLog,Level,TEXT,,,,,,,,,

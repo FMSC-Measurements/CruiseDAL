@@ -1,0 +1,15 @@
+# cruise
+several unused fields
+- measurment year
+- logGradingEnabled
+- templateFile
+
+# log
+LogNumber field type is TEXT but there is a check to ensure value is > 0
+Can we change LogNumber to INTEGER?
+
+# LogGradeAuditRule
+there is a check on grade for lenght > 0. use value IN check like other grade fields
+
+# TreeAuditRuleSelector
+ - add LK_Product ref to PrimaryProduct?

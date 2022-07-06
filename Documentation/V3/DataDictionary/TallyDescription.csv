@@ -1,0 +1,8 @@
+Table,FieldName,DbType,IsPK,IsFK,References,NotNull,Description,Min,Max,RegionsUsing,AdditionalRemarks
+TallyDescription,TallyDescription_CN,INTEGER,X,,,,,,,,
+TallyDescription,CruiseID,TEXT,,X,"Subpopulation,Species,SampleGroup",X,,,,,
+TallyDescription,StratumCode,TEXT,,X,"Subpopulation,SampleGroup",X,,,,,
+TallyDescription,SampleGroupCode,TEXT,,X,"Subpopulation,SampleGroup",X,,,,,
+TallyDescription,SpeciesCode,TEXT,,X,"Subpopulation,Species",,,,,,Both species code and live dead can be null (tally by SG) OR both not null
+TallyDescription,LiveDead,TEXT,,X,Subpopulation,,,,,,"Allowed values 'L', 'D'"
+TallyDescription,Description,TEXT,,,,X,,,,,

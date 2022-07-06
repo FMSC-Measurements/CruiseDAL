@@ -1,0 +1,12 @@
+Table,FieldName,DbType,IsPK,IsFK,References,NotNull,Description,Min,Max,RegionsUsing,AdditionalRemarks
+SubPopulation,Subpopulation_CN,INTEGER,X,,,,,,,,
+SubPopulation,SubPopulationID,TEXT,,,,X,,,,,Guid
+SubPopulation,CruiseID,TEXT,,X,"Species,SampleGroup",X,,,,,Guid
+SubPopulation,StratumCode,TEXT,,X,SampleGroup,X,,,,,
+SubPopulation,SampleGroupCode,TEXT,,X,SampleGroup,X,,,,,
+SubPopulation,SpeciesCode,TEXT,,X,Species,X,,,,,
+SubPopulation,LiveDead,TEXT,,,,X,,,,,"Allowed values 'L', 'D'"
+SubPopulation,CreatedBy,TEXT,,,,,,,,,
+SubPopulation,Created_TS,DATETIME,,,,,,,,,
+SubPopulation,ModifiedBy,TEXT,,,,,,,,,
+SubPopulation,Modified_TS,DATETIME,,,,,,,,,

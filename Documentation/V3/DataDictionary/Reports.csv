@@ -1,0 +1,9 @@
+Table,FieldName,DbType,IsPK,IsFK,References,NotNull,Description,Min,Max,RegionsUsing,AdditionalRemarks
+Reports,ReportID,TEXT,,,,X,,,,,
+Reports,CruiseID,TEXT,,X,Cruise,X,,,,,
+Reports,Selected,BOOLEAN,,,,,,,,,
+Reports,Title,TEXT,,,,,,,,,
+Reports,CreatedBy,TEXT,,,,,,,,,
+Reports,Created_TS,DATETIME,,,,,,,,,
+Reports,ModifiedBy,TEXT,,,,,,,,,
+Reports,Modified_TS,DATETIME,,,,,,,,,

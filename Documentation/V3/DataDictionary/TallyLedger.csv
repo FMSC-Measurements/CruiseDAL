@@ -1,0 +1,21 @@
+Table,FieldName,DbType,IsPK,IsFK,References,NotNull,Description,Min,Max,RegionsUsing,AdditionalRemarks
+TallyLedger,TallyLedger_CN,INTEGER,X,,,,,,,,
+TallyLedger,TallyLedgerID,TEXT,,,,X,,,,,Guid
+TallyLedger,CruiseID,TEXT,,X,"Plot,Species,SampleGroup,CuttingUnit",X,,,,,
+TallyLedger,TreeID,TEXT,,X,Tree,,,,,,"Foreign Keys used to enforce that Unit, Stratum, SG, Plot, Species, LiveDead values match values on Tree record"
+TallyLedger,CuttingUnitCode,TEXT,,X,"Plot,CuttingUnit",X,,,,,
+TallyLedger,StratumCode,TEXT,,X,SampleGroup,X,,,,,
+TallyLedger,SampleGroupCode,TEXT,,X,SampleGroup,X,,,,,
+TallyLedger,PlotNumber,INTEGER,,X,Plot,,,,,,
+TallyLedger,SpeciesCode,TEXT,,X,Species,,,,,,
+TallyLedger,LiveDead,TEXT,,,,,,,,,"Allowed values 'L', 'D'"
+TallyLedger,TreeCount,INTEGER,,,,X,,,,,
+TallyLedger,KPI,INTEGER,,,,,,,,,
+TallyLedger,STM,BOOLEAN,,,,,,,,,"Allowed values 1, 0"
+TallyLedger,ThreePRandomValue,INTEGER,,,,,,,,,
+TallyLedger,Signature,TEXT,,,,,,,,,
+TallyLedger,Reason,TEXT,,,,,,,,,
+TallyLedger,Remarks,TEXT,,,,,,,,,
+TallyLedger,EntryType,TEXT,,X,LK_TallyEntryType,,,,,,
+TallyLedger,CreatedBy,TEXT,,,,,,,,,
+TallyLedger,Created_TS,DATETIME,,,,,,,,,

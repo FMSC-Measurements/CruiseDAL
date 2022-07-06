@@ -1,0 +1,15 @@
+Table,FieldName,DbType,IsPK,IsFK,References,NotNull,Description,Min,Max,RegionsUsing,AdditionalRemarks
+Sale,Sale_CN,INTEGER,X,,,,,,,,
+Sale,SaleID,TEXT,,,,X,,,,,Guid
+Sale,SaleNumber,TEXT,,,,X,,,,,
+Sale,Name,TEXT,,,,,,,,,
+Sale,Region,TEXT,,X,LK_Region,,,,,,
+Sale,Forest,TEXT,,,,,,,,,
+Sale,District,TEXT,,,,,,,,,
+Sale,CalendarYear,INTEGER,,,,,,,,,
+Sale,Remarks,TEXT,,,,,,,,,
+Sale,DefaultUOM,TEXT,,,,,,,,,
+Sale,CreatedBy,TEXT,,,,,,,,,
+Sale,Created_TS,DATETIME,,,,,,,,,
+Sale,ModifiedBy,TEXT,,,,,,,,,
+Sale,Modified_TS,DATETIME,,,,,,,,,

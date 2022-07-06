@@ -1,0 +1,5 @@
+Table,FieldName,DbType,IsPK,IsFK,References,NotNull,Description,Min,Max,RegionsUsing,AdditionalRemarks
+LK_Forest,LK_Forest_CN,INTEGER,X,,,,,,,,
+LK_Forest,Forest,TEXT,,,,X,,,,,needs to be text because one blm forest has non numeric forest number
+LK_Forest,Region,TEXT,,X,LK_Region,X,,,,,
+LK_Forest,FriendlyName,TEXT,,,,X,,,,,

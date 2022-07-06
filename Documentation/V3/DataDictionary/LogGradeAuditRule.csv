@@ -1,0 +1,6 @@
+Table,FieldName,DbType,IsPK,IsFK,References,NotNull,Description,Min,Max,RegionsUsing,AdditionalRemarks
+LogGradeAuditRule,LogGradeAuditRule_CN,INTEGER,X,,,,,,,,
+LogGradeAuditRule,CruiseID,TEXT,,X,"Cruise,Species",X,,,,,
+LogGradeAuditRule,SpeciesCode,TEXT,,X,Species,,,,,,Can leave blank to apply to all species codes
+LogGradeAuditRule,Grade,TEXT,,,,X,,,,,min length 1
+LogGradeAuditRule,DefectMax,REAL,,,,,,,,,"Unique with CruiseID, SpeciesCode, Grade. Rounded to two places"

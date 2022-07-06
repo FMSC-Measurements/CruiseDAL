@@ -1,0 +1,4 @@
+Table,FieldName,DbType,IsPK,IsFK,References,NotNull,Description,Min,Max,RegionsUsing,AdditionalRemarks
+LK_Region,LK_Region_CN,INTEGER,X,,,,,,,,
+LK_Region,Region,TEXT,,,,X,,,,,
+LK_Region,FriendlyName,TEXT,,,,X,,,,,

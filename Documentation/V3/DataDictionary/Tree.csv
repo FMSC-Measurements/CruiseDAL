@@ -1,0 +1,16 @@
+Table,FieldName,DbType,IsPK,IsFK,References,NotNull,Description,Min,Max,RegionsUsing,AdditionalRemarks
+Tree,Tree_CN,INTEGER,X,,,,,,,,
+Tree,CruiseID,TEXT,,X,"Species,Plot,SampleGroup,CuttingUnit",X,,,,,
+Tree,TreeID,TEXT,,,,X,,,,,Guid
+Tree,CuttingUnitCode,TEXT,,X,"Plot,CuttingUnit",X,,,,,
+Tree,StratumCode,TEXT,,X,SampleGroup,X,,,,,
+Tree,SampleGroupCode,TEXT,,X,SampleGroup,X,,,,,
+Tree,SpeciesCode,TEXT,,X,Species,,,,,,
+Tree,LiveDead,TEXT,,,,,,,,,"Allowed values 'L', 'D', NULL"
+Tree,PlotNumber,INTEGER,,X,Plot,,,,,,
+Tree,TreeNumber,INTEGER,,,,X,,1,,,
+Tree,CountOrMeasure,TEXT,,,,,,,,,"Allowed values 'M', 'I', 'C'"
+Tree,CreatedBy,TEXT,,,,,,,,,
+Tree,Created_TS,DATETIME,,,,,,,,,
+Tree,ModifiedBy,TEXT,,,,,,,,,
+Tree,Modified_TS,DATETIME,,,,,,,,,

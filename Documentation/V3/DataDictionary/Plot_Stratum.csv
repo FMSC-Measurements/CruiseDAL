@@ -1,0 +1,16 @@
+Table,FieldName,DbType,IsPK,IsFK,References,NotNull,Description,Min,Max,RegionsUsing,AdditionalRemarks
+Plot_Stratum,Plot_Stratum_CN,INTEGER,X,,,,,,,,
+Plot_Stratum,PlotNumber,INTEGER,,X,Plot,X,,,,,
+Plot_Stratum,CruiseID,TEXT,,X,"Plot,Stratum",X,,,,,
+Plot_Stratum,CuttingUnitCode,TEXT,,X,Plot,X,,,,,
+Plot_Stratum,StratumCode,TEXT,,X,Stratum,X,,,,,
+Plot_Stratum,IsEmpty,BOOLEAN,,,,,,,,,"allowed values 1, 0"
+Plot_Stratum,CountOrMeasure,TEXT,,,,,,,,,"allowed values 'C', 'M', NULL. for 3ppnt cruise methods but might be expanded to other methods"
+Plot_Stratum,TreeCount,INTEGER,,,,,,,,,if treecount > 0 then average height and kpi must also be > 0.  for 3ppnt cruise method
+Plot_Stratum,AverageHeight,REAL,,,,,,,,,for 3ppnt cruise method
+Plot_Stratum,KPI,REAL,,,,,,,,,for 3ppnt cruise method
+Plot_Stratum,ThreePRandomValue,INTEGER,,,,,,,,,for 3ppnt cruise method
+Plot_Stratum,CreatedBy,TEXT,,,,,,,,,
+Plot_Stratum,Created_TS,DATETIME,,,,,,,,,
+Plot_Stratum,ModifiedBy,TEXT,,,,,,,,,
+Plot_Stratum,Modified_TS,DATETIME,,,,,,,,,

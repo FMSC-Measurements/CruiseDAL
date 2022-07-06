@@ -1,0 +1,15 @@
+Table,FieldName,DbType,IsPK,IsFK,References,NotNull,Description,Min,Max,RegionsUsing,AdditionalRemarks
+CuttingUnit,CuttingUnit_CN,INTEGER,X,,,,,,,,
+CuttingUnit,CuttingUnitID,TEXT,,,,X,,,,,Guid
+CuttingUnit,CuttingUnitCode,TEXT,,,,X,,,,,min length 1
+CuttingUnit,CruiseID,TEXT,,X,Cruise,X,,,,,
+CuttingUnit,Area,REAL,,,,,,0.1,,,
+CuttingUnit,Description,TEXT,,,,,,,,,
+CuttingUnit,Remarks,TEXT,,,,,,,,,
+CuttingUnit,LoggingMethod,TEXT,,X,LK_LoggingMethod,,,,,,
+CuttingUnit,PaymentUnit,TEXT,,,,,,,,,
+CuttingUnit,Rx,TEXT,,,,,,,,,
+CuttingUnit,CreatedBy,TEXT,,,,,,,,,
+CuttingUnit,Created_TS,DATETIME,,,,,,,,,
+CuttingUnit,ModifiedBy,TEXT,,,,,,,,,
+CuttingUnit,Modified_TS,DATETIME,,,,,,,,,

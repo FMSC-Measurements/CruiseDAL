@@ -1,0 +1,7 @@
+Table,FieldName,DbType,IsPK,IsFK,References,NotNull,Description,Min,Max,RegionsUsing,AdditionalRemarks
+TreeAuditRuleSelector,TreeAuditRuleSelector_CN,INTEGER,X,,,,,,,,
+TreeAuditRuleSelector,CruiseID,TEXT,,X,"Species,Cruise",X,,,,,
+TreeAuditRuleSelector,SpeciesCode,TEXT,,X,Species,,,,,,
+TreeAuditRuleSelector,LiveDead,TEXT,,,,,,,,,"Allowed values 'L', 'D', NULL"
+TreeAuditRuleSelector,PrimaryProduct,TEXT,,,,,,,,,
+TreeAuditRuleSelector,TreeAuditRuleID,TEXT,,X,TreeAuditRule,X,,,,,

@@ -1,0 +1,9 @@
+Table,FieldName,DbType,IsPK,IsFK,References,NotNull,Description,Min,Max,RegionsUsing,AdditionalRemarks
+TreeFieldHeading,TreeFieldHeading_CN,INTEGER,X,,,,,,,,
+TreeFieldHeading,CruiseID,TEXT,,X,Cruise,X,,,,,
+TreeFieldHeading,Field,TEXT,,X,TreeField,X,,,,,
+TreeFieldHeading,Heading,TEXT,,,,X,,,,,
+TreeFieldHeading,CreatedBy,TEXT,,,,,,,,,
+TreeFieldHeading,Created_TS,DATETIME,,,,,,,,,
+TreeFieldHeading,ModifiedBy,TEXT,,,,,,,,,
+TreeFieldHeading,Modified_TS,DATETIME,,,,,,,,,
