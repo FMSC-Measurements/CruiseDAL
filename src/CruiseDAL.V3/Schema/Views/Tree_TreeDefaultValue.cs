@@ -1,4 +1,4 @@
-﻿namespace CruiseDAL.Schema.Views
+﻿namespace CruiseDAL.Schema
 {
     public class Tree_TreeDefaultValue : IViewDefinition
     {
