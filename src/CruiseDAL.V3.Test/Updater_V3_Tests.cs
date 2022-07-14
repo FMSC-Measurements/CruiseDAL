@@ -1,4 +1,5 @@
 ﻿using CruiseDAL.TestCommon;
+using CruiseDAL.Update;
 using CruiseDAL.V3.Models;
 using FluentAssertions;
 using FMSC.ORM.Core;
@@ -47,6 +48,7 @@ namespace CruiseDAL.V3.Test
 
         [InlineData("3.3.0.crz3")]
         [InlineData("3.3.4.crz3")]
+        [InlineData("3.5.4.crz3")]
         [Theory]
         public void Update(string fileName)
         {
@@ -98,6 +100,7 @@ namespace CruiseDAL.V3.Test
 
         [InlineData("3.3.0.crz3")]
         [InlineData("3.3.4.crz3")]
+        [InlineData("3.5.4.crz3")]
         [Theory]
         public void UpdateNG(string fileName)
         {
@@ -162,6 +165,17 @@ namespace CruiseDAL.V3.Test
             ds.Invoking(x => x.Execute("DELETE FROM Plot_Stratum;")).Should().NotThrow<FMSC.ORM.SQLException>();
         }
 
-        
+        [Fact]
+        public void UpdateFrom354_To_355()
+        {
+            var filePath = InitializeTestFile("3.5.4.crz3");
+
+            using var ds = new CruiseDatastore(filePath);
+
+            var updateTo355 = new UpdateTo_3_5_5();
+
+            using var conn = ds.OpenConnection();
+            updateTo355.Invoking( x => x.Update(conn)).Should().NotThrow();
+        }
     }
 }

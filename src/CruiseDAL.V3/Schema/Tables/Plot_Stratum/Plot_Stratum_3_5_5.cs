@@ -1,8 +1,11 @@
-﻿using System.Collections.Generic;
+﻿
+using System.Collections.Generic;
 
 namespace CruiseDAL.Schema
 {
-    public class Plot_StratumTableDefinition_3_4_1 : ITableDefinition
+
+    // changed check on ThreePRandomValue to is null or >= 0, was is null or > 0
+    public class Plot_StratumTableDefinition_3_5_5 : ITableDefinition
     {
         public string TableName => "Plot_Stratum";
 
@@ -32,7 +35,7 @@ namespace CruiseDAL.Schema
     CHECK (IsEmpty IN (0, 1)),
     CHECK (CountOrMeasure IN ('C', 'M') OR CountOrMeasure IS NULL),
     CHECK ((ifnull(TreeCount,0) IS 0 AND ifnull(AverageHeight,0.0) IS 0.0 AND ifnull(KPI, 0.0) IS 0.0) OR (TreeCount > 0 AND AverageHeight > 0.0 AND KPI > 0.0)),
-    CHECK (ThreePRandomValue IS NULL OR ThreePRandomValue > 0),
+    CHECK (ThreePRandomValue IS NULL OR ThreePRandomValue >= 0),
 
     FOREIGN KEY (StratumCode,  CruiseID) REFERENCES Stratum (StratumCode, CruiseID) ON DELETE CASCADE ON UPDATE CASCADE,
     FOREIGN KEY (PlotNumber, CuttingUnitCode, CruiseID) REFERENCES Plot (PlotNumber, CuttingUnitCode, CruiseID) ON DELETE CASCADE ON UPDATE CASCADE
@@ -68,10 +71,10 @@ CREATE INDEX NIX_Plot_Stratum_Tombstone_CruiseID_PlotNumber_CuttingUnitCode_Stra
 
 CREATE INDEX NIX_Plot_Stratum_PlotNumber_CuttingUnitCode_CruiseID ON Plot_Stratum ('PlotNumber', 'CuttingUnitCode', 'CruiseID');";
 
-        public IEnumerable<string> CreateTriggers => new[] { 
-            CREATE_TRIGGER_PLOT_STRATUM_ONUPDATE, 
-            CREATE_TRIGGER_Plot_Stratum_OnDelete, 
-            CREATE_TRIGGER_Stratum_OnInsert_ClearTombstones, 
+        public IEnumerable<string> CreateTriggers => new[] {
+            CREATE_TRIGGER_PLOT_STRATUM_ONUPDATE,
+            CREATE_TRIGGER_Plot_Stratum_OnDelete,
+            CREATE_TRIGGER_Stratum_OnInsert_ClearTombstones,
         };
 
         public const string CREATE_TRIGGER_PLOT_STRATUM_ONUPDATE =
@@ -153,3 +156,4 @@ BEGIN
 END;";
     }
 }
+

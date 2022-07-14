@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace CruiseDAL.Schema.Views
+namespace CruiseDAL.Schema
 {
     public class TreeFieldValue_AllViewDefinition : IViewDefinition
     {

@@ -33,10 +33,10 @@ namespace CruiseDAL.V3.Models
   public Int32? Counter { get; set; }
 
   [Field("InsuranceIndex")]
-  public String InsuranceIndex { get; set; }
+  public Int32? InsuranceIndex { get; set; }
 
   [Field("InsuranceCounter")]
-  public String InsuranceCounter { get; set; }
+  public Int32? InsuranceCounter { get; set; }
 
   [Field("CreatedBy")]
   public String CreatedBy { get; set; }

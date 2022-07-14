@@ -27,6 +27,7 @@ namespace CruiseDAL
             new UpdateTo_3_5_2(),
             new UpdateTo_3_5_3(),
             new UpdateTo_3_5_4(),
+            new UpdateTo_3_5_5(),
         };
 
         public static ILogger Logger { get; set; } = LoggerProvider.Get();

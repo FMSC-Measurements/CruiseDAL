@@ -29,6 +29,7 @@ namespace CruiseDAL.V3.Test.Schema.Views
                 // just requited fields
                 CruiseID = init.CruiseID,
                 TreeID = Guid.NewGuid().ToString(),
+                TreeNumber = 1,
                 CuttingUnitCode = "u1",
                 StratumCode = "st1",
                 SampleGroupCode = "sg1",
@@ -55,6 +56,7 @@ namespace CruiseDAL.V3.Test.Schema.Views
                 // just requited fields
                 CruiseID = init.CruiseID,
                 TreeID = Guid.NewGuid().ToString(),
+                TreeNumber = 1,
                 CuttingUnitCode = "u1",
                 StratumCode = "st1",
                 SampleGroupCode = "sg1",
@@ -86,6 +88,7 @@ namespace CruiseDAL.V3.Test.Schema.Views
                 // just requited fields
                 CruiseID = init.CruiseID,
                 TreeID = Guid.NewGuid().ToString(),
+                TreeNumber = 1,
                 CuttingUnitCode = "u1",
                 StratumCode = "st1",
                 SampleGroupCode = "sg1",
@@ -119,6 +122,7 @@ namespace CruiseDAL.V3.Test.Schema.Views
                 // just requited fields
                 CruiseID = init.CruiseID,
                 TreeID = Guid.NewGuid().ToString(),
+                TreeNumber = 1,
                 CuttingUnitCode = "u1",
                 StratumCode = "st1",
                 SampleGroupCode = "sg1",
@@ -130,15 +134,15 @@ namespace CruiseDAL.V3.Test.Schema.Views
             var tm = new TreeMeasurment
             {
                 TreeID = tree.TreeID,
-                RecoverablePrimary = 103,
-                SeenDefectPrimary = 102,
+                RecoverablePrimary = 3,
+                SeenDefectPrimary = 2,
             };
             db.Insert(tm);
 
             var treeErrors = db.From<TreeError>().Query().ToArray();
             treeErrors.Should().Contain(x => x.Field == "SeenDefectPrimary");
 
-            tm.SeenDefectPrimary = 103;
+            tm.SeenDefectPrimary = 3;
             db.Update(tm);
 
             treeErrors = db.From<TreeError>().Query().ToArray();

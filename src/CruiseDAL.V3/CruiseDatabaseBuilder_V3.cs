@@ -11,12 +11,12 @@ namespace CruiseDAL
 {
     public class CruiseDatastoreBuilder_V3 : IDatastoreBuilder
     {
-        public static readonly Version DATABASE_VERSION = new Version("3.5.4");
+        public static readonly Version DATABASE_VERSION = new Version("3.5.5");
 
         public static readonly IEnumerable<ITableDefinition> TABLE_DEFINITIONS =
         new ITableDefinition[]
         {
-            new DeviceTableDefinition(),
+            new DeviceTableDefinition_3_5_5(),
 
             // lookup
             new FIATableDefinition(),
@@ -32,41 +32,35 @@ namespace CruiseDAL
             new LK_Purpose(),
             new LK_TallyEntryType(),
 
-            // cruise specific lookup
-            new SpeciesTableDefinition(),
-            new Species_ProductTableDefinition(),
-            new TreeDefaultValueTableDefinition(),
-
             // design
             new SaleTableDefinition(),
             new CruiseTableDefinition_3_5_3(),
-
-            new CuttingUnitTableDefinition(),
+            new CuttingUnitTableDefinition_3_5_5(),
             new StratumTableDefinition(),
             new CuttingUnit_StratumTableDefinition(),
-            new PlotTableDefinition(),
-            new Plot_StratumTableDefinition_3_4_1(),
+            new PlotTableDefinition_3_5_5(),
+            new Plot_StratumTableDefinition_3_5_5(),
             new PlotLocationTableDefinition(),
-            new SampleGroupTableDefinition(),
-
+            new SampleGroupTableDefinition_3_5_5(),
+            new SpeciesTableDefinition(),
+            new Species_ProductTableDefinition(),
+            new TreeDefaultValueTableDefinition_3_5_5(),
             new TreeFieldSetupTableDefinition(),
             new TreeFieldHeading(),
             new LogFieldHeading(),
             new LogFieldSetupTableDefinition(),
-
-            new SamplerStateTableDefinition(),
-
+            new SamplerStateTableDefinition_3_5_5(),
             new SubPopulationTableDefinition(),
             new TallyDescriptionTableDefinition(),
             new TallyHotkeyTableDefinition(),
             new FixCNTTallyPopulationTableDefinition(),
 
             // field data
-            new TreeTableDefinition(),
-            new TreeMeasurmentsTableDefinition(),
+            new TreeTableDefinition_3_5_5(),
+            new TreeMeasurmentsTableDefinition_3_5_5(),
             new TreeLocationTableDefinition(),
             new TreeFieldValueTableDefinition(),
-            new LogTableDefinition(),
+            new LogTableDefinition_3_5_5(),
             new StemTableDefinition(),
             new TallyLedgerTableDefinition(),
 

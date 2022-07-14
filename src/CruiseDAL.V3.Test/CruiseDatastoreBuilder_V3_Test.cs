@@ -7,6 +7,7 @@ using System.Linq;
 using System.Reflection;
 using Xunit;
 using Xunit.Abstractions;
+using FMSC.ORM.Core;
 
 namespace CruiseDAL.V3.Test
 {
@@ -23,7 +24,10 @@ namespace CruiseDAL.V3.Test
             {
                 var dbBuilder = new CruiseDatastoreBuilder_V3();
 
-                database.Invoking(x => x.CreateDatastore(dbBuilder)).Should().NotThrow();
+                var conn = database.OpenConnection();
+                dbBuilder.BuildDatabase(conn, null);
+
+                //database.Invoking(x => x.CreateDatastore(dbBuilder)).Should().NotThrow();
 
                 foreach (var table in CruiseDatastoreBuilder_V3.TABLE_DEFINITIONS)
                 {
@@ -35,6 +39,61 @@ namespace CruiseDAL.V3.Test
                 //{
                 //    database.CheckTableExists(view.ViewName).Should().BeTrue();
                 //}
+            }
+        }
+
+        [Fact]
+        public void whatIsHappening()
+        {
+            var tempPath = base.GetTempFilePathWithExt(".db");
+
+            using(var db = new CruiseDatastore(tempPath, true, null, null))
+            {
+                var conn = db.OpenConnection();
+
+                var tdvdef = new TreeDefaultValueTableDefinition();
+                conn.ExecuteNonQuery(tdvdef.CreateTable);
+
+            }
+        }
+
+        [Fact]
+        public void WriteDDLToOutput()
+        {
+            foreach (var table in CruiseDatastoreBuilder_V3.TABLE_DEFINITIONS)
+            {
+
+                Output.WriteLine("-- " + table.TableName);
+
+                var createCommand = table.CreateTable;
+                Output.WriteLine(createCommand);
+
+                var createIndexes = table.CreateIndexes;
+                if (createIndexes != null)
+                {
+                    Output.WriteLine(createIndexes);
+                }
+
+                var createTombstone = table.CreateTombstoneTable;
+                if (createTombstone != null)
+                {
+                    Output.WriteLine(createTombstone);
+                }
+
+                var initialize = table.InitializeTable;
+                if (initialize != null)
+                {
+                    Output.WriteLine(initialize);
+                }
+
+                var triggers = table.CreateTriggers;
+                if (triggers != null)
+                {
+                    foreach (var trigger in triggers)
+                    {
+                        Output.WriteLine(trigger);
+                    }
+                }
             }
         }
 

@@ -52,6 +52,18 @@ namespace CruiseDAL.V3.Test.Schema.Views
                 .Ignore(x => x.ModifiedBy)
                 .Ignore(x => x.Modified_TS)
                 .RuleFor(x => x.CruiseID, y => init.CruiseID)
+
+                .RuleFor(x => x.CullPrimary, x => x.Random.Int(min: 0, max: 100))
+                .RuleFor(x => x.CullPrimaryDead, x => x.Random.Int(min: 0, max: 100))
+                .RuleFor(x => x.HiddenPrimary, x => x.Random.Int(min: 0, max: 100))
+                .RuleFor(x => x.HiddenPrimaryDead, x => x.Random.Int(min: 0, max: 100))
+                .RuleFor(x => x.TreeGrade, x => x.PickRandom("0", "1", "2", "3", "4", "5", "6", "7", "8", "9"))
+                .RuleFor(x => x.TreeGradeDead, x => x.PickRandom("0", "1", "2", "3", "4", "5", "6", "7", "8", "9"))
+                .RuleFor(x => x.CullSecondary, x => x.Random.Int(min: 0, max: 100))
+                .RuleFor(x => x.HiddenSecondary, x => x.Random.Int(min: 0, max: 100))
+                .RuleFor(x => x.Recoverable, x => x.Random.Int(min: 0, max: 100))
+                .RuleFor(x => x.MerchHeightLogLength, x => x.Random.Int(min: 0))
+
                 .Generate();
 
             tdv.CruiseID = init.CruiseID;
@@ -164,6 +176,18 @@ namespace CruiseDAL.V3.Test.Schema.Views
     .Ignore(x => x.ModifiedBy)
     .Ignore(x => x.Modified_TS)
     .RuleFor(x => x.CruiseID, y => init.CruiseID)
+
+    .RuleFor(x => x.CullPrimary, x => x.Random.Int(min: 0, max: 100))
+    .RuleFor(x => x.CullPrimaryDead, x => x.Random.Int(min: 0, max: 100))
+    .RuleFor(x => x.HiddenPrimary, x => x.Random.Int(min: 0, max: 100))
+    .RuleFor(x => x.HiddenPrimaryDead, x => x.Random.Int(min: 0, max: 100))
+    .RuleFor(x => x.TreeGrade, x => x.PickRandom("0", "1", "2", "3", "4", "5", "6", "7", "8", "9"))
+    .RuleFor(x => x.TreeGradeDead, x => x.PickRandom("0", "1", "2", "3", "4", "5", "6", "7", "8", "9"))
+    .RuleFor(x => x.CullSecondary, x => x.Random.Int(min: 0, max: 100))
+    .RuleFor(x => x.HiddenSecondary, x => x.Random.Int(min: 0, max: 100))
+    .RuleFor(x => x.Recoverable, x => x.Random.Int(min: 0, max: 100))
+    .RuleFor(x => x.MerchHeightLogLength, x => x.Random.Int(min: 0))
+
     .Generate();
 
             tdv.CruiseID = init.CruiseID;

@@ -53,7 +53,7 @@ CREATE TABLE Cruise (
     CHECK (LogGradingEnabled IN (0, 1)),
     CHECK (UseCrossStrataPlotTreeNumbering IN (0, 1)),
 
-    FOREIGN KEY (SaleNumber) REFERENCES Sale (SaleNumber) ON DELETE CASCADE,
+    FOREIGN KEY (SaleNumber) REFERENCES Sale (SaleNumber) ON UPDATE CASCADE,
     FOREIGN KEY (DefaultUOM) REFERENCES LK_UOM (UOM),
     FOREIGN KEY (Purpose) REFERENCES LK_Purpose (Purpose)
 )
@@ -102,7 +102,8 @@ CREATE TABLE CuttingUnit (
     FOREIGN KEY (LoggingMethod) REFERENCES LK_LoggingMethod (LoggingMethod),
 
     CHECK (CuttingUnitID LIKE '________-____-____-____-____________'),
-    CHECK (length(CuttingUnitCode) > 0)
+    CHECK (length(CuttingUnitCode) > 0),
+    CHECK (Area IS NULL OR Area > 0.0)
 )
 
 CREATE TRIGGER CuttingUnit_OnUpdate
@@ -278,6 +279,8 @@ CREATE TABLE Device (
     Name TEXT,
 
     FOREIGN KEY (CruiseID) REFERENCES Cruise (CruiseID) ON DELETE CASCADE,
+
+    CHECK (DeviceID LIKE '________-____-____-____-____________'),
 
     UNIQUE (DeviceID, CruiseID)
 )
@@ -492,6 +495,21 @@ CREATE TABLE Log (
     UNIQUE (TreeID, LogNumber),
 
     CHECK (LogID LIKE '________-____-____-____-____________'),
+    CHECK (CAST(LogNumber AS INTEGER) > 0),
+    CHECK (Grade IS NULL OR Grade IN ('0', '1', '2', '3', '4', '5', '6', '7', '8', '9')),
+    CHECK (SeenDefect IS NULL OR SeenDefect BETWEEN 0.0 AND 100.0),
+    CHECK (PercentRecoverable IS NULL OR PercentRecoverable BETWEEN 0.0 AND 100.0),
+    CHECK (Length IS NULL OR Length >= 0),
+    CHECK (SmallEndDiameter IS NULL OR SmallEndDiameter >= 0.0),
+    CHECK (LargeEndDiameter IS NULL OR LargeEndDiameter >= 0.0),
+    CHECK (GrossBoardFoot IS NULL OR GrossBoardFoot >= 0.0),
+    CHECK (NetBoardFoot IS NULL OR NetBoardFoot >= 0.0),
+    CHECK (GrossCubicFoot IS NULL OR GrossCubicFoot >= 0.0),
+    CHECK (NetCubicFoot IS NULL OR NetCubicFoot >= 0.0),
+    CHECK (BoardFootRemoved IS NULL OR BoardFootRemoved >= 0.0),
+    CHECK (CubicFootRemoved IS NULL OR CubicFootRemoved >= 0.0),
+    CHECK (DIBClass IS NULL OR DIBClass >= 0.0), 
+    CHECK (BarkThickness IS NULL OR BarkThickness >= 0.0),
 
     FOREIGN KEY (TreeID) REFERENCES Tree (TreeID) ON DELETE CASCADE,
     FOREIGN KEY (CruiseID) REFERENCES Cruise (CruiseID)
@@ -688,16 +706,6 @@ CREATE INDEX NIX_LogFieldSetup_Field ON LogFieldSetup ('Field' COLLATE NOCASE)
 CREATE INDEX NIX_LogFieldSetup_StratumCode_CruiseID ON LogFieldSetup ('StratumCode', 'CruiseID')
 
 
--- ************** LogFieldSetupDefault **************
-CREATE VIEW LogFieldSetupDefault AS
-SELECT
-    StratumTemplateLogFieldSetup_CN AS LogFieldSetupDefault_CN,
-    StratumTemplateName || CruiseID AS StratumDefaultID,
-    Field,
-    FieldOrder
-FROM StratumTemplateLogFieldSetup
-
-
 -- ************** LogFieldSetup_Tombstone **************
 CREATE TABLE LogFieldSetup_Tombstone (
     StratumCode TEXT NOT NULL,
@@ -761,26 +769,6 @@ CREATE TABLE LogGradeAuditRule_Tombstone (
 
 CREATE INDEX NIX_LogGradeAuditRule_Tombstone_CruiseID_SpeciesCode_Grade ON LogGradeAuditRule_Tombstone
 (CruiseID, (ifnull(SpeciesCode, '')), Grade)
-
-
--- ************** LogGradeError **************
-CREATE VIEW LogGradeError AS
-SELECT
-    l.Log_CN,
-    l.LogID,
-    t.CruiseID,
-    LogGradeAuditRule_CN,
-    'Species ' || t.SpeciesCode || ', log grade ' || lgar.Grade || 'max defect is ' || lgar.DefectMax AS Message,
-    0 AS IsResolved,
-    null AS Resolution,
-    null AS ResolutionInitials
-FROM Log AS l
-JOIN Tree AS t USING (TreeID)
-JOIN LogGradeAuditRule AS lgar ON
-    t.CruiseID = lgar.CruiseID
-    AND ifnull(lgar.SpeciesCode, '') IN  (t.SpeciesCode, '')
-    AND ifnull(l.Grade, '') = lgar.Grade
-    AND round(l.SeenDefect, 2) > round(lgar.DefectMax, 2)
 
 
 -- ************** Log_Tombstone **************
@@ -848,6 +836,9 @@ CREATE TABLE Plot (
     Modified_TS DATETIME,
 
     CHECK (PlotID LIKE '________-____-____-____-____________'),
+    CHECK (PlotNumber > 0),
+    CHECK (Slope IS NULL OR Slope BETWEEN 0.0 AND 200.0), -- value of 200 would be a 90degree slope
+    CHECK (Aspect IS NULL OR Aspect BETWEEN 0.0 AND 360.0),
 
     UNIQUE (PlotID),
     UNIQUE (PlotNumber, CuttingUnitCode, CruiseID),
@@ -907,29 +898,6 @@ END
 CREATE INDEX NIX_Plot_CuttingUnitCode_CruiseID ON Plot (CuttingUnitCode, CruiseID)
 
 CREATE INDEX NIX_Plot_PlotNumber_CruiseID ON Plot (PlotNumber, CruiseID)
-
-
--- ************** PlotError **************
-CREATE VIEW PlotError AS
-    SELECT
-        p.PlotID, 
-        p.CruiseID,
-        ps.CuttingUnitCode,
-        ps.PlotNumber,
-        ps.StratumCode,
-        ps.Plot_Stratum_CN,
-        'Unit:' || ps.CuttingUnitCode || ' Plot:' || ps.PlotNumber || ' St:' || ps.StratumCode || ' contains trees but is marked as empty' AS Message,
-        'IsEmpty' AS Field,
-        'E' AS Level,
-        0 AS IsResolved,
-        null AS Resolution,
-        null AS ResolutionInitials
-    FROM Plot_Stratum AS ps
-    JOIN Plot AS p USING (CuttingUnitCode, PlotNumber, CruiseID)
-    WHERE IsEmpty != 0
-        AND EXISTS (SELECT * FROM Tree
-            WHERE CuttingUnitCode = ps.CuttingUnitCode
-            AND PlotNumber = ps.PlotNumber AND StratumCode = ps.StratumCode AND CruiseID = ps.CruiseID)
 
 
 -- ************** PlotLocation **************
@@ -1022,9 +990,11 @@ CREATE TABLE Plot_Stratum (
     Modified_TS DATETIME,
 
     UNIQUE (PlotNumber, CuttingUnitCode, StratumCode, CruiseID),
+
     CHECK (IsEmpty IN (0, 1)),
     CHECK (CountOrMeasure IN ('C', 'M') OR CountOrMeasure IS NULL),
-    --CHECK ((TreeCount IS 0 AND AverageHeight IS 0.0 AND KPI IS 0.0) OR (TreeCount > 0 AND AverageHeight > 0.0 AND KPI > 0.0)) 
+    CHECK ((ifnull(TreeCount,0) IS 0 AND ifnull(AverageHeight,0.0) IS 0.0 AND ifnull(KPI, 0.0) IS 0.0) OR (TreeCount > 0 AND AverageHeight > 0.0 AND KPI > 0.0)),
+    CHECK (ThreePRandomValue IS NULL OR ThreePRandomValue > 0),
 
     FOREIGN KEY (StratumCode,  CruiseID) REFERENCES Stratum (StratumCode, CruiseID) ON DELETE CASCADE ON UPDATE CASCADE,
     FOREIGN KEY (PlotNumber, CuttingUnitCode, CruiseID) REFERENCES Plot (PlotNumber, CuttingUnitCode, CruiseID) ON DELETE CASCADE ON UPDATE CASCADE
@@ -1302,7 +1272,7 @@ CREATE TABLE SampleGroup (
     Modified_TS DATETIME,
 
     CHECK (SampleGroupID LIKE '________-____-____-____-____________'),
-    CHECK (length(SampleGroupCode) > 0)
+    CHECK (length(SampleGroupCode) > 0),
     CHECK (TallyBySubPop IN (0, 1)),
     CHECK (UseExternalSampler IN (0, 1)),
     CHECK (SampleSelectorType IS NULL
@@ -1506,8 +1476,8 @@ CREATE TABLE SamplerState (
     BlockState TEXT,
     SystematicIndex INTEGER DEFAULT 0,      -- should not change after record creation
     Counter INTEGER DEFAULT 0,
-    InsuranceIndex DEFAULT -1,              -- should not change after record creation
-    InsuranceCounter DEFAULT -1,
+    InsuranceIndex INTEGER DEFAULT -1,              -- should not change after record creation
+    InsuranceCounter INTEGER DEFAULT -1,
     CreatedBy TEXT DEFAULT 'none',
     Created_TS DATETIME DEFAULT (CURRENT_TIMESTAMP),
     ModifiedBy TEXT,
@@ -1768,28 +1738,6 @@ END
 
 
 
-
-
--- ************** StratumDefault **************
-CREATE VIEW StratumDefault AS
-    SELECT
-        0 AS StratumDefault_CN,
-        StratumTemplateName || CruiseID AS StratumDefaultID,
-        NULL AS Region,
-        NULL AS Forest,
-        NULL AS District,
-        StratumCode,
-        StratumTemplateName AS Description,
-        Method,
-        BasalAreaFactor,
-        FixedPlotSize,
-        KZ3PPNT,
-        SamplingFrequency,
-        Hotkey,
-        FBSCode,
-        YieldComponent,
-        FixCNTField
-FROM StratumTemplate
 
 
 -- ************** StratumTemplate **************
@@ -2403,29 +2351,6 @@ CREATE INDEX NIX_TallyLedger_CuttingUnitCode_CruiseID ON TallyLedger ('CuttingUn
 CREATE INDEX NIX_TallyLedger_Created_TS ON TallyLedger (Created_TS)
 
 
--- ************** TallyLedger_Plot_Totals **************
-CREATE VIEW TallyLedger_Plot_Totals AS
-SELECT
-    tl.CruiseID,
-    tl.CuttingUnitCode,
-    tl.StratumCode,
-    tl.SampleGroupCode,
-    tl.SpeciesCode,
-    tl.LiveDead,
-    tl.PlotNumber,
-    sum(tl.TreeCount) AS TreeCount,
-    sum(tl.KPI) AS KPI
-FROM TallyLedger AS tl
-GROUP BY
-    CruiseID,
-    CuttingUnitCode,
-    StratumCode,
-    SampleGroupCode,
-    ifnull(SpeciesCode, ''),
-    ifnull(LiveDead, ''),
-    ifnull(PlotNumber, -1)
-
-
 -- ************** TallyLedger_Tombstone **************
 CREATE TABLE TallyLedger_Tombstone (
     TallyLedgerID TEXT NOT NULL,
@@ -2455,89 +2380,6 @@ CREATE INDEX NIX_TallyLedger_Tombstone_TallyLedgerID ON TallyLedger_Tombstone
 (TallyLedgerID)
 
 
--- ************** TallyLedger_Totals **************
-CREATE VIEW TallyLedger_Totals AS
-SELECT
-    tl.CruiseID,
-    tl.CuttingUnitCode,
-    tl.StratumCode,
-    tl.SampleGroupCode,
-    tl.SpeciesCode,
-    tl.LiveDead,
-    sum(tl.TreeCount) AS TreeCount,
-    sum(tl.KPI) AS KPI
-FROM TallyLedger AS tl
-GROUP BY
-    CruiseID,
-    CuttingUnitCode,
-    StratumCode,
-    SampleGroupCode,
-    ifnull(SpeciesCode, ''),
-    ifnull(LiveDead, '')
-
-
--- ************** TallyLedger_Tree_Totals **************
-CREATE VIEW TallyLedger_Tree_Totals AS
-SELECT
-    tl.CruiseID,
-    tl.TreeID,
-    max(tl.STM) AS STM,
-    sum(tl.TreeCount) AS TreeCount,
-    sum(tl.KPI) AS KPI
-FROM TallyLedger AS tl
-WHERE  TreeID IS NOT NULL
-GROUP BY
-    CruiseID,
-    TreeID
-
-
--- ************** TallyPopulation **************
-CREATE VIEW TallyPopulation AS
-
--- Tally By SubPop tally pops
-SELECT
-    sp.CruiseID,
-    sp.StratumCode,
-    sp.SampleGroupCode,
-    sp.SpeciesCode,
-    sp.LiveDead,
-    ifnull(td.Description, '') AS Description,
-    ifnull(thk.HotKey, '') AS HotKey
-FROM SubPopulation AS sp
-JOIN SampleGroup AS sg USING (StratumCode, SampleGroupCode, CruiseID)
-JOIN Stratum AS st USING (StratumCode, CruiseID)
-LEFT JOIN TallyHotKey AS thk USING (StratumCode, SampleGroupCode, SpeciesCode, LiveDead, CruiseID)
-LEFT JOIN TallyDescription AS td USING (StratumCode, SampleGroupCode, SpeciesCode, LiveDead, CruiseID)
-WHERE sg.TallyBySubPop != 0  OR st.Method IN ('3P', 'F3P', 'P3P', 'S3P')
-
-UNION ALL
-
--- Tally by SG tally pops
-SELECT
-    sg.CruiseID,
-    sg.StratumCode,
-    sg.SampleGroupCode,
-    null AS SpeciesCode,
-    null AS LiveDead,
-    ifnull(td.Description,'') AS Description,
-    ifnull(thk.HotKey, '') AS HotKey
-FROM SampleGroup AS sg
-JOIN Stratum AS st USING (StratumCode, CruiseID)
-LEFT JOIN TallyHotKey AS thk ON
-        thk.CruiseID = sg.CruiseID
-        AND thk.StratumCode = sg.StratumCode
-        AND thk.SampleGroupCode = sg.SampleGroupCode
-        AND ifnull(thk.SpeciesCode, '') = ''
-        AND ifnull(thk.LiveDead, '') = ''
-LEFT JOIN TallyDescription AS td ON
-        thk.CruiseID = sg.CruiseID
-        AND td.StratumCode = sg.StratumCode
-        AND td.SampleGroupCode = sg.SampleGroupCode
-        AND ifnull(td.SpeciesCode, '') = ''
-        AND ifnull(td.LiveDead, '') = ''
-WHERE sg.TallyBySubPop == 0 AND st.Method NOT IN ('3P', 'F3P', 'P3P', 'S3P')
-
-
 -- ************** Tree **************
 CREATE TABLE Tree (
     Tree_CN INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -2560,6 +2402,7 @@ CREATE TABLE Tree (
     UNIQUE (TreeID),
 
     CHECK (TreeID LIKE '________-____-____-____-____________'),
+    CHECK (TreeNumber > 0)
     CHECK (CountOrMeasure IN ('C', 'M', 'I')),
     CHECK (LiveDead IN ('L', 'D') OR LiveDead IS NULL),
 
@@ -2700,68 +2543,6 @@ CREATE UNIQUE INDEX UIX_Tree_TreeNumber_CuttingUnitCode_PlotNumber_StratumCode_C
 
 CREATE UNIQUE INDEX UIX_Tree_TreeNumber_CuttingUnitCode_CruiseID ON Tree
     (TreeNumber, CuttingUnitCode, CruiseID) WHERE PlotNumber IS NULL
-
-
--- ************** TreeAuditError **************
-CREATE VIEW TreeAuditError AS
-WITH
--- return just measure trees
-measureTrees AS (
-    SELECT
-        t.Tree_CN,
-        t.CruiseID,
-        t.TreeID,
-        t.StratumCode,
-        t.SpeciesCode,
-        t.LiveDead,
-        sg.PrimaryProduct
-    FROM Tree AS t
-    JOIN SampleGroup AS sg USING (SampleGroupCode, StratumCode, CruiseID)
-    WHERE t.CountOrMeasure = 'M'),
-
--- expands TreeAuditRuleSelector to include Field, Min, Max
-treeAuditRuleSelector_Epanded AS (
-    SELECT
-        tar.CruiseID,
-        SpeciesCode,
-        LiveDead,
-        PrimaryProduct,
-        tar.Field,
-        Min,
-        Max,
-        tar.TreeAuditRuleID
-    FROM TreeAuditRuleSelector AS tars
-    JOIN TreeAuditRule AS tar USING (TreeAuditRuleID))
-
-SELECT
-    Tree_CN,
-    t.CruiseID,
-    TreeID,
-    TreeAuditRuleID,
-    tar.Field AS Field,
-    (CASE WHEN res.TreeAuditResolution_CN IS NULL THEN 0 ELSE 1 END)  AS IsResolved,
-    (CASE
-    WHEN tar.Min IS NOT NULL AND (tfv.ValueReal < tar.Min) THEN tar.Field || ' must be greater than ' || tar.Min
-    WHEN tar.Max IS NOT NULL AND (tfv.ValueReal > tar.Max) THEN tar.Field || ' must be less than ' || tar.Max
-    ELSE 'Validation Error' END) AS Message,
-    res.Resolution
-FROM measureTrees AS t
-JOIN TreeFieldSetup AS tfs USING (StratumCode, CruiseID)
-JOIN TreeFieldValue_All AS tfv USING (TreeID, Field)
--- get audit rule
-JOIN TreeAuditRule AS tar
-    ON tar.Field = tfs.Field AND tar.CruiseID = t.CruiseID
-        AND EXISTS (SELECT * FROM TreeAuditRuleSelector AS tars WHERE
-            (tars.SpeciesCode IS NULL OR tars.SpeciesCode = t.SpeciesCode)
-            AND (tars.LiveDead IS NULL OR tars.LiveDead = t.LiveDead)
-            AND (tars.PrimaryProduct IS NULL OR tars.PrimaryProduct = t.PrimaryProduct)
-            AND tars.TreeAuditRuleID = tar.TreeAuditRuleID
-            AND tars.CruiseID = t.CruiseID)
-LEFT JOIN TreeAuditResolution AS res USING (TreeAuditRuleID, TreeID)
-WHERE
-    (tfv.ValueReal IS NOT NULL AND
-    (tar.Min IS NOT NULL AND tfv.ValueReal < tar.Min)
-    OR (tar.Max IS NOT NULL AND tfv.ValueReal > tar.Max))
 
 
 -- ************** TreeAuditResolution **************
@@ -2945,25 +2726,45 @@ CREATE TABLE TreeDefaultValue (
     CruiseID TEXT NOT NULL COLLATE NOCASE,
     SpeciesCode TEXT COLLATE NOCASE,
     PrimaryProduct TEXT COLLATE NOCASE,
-    CullPrimary REAL DEFAULT 0.0,
+
+    CullPrimary REAL DEFAULT 0.0 ,
     CullPrimaryDead REAL DEFAULT 0.0,
+
     HiddenPrimary REAL DEFAULT 0.0,
     HiddenPrimaryDead REAL DEFAULT 0.0,
+
     TreeGrade TEXT DEFAULT '0' COLLATE NOCASE,
     TreeGradeDead TEXT DEFAULT '0' COLLATE NOCASE,
+
     CullSecondary REAL DEFAULT 0.0,
     HiddenSecondary REAL DEFAULT 0.0,
     Recoverable REAL DEFAULT 0.0,
     MerchHeightLogLength INTEGER DEFAULT 0,
     MerchHeightType TEXT DEFAULT 'F' ,
+
     FormClass REAL DEFAULT 0.0,
     BarkThicknessRatio REAL DEFAULT 0.0,
     AverageZ REAL DEFAULT 0.0,
     ReferenceHeightPercent REAL DEFAULT 0.0,
+
     CreatedBy TEXT DEFAULT 'none',
     Created_TS DATETIME DEFAULT (CURRENT_TIMESTAMP),
     ModifiedBy TEXT,
     Modified_TS DATETIME,
+
+    CHECK (CullPrimary IS NULL OR CullPrimary BETWEEN 0.0 AND 100.0),
+    CHECK (CullPrimaryDead IS NULL OR CullPrimaryDead BETWEEN 0.0 AND 100.0),
+
+    CHECK (HiddenPrimary IS NULL OR HiddenPrimary BETWEEN 0.0 AND 100.0),
+    CHECK (HiddenPrimaryDead IS NULL OR HiddenPrimaryDead BETWEEN 0.0 AND 100.0),
+
+    CHECK (TreeGrade IN ('0', '1', '2', '3', '4', '5', '6', '7', '8', '9') OR TreeGrade IS NULL),
+    CHECK (TreeGradeDead IN ('0', '1', '2', '3', '4', '5', '6', '7', '8', '9') OR TreeGradeDead IS NULL),
+
+    CHECK (CullSecondary IS NULL OR CullPrimary BETWEEN 0.0 AND 100.0),
+    CHECK (HiddenSecondary IS NULL OR CullPrimary BETWEEN 0.0 AND 100.0),
+    CHECK (Recoverable IS NULL OR CullPrimary BETWEEN 0.0 AND 100.0),
+    CHECK (MerchHeightLogLength IS NULL OR MerchHeightLogLength >= 0),
 
     FOREIGN KEY (CruiseID) REFERENCES Cruise (CruiseID) ON DELETE CASCADE
     --FOREIGN KEY (SpeciesCode, CruiseID) REFERENCES Species (SpeciesCode, CruiseID) ON UPDATE CASCADE ON DELETE CASCADE
@@ -3092,167 +2893,6 @@ CREATE INDEX NIX_TreeDefaultValue_Tombstone_CruiseID_SpeciesCode_PrimaryProduct 
 (CruiseID, ifnull(SpeciesCode, '') COLLATE NOCASE, ifnull(PrimaryProduct, '') COLLATE NOCASE)
 
 
--- ************** TreeError **************
-CREATE VIEW TreeError AS
-
-WITH
-    treeError_speciesCode AS (
-    SELECT
-        t.TreeID,
-        t.CruiseID,
-        'e' AS Level,
-        'Species Code Is Missing' AS Message,
-        'SpeciesCode' AS Field
-    FROM Tree AS t
-    WHERE t.SpeciesCode IS NULL OR t.SpeciesCode = ''),
-
-    treeError_liveDead AS (
-    SELECT
-        t.TreeID,
-        t.CruiseID,
-        'e' AS Level,
-        'Live/Dead Value Is Missing' AS Message,
-        'LiveDead' AS Field
-    FROM Tree AS t
-    WHERE t.LiveDead IS NULL OR t.LiveDead = ''),
-
-    treeError_heights AS (
-    SELECT
-        t.TreeID,
-        t.CruiseID,
-        'e' AS Level,
-        'Aleast One Height Parameter Must Be Greater Than 0' AS Message,
-        'heights' AS Field
-    FROM Tree AS t
-    LEFT JOIN TreeMeasurment AS tm USING (TreeID)
-    WHERE t.CountOrMeasure = 'M'  
-        AND ifnull(tm.TotalHeight, 0) <=0 
-        AND ifnull(tm.MerchHeightPrimary, 0) <= 0 
-        AND ifnull(tm.MerchHeightSecondary, 0) <= 0 
-        AND ifnull(tm.UpperStemHeight, 0) <= 0),
-
-    treeError_diameters AS (
-    SELECT
-        t.TreeID,
-        t.CruiseID,
-        'e' AS Level,
-        'DBH or DRC must be greater than 0' AS Message,
-        'diameters' AS Field
-    FROM Tree AS t
-    LEFT JOIN TreeMeasurment AS tm USING (TreeID)
-    WHERE t.CountOrMeasure = 'M' 
-        AND ifnull(tm.DBH, 0) <=0 
-        AND ifnull(tm.DRC, 0) <=0),
-
-    treeError_merchHeightSecondary AS (
-    SELECT
-        t.TreeID,
-        t.CruiseID,
-        'e' AS Level,
-        'Merch Height Secondary Must Be Greater Than or Equal Merch Height Primary' AS Message,
-        'MerchHeightSecondary' AS Field
-    FROM Tree AS t
-    JOIN TreeMeasurment AS tm USING (TreeID)
-    WHERE t.CountOrMeasure = 'M' 
-        AND tm.MerchHeightSecondary > 0 
-        AND tm.MerchHeightSecondary <= tm.MerchHeightPrimary),
-
-    treeError_upperStemHeight AS (
-    SELECT
-        t.TreeID,
-        t.CruiseID,
-        'e' AS Level,
-        'Upper Stem Height Must Be Greater Than or Equal Merch Height Primary' AS Message,
-        'UpperStemHeight' AS Field
-    FROM Tree AS t
-    JOIN TreeMeasurment AS tm USING (TreeID)
-    WHERE t.CountOrMeasure = 'M' 
-        AND tm.UpperStemHeight > 0 
-        AND tm.UpperStemHeight < tm.MerchHeightPrimary),
-
-    treeError_upperStemDiameter AS (
-    SELECT
-        t.TreeID,
-        t.CruiseID,
-        'e' AS Level,
-        'Upper Stem Diameter Must Be Smaller Than DBH' AS Message,
-        'UpperStemDiameter' AS Field
-    FROM Tree AS t
-    JOIN TreeMeasurment AS tm USING (TreeID)
-    WHERE t.CountOrMeasure = 'M' 
-        AND tm.UpperStemDiameter > 0 
-        AND tm.UpperStemDiameter >= tm.DBH),
-
-    treeError_topDIBSecondary AS (
-    SELECT
-        t.TreeID,
-        t.CruiseID,
-        'e' AS Level,
-        'Top DIB Secondary must be less Top DIB Primary' AS Message,
-        'TopDIBSecondary' AS Field
-    FROM Tree AS t
-    JOIN TreeMeasurment AS tm USING (TreeID)
-    WHERE t.CountOrMeasure = 'M' 
-        AND tm.TopDIBSecondary > 0 
-        AND tm.TopDIBSecondary > tm.TopDIBPrimary),
-
-    treeError_seenDefectPrimary AS (
-    SELECT
-        t.TreeID,
-        t.CruiseID,
-        'e' AS Level,
-        'Seen Defect Primary must be greater than Recoverable Primary' AS Message,
-        'SeenDefectPrimary' AS Field
-    FROM Tree AS t
-    JOIN TreeMeasurment AS tm USING (TreeID)
-    WHERE t.CountOrMeasure = 'M' 
-        AND tm.SeenDefectPrimary > 0 
-        AND tm.SeenDefectPrimary < tm.RecoverablePrimary)
-
-SELECT
-	tae.TreeID,
-    tae.CruiseID,
-	tae.TreeAuditRuleID,
-	'W' AS Level,
-	tae.Message,
-	tae.Field,
-    tae.IsResolved,
-	tar.Resolution,
-	tar.Initials AS ResolutionInitials
-FROM TreeAuditError AS tae
-LEFT JOIN TreeAuditResolution AS tar USING (TreeAuditRuleID, TreeID)
-UNION ALL
-SELECT
-    te.TreeID,
-    te.CruiseID,
-    null AS TreeAuditRuleID,
-    'E' AS Level,
-    te.Message,
-    te.Field,
-    0 AS IsResolved,
-    null AS Resolution,
-    null AS ResolutionInitials
-FROM (
-    SELECT * FROM treeError_speciesCode
-    UNION ALL
-    SELECT * FROM treeError_liveDead
-    UNION ALL
-    SELECT * FROM treeError_heights
-    UNION ALL
-    SELECT * FROM treeError_diameters
-    UNION ALL
-    SELECT * FROM treeError_merchHeightSecondary
-    UNION ALL
-    SELECT * FROM treeError_upperStemHeight
-    UNION ALL
-    SELECT * FROM treeError_upperStemDiameter
-    UNION ALL
-    SELECT * FROM treeError_topDIBSecondary
-    UNION ALL
-    SELECT * FROM treeError_seenDefectPrimary
-) AS te
-
-
 -- ************** TreeField **************
 CREATE TABLE TreeField (
     TreeField_CN INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -3366,24 +3006,6 @@ CREATE UNIQUE INDEX UIX_TreeFieldSetup_SampleGroupCode_StratumCode_Field_CruiseI
     (ifnull(SampleGroupCode, ''), StratumCode, Field, CruiseID)
 
 
--- ************** TreeFieldSetupDefault **************
-CREATE VIEW TreeFieldSetupDefault AS
-    SELECT
-    0 AS TreeFieldSetupDefault_CN,
-    StratumTemplateName || CruiseID AS StratumDefaultID,
-    null AS SampleGroupDefaultID,
-    Field,
-    FieldOrder,
-    IsHidden,
-    IsLocked,
-    -- value type determined by TreeField.DbType
-    DefaultValueInt,
-    DefaultValueReal,
-    DefaultValueBool,
-    DefaultValueText
-FROM StratumTemplateTreeFieldSetup
-
-
 -- ************** TreeFieldSetup_Tombstone **************
 CREATE TABLE TreeFieldSetup_Tombstone (
     CruiseID TEXT NOT NULL COLLATE NOCASE,
@@ -3452,35 +3074,6 @@ CREATE INDEX NIX_TreeFieldValue_TreeID ON TreeFieldValue ('TreeID')
 CREATE INDEX NIX_TreeFieldValue_Field ON TreeFieldValue ('Field')
 
 
--- ************** TreeFieldValue_All **************
-CREATE VIEW TreeFieldValue_All AS
-SELECT
-    TreeID,
-    Field,
-    ValueInt,
-    ValueReal,
-    ValueBool,
-    ValueText,
-    CreatedBy,
-    Created_TS,
-    ModifiedBy,
-    Modified_TS
-FROM TreeFieldValue_TreeMeasurment
-UNION ALL
-SELECT
-    TreeID,
-    Field,
-    ValueInt,
-    ValueReal,
-    ValueBool,
-    ValueText,
-    CreatedBy,
-    Created_TS,
-    ModifiedBy,
-    Modified_TS
-FROM TreeFieldValue
-
-
 -- ************** TreeFieldValue_Tombstone **************
 CREATE TABLE TreeFieldValue_Tombstone (
     TreeID TEXT NOT NULL,
@@ -3499,124 +3092,6 @@ CREATE TABLE TreeFieldValue_Tombstone (
 
 CREATE INDEX NIX_TreeFieldValue_Tombstone_TreeID_Field ON TreeFieldValue_Tombstone
 (TreeID, Field)
-
-
--- ************** TreeFieldValue_TreeMeasurment **************
-CREATE VIEW TreeFieldValue_TreeMeasurment AS
-SELECT
-    tm.TreeID,
-    tf.Field,
-    tf.DbType,
-    (CASE tf.Field
-        WHEN 'SeenDefectPrimary' THEN SeenDefectPrimary
-        WHEN 'SeenDefectSecondary' THEN SeenDefectSecondary
-        WHEN 'RecoverablePrimary' THEN RecoverablePrimary
-        WHEN 'HiddenPrimary' THEN HiddenPrimary
-        WHEN 'HeightToFirstLiveLimb' THEN HeightToFirstLiveLimb
-        WHEN 'PoleLength' THEN PoleLength
-        WHEN 'CrownRatio' THEN CrownRatio
-        WHEN 'DBH' THEN DBH
-        WHEN 'DRC' THEN DRC
-        WHEN 'TotalHeight' THEN TotalHeight
-        WHEN 'MerchHeightPrimary' THEN MerchHeightPrimary
-        WHEN 'MerchHeightSecondary' THEN MerchHeightSecondary
-        WHEN 'FormClass' THEN FormClass
-        WHEN 'UpperStemDiameter' THEN UpperStemDiameter
-        WHEN 'UpperStemHeight' THEN UpperStemHeight
-        WHEN 'DBHDoubleBarkThickness' THEN DBHDoubleBarkThickness
-        WHEN 'TopDIBPrimary' THEN TopDIBPrimary
-        WHEN 'TopDIBSecondary' THEN TopDIBSecondary
-        WHEN 'DiameterAtDefect' THEN DiameterAtDefect
-        WHEN 'VoidPercent' THEN VoidPercent
-        WHEN 'Slope' THEN Slope
-        WHEN 'Aspect' THEN Aspect
-        --WHEN 'XCoordinate' THEN XCoordinate
-        --WHEN 'YCoordinate' THEN YCoordinate
-        --WHEN 'ZCoordinate' THEN ZCoordinate
-        ELSE NULL END) AS ValueReal,
-
-    (CASE tf.Field
-        WHEN 'IsFallBuckScale' THEN IsFallBuckScale
-        ELSE NULL END) AS ValueBool,
-
-    (CASE tf.Field
-        WHEN 'Grade' THEN Grade
-        WHEN 'ClearFace' THEN ClearFace
-        WHEN 'DefectCode' THEN DefectCode
-        WHEN 'Remarks' THEN Remarks
-        WHEN 'MetaData' THEN MetaData
-        WHEN 'Initials' THEN Initials
-        ELSE NULL END) AS ValueText,
-
-    NULL AS ValueInt,
-    tm.CreatedBy,
-    tm.Created_TS,
-    tm.ModifiedBy,
-    tm.Modified_TS
-
-FROM TreeMeasurment AS tm
-CROSS JOIN TreeField AS tf
-WHERE tf.IsTreeMeasurmentField = 1
-
-
--- ************** TreeFieldValue_TreeMeasurment_Filtered **************
-CREATE VIEW TreeFieldValue_TreeMeasurment_Filtered AS
-SELECT
-    tm.TreeID,
-    tf.Field,
-    tf.DbType,
-    (CASE tf.Field
-        WHEN 'SeenDefectPrimary' THEN SeenDefectPrimary
-        WHEN 'SeenDefectSecondary' THEN SeenDefectSecondary
-        WHEN 'RecoverablePrimary' THEN RecoverablePrimary
-        WHEN 'HiddenPrimary' THEN HiddenPrimary
-        WHEN 'HeightToFirstLiveLimb' THEN HeightToFirstLiveLimb
-        WHEN 'PoleLength' THEN PoleLength
-        WHEN 'CrownRatio' THEN CrownRatio
-        WHEN 'DBH' THEN DBH
-        WHEN 'DRC' THEN DRC
-        WHEN 'TotalHeight' THEN TotalHeight
-        WHEN 'MerchHeightPrimary' THEN MerchHeightPrimary
-        WHEN 'MerchHeightSecondary' THEN MerchHeightSecondary
-        WHEN 'FormClass' THEN FormClass
-        WHEN 'UpperStemDiameter' THEN UpperStemDiameter
-        WHEN 'UpperStemHeight' THEN UpperStemHeight
-        WHEN 'DBHDoubleBarkThickness' THEN DBHDoubleBarkThickness
-        WHEN 'TopDIBPrimary' THEN TopDIBPrimary
-        WHEN 'TopDIBSecondary' THEN TopDIBSecondary
-        WHEN 'DiameterAtDefect' THEN DiameterAtDefect
-        WHEN 'VoidPercent' THEN VoidPercent
-        WHEN 'Slope' THEN Slope
-        WHEN 'Aspect' THEN Aspect
-        --WHEN 'XCoordinate' THEN XCoordinate
-        --WHEN 'YCoordinate' THEN YCoordinate
-        --WHEN 'ZCoordinate' THEN ZCoordinate
-        ELSE NULL END) AS ValueReal,
-
-    (CASE tf.Field
-        WHEN 'IsFallBuckScale' THEN IsFallBuckScale
-        ELSE NULL END) AS ValueBool,
-
-    (CASE tf.Field
-        WHEN 'Grade' THEN Grade
-        WHEN 'ClearFace' THEN ClearFace
-        WHEN 'DefectCode' THEN DefectCode
-        WHEN 'Remarks' THEN Remarks
-        WHEN 'MetaData' THEN MetaData
-        WHEN 'Initials' THEN Initials
-        ELSE NULL END) AS ValueText,
-
-    NULL AS ValueInt,
-    tm.CreatedBy,
-    tm.Created_TS,
-    tm.ModifiedBy,
-    tm.Modified_TS
-
-FROM TreeMeasurment AS tm
-JOIN Tree AS t USING (TreeID)
-CROSS JOIN TreeFieldSetup AS tfs
-JOIN TreeField AS tf USING (Field)
-WHERE tf.IsTreeMeasurmentField = 1
 
 
 -- ************** TreeLocation **************
@@ -3769,6 +3244,35 @@ CREATE TABLE TreeMeasurment (
     ModifiedBy TEXT,
     Modified_TS DATETIME,
 
+    CHECK (SeenDefectPrimary IS NULL OR SeenDefectPrimary BETWEEN 0.0 AND 100.0),
+    CHECK (SeenDefectSecondary IS NULL OR SeenDefectSecondary BETWEEN 0.0 AND 100.0),
+    CHECK (RecoverablePrimary IS NULL OR RecoverablePrimary BETWEEN 0.0 AND 100.0),
+    CHECK (HiddenPrimary IS NULL OR HiddenPrimary BETWEEN 0.0 AND 100.0),
+    CHECK (Grade IS NULL OR Grade IN ('0', '1', '2', '3', '4', '5', '6', '7', '8', '9')),
+
+    CHECK (HeightToFirstLiveLimb IS NULL OR HeightToFirstLiveLimb >= 0.0),
+    CHECK (PoleLength IS NULL OR PoleLength >= 0.0),
+    CHECK (DBH IS NULL OR DBH >= 0.0),
+
+    CHECK (DRC IS NULL OR DRC >= 0.0),
+    CHECK (TotalHeight IS NULL OR TotalHeight >= 0.0),
+    CHECK (MerchHeightPrimary IS NULL OR MerchHeightPrimary >= 0.0),
+    CHECK (MerchHeightSecondary IS NULL OR MerchHeightSecondary >= 0.0),
+    CHECK (FormClass IS NULL OR FormClass >= 0.0),
+
+    CHECK (UpperStemDiameter IS NULL OR UpperStemDiameter >= 0.0),
+    CHECK (UpperStemHeight IS NULL OR UpperStemHeight >= 0.0),
+    CHECK (DBHDoubleBarkThickness IS NULL OR DBHDoubleBarkThickness >= 0.0),
+    CHECK (TopDIBPrimary IS NULL OR TopDIBPrimary >= 0.0),
+    CHECK (TopDIBSecondary IS NULL OR TopDIBSecondary >= 0.0),
+
+    CHECK (DiameterAtDefect IS NULL OR DiameterAtDefect >= 0.0),
+    CHECK (VoidPercent IS NULL OR VoidPercent BETWEEN 0.0 AND 100.0),
+    CHECK (Slope IS NULL OR Slope BETWEEN 0.0 AND 200.0), -- value of 200 would be a 90degree slope
+    CHECK (Aspect IS NULL OR Aspect BETWEEN 0.0 AND 360.0),
+
+    CHECK (IsFallBuckScale IS NULL OR IsFallBuckScale IN (0, 1)),
+
     UNIQUE (TreeID),
 
     FOREIGN KEY (TreeID) REFERENCES Tree (TreeID) ON DELETE CASCADE ON UPDATE CASCADE
@@ -3915,127 +3419,6 @@ END
 
 
 
--- ************** TreeMeasurment_DefaultResolved **************
-CREATE VIEW TreeMeasurment_DefaultResolved AS 
-SELECT
-        tm.TreeID,
-
-        -- for each tree field we will resolve the value by taking the first non-null value in the following order
-            -- first try reading the value from the TreeMeasurments table, treating the default value (0.0, 0, '') depending on data type as null
-            -- next we will try getting the default value from the TreeFieldSetup table, by matching with either the stratum level or samplegroup level field setup
-            -- if the field is a field in the TreeDefaultValues table we will get populate the value from the tree default value table
-            -- last we will use the value in the TreeMeasurments table which we know is the default value for the field...
-                -- note: should we just force the 
-
-
-        -- MEASURMENT FIELDS
-        coalesce(nullif(tm.SeenDefectPrimary, 0.0),
-                (SELECT tfs.DefaultValueReal FROM TreeFieldSetup AS tfs WHERE tfs.CruiseID = t.CruiseID AND t.StratumCode = tfs.StratumCode AND (t.SampleGroupCode = tfs.SampleGroupCode OR tfs.SampleGroupCode IS NULL) AND tfs.Field = 'SeenDefectPrimary' ORDER BY tfs.SampleGroupCode DESC LIMIT 1),
-                tm.SeenDefectPrimary) AS SeenDefectPrimary,
-        coalesce(nullif(tm.SeenDefectSecondary, 0.0), 
-                (SELECT DefaultValueReal FROM TreeFieldSetup AS tfs WHERE tfs.CruiseID = t.CruiseID AND t.StratumCode = tfs.StratumCode AND (t.SampleGroupCode = tfs.SampleGroupCode OR tfs.SampleGroupCode IS NULL) AND tfs.Field = 'SeenDefectSecondary' ORDER BY tfs.SampleGroupCode DESC LIMIT 1),
-                tm.SeenDefectSecondary) AS SeenDefectSecondary,
-        coalesce(nullif(tm.RecoverablePrimary, 0.0), 
-                (SELECT DefaultValueReal FROM TreeFieldSetup AS tfs WHERE tfs.CruiseID = t.CruiseID AND t.StratumCode = tfs.StratumCode AND (t.SampleGroupCode = tfs.SampleGroupCode OR tfs.SampleGroupCode IS NULL) AND tfs.Field = 'RecoverablePrimary' ORDER BY tfs.SampleGroupCode DESC LIMIT 1),
-                tdv.Recoverable, -- if tree RecoverablePrimary value not defined get value from TDV
-                tm.RecoverablePrimary) AS RecoverablePrimary,
-
-        coalesce(nullif(tm.HiddenPrimary, 0.0), 
-                (SELECT DefaultValueReal FROM TreeFieldSetup AS tfs WHERE tfs.CruiseID = t.CruiseID AND t.StratumCode = tfs.StratumCode AND (t.SampleGroupCode = tfs.SampleGroupCode OR tfs.SampleGroupCode IS NULL) AND tfs.Field = 'HiddenPrimary' ORDER BY tfs.SampleGroupCode DESC LIMIT 1),
-                CASE WHEN t.LiveDead != 'D' THEN tdv.HiddenPrimary ELSE tdv.HiddenPrimaryDead END, -- if tree HiddenPrimary value not defined get value from TDV
-                tm.HiddenPrimary) AS HiddenPrimary,
-
-        coalesce(nullif(tm.Grade, ''), 
-                (SELECT DefaultValueText FROM TreeFieldSetup AS tfs WHERE tfs.CruiseID = t.CruiseID AND t.StratumCode = tfs.StratumCode AND (t.SampleGroupCode = tfs.SampleGroupCode OR tfs.SampleGroupCode IS NULL) AND tfs.Field = 'Grade' ORDER BY tfs.SampleGroupCode DESC LIMIT 1),
-                CASE WHEN t.LiveDead != 'D' THEN tdv.TreeGrade ELSE tdv.TreeGradeDead END, -- if tree Grade value not defined get value from TDV
-                tm.Grade,
-                '0' ) AS Grade, -- if Grade not defined on tree or in defaults use '0' as default value
-
-        coalesce(nullif(tm.HeightToFirstLiveLimb, 0.0), 
-                (SELECT DefaultValueReal FROM TreeFieldSetup AS tfs WHERE tfs.CruiseID = t.CruiseID AND t.StratumCode = tfs.StratumCode AND (t.SampleGroupCode = tfs.SampleGroupCode OR tfs.SampleGroupCode IS NULL) AND tfs.Field = 'HeightToFirstLiveLimb' ORDER BY tfs.SampleGroupCode DESC LIMIT 1),
-                tm.HeightToFirstLiveLimb) AS HeightToFirstLiveLimb,
-        coalesce(nullif(tm.PoleLength, 0.0), 
-                (SELECT DefaultValueReal FROM TreeFieldSetup AS tfs WHERE tfs.CruiseID = t.CruiseID AND t.StratumCode = tfs.StratumCode AND (t.SampleGroupCode = tfs.SampleGroupCode OR tfs.SampleGroupCode IS NULL) AND tfs.Field = 'PoleLength' ORDER BY tfs.SampleGroupCode DESC LIMIT 1),
-                tm.PoleLength) AS PoleLength,
-        coalesce(nullif(tm.ClearFace, ''), 
-                (SELECT DefaultValueText FROM TreeFieldSetup AS tfs WHERE tfs.CruiseID = t.CruiseID AND t.StratumCode = tfs.StratumCode AND (t.SampleGroupCode = tfs.SampleGroupCode OR tfs.SampleGroupCode IS NULL) AND tfs.Field = 'ClearFace' ORDER BY tfs.SampleGroupCode DESC LIMIT 1),
-                tm.ClearFace) AS ClearFace,
-        coalesce(nullif(tm.CrownRatio, 0.0), 
-                (SELECT DefaultValueReal FROM TreeFieldSetup AS tfs WHERE tfs.CruiseID = t.CruiseID AND t.StratumCode = tfs.StratumCode AND (t.SampleGroupCode = tfs.SampleGroupCode OR tfs.SampleGroupCode IS NULL) AND tfs.Field = 'CrownRatio' ORDER BY tfs.SampleGroupCode DESC LIMIT 1),
-                tm.CrownRatio) AS CrownRatio,
-        coalesce(nullif(tm.DBH, 0.0), 
-                (SELECT DefaultValueReal FROM TreeFieldSetup AS tfs WHERE tfs.CruiseID = t.CruiseID AND t.StratumCode = tfs.StratumCode AND (t.SampleGroupCode = tfs.SampleGroupCode OR tfs.SampleGroupCode IS NULL) AND tfs.Field = 'DBH' ORDER BY tfs.SampleGroupCode DESC LIMIT 1),
-                tm.DBH) AS DBH,
-
-        coalesce(nullif(tm.DRC, 0.0), 
-                (SELECT DefaultValueReal FROM TreeFieldSetup AS tfs WHERE tfs.CruiseID = t.CruiseID AND t.StratumCode = tfs.StratumCode AND (t.SampleGroupCode = tfs.SampleGroupCode OR tfs.SampleGroupCode IS NULL) AND tfs.Field = 'DRC' ORDER BY tfs.SampleGroupCode DESC LIMIT 1),
-                tm.DRC) AS DRC,
-        coalesce(nullif(tm.TotalHeight, 0.0), 
-                (SELECT DefaultValueReal FROM TreeFieldSetup AS tfs WHERE tfs.CruiseID = t.CruiseID AND t.StratumCode = tfs.StratumCode AND (t.SampleGroupCode = tfs.SampleGroupCode OR tfs.SampleGroupCode IS NULL) AND tfs.Field = 'TotalHeight' ORDER BY tfs.SampleGroupCode DESC LIMIT 1),
-                tm.TotalHeight) AS TotalHeight,
-        coalesce(nullif(tm.MerchHeightPrimary, 0.0), 
-                (SELECT DefaultValueReal FROM TreeFieldSetup AS tfs WHERE tfs.CruiseID = t.CruiseID AND t.StratumCode = tfs.StratumCode AND (t.SampleGroupCode = tfs.SampleGroupCode OR tfs.SampleGroupCode IS NULL) AND tfs.Field = 'MerchHeightPrimary' ORDER BY tfs.SampleGroupCode DESC LIMIT 1),
-                tm.MerchHeightPrimary) AS MerchHeightPrimary,
-        coalesce(nullif(tm.MerchHeightSecondary, 0.0), 
-                (SELECT DefaultValueReal FROM TreeFieldSetup AS tfs WHERE tfs.CruiseID = t.CruiseID AND t.StratumCode = tfs.StratumCode AND (t.SampleGroupCode = tfs.SampleGroupCode OR tfs.SampleGroupCode IS NULL) AND tfs.Field = 'MerchHeightSecondary' ORDER BY tfs.SampleGroupCode DESC LIMIT 1),
-                tm.MerchHeightSecondary) AS MerchHeightSecondary,
-        coalesce(nullif(tm.FormClass, 0.0), 
-                (SELECT DefaultValueReal FROM TreeFieldSetup AS tfs WHERE tfs.CruiseID = t.CruiseID AND t.StratumCode = tfs.StratumCode AND (t.SampleGroupCode = tfs.SampleGroupCode OR tfs.SampleGroupCode IS NULL) AND tfs.Field = 'FormClass' ORDER BY tfs.SampleGroupCode DESC LIMIT 1),
-                tdv.FormClass, -- if tree FormClass value not defined get value from TDV
-                tm.FormClass) AS FormClass,
-
-        coalesce(nullif(tm.UpperStemDiameter, 0.0), 
-                (SELECT DefaultValueReal FROM TreeFieldSetup AS tfs WHERE tfs.CruiseID = t.CruiseID AND t.StratumCode = tfs.StratumCode AND (t.SampleGroupCode = tfs.SampleGroupCode OR tfs.SampleGroupCode IS NULL) AND tfs.Field = 'UpperStemDiameter' ORDER BY tfs.SampleGroupCode DESC LIMIT 1),
-                tm.UpperStemDiameter) AS UpperStemDiameter,
-        coalesce(nullif(tm.UpperStemHeight, 0.0), 
-                (SELECT DefaultValueReal FROM TreeFieldSetup AS tfs WHERE tfs.CruiseID = t.CruiseID AND t.StratumCode = tfs.StratumCode AND (t.SampleGroupCode = tfs.SampleGroupCode OR tfs.SampleGroupCode IS NULL) AND tfs.Field = 'UpperStemHeight' ORDER BY tfs.SampleGroupCode DESC LIMIT 1),
-                tm.UpperStemHeight) AS UpperStemHeight,
-        coalesce(nullif(tm.DBHDoubleBarkThickness, 0.0), 
-                (SELECT DefaultValueReal FROM TreeFieldSetup AS tfs WHERE tfs.CruiseID = t.CruiseID AND t.StratumCode = tfs.StratumCode AND (t.SampleGroupCode = tfs.SampleGroupCode OR tfs.SampleGroupCode IS NULL) AND tfs.Field = 'DBHDoubleBarkThickness' ORDER BY tfs.SampleGroupCode DESC LIMIT 1),
-                tm.DBHDoubleBarkThickness) AS DBHDoubleBarkThickness,
-        coalesce(nullif(tm.TopDIBPrimary, 0.0), 
-                (SELECT DefaultValueReal FROM TreeFieldSetup AS tfs WHERE tfs.CruiseID = t.CruiseID AND t.StratumCode = tfs.StratumCode AND (t.SampleGroupCode = tfs.SampleGroupCode OR tfs.SampleGroupCode IS NULL) AND tfs.Field = 'TopDIBPrimary' ORDER BY tfs.SampleGroupCode DESC LIMIT 1),
-                tm.TopDIBPrimary) AS TopDIBPrimary,
-        coalesce(nullif(tm.TopDIBSecondary, 0.0), 
-                (SELECT DefaultValueReal FROM TreeFieldSetup AS tfs WHERE tfs.CruiseID = t.CruiseID AND t.StratumCode = tfs.StratumCode AND (t.SampleGroupCode = tfs.SampleGroupCode OR tfs.SampleGroupCode IS NULL) AND tfs.Field = 'TopDIBSecondary' ORDER BY tfs.SampleGroupCode DESC LIMIT 1),
-                tm.TopDIBSecondary) AS TopDIBSecondary,
-
-        coalesce(nullif(tm.DefectCode, ''), 
-                (SELECT DefaultValueText FROM TreeFieldSetup AS tfs WHERE tfs.CruiseID = t.CruiseID AND t.StratumCode = tfs.StratumCode AND (t.SampleGroupCode = tfs.SampleGroupCode OR tfs.SampleGroupCode IS NULL) AND tfs.Field = 'DefectCode' ORDER BY tfs.SampleGroupCode DESC LIMIT 1),
-                tm.DefectCode) AS DefectCode,
-        coalesce(nullif(tm.DiameterAtDefect, 0.0), 
-                (SELECT DefaultValueReal FROM TreeFieldSetup AS tfs WHERE tfs.CruiseID = t.CruiseID AND t.StratumCode = tfs.StratumCode AND (t.SampleGroupCode = tfs.SampleGroupCode OR tfs.SampleGroupCode IS NULL) AND tfs.Field = 'DiameterAtDefect' ORDER BY tfs.SampleGroupCode DESC LIMIT 1),
-                tm.DiameterAtDefect) AS DiameterAtDefect,
-        coalesce(nullif(tm.VoidPercent, 0.0), 
-                (SELECT DefaultValueReal FROM TreeFieldSetup AS tfs WHERE tfs.CruiseID = t.CruiseID AND t.StratumCode = tfs.StratumCode AND (t.SampleGroupCode = tfs.SampleGroupCode OR tfs.SampleGroupCode IS NULL) AND tfs.Field = 'VoidPercent' ORDER BY tfs.SampleGroupCode DESC LIMIT 1),
-                tm.VoidPercent) AS VoidPercent,
-        coalesce(nullif(tm.Slope, 0.0), 
-                (SELECT DefaultValueReal FROM TreeFieldSetup AS tfs WHERE tfs.CruiseID = t.CruiseID AND t.StratumCode = tfs.StratumCode AND (t.SampleGroupCode = tfs.SampleGroupCode OR tfs.SampleGroupCode IS NULL) AND tfs.Field = 'Slope' ORDER BY tfs.SampleGroupCode DESC LIMIT 1),
-                tm.Slope) AS Slope,
-        coalesce(nullif(tm.Aspect, 0.0), 
-                (SELECT DefaultValueReal FROM TreeFieldSetup AS tfs WHERE tfs.CruiseID = t.CruiseID AND t.StratumCode = tfs.StratumCode AND (t.SampleGroupCode = tfs.SampleGroupCode OR tfs.SampleGroupCode IS NULL) AND tfs.Field = 'Aspect' ORDER BY tfs.SampleGroupCode DESC LIMIT 1),
-                tm.Aspect) AS Aspect,
-
-        coalesce(nullif(tm.Remarks, ''), 
-                (SELECT DefaultValueText FROM TreeFieldSetup AS tfs WHERE tfs.CruiseID = t.CruiseID AND t.StratumCode = tfs.StratumCode AND (t.SampleGroupCode = tfs.SampleGroupCode OR tfs.SampleGroupCode IS NULL) AND tfs.Field = 'Remarks' ORDER BY tfs.SampleGroupCode DESC LIMIT 1),
-                tm.Remarks) AS Remarks,
-        coalesce(nullif(tm.IsFallBuckScale, 0), 
-                (SELECT DefaultValueText FROM TreeFieldSetup AS tfs WHERE tfs.CruiseID = t.CruiseID AND t.StratumCode = tfs.StratumCode AND (t.SampleGroupCode = tfs.SampleGroupCode OR tfs.SampleGroupCode IS NULL) AND tfs.Field = 'IsFallBuckScale' ORDER BY tfs.SampleGroupCode DESC LIMIT 1),
-                tm.IsFallBuckScale) AS IsFallBuckScale,
-
-        coalesce(nullif(tm.MetaData, ''), 
-                (SELECT DefaultValueText FROM TreeFieldSetup AS tfs WHERE tfs.CruiseID = t.CruiseID AND t.StratumCode = tfs.StratumCode AND (t.SampleGroupCode = tfs.SampleGroupCode OR tfs.SampleGroupCode IS NULL) AND tfs.Field = 'MetaData' ORDER BY tfs.SampleGroupCode DESC LIMIT 1),
-                tm.MetaData) AS MetaData, 
-        coalesce(nullif(tm.Initials, ''), 
-                (SELECT DefaultValueText FROM TreeFieldSetup AS tfs WHERE tfs.CruiseID = t.CruiseID AND t.StratumCode = tfs.StratumCode AND (t.SampleGroupCode = tfs.SampleGroupCode OR tfs.SampleGroupCode IS NULL) AND tfs.Field = 'Initials' ORDER BY tfs.SampleGroupCode DESC LIMIT 1),
-                tm.Initials) AS Initials
-
-FROM TreeMeasurment AS tm
-JOIN Tree AS t USING (TreeID)
-JOIN Tree_TreeDefaultValue USING (TreeID)
-LEFT JOIN TreeDefaultValue AS tdv USING (TreeDefaultValue_CN)
-
-
 -- ************** TreeMeasurment_Tombstone **************
 CREATE TABLE TreeMeasurment_Tombstone (
     TreeID TEXT NOT NULL,
@@ -4114,21 +3497,6 @@ CREATE INDEX NIX_Tree_Tombstone_TreeID ON Tree_Tombstone
 
 CREATE INDEX NIX_Tree_Tombstone_CruiseID_CuttingUnitCode_PlotNumber_TreeNumber ON Tree_Tombstone
 (CruiseID, CuttingUnitCode, PlotNumber, TreeNumber)
-
-
--- ************** Tree_TreeDefaultValue **************
-CREATE VIEW Tree_TreeDefaultValue AS
-SELECT
-    t.TreeID,
-    (SELECT TreeDefaultValue_CN FROM TreeDefaultValue AS tdv
-        WHERE  tdv.CruiseID = t.CruiseID
-            AND (tdv.SpeciesCode = t.SpeciesCode OR SpeciesCode IS NULL)
-            AND (tdv.PrimaryProduct = sg.PrimaryProduct OR tdv.PrimaryProduct IS NULL)
-        ORDER BY tdv.PrimaryProduct DESC, tdv.SpeciesCode DESC
-        LIMIT 1
-    ) AS TreeDefaultValue_CN
-FROM Tree AS t
-JOIN SampleGroup AS sg USING (SampleGroupCode, StratumCode, CruiseID)
 
 
 -- ************** ValueEquation **************
@@ -4339,5 +3707,710 @@ CREATE TABLE VolumeEquation_Tombstone (
     Modified_TS DATETIME,
 	Deleted_TS DATETIME
 )
+
+
+-- ************** LogFieldSetupDefault **************
+CREATE VIEW LogFieldSetupDefault AS
+SELECT
+    StratumTemplateLogFieldSetup_CN AS LogFieldSetupDefault_CN,
+    StratumTemplateName || CruiseID AS StratumDefaultID,
+    Field,
+    FieldOrder
+FROM StratumTemplateLogFieldSetup
+
+
+-- ************** LogGradeError **************
+CREATE VIEW LogGradeError AS
+SELECT
+    l.Log_CN,
+    l.LogID,
+    t.CruiseID,
+    LogGradeAuditRule_CN,
+    'Species ' || t.SpeciesCode || ', log grade ' || lgar.Grade || 'max defect is ' || lgar.DefectMax AS Message,
+    0 AS IsResolved,
+    null AS Resolution,
+    null AS ResolutionInitials
+FROM Log AS l
+JOIN Tree AS t USING (TreeID)
+JOIN LogGradeAuditRule AS lgar ON
+    t.CruiseID = lgar.CruiseID
+    AND ifnull(lgar.SpeciesCode, '') IN  (t.SpeciesCode, '')
+    AND ifnull(l.Grade, '') = lgar.Grade
+    AND round(l.SeenDefect, 2) > round(lgar.DefectMax, 2)
+
+
+-- ************** PlotError **************
+CREATE VIEW PlotError AS
+    SELECT
+        p.PlotID, 
+        p.CruiseID,
+        ps.CuttingUnitCode,
+        ps.PlotNumber,
+        ps.StratumCode,
+        ps.Plot_Stratum_CN,
+        'Unit:' || ps.CuttingUnitCode || ' Plot:' || ps.PlotNumber || ' St:' || ps.StratumCode || ' contains trees but is marked as empty' AS Message,
+        'IsEmpty' AS Field,
+        'E' AS Level,
+        0 AS IsResolved,
+        null AS Resolution,
+        null AS ResolutionInitials
+    FROM Plot_Stratum AS ps
+    JOIN Plot AS p USING (CuttingUnitCode, PlotNumber, CruiseID)
+    WHERE IsEmpty != 0
+        AND EXISTS (SELECT * FROM Tree
+            WHERE CuttingUnitCode = ps.CuttingUnitCode
+            AND PlotNumber = ps.PlotNumber AND StratumCode = ps.StratumCode AND CruiseID = ps.CruiseID)
+
+
+-- ************** StratumDefault **************
+CREATE VIEW StratumDefault AS
+    SELECT
+        0 AS StratumDefault_CN,
+        StratumTemplateName || CruiseID AS StratumDefaultID,
+        NULL AS Region,
+        NULL AS Forest,
+        NULL AS District,
+        StratumCode,
+        StratumTemplateName AS Description,
+        Method,
+        BasalAreaFactor,
+        FixedPlotSize,
+        KZ3PPNT,
+        SamplingFrequency,
+        Hotkey,
+        FBSCode,
+        YieldComponent,
+        FixCNTField
+FROM StratumTemplate
+
+
+-- ************** TallyLedger_Plot_Totals **************
+CREATE VIEW TallyLedger_Plot_Totals AS
+SELECT
+    tl.CruiseID,
+    tl.CuttingUnitCode,
+    tl.StratumCode,
+    tl.SampleGroupCode,
+    tl.SpeciesCode,
+    tl.LiveDead,
+    tl.PlotNumber,
+    sum(tl.TreeCount) AS TreeCount,
+    sum(tl.KPI) AS KPI
+FROM TallyLedger AS tl
+GROUP BY
+    CruiseID,
+    CuttingUnitCode,
+    StratumCode,
+    SampleGroupCode,
+    ifnull(SpeciesCode, ''),
+    ifnull(LiveDead, ''),
+    ifnull(PlotNumber, -1)
+
+
+-- ************** TallyLedger_Totals **************
+CREATE VIEW TallyLedger_Totals AS
+SELECT
+    tl.CruiseID,
+    tl.CuttingUnitCode,
+    tl.StratumCode,
+    tl.SampleGroupCode,
+    tl.SpeciesCode,
+    tl.LiveDead,
+    sum(tl.TreeCount) AS TreeCount,
+    sum(tl.KPI) AS KPI
+FROM TallyLedger AS tl
+GROUP BY
+    CruiseID,
+    CuttingUnitCode,
+    StratumCode,
+    SampleGroupCode,
+    ifnull(SpeciesCode, ''),
+    ifnull(LiveDead, '')
+
+
+-- ************** TallyLedger_Tree_Totals **************
+CREATE VIEW TallyLedger_Tree_Totals AS
+SELECT
+    tl.CruiseID,
+    tl.TreeID,
+    max(tl.STM) AS STM,
+    sum(tl.TreeCount) AS TreeCount,
+    sum(tl.KPI) AS KPI
+FROM TallyLedger AS tl
+WHERE  TreeID IS NOT NULL
+GROUP BY
+    CruiseID,
+    TreeID
+
+
+-- ************** TallyPopulation **************
+CREATE VIEW TallyPopulation AS
+
+-- Tally By SubPop tally pops
+SELECT
+    sp.CruiseID,
+    sp.StratumCode,
+    sp.SampleGroupCode,
+    sp.SpeciesCode,
+    sp.LiveDead,
+    ifnull(td.Description, '') AS Description,
+    ifnull(thk.HotKey, '') AS HotKey
+FROM SubPopulation AS sp
+JOIN SampleGroup AS sg USING (StratumCode, SampleGroupCode, CruiseID)
+JOIN Stratum AS st USING (StratumCode, CruiseID)
+LEFT JOIN TallyHotKey AS thk USING (StratumCode, SampleGroupCode, SpeciesCode, LiveDead, CruiseID)
+LEFT JOIN TallyDescription AS td USING (StratumCode, SampleGroupCode, SpeciesCode, LiveDead, CruiseID)
+WHERE sg.TallyBySubPop != 0  OR st.Method IN ('3P', 'F3P', 'P3P', 'S3P')
+
+UNION ALL
+
+-- Tally by SG tally pops
+SELECT
+    sg.CruiseID,
+    sg.StratumCode,
+    sg.SampleGroupCode,
+    null AS SpeciesCode,
+    null AS LiveDead,
+    ifnull(td.Description,'') AS Description,
+    ifnull(thk.HotKey, '') AS HotKey
+FROM SampleGroup AS sg
+JOIN Stratum AS st USING (StratumCode, CruiseID)
+LEFT JOIN TallyHotKey AS thk ON
+        thk.CruiseID = sg.CruiseID
+        AND thk.StratumCode = sg.StratumCode
+        AND thk.SampleGroupCode = sg.SampleGroupCode
+        AND ifnull(thk.SpeciesCode, '') = ''
+        AND ifnull(thk.LiveDead, '') = ''
+LEFT JOIN TallyDescription AS td ON
+        thk.CruiseID = sg.CruiseID
+        AND td.StratumCode = sg.StratumCode
+        AND td.SampleGroupCode = sg.SampleGroupCode
+        AND ifnull(td.SpeciesCode, '') = ''
+        AND ifnull(td.LiveDead, '') = ''
+WHERE sg.TallyBySubPop == 0 AND st.Method NOT IN ('3P', 'F3P', 'P3P', 'S3P')
+
+
+-- ************** TreeAuditError **************
+CREATE VIEW TreeAuditError AS
+WITH
+-- return just measure trees
+measureTrees AS (
+    SELECT
+        t.Tree_CN,
+        t.CruiseID,
+        t.TreeID,
+        t.StratumCode,
+        t.SpeciesCode,
+        t.LiveDead,
+        sg.PrimaryProduct
+    FROM Tree AS t
+    JOIN SampleGroup AS sg USING (SampleGroupCode, StratumCode, CruiseID)
+    WHERE t.CountOrMeasure = 'M'),
+
+-- expands TreeAuditRuleSelector to include Field, Min, Max
+treeAuditRuleSelector_Epanded AS (
+    SELECT
+        tar.CruiseID,
+        SpeciesCode,
+        LiveDead,
+        PrimaryProduct,
+        tar.Field,
+        Min,
+        Max,
+        tar.TreeAuditRuleID
+    FROM TreeAuditRuleSelector AS tars
+    JOIN TreeAuditRule AS tar USING (TreeAuditRuleID))
+
+SELECT
+    Tree_CN,
+    t.CruiseID,
+    TreeID,
+    TreeAuditRuleID,
+    tar.Field AS Field,
+    (CASE WHEN res.TreeAuditResolution_CN IS NULL THEN 0 ELSE 1 END)  AS IsResolved,
+    (CASE
+    WHEN tar.Min IS NOT NULL AND (tfv.ValueReal < tar.Min) THEN tar.Field || ' must be greater than ' || tar.Min
+    WHEN tar.Max IS NOT NULL AND (tfv.ValueReal > tar.Max) THEN tar.Field || ' must be less than ' || tar.Max
+    ELSE 'Validation Error' END) AS Message,
+    res.Resolution
+FROM measureTrees AS t
+JOIN TreeFieldSetup AS tfs USING (StratumCode, CruiseID)
+JOIN TreeFieldValue_All AS tfv USING (TreeID, Field)
+-- get audit rule
+JOIN TreeAuditRule AS tar
+    ON tar.Field = tfs.Field AND tar.CruiseID = t.CruiseID
+        AND EXISTS (SELECT * FROM TreeAuditRuleSelector AS tars WHERE
+            (tars.SpeciesCode IS NULL OR tars.SpeciesCode = t.SpeciesCode)
+            AND (tars.LiveDead IS NULL OR tars.LiveDead = t.LiveDead)
+            AND (tars.PrimaryProduct IS NULL OR tars.PrimaryProduct = t.PrimaryProduct)
+            AND tars.TreeAuditRuleID = tar.TreeAuditRuleID
+            AND tars.CruiseID = t.CruiseID)
+LEFT JOIN TreeAuditResolution AS res USING (TreeAuditRuleID, TreeID)
+WHERE
+    (tfv.ValueReal IS NOT NULL AND
+    (tar.Min IS NOT NULL AND tfv.ValueReal < tar.Min)
+    OR (tar.Max IS NOT NULL AND tfv.ValueReal > tar.Max))
+
+
+-- ************** TreeError **************
+CREATE VIEW TreeError AS
+
+WITH
+    treeError_speciesCode AS (
+    SELECT
+        t.TreeID,
+        t.CruiseID,
+        'e' AS Level,
+        'Species Code Is Missing' AS Message,
+        'SpeciesCode' AS Field
+    FROM Tree AS t
+    WHERE t.SpeciesCode IS NULL OR t.SpeciesCode = ''),
+
+    treeError_liveDead AS (
+    SELECT
+        t.TreeID,
+        t.CruiseID,
+        'e' AS Level,
+        'Live/Dead Value Is Missing' AS Message,
+        'LiveDead' AS Field
+    FROM Tree AS t
+    WHERE t.LiveDead IS NULL OR t.LiveDead = ''),
+
+    treeError_heights AS (
+    SELECT
+        t.TreeID,
+        t.CruiseID,
+        'e' AS Level,
+        'Aleast One Height Parameter Must Be Greater Than 0' AS Message,
+        'heights' AS Field
+    FROM Tree AS t
+    LEFT JOIN TreeMeasurment AS tm USING (TreeID)
+    WHERE t.CountOrMeasure = 'M'  
+        AND ifnull(tm.TotalHeight, 0) <=0 
+        AND ifnull(tm.MerchHeightPrimary, 0) <= 0 
+        AND ifnull(tm.MerchHeightSecondary, 0) <= 0 
+        AND ifnull(tm.UpperStemHeight, 0) <= 0),
+
+    treeError_diameters AS (
+    SELECT
+        t.TreeID,
+        t.CruiseID,
+        'e' AS Level,
+        'DBH or DRC must be greater than 0' AS Message,
+        'diameters' AS Field
+    FROM Tree AS t
+    LEFT JOIN TreeMeasurment AS tm USING (TreeID)
+    WHERE t.CountOrMeasure = 'M' 
+        AND ifnull(tm.DBH, 0) <=0 
+        AND ifnull(tm.DRC, 0) <=0),
+
+    treeError_merchHeightSecondary AS (
+    SELECT
+        t.TreeID,
+        t.CruiseID,
+        'e' AS Level,
+        'Merch Height Secondary Must Be Greater Than or Equal Merch Height Primary' AS Message,
+        'MerchHeightSecondary' AS Field
+    FROM Tree AS t
+    JOIN TreeMeasurment AS tm USING (TreeID)
+    WHERE t.CountOrMeasure = 'M' 
+        AND tm.MerchHeightSecondary > 0 
+        AND tm.MerchHeightSecondary <= tm.MerchHeightPrimary),
+
+    treeError_upperStemHeight AS (
+    SELECT
+        t.TreeID,
+        t.CruiseID,
+        'e' AS Level,
+        'Upper Stem Height Must Be Greater Than or Equal Merch Height Primary' AS Message,
+        'UpperStemHeight' AS Field
+    FROM Tree AS t
+    JOIN TreeMeasurment AS tm USING (TreeID)
+    WHERE t.CountOrMeasure = 'M' 
+        AND tm.UpperStemHeight > 0 
+        AND tm.UpperStemHeight < tm.MerchHeightPrimary),
+
+    treeError_upperStemDiameter AS (
+    SELECT
+        t.TreeID,
+        t.CruiseID,
+        'e' AS Level,
+        'Upper Stem Diameter Must Be Smaller Than DBH' AS Message,
+        'UpperStemDiameter' AS Field
+    FROM Tree AS t
+    JOIN TreeMeasurment AS tm USING (TreeID)
+    WHERE t.CountOrMeasure = 'M' 
+        AND tm.UpperStemDiameter > 0 
+        AND tm.UpperStemDiameter >= tm.DBH),
+
+    treeError_topDIBSecondary AS (
+    SELECT
+        t.TreeID,
+        t.CruiseID,
+        'e' AS Level,
+        'Top DIB Secondary must be less Top DIB Primary' AS Message,
+        'TopDIBSecondary' AS Field
+    FROM Tree AS t
+    JOIN TreeMeasurment AS tm USING (TreeID)
+    WHERE t.CountOrMeasure = 'M' 
+        AND tm.TopDIBSecondary > 0 
+        AND tm.TopDIBSecondary > tm.TopDIBPrimary),
+
+    treeError_seenDefectPrimary AS (
+    SELECT
+        t.TreeID,
+        t.CruiseID,
+        'e' AS Level,
+        'Seen Defect Primary must be greater than Recoverable Primary' AS Message,
+        'SeenDefectPrimary' AS Field
+    FROM Tree AS t
+    JOIN TreeMeasurment AS tm USING (TreeID)
+    WHERE t.CountOrMeasure = 'M' 
+        AND tm.SeenDefectPrimary > 0 
+        AND tm.SeenDefectPrimary < tm.RecoverablePrimary)
+
+SELECT
+	tae.TreeID,
+    tae.CruiseID,
+	tae.TreeAuditRuleID,
+	'W' AS Level,
+	tae.Message,
+	tae.Field,
+    tae.IsResolved,
+	tar.Resolution,
+	tar.Initials AS ResolutionInitials
+FROM TreeAuditError AS tae
+LEFT JOIN TreeAuditResolution AS tar USING (TreeAuditRuleID, TreeID)
+UNION ALL
+SELECT
+    te.TreeID,
+    te.CruiseID,
+    null AS TreeAuditRuleID,
+    'E' AS Level,
+    te.Message,
+    te.Field,
+    0 AS IsResolved,
+    null AS Resolution,
+    null AS ResolutionInitials
+FROM (
+    SELECT * FROM treeError_speciesCode
+    UNION ALL
+    SELECT * FROM treeError_liveDead
+    UNION ALL
+    SELECT * FROM treeError_heights
+    UNION ALL
+    SELECT * FROM treeError_diameters
+    UNION ALL
+    SELECT * FROM treeError_merchHeightSecondary
+    UNION ALL
+    SELECT * FROM treeError_upperStemHeight
+    UNION ALL
+    SELECT * FROM treeError_upperStemDiameter
+    UNION ALL
+    SELECT * FROM treeError_topDIBSecondary
+    UNION ALL
+    SELECT * FROM treeError_seenDefectPrimary
+) AS te
+
+
+-- ************** TreeFieldSetupDefault **************
+CREATE VIEW TreeFieldSetupDefault AS
+    SELECT
+    0 AS TreeFieldSetupDefault_CN,
+    StratumTemplateName || CruiseID AS StratumDefaultID,
+    null AS SampleGroupDefaultID,
+    Field,
+    FieldOrder,
+    IsHidden,
+    IsLocked,
+    -- value type determined by TreeField.DbType
+    DefaultValueInt,
+    DefaultValueReal,
+    DefaultValueBool,
+    DefaultValueText
+FROM StratumTemplateTreeFieldSetup
+
+
+-- ************** TreeFieldValue_All **************
+CREATE VIEW TreeFieldValue_All AS
+SELECT
+    TreeID,
+    Field,
+    ValueInt,
+    ValueReal,
+    ValueBool,
+    ValueText,
+    CreatedBy,
+    Created_TS,
+    ModifiedBy,
+    Modified_TS
+FROM TreeFieldValue_TreeMeasurment
+UNION ALL
+SELECT
+    TreeID,
+    Field,
+    ValueInt,
+    ValueReal,
+    ValueBool,
+    ValueText,
+    CreatedBy,
+    Created_TS,
+    ModifiedBy,
+    Modified_TS
+FROM TreeFieldValue
+
+
+-- ************** TreeFieldValue_TreeMeasurment **************
+CREATE VIEW TreeFieldValue_TreeMeasurment AS
+SELECT
+    tm.TreeID,
+    tf.Field,
+    tf.DbType,
+    (CASE tf.Field
+        WHEN 'SeenDefectPrimary' THEN SeenDefectPrimary
+        WHEN 'SeenDefectSecondary' THEN SeenDefectSecondary
+        WHEN 'RecoverablePrimary' THEN RecoverablePrimary
+        WHEN 'HiddenPrimary' THEN HiddenPrimary
+        WHEN 'HeightToFirstLiveLimb' THEN HeightToFirstLiveLimb
+        WHEN 'PoleLength' THEN PoleLength
+        WHEN 'CrownRatio' THEN CrownRatio
+        WHEN 'DBH' THEN DBH
+        WHEN 'DRC' THEN DRC
+        WHEN 'TotalHeight' THEN TotalHeight
+        WHEN 'MerchHeightPrimary' THEN MerchHeightPrimary
+        WHEN 'MerchHeightSecondary' THEN MerchHeightSecondary
+        WHEN 'FormClass' THEN FormClass
+        WHEN 'UpperStemDiameter' THEN UpperStemDiameter
+        WHEN 'UpperStemHeight' THEN UpperStemHeight
+        WHEN 'DBHDoubleBarkThickness' THEN DBHDoubleBarkThickness
+        WHEN 'TopDIBPrimary' THEN TopDIBPrimary
+        WHEN 'TopDIBSecondary' THEN TopDIBSecondary
+        WHEN 'DiameterAtDefect' THEN DiameterAtDefect
+        WHEN 'VoidPercent' THEN VoidPercent
+        WHEN 'Slope' THEN Slope
+        WHEN 'Aspect' THEN Aspect
+        --WHEN 'XCoordinate' THEN XCoordinate
+        --WHEN 'YCoordinate' THEN YCoordinate
+        --WHEN 'ZCoordinate' THEN ZCoordinate
+        ELSE NULL END) AS ValueReal,
+
+    (CASE tf.Field
+        WHEN 'IsFallBuckScale' THEN IsFallBuckScale
+        ELSE NULL END) AS ValueBool,
+
+    (CASE tf.Field
+        WHEN 'Grade' THEN Grade
+        WHEN 'ClearFace' THEN ClearFace
+        WHEN 'DefectCode' THEN DefectCode
+        WHEN 'Remarks' THEN Remarks
+        WHEN 'MetaData' THEN MetaData
+        WHEN 'Initials' THEN Initials
+        ELSE NULL END) AS ValueText,
+
+    NULL AS ValueInt,
+    tm.CreatedBy,
+    tm.Created_TS,
+    tm.ModifiedBy,
+    tm.Modified_TS
+
+FROM TreeMeasurment AS tm
+CROSS JOIN TreeField AS tf
+WHERE tf.IsTreeMeasurmentField = 1
+
+
+-- ************** TreeFieldValue_TreeMeasurment_Filtered **************
+CREATE VIEW TreeFieldValue_TreeMeasurment_Filtered AS
+SELECT
+    tm.TreeID,
+    tf.Field,
+    tf.DbType,
+    (CASE tf.Field
+        WHEN 'SeenDefectPrimary' THEN SeenDefectPrimary
+        WHEN 'SeenDefectSecondary' THEN SeenDefectSecondary
+        WHEN 'RecoverablePrimary' THEN RecoverablePrimary
+        WHEN 'HiddenPrimary' THEN HiddenPrimary
+        WHEN 'HeightToFirstLiveLimb' THEN HeightToFirstLiveLimb
+        WHEN 'PoleLength' THEN PoleLength
+        WHEN 'CrownRatio' THEN CrownRatio
+        WHEN 'DBH' THEN DBH
+        WHEN 'DRC' THEN DRC
+        WHEN 'TotalHeight' THEN TotalHeight
+        WHEN 'MerchHeightPrimary' THEN MerchHeightPrimary
+        WHEN 'MerchHeightSecondary' THEN MerchHeightSecondary
+        WHEN 'FormClass' THEN FormClass
+        WHEN 'UpperStemDiameter' THEN UpperStemDiameter
+        WHEN 'UpperStemHeight' THEN UpperStemHeight
+        WHEN 'DBHDoubleBarkThickness' THEN DBHDoubleBarkThickness
+        WHEN 'TopDIBPrimary' THEN TopDIBPrimary
+        WHEN 'TopDIBSecondary' THEN TopDIBSecondary
+        WHEN 'DiameterAtDefect' THEN DiameterAtDefect
+        WHEN 'VoidPercent' THEN VoidPercent
+        WHEN 'Slope' THEN Slope
+        WHEN 'Aspect' THEN Aspect
+        --WHEN 'XCoordinate' THEN XCoordinate
+        --WHEN 'YCoordinate' THEN YCoordinate
+        --WHEN 'ZCoordinate' THEN ZCoordinate
+        ELSE NULL END) AS ValueReal,
+
+    (CASE tf.Field
+        WHEN 'IsFallBuckScale' THEN IsFallBuckScale
+        ELSE NULL END) AS ValueBool,
+
+    (CASE tf.Field
+        WHEN 'Grade' THEN Grade
+        WHEN 'ClearFace' THEN ClearFace
+        WHEN 'DefectCode' THEN DefectCode
+        WHEN 'Remarks' THEN Remarks
+        WHEN 'MetaData' THEN MetaData
+        WHEN 'Initials' THEN Initials
+        ELSE NULL END) AS ValueText,
+
+    NULL AS ValueInt,
+    tm.CreatedBy,
+    tm.Created_TS,
+    tm.ModifiedBy,
+    tm.Modified_TS
+
+FROM TreeMeasurment AS tm
+JOIN Tree AS t USING (TreeID)
+CROSS JOIN TreeFieldSetup AS tfs
+JOIN TreeField AS tf USING (Field)
+WHERE tf.IsTreeMeasurmentField = 1
+
+
+-- ************** TreeMeasurment_DefaultResolved **************
+CREATE VIEW TreeMeasurment_DefaultResolved AS 
+SELECT
+        tm.TreeID,
+
+        -- for each tree field we will resolve the value by taking the first non-null value in the following order
+            -- first try reading the value from the TreeMeasurments table, treating the default value (0.0, 0, '') depending on data type as null
+            -- next we will try getting the default value from the TreeFieldSetup table, by matching with either the stratum level or samplegroup level field setup
+            -- if the field is a field in the TreeDefaultValues table we will get populate the value from the tree default value table
+            -- last we will use the value in the TreeMeasurments table which we know is the default value for the field...
+                -- note: should we just force the 
+
+
+        -- MEASURMENT FIELDS
+        coalesce(nullif(tm.SeenDefectPrimary, 0.0),
+                (SELECT tfs.DefaultValueReal FROM TreeFieldSetup AS tfs WHERE tfs.CruiseID = t.CruiseID AND t.StratumCode = tfs.StratumCode AND (t.SampleGroupCode = tfs.SampleGroupCode OR tfs.SampleGroupCode IS NULL) AND tfs.Field = 'SeenDefectPrimary' ORDER BY tfs.SampleGroupCode DESC LIMIT 1),
+                tm.SeenDefectPrimary) AS SeenDefectPrimary,
+        coalesce(nullif(tm.SeenDefectSecondary, 0.0), 
+                (SELECT DefaultValueReal FROM TreeFieldSetup AS tfs WHERE tfs.CruiseID = t.CruiseID AND t.StratumCode = tfs.StratumCode AND (t.SampleGroupCode = tfs.SampleGroupCode OR tfs.SampleGroupCode IS NULL) AND tfs.Field = 'SeenDefectSecondary' ORDER BY tfs.SampleGroupCode DESC LIMIT 1),
+                tm.SeenDefectSecondary) AS SeenDefectSecondary,
+        coalesce(nullif(tm.RecoverablePrimary, 0.0), 
+                (SELECT DefaultValueReal FROM TreeFieldSetup AS tfs WHERE tfs.CruiseID = t.CruiseID AND t.StratumCode = tfs.StratumCode AND (t.SampleGroupCode = tfs.SampleGroupCode OR tfs.SampleGroupCode IS NULL) AND tfs.Field = 'RecoverablePrimary' ORDER BY tfs.SampleGroupCode DESC LIMIT 1),
+                tdv.Recoverable, -- if tree RecoverablePrimary value not defined get value from TDV
+                tm.RecoverablePrimary) AS RecoverablePrimary,
+
+        coalesce(nullif(tm.HiddenPrimary, 0.0), 
+                (SELECT DefaultValueReal FROM TreeFieldSetup AS tfs WHERE tfs.CruiseID = t.CruiseID AND t.StratumCode = tfs.StratumCode AND (t.SampleGroupCode = tfs.SampleGroupCode OR tfs.SampleGroupCode IS NULL) AND tfs.Field = 'HiddenPrimary' ORDER BY tfs.SampleGroupCode DESC LIMIT 1),
+                CASE WHEN t.LiveDead != 'D' THEN tdv.HiddenPrimary ELSE tdv.HiddenPrimaryDead END, -- if tree HiddenPrimary value not defined get value from TDV
+                tm.HiddenPrimary) AS HiddenPrimary,
+
+        coalesce(nullif(tm.Grade, ''), 
+                (SELECT DefaultValueText FROM TreeFieldSetup AS tfs WHERE tfs.CruiseID = t.CruiseID AND t.StratumCode = tfs.StratumCode AND (t.SampleGroupCode = tfs.SampleGroupCode OR tfs.SampleGroupCode IS NULL) AND tfs.Field = 'Grade' ORDER BY tfs.SampleGroupCode DESC LIMIT 1),
+                CASE WHEN t.LiveDead != 'D' THEN tdv.TreeGrade ELSE tdv.TreeGradeDead END, -- if tree Grade value not defined get value from TDV
+                tm.Grade,
+                '0' ) AS Grade, -- if Grade not defined on tree or in defaults use '0' as default value
+
+        coalesce(nullif(tm.HeightToFirstLiveLimb, 0.0), 
+                (SELECT DefaultValueReal FROM TreeFieldSetup AS tfs WHERE tfs.CruiseID = t.CruiseID AND t.StratumCode = tfs.StratumCode AND (t.SampleGroupCode = tfs.SampleGroupCode OR tfs.SampleGroupCode IS NULL) AND tfs.Field = 'HeightToFirstLiveLimb' ORDER BY tfs.SampleGroupCode DESC LIMIT 1),
+                tm.HeightToFirstLiveLimb) AS HeightToFirstLiveLimb,
+        coalesce(nullif(tm.PoleLength, 0.0), 
+                (SELECT DefaultValueReal FROM TreeFieldSetup AS tfs WHERE tfs.CruiseID = t.CruiseID AND t.StratumCode = tfs.StratumCode AND (t.SampleGroupCode = tfs.SampleGroupCode OR tfs.SampleGroupCode IS NULL) AND tfs.Field = 'PoleLength' ORDER BY tfs.SampleGroupCode DESC LIMIT 1),
+                tm.PoleLength) AS PoleLength,
+        coalesce(nullif(tm.ClearFace, ''), 
+                (SELECT DefaultValueText FROM TreeFieldSetup AS tfs WHERE tfs.CruiseID = t.CruiseID AND t.StratumCode = tfs.StratumCode AND (t.SampleGroupCode = tfs.SampleGroupCode OR tfs.SampleGroupCode IS NULL) AND tfs.Field = 'ClearFace' ORDER BY tfs.SampleGroupCode DESC LIMIT 1),
+                tm.ClearFace) AS ClearFace,
+        coalesce(nullif(tm.CrownRatio, 0.0), 
+                (SELECT DefaultValueReal FROM TreeFieldSetup AS tfs WHERE tfs.CruiseID = t.CruiseID AND t.StratumCode = tfs.StratumCode AND (t.SampleGroupCode = tfs.SampleGroupCode OR tfs.SampleGroupCode IS NULL) AND tfs.Field = 'CrownRatio' ORDER BY tfs.SampleGroupCode DESC LIMIT 1),
+                tm.CrownRatio) AS CrownRatio,
+        coalesce(nullif(tm.DBH, 0.0), 
+                (SELECT DefaultValueReal FROM TreeFieldSetup AS tfs WHERE tfs.CruiseID = t.CruiseID AND t.StratumCode = tfs.StratumCode AND (t.SampleGroupCode = tfs.SampleGroupCode OR tfs.SampleGroupCode IS NULL) AND tfs.Field = 'DBH' ORDER BY tfs.SampleGroupCode DESC LIMIT 1),
+                tm.DBH) AS DBH,
+
+        coalesce(nullif(tm.DRC, 0.0), 
+                (SELECT DefaultValueReal FROM TreeFieldSetup AS tfs WHERE tfs.CruiseID = t.CruiseID AND t.StratumCode = tfs.StratumCode AND (t.SampleGroupCode = tfs.SampleGroupCode OR tfs.SampleGroupCode IS NULL) AND tfs.Field = 'DRC' ORDER BY tfs.SampleGroupCode DESC LIMIT 1),
+                tm.DRC) AS DRC,
+        coalesce(nullif(tm.TotalHeight, 0.0), 
+                (SELECT DefaultValueReal FROM TreeFieldSetup AS tfs WHERE tfs.CruiseID = t.CruiseID AND t.StratumCode = tfs.StratumCode AND (t.SampleGroupCode = tfs.SampleGroupCode OR tfs.SampleGroupCode IS NULL) AND tfs.Field = 'TotalHeight' ORDER BY tfs.SampleGroupCode DESC LIMIT 1),
+                tm.TotalHeight) AS TotalHeight,
+        coalesce(nullif(tm.MerchHeightPrimary, 0.0), 
+                (SELECT DefaultValueReal FROM TreeFieldSetup AS tfs WHERE tfs.CruiseID = t.CruiseID AND t.StratumCode = tfs.StratumCode AND (t.SampleGroupCode = tfs.SampleGroupCode OR tfs.SampleGroupCode IS NULL) AND tfs.Field = 'MerchHeightPrimary' ORDER BY tfs.SampleGroupCode DESC LIMIT 1),
+                tm.MerchHeightPrimary) AS MerchHeightPrimary,
+        coalesce(nullif(tm.MerchHeightSecondary, 0.0), 
+                (SELECT DefaultValueReal FROM TreeFieldSetup AS tfs WHERE tfs.CruiseID = t.CruiseID AND t.StratumCode = tfs.StratumCode AND (t.SampleGroupCode = tfs.SampleGroupCode OR tfs.SampleGroupCode IS NULL) AND tfs.Field = 'MerchHeightSecondary' ORDER BY tfs.SampleGroupCode DESC LIMIT 1),
+                tm.MerchHeightSecondary) AS MerchHeightSecondary,
+        coalesce(nullif(tm.FormClass, 0.0), 
+                (SELECT DefaultValueReal FROM TreeFieldSetup AS tfs WHERE tfs.CruiseID = t.CruiseID AND t.StratumCode = tfs.StratumCode AND (t.SampleGroupCode = tfs.SampleGroupCode OR tfs.SampleGroupCode IS NULL) AND tfs.Field = 'FormClass' ORDER BY tfs.SampleGroupCode DESC LIMIT 1),
+                tdv.FormClass, -- if tree FormClass value not defined get value from TDV
+                tm.FormClass) AS FormClass,
+
+        coalesce(nullif(tm.UpperStemDiameter, 0.0), 
+                (SELECT DefaultValueReal FROM TreeFieldSetup AS tfs WHERE tfs.CruiseID = t.CruiseID AND t.StratumCode = tfs.StratumCode AND (t.SampleGroupCode = tfs.SampleGroupCode OR tfs.SampleGroupCode IS NULL) AND tfs.Field = 'UpperStemDiameter' ORDER BY tfs.SampleGroupCode DESC LIMIT 1),
+                tm.UpperStemDiameter) AS UpperStemDiameter,
+        coalesce(nullif(tm.UpperStemHeight, 0.0), 
+                (SELECT DefaultValueReal FROM TreeFieldSetup AS tfs WHERE tfs.CruiseID = t.CruiseID AND t.StratumCode = tfs.StratumCode AND (t.SampleGroupCode = tfs.SampleGroupCode OR tfs.SampleGroupCode IS NULL) AND tfs.Field = 'UpperStemHeight' ORDER BY tfs.SampleGroupCode DESC LIMIT 1),
+                tm.UpperStemHeight) AS UpperStemHeight,
+        coalesce(nullif(tm.DBHDoubleBarkThickness, 0.0), 
+                (SELECT DefaultValueReal FROM TreeFieldSetup AS tfs WHERE tfs.CruiseID = t.CruiseID AND t.StratumCode = tfs.StratumCode AND (t.SampleGroupCode = tfs.SampleGroupCode OR tfs.SampleGroupCode IS NULL) AND tfs.Field = 'DBHDoubleBarkThickness' ORDER BY tfs.SampleGroupCode DESC LIMIT 1),
+                tm.DBHDoubleBarkThickness) AS DBHDoubleBarkThickness,
+        coalesce(nullif(tm.TopDIBPrimary, 0.0), 
+                (SELECT DefaultValueReal FROM TreeFieldSetup AS tfs WHERE tfs.CruiseID = t.CruiseID AND t.StratumCode = tfs.StratumCode AND (t.SampleGroupCode = tfs.SampleGroupCode OR tfs.SampleGroupCode IS NULL) AND tfs.Field = 'TopDIBPrimary' ORDER BY tfs.SampleGroupCode DESC LIMIT 1),
+                tm.TopDIBPrimary) AS TopDIBPrimary,
+        coalesce(nullif(tm.TopDIBSecondary, 0.0), 
+                (SELECT DefaultValueReal FROM TreeFieldSetup AS tfs WHERE tfs.CruiseID = t.CruiseID AND t.StratumCode = tfs.StratumCode AND (t.SampleGroupCode = tfs.SampleGroupCode OR tfs.SampleGroupCode IS NULL) AND tfs.Field = 'TopDIBSecondary' ORDER BY tfs.SampleGroupCode DESC LIMIT 1),
+                tm.TopDIBSecondary) AS TopDIBSecondary,
+
+        coalesce(nullif(tm.DefectCode, ''), 
+                (SELECT DefaultValueText FROM TreeFieldSetup AS tfs WHERE tfs.CruiseID = t.CruiseID AND t.StratumCode = tfs.StratumCode AND (t.SampleGroupCode = tfs.SampleGroupCode OR tfs.SampleGroupCode IS NULL) AND tfs.Field = 'DefectCode' ORDER BY tfs.SampleGroupCode DESC LIMIT 1),
+                tm.DefectCode) AS DefectCode,
+        coalesce(nullif(tm.DiameterAtDefect, 0.0), 
+                (SELECT DefaultValueReal FROM TreeFieldSetup AS tfs WHERE tfs.CruiseID = t.CruiseID AND t.StratumCode = tfs.StratumCode AND (t.SampleGroupCode = tfs.SampleGroupCode OR tfs.SampleGroupCode IS NULL) AND tfs.Field = 'DiameterAtDefect' ORDER BY tfs.SampleGroupCode DESC LIMIT 1),
+                tm.DiameterAtDefect) AS DiameterAtDefect,
+        coalesce(nullif(tm.VoidPercent, 0.0), 
+                (SELECT DefaultValueReal FROM TreeFieldSetup AS tfs WHERE tfs.CruiseID = t.CruiseID AND t.StratumCode = tfs.StratumCode AND (t.SampleGroupCode = tfs.SampleGroupCode OR tfs.SampleGroupCode IS NULL) AND tfs.Field = 'VoidPercent' ORDER BY tfs.SampleGroupCode DESC LIMIT 1),
+                tm.VoidPercent) AS VoidPercent,
+        coalesce(nullif(tm.Slope, 0.0), 
+                (SELECT DefaultValueReal FROM TreeFieldSetup AS tfs WHERE tfs.CruiseID = t.CruiseID AND t.StratumCode = tfs.StratumCode AND (t.SampleGroupCode = tfs.SampleGroupCode OR tfs.SampleGroupCode IS NULL) AND tfs.Field = 'Slope' ORDER BY tfs.SampleGroupCode DESC LIMIT 1),
+                tm.Slope) AS Slope,
+        coalesce(nullif(tm.Aspect, 0.0), 
+                (SELECT DefaultValueReal FROM TreeFieldSetup AS tfs WHERE tfs.CruiseID = t.CruiseID AND t.StratumCode = tfs.StratumCode AND (t.SampleGroupCode = tfs.SampleGroupCode OR tfs.SampleGroupCode IS NULL) AND tfs.Field = 'Aspect' ORDER BY tfs.SampleGroupCode DESC LIMIT 1),
+                tm.Aspect) AS Aspect,
+
+        coalesce(nullif(tm.Remarks, ''), 
+                (SELECT DefaultValueText FROM TreeFieldSetup AS tfs WHERE tfs.CruiseID = t.CruiseID AND t.StratumCode = tfs.StratumCode AND (t.SampleGroupCode = tfs.SampleGroupCode OR tfs.SampleGroupCode IS NULL) AND tfs.Field = 'Remarks' ORDER BY tfs.SampleGroupCode DESC LIMIT 1),
+                tm.Remarks) AS Remarks,
+        coalesce(nullif(tm.IsFallBuckScale, 0), 
+                (SELECT DefaultValueText FROM TreeFieldSetup AS tfs WHERE tfs.CruiseID = t.CruiseID AND t.StratumCode = tfs.StratumCode AND (t.SampleGroupCode = tfs.SampleGroupCode OR tfs.SampleGroupCode IS NULL) AND tfs.Field = 'IsFallBuckScale' ORDER BY tfs.SampleGroupCode DESC LIMIT 1),
+                tm.IsFallBuckScale) AS IsFallBuckScale,
+
+        coalesce(nullif(tm.MetaData, ''), 
+                (SELECT DefaultValueText FROM TreeFieldSetup AS tfs WHERE tfs.CruiseID = t.CruiseID AND t.StratumCode = tfs.StratumCode AND (t.SampleGroupCode = tfs.SampleGroupCode OR tfs.SampleGroupCode IS NULL) AND tfs.Field = 'MetaData' ORDER BY tfs.SampleGroupCode DESC LIMIT 1),
+                tm.MetaData) AS MetaData, 
+        coalesce(nullif(tm.Initials, ''), 
+                (SELECT DefaultValueText FROM TreeFieldSetup AS tfs WHERE tfs.CruiseID = t.CruiseID AND t.StratumCode = tfs.StratumCode AND (t.SampleGroupCode = tfs.SampleGroupCode OR tfs.SampleGroupCode IS NULL) AND tfs.Field = 'Initials' ORDER BY tfs.SampleGroupCode DESC LIMIT 1),
+                tm.Initials) AS Initials
+
+FROM TreeMeasurment AS tm
+JOIN Tree AS t USING (TreeID)
+JOIN Tree_TreeDefaultValue USING (TreeID)
+LEFT JOIN TreeDefaultValue AS tdv USING (TreeDefaultValue_CN)
+
+
+-- ************** Tree_TreeDefaultValue **************
+CREATE VIEW Tree_TreeDefaultValue AS
+SELECT
+    t.TreeID,
+    (SELECT TreeDefaultValue_CN FROM TreeDefaultValue AS tdv
+        WHERE  tdv.CruiseID = t.CruiseID
+            AND (tdv.SpeciesCode = t.SpeciesCode OR SpeciesCode IS NULL)
+            AND (tdv.PrimaryProduct = sg.PrimaryProduct OR tdv.PrimaryProduct IS NULL)
+        ORDER BY tdv.PrimaryProduct DESC, tdv.SpeciesCode DESC
+        LIMIT 1
+    ) AS TreeDefaultValue_CN
+FROM Tree AS t
+JOIN SampleGroup AS sg USING (SampleGroupCode, StratumCode, CruiseID)
 
 
