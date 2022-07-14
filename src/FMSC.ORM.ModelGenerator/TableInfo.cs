@@ -6,6 +6,8 @@ using System.Threading.Tasks;
 
 namespace FMSC.ORM.ModelGenerator
 {
+    public enum TableType { Table, View};
+
     public class TableInfo
     {
         public string TableName { get; set; }
@@ -17,5 +19,7 @@ namespace FMSC.ORM.ModelGenerator
         public IEnumerable<ForeignKeyInfo> ForeignKeys { get; set; }
 
         public string DDL { get; set; }
+
+        public TableType Type { get; set; }
     }
 }

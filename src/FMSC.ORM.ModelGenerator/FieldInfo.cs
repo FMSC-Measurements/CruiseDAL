@@ -4,6 +4,9 @@ namespace FMSC.ORM.ModelGenerator
 {
     public class FieldInfo
     {
+        [Field("table")]
+        public string Table { get; set; }
+
         [Field("name")]
         public string FieldName { get; set; }
 
