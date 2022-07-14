@@ -1,8 +1,10 @@
 ﻿using FluentAssertions;
+using FMSC.ORM.Core;
 using FMSC.ORM.TestSupport;
 using FMSC.ORM.TestSupport.TestModels;
 using System;
 using System.Collections.Generic;
+using System.Data.Common;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -57,6 +59,46 @@ namespace FMSC.ORM.SQLite
             }
         }
 
+        [Fact]
+        public void CreateTableWithMissingFKeyTable()
+        {
+
+            // create table track that references missing table artist
+            using (var conn = GetOpenConnection())
+            {
+                conn.Invoking(x => x.ExecuteNonQuery(@"CREATE TABLE track(
+  trackid     INTEGER,
+  trackname   TEXT,
+  trackartist INTEGER,
+  FOREIGN KEY(trackartist) REFERENCES artist (artistid)
+); ")).Should().NotThrow();
+
+                conn.Invoking(x => x.ExecuteNonQuery(@"INSERT INTO artist VALUES(3, 'Sammy Davis Jr.');"))
+                .Should().Throw<DbException>();
+            }
+        }
+
+
+        //https://sqlite.org/forum/forumpost/483cdbb61a
+        [Fact]
+        public void AllowsCheckConstraintsWithOutCommas()
+        {
+            using (var conn = GetOpenConnection())
+            {
+                conn.Invoking(x => x.ExecuteNonQuery(@"CREATE TABLE track(
+  trackid     INTEGER,
+  trackname   TEXT,
+  trackartist INTEGER,
+
+  CHECK (length(trackname) > 0)
+  CHECK (trackartist > 0)  
+); ")).Should().NotThrow();
+
+                conn.Invoking(x => x.ExecuteNonQuery(@"INSERT INTO artist VALUES(3, 'Sammy Davis Jr.');"))
+                .Should().Throw<DbException>();
+            }
+        }
+
 
         // see if defering fkeys defers cascading deletes
         //[Fact]
@@ -86,7 +128,7 @@ namespace FMSC.ORM.SQLite
         //        try
         //        {
         //            db.Execute("PRAGMA foreign_keys=on;"); // note: Fkeys are off by default, but we need to make sure they are on for the connection
-                    
+
 
         //            db.BeginTransaction();
         //            db.Execute("PRAGMA defer_foreign_keys=on;");
