@@ -74,45 +74,45 @@ SELECT
               WHEN st.Method == '100' THEN 1 -- for 100pct tree count should always be 1, this might be overkill hard coding it in here
               ELSE 0 -- for all other tree methods give tree count of 0 at the tree level, 
                      -- because we are doing all counts at the count tree level. 
-                     -- This is not fully consistant with v2 behavior, but v2 behavior wasn't very consistant its self. 
+                     -- This is not fully consistent with v2 behavior, but v2 behavior wasn't very consistent its self. 
         END)
         AS REAL) AS TreeCount, -- in v2 TreeCount and kpi had a type of REAL
 
     CAST (ifnull(tl.KPI, 0) AS REAL) AS KPI,
     (CASE ifnull(tl.STM, 0) WHEN 0 THEN 'N' WHEN 1 THEN 'Y' END) AS STM,
 
-        tm.SeenDefectPrimary, 
-        tm.SeenDefectSecondary, 
-        tm.RecoverablePrimary, 
-        tm.HiddenPrimary, 
+        ifnull(tm.SeenDefectPrimary, 0.0) AS SeenDefectPrimary, 
+        ifnull(tm.SeenDefectSecondary, 0.0) AS SeenDefectSecondary,
+        ifnull(tm.RecoverablePrimary, 0.0) AS RecoverablePrimary,
+        ifnull(tm.HiddenPrimary, 0.0) AS HiddenPrimary,
         tm.Grade, 
 
-        tm.HeightToFirstLiveLimb, 
-        tm.PoleLength, 
-        tm.ClearFace, 
-        tm.CrownRatio, 
-        tm.DBH, 
+        ifnull(tm.HeightToFirstLiveLimb, 0.0) AS HeightToFirstLiveLimb, 
+        ifnull(tm.PoleLength, 0.0) AS PoleLength, 
+        tm.ClearFace AS ClearFace, 
+        ifnull(tm.CrownRatio, 0.0) AS CrownRatio, 
+        ifnull(tm.DBH, 0.0) AS DBH, 
 
-        tm.DRC, 
-        tm.TotalHeight, 
-        tm.MerchHeightPrimary, 
-        tm.MerchHeightSecondary, 
-        tm.FormClass, 
+        ifnull(tm.DRC, 0.0) AS DRC, 
+        ifnull(tm.TotalHeight, 0.0) AS TotalHeight, 
+        ifnull(tm.MerchHeightPrimary, 0.0) AS MerchHeightPrimary, 
+        ifnull(tm.MerchHeightSecondary, 0.0) AS MerchHeightSecondary, 
+        ifnull(tm.FormClass, 0.0) AS FormClass, 
 
-        tm.UpperStemDiameter, 
-        tm.UpperStemHeight, 
-        tm.DBHDoubleBarkThickness, 
-        tm.TopDIBPrimary, 
-        tm.TopDIBSecondary, 
+        ifnull(tm.UpperStemDiameter, 0.0) AS UpperStemDiameter, 
+        ifnull(tm.UpperStemHeight, 0.0) AS UpperStemHeight, 
+        ifnull(tm.DBHDoubleBarkThickness, 0.0) DBHDoubleBarkThickness, 
+        ifnull(tm.TopDIBPrimary, 0.0) AS TopDIBPrimary, 
+        ifnull(tm.TopDIBSecondary, 0.0) AS TopDIBSecondary, 
 
-        tm.DefectCode, 
-        tm.DiameterAtDefect, 
-        tm.VoidPercent, 
-        tm.Slope, 
-        tm.Aspect, 
+        tm.DefectCode AS DefectCode, 
+        ifnull(tm.DiameterAtDefect, 0.0) AS DiameterAtDefect, 
+        ifnull(tm.VoidPercent, 0.0) AS VoidPercent, 
+        ifnull(tm.Slope, 0.0) AS Slope, 
+        ifnull(tm.Aspect, 0.0) AS Aspect, 
 
         tm.Remarks, 
-        tm.IsFallBuckScale, 
+        ifnull(tm.IsFallBuckScale, 0) AS IsFallBuckScale, 
 
         tm.MetaData, 
         tm.Initials 

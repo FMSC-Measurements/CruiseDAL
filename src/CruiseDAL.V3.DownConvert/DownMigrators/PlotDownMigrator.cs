@@ -25,9 +25,9 @@ SELECT
 	cu.CuttingUnit_CN,
 	ps.PlotNumber,
 	(CASE ps.IsEmpty WHEN 0 THEN 'False' ELSE 'True' END) AS IsEmpty,
-	p.Slope,
+	ifnull(p.Slope, 0.0) AS Slope,
     ps.KPI,
-	p.Aspect,
+	ifnull(p.Aspect, 0.0) AS Aspect,
     p.Remarks,
 	ps.ThreePRandomValue
 FROM {fromDbName}.Plot_Stratum AS ps
