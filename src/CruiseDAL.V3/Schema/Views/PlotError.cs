@@ -8,7 +8,16 @@ namespace CruiseDAL.Schema
         public string ViewName => "PlotError";
 
         public string CreateView =>
-@"CREATE VIEW PlotError AS
+@"
+
+
+
+
+
+CREATE VIEW PlotError AS
+
+WITH 
+    plotError_null_with_trees AS (
     SELECT
         p.PlotID, 
         p.CruiseID,
@@ -16,7 +25,7 @@ namespace CruiseDAL.Schema
         ps.PlotNumber,
         ps.StratumCode,
         ps.Plot_Stratum_CN,
-        'Unit:' || ps.CuttingUnitCode || ' Plot:' || ps.PlotNumber || ' St:' || ps.StratumCode || ' contains trees but is marked as empty' AS Message,
+        'Unit:' || ps.CuttingUnitCode || ' Plot:' || ps.PlotNumber || ' St:' || ps.StratumCode || ' contains trees but is marked as null plot' AS Message,
         'IsEmpty' AS Field,
         'E' AS Level,
         0 AS IsResolved,
@@ -27,6 +36,72 @@ namespace CruiseDAL.Schema
     WHERE IsEmpty != 0
         AND EXISTS (SELECT * FROM Tree
             WHERE CuttingUnitCode = ps.CuttingUnitCode
-            AND PlotNumber = ps.PlotNumber AND StratumCode = ps.StratumCode AND CruiseID = ps.CruiseID);";
+            AND PlotNumber = ps.PlotNumber AND StratumCode = ps.StratumCode AND CruiseID = ps.CruiseID)
+    ),
+
+    plotError_nonNull_no_trees AS  (
+    SELECT
+        p.PlotID, 
+        p.CruiseID,
+        ps.CuttingUnitCode,
+        ps.PlotNumber,
+        ps.StratumCode,
+        ps.Plot_Stratum_CN,
+        'Unit:' || ps.CuttingUnitCode || ' Plot:' || ps.PlotNumber || ' St:' || ps.StratumCode || ' contains no trees but is not marked as null plot' AS Message,
+        'IsEmpty' AS Field,
+        'E' AS Level,
+        0 AS IsResolved,
+        null AS Resolution,
+        null AS ResolutionInitials
+    FROM Plot_Stratum AS ps
+    JOIN Plot AS p USING (CuttingUnitCode, PlotNumber, CruiseID)
+    WHERE IsEmpty == 0
+        AND NOT EXISTS (SELECT * FROM Tree
+            WHERE CuttingUnitCode = ps.CuttingUnitCode
+            AND PlotNumber = ps.PlotNumber AND StratumCode = ps.StratumCode AND CruiseID = ps.CruiseID)
+    ),
+
+    plotError_no_plotStratum AS  (
+    SELECT
+        p.PlotID, 
+        p.CruiseID,
+        p.CuttingUnitCode,
+        p.PlotNumber,
+        NULL AS StratumCode,
+        NULL AS Plot_Stratum_CN,
+        'Unit:' || p.CuttingUnitCode || ' Plot:' || p.PlotNumber ||  ' no strata in plot ' AS Message,
+        NULL AS Field,
+        'E' AS Level,
+        0 AS IsResolved,
+        null AS Resolution,
+        null AS ResolutionInitials
+    FROM Plot AS p
+    WHERE NOT EXISTS (SELECT * FROM Plot_Stratum AS ps
+            WHERE CuttingUnitCode = ps.CuttingUnitCode
+            AND PlotNumber = ps.PlotNumber AND StratumCode = ps.StratumCode AND CruiseID = ps.CruiseID)
+    )
+    
+
+
+SELECT 
+    pe.PlotID,
+    pe.CruiseID, 
+    pe.CuttingUnitCode,
+    pe.PlotNumber,
+    pe.StratumCode,
+    pe.Plot_Stratum_CN,
+    pe.Message,
+    pe.Field,
+    pe.Level,
+    pe.IsResolved,
+    pe.Resolution,
+    pe.ResolutionInitials
+FROM (
+    SELECT * FROM plotError_null_with_trees
+    UNION ALL
+    SELECT * FROM plotError_nonNull_no_trees
+    UNION ALL
+    SELECT * FROM plotError_no_plotStratum
+) AS pe;";
     }
 }
