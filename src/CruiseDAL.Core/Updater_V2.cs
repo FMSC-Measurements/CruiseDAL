@@ -134,6 +134,10 @@ namespace CruiseDAL
             {
                 UpdateTo_2_7_3(db);
             }
+            if (db.DatabaseVersion == "2.7.4")
+            {
+                UpdateTo_2_7_4(db);
+            }
 
             if (db.CheckFieldExists("Stratum", "HotKey") == false)
             {
@@ -1152,6 +1156,39 @@ CREATE TABLE TreeEstimate (
                 db.BeginTransaction();
                 db.Execute("DROP VIEW IF EXISTS CountTree_View;");
                 db.Execute("DROP VIEW IF EXISTS StratumAcres_View;");
+                SetDatabaseVersion(db, targetVersion);
+                db.CommitTransaction();
+            }
+            catch (Exception e)
+            {
+                db.RollbackTransaction();
+                throw new SchemaUpdateException(startVersion, targetVersion, e);
+            }
+        }
+
+        // add logging of field values back to OnTreeDelete trigger
+        public static void UpdateTo_2_7_4(CruiseDatastore db)
+        {
+            var startVersion = db.DatabaseVersion;
+            var targetVersion = "2.7.4";
+
+            try
+            {
+
+
+                db.Execute("DROP TRIGGER OnDeleteTree;");
+
+                db.Execute(
+@"CREATE TRIGGER OnDeleteTree AFTER DELETE ON Tree
+BEGIN
+
+    INSERT INTO Util_Tombstone
+    (RecordID, RecordGUID, TableName, Data, DeletedDate)
+
+    VALUES
+    (OLD.rowID, OLD.Tree_GUID, 'Tree', '(TreeDefaultValue_CN, Stratum_CN, SampleGroup_CN, CuttingUnit_CN, Plot_CN, TreeNumber) VALUES (' || quote(OLD.TreeDefaultValue_CN) || ',' || quote(OLD.Stratum_CN) || ',' || quote(OLD.SampleGroup_CN) || ',' || quote(OLD.CuttingUnit_CN) || ',' || quote(OLD.Plot_CN) || ',' || quote(OLD.TreeNumber) || ')', datetime(current_timestamp, 'localtime'));
+END;");
+
                 SetDatabaseVersion(db, targetVersion);
                 db.CommitTransaction();
             }

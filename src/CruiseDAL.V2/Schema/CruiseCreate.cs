@@ -2,7 +2,7 @@
 {
 	public static partial class Schema
 	{
-		public static string CREATE_TABLES_VERSION = "2.7.3";
+		public static string CREATE_TABLES_VERSION = "2.7.4";
 
 		public static string CREATE_TABLES =
 		@"
