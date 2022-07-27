@@ -59,6 +59,7 @@ namespace CruiseDAL.Schema
     CHECK (BigBAF IS NULL OR BigBAF >= 0),
     CHECK (MinKPI >= 0 OR MinKPI IS NULL),
     CHECK (MaxKPI >= 0 OR MaxKPI IS NULL),
+    CHECK (SmallFPS >= 0 OR SmallFPS IS NULL),
     CHECK (DefaultLiveDead IS NULL OR DefaultLiveDead IN ('L', 'D')),
     
 

@@ -11,5 +11,8 @@ Can we change LogNumber to INTEGER?
 # LogGradeAuditRule
 there is a check on grade for lenght > 0. use value IN check like other grade fields
 
+# SampleGroup
+ - BiomassProduct?
+
 # TreeAuditRuleSelector
  - add LK_Product ref to PrimaryProduct?
