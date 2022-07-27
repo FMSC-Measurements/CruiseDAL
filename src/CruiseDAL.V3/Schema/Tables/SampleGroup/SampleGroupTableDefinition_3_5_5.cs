@@ -32,7 +32,7 @@ namespace CruiseDAL.Schema
     KZ INTEGER Default 0,
     BigBAF INTEGER Default 0,
     TallyBySubPop BOOLEAN DEFAULT 0,
-    UseExternalSampler BOOLEAN DEFAULT 0, -- depreciated decided to implement using SampleSelectorType
+    UseExternalSampler BOOLEAN DEFAULT 0, -- depreciated, decided to implement using SampleSelectorType
     SampleSelectorType TEXT COLLATE NOCASE,
     Description TEXT,
     MinKPI INTEGER Default 0,
@@ -52,6 +52,15 @@ namespace CruiseDAL.Schema
             '{SAMPLESELECTORTYPE_SYSTEMATICSELECTER}',
             '{SAMPLESELECTORTYPE_BLOCKSELECTER}',
             '{SAMPLESELECTORTYPE_CLICKERSELECTER}')),
+
+    CHECK (SamplingFrequency IS NULL OR SamplingFrequency >= 0),
+    CHECK (InsuranceFrequency IS NULL OR InsuranceFrequency >= 0),
+    CHECK (KZ IS NULL OR KZ >= 0),
+    CHECK (BigBAF IS NULL OR BigBAF >= 0),
+    CHECK (MinKPI >= 0 OR MinKPI IS NULL),
+    CHECK (MaxKPI >= 0 OR MaxKPI IS NULL),
+    CHECK (DefaultLiveDead IS NULL OR DefaultLiveDead IN ('L', 'D')),
+    
 
     UNIQUE (SampleGroupID),
     UNIQUE (StratumCode, SampleGroupCode, CruiseID),
