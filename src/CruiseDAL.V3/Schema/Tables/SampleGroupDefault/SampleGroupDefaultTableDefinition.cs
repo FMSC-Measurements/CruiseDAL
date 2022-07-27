@@ -29,7 +29,7 @@ return $@"CREATE TABLE {tableName} (
     KZ INTEGER,
     BigBAF INTEGER,
     TallyBySubPop BOOLEAN,
-    UseExternalSampler BOOLEAN,
+    UseExternalSampler BOOLEAN, -- depreciated
     TallyMethod TEXT COLLATE NOCASE,
     Description TEXT,
     MinKPI INTEGER,

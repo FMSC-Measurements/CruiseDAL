@@ -471,7 +471,6 @@ classDiagram
         - KZ : INTEGER
         - BigBAF : INTEGER
         - TallyBySubPop : BOOLEAN
-        - UseExternalSampler : BOOLEAN
         - SampleSelectorType : TEXT
         - Description : TEXT
         - MinKPI : INTEGER
@@ -502,7 +501,6 @@ classDiagram
         - KZ : INTEGER
         - BigBAF : INTEGER
         - TallyBySubPop : BOOLEAN
-        - UseExternalSampler : BOOLEAN
         - TallyMethod : TEXT
         - Description : TEXT
         - MinKPI : INTEGER
@@ -526,7 +524,6 @@ classDiagram
         - KZ : INTEGER
         - BigBAF : INTEGER
         - TallyBySubPop : BOOLEAN
-        - UseExternalSampler : BOOLEAN
         - SampleSelectorType : TEXT
         - Description : TEXT
         - MinKPI : INTEGER
