@@ -103,7 +103,7 @@ CREATE TABLE CuttingUnit (
 
     CHECK (CuttingUnitID LIKE '________-____-____-____-____________'),
     CHECK (length(CuttingUnitCode) > 0),
-    CHECK (Area IS NULL OR Area > 0.0)
+    CHECK (Area IS NULL OR Area >= 0.0)
 )
 
 CREATE TRIGGER CuttingUnit_OnUpdate
@@ -994,7 +994,7 @@ CREATE TABLE Plot_Stratum (
     CHECK (IsEmpty IN (0, 1)),
     CHECK (CountOrMeasure IN ('C', 'M') OR CountOrMeasure IS NULL),
     CHECK ((ifnull(TreeCount,0) IS 0 AND ifnull(AverageHeight,0.0) IS 0.0 AND ifnull(KPI, 0.0) IS 0.0) OR (TreeCount > 0 AND AverageHeight > 0.0 AND KPI > 0.0)),
-    CHECK (ThreePRandomValue IS NULL OR ThreePRandomValue > 0),
+    CHECK (ThreePRandomValue IS NULL OR ThreePRandomValue >= 0),
 
     FOREIGN KEY (StratumCode,  CruiseID) REFERENCES Stratum (StratumCode, CruiseID) ON DELETE CASCADE ON UPDATE CASCADE,
     FOREIGN KEY (PlotNumber, CuttingUnitCode, CruiseID) REFERENCES Plot (PlotNumber, CuttingUnitCode, CruiseID) ON DELETE CASCADE ON UPDATE CASCADE
@@ -1260,7 +1260,7 @@ CREATE TABLE SampleGroup (
     KZ INTEGER Default 0,
     BigBAF INTEGER Default 0,
     TallyBySubPop BOOLEAN DEFAULT 0,
-    UseExternalSampler BOOLEAN DEFAULT 0, -- depreciated decided to implement using SampleSelectorType
+    UseExternalSampler BOOLEAN DEFAULT 0, -- depreciated, decided to implement using SampleSelectorType
     SampleSelectorType TEXT COLLATE NOCASE,
     Description TEXT,
     MinKPI INTEGER Default 0,
@@ -1280,6 +1280,15 @@ CREATE TABLE SampleGroup (
             'SystematicSelecter',
             'BlockSelecter',
             'ClickerSelecter')),
+
+    CHECK (SamplingFrequency IS NULL OR SamplingFrequency >= 0),
+    CHECK (InsuranceFrequency IS NULL OR InsuranceFrequency >= 0),
+    CHECK (KZ IS NULL OR KZ >= 0),
+    CHECK (BigBAF IS NULL OR BigBAF >= 0),
+    CHECK (MinKPI >= 0 OR MinKPI IS NULL),
+    CHECK (MaxKPI >= 0 OR MaxKPI IS NULL),
+    CHECK (DefaultLiveDead IS NULL OR DefaultLiveDead IN ('L', 'D')),
+    
 
     UNIQUE (SampleGroupID),
     UNIQUE (StratumCode, SampleGroupCode, CruiseID),
@@ -1403,7 +1412,7 @@ CREATE TABLE SampleGroupDefault (
     KZ INTEGER,
     BigBAF INTEGER,
     TallyBySubPop BOOLEAN,
-    UseExternalSampler BOOLEAN,
+    UseExternalSampler BOOLEAN, -- depreciated
     TallyMethod TEXT COLLATE NOCASE,
     Description TEXT,
     MinKPI INTEGER,
@@ -2392,7 +2401,7 @@ CREATE TABLE Tree (
     LiveDead TEXT COLLATE NOCASE,
     PlotNumber INTEGER,
     TreeNumber INTEGER NOT NULL,
-    CountOrMeasure TEXT DEFAULT 'M' COLLATE NOCASE, -- field is for compatibility with older schema. because plot cruising still requires a tree record to record non measure trees                               // initials of the cruiser taking measurments
+    CountOrMeasure TEXT DEFAULT 'M' COLLATE NOCASE, 
 
     CreatedBy TEXT DEFAULT 'none',
     Created_TS DATETIME DEFAULT (CURRENT_TIMESTAMP),
@@ -3741,6 +3750,9 @@ JOIN LogGradeAuditRule AS lgar ON
 
 -- ************** PlotError **************
 CREATE VIEW PlotError AS
+
+WITH 
+    plotError_null_with_trees AS (
     SELECT
         p.PlotID, 
         p.CruiseID,
@@ -3748,7 +3760,7 @@ CREATE VIEW PlotError AS
         ps.PlotNumber,
         ps.StratumCode,
         ps.Plot_Stratum_CN,
-        'Unit:' || ps.CuttingUnitCode || ' Plot:' || ps.PlotNumber || ' St:' || ps.StratumCode || ' contains trees but is marked as empty' AS Message,
+        'Unit:' || ps.CuttingUnitCode || ' Plot:' || ps.PlotNumber || ' St:' || ps.StratumCode || ' contains trees but is marked as null plot' AS Message,
         'IsEmpty' AS Field,
         'E' AS Level,
         0 AS IsResolved,
@@ -3760,6 +3772,71 @@ CREATE VIEW PlotError AS
         AND EXISTS (SELECT * FROM Tree
             WHERE CuttingUnitCode = ps.CuttingUnitCode
             AND PlotNumber = ps.PlotNumber AND StratumCode = ps.StratumCode AND CruiseID = ps.CruiseID)
+    ),
+
+    plotError_nonNull_no_trees AS  (
+    SELECT
+        p.PlotID, 
+        p.CruiseID,
+        ps.CuttingUnitCode,
+        ps.PlotNumber,
+        ps.StratumCode,
+        ps.Plot_Stratum_CN,
+        'Unit:' || ps.CuttingUnitCode || ' Plot:' || ps.PlotNumber || ' St:' || ps.StratumCode || ' contains no trees but is not marked as null plot' AS Message,
+        'IsEmpty' AS Field,
+        'E' AS Level,
+        0 AS IsResolved,
+        null AS Resolution,
+        null AS ResolutionInitials
+    FROM Plot_Stratum AS ps
+    JOIN Plot AS p USING (CuttingUnitCode, PlotNumber, CruiseID)
+    WHERE IsEmpty == 0
+        AND NOT EXISTS (SELECT * FROM Tree
+            WHERE CuttingUnitCode = ps.CuttingUnitCode
+            AND PlotNumber = ps.PlotNumber AND StratumCode = ps.StratumCode AND CruiseID = ps.CruiseID)
+    ),
+
+    plotError_no_plotStratum AS  (
+    SELECT
+        p.PlotID, 
+        p.CruiseID,
+        p.CuttingUnitCode,
+        p.PlotNumber,
+        ps.StratumCode,
+        ps.Plot_Stratum_CN,
+        'Unit:' || p.CuttingUnitCode || ' Plot:' || p.PlotNumber ||  ' no strata in plot ' AS Message,
+        NULL AS Field,
+        'E' AS Level,
+        0 AS IsResolved,
+        null AS Resolution,
+        null AS ResolutionInitials
+    FROM Plot AS p
+    LEFT JOIN Plot_Stratum as ps USING (CruiseID, CuttingUnitCode, PlotNumber)
+    WHERE ps.RowID IS NULL
+    )
+    
+
+
+SELECT 
+    pe.PlotID,
+    pe.CruiseID, 
+    pe.CuttingUnitCode,
+    pe.PlotNumber,
+    pe.StratumCode,
+    pe.Plot_Stratum_CN,
+    pe.Message,
+    pe.Field,
+    pe.Level,
+    pe.IsResolved,
+    pe.Resolution,
+    pe.ResolutionInitials
+FROM (
+    SELECT * FROM plotError_null_with_trees
+    UNION ALL
+    SELECT * FROM plotError_nonNull_no_trees
+    UNION ALL
+    SELECT * FROM plotError_no_plotStratum
+) AS pe
 
 
 -- ************** StratumDefault **************

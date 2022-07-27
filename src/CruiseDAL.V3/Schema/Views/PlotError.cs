@@ -67,8 +67,8 @@ WITH
         p.CruiseID,
         p.CuttingUnitCode,
         p.PlotNumber,
-        NULL AS StratumCode,
-        NULL AS Plot_Stratum_CN,
+        ps.StratumCode,
+        ps.Plot_Stratum_CN,
         'Unit:' || p.CuttingUnitCode || ' Plot:' || p.PlotNumber ||  ' no strata in plot ' AS Message,
         NULL AS Field,
         'E' AS Level,
@@ -76,9 +76,8 @@ WITH
         null AS Resolution,
         null AS ResolutionInitials
     FROM Plot AS p
-    WHERE NOT EXISTS (SELECT * FROM Plot_Stratum AS ps
-            WHERE CuttingUnitCode = ps.CuttingUnitCode
-            AND PlotNumber = ps.PlotNumber AND StratumCode = ps.StratumCode AND CruiseID = ps.CruiseID)
+    LEFT JOIN Plot_Stratum as ps USING (CruiseID, CuttingUnitCode, PlotNumber)
+    WHERE ps.RowID IS NULL
     )
     
 
