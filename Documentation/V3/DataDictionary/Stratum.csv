@@ -1,0 +1,19 @@
+Table,FieldName,DbType,IsPK,IsFK,References,NotNull,Description,Min,Max,RegionsUsing,AdditionalRemarks
+Stratum,Stratum_CN,INTEGER,X,,,,,,,,
+Stratum,StratumID,TEXT,,,,X,,,,,Guid
+Stratum,StratumCode,TEXT,,,,X,,,,,Min length 1
+Stratum,CruiseID,TEXT,,X,Cruise,X,,,,,
+Stratum,Description,TEXT,,,,,,,,,
+Stratum,Method,TEXT,,X,LK_CruiseMethod,,,,,,
+Stratum,BasalAreaFactor,REAL,,,,,,,,,
+Stratum,FixedPlotSize,REAL,,,,,,,,,
+Stratum,KZ3PPNT,INTEGER,,,,,,,,,
+Stratum,SamplingFrequency,INTEGER,,,,,,,,,
+Stratum,Hotkey,TEXT,,,,,,,,,
+Stratum,FBSCode,TEXT,,,,,,,,,
+Stratum,YieldComponent,TEXT,,,,,,,,,"Allowed values 'CL', 'CD', 'NL', 'ND'"
+Stratum,FixCNTField,TEXT,,X,TreeField,,,,,,
+Stratum,CreatedBy,TEXT,,,,,,,,,
+Stratum,Created_TS,DATETIME,,,,,,,,,
+Stratum,ModifiedBy,TEXT,,,,,,,,,
+Stratum,Modified_TS,DATETIME,,,,,,,,,

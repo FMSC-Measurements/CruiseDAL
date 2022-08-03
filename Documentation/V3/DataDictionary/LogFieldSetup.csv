@@ -1,0 +1,7 @@
+Table,FieldName,DbType,IsPK,IsFK,References,NotNull,Description,Min,Max,RegionsUsing,AdditionalRemarks
+LogFieldSetup,StratumCode,TEXT,,X,Stratum,X,,,,,
+LogFieldSetup,CruiseID,TEXT,,X,Stratum,X,,,,,
+LogFieldSetup,Field,TEXT,,X,LogField,X,,,,,
+LogFieldSetup,FieldOrder,INTEGER,,,,,,,,,
+LogFieldSetup,Heading,TEXT,,,,,,,,,
+LogFieldSetup,Width,REAL,,,,,,,,,

@@ -33,99 +33,115 @@ namespace FMSC.ORM.ModelGenerator
             ignoreColumnNames = ignoreColumnNames ?? Enumerable.Empty<string>();
 
             // note: we are only generating types off of tables because sqlite may fail to reflect the type on columns in views
-            var tableNames = datastore.QueryScalar<string>("SELECT tbl_name FROM Sqlite_Master WHERE type IN ('table', 'view') AND tbl_name NOT LIKE 'sqlite\\_%' ESCAPE '\\' ORDER BY tbl_name;");
-
-            var conn = datastore.OpenConnection();
+            var tableNames = datastore.QueryScalar<string>("SELECT tbl_name FROM Sqlite_Master WHERE type = 'table' AND tbl_name NOT LIKE 'sqlite\\_%' ESCAPE '\\' ORDER BY tbl_name;");
 
             foreach (var tableName in tableNames)
             {
-                //var tblInfo = datastore.GetTableInfo(tableName);
-                //var foreignkeys = datastore.Query<ForeignKeyInfo>($"PRAGMA foreign_key_list('{tableName}');");
+                var tableInfo = ReadTableInfo(datastore, tableName, ignoreColumnNames);
+                tableInfo.Type = TableType.Table;
+                yield return tableInfo;
+            }
 
-                //var fieldInfo = tblInfo.Where(x => ignoreColumnNames.Contains(x.Name, StringComparer.InvariantCultureIgnoreCase) == false)
-                //    .Select(x =>
-                //        new FieldInfo
-                //        {
-                //            FieldName = x.Name,
-                //            IsPK = x.IsPK,
-                //            RuntimeTimeType = dialect.Try(
-                //                y => y.MapSQLtypeToSystemType(x.Type),
-                //                (z, e) => { Console.WriteLine($"table:{tableName}| field:{x.Name}| {x.Type ?? "null"}| {e.Message}"); return typeof(string); }),
+            var viewNames = datastore.QueryScalar<string>("SELECT tbl_name FROM Sqlite_Master WHERE type = 'view' AND tbl_name NOT LIKE 'sqlite\\_%' ESCAPE '\\' ORDER BY tbl_name;");
 
-                //            //HACK make an assumption that the field is AutoIncr.
-                //            //IsAutoIncr = x.Type == SqliteDataType.INTEGER && x.IsPK && x.NotNull == false,
-                //            NotNull = x.NotNull,
-                //        }).ToList();
+            foreach (var viewName in viewNames)
+            {
+                var viewInfo = ReadTableInfo(datastore, viewName, ignoreColumnNames);
+                viewInfo.Type = TableType.View;
+                yield return viewInfo;
+            }
+        }
 
-                //var pkField = fieldInfo.Where(x => x.IsPK).SingleOrDefault();
+        protected TableInfo ReadTableInfo(Datastore datastore, string tableName, IEnumerable<string> ignoreColumnNames)
+        {
+            var conn = datastore.OpenConnection();
 
-                var fields = datastore.Query<FieldInfo>(
+            //var tblInfo = datastore.GetTableInfo(tableName);
+            //var foreignkeys = datastore.Query<ForeignKeyInfo>($"PRAGMA foreign_key_list('{tableName}');");
+
+            //var fieldInfo = tblInfo.Where(x => ignoreColumnNames.Contains(x.Name, StringComparer.InvariantCultureIgnoreCase) == false)
+            //    .Select(x =>
+            //        new FieldInfo
+            //        {
+            //            FieldName = x.Name,
+            //            IsPK = x.IsPK,
+            //            RuntimeTimeType = dialect.Try(
+            //                y => y.MapSQLtypeToSystemType(x.Type),
+            //                (z, e) => { Console.WriteLine($"table:{tableName}| field:{x.Name}| {x.Type ?? "null"}| {e.Message}"); return typeof(string); }),
+
+            //            //HACK make an assumption that the field is AutoIncr.
+            //            //IsAutoIncr = x.Type == SqliteDataType.INTEGER && x.IsPK && x.NotNull == false,
+            //            NotNull = x.NotNull,
+            //        }).ToList();
+
+            //var pkField = fieldInfo.Where(x => x.IsPK).SingleOrDefault();
+
+            var fields = datastore.Query<FieldInfo>(
 $@"
                 SELECT * FROM  
                 PRAGMA_TABLE_INFO('{tableName}') AS ti 
                 Left JOIN 
                 (SELECT *, 1 AS IsFK, [from] as name, group_concat([table]) AS fkReferences FROM PRAGMA_FOREIGN_KEY_LIST('{tableName}') group by name) AS fkl
                 using (name);")
-                    .Where(x => ignoreColumnNames.Contains(x.FieldName, StringComparer.InvariantCultureIgnoreCase) == false)
-                    .ToArray();
-
-                
-
-                // we have better luck getting fild type for views 
-                // by using a datareader
-                foreach(var f in fields)
-                {
-                    var fieldName = f.FieldName;
-                    var command = conn.CreateCommand();
-                    command.CommandText = $"SELECT {fieldName} FROM {tableName};";
-
-                    using var reader = command.ExecuteReader();
-                    var dbType = reader.GetDataTypeName(0);
-
-                    // 
-                    if(dbType == SqliteDataType.BLOB) { continue; }
-
-                    f.DbType = dbType;
-                }
+                .Where(x => ignoreColumnNames.Contains(x.FieldName, StringComparer.InvariantCultureIgnoreCase) == false)
+                .ToArray();
 
 
 
-                var pkField = fields.SingleOrDefault(x => x.IsPK);
+            // we have better luck getting fild type for views 
+            // by using a datareader
+            foreach (var f in fields)
+            {
+                f.Table = tableName;
 
-                var foreignKeys = datastore.Query<ForeignKeyInfo>(
+                var fieldName = f.FieldName;
+                var command = conn.CreateCommand();
+                command.CommandText = $"SELECT {fieldName} FROM {tableName};";
+
+                using var reader = command.ExecuteReader();
+                var dbType = reader.GetDataTypeName(0);
+
+                // 
+                if (dbType == SqliteDataType.BLOB) { continue; }
+
+                f.DbType = dbType;
+            }
+
+
+
+            var pkField = fields.SingleOrDefault(x => x.IsPK);
+
+            var foreignKeys = datastore.Query<ForeignKeyInfo>(
 $@"SELECT [table], group_concat([from]) AS FromFieldNames, group_concat([to]) AS ToFieldNames FROM PRAGMA_FOREIGN_KEY_LIST('{tableName}') GROUP BY [table];").ToArray();
 
 
-                var tableDDLs = datastore.QueryScalar<string>(
-                    "SELECT sql FROM sqlite_master WHERE tbl_name = @p1 AND type = 'table' " +
-                    "UNION ALL " +
-                    "SELECT sql FROM sqlite_master WHERE tbl_name = @p1 AND type = 'trigger' " +
-                    "UNION ALL " +
-                    "SELECT sql FROM sqlite_master WHERE tbl_name = @p1 AND type = 'view' " +
-                    "UNION ALL " +
-                    "SELECT sql FROM sqlite_master WHERE tbl_name = @p1 AND type = 'index'; ",
-                    tableName);
+            var tableDDLs = datastore.QueryScalar<string>(
+                "SELECT sql FROM sqlite_master WHERE tbl_name = @p1 AND type = 'table' " +
+                "UNION ALL " +
+                "SELECT sql FROM sqlite_master WHERE tbl_name = @p1 AND type = 'trigger' " +
+                "UNION ALL " +
+                "SELECT sql FROM sqlite_master WHERE tbl_name = @p1 AND type = 'view' " +
+                "UNION ALL " +
+                "SELECT sql FROM sqlite_master WHERE tbl_name = @p1 AND type = 'index'; ",
+                tableName);
 
-                var ddlSb = new StringBuilder();
-                foreach(var tableDDL in tableDDLs)
-                {
-                    ddlSb.AppendLine(tableDDL);
-                    ddlSb.AppendLine();
-                }
-
-                var tableInfo = new TableInfo()
-                {
-                    TableName = tableName,
-                    Fields = fields,
-                    PrimaryKeyField = pkField,
-                    ForeignKeys = foreignKeys,
-                    DDL = ddlSb.ToString(),
-                };
-
-
-
-                yield return tableInfo;
+            var ddlSb = new StringBuilder();
+            foreach (var tableDDL in tableDDLs)
+            {
+                ddlSb.AppendLine(tableDDL);
+                ddlSb.AppendLine();
             }
+
+            var tableInfo = new TableInfo()
+            {
+                TableName = tableName,
+                Fields = fields,
+                PrimaryKeyField = pkField,
+                ForeignKeys = foreignKeys,
+                DDL = ddlSb.ToString(),
+            };
+
+            return tableInfo;
         }
     }
 

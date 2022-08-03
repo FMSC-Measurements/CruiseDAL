@@ -78,6 +78,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "DbSync", "DbSync", "{89CC4E
 EndProject
 Global
 	GlobalSection(SharedMSBuildProjectFiles) = preSolution
+		CruiseDAL.TestCommon.V2\CruiseDAL.TestCommon.V2.projitems*{00ae3e67-f599-4674-9bee-261a027600f7}*SharedItemsImports = 5
 		CruiseDAL.TestCommon\CruiseDAL.TestCommon.projitems*{00ae3e67-f599-4674-9bee-261a027600f7}*SharedItemsImports = 5
 		CruiseDAL.TestCommon.V3\CruiseDAL.TestCommon.V3.projitems*{1087653e-18da-467c-9071-073332b8b76b}*SharedItemsImports = 5
 		CruiseDAL.TestCommon\CruiseDAL.TestCommon.projitems*{1087653e-18da-467c-9071-073332b8b76b}*SharedItemsImports = 5

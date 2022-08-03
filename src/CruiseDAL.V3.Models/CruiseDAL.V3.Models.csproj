@@ -17,7 +17,7 @@
     <PropertyGroup Label="Model Generator Properties">
       <ModelGenDatastoreTypeName>CruiseDAL.CruiseDatastore_V3</ModelGenDatastoreTypeName>
       <ModelGenTargetAssembly>$(MSBuildProjectDirectory)\$(OutputPath)CruiseDAL.V3.dll</ModelGenTargetAssembly>
-      <ModelGenIgnoreColumns></ModelGenIgnoreColumns>
+      <ModelGenIgnoreColumns>UseExternalSampler</ModelGenIgnoreColumns>
       <ModelGenNonPersistedColumns>CreatedBy,Created_TS,ModifiedBy,Modified_TS</ModelGenNonPersistedColumns>
     </PropertyGroup>
   </Target>

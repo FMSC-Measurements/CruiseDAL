@@ -1,0 +1,7 @@
+Table,FieldName,DbType,IsPK,IsFK,References,NotNull,Description,Min,Max,RegionsUsing,AdditionalRemarks
+TreeAuditResolution,TreeAuditResolution_CN,INTEGER,X,,,,,,,,
+TreeAuditResolution,CruiseID,TEXT,,X,Cruise,X,,,,,
+TreeAuditResolution,TreeID,TEXT,,X,Tree,X,,,,,
+TreeAuditResolution,TreeAuditRuleID,TEXT,,X,TreeAuditRule,X,,,,,
+TreeAuditResolution,Resolution,TEXT,,,,,description indicating the reason of the resolution. Optional,,,,
+TreeAuditResolution,Initials,TEXT,,,,X,initials of the cruiser that resolved the error.,,,,

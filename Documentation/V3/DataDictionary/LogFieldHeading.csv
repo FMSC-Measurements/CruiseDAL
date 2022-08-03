@@ -1,0 +1,9 @@
+Table,FieldName,DbType,IsPK,IsFK,References,NotNull,Description,Min,Max,RegionsUsing,AdditionalRemarks
+LogFieldHeading,LogFieldHeading_CN,INTEGER,X,,,,,,,,
+LogFieldHeading,CruiseID,TEXT,,X,Cruise,X,,,,,
+LogFieldHeading,Field,TEXT,,X,LogField,X,,,,,
+LogFieldHeading,Heading,TEXT,,,,X,,,,,
+LogFieldHeading,CreatedBy,TEXT,,,,,,,,,
+LogFieldHeading,Created_TS,DATETIME,,,,,,,,,
+LogFieldHeading,ModifiedBy,TEXT,,,,,,,,,
+LogFieldHeading,Modified_TS,DATETIME,,,,,,,,,

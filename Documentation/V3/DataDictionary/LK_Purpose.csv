@@ -1,0 +1,4 @@
+Table,FieldName,DbType,IsPK,IsFK,References,NotNull,Description,Min,Max,RegionsUsing,AdditionalRemarks
+LK_Purpose,LK_Purpose_CN,INTEGER,X,,,,,,,,
+LK_Purpose,Purpose,TEXT,,,,X,,,,,
+LK_Purpose,ShortCode,TEXT,,,,X,,,,,currently short code is only used in V2 file names

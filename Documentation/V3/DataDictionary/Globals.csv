@@ -1,0 +1,4 @@
+Table,FieldName,DbType,IsPK,IsFK,References,NotNull,Description,Min,Max,RegionsUsing,AdditionalRemarks
+Globals,Block,TEXT,,,,,,,,,
+Globals,Key,TEXT,,,,,,,,,
+Globals,Value,TEXT,,,,,,,,,

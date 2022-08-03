@@ -1,0 +1,4 @@
+Table,FieldName,DbType,IsPK,IsFK,References,NotNull,Description,Min,Max,RegionsUsing,AdditionalRemarks
+LK_LoggingMethod,LK_LoggingMethod_CN,INTEGER,X,,,,,,,,
+LK_LoggingMethod,LoggingMethod,TEXT,,,,X,,,,,
+LK_LoggingMethod,FriendlyName,TEXT,,,,X,,,,,

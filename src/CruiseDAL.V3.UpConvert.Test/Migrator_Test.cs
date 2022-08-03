@@ -83,59 +83,59 @@ namespace CruiseDAL.V3.Test
             }
         }
 
-        [Theory]
-        [InlineData("7Wolf.cruise")]
-        [InlineData("MultiTest.2014.10.31.cruise")]
-        public void MigrateFromV2ToV3_testUpdaterMigrate(string fileName)
-        {
-            var filePath = Path.Combine(TestFilesDirectory, fileName);
-            // copy file to test temp dir
-            var tempPath = Path.Combine(TestTempPath, fileName);
-            File.Copy(filePath, tempPath);
+        //[Theory]
+        //[InlineData("7Wolf.cruise")]
+        //[InlineData("MultiTest.2014.10.31.cruise")]
+        //public void MigrateFromV2ToV3_testUpdaterMigrate(string fileName)
+        //{
+        //    var filePath = Path.Combine(TestFilesDirectory, fileName);
+        //    // copy file to test temp dir
+        //    var tempPath = Path.Combine(TestTempPath, fileName);
+        //    File.Copy(filePath, tempPath);
 
-            var newFilePath = new Migrator().MigrateFromV2ToV3(filePath, true);
+        //    var newFilePath = new Migrator().MigrateFromV2ToV3(filePath, true);
 
-            using (var destDB = new CruiseDatastore_V3())
-            using (var srcDB = new CruiseDatastore_V3(newFilePath))
-            {
-                try
-                {
-                    var destConn = destDB.OpenConnection();
-                    Updater_V3.Migrate(srcDB, destDB);
+        //    using (var destDB = new CruiseDatastore_V3())
+        //    using (var srcDB = new CruiseDatastore_V3(newFilePath))
+        //    {
+        //        try
+        //        {
+        //            var destConn = destDB.OpenConnection();
+        //            Updater_V3.Migrate(srcDB, destDB);
 
-                    var dumpPath = newFilePath + ".dump.crz3";
-                    RegesterFileForCleanUp(dumpPath);
-                    destDB.BackupDatabase(dumpPath);
-                    File.Exists(dumpPath).Should().BeTrue();
+        //            var dumpPath = newFilePath + ".dump.crz3";
+        //            RegesterFileForCleanUp(dumpPath);
+        //            destDB.BackupDatabase(dumpPath);
+        //            File.Exists(dumpPath).Should().BeTrue();
 
-                    using (var newdb = new CruiseDatastore_V3(dumpPath))
-                    {
-                        var tables = newdb.GetTableNames();
+        //            using (var newdb = new CruiseDatastore_V3(dumpPath))
+        //            {
+        //                var tables = newdb.GetTableNames();
 
-                        newdb.AttachDB(srcDB, "olddb");
+        //                newdb.AttachDB(srcDB, "olddb");
 
-                        foreach (var t in tables)
-                        {
+        //                foreach (var t in tables)
+        //                {
 
-                            var stuff = newdb.QueryGeneric($"SELECT * FROM main.{t} EXCEPT SELECT * FROM olddb.{t};")
-                                .ToArray();
+        //                    var stuff = newdb.QueryGeneric($"SELECT * FROM main.{t} EXCEPT SELECT * FROM olddb.{t};")
+        //                        .ToArray();
 
-                            if (t == "MessageLog")
-                            {
-                                stuff.Should().NotBeEmpty();
-                                continue;
-                            }
+        //                    if (t == "MessageLog")
+        //                    {
+        //                        stuff.Should().NotBeEmpty();
+        //                        continue;
+        //                    }
 
-                            stuff.Should().BeEmpty();
-                        }
-                    }
-                }
-                finally
-                {
-                    destDB.ReleaseConnection();
-                }
-            }
-        }
+        //                    stuff.Should().BeEmpty();
+        //                }
+        //            }
+        //        }
+        //        finally
+        //        {
+        //            destDB.ReleaseConnection();
+        //        }
+        //    }
+        //}
 
 
         [Fact]

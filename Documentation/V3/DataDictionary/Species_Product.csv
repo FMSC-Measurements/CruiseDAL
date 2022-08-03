@@ -1,0 +1,6 @@
+Table,FieldName,DbType,IsPK,IsFK,References,NotNull,Description,Min,Max,RegionsUsing,AdditionalRemarks
+Species_Product,Species_Product_CN,INTEGER,X,,,,,,,,
+Species_Product,CruiseID,TEXT,,X,Species,X,,,,,
+Species_Product,SpeciesCode,TEXT,,X,Species,X,,,,,
+Species_Product,PrimaryProduct,TEXT,,X,LK_Product,,,,,,
+Species_Product,ContractSpecies,TEXT,,,,X,,,,,

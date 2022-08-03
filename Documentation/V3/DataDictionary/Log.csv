@@ -1,0 +1,25 @@
+Table,FieldName,DbType,IsPK,IsFK,References,NotNull,Description,Min,Max,RegionsUsing,AdditionalRemarks
+Log,Log_CN,INTEGER,X,,,,,,,,
+Log,CruiseID,TEXT,,X,Cruise,X,,,,,
+Log,LogID,TEXT,,,,X,,,,,Guid
+Log,TreeID,TEXT,,X,Tree,X,,,,,
+Log,LogNumber,TEXT,,,,X,,1,,,Although field type is Int. there is a check to ensure value is greater than 1
+Log,Grade,TEXT,,,,,,,,,"allowed values '0', '1', '2', '3', '4', '5', '6', '7', '8', '9'"
+Log,SeenDefect,REAL,,,,,,0,100,,
+Log,PercentRecoverable,REAL,,,,,,0,100,,
+Log,Length,INTEGER,,,,,,0,,,
+Log,ExportGrade,TEXT,,,,,,,,,
+Log,SmallEndDiameter,REAL,,,,,,0,,,
+Log,LargeEndDiameter,REAL,,,,,,0,,,
+Log,GrossBoardFoot,REAL,,,,,,0,,,
+Log,NetBoardFoot,REAL,,,,,,0,,,
+Log,GrossCubicFoot,REAL,,,,,,0,,,
+Log,NetCubicFoot,REAL,,,,,,0,,,
+Log,BoardFootRemoved,REAL,,,,,,0,,,
+Log,CubicFootRemoved,REAL,,,,,,0,,,
+Log,DIBClass,REAL,,,,,,0,,,
+Log,BarkThickness,REAL,,,,,,0,,,
+Log,CreatedBy,TEXT,,,,,,,,,
+Log,Created_TS,DATETIME,,,,,,,,,
+Log,ModifiedBy,TEXT,,,,,,,,,
+Log,Modified_TS,DATETIME,,,,,,,,,

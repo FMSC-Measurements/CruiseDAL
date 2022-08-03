@@ -1,0 +1,9 @@
+Table,FieldName,DbType,IsPK,IsFK,References,NotNull,Description,Min,Max,RegionsUsing,AdditionalRemarks
+PlotLocation,PlotLocation_CN,INTEGER,X,,,,,,,,
+PlotLocation,PlotID,TEXT,,X,Plot,X,,,,,
+PlotLocation,Latitude,REAL,,,,X,,-90,90,,
+PlotLocation,Longitude,REAL,,,,X,,-180,180,,
+PlotLocation,CreatedBy,TEXT,,,,,,,,,
+PlotLocation,Created_TS,DATETIME,,,,,,,,,
+PlotLocation,ModifiedBy,TEXT,,,,,,,,,
+PlotLocation,Modified_TS,DATETIME,,,,,,,,,

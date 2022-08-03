@@ -1,0 +1,6 @@
+Table,FieldName,DbType,IsPK,IsFK,References,NotNull,Description,Min,Max,RegionsUsing,AdditionalRemarks
+LK_District,LK_District_CN,INTEGER,X,,,,,,,,
+LK_District,Region,TEXT,,X,"LK_Forest,LK_Region",X,,,,,
+LK_District,Forest,TEXT,,X,LK_Forest,X,,,,,
+LK_District,District,TEXT,,,,X,,,,,
+LK_District,FriendlyName,TEXT,,,,X,,,,,

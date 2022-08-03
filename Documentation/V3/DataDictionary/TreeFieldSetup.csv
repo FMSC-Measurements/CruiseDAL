@@ -1,0 +1,12 @@
+Table,FieldName,DbType,IsPK,IsFK,References,NotNull,Description,Min,Max,RegionsUsing,AdditionalRemarks
+TreeFieldSetup,CruiseID,TEXT,,X,"SampleGroup,Stratum",X,,,,,
+TreeFieldSetup,StratumCode,TEXT,,X,"SampleGroup,Stratum",X,,,,,
+TreeFieldSetup,SampleGroupCode,TEXT,,X,SampleGroup,,,,,,
+TreeFieldSetup,Field,TEXT,,X,TreeField,X,,,,,
+TreeFieldSetup,FieldOrder,INTEGER,,,,,,,,,
+TreeFieldSetup,IsHidden,BOOLEAN,,,,,,,,,
+TreeFieldSetup,IsLocked,BOOLEAN,,,,,,,,,
+TreeFieldSetup,DefaultValueInt,INTEGER,,,,,,,,,
+TreeFieldSetup,DefaultValueReal,REAL,,,,,,,,,
+TreeFieldSetup,DefaultValueBool,BOOLEAN,,,,,,,,,
+TreeFieldSetup,DefaultValueText,TEXT,,,,,,,,,

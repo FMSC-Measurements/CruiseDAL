@@ -1,0 +1,11 @@
+Table,FieldName,DbType,IsPK,IsFK,References,NotNull,Description,Min,Max,RegionsUsing,AdditionalRemarks
+Stem,Stem_CN,INTEGER,X,,,,,,,,
+Stem,StemID,TEXT,,,,X,,,,,
+Stem,CruiseID,TEXT,,X,Cruise,X,,,,,
+Stem,TreeID,TEXT,,X,Tree,X,,,,,
+Stem,Diameter,REAL,,,,,,,,,
+Stem,DiameterType,TEXT,,,,,,,,,
+Stem,CreatedBy,TEXT,,,,,,,,,
+Stem,Created_TS,DATETIME,,,,,,,,,
+Stem,ModifiedBy,TEXT,,,,,,,,,
+Stem,Modified_TS,DATETIME,,,,,,,,,

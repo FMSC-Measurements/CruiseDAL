@@ -8,11 +8,11 @@
   </PropertyGroup>
 
   <PropertyGroup Label="ProjectVersions">
-    <FMSCORMversion>2.6.12.0</FMSCORMversion>
+    <FMSCORMversion>2.6.13.0</FMSCORMversion>
 
-    <CruiseDALv2SchemaVersion>2.7.3</CruiseDALv2SchemaVersion>
-    <CruiseDALv3SchemaVersion>3.5.4</CruiseDALv3SchemaVersion>
-    <CruiseDALIncrementalVersion>106</CruiseDALIncrementalVersion>
+    <CruiseDALv2SchemaVersion>2.7.4</CruiseDALv2SchemaVersion>
+    <CruiseDALv3SchemaVersion>3.5.5</CruiseDALv3SchemaVersion>
+    <CruiseDALIncrementalVersion>108</CruiseDALIncrementalVersion>
     <CruiseDALCoreVersion>3.0.0.$(CruiseDALIncrementalVersion)</CruiseDALCoreVersion>
     <CruiseDALV2Version>$(CruiseDALv2SchemaVersion).$(CruiseDALIncrementalVersion)</CruiseDALV2Version>
     <CruiseDALV3Version>$(CruiseDALv3SchemaVersion).$(CruiseDALIncrementalVersion)</CruiseDALV3Version>
@@ -26,7 +26,7 @@
   </PropertyGroup>
 
   <PropertyGroup Label="CustomProperties">
-    <BuildCF>false</BuildCF>
+    <BuildCF>true</BuildCF>
     <LibTargetFrameworks>net40;net461;netstandard20;</LibTargetFrameworks>
     <LibTargetFrameworks Condition="'$(BuildCF)' == 'true'">$(LibTargetFrameworks)net35-cf;</LibTargetFrameworks>
 

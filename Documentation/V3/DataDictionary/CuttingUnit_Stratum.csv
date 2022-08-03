@@ -1,0 +1,10 @@
+Table,FieldName,DbType,IsPK,IsFK,References,NotNull,Description,Min,Max,RegionsUsing,AdditionalRemarks
+CuttingUnit_Stratum,CuttingUnit_Stratum_CN,INTEGER,X,,,,,,,,
+CuttingUnit_Stratum,CruiseID,TEXT,,X,"Stratum,CuttingUnit",X,,,,,
+CuttingUnit_Stratum,CuttingUnitCode,TEXT,,X,CuttingUnit,X,,,,,
+CuttingUnit_Stratum,StratumCode,TEXT,,X,Stratum,X,,,,,
+CuttingUnit_Stratum,StratumArea,REAL,,,,,,,,,can be null of user hasn't subdevided area
+CuttingUnit_Stratum,CreatedBy,TEXT,,,,,,,,,
+CuttingUnit_Stratum,Created_TS,DATETIME,,,,,,,,,
+CuttingUnit_Stratum,ModifiedBy,TEXT,,,,,,,,,
+CuttingUnit_Stratum,Modified_TS,DATETIME,,,,,,,,,

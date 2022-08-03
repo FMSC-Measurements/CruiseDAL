@@ -1,0 +1,17 @@
+Table,FieldName,DbType,IsPK,IsFK,References,NotNull,Description,Min,Max,RegionsUsing,AdditionalRemarks
+Cruise,Cruise_CN,INTEGER,X,,,,,,,,
+Cruise,CruiseID,TEXT,,,,X,,,,,
+Cruise,SaleID,TEXT,,,,X,,,,,
+Cruise,SaleNumber,TEXT,,X,Sale,X,,,,,
+Cruise,CruiseNumber,TEXT,,,,X,,,,,
+Cruise,Purpose,TEXT,,X,LK_Purpose,,,,,,
+Cruise,Remarks,TEXT,,,,,,,,,
+Cruise,DefaultUOM,TEXT,,X,LK_UOM,,,,,,
+Cruise,MeasurementYear,TEXT,,,,,,,,,
+Cruise,LogGradingEnabled,BOOLEAN,,,,,,,,,"allowed values 1, 0. Unused field"
+Cruise,UseCrossStrataPlotTreeNumbering,BOOLEAN,,,,,,,,,"allowed values 1, 0"
+Cruise,TemplateFile,TEXT,,,,,,,,,
+Cruise,CreatedBy,TEXT,,,,,,,,,
+Cruise,Created_TS,DATETIME,,,,,,,,,
+Cruise,ModifiedBy,TEXT,,,,,,,,,
+Cruise,Modified_TS,DATETIME,,,,,,,,,

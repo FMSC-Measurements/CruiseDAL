@@ -1,0 +1,5 @@
+Table,FieldName,DbType,IsPK,IsFK,References,NotNull,Description,Min,Max,RegionsUsing,AdditionalRemarks
+LK_CruiseMethod,LK_CruiseMethod_CN,INTEGER,X,,,,,,,,
+LK_CruiseMethod,Method,TEXT,,,,X,,,,,
+LK_CruiseMethod,FriendlyName,TEXT,,,,X,,,,,
+LK_CruiseMethod,IsPlotMethod,BOOLEAN,,,,X,,,,,

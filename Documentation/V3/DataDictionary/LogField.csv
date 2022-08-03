@@ -1,0 +1,5 @@
+Table,FieldName,DbType,IsPK,IsFK,References,NotNull,Description,Min,Max,RegionsUsing,AdditionalRemarks
+LogField,LogField_CN,INTEGER,X,,,,,,,,
+LogField,Field,TEXT,,,,X,,,,,
+LogField,DefaultHeading,TEXT,,,,X,,,,,
+LogField,DbType,TEXT,,,,X,,,,,

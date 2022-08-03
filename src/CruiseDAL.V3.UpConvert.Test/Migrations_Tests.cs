@@ -129,6 +129,7 @@ namespace CruiseDAL.V3.Test
                     "LK_TallyEntryType",
                     "Species",
                     "TreeField",
+                    "Sale"
                 };
             // some tables don't have cascading deletes so we need to skip them
             Skip.If(skipTables.Contains(tableName));

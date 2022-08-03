@@ -56,9 +56,6 @@ namespace CruiseDAL.V3.Models
   [Field("TallyBySubPop")]
   public Boolean? TallyBySubPop { get; set; }
 
-  [Field("UseExternalSampler")]
-  public Boolean? UseExternalSampler { get; set; }
-
   [Field("TallyMethod")]
   public String TallyMethod { get; set; }
 

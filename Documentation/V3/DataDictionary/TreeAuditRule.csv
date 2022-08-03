@@ -1,0 +1,8 @@
+Table,FieldName,DbType,IsPK,IsFK,References,NotNull,Description,Min,Max,RegionsUsing,AdditionalRemarks
+TreeAuditRule,TreeAuditRule_CN,INTEGER,X,,,,,,,,
+TreeAuditRule,TreeAuditRuleID,TEXT,,,,X,,,,,Guid
+TreeAuditRule,CruiseID,TEXT,,X,Cruise,X,,,,,
+TreeAuditRule,Field,TEXT,,X,TreeField,X,,,,,
+TreeAuditRule,Min,REAL,,,,,,,,,Min must be less than Max
+TreeAuditRule,Max,REAL,,,,,,,,,
+TreeAuditRule,Description,TEXT,,,,,,,,,

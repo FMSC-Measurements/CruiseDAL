@@ -39,14 +39,14 @@ SELECT
     sg.DefaultLiveDead,
     sg.SamplingFrequency,
     sg.InsuranceFrequency,
-    sg.KZ,
-    sg.BigBAF,
-    sg.SmallFPS,
+    ifnull(sg.KZ, 0) AS KZ,
+    ifnull(sg.BigBAF, 0) AS BigBAF,
+    ifnull(sg.SmallFPS, 0) AS SmallFPS,
     sg.Description,
     NULL AS SampleSelectorType,
     NULL AS SampleSelectorState,
-    sg.MinKPI,
-    sg.MaxKPI,
+    ifnull(sg.MinKPI, 0) AS MinKPI,
+    ifnull(sg.MaxKPI, 0) AS MaxKPI,
     '{createdBy}'
 FROM {fromDbName}.SampleGroup AS sg
 JOIN {fromDbName}.Stratum AS st USING (StratumCode)

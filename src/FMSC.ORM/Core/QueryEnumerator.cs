@@ -83,6 +83,7 @@ namespace FMSC.ORM.Core
         }
     }
 
+#if !NET35_CF
     public class QueryEnumerator<TResult1, TResult2> : IEnumerator<Tuple<TResult1, TResult2>> 
         where TResult1 : new () 
         where TResult2 : new()
@@ -177,4 +178,5 @@ namespace FMSC.ORM.Core
             throw new NotSupportedException();
         }
     }
+#endif
 }

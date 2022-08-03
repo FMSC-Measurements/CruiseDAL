@@ -1,0 +1,14 @@
+Table,FieldName,DbType,IsPK,IsFK,References,NotNull,Description,Min,Max,RegionsUsing,AdditionalRemarks
+TreeLocation,TreeLocation_CN,INTEGER,X,,,,,,,,
+TreeLocation,TreeID,TEXT,,X,Tree,X,,,,,
+TreeLocation,Latitude,REAL,,,,X,,-90,90,,
+TreeLocation,Longitude,REAL,,,,X,,-180,180,,
+TreeLocation,SS_Latatude,REAL,,,,,side shot latatude,-90,90,,if side shot position values not null Azimuth and Distance must also be not null
+TreeLocation,SS_Longitude,REAL,,,,,side shot longitude,-180,180,,
+TreeLocation,Azimuth,REAL,,,,,,,,,
+TreeLocation,Distance,REAL,,,,,,,,,
+TreeLocation,IsEstimate,BOOLEAN,,,,,,,,,
+TreeLocation,CreatedBy,TEXT,,,,,,,,,
+TreeLocation,Created_TS,DATETIME,,,,,,,,,
+TreeLocation,ModifiedBy,TEXT,,,,,,,,,
+TreeLocation,Modified_TS,DATETIME,,,,,,,,,

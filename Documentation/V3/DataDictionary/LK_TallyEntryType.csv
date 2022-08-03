@@ -1,0 +1,3 @@
+Table,FieldName,DbType,IsPK,IsFK,References,NotNull,Description,Min,Max,RegionsUsing,AdditionalRemarks
+LK_TallyEntryType,LK_TallyEntryType_CN,INTEGER,X,,,,,,,,
+LK_TallyEntryType,EntryType,TEXT,,,,X,,,,,

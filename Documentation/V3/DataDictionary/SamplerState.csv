@@ -1,0 +1,16 @@
+Table,FieldName,DbType,IsPK,IsFK,References,NotNull,Description,Min,Max,RegionsUsing,AdditionalRemarks
+SamplerState,SamplerState_CN,INTEGER,X,,,,,,,,
+SamplerState,DeviceID,TEXT,,X,Device,X,,,,,
+SamplerState,CruiseID,TEXT,,X,"SampleGroup,Device",X,,,,,
+SamplerState,StratumCode,TEXT,,X,SampleGroup,X,,,,,
+SamplerState,SampleGroupCode,TEXT,,X,SampleGroup,X,,,,,
+SamplerState,SampleSelectorType,TEXT,,,,,,,,,should not change after record creation
+SamplerState,BlockState,TEXT,,,,,,,,,
+SamplerState,SystematicIndex,INTEGER,,,,,,,,,should not change after record creation
+SamplerState,Counter,INTEGER,,,,,,,,,
+SamplerState,InsuranceIndex,INTEGER,,,,,,,,,should not change after record creation
+SamplerState,InsuranceCounter,INTEGER,,,,,,,,,
+SamplerState,CreatedBy,TEXT,,,,,,,,,
+SamplerState,Created_TS,DATETIME,,,,,,,,,
+SamplerState,ModifiedBy,TEXT,,,,,,,,,
+SamplerState,Modified_TS,DATETIME,,,,,,,,,

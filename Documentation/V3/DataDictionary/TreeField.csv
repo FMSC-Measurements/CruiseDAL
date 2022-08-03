@@ -1,0 +1,6 @@
+Table,FieldName,DbType,IsPK,IsFK,References,NotNull,Description,Min,Max,RegionsUsing,AdditionalRemarks
+TreeField,TreeField_CN,INTEGER,X,,,,,,,,
+TreeField,Field,TEXT,,,,,,,,,
+TreeField,DefaultHeading,TEXT,,,,X,,,,,
+TreeField,DbType,TEXT,,,,X,,,,,
+TreeField,IsTreeMeasurmentField,BOOLEAN,,,,,,,,,

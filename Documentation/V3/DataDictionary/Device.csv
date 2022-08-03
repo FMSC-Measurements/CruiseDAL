@@ -1,0 +1,4 @@
+Table,FieldName,DbType,IsPK,IsFK,References,NotNull,Description,Min,Max,RegionsUsing,AdditionalRemarks
+Device,DeviceID,TEXT,,,,X,,,,,Guid
+Device,CruiseID,TEXT,,X,Cruise,X,,,,,
+Device,Name,TEXT,,,,,,,,,

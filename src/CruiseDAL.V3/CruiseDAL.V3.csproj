@@ -11,4 +11,7 @@
     <ProjectReference Include="..\CruiseDAL.Core\CruiseDAL.Core.csproj" PrivateAssets="none" />
   </ItemGroup>
 
+
+	
+	<!--when implemented this csproj feature would be useful  for the Schema directory https://github.com/dotnet/project-system/issues/5372 -->
 </Project>
