@@ -15,7 +15,7 @@ namespace CruiseDAL
 
             Update_Impl(datastore);
 
-            // the following method calls are not nessicary for updating the 
+            // the following method calls are not necessary for updating the 
             // database. They just need to be ran to clean up potential errors. 
             CleanupErrorLog(datastore);
             FixTreeAuditValueFKeyErrors(datastore);
@@ -24,8 +24,8 @@ namespace CruiseDAL
         public static void Update_Impl(CruiseDatastore db)
         {
             var dbVersion = db.DatabaseVersion;
-            if (string.IsNullOrWhiteSpace(dbVersion))
-            { throw new UpdateException("unable to determin file version"); }
+            if (string.IsNullOrEmpty(dbVersion))
+            { throw new UpdateException("unable to determine file version"); }
 
             if (!CheckCanUpdate(dbVersion))
             {

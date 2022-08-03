@@ -33,6 +33,7 @@ namespace FMSC.ORM.Core
         }
     }
 
+#if !NET35_CF
     public class QueryResult<TResult1, TResult2> : IEnumerable<Tuple<TResult1, TResult2>> 
         where TResult1 : new()
         where TResult2 : new()
@@ -57,9 +58,11 @@ namespace FMSC.ORM.Core
             return new QueryEnumerator<TResult1, TResult2>(reader, exceptionProcessor);
         }
 
+
         IEnumerator IEnumerable.GetEnumerator()
         {
             return this.GetEnumerator();
         }
     }
+#endif
 }

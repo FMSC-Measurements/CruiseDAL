@@ -244,6 +244,8 @@ namespace FMSC.ORM.Core
             return new QueryResult<TResult>(connection, command, transaction, exceptionProcessor);
             
         }
+
+#if !NET35_CF
         public static IEnumerable<Tuple<TResult1, TResult2>> Query<TResult1, TResult2>(this DbConnection connection, string commandText, object[] paramaters = null, DbTransaction transaction = null, IExceptionProcessor exceptionProcessor = null) 
             where TResult1 : new()
             where TResult2 : new()
@@ -256,6 +258,7 @@ namespace FMSC.ORM.Core
 
             return new QueryResult<TResult1, TResult2>(connection, command, transaction, exceptionProcessor);
         }
+#endif
 
         public static IEnumerable<TResult> Query2<TResult>(this DbConnection connection, string commandText, object paramaters = null, DbTransaction transaction = null, IExceptionProcessor exceptionProcessor = null) where TResult : new()
         {
@@ -268,6 +271,7 @@ namespace FMSC.ORM.Core
             return new QueryResult<TResult>(connection, command, transaction, exceptionProcessor);
         }
 
+#if !NET35_CF
         public static IEnumerable<Tuple<TResult1, TResult2>> Query2<TResult1, TResult2>(this DbConnection connection, string commandText, object paramaters = null, DbTransaction transaction = null, IExceptionProcessor exceptionProcessor = null) 
             where TResult1 : new()
             where TResult2 : new()
@@ -280,8 +284,9 @@ namespace FMSC.ORM.Core
 
             return new QueryResult<TResult1, TResult2>(connection, command, transaction, exceptionProcessor);
         }
+#endif
 
-        #endregion Query
+#endregion Query
 
         #region QueryScalar
 
