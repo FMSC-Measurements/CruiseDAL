@@ -53,6 +53,7 @@ namespace CruiseDAL.Update
             RebuildTable(conn, transaction, exceptionProcessor, new TreeTableDefinition_3_5_5());
             RebuildTable(conn, transaction, exceptionProcessor, new TreeDefaultValueTableDefinition_3_5_5());
             RebuildTable(conn, transaction, exceptionProcessor, new TreeMeasurmentsTableDefinition_3_5_5());
+            RebuildTable(conn, transaction, exceptionProcessor, new TreeAuditRuleSelectorTableDefinition_3_5_5());
 
             foreach(var view in suspendViews)
             {

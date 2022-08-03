@@ -16,8 +16,6 @@ namespace CruiseDAL
         public static readonly IEnumerable<ITableDefinition> TABLE_DEFINITIONS =
         new ITableDefinition[]
         {
-            new DeviceTableDefinition_3_5_5(),
-
             // lookup
             new FIATableDefinition(),
             new TreeFieldTableDefinition(),
@@ -35,6 +33,7 @@ namespace CruiseDAL
             // design
             new SaleTableDefinition(),
             new CruiseTableDefinition_3_5_3(),
+            new DeviceTableDefinition_3_5_5(),
             new CuttingUnitTableDefinition_3_5_5(),
             new StratumTableDefinition(),
             new CuttingUnit_StratumTableDefinition(),
@@ -66,7 +65,7 @@ namespace CruiseDAL
 
             // validation
             new TreeAuditRuleTableDefinition(),
-            new TreeAuditRuleSelectorTableDefinition(),
+            new TreeAuditRuleSelectorTableDefinition_3_5_5(),
             new TreeAuditResolutionTableDefinition(),
             new LogGradeAuditRuleTableDefinition(),
 
