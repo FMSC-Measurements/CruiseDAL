@@ -12,7 +12,7 @@
 
     <CruiseDALv2SchemaVersion>2.7.4</CruiseDALv2SchemaVersion>
     <CruiseDALv3SchemaVersion>3.5.5</CruiseDALv3SchemaVersion>
-    <CruiseDALIncrementalVersion>108</CruiseDALIncrementalVersion>
+    <CruiseDALIncrementalVersion>109</CruiseDALIncrementalVersion>
     <CruiseDALCoreVersion>3.0.0.$(CruiseDALIncrementalVersion)</CruiseDALCoreVersion>
     <CruiseDALV2Version>$(CruiseDALv2SchemaVersion).$(CruiseDALIncrementalVersion)</CruiseDALV2Version>
     <CruiseDALV3Version>$(CruiseDALv3SchemaVersion).$(CruiseDALIncrementalVersion)</CruiseDALV3Version>
@@ -27,7 +27,7 @@
 
   <PropertyGroup Label="CustomProperties">
     <BuildCF>false</BuildCF>
-    <LibTargetFrameworks>net40;net461;netstandard20;</LibTargetFrameworks>
+    <LibTargetFrameworks>net40;net462;netstandard20;</LibTargetFrameworks>
     <LibTargetFrameworks Condition="'$(BuildCF)' == 'true'">$(LibTargetFrameworks)net35-cf;</LibTargetFrameworks>
 
     <TestsTargetFrameworks>net452;net461;netcoreapp3.1;</TestsTargetFrameworks>
