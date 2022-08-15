@@ -128,10 +128,10 @@ namespace CruiseDAL.Update
             {
                 foreach (var map in customFieldMaps)
                 {
-                    var i = fieldListTo.FindIndex(x => string.Compare(x, map.Key, true) is 0);
+                    var i = fieldListFrom.FindIndex(x => string.Compare(x, map.Key, true) is 0);
                     if (i > 0)
                     {
-                        fieldListTo[i] = map.Value;
+                        fieldListFrom[i] = map.Value;
                     }
                     else
                     {
@@ -141,7 +141,7 @@ namespace CruiseDAL.Update
                 }
             }
 
-            conn.ExecuteNonQuery($"INSERT INTO main.{tempTableName} ( {fieldListTo.Aggregate((a, b) => a + ", " + b)} ) SELECT {fieldListFrom.Aggregate((a, b) => a + ", " + b)} FROM main.{tableName};");
+            conn.ExecuteNonQuery($"INSERT INTO main.{tempTableName} ( {fieldListTo.Select(x => "\"" + x + "\"").Aggregate((a, b) => a + ", " + b)} ) SELECT {fieldListFrom.Aggregate((a, b) => a + ", " + b)} FROM main.{tableName};");
 
             conn.ExecuteNonQuery($"DROP TABLE main.{tableName};");
             conn.ExecuteNonQuery($"ALTER TABLE {tempTableName} RENAME TO {tableName}");
@@ -187,13 +187,13 @@ namespace CruiseDAL.Update
 
         public static string[] ListFieldsIntersect(DbConnection conn, string table1, string table2, DbTransaction transaction = null, IExceptionProcessor exceptionProcessor = null)
         {
-            var sourceFields = conn.QueryScalar2<string>($@"SELECT '""' || Name || '""' FROM pragma_table_info('{table1}');",
+            var sourceFields = conn.QueryScalar2<string>($@"SELECT Name FROM pragma_table_info('{table1}');",
                 transaction: transaction, exceptionProcessor: exceptionProcessor);
 
-            var destFields = conn.QueryScalar2<string>($@"SELECT '""' || Name || '""' FROM pragma_table_info('{table2}');",
+            var destFields = conn.QueryScalar2<string>($@"SELECT Name FROM pragma_table_info('{table2}');",
                 transaction: transaction, exceptionProcessor: exceptionProcessor);
 
-            var both = sourceFields.Intersect(destFields).ToArray();
+            var both = sourceFields.Intersect(destFields, StringComparer.OrdinalIgnoreCase).ToArray();
             return both;
         }
 
