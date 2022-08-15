@@ -451,7 +451,7 @@ namespace CruiseDAL.V3.Sync
             {
                 var match = destination.From<TallyLedger>()
                     .Where("TallyLedgerID = @TallyLedgerID")
-                    .Query2(i.TallyLedgerID)
+                    .Query2(new { i.TallyLedgerID })
                     .FirstOrDefault();
 
                 if (match != null)

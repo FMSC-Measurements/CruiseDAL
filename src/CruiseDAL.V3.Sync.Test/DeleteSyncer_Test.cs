@@ -108,5 +108,41 @@ namespace CruiseDAL.V3.Sync
             toDb.GetRowCount("Stratum", "WHERE StratumID = @p1", newStratum.StratumID)
                 .Should().Be(0);
         }
+
+        [Fact]
+        public void Sync_TallyLedger_Delete()
+        {
+            var init = new DatabaseInitializer();
+            var fromPath = GetTempFilePathWithExt(".crz3", "Sync_SampleGroup_Delete_fromFile");
+            var toPath = GetTempFilePathWithExt(".crz3", "Sync_SampleGroup_Delete_toFile");
+
+            using var fromDb = init.CreateDatabaseFile(fromPath);
+            var cruiseID = init.CruiseID;
+            var saleID = init.SaleID;
+
+            var tallyLedger = new TallyLedger
+            {
+                CruiseID = cruiseID,
+                TallyLedgerID = Guid.NewGuid().ToString(),
+                CuttingUnitCode = "u1",
+                StratumCode = "st1",
+                SampleGroupCode = "sg1",
+            };
+            fromDb.Insert(tallyLedger);
+
+            fromDb.CopyTo(toPath, true);
+            using var toDb = new CruiseDatastore_V3(toPath);
+
+            fromDb.Delete(tallyLedger);
+
+            var syncer = new DeleteSysncer();
+            var syncOptions = new CruiseSyncOptions();
+            syncer.Sync(cruiseID, fromDb, toDb, syncOptions);
+
+            toDb.GetRowCount("TallyLedger", "WHERE TallyLedgerID = @p1", tallyLedger.TallyLedgerID)
+                .Should().Be(0);
+            toDb.GetRowCount("TallyLedger_Tombstone", "WHERE TallyLedgerID = @p1", tallyLedger.TallyLedgerID)
+                .Should().Be(1);
+        }
     }
 }
