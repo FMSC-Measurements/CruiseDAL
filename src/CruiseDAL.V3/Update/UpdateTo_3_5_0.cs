@@ -1,19 +1,13 @@
 ﻿using CruiseDAL.Schema;
-using CruiseDAL.Schema.Views;
 using FMSC.ORM.Core;
-using System;
-using System.Collections.Generic;
 using System.Data.Common;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace CruiseDAL.Update
 {
     public class UpdateTo_3_5_0 : DbUpdateBase
     {
-        public UpdateTo_3_5_0() 
-            : base(targetVersion: "3.5.0", sourceVersions: new[] {"3.4.4"})
+        public UpdateTo_3_5_0()
+            : base(targetVersion: "3.5.0", sourceVersions: new[] { "3.4.4" })
         {
         }
 

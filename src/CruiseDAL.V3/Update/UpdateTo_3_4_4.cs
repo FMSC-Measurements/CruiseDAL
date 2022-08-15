@@ -1,6 +1,5 @@
 ﻿using CruiseDAL.Schema;
 using FMSC.ORM.Core;
-using System.Collections.Generic;
 using System.Data.Common;
 
 namespace CruiseDAL.Update
