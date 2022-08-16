@@ -84,7 +84,7 @@ namespace CruiseDAL
             //    return false;
             //}
 
-            var subPopTdvErrors = CheckAllSubPopsHavTDV(cruiseID, v3db);
+            var subPopTdvErrors = CheckAllSubPopsHaveTDV(cruiseID, v3db);
             if(subPopTdvErrors.Any())
             {
                 foreach(var error in subPopTdvErrors)
@@ -114,21 +114,21 @@ namespace CruiseDAL
         //    else { return true; }
         //}
 
-        public static IEnumerable<string> CheckAllSubPopsHavTDV(string cruiseID, CruiseDatastore_V3 v3db)
+        public static IEnumerable<string> CheckAllSubPopsHaveTDV(string cruiseID, CruiseDatastore_V3 v3db)
         {
             return v3db.QueryScalar<string>(
 @"SELECT
-    'SubPopulation' AS Category,
-    'Warning' AS Level,
-    'SubPopulation ' || SpeciesCode || ' ' || LiveDead || ' in SG ' || SampleGroupCode || ' Stratum ' || StratumCode || ' Has No Applyable Tree Defaults' AS Message,
-    SubPopulationID AS RecordID
+    --'SubPopulation' AS Category,
+    --'Warning' AS Level,
+    'SubPopulation ' || SpeciesCode || ' ' || LiveDead || ' in SG ' || SampleGroupCode || ' Stratum ' || StratumCode || ' Has No Applicable Tree Defaults' AS Message
+    --SubPopulationID AS RecordID
 FROM (
         SELECT
             subp.*,
             (SELECT TreeDefaultValue_CN FROM TreeDefaultValue AS tdv
             WHERE  tdv.CruiseID = subp.CruiseID
-                AND SpeciesCode = subp.SpeciesCode OR SpeciesCode IS NULL
-                AND PrimaryProduct = sg.PrimaryProduct OR PrimaryProduct IS NULL
+                AND (SpeciesCode = subp.SpeciesCode OR SpeciesCode IS NULL)
+                AND (PrimaryProduct = sg.PrimaryProduct OR PrimaryProduct IS NULL)
             ORDER BY PrimaryProduct DESC, SpeciesCode DESC
             LIMIT 1
             ) AS TreeDefaultValue_CN
