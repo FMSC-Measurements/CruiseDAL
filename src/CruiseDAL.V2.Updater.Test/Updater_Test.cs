@@ -36,6 +36,8 @@ namespace CruiseDAL.Tests
             }
 
             database.CheckTableExists("SamplerState").Should().BeTrue();
+
+            database.DatabaseVersion.Should().Be(Schema.Schema.CREATE_TABLES_VERSION);
         }
 
         void ValidateCRUD(CruiseDatastore ds)

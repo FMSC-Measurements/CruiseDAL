@@ -1,0 +1,12 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+		<Version>$(CruiseDALV2Version)</Version>
+		<TargetFrameworks>$(LibTargetFrameworks)</TargetFrameworks>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<ProjectReference Include="..\CruiseDAL.Core\CruiseDAL.Core.csproj" />
+	</ItemGroup>
+
+</Project>

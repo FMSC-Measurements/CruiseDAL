@@ -76,24 +76,11 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "DbSync", "DbSync", "{89CC4E
 		..\Documentation\V3\DbSync\SyncInternalProcess.md = ..\Documentation\V3\DbSync\SyncInternalProcess.md
 	EndProjectSection
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CruiseDAL.V2.Updater", "CruiseDAL.V2.Updater\CruiseDAL.V2.Updater.csproj", "{578FAABD-D2F6-4E43-A3FD-35496F3CC4F9}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CruiseDAL.V2.Updater.Test", "CruiseDAL.V2.Updater.Test\CruiseDAL.V2.Updater.Test.csproj", "{457538B2-06A7-4C65-A545-0C69E658C310}"
+EndProject
 Global
-	GlobalSection(SharedMSBuildProjectFiles) = preSolution
-		CruiseDAL.TestCommon.V2\CruiseDAL.TestCommon.V2.projitems*{00ae3e67-f599-4674-9bee-261a027600f7}*SharedItemsImports = 5
-		CruiseDAL.TestCommon\CruiseDAL.TestCommon.projitems*{00ae3e67-f599-4674-9bee-261a027600f7}*SharedItemsImports = 5
-		CruiseDAL.TestCommon.V3\CruiseDAL.TestCommon.V3.projitems*{1087653e-18da-467c-9071-073332b8b76b}*SharedItemsImports = 5
-		CruiseDAL.TestCommon\CruiseDAL.TestCommon.projitems*{1087653e-18da-467c-9071-073332b8b76b}*SharedItemsImports = 5
-		CruiseDAL.TestCommon.V3\CruiseDAL.TestCommon.V3.projitems*{73d6bed5-4a9e-4ae8-bead-1cf43eef9be1}*SharedItemsImports = 5
-		CruiseDAL.TestCommon\CruiseDAL.TestCommon.projitems*{73d6bed5-4a9e-4ae8-bead-1cf43eef9be1}*SharedItemsImports = 5
-		CruiseDAL.TestCommon\CruiseDAL.TestCommon.projitems*{75a64b8f-d90d-42af-ab17-96b35c4df788}*SharedItemsImports = 13
-		CruiseDAL.TestCommon.V2\CruiseDAL.TestCommon.V2.projitems*{884f964b-0730-4a36-aeac-6e4034070c8c}*SharedItemsImports = 13
-		CruiseDAL.TestCommon\CruiseDAL.TestCommon.projitems*{886a3cdf-fd6e-4d0e-8d05-8884dc11d877}*SharedItemsImports = 5
-		CruiseDAL.TestCommon.V2\CruiseDAL.TestCommon.V2.projitems*{8d9a8067-486e-468d-bf6c-a44e695b0f90}*SharedItemsImports = 5
-		CruiseDAL.TestCommon.V3\CruiseDAL.TestCommon.V3.projitems*{8d9a8067-486e-468d-bf6c-a44e695b0f90}*SharedItemsImports = 5
-		CruiseDAL.TestCommon\CruiseDAL.TestCommon.projitems*{8d9a8067-486e-468d-bf6c-a44e695b0f90}*SharedItemsImports = 5
-		CruiseDAL.TestCommon.V3\CruiseDAL.TestCommon.V3.projitems*{a646ff3f-c530-4bdd-b9af-cc86f875ceb3}*SharedItemsImports = 5
-		CruiseDAL.TestCommon\CruiseDAL.TestCommon.projitems*{a646ff3f-c530-4bdd-b9af-cc86f875ceb3}*SharedItemsImports = 5
-		CruiseDAL.TestCommon.V3\CruiseDAL.TestCommon.V3.projitems*{ed86a10a-9d11-4dcb-9d72-196c8732d3b2}*SharedItemsImports = 13
-	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
 		Legacy|Any CPU = Legacy|Any CPU
@@ -228,6 +215,18 @@ Global
 		{30DDC6BD-E022-4D00-A5ED-03062B698560}.Legacy|Any CPU.Build.0 = Debug|Any CPU
 		{30DDC6BD-E022-4D00-A5ED-03062B698560}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{30DDC6BD-E022-4D00-A5ED-03062B698560}.Release|Any CPU.Build.0 = Release|Any CPU
+		{578FAABD-D2F6-4E43-A3FD-35496F3CC4F9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{578FAABD-D2F6-4E43-A3FD-35496F3CC4F9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{578FAABD-D2F6-4E43-A3FD-35496F3CC4F9}.Legacy|Any CPU.ActiveCfg = Debug|Any CPU
+		{578FAABD-D2F6-4E43-A3FD-35496F3CC4F9}.Legacy|Any CPU.Build.0 = Debug|Any CPU
+		{578FAABD-D2F6-4E43-A3FD-35496F3CC4F9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{578FAABD-D2F6-4E43-A3FD-35496F3CC4F9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{457538B2-06A7-4C65-A545-0C69E658C310}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{457538B2-06A7-4C65-A545-0C69E658C310}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{457538B2-06A7-4C65-A545-0C69E658C310}.Legacy|Any CPU.ActiveCfg = Debug|Any CPU
+		{457538B2-06A7-4C65-A545-0C69E658C310}.Legacy|Any CPU.Build.0 = Debug|Any CPU
+		{457538B2-06A7-4C65-A545-0C69E658C310}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{457538B2-06A7-4C65-A545-0C69E658C310}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -249,8 +248,28 @@ Global
 		{94C5C59E-4852-413E-8F9F-74BFD358A039} = {297B19EA-5FA9-4EB1-8638-519B5EDA1EC1}
 		{39761B2E-CAB7-428B-B569-1ED8A2F4B801} = {94C5C59E-4852-413E-8F9F-74BFD358A039}
 		{89CC4EBA-F7E4-4839-90EF-8DF961C409B2} = {39761B2E-CAB7-428B-B569-1ED8A2F4B801}
+		{457538B2-06A7-4C65-A545-0C69E658C310} = {50484533-C2FF-4C4F-B71C-3BFCFA1DAC59}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {8C6EAB8C-1186-4EFB-BEC1-3597B32E3F4C}
+	EndGlobalSection
+	GlobalSection(SharedMSBuildProjectFiles) = preSolution
+		CruiseDAL.TestCommon.V2\CruiseDAL.TestCommon.V2.projitems*{00ae3e67-f599-4674-9bee-261a027600f7}*SharedItemsImports = 5
+		CruiseDAL.TestCommon\CruiseDAL.TestCommon.projitems*{00ae3e67-f599-4674-9bee-261a027600f7}*SharedItemsImports = 5
+		CruiseDAL.TestCommon.V3\CruiseDAL.TestCommon.V3.projitems*{1087653e-18da-467c-9071-073332b8b76b}*SharedItemsImports = 5
+		CruiseDAL.TestCommon\CruiseDAL.TestCommon.projitems*{1087653e-18da-467c-9071-073332b8b76b}*SharedItemsImports = 5
+		CruiseDAL.TestCommon\CruiseDAL.TestCommon.projitems*{30ddc6bd-e022-4d00-a5ed-03062b698560}*SharedItemsImports = 5
+		CruiseDAL.TestCommon\CruiseDAL.TestCommon.projitems*{457538b2-06a7-4c65-a545-0c69e658c310}*SharedItemsImports = 5
+		CruiseDAL.TestCommon.V3\CruiseDAL.TestCommon.V3.projitems*{73d6bed5-4a9e-4ae8-bead-1cf43eef9be1}*SharedItemsImports = 5
+		CruiseDAL.TestCommon\CruiseDAL.TestCommon.projitems*{73d6bed5-4a9e-4ae8-bead-1cf43eef9be1}*SharedItemsImports = 5
+		CruiseDAL.TestCommon\CruiseDAL.TestCommon.projitems*{75a64b8f-d90d-42af-ab17-96b35c4df788}*SharedItemsImports = 13
+		CruiseDAL.TestCommon.V2\CruiseDAL.TestCommon.V2.projitems*{884f964b-0730-4a36-aeac-6e4034070c8c}*SharedItemsImports = 13
+		CruiseDAL.TestCommon\CruiseDAL.TestCommon.projitems*{886a3cdf-fd6e-4d0e-8d05-8884dc11d877}*SharedItemsImports = 5
+		CruiseDAL.TestCommon.V2\CruiseDAL.TestCommon.V2.projitems*{8d9a8067-486e-468d-bf6c-a44e695b0f90}*SharedItemsImports = 5
+		CruiseDAL.TestCommon.V3\CruiseDAL.TestCommon.V3.projitems*{8d9a8067-486e-468d-bf6c-a44e695b0f90}*SharedItemsImports = 5
+		CruiseDAL.TestCommon\CruiseDAL.TestCommon.projitems*{8d9a8067-486e-468d-bf6c-a44e695b0f90}*SharedItemsImports = 5
+		CruiseDAL.TestCommon.V3\CruiseDAL.TestCommon.V3.projitems*{a646ff3f-c530-4bdd-b9af-cc86f875ceb3}*SharedItemsImports = 5
+		CruiseDAL.TestCommon\CruiseDAL.TestCommon.projitems*{a646ff3f-c530-4bdd-b9af-cc86f875ceb3}*SharedItemsImports = 5
+		CruiseDAL.TestCommon.V3\CruiseDAL.TestCommon.V3.projitems*{ed86a10a-9d11-4dcb-9d72-196c8732d3b2}*SharedItemsImports = 13
 	EndGlobalSection
 EndGlobal
