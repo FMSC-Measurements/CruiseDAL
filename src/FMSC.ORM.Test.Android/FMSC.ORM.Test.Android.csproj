@@ -1,33 +1,15 @@
-﻿<Project Sdk="MSBuild.Sdk.Extras/1.5.4">
-  <PropertyGroup>
-    <TargetFramework>MonoAndroid81</TargetFramework>
-    <Configurations>Debug;Release;Legacy</Configurations>
-    <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
-  </PropertyGroup>
+﻿<Project Sdk="Microsoft.NET.Sdk">
+	<PropertyGroup>
+		<TargetFramework>net6.0-android</TargetFramework>
+		<OutputType>Exe</OutputType>
+		<Configurations>Debug;Release;Legacy</Configurations>
+		<GeneratePackageOnBuild>false</GeneratePackageOnBuild>
+		<RuntimeIdentifiers>android-arm;android-arm64;android-x86;android-x64</RuntimeIdentifiers>
+	</PropertyGroup>
 
-  <ItemGroup>
-    <None Include="**\*.cs;**\*.xml;**\*.axml;**\*.png" Exclude="obj\**\*.*;bin\**\*.*" />
-    <!--<Compile Include="GlobalSuppressions.cs" />-->
-    <Compile Include="**\*.shared.cs" />
-    <Compile Include="**\*.shared.*.cs" />
-  </ItemGroup>
-
-  <ItemGroup Condition=" $(TargetFramework.StartsWith('MonoAndroid')) ">
-    <Compile Include="**\*.android.cs" />
-    <Compile Include="**\*.android.*.cs" />
-
-    <AndroidResource Include="Resources\**\*.axml" />
-    <AndroidResource Include="Resources\**\*.xml" />
-    <AndroidResource Include="Resources\**\*.png" />
-  </ItemGroup>
-
-  <!--<Import Project="$(MSBuildSDKExtrasTargets)" Condition="Exists('$(MSBuildSDKExtrasTargets)')" />-->
-
-  <ItemGroup>
-    <!--<PackageReference Include="MSBuild.Sdk.Extras" Version="1.5.4" PrivateAssets="All" />-->
-
-    <PackageReference Include="xunit" Version="2.4.1" />
-    <PackageReference Include="xunit.runner.devices" Version="2.5.25" />
-    <ProjectReference Include="..\FMSC.ORM.Test\FMSC.ORM.Test.csproj" Properties="TargetFramework=netstandard2.0" />
-  </ItemGroup>
+	<ItemGroup>
+		<PackageReference Include="xunit" Version="2.4.1" />
+		<PackageReference Include="xunit.runner.devices" Version="2.5.25" />
+		<ProjectReference Include="..\FMSC.ORM.Test\FMSC.ORM.Test.csproj"  />
+	</ItemGroup>
 </Project>
