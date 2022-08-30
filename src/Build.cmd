@@ -16,23 +16,32 @@ SET msbuild="%parent%tools\msbuild.cmd"
 
 IF NOT DEFINED buildNetCF SET buildNetCF="true"
 IF NOT DEFINED build_config SET build_config="Release"
+IF NOT DEFINED targets	SET targets="build"
 
 call %msbuild% %parent%CruiseDAL.sln -t:restore
 
-call %msbuild% /p:Configuration=%build_config%;BuildCF=%buildNetCF% %parent%FMSC.ORM\FMSC.ORM.csproj
-call %msbuild% /p:Configuration=%build_config%;BuildCF=%buildNetCF% %parent%CruiseDAL.Core\CruiseDAL.Core.csproj
-call %msbuild% /p:Configuration=%build_config%;BuildCF=%buildNetCF% %parent%CruiseDAL.V2\CruiseDAL.V2.csproj
-call %msbuild% /p:Configuration=%build_config%;BuildCF=%buildNetCF% %parent%CruiseDAL.V2.Models\CruiseDAL.V2.Models.csproj
+IF DEFINED build_params (
+	SET build_params=%build_params%;Configuration=%build_config%
+) ELSE (
+	SET build_params=Configuration=%build_config%
+)
+
+IF %ERRORLEVEL% EQU 0 call %msbuild% -t:%targets% -p:%build_params%;BuildCF=%buildNetCF% %parent%FMSC.ORM\FMSC.ORM.csproj
+IF %ERRORLEVEL% EQU 0 call %msbuild% -t:%targets% -p:%build_params%;BuildCF=%buildNetCF% %parent%CruiseDAL.Core\CruiseDAL.Core.csproj
+IF %ERRORLEVEL% EQU 0 call %msbuild% -t:%targets% -p:%build_params%;BuildCF=%buildNetCF% %parent%CruiseDAL.V2\CruiseDAL.V2.csproj
+IF %ERRORLEVEL% EQU 0 call %msbuild% -t:%targets% -p:%build_params%;BuildCF=%buildNetCF% %parent%CruiseDAL.V2.Models\CruiseDAL.V2.Models.csproj
+IF %ERRORLEVEL% EQU 0 call %msbuild% -t:%targets% -p:%build_params%;BuildCF=%buildNetCF% %parent%CruiseDAL.V2.Updater\CruiseDAL.V2.Updater.csproj
 
 IF NOT %buildNetCF%=="true" (
-call %msbuild% /p:Configuration=%build_config% %parent%CruiseDAL.V3\CruiseDAL.V3.csproj
-call %msbuild% /p:Configuration=%build_config% %parent%CruiseDAL.V3.UpConvert\CruiseDAL.V3.UpConvert.csproj
-call %msbuild% /p:Configuration=%build_config% %parent%CruiseDAL.V3.DownConvert\CruiseDAL.V3.DownConvert.csproj
-call %msbuild% /p:Configuration=%build_config% %parent%CruiseDAL.V3.Models\CruiseDAL.V3.Models.csproj
-call %msbuild% /p:Configuration=%build_config% %parent%CruiseCLI\CruiseCLI.csproj
+	IF %ERRORLEVEL% EQU 0 call %msbuild% -t:%targets% -p:%build_params% %parent%CruiseDAL.V3\CruiseDAL.V3.csproj
+	IF %ERRORLEVEL% EQU 0 call %msbuild% -t:%targets% -p:%build_params% %parent%CruiseDAL.V3.UpConvert\CruiseDAL.V3.UpConvert.csproj
+	IF %ERRORLEVEL% EQU 0 call %msbuild% -t:%targets% -p:%build_params% %parent%CruiseDAL.V3.DownConvert\CruiseDAL.V3.DownConvert.csproj
+	IF %ERRORLEVEL% EQU 0 call %msbuild% -t:%targets% -p:%build_params% %parent%CruiseDAL.V3.Models\CruiseDAL.V3.Models.csproj
+	IF %ERRORLEVEL% EQU 0 call %msbuild% -t:%targets% -p:%build_params% %parent%CruiseCLI\CruiseCLI.csproj
 )
 
 ::if invoked from windows explorer, pause
 IF "%interactive%"=="0" PAUSE
 ENDLOCAL
-EXIT /B 0
+
+EXIT /B %ERRORLEVEL%
