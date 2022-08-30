@@ -13,8 +13,8 @@ SET me=%~n0
 SET parent=%~dp0
 
 SET msbuild="%parent%tools\msbuild.cmd"
-SET buildNetCF="true"
 
+IF NOT DEFINED buildNetCF SET buildNetCF="true"
 IF NOT DEFINED build_config SET build_config="Release"
 
 call %msbuild% %parent%CruiseDAL.sln -t:restore
