@@ -13,18 +13,24 @@ SET me=%~n0
 SET parent=%~dp0
 
 SET msbuild="%parent%tools\msbuild.cmd"
+SET buildNetCF="true"
 
 IF NOT DEFINED build_config SET build_config="Release"
 
-call %msbuild% /p:Configuration=%build_config% %parent%FMSC.ORM\FMSC.ORM.csproj
-call %msbuild% /p:Configuration=%build_config% %parent%CruiseDAL.Core\CruiseDAL.Core.csproj
-call %msbuild% /p:Configuration=%build_config% %parent%CruiseDAL.V2\CruiseDAL.V2.csproj
+call %msbuild% %parent%CruiseDAL.sln -t:restore
+
+call %msbuild% /p:Configuration=%build_config%;BuildCF=%buildNetCF% %parent%FMSC.ORM\FMSC.ORM.csproj
+call %msbuild% /p:Configuration=%build_config%;BuildCF=%buildNetCF% %parent%CruiseDAL.Core\CruiseDAL.Core.csproj
+call %msbuild% /p:Configuration=%build_config%;BuildCF=%buildNetCF% %parent%CruiseDAL.V2\CruiseDAL.V2.csproj
+call %msbuild% /p:Configuration=%build_config%;BuildCF=%buildNetCF% %parent%CruiseDAL.V2.Models\CruiseDAL.V2.Models.csproj
+
+IF NOT %buildNetCF%=="true" (
 call %msbuild% /p:Configuration=%build_config% %parent%CruiseDAL.V3\CruiseDAL.V3.csproj
 call %msbuild% /p:Configuration=%build_config% %parent%CruiseDAL.V3.UpConvert\CruiseDAL.V3.UpConvert.csproj
 call %msbuild% /p:Configuration=%build_config% %parent%CruiseDAL.V3.DownConvert\CruiseDAL.V3.DownConvert.csproj
 call %msbuild% /p:Configuration=%build_config% %parent%CruiseDAL.V3.Models\CruiseDAL.V3.Models.csproj
-call %msbuild% /p:Configuration=%build_config% %parent%CruiseDAL.V2.Models\CruiseDAL.V2.Models.csproj
 call %msbuild% /p:Configuration=%build_config% %parent%CruiseCLI\CruiseCLI.csproj
+)
 
 ::if invoked from windows explorer, pause
 IF "%interactive%"=="0" PAUSE

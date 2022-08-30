@@ -1,12 +1,13 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-    <Version>$(CruiseDALV2Version)</Version>
-    <TargetFrameworks>$(LibTargetFrameworks)</TargetFrameworks>
-  </PropertyGroup>
+	<PropertyGroup>
+		<Version>$(CruiseDALV2Version)</Version>
+		<TargetFrameworks>$(LibTargetFrameworks)</TargetFrameworks>
+		<CanBuildNetCF>true</CanBuildNetCF>
+	</PropertyGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\CruiseDAL.Core\CruiseDAL.Core.csproj" PrivateAssets="none" />
-    <ProjectReference Include="..\CruiseDAL.V2.Updater\CruiseDAL.V2.Updater.csproj" />
-  </ItemGroup>
+	<ItemGroup>
+		<ProjectReference Include="..\CruiseDAL.Core\CruiseDAL.Core.csproj" PrivateAssets="none" />
+		<ProjectReference Include="..\CruiseDAL.V2.Updater\CruiseDAL.V2.Updater.csproj" />
+	</ItemGroup>
 </Project>

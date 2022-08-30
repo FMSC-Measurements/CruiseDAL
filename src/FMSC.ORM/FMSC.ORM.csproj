@@ -1,15 +1,16 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-    <TargetFrameworks>$(LibTargetFrameworks)</TargetFrameworks>
-    <Version>$(FMSCORMversion)</Version>
-  </PropertyGroup>
+	<PropertyGroup>
+		<TargetFrameworks>$(LibTargetFrameworks)</TargetFrameworks>
+		<Version>$(FMSCORMversion)</Version>
+		<CanBuildNetCF>true</CanBuildNetCF>
+	</PropertyGroup>
 
-  <ItemGroup Condition="$(MicrosoftDataSqlite) == 'true'">
-    <PackageReference Include="Microsoft.Data.Sqlite" Version="3.1.14" PrivateAssets="none" />
-  </ItemGroup>
+	<ItemGroup Condition="$(MicrosoftDataSqlite) == 'true'">
+		<PackageReference Include="Microsoft.Data.Sqlite" Version="3.1.14" PrivateAssets="none" />
+	</ItemGroup>
 
-  <ItemGroup>
-    <PackageReference Include="Backpack.SqlBuilder" Version="1.1.5" />
-  </ItemGroup>
+	<ItemGroup>
+		<PackageReference Include="Backpack.SqlBuilder" Version="1.1.5" />
+	</ItemGroup>
 </Project>

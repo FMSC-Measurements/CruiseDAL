@@ -3,6 +3,7 @@
 	<PropertyGroup>
 		<Version>$(CruiseDALV2Version)</Version>
 		<TargetFrameworks>$(LibTargetFrameworks)</TargetFrameworks>
+		<CanBuildNetCF>true</CanBuildNetCF>
 	</PropertyGroup>
 
 	<ItemGroup>
