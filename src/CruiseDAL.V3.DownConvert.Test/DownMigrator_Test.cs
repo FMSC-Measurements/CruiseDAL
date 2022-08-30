@@ -447,8 +447,31 @@ ORDER BY cnt.CuttingUnit_CN, cnt.SampleGroup_CN, cnt.TreeDefaultValue_CN;").ToAr
             };
             using var v3db = init.CreateDatabase();
 
-            var result = DownMigrator.CheckAllSubPopsHavTDV(init.CruiseID, v3db);
+            var result = DownMigrator.CheckAllSubPopsHaveTDV(init.CruiseID, v3db);
             result.Should().BeEmpty();
+        }
+
+        [Fact]
+        public void EnsureCanMigrate_CheckAllSubPopsHaveTDV_MissingTDVs()
+        {
+            var v3Path = GetTestFile("Fails_Subpop_DesignCheck.crz3");
+
+            using var v3db = new CruiseDatastore_V3(v3Path);
+            var cruiseID = v3db.ExecuteScalar<string>("SELECT CruiseID FROM Cruise LIMIT 1");
+
+            var result = DownMigrator.CheckAllSubPopsHaveTDV(cruiseID, v3db);
+            result.Should().NotBeEmpty();
+
+            var downmigrator = new DownMigrator();
+
+
+            // demonstrate that this file has trees with out TDVs
+            v3db.From<CruiseDAL.V3.Models.Tree>().Where("SpeciesCode IS NULL OR LiveDead IS NULL").Query().Should().BeEmpty();
+
+            var v2Path = GetTempFilePathWithExt(".cruise");
+            using var v2db = new DAL(v2Path, true);
+            downmigrator.MigrateFromV3ToV2(cruiseID, v3db, v2db);
+            v2db.From<CruiseDAL.V2.Models.Tree>().Where("TreeDefaultValue_CN IS NULL").Query().Should().NotBeEmpty();
         }
 
         [Fact]
@@ -462,7 +485,7 @@ ORDER BY cnt.CuttingUnit_CN, cnt.SampleGroup_CN, cnt.TreeDefaultValue_CN;").ToAr
             };
             using var v3db = init.CreateDatabase();
 
-            var result = DownMigrator.CheckAllSubPopsHavTDV(init.CruiseID, v3db);
+            var result = DownMigrator.CheckAllSubPopsHaveTDV(init.CruiseID, v3db);
             result.Should().NotBeNullOrEmpty();
         }
 

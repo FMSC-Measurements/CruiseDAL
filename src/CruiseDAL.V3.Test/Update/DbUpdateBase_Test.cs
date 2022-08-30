@@ -27,7 +27,24 @@ namespace CruiseDAL.V3.Test.Update
                     conn.ExecuteNonQuery("CREATE TABLE B ( f2 TEXT, f3 TEXT );");
 
                     var tables = DbUpdateBase.ListFieldsIntersect(conn, "A", "B");
-                    tables.Single().Should().Be("\"f2\"");
+                    tables.Single().Should().Be("f2");
+                }
+            }
+        }
+
+        [Fact]
+        public void ListFieldsIntersect_IgnoreCase()
+        {
+            using (var db = new SQLiteDatastore())
+            {
+                using (var conn = db.OpenConnection())
+                {
+                    conn.ExecuteNonQuery("CREATE TABLE A ( f1 TEXT, f2 TEXT );");
+
+                    conn.ExecuteNonQuery("CREATE TABLE B ( F2 TEXT, f3 TEXT );");
+
+                    var tables = DbUpdateBase.ListFieldsIntersect(conn, "A", "B");
+                    tables.Single().Should().Be("f2");
                 }
             }
         }

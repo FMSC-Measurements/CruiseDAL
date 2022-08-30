@@ -1,11 +1,6 @@
 ﻿using CruiseDAL.Schema;
 using FMSC.ORM.Core;
-using System;
-using System.Collections.Generic;
 using System.Data.Common;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace CruiseDAL.Update
 {
@@ -15,7 +10,7 @@ namespace CruiseDAL.Update
     // remove check constraint on EntryType and add FKey on EntryType
     public class UpdateTo_3_3_3 : DbUpdateBase
     {
-        public UpdateTo_3_3_3() 
+        public UpdateTo_3_3_3()
             : base(targetVersion: "3.3.3", sourceVersions: new[] { "3.3.2" })
         {
         }
@@ -33,6 +28,5 @@ namespace CruiseDAL.Update
             var tallyLedgerTableDef = new TallyLedgerTableDefinition();
             UpdateTableDDL(conn, transaction, exceptionProcessor, tallyLedgerTableDef);
         }
-
     }
 }

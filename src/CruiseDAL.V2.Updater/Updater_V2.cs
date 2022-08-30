@@ -130,7 +130,7 @@ namespace CruiseDAL
             {
                 UpdateTo_2_7_1(db);
             }
-            if (db.DatabaseVersion == "2.7.1" || db.DatabaseVersion == "2.7.3")
+            if (db.DatabaseVersion == "2.7.1" || db.DatabaseVersion == "2.7.2")
             {
                 UpdateTo_2_7_3(db);
             }

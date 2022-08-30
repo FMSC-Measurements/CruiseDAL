@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <OutputType>Exe</OutputType>
-    <TargetFrameworks>net461</TargetFrameworks>
+    <TargetFrameworks>net462</TargetFrameworks>
     <StartupObject>FMSC.ORM.ModelGenerator.Program</StartupObject>
     <AssemblyName>ModelGen</AssemblyName>
     <LangVersion>8.0</LangVersion>
