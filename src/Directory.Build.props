@@ -12,7 +12,7 @@
 
 		<CruiseDALv2SchemaVersion>2.7.4</CruiseDALv2SchemaVersion>
 		<CruiseDALv3SchemaVersion>3.5.5</CruiseDALv3SchemaVersion>
-		<CruiseDALIncrementalVersion>110</CruiseDALIncrementalVersion>
+		<CruiseDALIncrementalVersion>111</CruiseDALIncrementalVersion>
 		<CruiseDALCoreVersion>3.1.0.$(CruiseDALIncrementalVersion)</CruiseDALCoreVersion>
 		<CruiseDALV2Version>$(CruiseDALv2SchemaVersion).$(CruiseDALIncrementalVersion)</CruiseDALV2Version>
 		<CruiseDALV3Version>$(CruiseDALv3SchemaVersion).$(CruiseDALIncrementalVersion)</CruiseDALV3Version>
@@ -30,7 +30,7 @@
 		<LibTargetFrameworks>net462;netstandard20;</LibTargetFrameworks>
 		<LibTargetFrameworks Condition="'$(BuildCF)' == 'true' AND '$(CanBuildNetCF)' == 'true'">$(LibTargetFrameworks)net35-cf;</LibTargetFrameworks>
 
-		<TestsTargetFrameworks>net462;netcoreapp3.1;</TestsTargetFrameworks>
+		<TestsTargetFrameworks>net462;net6.0;</TestsTargetFrameworks>
 	</PropertyGroup>
 
 	<PropertyGroup Label="Directories">
@@ -49,7 +49,7 @@
 		<DefineConstants>$(DefineConstants);SYSTEM_DATA_SQLITE</DefineConstants>
 	</PropertyGroup>
 
-	<PropertyGroup Condition="$(TargetFramework.StartsWith('netstandard')) OR $(TargetFramework.StartsWith('netcoreapp')) OR $(TargetFramework.StartsWith('net46'))">
+	<PropertyGroup Condition="$(TargetFramework.StartsWith('netstandard')) OR $(TargetFramework.StartsWith('net6')) OR $(TargetFramework.StartsWith('net46'))">
 		<MicrosoftDataSqlite>true</MicrosoftDataSqlite>
 		<DefineConstants>$(DefineConstants);MICROSOFT_DATA_SQLITE</DefineConstants>
 	</PropertyGroup>

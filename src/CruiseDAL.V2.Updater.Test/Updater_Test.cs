@@ -12,6 +12,7 @@ using System.Collections.Generic;
 using FMSC.ORM.EntityModel.Support;
 using FMSC.ORM.Sql;
 using CruiseDAL.TestCommon;
+using FMSC.ORM.Core;
 
 namespace CruiseDAL.Tests
 {
@@ -62,71 +63,110 @@ namespace CruiseDAL.Tests
 
         }
 
+        //[Fact]
+        //public void Update_FROM_05_30_2013()
+        //{
+        //    var filePath = Path.Combine(TestTempPath, "TestUpdate.cruise");
+
+        //    try
+        //    {
+        //        using (var setup = new SQLiteDatastore(filePath))
+        //        {
+        //            setup.Execute(CruiseDAL.Tests.SQL.CRUISECREATE_05_30_2013);
+        //        }
+
+        //        using (var database = new CruiseDatastore(filePath))
+        //        {
+        //            var dataStore = new CruiseDatastore(filePath);
+
+        //            var updater = new Updater_V2();
+        //            updater.Invoking(x => x.Update(dataStore)).Should().Throw<IncompatibleSchemaException>();
+
+        //            database.CurrentTransaction.Should().BeNull();
+        //        }
+        //    }
+        //    finally
+        //    {
+        //        if (File.Exists(filePath))
+        //        {
+        //            File.Delete(filePath);
+        //        }
+        //    }
+        //}
+
+        //[Fact]
+        //public void Update_FROM_2015_01_05()
+        //{
+        //    var filePath = Path.Combine(TestTempPath, "Update_FROM_2015_01_05.cruise");
+
+        //    try
+        //    {
+        //        using (var setup = new SQLiteDatastore(filePath))
+        //        {
+        //            setup.Execute(CruiseDAL.Tests.SQL.CRUISECREATE_2015_01_05);
+        //        }
+
+        //        using (var datastore = new CruiseDatastore(filePath))
+        //        {
+        //            var updater = new Updater_V2();
+        //            updater.Invoking(x => x.Update(datastore))
+        //                .Should().NotThrow();
+
+        //            var semVerActual = new Version(datastore.DatabaseVersion);
+        //            var semVerExpected = new Version("2.7.0");
+
+        //            semVerActual.Major.Should().Be(semVerExpected.Major);
+        //            semVerActual.Minor.Should().Be(semVerExpected.Minor);
+
+        //            ValidateUpdate(datastore);
+        //        }
+        //    }
+        //    finally
+        //    {
+        //        if (File.Exists(filePath))
+        //        {
+        //            File.Delete(filePath);
+        //        }
+        //    }
+        //}
+
+        //[Fact]
+        //public void UpdateFrom_2015_08_19()
+        //{
+        //    var dbPath = GetTempFilePath("UpdateFrom_2015_08_19.cruise");
+
+        //    using var db = new CruiseDatastore(dbPath, true, null, null);
+        //    Output.WriteLine(dbPath);
+
+        //    db.Execute(CruiseDAL.V2.Updater.Test.SQL.Create_2015_08_19.CreateCruise);
+        //    db.Execute(CruiseDAL.V2.Updater.Test.SQL.Create_2015_08_19.CreateTriggers);
+
+        //    var updater = new Updater_V2();
+        //    updater.Update(db);
+
+        //    ValidateUpdate(db);
+        //}
+
         [Fact]
-        public void Update_FROM_05_30_2013()
+        public void UpdateFrom_2_1_1()
         {
-            var filePath = Path.Combine(TestTempPath, "TestUpdate.cruise");
+            var dbPath = GetTempFilePath("UpdateFrom_2_1_1.cruise");
 
-            try
+            if (File.Exists(dbPath))
             {
-                using (var setup = new SQLiteDatastore(filePath))
-                {
-                    setup.Execute(CruiseDAL.Tests.SQL.CRUISECREATE_05_30_2013);
-                }
-
-                using (var database = new CruiseDatastore(filePath))
-                {
-                    var dataStore = new CruiseDatastore(filePath);
-
-                    var updater = new Updater_V2();
-                    updater.Invoking(x => x.Update(dataStore)).Should().Throw<IncompatibleSchemaException>();
-
-                    database.CurrentTransaction.Should().BeNull();
-                }
+                File.Delete(dbPath);
             }
-            finally
-            {
-                if (File.Exists(filePath))
-                {
-                    File.Delete(filePath);
-                }
-            }
-        }
 
-        [Fact]
-        public void Update_FROM_2015_01_05()
-        {
-            var filePath = Path.Combine(TestTempPath, "TestUpdate.cruise");
+            using var db = new CruiseDatastore(dbPath, true, null, null);
+            Output.WriteLine(dbPath);
 
-            try
-            {
-                using (var setup = new SQLiteDatastore(filePath))
-                {
-                    setup.Execute(CruiseDAL.Tests.SQL.CRUISECREATE_2015_01_05);
-                }
+            db.Execute(CruiseDAL.V2.Updater.Test.SQL.Create_2_1_1.CreateCruise);
+            db.Execute(CruiseDAL.V2.Updater.Test.SQL.Create_2_1_1.CreateTriggers);
 
-                using (var datastore = new CruiseDatastore(filePath))
-                {
-                    var updater = new Updater_V2();
-                    updater.Invoking(x => x.Update(datastore))
-                        .Should().NotThrow();
+            var updater = new Updater_V2();
+            updater.Update(db);
 
-                    var semVerActual = new Version(datastore.DatabaseVersion);
-                    var semVerExpected = new Version("2.7.0");
-
-                    semVerActual.Major.Should().Be(semVerExpected.Major);
-                    semVerActual.Minor.Should().Be(semVerExpected.Minor);
-
-                    ValidateUpdate(datastore);
-                }
-            }
-            finally
-            {
-                if (File.Exists(filePath))
-                {
-                    File.Delete(filePath);
-                }
-            }
+            ValidateUpdate(db);
         }
 
         [Theory]
@@ -195,6 +235,7 @@ namespace CruiseDAL.Tests
 
             foreach (var table in tableNames)
             {
+                if(table == Schema.GLOBALS._NAME || table == Schema.MESSAGELOG._NAME) { continue; }
                 try
                 {
                     datastore.Execute($"DELETE FROM {table};");
