@@ -6,6 +6,24 @@
 	</PropertyGroup>
 
 	<ItemGroup>
+	  <None Remove="TestFiles\51032_Toad Hill_TS.M.cruise" />
+	  <None Remove="TestFiles\notes.md" />
+	  <None Remove="TestFiles\v2_5_0.cruise" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <Content Include="TestFiles\51032_Toad Hill_TS.M.cruise">
+	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+	  </Content>
+	  <Content Include="TestFiles\notes.md">
+	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+	  </Content>
+	  <Content Include="TestFiles\v2_5_0.cruise">
+	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+	  </Content>
+	</ItemGroup>
+
+	<ItemGroup>
 		<PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.1.0" />
 		<PackageReference Include="xunit" Version="2.4.1" />
 		<PackageReference Include="xunit.runner.visualstudio" Version="2.4.3">

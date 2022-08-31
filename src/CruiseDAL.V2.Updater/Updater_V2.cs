@@ -134,7 +134,7 @@ namespace CruiseDAL
             {
                 UpdateTo_2_7_3(db);
             }
-            if (db.DatabaseVersion == "2.7.4")
+            if (db.DatabaseVersion == "2.7.3")
             {
                 UpdateTo_2_7_4(db);
             }
@@ -1176,7 +1176,7 @@ CREATE TABLE TreeEstimate (
             {
 
 
-                db.Execute("DROP TRIGGER OnDeleteTree;");
+                db.Execute("DROP TRIGGER IF EXISTS  OnDeleteTree;");
 
                 db.Execute(
 @"CREATE TRIGGER OnDeleteTree AFTER DELETE ON Tree
