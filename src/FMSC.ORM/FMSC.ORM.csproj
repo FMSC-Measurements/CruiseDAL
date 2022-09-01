@@ -1,9 +1,9 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
 	<PropertyGroup>
+		<LibTargetFrameworks Condition="'$(BuildCF)' == 'true'">$(LibTargetFrameworks)net35-cf;</LibTargetFrameworks>
 		<TargetFrameworks>$(LibTargetFrameworks)</TargetFrameworks>
 		<Version>$(FMSCORMversion)</Version>
-		<CanBuildNetCF>true</CanBuildNetCF>
 	</PropertyGroup>
 
 	<ItemGroup Condition="$(MicrosoftDataSqlite) == 'true'">

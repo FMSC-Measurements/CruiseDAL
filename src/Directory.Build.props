@@ -28,7 +28,6 @@
 	<PropertyGroup Label="CustomProperties">
 		<BuildCF Condition="'$(BuildCF)' == ''">true</BuildCF>
 		<LibTargetFrameworks>net462;netstandard20;</LibTargetFrameworks>
-		<LibTargetFrameworks Condition="'$(BuildCF)' == 'true' AND '$(CanBuildNetCF)' == 'true'">$(LibTargetFrameworks)net35-cf;</LibTargetFrameworks>
 
 		<TestsTargetFrameworks>net462;net6.0;</TestsTargetFrameworks>
 	</PropertyGroup>

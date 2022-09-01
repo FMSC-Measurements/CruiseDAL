@@ -1,27 +1,28 @@
-﻿ <Project Sdk="Microsoft.NET.Sdk">
-  
-  <PropertyGroup>
-    <Version>$(CruiseDALV2ModelsVersion)</Version>
-	 <TargetFrameworks>$(LibTargetFrameworks)</TargetFrameworks>
-  </PropertyGroup>
-  
-  <PropertyGroup>
-    <GenerateModels Condition="'$(GenerateModels)' == ''">false</GenerateModels>
-  </PropertyGroup>
-  
-  <Target Name="BeforeGenerateModels" BeforeTargets="GenerateModels">
-    <PropertyGroup Label="Model Generator Properties">
-      <ModelGenDatastoreTypeName>CruiseDAL.DAL</ModelGenDatastoreTypeName>
-      <ModelGenTargetAssembly>$(MSBuildProjectDirectory)\$(OutputPath)CruiseDAL.V2.dll</ModelGenTargetAssembly>
-      <ModelGenIgnoreColumns>CreatedBy,CreatedDate,ModifiedBy,ModifiedDate,RowVersion,UpperStemDOB,MinLogLengthSecondary,MaxLogLengthSecondary,ErrorMessage,Chargeable</ModelGenIgnoreColumns>
-    </PropertyGroup>
-  </Target>
-  
-  <Import Project="$(ModelGenToolDirectory)FMSC.ORM.ModelGenerator.targets" />
-  <Target Name="_GenerateModel" DependsOnTargets="GenerateModels" BeforeTargets="Build" Condition="$(GenerateModels) == true AND $(TargetFramework) == 'net40'">
-  </Target>
-  
-  <ItemGroup>
-    <ProjectReference Include="..\CruiseDAL.V2\CruiseDAL.V2.csproj" />
-  </ItemGroup>
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+		<Version>$(CruiseDALV2ModelsVersion)</Version>
+		<LibTargetFrameworks Condition="'$(BuildCF)' == 'true'">$(LibTargetFrameworks)net35-cf;</LibTargetFrameworks>
+		<TargetFrameworks>$(LibTargetFrameworks)</TargetFrameworks>
+	</PropertyGroup>
+
+	<PropertyGroup>
+		<GenerateModels Condition="'$(GenerateModels)' == ''">false</GenerateModels>
+	</PropertyGroup>
+
+	<Target Name="BeforeGenerateModels" BeforeTargets="GenerateModels">
+		<PropertyGroup Label="Model Generator Properties">
+			<ModelGenDatastoreTypeName>CruiseDAL.DAL</ModelGenDatastoreTypeName>
+			<ModelGenTargetAssembly>$(MSBuildProjectDirectory)\$(OutputPath)CruiseDAL.V2.dll</ModelGenTargetAssembly>
+			<ModelGenIgnoreColumns>CreatedBy,CreatedDate,ModifiedBy,ModifiedDate,RowVersion,UpperStemDOB,MinLogLengthSecondary,MaxLogLengthSecondary,ErrorMessage,Chargeable</ModelGenIgnoreColumns>
+		</PropertyGroup>
+	</Target>
+
+	<Import Project="$(ModelGenToolDirectory)FMSC.ORM.ModelGenerator.targets" />
+	<Target Name="_GenerateModel" DependsOnTargets="GenerateModels" BeforeTargets="Build" Condition="$(GenerateModels) == true AND $(TargetFramework) == 'net40'">
+	</Target>
+
+	<ItemGroup>
+		<ProjectReference Include="..\CruiseDAL.V2\CruiseDAL.V2.csproj" />
+	</ItemGroup>
 </Project>

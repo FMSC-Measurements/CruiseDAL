@@ -2,6 +2,7 @@
 
 	<PropertyGroup>
 		<Version>$(CruiseDALV2Version)</Version>
+		<LibTargetFrameworks Condition="'$(BuildCF)' == 'true'">$(LibTargetFrameworks)net35-cf;</LibTargetFrameworks>
 		<TargetFrameworks>$(LibTargetFrameworks)</TargetFrameworks>
 		<CanBuildNetCF>true</CanBuildNetCF>
 	</PropertyGroup>
