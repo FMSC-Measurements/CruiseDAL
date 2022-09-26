@@ -14,7 +14,7 @@ SET parent=%~dp0
 
 SET msbuild="%parent%tools\msbuild.cmd"
 
-IF NOT DEFINED buildNetCF SET buildNetCF="true"
+IF NOT DEFINED buildNetCF SET buildNetCF="false"
 IF NOT DEFINED build_config SET build_config="Release"
 IF NOT DEFINED targets	SET targets="build"
 
