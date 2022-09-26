@@ -83,7 +83,7 @@ namespace CruiseDAL.Schema
 
     CHECK (DiameterAtDefect IS NULL OR DiameterAtDefect >= 0.0),
     CHECK (VoidPercent IS NULL OR VoidPercent BETWEEN 0.0 AND 100.0),
-    CHECK (Slope IS NULL OR Slope BETWEEN 0.0 AND 200.0), -- value of 200 would be a 90degree slope
+    CHECK (Slope IS NULL OR Slope BETWEEN 0.0 AND 200.0), -- value of 200 is about 64°, a somewhat arbitrary ceiling but thats what we're going with 
     CHECK (Aspect IS NULL OR Aspect BETWEEN 0.0 AND 360.0),
 
     CHECK (IsFallBuckScale IS NULL OR IsFallBuckScale IN (0, 1)),

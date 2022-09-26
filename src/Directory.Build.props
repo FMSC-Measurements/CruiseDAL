@@ -12,11 +12,11 @@
 
 		<CruiseDALv2SchemaVersion>2.7.4</CruiseDALv2SchemaVersion>
 		<CruiseDALv3SchemaVersion>3.5.5</CruiseDALv3SchemaVersion>
-		<CruiseDALIncrementalVersion>111</CruiseDALIncrementalVersion>
+		<CruiseDALIncrementalVersion>112</CruiseDALIncrementalVersion>
 		<CruiseDALCoreVersion>3.1.0.$(CruiseDALIncrementalVersion)</CruiseDALCoreVersion>
 		<CruiseDALV2Version>$(CruiseDALv2SchemaVersion).$(CruiseDALIncrementalVersion)</CruiseDALV2Version>
 		<CruiseDALV3Version>$(CruiseDALv3SchemaVersion).$(CruiseDALIncrementalVersion)</CruiseDALV3Version>
-		<CruiseDALV3SyncVersion>$(CruiseDALv3SchemaVersion).$(CruiseDALIncrementalVersion)01</CruiseDALV3SyncVersion>
+		<CruiseDALV3SyncVersion>$(CruiseDALv3SchemaVersion).$(CruiseDALIncrementalVersion)00</CruiseDALV3SyncVersion>
 		<CruiseDALV3ModelsVersion>$(CruiseDALv3SchemaVersion).$(CruiseDALIncrementalVersion)</CruiseDALV3ModelsVersion>
 		<CruiseDALV2ModelsVersion>$(CruiseDALv2SchemaVersion).$(CruiseDALIncrementalVersion)</CruiseDALV2ModelsVersion>
 
@@ -26,9 +26,8 @@
 	</PropertyGroup>
 
 	<PropertyGroup Label="CustomProperties">
-		<BuildCF Condition="'$(BuildCF)' == ''">true</BuildCF>
+		<BuildCF Condition="'$(BuildCF)' == ''">false</BuildCF>
 		<LibTargetFrameworks>net462;netstandard20;</LibTargetFrameworks>
-		<LibTargetFrameworks Condition="'$(BuildCF)' == 'true' AND '$(CanBuildNetCF)' == 'true'">$(LibTargetFrameworks)net35-cf;</LibTargetFrameworks>
 
 		<TestsTargetFrameworks>net462;net6.0;</TestsTargetFrameworks>
 	</PropertyGroup>

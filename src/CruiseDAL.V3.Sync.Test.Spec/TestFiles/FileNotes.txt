@@ -1,0 +1,3 @@
+# 17901_Light_TS_202208040240_GalaxyTabS3-15CRZ ComponentX.crz3 
+these files were created by Steve to emulate a real world cruise using component files.
+They were causing an exception during sync due to not syncing deletion of untallied trees

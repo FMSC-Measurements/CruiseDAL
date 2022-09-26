@@ -43,7 +43,6 @@ namespace CruiseDAL.Update
                 new[] { new KeyValuePair<string, string>("District", "CASE WHEN District NOT NULL THEN substr(District, 1, min(2, length(District))) ELSE NULL END") });
 
             RebuildTable(conn, transaction, exceptionProcessor, new CuttingUnitTableDefinition_3_5_5());
-            RebuildTable(conn, transaction, exceptionProcessor, new DeviceTableDefinition_3_5_5());
             RebuildTable(conn, transaction, exceptionProcessor, new LogTableDefinition_3_5_5());
             RebuildTable(conn, transaction, exceptionProcessor, new LogGradeAuditRuleTableDefinition_3_5_5());
             RebuildTable(conn, transaction, exceptionProcessor, new PlotTableDefinition_3_5_5());

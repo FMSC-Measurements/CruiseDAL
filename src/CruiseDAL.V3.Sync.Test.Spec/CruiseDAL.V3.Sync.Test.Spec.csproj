@@ -13,6 +13,8 @@
 		<PackageReference Include="xunit" Version="2.4.1" />
 		<PackageReference Include="xunit.runner.visualstudio" Version="2.4.3" />
 		<PackageReference Include="FluentAssertions" Version="6.2.0" />
+		<PackageReference Include="AutoBogus" Version="2.6.0" />
+		<PackageReference Include="Bogus" Version="34.0.2" />
 	</ItemGroup>
 
 	<ItemGroup>
@@ -29,5 +31,7 @@
 			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
 		</Content>
 	</ItemGroup>
+
+	<Import Project="..\CruiseDAL.TestCommon\CruiseDAL.TestCommon.projitems" Label="Shared" />
 
 </Project>

@@ -3,9 +3,9 @@
 	<PropertyGroup Label="Assembily Info">
 		<AssemblyName>CruiseDAL.Core</AssemblyName>
 		<RootNamespace>CruiseDAL</RootNamespace>
+		<LibTargetFrameworks Condition="'$(BuildCF)' == 'true'">$(LibTargetFrameworks)net35-cf;</LibTargetFrameworks>
 		<TargetFrameworks>$(LibTargetFrameworks)</TargetFrameworks>
 		<Version>$(CruiseDALCoreVersion)</Version>
-		<CanBuildNetCF>true</CanBuildNetCF>
 	</PropertyGroup>
 
 	<ItemGroup Label="Project References">

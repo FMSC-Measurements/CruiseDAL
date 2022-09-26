@@ -9,7 +9,7 @@ namespace CruiseDAL.Schema
 
         public string CreateTable =>
 @"CREATE TABLE Device (
-    DeviceID TEXT NOT NULL COLLATE NOCASE,
+    DeviceID TEXT NOT NULL COLLATE NOCASE, -- may be guid or may platform specific format
     CruiseID TEXT NOT NULL COLLATE NOCASE,
     Name TEXT,
 
