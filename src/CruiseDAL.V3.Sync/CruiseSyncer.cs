@@ -466,10 +466,7 @@ namespace CruiseDAL.V3.Sync
                         if (options.Design.HasFlag(SyncFlags.ForceInsert)
                             || (hasTombstone == false && options.Design.HasFlag(SyncFlags.Insert)))
                         {
-                            if (options.Design.HasFlag(SyncFlags.Insert))
-                            {
-                                destination.Insert(sg, persistKeyvalue: false);
-                            }
+                            destination.Insert(sg, persistKeyvalue: false);
                         }
                     }
                     else
@@ -1129,7 +1126,8 @@ namespace CruiseDAL.V3.Sync
                 var hasRecord = destination.ExecuteScalar<long>("SELECT count(*) FROM TallyLedger WHERE TallyLedgerID = @p1;", parameters: new[] { tl.TallyLedgerID }) > 0;
                 var hasTombstone = destination.ExecuteScalar<long>("SELECT count(*) FROM TallyLedger_Tombstone WHERE TallyLedgerID = @p1;", parameters: new[] { tl.TallyLedgerID }) > 0;
 
-                if (hasRecord == false && hasTombstone == false)
+                if (options.FieldData.HasFlag(SyncFlags.ForceInsert)
+                                || (hasTombstone == false && options.FieldData.HasFlag(SyncFlags.Insert)))
                 {
                     destination.Insert(tl, persistKeyvalue: false);
                 }
