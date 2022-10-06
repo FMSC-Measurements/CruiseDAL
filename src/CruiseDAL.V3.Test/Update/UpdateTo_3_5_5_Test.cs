@@ -18,6 +18,24 @@ namespace CruiseDAL.V3.Test.Update
         {
         }
 
+        [Fact]
+        public void UpdateFrom354_To_355()
+        {
+            var filePath = InitializeTestFile("3.5.4.crz3");
+
+            using var ds = new CruiseDatastore(filePath);
+
+            ds.Execute("UPDATE Sale SET District = 'something';");
+
+            var updateTo355 = new UpdateTo_3_5_5();
+
+            using var conn = ds.OpenConnection();
+            updateTo355.Invoking(x => x.Update(conn)).Should().NotThrow();
+
+            var saleAfter = ds.From<Sale>().Query().Single();
+            saleAfter.District.Should().Be("so");
+        }
+
         [Theory]
         [InlineData("something")]
         [InlineData(null)]
