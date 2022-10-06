@@ -175,6 +175,33 @@ namespace CruiseDAL.TestCommon
             return database;
         }
 
+        public CruiseDatastore_V3 CreateDatabaseFileWithAllTables(string path, string cruiseID = null, string saleID = null, string saleNumber = null)
+        {
+            cruiseID = cruiseID ?? CruiseID;
+            saleID = saleID ?? SaleID;
+            saleNumber = saleNumber ?? SaleNumber;
+
+            var units = Units;
+
+            var strata = Strata;
+
+            var unitStrata = UnitStrata;
+
+            var sampleGroups = SampleGroups;
+
+            var species = Species;
+
+            var tdvs = TreeDefaults;
+
+            var subPops = Subpops;
+
+            var database = new CruiseDatastore_V3(path, true);
+
+            InitializeDatabaseAllTables(database, cruiseID, saleID, saleNumber, units, strata, unitStrata, sampleGroups, species, tdvs, subPops);
+
+            return database;
+        }
+
         public CruiseDatastore_V3 CreateDatabaseFile(string path, string cruiseID = null, string saleID = null, string saleNumber = null)
         {
             cruiseID = cruiseID ?? CruiseID;
@@ -202,7 +229,7 @@ namespace CruiseDAL.TestCommon
             return database;
         }
 
-        public static void InitializeDatabase(CruiseDatastore_V3 db,
+        public static void InitializeDatabase(CruiseDatastore db,
             string cruiseID,
             string saleID,
             string saleNumber,
@@ -283,7 +310,7 @@ namespace CruiseDAL.TestCommon
             }
         }
 
-        public static void InitializeDatabaseAllTables(CruiseDatastore_V3 db,
+        public static void InitializeDatabaseAllTables(CruiseDatastore db,
             string cruiseID,
             string saleID,
             string saleNumber,
