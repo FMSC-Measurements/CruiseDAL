@@ -55,6 +55,19 @@ namespace CruiseDAL.V3.Test
             ValidateDAL(datastore);
         }
 
+        [Fact]
+        public void Constructor_file_create_withAllTables_test()
+        {
+            var filePath = GetTempFilePathWithExt(".crz3", "testCreate_withAllTables");
+            Output.WriteLine(filePath);
+            RegesterFileForCleanUp(filePath);
+
+            var init = new DatabaseInitializer();
+            using var datastore = init.CreateDatabaseFileWithAllTables(filePath);
+
+            ValidateDAL(datastore);
+        }
+
         private void ValidateDAL(CruiseDatastore_V3 db)
         {
             var f_keys = db.ExecuteScalar<string>("PRAGMA foreign_keys;");
