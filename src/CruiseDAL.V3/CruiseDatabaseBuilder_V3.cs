@@ -61,7 +61,7 @@ namespace CruiseDAL
             new TreeFieldValueTableDefinition(),
             new LogTableDefinition_3_5_6(),
             new StemTableDefinition(),
-            new TallyLedgerTableDefinition(),
+            new TallyLedgerTableDefinition_3_5_6(),
 
             // validation
             new TreeAuditRuleTableDefinition(),

@@ -39,6 +39,9 @@ namespace CruiseDAL.Update
                 new TreeMeasurment_DefaultResolved(),
                 new TreeAuditErrorViewDefinition(),
                 new TallyPopulationViewDefinition_3_3_2(),
+                new TallyLedger_Plot_TotalsViewDefinition(),
+                new TallyLedger_TotalsViewDefinition(),
+                new TallyLedger_Tree_TotalsViewDefinition(),
             };
 
             foreach (var view in suspendViews)
@@ -94,6 +97,18 @@ namespace CruiseDAL.Update
                     new KeyValuePair<string, string>("Aspect", "min(Aspect, 200)"),
                 });
             RebuildTable(conn, transaction, exceptionProcessor, new TreeAuditRuleSelectorTableDefinition_3_5_5());
+
+
+            conn.ExecuteNonQuery("DROP TRIGGER Tree_Cascade_Species_Updates;");
+            conn.ExecuteNonQuery("DROP TRIGGER Tree_Cascade_LiveDead_Updates;");
+            conn.ExecuteNonQuery("DROP TRIGGER Tree_Cascade_SampleGroup_Updates;");
+            conn.ExecuteNonQuery("DROP TRIGGER Tree_Cascade_Stratum_Updates;");
+            RebuildTable(conn, transaction, exceptionProcessor, new TallyLedgerTableDefinition_3_5_6());
+
+            conn.ExecuteNonQuery(TreeTableDefinition_3_5_5.CREATE_TRIGGER_TREE_Cascade_Species_Updates);
+            conn.ExecuteNonQuery(TreeTableDefinition_3_5_5.CREATE_TRIGGER_TREE_Cascade_LiveDead_Updates);
+            conn.ExecuteNonQuery(TreeTableDefinition_3_5_5.CREATE_TRIGGER_TREE_Cascade_SampleGroupCode_Updates);
+            conn.ExecuteNonQuery(TreeTableDefinition_3_5_5.CREATE_TRIGGER_TREE_Cascade_StratumCode_Updates);
 
             foreach (var view in suspendViews)
             {

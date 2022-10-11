@@ -818,6 +818,8 @@ classDiagram
         - EntryType : TEXT <<FK>>
         - CreatedBy : TEXT
         - Created_TS : DATETIME
+        - ModifiedBy : TEXT
+        - Modified_TS : DATETIME
     }
 
     class TallyLedger_Tombstone {
@@ -897,7 +899,7 @@ classDiagram
         - CruiseID : TEXT <<FK>>
         - SpeciesCode : TEXT <<FK>>
         - LiveDead : TEXT
-        - PrimaryProduct : TEXT
+        - PrimaryProduct : TEXT <<FK>>
         - TreeAuditRuleID : TEXT <<FK>>
     }
 
@@ -1606,6 +1608,7 @@ classDiagram
     TreeField <|-- TreeAuditRule
 
     Cruise <|-- TreeAuditRuleSelector
+    LK_Product <|-- TreeAuditRuleSelector
     Species <|-- TreeAuditRuleSelector
     TreeAuditRule <|-- TreeAuditRuleSelector
 

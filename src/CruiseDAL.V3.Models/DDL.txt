@@ -274,13 +274,11 @@ CREATE INDEX NIX_CuttingUnit_Tombstone_CruiseID_CuttingUnitCode ON CuttingUnit_T
 
 -- ************** Device **************
 CREATE TABLE Device (
-    DeviceID TEXT NOT NULL COLLATE NOCASE,
+    DeviceID TEXT NOT NULL COLLATE NOCASE, -- may be guid or may platform specific format
     CruiseID TEXT NOT NULL COLLATE NOCASE,
     Name TEXT,
 
     FOREIGN KEY (CruiseID) REFERENCES Cruise (CruiseID) ON DELETE CASCADE,
-
-    CHECK (DeviceID LIKE '________-____-____-____-____________'),
 
     UNIQUE (DeviceID, CruiseID)
 )
@@ -496,7 +494,7 @@ CREATE TABLE Log (
 
     CHECK (LogID LIKE '________-____-____-____-____________'),
     CHECK (CAST(LogNumber AS INTEGER) > 0),
-    CHECK (Grade IS NULL OR Grade IN ('0', '1', '2', '3', '4', '5', '6', '7', '8', '9')),
+    CHECK (Grade IS NULL OR Grade IN ('', '0', '1', '2', '3', '4', '5', '6', '7', '8', '9')),
     CHECK (SeenDefect IS NULL OR SeenDefect BETWEEN 0.0 AND 100.0),
     CHECK (PercentRecoverable IS NULL OR PercentRecoverable BETWEEN 0.0 AND 100.0),
     CHECK (Length IS NULL OR Length >= 0),
@@ -508,7 +506,7 @@ CREATE TABLE Log (
     CHECK (NetCubicFoot IS NULL OR NetCubicFoot >= 0.0),
     CHECK (BoardFootRemoved IS NULL OR BoardFootRemoved >= 0.0),
     CHECK (CubicFootRemoved IS NULL OR CubicFootRemoved >= 0.0),
-    CHECK (DIBClass IS NULL OR DIBClass >= 0.0), 
+    CHECK (DIBClass IS NULL OR DIBClass >= 0.0),
     CHECK (BarkThickness IS NULL OR BarkThickness >= 0.0),
 
     FOREIGN KEY (TreeID) REFERENCES Tree (TreeID) ON DELETE CASCADE,
@@ -837,7 +835,7 @@ CREATE TABLE Plot (
 
     CHECK (PlotID LIKE '________-____-____-____-____________'),
     CHECK (PlotNumber > 0),
-    CHECK (Slope IS NULL OR Slope BETWEEN 0.0 AND 200.0), -- value of 200 would be a 90degree slope
+    CHECK (Slope IS NULL OR Slope BETWEEN 0.0 AND 200.0), -- value of 200 is about 64°, a somewhat arbitrary ceiling but thats what we're going with
     CHECK (Aspect IS NULL OR Aspect BETWEEN 0.0 AND 360.0),
 
     UNIQUE (PlotID),
@@ -1287,6 +1285,7 @@ CREATE TABLE SampleGroup (
     CHECK (BigBAF IS NULL OR BigBAF >= 0),
     CHECK (MinKPI >= 0 OR MinKPI IS NULL),
     CHECK (MaxKPI >= 0 OR MaxKPI IS NULL),
+    CHECK (SmallFPS >= 0 OR SmallFPS IS NULL),
     CHECK (DefaultLiveDead IS NULL OR DefaultLiveDead IN ('L', 'D')),
     
 
@@ -2275,6 +2274,8 @@ CREATE TABLE TallyLedger (
 
     CreatedBy TEXT DEFAULT 'none',
     Created_TS DATETIME DEFAULT (CURRENT_TIMESTAMP),
+    ModifiedBy TEXT,
+    Modified_TS DATETIME,
 
     CHECK (LiveDead IN ('L', 'D') OR LiveDead IS NULL),
     CHECK (STM IN (0, 1)),
@@ -2345,6 +2346,21 @@ BEGIN
         OLD.Created_TS,
         CURRENT_TIMESTAMP
     );
+END
+
+CREATE TRIGGER TallyLedger_OnUpdate
+AFTER UPDATE OF
+    CuttingUnitCode,
+    StratumCode,
+    SampleGroupCode,
+    PlotNumber,
+    SpeciesCode,
+    LiveDead,
+    TreeCount
+ON TallyLedger
+FOR EACH ROW
+BEGIN
+    UPDATE TallyLedger SET Modified_TS = CURRENT_TIMESTAMP WHERE TallyLedger_CN = old.TallyLedger_CN;
 END
 
 
@@ -2663,7 +2679,8 @@ CREATE TABLE TreeAuditRuleSelector (
 
     FOREIGN KEY (CruiseID) REFERENCES Cruise (CruiseID) ON DELETE CASCADE,
     FOREIGN KEY (TreeAuditRuleID) REFERENCES TreeAuditRule (TreeAuditRuleID) ON DELETE CASCADE,
-    FOREIGN KEY (SpeciesCode, CruiseID) REFERENCES Species (SpeciesCode, CruiseID) ON UPDATE CASCADE
+    FOREIGN KEY (SpeciesCode, CruiseID) REFERENCES Species (SpeciesCode, CruiseID) ON UPDATE CASCADE,
+    FOREIGN KEY (PrimaryProduct) REFERENCES LK_Product (Product)
 )
 
 CREATE TRIGGER TreeAuditRuleSelector_OnDelete
@@ -2767,8 +2784,8 @@ CREATE TABLE TreeDefaultValue (
     CHECK (HiddenPrimary IS NULL OR HiddenPrimary BETWEEN 0.0 AND 100.0),
     CHECK (HiddenPrimaryDead IS NULL OR HiddenPrimaryDead BETWEEN 0.0 AND 100.0),
 
-    CHECK (TreeGrade IN ('0', '1', '2', '3', '4', '5', '6', '7', '8', '9') OR TreeGrade IS NULL),
-    CHECK (TreeGradeDead IN ('0', '1', '2', '3', '4', '5', '6', '7', '8', '9') OR TreeGradeDead IS NULL),
+    CHECK (TreeGrade IN ('', '0', '1', '2', '3', '4', '5', '6', '7', '8', '9') OR TreeGrade IS NULL),
+    CHECK (TreeGradeDead IN ('', '0', '1', '2', '3', '4', '5', '6', '7', '8', '9') OR TreeGradeDead IS NULL),
 
     CHECK (CullSecondary IS NULL OR CullPrimary BETWEEN 0.0 AND 100.0),
     CHECK (HiddenSecondary IS NULL OR CullPrimary BETWEEN 0.0 AND 100.0),
@@ -3257,7 +3274,7 @@ CREATE TABLE TreeMeasurment (
     CHECK (SeenDefectSecondary IS NULL OR SeenDefectSecondary BETWEEN 0.0 AND 100.0),
     CHECK (RecoverablePrimary IS NULL OR RecoverablePrimary BETWEEN 0.0 AND 100.0),
     CHECK (HiddenPrimary IS NULL OR HiddenPrimary BETWEEN 0.0 AND 100.0),
-    CHECK (Grade IS NULL OR Grade IN ('0', '1', '2', '3', '4', '5', '6', '7', '8', '9')),
+    CHECK (Grade IS NULL OR Grade IN ('', '0', '1', '2', '3', '4', '5', '6', '7', '8', '9')),
 
     CHECK (HeightToFirstLiveLimb IS NULL OR HeightToFirstLiveLimb >= 0.0),
     CHECK (PoleLength IS NULL OR PoleLength >= 0.0),
@@ -3277,7 +3294,7 @@ CREATE TABLE TreeMeasurment (
 
     CHECK (DiameterAtDefect IS NULL OR DiameterAtDefect >= 0.0),
     CHECK (VoidPercent IS NULL OR VoidPercent BETWEEN 0.0 AND 100.0),
-    CHECK (Slope IS NULL OR Slope BETWEEN 0.0 AND 200.0), -- value of 200 would be a 90degree slope
+    CHECK (Slope IS NULL OR Slope BETWEEN 0.0 AND 200.0), -- value of 200 is about 64°, a somewhat arbitrary ceiling but thats what we're going with
     CHECK (Aspect IS NULL OR Aspect BETWEEN 0.0 AND 360.0),
 
     CHECK (IsFallBuckScale IS NULL OR IsFallBuckScale IN (0, 1)),
