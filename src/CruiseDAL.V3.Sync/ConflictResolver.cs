@@ -237,6 +237,8 @@ namespace CruiseDAL.V3.Sync
                     }
                 case ConflictResolutionType.ChoseSourceMergeData:
                     {
+                        throw new NotSupportedException();
+
                         destination.ExecuteNonQuery(
                             "PRAGMA foreign_keys=off; " +
                             "BEGIN; " + // disable FKeys so that cascading deletes don't trigger 
@@ -244,8 +246,6 @@ namespace CruiseDAL.V3.Sync
                             "COMMIT; " +
                             "PRAGMA foreign_keys=on;", new[] { conflict.DestRecID });
                         break;
-
-                        throw new NotSupportedException();
                     }
                 case ConflictResolutionType.ChoseDest:
                     {
@@ -264,6 +264,8 @@ namespace CruiseDAL.V3.Sync
                     }
                 case ConflictResolutionType.ChoseDestMergeData:
                     {
+                        throw new NotSupportedException();
+
                         source.ExecuteNonQuery(
                             "PRAGMA foreign_keys=off; " +
                             "BEGIN; " + // disable FKeys so that cascading deletes don't trigger 

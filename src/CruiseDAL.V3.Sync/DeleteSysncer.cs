@@ -11,7 +11,7 @@ namespace CruiseDAL.V3.Sync
 {
     public class DeleteSysncer
     {
-        public void Sync(string cruiseID, CruiseDatastore source, CruiseDatastore destination, CruiseSyncOptions options)
+        public void Sync(string cruiseID, CruiseDatastore source, CruiseDatastore destination, TableSyncOptions options)
         {
             var sourceConn = source.OpenConnection();
             try
@@ -32,27 +32,46 @@ namespace CruiseDAL.V3.Sync
             }
         }
 
-        public Task SyncAsync(string cruiseID, DbConnection source, DbConnection destination, CruiseSyncOptions options, IProgress<float> progress = null)
+        public Task SyncAsync(string cruiseID, DbConnection source, DbConnection destination, TableSyncOptions options, IProgress<float> progress = null)
         {
             return Task.Run(() => Sync(cruiseID, source, destination, options, progress));
         }
 
-        public void Sync(string cruiseID, DbConnection source, DbConnection destination, CruiseSyncOptions options, IProgress<float> progress = null)
+        public void Sync(string cruiseID, DbConnection source, DbConnection destination, TableSyncOptions options, IProgress<float> progress = null)
         {
-            var steps = 16;
+            var steps = 19;
             float p = 0.0f;
             var transaction = destination.BeginTransaction();
             try
             {
-                SyncCuttingUnits(cruiseID, source, destination, options);
+                // field data
+                SyncTallyLedger(cruiseID, source, destination, options);
                 progress?.Report(p++ / steps);
-                SyncStrata(cruiseID, source, destination, options);
+
+                SyncLog(cruiseID, source, destination, options);
                 progress?.Report(p++ / steps);
-                SyncCuttingUnit_Stratum(cruiseID, source, destination, options);
+                SyncStem(cruiseID, source, destination, options);
+                progress?.Report(p++ / steps);
+                SyncTree(cruiseID, source, destination, options);
+                progress?.Report(p++ / steps);
+
+                SyncPlotLocation(cruiseID, source, destination, options);
+                progress?.Report(p++ / steps);
+                SyncPlot_Strata(cruiseID, source, destination, options);
+                progress?.Report(p++ / steps);
+                SyncPlots(cruiseID, source, destination, options);
+                progress?.Report(p++ / steps);
+
+                //design
+                SyncSubPopulation(cruiseID, source, destination, options);
                 progress?.Report(p++ / steps);
                 SyncSampleGroup(cruiseID, source, destination, options);
                 progress?.Report(p++ / steps);
-                SyncSubPopulation(cruiseID, source, destination, options);
+                SyncCuttingUnit_Stratum(cruiseID, source, destination, options);
+                progress?.Report(p++ / steps);
+                SyncCuttingUnits(cruiseID, source, destination, options);
+                progress?.Report(p++ / steps);
+                SyncStrata(cruiseID, source, destination, options);
                 progress?.Report(p++ / steps);
 
                 // field setup
@@ -69,26 +88,9 @@ namespace CruiseDAL.V3.Sync
                 SyncTreeAuditResolution(cruiseID, source, destination, options);
                 progress?.Report(p++ / steps);
 
-                // field data
-                SyncPlots(cruiseID, source, destination, options);
-                progress?.Report(p++ / steps);
-                SyncPlotLocation(cruiseID, source, destination, options);
-                progress?.Report(p++ / steps);
-                SyncPlot_Strata(cruiseID, source, destination, options);
-                progress?.Report(p++ / steps);
-
-                SyncTallyLedger(cruiseID, source, destination, options);
-                progress?.Report(p++ / steps);
-
-                //SyncLog(cruiseID, source, destination, options);
-                //progress?.Report(p++ / steps);
-                //SyncStem(cruiseID, source, destination, options);
-                //progress?.Report(p++ / steps);
-
                 //processing
                 SyncVolumeEquations(cruiseID, source, destination, options);
                 progress?.Report(p++ / steps);
-
                 SyncReports(cruiseID, source, destination, options);
                 progress?.Report(p++ / steps);
 
@@ -103,8 +105,10 @@ namespace CruiseDAL.V3.Sync
 
         
 
-        private void SyncCuttingUnits(string cruiseID, DbConnection source, DbConnection destination, CruiseSyncOptions options)
+        private void SyncCuttingUnits(string cruiseID, DbConnection source, DbConnection destination, TableSyncOptions options)
         {
+            if (!options.CuttingUnit.HasFlag(SyncOption.Delete)) return;
+
             var deletedItems = source.From<CuttingUnit_Tombstone>()
                 .Where("CruiseID = @p1")
                 .Query(cruiseID);
@@ -126,8 +130,10 @@ namespace CruiseDAL.V3.Sync
             }
         }
 
-        private void SyncStrata(string cruiseID, DbConnection source, DbConnection destination, CruiseSyncOptions options)
+        private void SyncStrata(string cruiseID, DbConnection source, DbConnection destination, TableSyncOptions options)
         {
+            if (!options.Stratum.HasFlag(SyncOption.Delete)) return;
+
             var deletedItems = source.From<Stratum_Tombstone>()
                 .Where("CruiseID = @p1")
                 .Query(cruiseID);
@@ -149,8 +155,10 @@ namespace CruiseDAL.V3.Sync
             }
         }
 
-        private void SyncCuttingUnit_Stratum(string cruiseID, DbConnection source, DbConnection destination, CruiseSyncOptions options)
+        private void SyncCuttingUnit_Stratum(string cruiseID, DbConnection source, DbConnection destination, TableSyncOptions options)
         {
+            if (!options.CuttingUnitStratum.HasFlag(SyncOption.Delete)) return;
+
             var deletedItems = source.From<CuttingUnit_Stratum_Tombstone>()
                 .Where("CruiseID = @p1")
                 .Query(cruiseID);
@@ -172,8 +180,10 @@ namespace CruiseDAL.V3.Sync
             }
         }
 
-        private void SyncSampleGroup(string cruiseID, DbConnection source, DbConnection destination, CruiseSyncOptions options)
+        private void SyncSampleGroup(string cruiseID, DbConnection source, DbConnection destination, TableSyncOptions options)
         {
+            if (!options.SampleGroup.HasFlag(SyncOption.Delete)) return;
+
             var deletedItems = source.From<SampleGroup_Tombstone>()
                 .Where("CruiseID = @p1")
                 .Query(cruiseID);
@@ -195,8 +205,10 @@ namespace CruiseDAL.V3.Sync
             }
         }
 
-        private void SyncSubPopulation(string cruiseID, DbConnection source, DbConnection destination, CruiseSyncOptions options)
+        private void SyncSubPopulation(string cruiseID, DbConnection source, DbConnection destination, TableSyncOptions options)
         {
+            if (!options.Subpopulation.HasFlag(SyncOption.Delete)) return;
+
             var deletedItems = source.From<SubPopulation_Tombstone>()
                 .Where("CruiseID = @p1")
                 .Query(cruiseID);
@@ -224,8 +236,10 @@ namespace CruiseDAL.V3.Sync
         //    throw new NotImplementedException();
         //}
 
-        private void SyncLogFieldSetup(string cruiseID, DbConnection source, DbConnection destination, CruiseSyncOptions options)
+        private void SyncLogFieldSetup(string cruiseID, DbConnection source, DbConnection destination, TableSyncOptions options)
         {
+            if (!options.LogFieldSetup.HasFlag(SyncOption.Delete)) return;
+
             var deletedItems = source.From<LogFieldSetup_Tombstone>()
                 .Where("CruiseID = @p1")
                 .Query(cruiseID);
@@ -248,8 +262,10 @@ namespace CruiseDAL.V3.Sync
             }
         }
 
-        private void SyncTreeFieldSetup(string cruiseID, DbConnection source, DbConnection destination, CruiseSyncOptions options)
+        private void SyncTreeFieldSetup(string cruiseID, DbConnection source, DbConnection destination, TableSyncOptions options)
         {
+            if (!options.TreeFieldSetup.HasFlag(SyncOption.Delete)) return;
+
             var deletedItems = source.From<TreeFieldSetup_Tombstone>()
                 .Where("CruiseID = @p1")
                 .Query(cruiseID);
@@ -272,8 +288,10 @@ namespace CruiseDAL.V3.Sync
             }
         }
 
-        private void SyncTreeAuditRule(string cruiseID, DbConnection source, DbConnection destination, CruiseSyncOptions options)
+        private void SyncTreeAuditRule(string cruiseID, DbConnection source, DbConnection destination, TableSyncOptions options)
         {
+            if (!options.TreeAuditRule.HasFlag(SyncOption.Delete)) return;
+
             var deletedItems = source.From<TreeAuditRule_Tombstone>()
                 .Where("CruiseID = @p1")
                 .Query(cruiseID);
@@ -296,8 +314,10 @@ namespace CruiseDAL.V3.Sync
             }
         }
 
-        private void SyncTreeAuditRuleSelector(string cruiseID, DbConnection source, DbConnection destination, CruiseSyncOptions options)
+        private void SyncTreeAuditRuleSelector(string cruiseID, DbConnection source, DbConnection destination, TableSyncOptions options)
         {
+            if (!options.TreeAuditRuleSelector.HasFlag(SyncOption.Delete)) return;
+
             var deletedItems = source.From<TreeAuditRuleSelector_Tombstone>()
                 .Where("CruiseID = @p1")
                 .Query(cruiseID);
@@ -320,8 +340,10 @@ namespace CruiseDAL.V3.Sync
             }
         }
 
-        private void SyncTreeAuditResolution(string cruiseID, DbConnection source, DbConnection destination, CruiseSyncOptions options)
+        private void SyncTreeAuditResolution(string cruiseID, DbConnection source, DbConnection destination, TableSyncOptions options)
         {
+            if (!options.TreeAuditResolution.HasFlag(SyncOption.Delete)) return;
+
             var deletedItems = source.From<TreeAuditResolution_Tombstone>()
                 .Where("CruiseID = @p1")
                 .Query(cruiseID);
@@ -344,8 +366,10 @@ namespace CruiseDAL.V3.Sync
             }
         }
 
-        private void SyncPlots(string cruiseID, DbConnection source, DbConnection destination, CruiseSyncOptions options)
+        private void SyncPlots(string cruiseID, DbConnection source, DbConnection destination, TableSyncOptions options)
         {
+            if (!options.Plot.HasFlag(SyncOption.Delete)) return;
+
             var deletedItems = source.From<Plot_Tombstone>()
                 .Where("CruiseID = @p1")
                 .Query(cruiseID);
@@ -368,8 +392,10 @@ namespace CruiseDAL.V3.Sync
             }
         }
 
-        private void SyncPlotLocation(string cruiseID, DbConnection source, DbConnection destination, CruiseSyncOptions options)
+        private void SyncPlotLocation(string cruiseID, DbConnection source, DbConnection destination, TableSyncOptions options)
         {
+            if (!options.PlotLocation.HasFlag(SyncOption.Delete)) return;
+
             var deletedItems = source.From<PlotLocation_Tombstone>()
                 .Join("Plot", "USING (PlotID)")
                 .Where("CruiseID = @p1")
@@ -393,8 +419,10 @@ namespace CruiseDAL.V3.Sync
             }
         }
 
-        private void SyncPlot_Strata(string cruiseID, DbConnection source, DbConnection destination, CruiseSyncOptions options)
+        private void SyncPlot_Strata(string cruiseID, DbConnection source, DbConnection destination, TableSyncOptions options)
         {
+            if (!options.PlotStratum.HasFlag(SyncOption.Delete)) return;
+
             var deletedItems = source.From<Plot_Stratum_Tombstone>()
                 .Where("CruiseID = @p1")
                 .Query(cruiseID);
@@ -417,8 +445,10 @@ namespace CruiseDAL.V3.Sync
             }
         }
 
-        private void SyncTree(string cruiseID, DbConnection source, DbConnection destination, CruiseSyncOptions options)
+        private void SyncTree(string cruiseID, DbConnection source, DbConnection destination, TableSyncOptions options)
         {
+            if (!options.Tree.HasFlag(SyncOption.Delete)) return;
+
             var deletedItems = source.From<Tree_Tombstone>()
                 .Where("CruiseID = @p1")
                 .Query(cruiseID);
@@ -441,8 +471,10 @@ namespace CruiseDAL.V3.Sync
             }
         }
 
-        private void SyncTallyLedger(string cruiseID, DbConnection source, DbConnection destination, CruiseSyncOptions options)
+        private void SyncTallyLedger(string cruiseID, DbConnection source, DbConnection destination, TableSyncOptions options)
         {
+            if (!options.TallyLedger.HasFlag(SyncOption.Delete)) return;
+
             var deletedItems = source.From<TallyLedger_Tombstone>()
                 .Where("CruiseID = @p1")
                 .Query(cruiseID);
@@ -466,8 +498,10 @@ namespace CruiseDAL.V3.Sync
             }
         }
 
-        private void synclog(string cruiseid, DbConnection source, DbConnection destination, CruiseSyncOptions options)
+        private void SyncLog(string cruiseid, DbConnection source, DbConnection destination, TableSyncOptions options)
         {
+            if (!options.Log.HasFlag(SyncOption.Delete)) return;
+
             var deletedItems = source.From<Log_Tombstone>()
                 .Where("CruiseID = @p1")
                 .Query(cruiseid);
@@ -490,8 +524,10 @@ namespace CruiseDAL.V3.Sync
             }
         }
 
-        private void SyncStem(string cruiseID, DbConnection source, DbConnection destination, CruiseSyncOptions options)
+        private void SyncStem(string cruiseID, DbConnection source, DbConnection destination, TableSyncOptions options)
         {
+            if (!options.Stem.HasFlag(SyncOption.Delete)) return;
+
             var deletedItems = source.From<Stem_Tombstone>()
                 .Where("CruiseID = @p1")
                 .Query(cruiseID);
@@ -514,8 +550,10 @@ namespace CruiseDAL.V3.Sync
             }
         }
 
-        private void SyncVolumeEquations(string cruiseID, DbConnection source, DbConnection destination, CruiseSyncOptions options)
+        private void SyncVolumeEquations(string cruiseID, DbConnection source, DbConnection destination, TableSyncOptions options)
         {
+            if (!options.Processing.HasFlag(SyncOption.Delete)) return;
+
             var deletedItems = source.From<VolumeEquation_Tombstone>()
                 .Where("CruiseID = @p1")
                 .Query(cruiseID);
@@ -538,8 +576,10 @@ namespace CruiseDAL.V3.Sync
             }
         }
 
-        private void SyncReports(string cruiseID, DbConnection source, DbConnection destination, CruiseSyncOptions options)
+        private void SyncReports(string cruiseID, DbConnection source, DbConnection destination, TableSyncOptions options)
         {
+            if (!options.Processing.HasFlag(SyncOption.Delete)) return;
+
             var deletedItems = source.From<Reports_Tombstone>()
                 .Where("CruiseID = @p1")
                 .Query(cruiseID);

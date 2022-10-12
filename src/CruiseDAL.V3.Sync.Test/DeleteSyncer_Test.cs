@@ -38,7 +38,12 @@ namespace CruiseDAL.V3.Sync
             fromDb.Delete(newUnit);
 
             var syncer = new DeleteSysncer();
-            var syncOptions = new CruiseSyncOptions();
+            var syncOptions = new TableSyncOptions(SyncOption.Lock)
+            {
+                CuttingUnit = SyncOption.Delete,
+            };
+
+
             syncer.Sync(cruiseID, fromDb, toDb, syncOptions);
 
             toDb.GetRowCount("CuttingUnit", "WHERE CuttingUnitID = @p1", newUnit.CuttingUnitID)
@@ -70,7 +75,10 @@ namespace CruiseDAL.V3.Sync
             fromDb.Delete(newStratum);
 
             var syncer = new DeleteSysncer();
-            var syncOptions = new CruiseSyncOptions();
+            var syncOptions = new TableSyncOptions(SyncOption.Lock)
+            {
+                Stratum = SyncOption.Delete,
+            };
             syncer.Sync(cruiseID, fromDb, toDb, syncOptions);
 
             toDb.GetRowCount("Stratum", "WHERE StratumID = @p1", newStratum.StratumID)
@@ -96,16 +104,31 @@ namespace CruiseDAL.V3.Sync
             };
             fromDb.Insert(newStratum);
 
+            var newSG = new SampleGroup
+            {
+                CruiseID = cruiseID,
+                StratumCode = newStratum.StratumCode,
+                SampleGroupID = Guid.NewGuid().ToString(),
+                SampleGroupCode = "newSt1",
+            };
+            fromDb.Insert(newSG);
+
             fromDb.CopyTo(toPath, true);
             using var toDb = new CruiseDatastore_V3(toPath);
 
             fromDb.Delete(newStratum);
+            fromDb.Delete(newSG);
 
             var syncer = new DeleteSysncer();
-            var syncOptions = new CruiseSyncOptions();
+            var syncOptions = new TableSyncOptions(SyncOption.Lock)
+            {
+                SampleGroup = SyncOption.Delete,
+            };
             syncer.Sync(cruiseID, fromDb, toDb, syncOptions);
 
             toDb.GetRowCount("Stratum", "WHERE StratumID = @p1", newStratum.StratumID)
+                .Should().Be(1);
+            toDb.GetRowCount("SampleGroup", "WHERE SampleGroupID = @p1", newSG.SampleGroupID)
                 .Should().Be(0);
         }
 
@@ -136,7 +159,10 @@ namespace CruiseDAL.V3.Sync
             fromDb.Delete(tallyLedger);
 
             var syncer = new DeleteSysncer();
-            var syncOptions = new CruiseSyncOptions();
+            var syncOptions = new TableSyncOptions(SyncOption.Lock)
+            {
+                TallyLedger = SyncOption.Delete,
+            };
             syncer.Sync(cruiseID, fromDb, toDb, syncOptions);
 
             toDb.GetRowCount("TallyLedger", "WHERE TallyLedgerID = @p1", tallyLedger.TallyLedgerID)

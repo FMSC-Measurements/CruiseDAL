@@ -17,7 +17,10 @@ namespace CruiseDAL.V3.Sync
             var fromPath = GetTempFilePathWithExt(".crz3", "Sale_Add_fromFile");
             var toPath = GetTempFilePathWithExt(".crz3", "Sale_Add_toFile");
 
-            var syncOptions = new CruiseSyncOptions();
+            var syncOptions = new TableSyncOptions(SyncOption.Lock)
+            {
+                Sale = SyncOption.Insert,
+            };
 
             var cruiseID = CruiseID;
             var saleID = SaleID;
@@ -45,7 +48,10 @@ namespace CruiseDAL.V3.Sync
             var fromPath = GetTempFilePathWithExt(".crz3", "Sale_Update_fromFile");
             var toPath = GetTempFilePathWithExt(".crz3", "Sale_Update_toFile");
 
-            var syncOptions = new CruiseSyncOptions();
+            var syncOptions = new TableSyncOptions(SyncOption.Lock)
+            {
+                Sale = SyncOption.Update,
+            };
 
             var cruiseID = CruiseID;
             var saleID = SaleID;
@@ -76,7 +82,10 @@ namespace CruiseDAL.V3.Sync
             var fromPath = GetTempFilePathWithExt(".crz3", "Sync_Sale_Update_ModifySaleNumber_fromFile");
             var toPath = GetTempFilePathWithExt(".crz3", "Sync_Sale_Update_ModifySaleNumber_toFile");
 
-            var syncOptions = new CruiseSyncOptions();
+            var syncOptions = new TableSyncOptions(SyncOption.Lock)
+            {
+                Sale = SyncOption.Update,
+            };
 
             var cruiseID = CruiseID;
             var saleID = SaleID;

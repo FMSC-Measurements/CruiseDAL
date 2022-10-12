@@ -14,7 +14,7 @@ namespace CruiseDAL.V3.Sync.Test.Spec.UnitTests
         public ConflictResolver ConflictResolver { get; }
         public CruiseSyncer Syncer { get; protected set; }
         public DeleteSysncer DeleteSyncer { get; }
-        public CruiseSyncOptions Options { get; protected set; }
+        public TableSyncOptions Options { get; protected set; }
 
         public SyncStevesFiles(ITestOutputHelper output) : base(output)
         {
@@ -22,7 +22,7 @@ namespace CruiseDAL.V3.Sync.Test.Spec.UnitTests
             DeleteSyncer = new DeleteSysncer();
             ConflictChecker = new ConflictChecker();
             ConflictResolver = new ConflictResolver();
-            Options = new CruiseSyncOptions();
+            Options = new TableSyncOptions();
         }
 
 
@@ -31,17 +31,14 @@ namespace CruiseDAL.V3.Sync.Test.Spec.UnitTests
             DeleteSyncer.Sync(cruiseID, source, dest, Options);
             DeleteSyncer.Sync(cruiseID, dest, source, Options);
 
-            var preCheckSyncOptions = new CruiseSyncOptions
+            var preCheckSyncOptions = new TableSyncOptions(SyncOption.Update)
             {
-                Design = SyncFlags.Update,
-                FieldData = SyncFlags.Update,
-                TreeFlags = SyncFlags.Update,
-                Processing = SyncFlags.Lock,
-                Template = SyncFlags.Lock,
-                SamplerState = SyncFlags.Lock,
-                TreeDataFlags = SyncFlags.Lock,
-                TreeDefaultValue = SyncFlags.Lock,
-                Validation = SyncFlags.Lock,
+                Processing = SyncOption.Lock,
+                Template = SyncOption.Lock,
+                SamplerState = SyncOption.Lock,
+                TreeDataFlags = SyncOption.Lock,
+                TreeDefaultValue = SyncOption.Lock,
+                Validation = SyncOption.Lock,
             };
             Syncer.Sync(cruiseID, dest, source, preCheckSyncOptions);
         }

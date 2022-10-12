@@ -28,7 +28,10 @@ namespace CruiseDAL.V3.Sync
             var fromPath = GetTempFilePathWithExt(".crz3", "Cruise_Add_fromFile");
             var toPath = GetTempFilePathWithExt(".crz3", "Cruise_Add_toFile");
 
-            var syncOptions = new CruiseSyncOptions();
+            var syncOptions = new TableSyncOptions(SyncOption.Lock)
+            {
+                Cruise = SyncOption.Insert,
+            };
 
             var init = new DatabaseInitializer();
             var cruiseID = init.CruiseID;
@@ -69,7 +72,10 @@ namespace CruiseDAL.V3.Sync
             var fromPath = GetTempFilePathWithExt(".crz3", "Cruise_Add_fromFile");
             var toPath = GetTempFilePathWithExt(".crz3", "Cruise_Add_toFile");
 
-            var syncOptions = new CruiseSyncOptions();
+            var syncOptions = new TableSyncOptions(SyncOption.Lock)
+            {
+                Cruise = SyncOption.Insert,
+            };
 
             var init = new DatabaseInitializer();
             var cruiseID = init.CruiseID;
@@ -110,7 +116,10 @@ namespace CruiseDAL.V3.Sync
             var fromPath = GetTempFilePathWithExt(".crz3", "Cruise_Update_fromFile");
             var toPath = GetTempFilePathWithExt(".crz3", "Cruise_Update_toFile");
 
-            var syncOptions = new CruiseSyncOptions();
+            var syncOptions = new TableSyncOptions(SyncOption.Lock)
+            {
+                Cruise = SyncOption.Update,
+            };
 
             var cruiseID = CruiseID;
             var saleID = SaleID;
@@ -143,9 +152,9 @@ namespace CruiseDAL.V3.Sync
             var fromPath = GetTempFilePathWithExt(".crz3", "fromFile");
             var toPath = GetTempFilePathWithExt(".crz3", "toFile");
 
-            var syncOptions = new CruiseSyncOptions()
+            var syncOptions = new TableSyncOptions(SyncOption.Lock)
             {
-                Design = SyncFlags.Insert,
+                Device = SyncOption.Insert,
             };
 
             var cruiseID = Guid.NewGuid().ToString();
@@ -175,9 +184,9 @@ namespace CruiseDAL.V3.Sync
             var fromPath = GetTempFilePathWithExt(".crz3", "fromFile");
             var toPath = GetTempFilePathWithExt(".crz3", "toFile");
 
-            var syncOptions = new CruiseSyncOptions()
+            var syncOptions = new TableSyncOptions(SyncOption.Lock)
             {
-                Design = SyncFlags.Insert,
+                CuttingUnitStratum = SyncOption.Insert,
             };
 
             var cruiseID = Guid.NewGuid().ToString();
@@ -208,7 +217,11 @@ namespace CruiseDAL.V3.Sync
             var fromPath = GetTempFilePathWithExt(".crz3", "SubPopulation_Add_fromFile");
             var toPath = GetTempFilePathWithExt(".crz3", "SubPopulation_Add_toFile");
 
-            var syncOptions = new CruiseSyncOptions();
+            var syncOptions = new TableSyncOptions(SyncOption.Lock)
+            {
+                Species = SyncOption.Insert,
+                Subpopulation = SyncOption.Insert,
+            };
 
             var cruiseID = Guid.NewGuid().ToString();
             var saleID = Guid.NewGuid().ToString();
@@ -260,10 +273,9 @@ namespace CruiseDAL.V3.Sync
             var fromPath = GetTempFilePathWithExt(".crz3", "Sync_Plot_Add_fromFile");
             var toPath = GetTempFilePathWithExt(".crz3", "Sync_Plot_Add_toFile");
 
-            var syncOptions = new CruiseSyncOptions()
+            var syncOptions = new TableSyncOptions(SyncOption.Lock)
             {
-                Design = SyncFlags.Insert,
-                FieldData = SyncFlags.Insert,
+                PlotStratum = SyncOption.Insert,
             };
 
             var cruiseID = Guid.NewGuid().ToString();
@@ -307,10 +319,9 @@ namespace CruiseDAL.V3.Sync
             var fromPath = GetTempFilePathWithExt(".crz3", "Sync_Plot_Add_fromFile");
             var toPath = GetTempFilePathWithExt(".crz3", "Sync_Plot_Add_toFile");
 
-            var syncOptions = new CruiseSyncOptions()
+            var syncOptions = new TableSyncOptions(SyncOption.Lock)
             {
-                Design = SyncFlags.Insert,
-                FieldData = SyncFlags.InsertUpdate,
+                Stratum = SyncOption.Insert,
             };
 
             var cruiseID = Guid.NewGuid().ToString();
@@ -333,14 +344,14 @@ namespace CruiseDAL.V3.Sync
                 PlotNumber = plot.PlotNumber,
                 CuttingUnitCode = plot.CuttingUnitCode,
                 StratumCode = PlotStrata[0].StratumCode,
+                IsEmpty = false,
             };
             fromDb.Insert(plotStratum);
 
             fromDb.CopyTo(toPath, true);
             using var toDb = new CruiseDatastore_V3(toPath);
 
-            plotStratum.KPI = Rand.Double();
-            plotStratum.ThreePRandomValue = Rand.Int();
+            plotStratum.IsEmpty = true;
             toDb.Update(plotStratum);
 
             var syncer = new CruiseSyncer();
@@ -361,10 +372,9 @@ namespace CruiseDAL.V3.Sync
             var fromPath = GetTempFilePathWithExt(".crz3", "Sync_Plot_Add_fromFile");
             var toPath = GetTempFilePathWithExt(".crz3", "Sync_Plot_Add_toFile");
 
-            var syncOptions = new CruiseSyncOptions()
+            var syncOptions = new TableSyncOptions(SyncOption.Lock)
             {
-                Design = SyncFlags.Insert,
-                FieldData = SyncFlags.Insert,
+                PlotLocation = SyncOption.Insert,
             };
 
             var cruiseID = Guid.NewGuid().ToString();
@@ -405,10 +415,9 @@ namespace CruiseDAL.V3.Sync
             var fromPath = GetTempFilePathWithExt(".crz3", "Sync_Plot_Add_fromFile");
             var toPath = GetTempFilePathWithExt(".crz3", "Sync_Plot_Add_toFile");
 
-            var syncOptions = new CruiseSyncOptions()
+            var syncOptions = new TableSyncOptions(SyncOption.Lock)
             {
-                Design = SyncFlags.Insert,
-                FieldData = SyncFlags.Update,
+                PlotLocation = SyncOption.Update,
             };
 
             var cruiseID = Guid.NewGuid().ToString();
@@ -455,12 +464,10 @@ namespace CruiseDAL.V3.Sync
             var fromPath = GetTempFilePathWithExt(".crz3", "Sync_Unit_Add_fromFile");
             var toPath = GetTempFilePathWithExt(".crz3", "Sync_Unit_Add_toFile");
 
-            var syncOptions = new CruiseSyncOptions()
+            var syncOptions = new TableSyncOptions(SyncOption.Lock)
             {
-                Design = SyncFlags.Insert,
-                FieldData = SyncFlags.Insert,
-                TreeDataFlags = SyncFlags.Insert,
-                TreeFlags = SyncFlags.Insert,
+                Tree = SyncOption.Insert,
+                TallyLedger = SyncOption.Insert,
             };
 
             var cruiseID = Guid.NewGuid().ToString();
@@ -528,12 +535,9 @@ namespace CruiseDAL.V3.Sync
             var fromPath = GetTempFilePathWithExt(".crz3", "Sync_Unit_Add_fromFile");
             var toPath = GetTempFilePathWithExt(".crz3", "Sync_Unit_Add_toFile");
 
-            var syncOptions = new CruiseSyncOptions()
+            var syncOptions = new TableSyncOptions(SyncOption.Lock)
             {
-                Design = SyncFlags.Insert,
-                FieldData = SyncFlags.Insert,
-                TreeDataFlags = SyncFlags.Insert,
-                TreeFlags = SyncFlags.Insert,
+                TallyLedger = SyncOption.Insert,
             };
 
             var cruiseID = Guid.NewGuid().ToString();
@@ -568,9 +572,9 @@ namespace CruiseDAL.V3.Sync
             var fromPath = GetTempFilePathWithExt(".crz3", "Sync_Plot_Add_fromFile");
             var toPath = GetTempFilePathWithExt(".crz3", "Sync_Plot_Add_toFile");
 
-            var syncOptions = new CruiseSyncOptions()
+            var syncOptions = new TableSyncOptions(SyncOption.Lock)
             {
-                FieldData = SyncFlags.Insert,
+                Log = SyncOption.Insert,
             };
 
             var cruiseID = Guid.NewGuid().ToString();
@@ -616,9 +620,9 @@ namespace CruiseDAL.V3.Sync
             var fromPath = GetTempFilePathWithExt(".crz3", "Sync_Reports_Add_fromFile");
             var toPath = GetTempFilePathWithExt(".crz3", "Sync_Reports_Add_toFile");
 
-            var syncOptions = new CruiseSyncOptions()
+            var syncOptions = new TableSyncOptions(SyncOption.Lock)
             {
-                Processing = SyncFlags.Insert,
+                Processing = SyncOption.Insert,
             };
 
             var cruiseID = Guid.NewGuid().ToString();
@@ -655,9 +659,9 @@ namespace CruiseDAL.V3.Sync
             var fromPath = GetTempFilePathWithExt(".crz3", "SyncValueEquations_Add_fromFile");
             var toPath = GetTempFilePathWithExt(".crz3", "SyncValueEquations_Add_toFile");
 
-            var syncOptions = new CruiseSyncOptions()
+            var syncOptions = new TableSyncOptions(SyncOption.Lock)
             {
-                Processing = SyncFlags.Insert,
+                Processing = SyncOption.Insert,
             };
 
             var cruiseID = Guid.NewGuid().ToString();
@@ -690,9 +694,9 @@ namespace CruiseDAL.V3.Sync
             var fromPath = GetTempFilePathWithExt(".crz3", "SyncVolumeEquations_Add_fromFile");
             var toPath = GetTempFilePathWithExt(".crz3", "SyncVolumeEquations_Add_toFile");
 
-            var syncOptions = new CruiseSyncOptions()
+            var syncOptions = new TableSyncOptions(SyncOption.Lock)
             {
-                Processing = SyncFlags.Insert,
+                Processing = SyncOption.Insert,
             };
 
             var cruiseID = Guid.NewGuid().ToString();
@@ -724,9 +728,9 @@ namespace CruiseDAL.V3.Sync
             var fromPath = GetTempFilePathWithExt(".crz3", "SyncTreeDefaultValues_Add_fromFile");
             var toPath = GetTempFilePathWithExt(".crz3", "SyncTreeDefaultValues_Add_toFile");
 
-            var syncOptions = new CruiseSyncOptions()
+            var syncOptions = new TableSyncOptions(SyncOption.Lock)
             {
-                Processing = SyncFlags.Insert,
+                TreeDefaultValue = SyncOption.Insert,
             };
 
             var init = new DatabaseInitializer()
@@ -760,9 +764,9 @@ namespace CruiseDAL.V3.Sync
             var fromPath = GetTempFilePathWithExt(".crz3", "SyncStratumTemplates_Add_fromFile");
             var toPath = GetTempFilePathWithExt(".crz3", "SyncStratumTemplates_Add_toFile");
 
-            var syncOptions = new CruiseSyncOptions()
+            var syncOptions = new TableSyncOptions(SyncOption.Lock)
             {
-                Processing = SyncFlags.Insert,
+                Template = SyncOption.Insert,
             };
 
             var init = new DatabaseInitializer();
@@ -792,9 +796,9 @@ namespace CruiseDAL.V3.Sync
             var fromPath = GetTempFilePathWithExt(".crz3", "SyncStratumTemplateTreeFieldSetup_Add_fromFile");
             var toPath = GetTempFilePathWithExt(".crz3", "SyncStratumTemplateTreeFieldSetup_Add_toFile");
 
-            var syncOptions = new CruiseSyncOptions()
+            var syncOptions = new TableSyncOptions(SyncOption.Lock)
             {
-                Processing = SyncFlags.Insert,
+                Template = SyncOption.Insert,
             };
 
             var init = new DatabaseInitializer();
@@ -832,9 +836,9 @@ namespace CruiseDAL.V3.Sync
             var fromPath = GetTempFilePathWithExt(".crz3", "SyncStratumTemplateLogFieldSetup_Add_fromFile");
             var toPath = GetTempFilePathWithExt(".crz3", "SyncStratumTemplateLogFieldSetup_Add_toFile");
 
-            var syncOptions = new CruiseSyncOptions()
+            var syncOptions = new TableSyncOptions(SyncOption.Lock)
             {
-                Processing = SyncFlags.Insert,
+                Template = SyncOption.Insert,
             };
 
             var init = new DatabaseInitializer();

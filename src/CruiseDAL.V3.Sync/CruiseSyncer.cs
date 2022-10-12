@@ -2,9 +2,11 @@
 using FMSC.ORM.Core;
 using FMSC.ORM.Logging;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Data.Common;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 
 namespace CruiseDAL.V3.Sync
@@ -22,14 +24,14 @@ namespace CruiseDAL.V3.Sync
     // TODO sync Species_Product
 
     // TODO need to noodle some more on how conflicts with tree is going to work with tally ledger records. 
-            // when resolving with Chose Dest or Chose Source we probably shouldn't sync TallyLedgers associated with not not-picked record
-            // one possible solution for now would be to only allow resolution with Modify Dest or Modify Source
+    // when resolving with Chose Dest or Chose Source we probably shouldn't sync TallyLedgers associated with not not-picked record
+    // one possible solution for now would be to only allow resolution with Modify Dest or Modify Source
 
     // TODO there are two ways to handle the ChoseSrourc/ChoseDest resolution. We can leave or merge any child records. I think we need both options. But Chose and Merge should be the default option
-        // situations where we need merge child records:
-        //      - user added units to files separately, went to cruise and how has tree data in both files. That tree data needs to make it to the final file
-        // situations where we need chose but no merge(overwrite child data):
-        //      - user added paper data to files separately and now has full duplicate data one two files. 
+    // situations where we need merge child records:
+    //      - user added units to files separately, went to cruise and how has tree data in both files. That tree data needs to make it to the final file
+    // situations where we need chose but no merge(overwrite child data):
+    //      - user added paper data to files separately and now has full duplicate data one two files. 
 
     // when resolving with a 'chose' resolution, can we simplify the choice the user makes by just allowing them to chose the newest version of the record
     // if when checking all downstream conflicts, if all records are the same, can we auto resolve the conflict but going with latest modified
@@ -55,7 +57,7 @@ namespace CruiseDAL.V3.Sync
             return hasCruise;
         }
 
-        public void Sync(string cruiseID, CruiseDatastore source, CruiseDatastore destination, CruiseSyncOptions options)
+        public void Sync(string cruiseID, CruiseDatastore source, CruiseDatastore destination, TableSyncOptions options)
         {
             var sourceConn = source.OpenConnection();
             try
@@ -76,122 +78,121 @@ namespace CruiseDAL.V3.Sync
             }
         }
 
-        public Task SyncAsync(string cruiseID, DbConnection source, DbConnection destination, CruiseSyncOptions options, IProgress<double> progress = null)
+        public Task<SyncResult> SyncAsync(string cruiseID, DbConnection source, DbConnection destination, TableSyncOptions options, IProgress<double> progress = null)
         {
             return Task.Run(() => Sync(cruiseID, source, destination, options, progress));
         }
 
-        public void Sync(string cruiseID, DbConnection source, DbConnection destination, CruiseSyncOptions options, IProgress<double> progress = null)
+        public SyncResult Sync(string cruiseID, DbConnection source, DbConnection destination, TableSyncOptions options, IProgress<double> progress = null)
         {
-            //var excludeOptions = new SyncExcludeOptions(options.ExcludeUnitIDs,
-            //    options.ExcludeStrataIDs,
-            //    options.ExcludeSampleGroupIDs,
-            //    options.ExcludePlotIDs,
-            //    options.ExcludeTreeIDs,
-            //    options.ExcludeLogIDs);
+            var syncResults = new SyncResult();
 
-            var excludeOptions = new SyncExcludeOptions();
-
-            var steps = 34;
+            var steps = 36;
             double p = 0.0;
             var transaction = destination.BeginTransaction();
             try
             {
                 // core
-                SyncSale(cruiseID, source, destination, options);
+                syncResults.Add(SyncSale(cruiseID, source, destination, options));
                 progress?.Report(++p / steps);
-                SyncCruise(cruiseID, source, destination, options);
+                syncResults.Add(SyncCruise(cruiseID, source, destination, options));
                 progress?.Report(++p / steps);
 
-                SyncDevice(cruiseID, source, destination, options);
+                syncResults.Add(SyncDevice(cruiseID, source, destination, options));
                 progress?.Report(++p / steps);
 
                 // design
-                SyncCuttingUnits(cruiseID, source, destination, options);
+                syncResults.Add(SyncCuttingUnits(cruiseID, source, destination, options));
                 progress?.Report(++p / steps);
-                SyncStrata(cruiseID, source, destination, options);
+                syncResults.Add(SyncStratum(cruiseID, source, destination, options));
                 progress?.Report(++p / steps);
-                SyncCuttingUnit_Stratum(cruiseID, source, destination, options);
+                syncResults.Add(SyncCuttingUnit_Stratum(cruiseID, source, destination, options));
                 progress?.Report(++p / steps);
-                SyncSampleGroup(cruiseID, source, destination, options);
+                syncResults.Add(SyncSampleGroup(cruiseID, source, destination, options));
                 progress?.Report(++p / steps);
-                SyncSamplerState(cruiseID, source, destination, options);
+                syncResults.Add(SyncSamplerState(cruiseID, source, destination, options));
                 progress?.Report(++p / steps);
-                SyncSpecies(cruiseID, source, destination, options);
+                syncResults.Add(SyncSpecies(cruiseID, source, destination, options));
                 progress?.Report(++p / steps);
-                SyncSubPopulation(cruiseID, source, destination, options);
+                syncResults.Add(SyncSubpopulation(cruiseID, source, destination, options));
                 progress?.Report(++p / steps);
-                SyncFixCNTTallyPopulation(cruiseID, source, destination, options);
+                syncResults.Add(SyncFixCNTTallyPopulation(cruiseID, source, destination, options));
                 progress?.Report(++p / steps);
 
                 // field setup
-                SyncLogFieldSetup(cruiseID, source, destination, options);
+                syncResults.Add(SyncLogFieldSetup(cruiseID, source, destination, options));
                 progress?.Report(++p / steps);
-                SyncTreeFieldSetup(cruiseID, source, destination, options);
+                syncResults.Add(SyncTreeFieldSetup(cruiseID, source, destination, options));
                 progress?.Report(++p / steps);
-                SyncTreeFieldHeading(cruiseID, source, destination, options);
+                syncResults.Add(SyncTreeFieldHeading(cruiseID, source, destination, options));
                 progress?.Report(++p / steps);
-                SyncLogFieldHeading(cruiseID, source, destination, options);
+                syncResults.Add(SyncLogFieldHeading(cruiseID, source, destination, options));
                 progress?.Report(++p / steps);
 
                 // validation
-                SyncTreeAuditRule(cruiseID, source, destination, options);
+                syncResults.Add(SyncTreeAuditRule(cruiseID, source, destination, options));
                 progress?.Report(++p / steps);
-                SyncTreeAuditRuleSelector(cruiseID, source, destination, options);
+                syncResults.Add(SyncTreeAuditRuleSelector(cruiseID, source, destination, options));
                 progress?.Report(++p / steps);
-                SyncTreeAuditResolution(cruiseID, source, destination, options);
+                syncResults.Add(SyncTreeAuditResolution(cruiseID, source, destination, options));
                 progress?.Report(++p / steps);
                 //SyncLogGradeAuditRules(cruiseID, source, destination, options);
                 //progress?.Report(++p / steps);
 
                 // field data
-                SyncPlots(cruiseID, source, destination, options);
+                syncResults.Add(SyncPlot(cruiseID, source, destination, options));
                 progress?.Report(++p / steps);
-                SyncPlotLocation(cruiseID, source, destination, options);
+                syncResults.Add(SyncPlotLocation(cruiseID, source, destination, options));
                 progress?.Report(++p / steps);
-                SyncPlot_Strata(cruiseID, source, destination, options);
+                syncResults.Add(SyncPlot_Strata(cruiseID, source, destination, options));
                 progress?.Report(++p / steps);
-                SyncPlotTree(cruiseID, source, destination, options);
+                syncResults.Add(SyncTree(cruiseID, source, destination, options));
                 progress?.Report(++p / steps);
-                SyncNonPlotTrees(cruiseID, source, destination, options);
+                syncResults.Add(SyncTreeMeasurment(cruiseID, source, destination, options));
+                progress?.Report(++p / steps);
+                syncResults.Add(SyncTreeLocation(cruiseID, source, destination, options));
+                progress?.Report(++p / steps);
+                syncResults.Add(SyncTreeFieldValue(cruiseID, source, destination, options));
                 progress?.Report(++p / steps);
 
-                SyncTallyLedger(cruiseID, source, destination, options);
+                syncResults.Add(SyncTallyLedger(cruiseID, source, destination, options));
                 progress?.Report(++p / steps);
 
-                SyncLog(cruiseID, source, destination, options);
+                syncResults.Add(SyncLog(cruiseID, source, destination, options));
                 progress?.Report(++p / steps);
-                SyncStem(cruiseID, source, destination, options);
+                syncResults.Add(SyncStem(cruiseID, source, destination, options));
                 progress?.Report(++p / steps);
 
                 //processing
-                SyncBiomassEquations(cruiseID, source, destination, options);
+                syncResults.Add(SyncBiomassEquation(cruiseID, source, destination, options));
                 progress?.Report(++p / steps);
 
-                SyncReports(cruiseID, source, destination, options);
+                syncResults.Add(SyncReport(cruiseID, source, destination, options));
                 progress?.Report(++p / steps);
 
-                SyncValueEquations(cruiseID, source, destination, options);
+                syncResults.Add(SyncValueEquation(cruiseID, source, destination, options));
                 progress?.Report(++p / steps);
 
-                SyncVolumeEquations(cruiseID, source, destination, options);
+                syncResults.Add(SyncVolumeEquation(cruiseID, source, destination, options));
                 progress?.Report(++p / steps);
 
                 // TreeDefaultValue
-                SyncTreeDefaultValues(cruiseID, source, destination, options);
+                syncResults.Add(SyncTreeDefaultValues(cruiseID, source, destination, options));
                 progress?.Report(++p / steps);
 
                 // template
-                SyncStratumTemplates(cruiseID, source, destination, options);
+                syncResults.Add(SyncStratumTemplates(cruiseID, source, destination, options));
                 progress?.Report(++p / steps);
 
-                SyncStratumTemplateTreeFieldSetups(cruiseID, source, destination, options);
+                syncResults.Add(SyncStratumTemplateTreeFieldSetups(cruiseID, source, destination, options));
                 progress?.Report(++p / steps);
 
-                SyncStratumTemplateLogFieldSetups(cruiseID, source, destination, options);
+                syncResults.Add(SyncStratumTemplateLogFieldSetups(cruiseID, source, destination, options));
                 progress?.Report(++p / steps);
 
                 transaction.Commit();
+
+                return syncResults;
             }
             catch (Exception e)
             {
@@ -200,12 +201,12 @@ namespace CruiseDAL.V3.Sync
             }
         }
 
-        private bool ShouldUpdate(DateTime? srcMod, DateTime? desMod, SyncFlags syncFlags)
+        private bool ShouldUpdate(DateTime? srcMod, DateTime? desMod, SyncOption syncFlags)
         {
             if (srcMod.HasValue == false) { return false; }
             else if ((desMod.HasValue == false)
-                || syncFlags.HasFlag(SyncFlags.ForceUpdate)
-                || (DateTime.Compare(srcMod.Value, desMod.Value) > 0) && syncFlags.HasFlag(SyncFlags.Update))
+                || syncFlags.HasFlag(SyncOption.ForceUpdate)
+                || (DateTime.Compare(srcMod.Value, desMod.Value) > 0) && syncFlags.HasFlag(SyncOption.Update))
             {
                 return true;
             }
@@ -215,8 +216,12 @@ namespace CruiseDAL.V3.Sync
             }
         }
 
-        private void SyncSale(string cruiseID, DbConnection source, DbConnection destination, CruiseSyncOptions options)
+        private TableSyncResult SyncSale(string cruiseID, DbConnection source, DbConnection destination, TableSyncOptions options)
         {
+            var syncResult = new TableSyncResult(nameof(Sale));
+            var flags = options.Sale;
+            if (flags == SyncOption.Lock) { return syncResult; }
+
             var sourceSale = source.From<Sale>()
                 .Join("Cruise AS c", "USING (SaleNumber)")
                 .Where("CruiseID = @p1")
@@ -232,21 +237,22 @@ namespace CruiseDAL.V3.Sync
 
             if (match == null && saleIDMatch == null)
             {
-                if (options.Sale.HasFlag(SyncFlags.Insert))
+                if (flags.HasFlag(SyncOption.Insert))
                 {
-                    
                     destination.Insert(sourceSale, persistKeyvalue: false);
+                    syncResult.IncrementInserts();
                 }
             }
-            else if(saleIDMatch == null)
+            else if (saleIDMatch == null)
             {
                 //we have a saleNumber match but no SaleID match, e.g. merging a cruise into a database containing a cruise with the same sale number
                 var srcMod = sourceSale.Modified_TS;
                 var destMod = match.Modified_TS;
 
-                if (ShouldUpdate(srcMod, destMod, options.Sale))
+                if (ShouldUpdate(srcMod, destMod, flags))
                 {
                     destination.Update(sourceSale, whereExpression: "SaleNumber = @SaleNumber");
+                    syncResult.IncrementUpdates();
                 }
             }
             else
@@ -255,15 +261,21 @@ namespace CruiseDAL.V3.Sync
                 var srcMod = sourceSale.Modified_TS;
                 var destMod = saleIDMatch.Modified_TS;
 
-                if (ShouldUpdate(srcMod, destMod, options.Sale))
+                if (ShouldUpdate(srcMod, destMod, flags))
                 {
                     destination.Update(sourceSale, whereExpression: "SaleID = @SaleID");
+                    syncResult.IncrementUpdates();
                 }
             }
+            return syncResult;
         }
 
-        private void SyncCruise(string cruiseID, DbConnection source, DbConnection destination, CruiseSyncOptions options)
+        private TableSyncResult SyncCruise(string cruiseID, DbConnection source, DbConnection destination, TableSyncOptions options)
         {
+            var syncResult = new TableSyncResult(nameof(Cruise));
+            var flags = options.Cruise;
+            if (flags == SyncOption.Lock) { return syncResult; }
+
             var where = "CruiseID = @CruiseID";
 
             var sCruise = source.From<Cruise>()
@@ -276,55 +288,60 @@ namespace CruiseDAL.V3.Sync
                 .Query2(new { CruiseID = cruiseID })
                 .FirstOrDefault();
 
-            if (dCruise == null)
+            if (dCruise == null && flags.HasFlag(SyncOption.Insert))
             {
-                if (options.Design.HasFlag(SyncFlags.Insert))
-                {
-                    destination.Insert(sCruise, persistKeyvalue: false);
-                }
+                destination.Insert(sCruise, persistKeyvalue: false);
+                syncResult.IncrementInserts();
             }
-            else
+            else if (dCruise != null)
             {
                 var sMod = sCruise.Modified_TS;
                 var dMod = dCruise.Modified_TS;
 
-                if (ShouldUpdate(sMod, dMod, options.Design))
+                if (ShouldUpdate(sMod, dMod, flags))
                 {
                     destination.Update(sCruise, whereExpression: where);
+                    syncResult.IncrementUpdates();
                 }
             }
+
+            return syncResult;
         }
 
-        private void SyncDevice(string cruiseID, DbConnection source, DbConnection destination, CruiseSyncOptions options)
+        private TableSyncResult SyncDevice(string cruiseID, DbConnection source, DbConnection destination, TableSyncOptions options)
         {
+            var syncResult = new TableSyncResult(nameof(Device));
+
+            var flags = options.Device;
+            if (flags == SyncOption.Lock) { return syncResult; }
+
             var sourceItems = source.From<Device>().Where("CruiseID = @p1").Query(cruiseID);
 
             foreach (var i in sourceItems)
             {
                 var hasMatch = destination.ExecuteScalar<long>("SELECT count(*) FROM Device WHERE DeviceID = @p1 AND CruiseID = @p2;", new object[] { i.DeviceID, cruiseID }) > 0;
 
-                if (hasMatch == false)
+                if (hasMatch == false && flags.HasFlag(SyncOption.Insert))
                 {
                     destination.Insert(i, persistKeyvalue: false);
                 }
             }
+
+            return syncResult;
         }
 
-        private void SyncCuttingUnits(string cruiseID, DbConnection source, DbConnection destination, CruiseSyncOptions options)
+        private TableSyncResult SyncCuttingUnits(string cruiseID, DbConnection source, DbConnection destination, TableSyncOptions options)
         {
+            var syncResult = new TableSyncResult(nameof(CuttingUnit));
+
+            var flags = options.CuttingUnit;
+            if (flags == SyncOption.Lock) { return syncResult; }
+
             var where = "CruiseID = @CruiseID AND CuttingUnitID =  @CuttingUnitID";
             var sourceUnits = source.From<CuttingUnit>().Where("CruiseID = @p1").Query(cruiseID);
 
-            //var excludeUnitIDs = excludeOptions.ExcludeUnitIDs;
-            //var unitConflictOptions = conflictOptions.CuttingUnit;
-
             foreach (var i in sourceUnits)
             {
-                //if (unitConflictOptions.TryGetValue(i.CuttingUnitID, out var unitConflictOpt) && unitConflictOpt != null)
-                //{
-                    
-                //}
-
                 var match = destination.From<CuttingUnit>()
                     .Where(where)
                     .Query2(i)
@@ -336,10 +353,11 @@ namespace CruiseDAL.V3.Sync
                         .Where(where)
                         .Count2(i) > 0;
 
-                    if (options.Design.HasFlag(SyncFlags.ForceInsert)
-                        || (hasTombstone == false && options.Design.HasFlag(SyncFlags.Insert)))
+                    if (flags.HasFlag(SyncOption.ForceInsert)
+                        || (hasTombstone == false && flags.HasFlag(SyncOption.Insert)))
                     {
                         destination.Insert(i, persistKeyvalue: false);
+                        syncResult.IncrementInserts();
                     }
                 }
                 else
@@ -347,56 +365,61 @@ namespace CruiseDAL.V3.Sync
                     var sMod = i.Modified_TS;
                     var matchMod = match.Modified_TS;
 
-                    if (ShouldUpdate(sMod, matchMod, options.Design))
+                    if (ShouldUpdate(sMod, matchMod, flags))
                     {
                         destination.Update(i, whereExpression: where);
+                        syncResult.IncrementUpdates();
                     }
                 }
             }
+
+            return syncResult;
         }
 
-        private void SyncCuttingUnit_Stratum(string cruiseID, DbConnection source, DbConnection destination, CruiseSyncOptions options)
+        private TableSyncResult SyncCuttingUnit_Stratum(string cruiseID, DbConnection source, DbConnection destination, TableSyncOptions options)
         {
+            var syncResult = new TableSyncResult(nameof(CuttingUnit_Stratum));
+
+            var flags = options.CuttingUnitStratum;
+            if (flags == SyncOption.Lock) { return syncResult; }
+
             var where = "CuttingUnitCode = @CuttingUnitCode AND StratumCode = @StratumCode  AND CruiseID = @CruiseID";
             var sourceItems = source.From<CuttingUnit_Stratum>().Where("CruiseID = @p1").Query(cruiseID);
 
-            //var excludeUnitIDs = excludeOptions.ExcludeUnitIDs;
-            //var excludeStrataIDs = excludeOptions.ExcludeStrataIDs;
-
             foreach (var i in sourceItems)
             {
-                //var unitID = source.ExecuteScalar<string>("SELECT CuttingUnitID FROM CuttingUnit WHERE CruiseID = @p1 AND CuttingUnitCode = @p2;", new[] { cruiseID, i.CuttingUnitCode });
-                //if (excludeUnitIDs.Contains(unitID)) { continue; }
 
-                //var stratumID = source.ExecuteScalar<string>("SELECT StratumID FROM Stratum WHERE CruiseID = @CruiseID AND StratumCode = @StratumCode;", new[] { cruiseID, i.StratumCode });
-                //if (excludeStrataIDs.Contains(stratumID)) { continue; }
+                var match = destination.From<CuttingUnit_Stratum>().Where(where).Count2(i) > 0;
 
-                var hasItem = destination.From<CuttingUnit_Stratum>().Where(where).Count2(i) > 0;
-                var hasTombstone = destination.From<CuttingUnit_Stratum>().Where(where).Count2(i) > 0;
-
-                if (hasItem == false && options.Design.HasFlag(SyncFlags.Insert))
+                if (match == false)
                 {
-                    if (hasTombstone == false || options.Design.HasFlag(SyncFlags.ForceInsert))
+                    var hasTombstone = destination.From<CuttingUnit_Stratum>().Where(where).Count2(i) > 0;
+
+                    if (flags.HasFlag(SyncOption.ForceInsert)
+                        || (hasTombstone == false && flags.HasFlag(SyncOption.Insert)))
                     {
                         destination.Insert(i, persistKeyvalue: false);
+                        syncResult.IncrementInserts();
                     }
                 }
             }
+
+            return syncResult;
         }
 
-        private void SyncStrata(string cruiseID, DbConnection source, DbConnection destination, CruiseSyncOptions options)
+        private TableSyncResult SyncStratum(string cruiseID, DbConnection source, DbConnection destination, TableSyncOptions options)
         {
+            var syncResult = new TableSyncResult(nameof(Stratum));
+
+            var flags = options.Stratum;
+            if (flags == SyncOption.Lock) { return syncResult; }
+
             var where = "CruiseID = @CruiseID AND StratumID = @StratumID";
 
             var sourceItems = source.From<Stratum>().Where("CruiseID = @p1").Query(cruiseID);
 
-            //var excludeStrataIDs = excludeOptions.ExcludeStrataIDs;
-            //var strataConflictOptions = conflictOptions.Stratum;
-
             foreach (var i in sourceItems)
             {
-                //if (excludeStrataIDs.Contains(i.StratumID)) { continue; }
-
 
                 var match = destination.From<Stratum>()
                     .Where(where)
@@ -409,10 +432,11 @@ namespace CruiseDAL.V3.Sync
                         .Where(where)
                         .Count2(i) > 0;
 
-                    if (options.Design.HasFlag(SyncFlags.ForceInsert)
-                        || (hasTombstone == false && options.Design.HasFlag(SyncFlags.Insert)))
+                    if (flags.HasFlag(SyncOption.ForceInsert)
+                        || (hasTombstone == false && flags.HasFlag(SyncOption.Insert)))
                     {
                         destination.Insert(i, persistKeyvalue: false);
+                        syncResult.IncrementInserts();
                     }
                 }
                 else
@@ -420,38 +444,36 @@ namespace CruiseDAL.V3.Sync
                     var sMod = i.Modified_TS;
                     var dMod = match.Modified_TS;
 
-                    if (ShouldUpdate(sMod, dMod, options.Design))
+                    if (ShouldUpdate(sMod, dMod, flags))
                     {
                         destination.Update(i, whereExpression: where);
+                        syncResult.IncrementUpdates();
                     }
                 }
             }
+
+            return syncResult;
         }
 
-        private void SyncSampleGroup(string cruiseID, DbConnection source, DbConnection destination, CruiseSyncOptions options)
+        private TableSyncResult SyncSampleGroup(string cruiseID, DbConnection source, DbConnection destination, TableSyncOptions options)
         {
+            var syncResult = new TableSyncResult(nameof(SampleGroup));
+
+            var flags = options.SampleGroup;
+            if (flags == SyncOption.Lock) { return syncResult; }
+
             var where = "CruiseID = @CruiseID AND StratumCode = @StratumCode AND SampleGroupID = @SampleGroupID";
 
             var strata = destination.From<Stratum>()
                 .Where("CruiseID = @p1").Query(cruiseID).ToArray();
 
-            //var excludeStrataIDs = excludeOptions.ExcludeStrataIDs;
-            //var excludeSampleGroupIDs = excludeOptions.ExcludeSampleGroupIDs;
-            //var sampleGroupConflictOptions = conflictOptions.SampleGroup;
-
             foreach (var st in strata)
             {
-                
-
-                //if (excludeStrataIDs.Contains(st.StratumID)) { continue; }
-
                 var sampleGroups = source.From<SampleGroup>()
                     .Where("CruiseID = @p1 AND StratumCode = @p2")
                     .Query(cruiseID, st.StratumCode);
                 foreach (var sg in sampleGroups)
                 {
-                    //if (excludeSampleGroupIDs.Contains(sg.SampleGroupID)) { continue; }
-
                     var match = destination.From<SampleGroup>()
                         .Where(where)
                         .Query2(sg)
@@ -463,13 +485,11 @@ namespace CruiseDAL.V3.Sync
                             .Where(where)
                             .Count2(sg) > 0;
 
-                        if (options.Design.HasFlag(SyncFlags.ForceInsert)
-                            || (hasTombstone == false && options.Design.HasFlag(SyncFlags.Insert)))
+                        if (flags.HasFlag(SyncOption.ForceInsert)
+                            || (hasTombstone == false && flags.HasFlag(SyncOption.Insert)))
                         {
-                            if (options.Design.HasFlag(SyncFlags.Insert))
-                            {
-                                destination.Insert(sg, persistKeyvalue: false);
-                            }
+                            destination.Insert(sg, persistKeyvalue: false);
+                            syncResult.IncrementInserts();
                         }
                     }
                     else
@@ -477,28 +497,32 @@ namespace CruiseDAL.V3.Sync
                         var sMod = sg.Modified_TS;
                         var dMod = match.Modified_TS;
 
-                        if (ShouldUpdate(sMod, dMod, options.Design))
+                        if (ShouldUpdate(sMod, dMod, flags))
                         {
                             destination.Update(sg, whereExpression: where);
+                            syncResult.IncrementUpdates();
                         }
                     }
                 }
             }
+
+            return syncResult;
         }
 
-        private void SyncSamplerState(string cruiseID, DbConnection source, DbConnection destination, CruiseSyncOptions options)
+        private TableSyncResult SyncSamplerState(string cruiseID, DbConnection source, DbConnection destination, TableSyncOptions options)
         {
-            var where = "CruiseID = @CruiseID AND StratumCode = @StratumCode AND SampleGroupCode = @SampleGroupCode AND DeviceID = @DeviceID";
+            var syncResult = new TableSyncResult(nameof(SamplerState));
 
-            //var excludeSampleGroupIDs = excludeOptions.ExcludeSampleGroupIDs;
+            var flags = options.SamplerState;
+            if (flags == SyncOption.Lock) { return syncResult; }
+
+            var where = "CruiseID = @CruiseID AND StratumCode = @StratumCode AND SampleGroupCode = @SampleGroupCode AND DeviceID = @DeviceID";
 
             var sampleGroups = destination.From<SampleGroup>()
                 .Where("CruiseID = @p1")
                 .Query(cruiseID).ToArray();
             foreach (var sg in sampleGroups)
             {
-                //if (excludeSampleGroupIDs.Contains(sg.SampleGroupID)) { continue; }
-
                 var sStates = source.From<SamplerState>()
                     .Where("CruiseID = @p1 AND SampleGroupCode = @p2")
                     .Query(cruiseID, sg.SampleGroupCode);
@@ -512,9 +536,10 @@ namespace CruiseDAL.V3.Sync
 
                     if (match == null)
                     {
-                        if (options.SamplerState.HasFlag(SyncFlags.Insert))
+                        if (flags.HasFlag(SyncOption.Insert))
                         {
                             destination.Insert(i, persistKeyvalue: false);
+                            syncResult.IncrementInserts();
                         }
                     }
                     else
@@ -522,41 +547,53 @@ namespace CruiseDAL.V3.Sync
                         var sMod = i.Modified_TS;
                         var dMod = match.Modified_TS;
 
-                        if (ShouldUpdate(sMod, dMod, options.SamplerState))
+                        if (ShouldUpdate(sMod, dMod, flags))
                         {
                             destination.Update(i, whereExpression: where);
+                            syncResult.IncrementUpdates();
                         }
                     }
                 }
             }
+            return syncResult;
         }
 
-        private void SyncSpecies(string cruiseID, DbConnection source, DbConnection desination, CruiseSyncOptions options)
+        private TableSyncResult SyncSpecies(string cruiseID, DbConnection source, DbConnection desination, TableSyncOptions options)
         {
+            var syncResult = new TableSyncResult(nameof(Species));
+
+            var flags = options.Species;
+            if (flags == SyncOption.Lock) { return syncResult; }
+
             var sourceItems = source.From<Species>().Where("CruiseID = @p1").Query(cruiseID);
             foreach (var i in sourceItems)
             {
                 var hasMatch = desination.From<Species>().Where("CruiseID = @CruiseID AND SpeciesCode = @SpeciesCode").Count2(i) > 0;
 
-                if (hasMatch == false)
+                if (hasMatch == false && flags.HasFlag(SyncOption.Insert))
                 {
                     desination.Insert(i, persistKeyvalue: false);
+                    syncResult.IncrementInserts();
                 }
             }
+
+            return syncResult;
         }
 
-        private void SyncSubPopulation(string cruiseID, DbConnection source, DbConnection destination, CruiseSyncOptions options)
+        private TableSyncResult SyncSubpopulation(string cruiseID, DbConnection source, DbConnection destination, TableSyncOptions options)
         {
-            var where = "CruiseID = @CruiseID AND StratumCode = @StratumCode AND SampleGroupCode = @SampleGroupCode AND SpeciesCode = @SpeciesCode AND LiveDead = @LiveDead";
+            var syncResult = new TableSyncResult(nameof(SubPopulation));
 
-            //var excludeSampleGroupIDs = new HashSet<string>(options.ExcludeSampleGroupIDs);
+            var flags = options.Subpopulation;
+            if (flags == SyncOption.Lock) { return syncResult; }
+
+            var where = "CruiseID = @CruiseID AND StratumCode = @StratumCode AND SampleGroupCode = @SampleGroupCode AND SpeciesCode = @SpeciesCode AND LiveDead = @LiveDead";
 
             var sampleGroups = destination.From<SampleGroup>()
                 .Where("CruiseID = @p1")
                 .Query(cruiseID).ToArray();
             foreach (var sg in sampleGroups)
             {
-                //if (excludeSampleGroupIDs.Contains(sg.SampleGroupID)) { continue; }
 
                 var sourceItems = source.From<SubPopulation>()
                     .Where("CruiseID = @p1 AND SampleGroupCode = @p2")
@@ -573,37 +610,39 @@ namespace CruiseDAL.V3.Sync
                     {
                         var hasTombstone = destination.From<SubPopulation_Tombstone>().Where(where).Count2(i) > 0;
 
-                        if (options.Design.HasFlag(SyncFlags.ForceInsert)
-                            || (hasTombstone == false && options.Design.HasFlag(SyncFlags.Insert)))
+                        if (flags.HasFlag(SyncOption.ForceInsert)
+                            || (hasTombstone == false && flags.HasFlag(SyncOption.Insert)))
                         {
                             destination.Insert(i, persistKeyvalue: false);
+                            syncResult.IncrementInserts();
                         }
                     }
                 }
             }
+
+            return syncResult;
         }
 
-        private void SyncFixCNTTallyPopulation(string cruiseID, DbConnection source, DbConnection destination, CruiseSyncOptions options)
+        private TableSyncResult SyncFixCNTTallyPopulation(string cruiseID, DbConnection source, DbConnection destination, TableSyncOptions options)
         {
-            var where = "CruiseID = @CruiseID AND StratumCode = @StratumCode AND SampleGroupCode = @SampleGroupCode AND SpeciesCode = @SpeciesCode AND LiveDead = @LiveDead";
+            var syncResult = new TableSyncResult(nameof(FixCNTTallyPopulation));
 
-            //var excludeStratumIDs = new HashSet<string>(options.ExcludeStrataIDs);
-            //var excludeSampleGroupIDs = new HashSet<string>(options.ExcludeSampleGroupIDs);
+            var flags = options.FixCNTTallyPopulation;
+            if (flags == SyncOption.Lock) { return syncResult; }
+
+            var where = "CruiseID = @CruiseID AND StratumCode = @StratumCode AND SampleGroupCode = @SampleGroupCode AND SpeciesCode = @SpeciesCode AND LiveDead = @LiveDead";
 
             var strata = destination.From<Stratum>()
                 .Where("CruiseID = @p1")
                 .Query(cruiseID).ToArray();
             foreach (var st in strata)
             {
-                //if (excludeStratumIDs.Contains(st.StratumID)) { continue; }
 
                 var sampleGroups = destination.From<SampleGroup>()
                 .Where("CruiseID = @p1 AND StratumCode = @p2")
                 .Query(cruiseID, st.StratumCode).ToArray();
                 foreach (var sg in sampleGroups)
                 {
-                    //if (excludeSampleGroupIDs.Contains(sg.SampleGroupID)) { continue; }
-
                     var sourceItems = source.From<FixCNTTallyPopulation>()
                         .Where("CruiseID = @p1 AND StratumCode = @p2 AND SampleGroupCode = @p3")
                         .Query(cruiseID, sg.StratumCode, sg.SampleGroupCode);
@@ -617,9 +656,10 @@ namespace CruiseDAL.V3.Sync
 
                         if (match == null)
                         {
-                            if (options.Design.HasFlag(SyncFlags.Insert))
+                            if (flags.HasFlag(SyncOption.Insert))
                             {
                                 destination.Insert(i, persistKeyvalue: false);
+                                syncResult.IncrementInserts();
                             }
                         }
                         else
@@ -627,45 +667,36 @@ namespace CruiseDAL.V3.Sync
                             var sMod = i.Modified_TS;
                             var dMod = match.Modified_TS;
 
-                            if (ShouldUpdate(sMod, dMod, options.Design))
+                            if (ShouldUpdate(sMod, dMod, flags))
                             {
                                 destination.Update(i, whereExpression: where);
+                                syncResult.IncrementUpdates();
                             }
                         }
                     }
                 }
             }
-
-
+            return syncResult;
         }
 
-        private void SyncPlots(string cruiseID, DbConnection source, DbConnection destination, CruiseSyncOptions options)
+        private TableSyncResult SyncPlot(string cruiseID, DbConnection source, DbConnection destination, TableSyncOptions options)
         {
+            var syncResult = new TableSyncResult(nameof(Plot));
+
+            var flags = options.Plot;
+            if (flags == SyncOption.Lock) { return syncResult; }
+
             var where = "CruiseID = @CruiseID AND PlotID = @PlotID";
-
-            //var excludeUnitIDs = new HashSet<string>(options.ExcludeUnitIDs);
-            //var excludePlotIDs = new HashSet<string>(options.ExcludePlotIDs);
-
-            //var plotConflictOptions = conflictOptions.Plot;
 
             var cuttingUnits = destination.From<CuttingUnit>()
                 .Where("CruiseID = @p1").Query(cruiseID).ToArray();
             foreach (var cu in cuttingUnits)
             {
-                //if (excludeUnitIDs.Contains(cu.CuttingUnitID)) { continue; }
-
                 var plots = source.From<Plot>()
                     .Where("CuttingUnitCode = @p1 AND CruiseID = @p2")
                     .Query(cu.CuttingUnitCode, cruiseID).ToArray();
                 foreach (var plot in plots)
                 {
-                    //if (excludePlotIDs.Contains(plot.PlotID)) { continue; }
-
-                    //if (plotConflictOptions.TryGetValue(plot.PlotID, out var plotConflictOpt) && plotConflictOpt != null)
-                    //{
-
-                    //}
-
                     var match = destination.From<Plot>()
                         .Where(where)
                         .Query2(plot)
@@ -677,10 +708,11 @@ namespace CruiseDAL.V3.Sync
                             .Where(where)
                             .Count2(plot) > 0;
 
-                        if (options.FieldData.HasFlag(SyncFlags.ForceInsert)
-                            || (hasTombstone == false && options.FieldData.HasFlag(SyncFlags.Insert)))
+                        if (flags.HasFlag(SyncOption.ForceInsert)
+                            || (hasTombstone == false && flags.HasFlag(SyncOption.Insert)))
                         {
                             destination.Insert(plot, persistKeyvalue: false);
+                            syncResult.IncrementInserts();
                         }
                     }
                     else
@@ -688,35 +720,35 @@ namespace CruiseDAL.V3.Sync
                         var sMod = plot.Modified_TS;
                         var dMod = match.Modified_TS;
 
-                        if (ShouldUpdate(sMod, dMod, options.FieldData))
+                        if (ShouldUpdate(sMod, dMod, flags))
                         {
                             destination.Update(plot, whereExpression: where);
+                            syncResult.IncrementUpdates();
                         }
                     }
                 }
             }
+            return syncResult;
         }
 
-        private void SyncPlotLocation(string cruiseID, DbConnection source, DbConnection destination, CruiseSyncOptions options)
+        private TableSyncResult SyncPlotLocation(string cruiseID, DbConnection source, DbConnection destination, TableSyncOptions options)
         {
-            var where = "PlotID = @PlotID";
+            var syncResult = new TableSyncResult(nameof(PlotLocation));
 
-            //var excludePlotIDs = excludeOptions.ExcludePlotIDs;
-            //var excludeCuttingUnitIDs = excludeOptions.ExcludeUnitIDs;
+            var flags = options.PlotLocation;
+            if (flags == SyncOption.Lock) { return syncResult; }
+
+            var where = "PlotID = @PlotID";
 
             var cuttingUnits = destination.From<CuttingUnit>()
                 .Where("CruiseID = @p1")
                 .Query(cruiseID).ToArray();
             foreach (var cu in cuttingUnits)
             {
-                //if (excludeCuttingUnitIDs.Contains(cu.CuttingUnitID)) { continue; }
-
                 var plotIDs = destination.QueryScalar<string>("SELECT PlotID FROM Plot WHERE CruiseID = @p1 AND CuttingUnitCode = @p2",
                     new[] { cruiseID, cu.CuttingUnitCode });
                 foreach (var plotID in plotIDs)
                 {
-                    //if (excludePlotIDs.Contains(plotID)) { continue; }
-
                     var items = source.From<PlotLocation>()
                     .Where("PlotID = @p1")
                     .Query(plotID);
@@ -734,12 +766,10 @@ namespace CruiseDAL.V3.Sync
                                 .Where(where)
                                 .Count2(item) > 0;
 
-                            if (hasTombstone == false)
+                            if (hasTombstone == false && flags.HasFlag(SyncOption.Insert))
                             {
-                                if (options.FieldData.HasFlag(SyncFlags.Insert))
-                                {
-                                    destination.Insert(item, persistKeyvalue: false);
-                                }
+                                destination.Insert(item, persistKeyvalue: false);
+                                syncResult.IncrementInserts();
                             }
                         }
                         else
@@ -747,49 +777,43 @@ namespace CruiseDAL.V3.Sync
                             var sMod = item.Modified_TS;
                             var dMod = match.Modified_TS;
 
-                            if (ShouldUpdate(sMod, dMod, options.FieldData))
+                            if (ShouldUpdate(sMod, dMod, flags))
                             {
                                 destination.Update(item, whereExpression: where);
+                                syncResult.IncrementUpdates();
                             }
                         }
                     }
                 }
             }
+            return syncResult;
         }
 
-        private void SyncPlot_Strata(string cruiseID, DbConnection source, DbConnection destination, CruiseSyncOptions options)
+        private TableSyncResult SyncPlot_Strata(string cruiseID, DbConnection source, DbConnection destination, TableSyncOptions options)
         {
-            var where = "CruiseID = @CruiseID AND CuttingUnitCode = @CuttingUnitCode AND PlotNumber = @PlotNumber AND StratumCode = @StratumCode";
+            var syncResult = new TableSyncResult(nameof(Plot_Stratum));
 
-            //var excludePlotIDs = excludeOptions.ExcludePlotIDs;
-            //var excludeCuttingUnitIDs = excludeOptions.ExcludeUnitIDs;
-            //var excludeStratumIDs = excludeOptions.ExcludeStrataIDs;
+            var flags = options.PlotStratum;
+            if (flags == SyncOption.Lock) { return syncResult; }
+
+            var where = "CruiseID = @CruiseID AND CuttingUnitCode = @CuttingUnitCode AND PlotNumber = @PlotNumber AND StratumCode = @StratumCode";
 
             var cuttingUnits = destination.From<CuttingUnit>()
                 .Where("CruiseID = @p1")
                 .Query(cruiseID).ToArray();
             foreach (var cu in cuttingUnits)
             {
-                //if(excludeCuttingUnitIDs.Contains(cu.CuttingUnitID)) { continue; }
-
                 var plots = destination.From<Plot>()
                     .Where("CruiseID = @p1 AND CuttingUnitCode = @p2")
                     .Query(cruiseID, cu.CuttingUnitCode).ToArray();
-                var plotIDs = destination.QueryScalar<string>("SELECT PlotID FROM Plot WHERE CruiseID = @p1 AND CuttingUnitCode = @p2;", 
-                    paramaters: new[] { cruiseID, cu.CuttingUnitCode });
+
                 foreach (var p in plots)
                 {
-                    //if (excludePlotIDs.Contains(p.PlotID)) { continue; }
-
                     var sourceItems = source.From<Plot_Stratum>()
                         .Where("CruiseID = @p1 AND CuttingUnitCode = @p2 AND PlotNumber = @p3")
                         .Query(cruiseID, cu.CuttingUnitCode, p.PlotNumber).ToArray();
                     foreach (var i in sourceItems)
                     {
-                        //var stratumID = source.ExecuteScalar<string>("SELECT StratumID FROM Stratum WHERE CruiseID = @p1 AND StratumCode = @p2;",
-                        //new[] { cruiseID, i.StratumCode });
-                        //if(excludeStratumIDs.Contains(stratumID)) { continue; }
-
                         var match = destination.From<Plot_Stratum>()
                             .Where(where)
                             .Query2(i)
@@ -801,10 +825,11 @@ namespace CruiseDAL.V3.Sync
                                 .Where(where)
                                 .Count2(i) > 0;
 
-                            if (options.FieldData.HasFlag(SyncFlags.ForceInsert)
-                                || (hasTombstone == false && options.FieldData.HasFlag(SyncFlags.Insert)))
+                            if (flags.HasFlag(SyncOption.ForceInsert)
+                                || (hasTombstone == false && flags.HasFlag(SyncOption.Insert)))
                             {
                                 destination.Insert(i, persistKeyvalue: false);
+                                syncResult.IncrementInserts();
                             }
                         }
                         else
@@ -812,56 +837,16 @@ namespace CruiseDAL.V3.Sync
                             var sMod = i.Modified_TS;
                             var dMod = match.Modified_TS;
 
-                            if (ShouldUpdate(sMod, dMod, options.FieldData))
+                            if (ShouldUpdate(sMod, dMod, flags))
                             {
                                 destination.Update(i, whereExpression: where);
+                                syncResult.IncrementUpdates();
                             }
                         }
                     }
                 }
             }
-
-            
-        }
-
-        private void SyncPlotTree(string cruiseID, DbConnection source, DbConnection destination, CruiseSyncOptions options)
-        {
-            var syncFlags = options.TreeFlags;
-            var allOrNone = options.PlotTreeAllOrNone;
-
-            //var excludeUnitIDs = new HashSet<string>(options.ExcludeUnitIDs);
-            //var excludePlotIDs = new HashSet<string>(options.ExcludePlotIDs);
-
-            // read units from the destination because we only should care about syncing units that have already been merged
-            // in case we decided not to merge a unit earlier in the sync process
-            var cuttingUnits = destination.From<CuttingUnit>()
-                .Where("CruiseID = @p1")
-                .Query(cruiseID).ToArray();
-            foreach (var cu in cuttingUnits)
-            {
-                //if (excludeUnitIDs.Contains(cu.CuttingUnitID)) { continue; }
-
-                var plots = destination.From<Plot>()
-                    .Where("CruiseID = @p1 AND CuttingUnitCode = @p2")
-                    .Query(cruiseID, cu.CuttingUnitCode).ToArray();
-                foreach (var p in plots)
-                {
-                    //if (excludePlotIDs.Contains(p.PlotID)) { continue; }
-
-                    var unitCode = p.CuttingUnitCode;
-                    var plotNumber = p.PlotNumber;
-                    var destPlotMod = GetPlotTreeModified(destination, cruiseID, unitCode, plotNumber);
-
-                    var srcPlotMod = GetPlotTreeModified(source, cruiseID, unitCode, plotNumber);
-
-                    if (allOrNone == false
-                        || (srcPlotMod.CompareTo(destPlotMod) > 0))
-                    {
-                        SyncPlotTreeMeasurmentData(source, destination, cruiseID, unitCode, plotNumber, options);
-                        SyncPlotTallyLedger(source, destination, cruiseID, unitCode, plotNumber, options);
-                    }
-                }
-            }
+            return syncResult;
         }
 
         public static DateTime GetPlotTreeModified(DbConnection db, string cruiseID, string unitCode, int plotNumber)
@@ -870,104 +855,24 @@ namespace CruiseDAL.V3.Sync
                         new object[] { cruiseID, unitCode, plotNumber });
         }
 
-        private void SyncPlotTreeMeasurmentData(DbConnection source, DbConnection destination, string cruiseID, string unitCode, int plotNumber, CruiseSyncOptions options)
+        private TableSyncResult SyncTree(string cruiseID, DbConnection source, DbConnection destination, TableSyncOptions options)
         {
-            const string where = "CruiseID = @CruiseID AND TreeID = @TreeID";
+            var syncResult = new TableSyncResult(nameof(Tree));
 
-            var syncFlags = options.TreeFlags;
+            var flags = options.Tree;
+            if (flags == SyncOption.Lock) { return syncResult; }
 
-            //var excludeTreeIDs = excludeOptions.ExcludeTreeIDs;
-
-            //var treeConflictOptions = conflictOptions.Tree;
-
-            var sourceTrees = source.From<Tree>().Where("CruiseID = @p1 AND CuttingUnitCode = @p2 AND PlotNumber = @p3").Query(cruiseID, unitCode, plotNumber).ToArray();
-            foreach (var tree in sourceTrees)
-            {
-                //if (excludeTreeIDs.Contains(tree.TreeID)) { continue; }
-
-                //if (treeConflictOptions.TryGetValue(tree.TreeID, out var treeConflictOpt) && treeConflictOpt != null)
-                //{
-
-                //}
-
-                var match = destination.From<Tree>()
-                    .Where(where)
-                    .Query2(tree)
-                    .FirstOrDefault();
-
-                if (match == null)
-                {
-                    // we're only checking for a tombstone if a match doesn't exist
-                    // it could be possible for a tombstone to exist event if a match
-                    // exists. However, I think we can ignore tombstones in such cases.
-                    // perhaps we decided to reinsert the record from another file, but
-                    // keep the original tombstone around to retain the records history.
-
-                    var hasTombstone = destination.From<Tree_Tombstone>()
-                        .Where(where)
-                        .Count2(tree) > 0;
-
-                    if (syncFlags.HasFlag(SyncFlags.ForceInsert)
-                            || (hasTombstone == false && syncFlags.HasFlag(SyncFlags.Insert)))
-                    {
-                        destination.Insert(tree, persistKeyvalue: false);
-
-                        // only sync tree data if we have synced the new tree record
-                        SyncTreeData(source, destination, tree.TreeID, options);
-                    }
-                }
-                else
-                {
-                    var sMod = tree.Modified_TS;
-                    var dMod = match.Modified_TS;
-
-                    if (ShouldUpdate(sMod, dMod, syncFlags))
-                    {
-                        destination.Update(match, whereExpression: where);
-                    }
-
-                    SyncTreeData(source, destination, tree.TreeID, options);
-                }
-            }
-        }
-
-        private void SyncNonPlotTrees(string cruiseID, DbConnection source, DbConnection destination, CruiseSyncOptions options)
-        {
             var where = "CruiseID = @CruiseID AND TreeID = @TreeID";
-
-            //var excludeUnitIDs = new HashSet<string>(options.ExcludeUnitIDs);
-            //var excludeStratumIDs = new HashSet<string>(options.ExcludeStrataIDs);
-            //var excludeSampleGroupIDs = new HashSet<string>(options.ExcludeSampleGroupIDs);
-            //var excludeTreeIDs = new HashSet<string>(options.ExcludeTreeIDs);
-
-            //var treeConflictOptions = conflictOptions.Tree;
-
-            var cuttingUnitCodes = destination.QueryScalar<string>("SELECT CuttingUnitCode FROM main.CuttingUnit WHERE CruiseID = @p1;", new[] { cruiseID });
 
             var cuttingUnits = destination.From<CuttingUnit>()
                 .Where("CruiseID = @p1")
                 .Query(cruiseID).ToArray();
             foreach (var cu in cuttingUnits)
             {
-                //if (excludeUnitIDs.Contains(cu.CuttingUnitID)) { continue; }
-
                 var sourceTrees = source.From<Tree>().Where("CruiseID = @p1 AND CuttingUnitCode = @p2 AND PlotNumber IS NULL")
                     .Query(cruiseID, cu.CuttingUnitCode);
                 foreach (var i in sourceTrees)
                 {
-                    //if (excludeTreeIDs.Contains(i.TreeID)) { continue; }
-
-                    //if (treeConflictOptions.TryGetValue(i.TreeID, out var treeConflictOpt) && treeConflictOpt != null)
-                    //{
-                        
-                    //}
-
-                    //var stratumID = source.ExecuteScalar<string>("SELECT StratumID FROM Stratum WHERE CruiseID = @p1 AND StratumCode = @p2", new[] { cruiseID, i.StratumCode });
-                    //if (excludeStratumIDs.Contains(stratumID)) { continue; }
-
-                    //var sampleGroupID = source.ExecuteScalar<string>("SELECT SampleGroupID FROM SampleGroup WHERE CruiseID = @p1 AND StratumCode = @p2 AND SampleGroupCode = @p3;", new[] { cruiseID, i.StratumCode, i.SampleGroupCode });
-                    //if (excludeSampleGroupIDs.Contains(sampleGroupID)) { continue; }
-
                     var match = destination.From<Tree>()
                         .Where(where)
                         .Query2(i)
@@ -979,12 +884,11 @@ namespace CruiseDAL.V3.Sync
                             .Where(where)
                             .Count2(i) > 0;
 
-                        if (options.FieldData.HasFlag(SyncFlags.ForceInsert)
-                            || (hasTombstone == false && options.FieldData.HasFlag(SyncFlags.Insert)))
+                        if (flags.HasFlag(SyncOption.ForceInsert)
+                            || (hasTombstone == false && flags.HasFlag(SyncOption.Insert)))
                         {
                             destination.Insert(i, persistKeyvalue: false);
-
-                            SyncTreeData(source, destination, i.TreeID, options);
+                            syncResult.IncrementInserts();
                         }
                     }
                     else
@@ -992,34 +896,83 @@ namespace CruiseDAL.V3.Sync
                         var sMod = i.Modified_TS;
                         var dMod = match.Modified_TS;
 
-                        if (ShouldUpdate(sMod, dMod, options.FieldData))
+                        if (ShouldUpdate(sMod, dMod, flags))
                         {
                             destination.Update(i, whereExpression: where);
+                            syncResult.IncrementUpdates();
                         }
-
-                        SyncTreeData(source, destination, i.TreeID, options);
                     }
                 }
             }
+
+            var plots = destination.From<Plot>().Where("CruiseID = @p1").Query(cruiseID);
+            foreach (var plot in plots)
+            {
+                var sourceTrees = source.From<Tree>()
+                    .Where("CruiseID = @p1 AND CuttingUnitCode = @p2 AND PlotNumber = @p3")
+                    .Query(cruiseID, plot.CuttingUnitCode, plot.PlotNumber).ToArray();
+
+                foreach (var tree in sourceTrees)
+                {
+                    var match = destination.From<Tree>()
+                        .Where(where)
+                        .Query2(tree)
+                        .FirstOrDefault();
+
+                    if (match == null)
+                    {
+                        // we're only checking for a tombstone if a match doesn't exist
+                        // it could be possible for a tombstone to exist event if a match
+                        // exists. However, I think we can ignore tombstones in such cases.
+                        // perhaps we decided to reinsert the record from another file, but
+                        // keep the original tombstone around to retain the records history.
+
+                        var hasTombstone = destination.From<Tree_Tombstone>()
+                            .Where(where)
+                            .Count2(tree) > 0;
+
+                        if (flags.HasFlag(SyncOption.ForceInsert)
+                                || (hasTombstone == false && flags.HasFlag(SyncOption.Insert)))
+                        {
+                            destination.Insert(tree, persistKeyvalue: false);
+                            syncResult.IncrementInserts();
+                        }
+                    }
+                    else
+                    {
+                        var sMod = tree.Modified_TS;
+                        var dMod = match.Modified_TS;
+
+                        if (ShouldUpdate(sMod, dMod, flags))
+                        {
+                            destination.Update(match, whereExpression: where);
+                            syncResult.IncrementUpdates();
+                        }
+                    }
+                }
+            }
+
+
+            return syncResult;
         }
 
-        private void SyncTreeData(DbConnection source, DbConnection destination, string treeID, CruiseSyncOptions options)
+        private TableSyncResult SyncTreeMeasurment(string cruiseID, DbConnection source, DbConnection destination, TableSyncOptions options)
         {
-            // we are not checking the tombstone tables for TreeMeasurment or TreeFieldValue because at this
+            // not checking the tombstone tables for TreeMeasurment because at this
             // point we should already know that the tree has not be deleted.
-            // we are assuming that TreeMeasurment or TreeFieldValue records wont be deleted unless the tree has been deleted
-            // however that might change for TreeFieldValue records
+            // I assuming that TreeMeasurment records wont be deleted unless the tree has been deleted
 
-            var srcLatestTimeStamp = GetTreeDataModified(source, treeID);
-            var destLatestTimeStamp = GetTreeDataModified(destination, treeID);
+            var syncResult = new TableSyncResult(nameof(TreeMeasurment));
 
-            // we are comparing the aggregate time stamps, per tree, across the files.
-            // This means changes to tree data in any of the tables that contain tree data
-            // can cause the given tree record to be updated in the sync.
+            var flags = options.TreeMeasurment;
+            if (flags == SyncOption.Lock) { return syncResult; }
 
-            if (srcLatestTimeStamp != null
-                && (destLatestTimeStamp == null || srcLatestTimeStamp.Value.CompareTo(destLatestTimeStamp) > 0))
+            var trees = destination.From<Tree>().Where("CruiseID = @p1")
+                .Query(cruiseID);
+            foreach (var tree in trees)
             {
+                var treeID = tree.TreeID;
+
                 var sourceMeasurmentsRecord = source.From<TreeMeasurment>().Where("TreeID = @p1").Query(treeID).FirstOrDefault();
                 if (sourceMeasurmentsRecord != null)
                 {
@@ -1027,18 +980,121 @@ namespace CruiseDAL.V3.Sync
 
                     if (hasMeasurmentsRecord)
                     {
-                        destination.Update(sourceMeasurmentsRecord, whereExpression: "TreeID =  @TreeID");
+                        if (flags.HasFlag(SyncOption.Update))
+                        {
+                            destination.Update(sourceMeasurmentsRecord, whereExpression: "TreeID =  @TreeID");
+                            syncResult.IncrementUpdates();
+                        }
                     }
                     else
                     {
-                        destination.Insert(sourceMeasurmentsRecord, persistKeyvalue: false);
+                        if (flags.HasFlag(SyncOption.Insert))
+                        {
+                            destination.Insert(sourceMeasurmentsRecord, persistKeyvalue: false);
+                            syncResult.IncrementInserts();
+                        }
                     }
                 }
-
-                SyncTreeLocation(source, destination, treeID, options);
-
-                SyncTreeFieldValue(source, destination, treeID, options);
             }
+            return syncResult;
+        }
+
+        private TableSyncResult SyncTreeLocation(string cruiseID, DbConnection source, DbConnection destination, TableSyncOptions options)
+        {
+            var syncResult = new TableSyncResult(nameof(TreeLocation));
+
+            var flags = options.TreeLocation;
+            if (flags == SyncOption.Lock) { return syncResult; }
+
+
+            var trees = destination.From<Tree>().Where("CruiseID = @p1")
+                .Query(cruiseID);
+            foreach (var tree in trees)
+            {
+                var treeID = tree.TreeID;
+                var treeLocationRecord = source.From<TreeLocation>()
+    .Where("TreeID = @p1")
+    .Query(treeID)
+    .FirstOrDefault();
+
+                if (treeLocationRecord != null)
+                {
+                    var match = destination.From<TreeLocation>()
+                        .Where("TreeID = @p1")
+                        .Query(treeID)
+                        .FirstOrDefault();
+
+                    if (match == null)
+                    {
+                        var hasTombstone = destination.From<TreeLocation_Tombstone>()
+                            .Where("TreeID = @p1")
+                            .Count(treeID) > 0;
+
+                        if (flags.HasFlag(SyncOption.ForceInsert)
+                                || (hasTombstone == false && flags.HasFlag(SyncOption.Insert)))
+                        {
+                            destination.Insert(treeLocationRecord, persistKeyvalue: false);
+                            syncResult.IncrementInserts();
+                        }
+                    }
+                    else
+                    {
+                        var sMod = treeLocationRecord.Modified_TS;
+                        var dMod = match.Modified_TS;
+
+                        if (ShouldUpdate(sMod, dMod, flags))
+                        {
+                            destination.Update(treeLocationRecord, whereExpression: "TreeID = @TreeID");
+                            syncResult.IncrementUpdates();
+                        }
+                    }
+                }
+            }
+            return syncResult;
+        }
+
+        private TableSyncResult SyncTreeFieldValue(string cruiseID, DbConnection source, DbConnection destination, TableSyncOptions options)
+        {
+            // not checking the tombstone tables for TreeFieldValue because at this
+            // point we should already know that the tree has not be deleted.
+            // we are assuming that TreeFieldValue records wont be deleted unless the tree has been deleted
+            // however that might change for TreeFieldValue records
+
+            var syncResult = new TableSyncResult(nameof(TreeFieldValue));
+
+            var flags = options.TreeFieldValue;
+            if (flags == SyncOption.Lock) { return syncResult; }
+
+            var trees = destination.From<Tree>().Where("CruiseID = @p1")
+                .Query(cruiseID);
+            foreach (var tree in trees)
+            {
+                var treeID = tree.TreeID;
+
+                var treeFieldValues = source.From<TreeFieldValue>().Where("TreeID =  @p1").Query(treeID);
+                foreach (var tfv in treeFieldValues)
+                {
+                    var hasTFVRecord = destination.From<TreeFieldValue>().Where("TreeID = @TreeID AND Field = @Field").Count2(tfv) > 0;
+                    if (hasTFVRecord)
+                    {
+                        if (flags.HasFlag(SyncOption.Update))
+                        {
+                            destination.Update(tfv, whereExpression: "TreeID = TreeID AND Field = @Field");
+                            syncResult.IncrementUpdates();
+                        }
+                    }
+                    else
+                    {
+                        if (flags.HasFlag(SyncOption.Insert))
+                        {
+                            destination.Insert(tfv, persistKeyvalue: false);
+                            syncResult.IncrementInserts();
+                        }
+                    }
+                }
+            }
+
+            return syncResult;
         }
 
         public static DateTime? GetTreeDataModified(DbConnection db, string treeID)
@@ -1055,139 +1111,14 @@ namespace CruiseDAL.V3.Sync
 );", parameters: new[] { treeID });
         }
 
-        private void SyncTreeLocation(DbConnection source, DbConnection destination, string treeID, CruiseSyncOptions options)
+        private TableSyncResult SyncLog(string cruiseID, DbConnection source, DbConnection destination, TableSyncOptions options)
         {
-            var treeLocationRecord = source.From<TreeLocation>()
-                .Where("TreeID = @p1")
-                .Query(treeID)
-                .FirstOrDefault();
+            var syncResult = new TableSyncResult(nameof(Log));
 
-            if (treeLocationRecord != null)
-            {
-                var match = destination.From<TreeLocation>()
-                    .Where("TreeID = @p1")
-                    .Query(treeID)
-                    .FirstOrDefault();
+            var flags = options.Log;
+            if (flags == SyncOption.Lock) { return syncResult; }
 
-                if (match == null)
-                {
-                    var hasTombstone = destination.From<TreeLocation_Tombstone>()
-                        .Where("TreeID = @p1")
-                        .Count(treeID) > 0;
-
-                    if (options.FieldData.HasFlag(SyncFlags.ForceInsert)
-                            || (hasTombstone == false && options.FieldData.HasFlag(SyncFlags.Insert)))
-                    {
-                        destination.Insert(treeLocationRecord, persistKeyvalue: false);
-                    }
-                }
-                else
-                {
-                    var sMod = treeLocationRecord.Modified_TS;
-                    var dMod = match.Modified_TS;
-
-                    if (ShouldUpdate(sMod, dMod, options.FieldData))
-                    {
-                        destination.Update(treeLocationRecord, whereExpression: "TreeID = @TreeID");
-                    }
-                }
-            }
-        }
-
-        private void SyncTreeFieldValue(DbConnection source, DbConnection destination, string treeID, CruiseSyncOptions options)
-        {
-            var treeFieldValues = source.From<TreeFieldValue>().Where("TreeID =  @p1").Query(treeID);
-            foreach (var tfv in treeFieldValues)
-            {
-                var hasTFVRecord = destination.From<TreeFieldValue>().Where("TreeID = @TreeID AND Field = @Field").Count2(tfv) > 0;
-                if (hasTFVRecord)
-                {
-                    destination.Update(tfv, whereExpression: "TreeID = TreeID AND Field = @Field");
-                }
-                else
-                {
-                    destination.Insert(tfv, persistKeyvalue: false);
-                }
-            }
-        }
-
-        private void SyncPlotTallyLedger(DbConnection source, DbConnection destination, string cruiseID, string unitCode, int plotNumber, CruiseSyncOptions options)
-        {
-            var syncFlags = options.TreeFlags;
-
-            //var excludeTreeIDs = new HashSet<string>(options.ExcludeTreeIDs);
-
-            var sourceTallyLedgers = source.From<TallyLedger>()
-                .Where("CruiseID = @p1 AND CuttingUnitCode = @p2 AND PlotNumber = @p3")
-                .Query(cruiseID, unitCode, plotNumber);
-
-            foreach (var tl in sourceTallyLedgers)
-            {
-                var treeID = tl.TreeID;
-                //if (!string.IsNullOrEmpty(treeID) && excludeTreeIDs.Contains(treeID)) { continue; }
-
-                var hasRecord = destination.ExecuteScalar<long>("SELECT count(*) FROM TallyLedger WHERE TallyLedgerID = @p1;", parameters: new[] { tl.TallyLedgerID }) > 0;
-                var hasTombstone = destination.ExecuteScalar<long>("SELECT count(*) FROM TallyLedger_Tombstone WHERE TallyLedgerID = @p1;", parameters: new[] { tl.TallyLedgerID }) > 0;
-
-                if (hasRecord == false && hasTombstone == false)
-                {
-                    destination.Insert(tl, persistKeyvalue: false);
-                }
-            }
-        }
-
-        // TODO remove unused method. I think this method is no longer used because we are now syncing TreeMeasurment records 
-        // as part of the SyncTreeData method that gets called in SyncNonPlotTrees
-        // and in the SyncPlotTreeMeasurmentData method hat gets called in SyncPlotTrees
-        private void SyncTreeMeasurment(string cruiseID, DbConnection source, DbConnection destination, CruiseSyncOptions options)
-        {
-            var where = "CruiseID = @CruiseID AND TreeID = @TreeID";
-
-            var sourceItems = source.From<TreeMeasurment>().Where("CruiseID = @p1").Query(cruiseID);
-
-            foreach (var i in sourceItems)
-            {
-                var match = destination.From<TreeMeasurment>()
-                    .Where(where)
-                    .Query2(i)
-                    .FirstOrDefault();
-
-                if (match == null)
-                {
-                    var hasTombstone = destination.From<TreeMeasurment_Tombstone>()
-                        .Where(where)
-                        .Count2(i) > 0;
-
-                    if (options.FieldData.HasFlag(SyncFlags.ForceInsert)
-                            || (hasTombstone == false && options.FieldData.HasFlag(SyncFlags.Insert)))
-                    {
-                        destination.Insert(i, persistKeyvalue: false);
-                    }
-                }
-                else
-                {
-                    var sMod = i.Modified_TS;
-                    var dMod = match.Modified_TS;
-
-                    if (ShouldUpdate(sMod, dMod, options.FieldData))
-                    {
-                        if (options.FieldData.HasFlag(SyncFlags.Update))
-                        {
-                            destination.Update(i, whereExpression: where);
-                        }
-                    }
-                }
-            }
-        }
-
-        private void SyncLog(string cruiseID, DbConnection source, DbConnection destination, CruiseSyncOptions options)
-        {
             var where = "LogID = @LogID";
-
-            //var excludeTreeIDs = new HashSet<string>(options.ExcludeTreeIDs);
-            //var excludeLogIDs = new HashSet<string>(options.ExcludeLogIDs);
-
-            //var logConflictOptions = conflictOptions.Log;
 
             // only sync for trees that are already in the destination
             // just in case we decide earlier not to sync some trees
@@ -1197,20 +1128,11 @@ namespace CruiseDAL.V3.Sync
                 "SELECT TreeID FROM Tree WHERE CruiseID = @p1;", new[] { cruiseID }).ToArray();
             foreach (var treeID in treeIDs)
             {
-                //if (excludeTreeIDs.Contains(treeID)) { continue; }
-
                 var logs = source.From<Log>()
                     .Where("TreeID = @p1")
                     .Query(treeID).ToArray();
                 foreach (var log in logs)
                 {
-                    //if (excludeLogIDs.Contains(log.LogID)) { continue; }
-
-                    //if (logConflictOptions.TryGetValue(log.LogID, out var logConflictOpt) && logConflictOpt != null)
-                    //{
-
-                    //}
-
                     var match = destination.From<Log>()
                         .Where(where)
                         .Query2(log)
@@ -1220,10 +1142,11 @@ namespace CruiseDAL.V3.Sync
                     {
                         var hasTombstone = destination.From<Log_Tombstone>().Where(where).Count2(log) > 0;
 
-                        if (options.FieldData.HasFlag(SyncFlags.ForceInsert)
-                            || (hasTombstone == false && options.FieldData.HasFlag(SyncFlags.Insert)))
+                        if (flags.HasFlag(SyncOption.ForceInsert)
+                            || (hasTombstone == false && flags.HasFlag(SyncOption.Insert)))
                         {
                             destination.Insert(log, persistKeyvalue: false);
+                            syncResult.IncrementInserts();
                         }
                     }
                     else
@@ -1231,20 +1154,24 @@ namespace CruiseDAL.V3.Sync
                         var sMod = log.Modified_TS;
                         var dMod = match.Modified_TS;
 
-                        if (ShouldUpdate(sMod, dMod, options.FieldData))
+                        if (ShouldUpdate(sMod, dMod, flags))
                         {
-                            if (options.FieldData.HasFlag(SyncFlags.Update))
-                            {
-                                destination.Update(log, whereExpression: where);
-                            }
+                            destination.Update(log, whereExpression: where);
+                            syncResult.IncrementUpdates();
                         }
                     }
                 }
             }
+            return syncResult;
         }
 
-        private void SyncStem(string cruiseID, DbConnection source, DbConnection destination, CruiseSyncOptions options)
+        private TableSyncResult SyncStem(string cruiseID, DbConnection source, DbConnection destination, TableSyncOptions options)
         {
+            var syncResult = new TableSyncResult(nameof(Stem));
+
+            var flags = options.Stem;
+            if (flags == SyncOption.Lock) { return syncResult; }
+
             var allOrNone = options.StemAllOrNone;
             var where = "CruiseID = @CruiseID AND StemID = @StemID";
 
@@ -1271,10 +1198,11 @@ namespace CruiseDAL.V3.Sync
                         if (match == null)
                         {
                             var hasTombstone = destination.From<Stem_Tombstone>().Where(where).Count2(i) > 0;
-                            if (options.FieldData.HasFlag(SyncFlags.ForceInsert)
-                            || (hasTombstone == false && options.FieldData.HasFlag(SyncFlags.Insert)))
+                            if (flags.HasFlag(SyncOption.ForceInsert)
+                            || (hasTombstone == false && flags.HasFlag(SyncOption.Insert)))
                             {
                                 destination.Insert(i, persistKeyvalue: false);
+                                syncResult.IncrementInserts();
                             }
                         }
                         else
@@ -1282,52 +1210,88 @@ namespace CruiseDAL.V3.Sync
                             var sMod = i.Modified_TS;
                             var dMod = match.Modified_TS;
 
-                            if (ShouldUpdate(sMod, dMod, options.FieldData))
+                            if (ShouldUpdate(sMod, dMod, flags))
                             {
                                 destination.Update(i, whereExpression: where);
+                                syncResult.IncrementUpdates();
                             }
                         }
                     }
                 }
             }
+            return syncResult;
         }
 
-        private void SyncTallyLedger(string cruiseID, DbConnection source, DbConnection destination, CruiseSyncOptions options)
+        private TableSyncResult SyncTallyLedger(string cruiseID, DbConnection source, DbConnection destination, TableSyncOptions options)
         {
+            var syncResult = new TableSyncResult(nameof(TallyLedger));
+
+            var flags = options.TallyLedger;
+            if (flags == SyncOption.Lock) { return syncResult; }
+
             var where = "CruiseID = @CruiseID AND TallyLedgerID = @TallyLedgerID";
 
-            //var excludeUnitIDs = new HashSet<string>(options.ExcludeUnitIDs);
-            //var excludeStratumIDs = new HashSet<string>(options.ExcludeStrataIDs);
-            //var excludeSampleGroupIDs = new HashSet<string>(options.ExcludeSampleGroupIDs);
-            //var excludeTreeIDs = new HashSet<string>(options.ExcludeTreeIDs);
-
-            var sourceItems = source.From<TallyLedger>().Where("CruiseID = @p1").Query(cruiseID);
-
-            foreach (var i in sourceItems)
+            var units = destination.From<CuttingUnit>().Where("CruiseID = @p1").Query(cruiseID);
+            foreach (var unit in units)
             {
-                var match = destination.From<TallyLedger>()
-                    .Where(where)
-                    .Query2(i)
-                    .FirstOrDefault();
-
-                if (match == null)
+                var sourceItems = source.From<TallyLedger>().Where("CruiseID = @p1 AND CuttingUnitCode = @p2 AND PlotNumber IS NULL").Query(cruiseID, unit.CuttingUnitCode);
+                foreach (var i in sourceItems)
                 {
-                    var hasTombstone = destination.From<TallyLedger_Tombstone>().Where(where).Count2(i) > 0;
+                    var match = destination.From<TallyLedger>()
+                        .Where(where)
+                        .Query2(i)
+                        .FirstOrDefault();
 
-                    if (options.FieldData.HasFlag(SyncFlags.ForceInsert)
-                            || (hasTombstone == false && options.FieldData.HasFlag(SyncFlags.Insert)))
+                    if (match == null)
                     {
-                        destination.Insert(i, persistKeyvalue: false);
+                        var hasTombstone = destination.From<TallyLedger_Tombstone>().Where(where).Count2(i) > 0;
+
+                        if (flags.HasFlag(SyncOption.ForceInsert)
+                                || (hasTombstone == false && flags.HasFlag(SyncOption.Insert)))
+                        {
+                            destination.Insert(i, persistKeyvalue: false);
+                            syncResult.IncrementInserts();
+                        }
                     }
                 }
             }
+
+            var plots = destination.From<Plot>().Where("CruiseID = @p1").Query(cruiseID);
+            foreach (var plot in plots)
+            {
+                var sourceTallyLedgers = source.From<TallyLedger>()
+                    .Where("CruiseID = @p1 AND CuttingUnitCode = @p2 AND PlotNumber = @p3")
+                    .Query(cruiseID, plot.CuttingUnitCode, plot.PlotNumber);
+
+                foreach (var tl in sourceTallyLedgers)
+                {
+                    var hasMatch = destination.ExecuteScalar<long>("SELECT count(*) FROM TallyLedger WHERE TallyLedgerID = @p1;", parameters: new[] { tl.TallyLedgerID }) > 0;
+                    if (!hasMatch)
+                    {
+                        var hasTombstone = destination.ExecuteScalar<long>("SELECT count(*) FROM TallyLedger_Tombstone WHERE TallyLedgerID = @p1;", parameters: new[] { tl.TallyLedgerID }) > 0;
+
+                        if (flags.HasFlag(SyncOption.ForceInsert)
+                                        || (hasTombstone == false && flags.HasFlag(SyncOption.Insert)))
+                        {
+                            destination.Insert(tl, persistKeyvalue: false);
+                            syncResult.IncrementInserts();
+                        }
+                    }
+                }
+            }
+
+
+            return syncResult;
         }
 
-        private void SyncLogFieldSetup(string cruiseID, DbConnection source, DbConnection destination, CruiseSyncOptions options)
+        private TableSyncResult SyncLogFieldSetup(string cruiseID, DbConnection source, DbConnection destination, TableSyncOptions options)
         {
-            var where = "CruiseID = @CruiseID AND StratumCode = @StratumCode AND Field = @Field";
+            var syncResult = new TableSyncResult(nameof(LogFieldSetup));
 
-            //var excludeStratumIDs = new HashSet<string>();
+            var flags = options.LogFieldSetup;
+            if (flags == SyncOption.Lock) { return syncResult; }
+
+            var where = "CruiseID = @CruiseID AND StratumCode = @StratumCode AND Field = @Field";
 
             var strata = destination.From<Stratum>()
                 .Where("CruiseID = @p1")
@@ -1335,7 +1299,6 @@ namespace CruiseDAL.V3.Sync
 
             foreach (var st in strata)
             {
-
                 var sourceItems = source.From<LogFieldSetup>().Where("CruiseID = @p1 AND StratumCode = @p2").Query(cruiseID, st.StratumCode);
 
                 foreach (var i in sourceItems)
@@ -1349,20 +1312,25 @@ namespace CruiseDAL.V3.Sync
                     {
                         var hasTombstone = destination.From<LogFieldSetup_Tombstone>().Where(where).Count2(i) > 0;
 
-                        if (options.Design.HasFlag(SyncFlags.ForceInsert)
-                                || (hasTombstone == false && options.Design.HasFlag(SyncFlags.Insert)))
+                        if (flags.HasFlag(SyncOption.ForceInsert)
+                                || (hasTombstone == false && flags.HasFlag(SyncOption.Insert)))
                         {
                             destination.Insert(i, persistKeyvalue: false);
+                            syncResult.IncrementInserts();
                         }
                     }
                 }
             }
-
-
+            return syncResult;
         }
 
-        private void SyncTreeFieldSetup(string cruiseID, DbConnection source, DbConnection destination, CruiseSyncOptions options)
+        private TableSyncResult SyncTreeFieldSetup(string cruiseID, DbConnection source, DbConnection destination, TableSyncOptions options)
         {
+            var syncResult = new TableSyncResult(nameof(TreeFieldSetup));
+
+            var flags = options.TreeFieldSetup;
+            if (flags == SyncOption.Lock) { return syncResult; }
+
             var where = "CruiseID = @CruiseID AND StratumCode = @StratumCode AND coalesce(SampleGroupCode, '') = coalesce(@SampleGroupCode, '') AND Field = @Field";
 
             var sourceItems = source.From<TreeFieldSetup>().Where("CruiseID = @p1").Query(cruiseID);
@@ -1378,17 +1346,24 @@ namespace CruiseDAL.V3.Sync
                 {
                     var hasTombstone = destination.From<TreeFieldSetup_Tombstone>().Where(where).Count2(i) > 0;
 
-                    if (options.Design.HasFlag(SyncFlags.ForceInsert)
-                            || (hasTombstone == false && options.Design.HasFlag(SyncFlags.Insert)))
+                    if (flags.HasFlag(SyncOption.ForceInsert)
+                            || (hasTombstone == false && flags.HasFlag(SyncOption.Insert)))
                     {
                         destination.Insert(i, persistKeyvalue: false);
+                        syncResult.IncrementInserts();
                     }
                 }
             }
+            return syncResult;
         }
 
-        private void SyncTreeAuditRule(string cruiseID, DbConnection source, DbConnection destination, CruiseSyncOptions options)
+        private TableSyncResult SyncTreeAuditRule(string cruiseID, DbConnection source, DbConnection destination, TableSyncOptions options)
         {
+            var syncResult = new TableSyncResult(nameof(TreeAuditRule));
+
+            var flags = options.TreeAuditRule;
+            if (flags == SyncOption.Lock) { return syncResult; }
+
             var where = "TreeAuditRuleID = @TreeAuditRuleID";
 
             var sourceItems = source.From<TreeAuditRule>().Where("CruiseID = @p1").Query(cruiseID);
@@ -1404,18 +1379,25 @@ namespace CruiseDAL.V3.Sync
                 {
                     var hasTombstone = destination.From<TreeAuditRule_Tombstone>().Where(where).Count2(i) > 0;
 
-                    if (options.Validation.HasFlag(SyncFlags.ForceInsert)
-                            || (hasTombstone == false && options.Validation.HasFlag(SyncFlags.Insert)))
+                    if (flags.HasFlag(SyncOption.ForceInsert)
+                            || (hasTombstone == false && flags.HasFlag(SyncOption.Insert)))
                     {
                         destination.Insert(i, persistKeyvalue: false);
+                        syncResult.IncrementInserts();
                     }
                 }
                 // update not supported
             }
+            return syncResult;
         }
 
-        private void SyncTreeAuditRuleSelector(string cruiseID, DbConnection source, DbConnection destination, CruiseSyncOptions options)
+        private TableSyncResult SyncTreeAuditRuleSelector(string cruiseID, DbConnection source, DbConnection destination, TableSyncOptions options)
         {
+            var syncResult = new TableSyncResult(nameof(TreeAuditRuleSelector));
+
+            var flags = options.TreeAuditRuleSelector;
+            if (flags == SyncOption.Lock) { return syncResult; }
+
             var where = "TreeAuditRuleID = @TreeAuditRuleID AND ifnull(SpeciesCode, '') = ifnull(@SpeciesCode, '') AND ifnull(LiveDead, '') = ifnull(@LiveDead, '') AND ifnull(PrimaryProduct, '') = ifnull(@PrimaryProduct, '')";
 
             var sourceItems = source.From<TreeAuditRuleSelector>().Where("CruiseID = @p1").Query(cruiseID);
@@ -1430,18 +1412,25 @@ namespace CruiseDAL.V3.Sync
                     var hasTombstone = destination.From<TreeAuditRuleSelector_Tombstone>()
                         .Where(where).Count2(i) > 0;
 
-                    if (options.Validation.HasFlag(SyncFlags.ForceInsert)
-                            || (hasTombstone == false && options.Validation.HasFlag(SyncFlags.Insert)))
+                    if (flags.HasFlag(SyncOption.ForceInsert)
+                            || (hasTombstone == false && flags.HasFlag(SyncOption.Insert)))
                     {
                         destination.Insert(i, persistKeyvalue: false);
+                        syncResult.IncrementInserts();
                     }
                 }
                 // update not supported
             }
+            return syncResult;
         }
 
-        private void SyncTreeAuditResolution(string cruiseID, DbConnection source, DbConnection destination, CruiseSyncOptions options)
+        private TableSyncResult SyncTreeAuditResolution(string cruiseID, DbConnection source, DbConnection destination, TableSyncOptions options)
         {
+            var syncResult = new TableSyncResult(nameof(TreeAuditResolution));
+
+            var flags = options.TreeAuditResolution;
+            if (flags == SyncOption.Lock) { return syncResult; }
+
             var where = "TreeAuditRuleID = @TreeAuditRuleID AND TreeID = @TreeID";
 
             var sourceItems = source.From<TreeAuditResolution>().Where("CruiseID = @p1").Query(cruiseID);
@@ -1451,21 +1440,23 @@ namespace CruiseDAL.V3.Sync
                     .Where(where).Query2(i);
 
                 // it is possible that the match doesn't have the same initials, or resolution values
-                // but I think it is save to ignore conflicts in this situation just as long as there is a resolution
+                // but I think it is safe to ignore conflicts in this situation just as long as there is a resolution
 
                 if (match == null)
                 {
                     var hasTombstone = destination.From<TreeAuditResolution_Tombstone>()
                         .Where(where).Count2(i) > 0;
 
-                    if (options.Validation.HasFlag(SyncFlags.ForceInsert)
-                                || (hasTombstone == false && options.Validation.HasFlag(SyncFlags.Insert)))
+                    if (flags.HasFlag(SyncOption.ForceInsert)
+                                || (hasTombstone == false && flags.HasFlag(SyncOption.Insert)))
                     {
                         destination.Insert(i, persistKeyvalue: false);
+                        syncResult.IncrementInserts();
                     }
                 }
                 // update not supported
             }
+            return syncResult;
         }
 
         //private void SyncLogGradeAuditRules(string cruiseID, DbConnection source, DbConnection destination, CruiseSyncOptions options)
@@ -1493,8 +1484,13 @@ namespace CruiseDAL.V3.Sync
         //    }
         //}
 
-        private void SyncTreeFieldHeading(string cruiseID, DbConnection source, DbConnection destination, CruiseSyncOptions options)
+        private TableSyncResult SyncTreeFieldHeading(string cruiseID, DbConnection source, DbConnection destination, TableSyncOptions options)
         {
+            var syncResult = new TableSyncResult(nameof(TreeFieldHeading));
+
+            var flags = options.TreeFieldHeading;
+            if (flags == SyncOption.Lock) { return syncResult; }
+
             var where = "CruiseID = @CruiseID AND Field = @Field";
             var sourceItems = source.From<TreeFieldHeading>().Where("CruiseID = @p1").Query(cruiseID);
 
@@ -1504,20 +1500,28 @@ namespace CruiseDAL.V3.Sync
 
                 if (match == null)
                 {
-                    destination.Insert(i, persistKeyvalue: false);
-                }
-                else
-                {
-                    if (ShouldUpdate(i.Modified_TS, match.Modified_TS, options.Design))
+                    if (flags.HasFlag(SyncOption.Insert))
                     {
-                        destination.Update(i, whereExpression: where);
+                        destination.Insert(i, persistKeyvalue: false);
+                        syncResult.IncrementInserts();
                     }
                 }
+                else if (ShouldUpdate(i.Modified_TS, match.Modified_TS, flags))
+                {
+                    destination.Update(i, whereExpression: where);
+                    syncResult.IncrementUpdates();
+                }
             }
+            return syncResult;
         }
 
-        private void SyncLogFieldHeading(string cruiseID, DbConnection source, DbConnection destination, CruiseSyncOptions options)
+        private TableSyncResult SyncLogFieldHeading(string cruiseID, DbConnection source, DbConnection destination, TableSyncOptions options)
         {
+            var syncResult = new TableSyncResult(nameof(LogFieldHeading));
+
+            var flags = options.LogFieldHeading;
+            if (flags == SyncOption.Lock) { return syncResult; }
+
             var where = "CruiseID = @CruiseID AND Field = @Field";
             var sourceItems = source.From<LogFieldHeading>().Where("CruiseID = @p1").Query(cruiseID);
 
@@ -1528,20 +1532,28 @@ namespace CruiseDAL.V3.Sync
 
                 if (match == null)
                 {
-                    destination.Insert(i, persistKeyvalue: false);
-                }
-                else
-                {
-                    if (ShouldUpdate(i.Modified_TS, match.Modified_TS, options.Design))
+                    if (flags.HasFlag(SyncOption.Insert))
                     {
-                        destination.Update(i, whereExpression: where);
+                        destination.Insert(i, persistKeyvalue: false);
+                        syncResult.IncrementInserts();
                     }
                 }
+                else if (ShouldUpdate(i.Modified_TS, match.Modified_TS, flags))
+                {
+                    destination.Update(i, whereExpression: where);
+                    syncResult.IncrementUpdates();
+                }
             }
+            return syncResult;
         }
 
-        private void SyncBiomassEquations(string cruiseID, DbConnection source, DbConnection destination, CruiseSyncOptions options)
+        private TableSyncResult SyncBiomassEquation(string cruiseID, DbConnection source, DbConnection destination, TableSyncOptions options)
         {
+            var syncResult = new TableSyncResult(nameof(BiomassEquation));
+
+            var flags = options.Processing;
+            if (flags == SyncOption.Lock) { return syncResult; }
+
             var where = "CruiseID = @CruiseID AND Species = @Species AND Product = @Product AND Component = @Component AND LiveDead = @LiveDead";
             var sourceItems = source.From<BiomassEquation>()
                 .Where("CruiseID = @p1").Query(cruiseID);
@@ -1553,20 +1565,31 @@ namespace CruiseDAL.V3.Sync
 
                 if (match == null)
                 {
-                    destination.Insert(i, persistKeyvalue: false);
+                    if (flags.HasFlag(SyncOption.Insert))
+                    {
+                        destination.Insert(i, persistKeyvalue: false);
+                        syncResult.IncrementInserts();
+                    }
                 }
                 else
                 {
-                    if (ShouldUpdate(i.Modified_TS, match.Modified_TS, options.Processing))
+                    if (ShouldUpdate(i.Modified_TS, match.Modified_TS, flags))
                     {
                         destination.Update(i, whereExpression: where);
+                        syncResult.IncrementUpdates();
                     }
                 }
             }
+            return syncResult;
         }
 
-        private void SyncReports(string cruiseID, DbConnection source, DbConnection destination, CruiseSyncOptions options)
+        private TableSyncResult SyncReport(string cruiseID, DbConnection source, DbConnection destination, TableSyncOptions options)
         {
+            var syncResult = new TableSyncResult(nameof(Reports));
+
+            var flags = options.Processing;
+            if (flags == SyncOption.Lock) { return syncResult; }
+
             var where = "CruiseID = @CruiseID AND ReportID = @ReportID";
             var sourceItems = source.From<Reports>()
                 .Where("CruiseID = @p1").Query(cruiseID);
@@ -1578,20 +1601,28 @@ namespace CruiseDAL.V3.Sync
 
                 if (match == null)
                 {
-                    destination.Insert(i, persistKeyvalue: false);
-                }
-                else
-                {
-                    if (ShouldUpdate(i.Modified_TS, match.Modified_TS, options.Processing))
+                    if (flags.HasFlag(SyncOption.Insert))
                     {
-                        destination.Update(i, whereExpression: where);
+                        destination.Insert(i, persistKeyvalue: false);
+                        syncResult.IncrementInserts();
                     }
                 }
+                else if (ShouldUpdate(i.Modified_TS, match.Modified_TS, flags))
+                {
+                    destination.Update(i, whereExpression: where);
+                    syncResult.IncrementUpdates();
+                }
             }
+            return syncResult;
         }
 
-        private void SyncValueEquations(string cruiseID, DbConnection source, DbConnection destination, CruiseSyncOptions options)
+        private TableSyncResult SyncValueEquation(string cruiseID, DbConnection source, DbConnection destination, TableSyncOptions options)
         {
+            var syncResult = new TableSyncResult(nameof(ValueEquation));
+
+            var flags = options.Processing;
+            if (flags == SyncOption.Lock) { return syncResult; }
+
             var where = "CruiseID = @CruiseID AND Species = @Species AND PrimaryProduct = @PrimaryProduct AND ValueEquationNumber = @ValueEquationNumber";
             var sourceItems = source.From<ValueEquation>()
                 .Where("CruiseID = @p1").Query(cruiseID);
@@ -1603,20 +1634,29 @@ namespace CruiseDAL.V3.Sync
 
                 if (match == null)
                 {
-                    destination.Insert(i, persistKeyvalue: false);
-                }
-                else
-                {
-                    if (ShouldUpdate(i.Modified_TS, match.Modified_TS, options.Processing))
+                    if (flags.HasFlag(SyncOption.Insert))
                     {
-                        destination.Update(i, whereExpression: where);
+                        destination.Insert(i, persistKeyvalue: false);
+                        syncResult.IncrementInserts();
                     }
                 }
+                else if (ShouldUpdate(i.Modified_TS, match.Modified_TS, flags))
+                {
+                    destination.Update(i, whereExpression: where);
+                    syncResult.IncrementUpdates();
+                }
             }
+            return syncResult;
+
         }
 
-        private void SyncVolumeEquations(string cruiseID, DbConnection source, DbConnection destination, CruiseSyncOptions options)
+        private TableSyncResult SyncVolumeEquation(string cruiseID, DbConnection source, DbConnection destination, TableSyncOptions options)
         {
+            var syncResult = new TableSyncResult(nameof(VolumeEquation));
+
+            var flags = options.Processing;
+            if (flags == SyncOption.Lock) { return syncResult; }
+
             var where = "CruiseID = @CruiseID AND Species = @Species AND PrimaryProduct =  @PrimaryProduct AND VolumeEquationNumber = @VolumeEquationNumber";
             var sourceItems = source.From<VolumeEquation>()
                 .Where("CruiseID = @p1").Query(cruiseID);
@@ -1627,20 +1667,28 @@ namespace CruiseDAL.V3.Sync
 
                 if (match == null)
                 {
-                    destination.Insert(i, persistKeyvalue: false);
-                }
-                else
-                {
-                    if (ShouldUpdate(i.Modified_TS, match.Modified_TS, options.Processing))
+                    if (flags.HasFlag(SyncOption.Insert))
                     {
-                        destination.Update(i, whereExpression: where);
+                        destination.Insert(i, persistKeyvalue: false);
+                        syncResult.IncrementInserts();
                     }
                 }
+                else if (ShouldUpdate(i.Modified_TS, match.Modified_TS, flags))
+                {
+                    destination.Update(i, whereExpression: where);
+                    syncResult.IncrementUpdates();
+                }
             }
+            return syncResult;
         }
 
-        private void SyncTreeDefaultValues(string cruiseID, DbConnection source, DbConnection destination, CruiseSyncOptions options)
+        private TableSyncResult SyncTreeDefaultValues(string cruiseID, DbConnection source, DbConnection destination, TableSyncOptions options)
         {
+            var syncResult = new TableSyncResult(nameof(TreeDefaultValue));
+
+            var flags = options.TreeDefaultValue;
+            if (flags == SyncOption.Lock) { return syncResult; }
+
             var where = "CruiseID = @CruiseID AND coalesce(SpeciesCode, '') = coalesce(@SpeciesCode, '') AND coalesce(PrimaryProduct, '') = coalesce(@PrimaryProduct, '')";
             var sourceItems = source.From<TreeDefaultValue>()
                 .Where("CruiseID = @p1").Query(cruiseID);
@@ -1654,24 +1702,32 @@ namespace CruiseDAL.V3.Sync
                     var hasTombstone = destination.From<TreeDefaultValue_Tombstone>()
                                                     .Where(where).Count2(i) > 0;
 
-                    if (options.TreeDefaultValue.HasFlag(SyncFlags.ForceInsert)
-                                || (hasTombstone == false && options.TreeDefaultValue.HasFlag(SyncFlags.Insert)))
+                    if (flags.HasFlag(SyncOption.ForceInsert)
+                                || (hasTombstone == false && flags.HasFlag(SyncOption.Insert)))
                     {
                         destination.Insert(i, persistKeyvalue: false);
+                        syncResult.IncrementInserts();
                     }
                 }
                 else
                 {
-                    if (ShouldUpdate(i.Modified_TS, match.Modified_TS, options.TreeDefaultValue))
+                    if (ShouldUpdate(i.Modified_TS, match.Modified_TS, flags))
                     {
                         destination.Update(i, whereExpression: where);
+                        syncResult.IncrementUpdates();
                     }
                 }
             }
+            return syncResult;
         }
 
-        private void SyncStratumTemplates(string cruiseID, DbConnection source, DbConnection destination, CruiseSyncOptions options)
+        private TableSyncResult SyncStratumTemplates(string cruiseID, DbConnection source, DbConnection destination, TableSyncOptions options)
         {
+            var syncResult = new TableSyncResult(nameof(StratumTemplate));
+
+            var flags = options.Template;
+            if (flags == SyncOption.Lock) { return syncResult; }
+
             var where = "CruiseID = @CruiseID AND StratumTemplateName = @StratumTemplateName";
             var sourceItems = source.From<StratumTemplate>()
                 .Where("CruiseID = @p1").Query(cruiseID);
@@ -1685,24 +1741,29 @@ namespace CruiseDAL.V3.Sync
                     var hasTombstone = destination.From<StratumTemplate_Tombstone>()
                                                     .Where(where).Count2(i) > 0;
 
-                    if (options.Template.HasFlag(SyncFlags.ForceInsert)
-                                || (hasTombstone == false && options.Template.HasFlag(SyncFlags.Insert)))
+                    if (flags.HasFlag(SyncOption.ForceInsert)
+                                || (hasTombstone == false && flags.HasFlag(SyncOption.Insert)))
                     {
                         destination.Insert(i, persistKeyvalue: false);
+                        syncResult.IncrementInserts();
                     }
                 }
-                else
+                else if (ShouldUpdate(i.Modified_TS, match.Modified_TS, flags))
                 {
-                    if (ShouldUpdate(i.Modified_TS, match.Modified_TS, options.Template))
-                    {
-                        destination.Update(i, whereExpression: where);
-                    }
+                    destination.Update(i, whereExpression: where);
+                    syncResult.IncrementUpdates();
                 }
             }
+            return syncResult;
         }
 
-        private void SyncStratumTemplateTreeFieldSetups(string cruiseID, DbConnection source, DbConnection destination, CruiseSyncOptions options)
+        private TableSyncResult SyncStratumTemplateTreeFieldSetups(string cruiseID, DbConnection source, DbConnection destination, TableSyncOptions options)
         {
+            var syncResult = new TableSyncResult(nameof(StratumTemplateTreeFieldSetup));
+
+            var flags = options.Template;
+            if (flags == SyncOption.Lock) { return syncResult; }
+
             var where = "CruiseID = @CruiseID AND StratumTemplateName = @StratumTemplateName AND Field = @Field";
             var sourceItems = source.From<StratumTemplateTreeFieldSetup>()
                 .Where("CruiseID = @p1").Query(cruiseID);
@@ -1716,24 +1777,29 @@ namespace CruiseDAL.V3.Sync
                     var hasTombstone = destination.From<StratumTemplateTreeFieldSetup_Tombstone>()
                                 .Where(where).Count2(i) > 0;
 
-                    if (options.Template.HasFlag(SyncFlags.ForceInsert)
-                                || (hasTombstone == false && options.Template.HasFlag(SyncFlags.Insert)))
+                    if (flags.HasFlag(SyncOption.ForceInsert)
+                                || (hasTombstone == false && flags.HasFlag(SyncOption.Insert)))
                     {
                         destination.Insert(i, persistKeyvalue: false);
+                        syncResult.IncrementInserts();
                     }
                 }
-                else
+                else if (ShouldUpdate(i.Modified_TS, match.Modified_TS, flags))
                 {
-                    if (ShouldUpdate(i.Modified_TS, match.Modified_TS, options.Template))
-                    {
-                        destination.Update(i, whereExpression: where);
-                    }
+                    destination.Update(i, whereExpression: where);
+                    syncResult.IncrementUpdates();
                 }
             }
+            return syncResult;
         }
 
-        private void SyncStratumTemplateLogFieldSetups(string cruiseID, DbConnection source, DbConnection destination, CruiseSyncOptions options)
+        private TableSyncResult SyncStratumTemplateLogFieldSetups(string cruiseID, DbConnection source, DbConnection destination, TableSyncOptions options)
         {
+            var syncResult = new TableSyncResult(nameof(StratumTemplateLogFieldSetup));
+
+            var flags = options.Template;
+            if (flags == SyncOption.Lock) { return syncResult; }
+
             var where = "CruiseID = @CruiseID AND StratumTemplateName = @StratumTemplateName AND Field = @Field";
             var sourceItems = source.From<StratumTemplateLogFieldSetup>()
                 .Where("CruiseID = @p1").Query(cruiseID);
@@ -1747,20 +1813,90 @@ namespace CruiseDAL.V3.Sync
                     var hasTombstone = destination.From<StratumTemplateLogFieldSetup_Tombstone>()
                                 .Where(where).Count2(i) > 0;
 
-                    if (options.Template.HasFlag(SyncFlags.ForceInsert)
-                                || (hasTombstone == false && options.Template.HasFlag(SyncFlags.Insert)))
+                    if (flags.HasFlag(SyncOption.ForceInsert)
+                                || (hasTombstone == false && flags.HasFlag(SyncOption.Insert)))
                     {
                         destination.Insert(i, persistKeyvalue: false);
+                        syncResult.IncrementInserts();
                     }
                 }
-                else
+                else if (ShouldUpdate(i.Modified_TS, match.Modified_TS, flags))
                 {
-                    if (ShouldUpdate(i.Modified_TS, match.Modified_TS, options.Template))
-                    {
-                        destination.Update(i, whereExpression: where);
-                    }
+                    destination.Update(i, whereExpression: where);
+                    syncResult.IncrementUpdates();
                 }
             }
+            return syncResult;
+        }
+    }
+
+    public class TableSyncResult
+    {
+        public string TableName { get; set; }
+
+        int _inserts;
+        int _updates;
+
+        public TableSyncResult(string tableName)
+        {
+            TableName = tableName ?? throw new ArgumentNullException(nameof(tableName));
+        }
+
+        public int Inserts => _inserts;
+
+        public int Updates => _updates;
+
+        public void IncrementInserts()
+        { _inserts++; }
+
+        public void IncrementUpdates()
+        { _updates++; }
+
+        public override string ToString()
+        {
+            return $"{TableName} Added:{Inserts} Updated:{Updates}";
+        }
+    }
+
+    public class SyncResult : IEnumerable<TableSyncResult>
+    {
+        Dictionary<string, TableSyncResult> _tableResults = new Dictionary<string, TableSyncResult>();
+
+        public TableSyncResult this[string table]
+        {
+            get
+            {
+                if (_tableResults.TryGetValue(table, out TableSyncResult result))
+                { return result; }
+                else
+                { return null; }
+            }
+
+            set
+            {
+                if (_tableResults.ContainsKey(table))
+                { _tableResults[table] = value; }
+                else
+                { _tableResults.Add(table, value); }
+            }
+        }
+
+        public void Add(TableSyncResult syncResult)
+        {
+            if (syncResult == null) throw new ArgumentNullException(nameof(syncResult));
+
+            var tableName = syncResult.TableName;
+            this[tableName] = syncResult;
+        }
+
+        public IEnumerator<TableSyncResult> GetEnumerator()
+        {
+            return _tableResults.Select(x => x.Value).GetEnumerator();
+        }
+
+        IEnumerator IEnumerable.GetEnumerator()
+        {
+            return _tableResults.Select(x => x.Value).GetEnumerator();
         }
     }
 

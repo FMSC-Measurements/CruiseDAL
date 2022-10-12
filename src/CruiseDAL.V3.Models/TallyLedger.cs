@@ -65,6 +65,12 @@ namespace CruiseDAL.V3.Models
   [Field("Created_TS")]
   public DateTime? Created_TS { get; set; }
 
+  [Field("ModifiedBy")]
+  public String ModifiedBy { get; set; }
+
+  [Field("Modified_TS", PersistanceFlags = PersistanceFlags.Never)]
+  public DateTime? Modified_TS { get; set; }
+
  }
 
 }

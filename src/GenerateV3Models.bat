@@ -15,7 +15,7 @@ SET parent=%~dp0
 SET msbuild="%parent%tools\msbuild.cmd"
 
 IF NOT DEFINED build_config SET build_config="Release"
-IF NOT DEFINED tf SET tf="net40"
+IF NOT DEFINED tf SET tf="net462"
 
 call %msbuild% /p:Configuration=%build_config% %parent%CruiseDAL.V3.Models\CruiseDAL.V3.Models.csproj
 call %msbuild% /p:Configuration=%build_config% %parent%CruiseDAL.V3.Models\CruiseDAL.V3.Models.csproj -target:GenerateModels -p:TargetFramework=%tf%

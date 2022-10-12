@@ -37,6 +37,7 @@ IF %ERRORLEVEL% EQU 0 call %msbuild% -t:%targets% -p:%build_params% %parent%Crui
 IF %ERRORLEVEL% EQU 0 call %msbuild% -t:%targets% -p:%build_params% %parent%CruiseDAL.V3.UpConvert\CruiseDAL.V3.UpConvert.csproj
 IF %ERRORLEVEL% EQU 0 call %msbuild% -t:%targets% -p:%build_params% %parent%CruiseDAL.V3.DownConvert\CruiseDAL.V3.DownConvert.csproj
 IF %ERRORLEVEL% EQU 0 call %msbuild% -t:%targets% -p:%build_params% %parent%CruiseDAL.V3.Models\CruiseDAL.V3.Models.csproj
+IF %ERRORLEVEL% EQU 0 call %msbuild% -t:%targets% -p:%build_params% %parent%CruiseDAL.V3.Sync\CruiseDAL.V3.Sync.csproj
 IF %ERRORLEVEL% EQU 0 call %msbuild% -t:%targets% -p:%build_params% %parent%CruiseCLI\CruiseCLI.csproj
 
 

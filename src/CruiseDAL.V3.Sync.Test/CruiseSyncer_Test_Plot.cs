@@ -17,10 +17,9 @@ namespace CruiseDAL.V3.Sync
             var fromPath = GetTempFilePathWithExt(".crz3", "Sync_Plot_Add_fromFile");
             var toPath = GetTempFilePathWithExt(".crz3", "Sync_Plot_Add_toFile");
 
-            var syncOptions = new CruiseSyncOptions()
+            var syncOptions = new TableSyncOptions(SyncOption.Lock)
             {
-                Design = SyncFlags.Insert,
-                FieldData = SyncFlags.Insert,
+                Plot = SyncOption.Insert,
             };
 
             var cruiseID = Guid.NewGuid().ToString();
@@ -53,10 +52,9 @@ namespace CruiseDAL.V3.Sync
             var fromPath = GetTempFilePathWithExt(".crz3", "Sync_Plot_Update_fromFile");
             var toPath = GetTempFilePathWithExt(".crz3", "Sync_Plot_Update_toFile");
 
-            var syncOptions = new CruiseSyncOptions()
+            var syncOptions = new TableSyncOptions(SyncOption.Lock)
             {
-                Design = SyncFlags.Insert,
-                FieldData = SyncFlags.InsertUpdate,
+                Plot = SyncOption.Update,
             };
 
             var cruiseID = Guid.NewGuid().ToString();
@@ -76,9 +74,9 @@ namespace CruiseDAL.V3.Sync
             fromDb.CopyTo(toPath, true);
             using var toDb = new CruiseDatastore_V3(toPath);
 
-            plot.Remarks = Rand.Words();
-            plot.Slope = Rand.Double();
-            plot.PlotNumber = Rand.Int();
+            plot.Remarks = "something";
+            plot.Slope = 101;
+            plot.PlotNumber = 2;
             fromDb.Update(plot);
 
             var syncer = new CruiseSyncer();
@@ -99,10 +97,9 @@ namespace CruiseDAL.V3.Sync
             var fromPath = GetTempFilePathWithExt(".crz3", "Sync_Plot_Update_plotNum_fromFile");
             var toPath = GetTempFilePathWithExt(".crz3", "Sync_Plot_Update_plotNum_toFile");
 
-            var syncOptions = new CruiseSyncOptions()
+            var syncOptions = new TableSyncOptions(SyncOption.Lock)
             {
-                Design = SyncFlags.Insert,
-                FieldData = SyncFlags.InsertUpdate,
+                Plot = SyncOption.Update,
             };
 
             var cruiseID = Guid.NewGuid().ToString();
@@ -122,7 +119,7 @@ namespace CruiseDAL.V3.Sync
             fromDb.CopyTo(toPath, true);
             using var toDb = new CruiseDatastore_V3(toPath);
 
-            plot.PlotNumber = Rand.Int();
+            plot.PlotNumber = 2;
             fromDb.Update(plot);
 
             var syncer = new CruiseSyncer();

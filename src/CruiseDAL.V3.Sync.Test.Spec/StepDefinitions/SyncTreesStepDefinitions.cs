@@ -133,10 +133,10 @@ namespace CruiseDAL.V3.Sync.Test.Spec.StepDefinitions
                         && (treeNumberStr == null || x.TreeNumber == int.Parse(treeNumberStr))
                         && (cuttingUnitCode == null || x.CuttingUnitCode == cuttingUnitCode));
 
-                tree.Should().NotBeNull(because: treeIDAlias);
+                tree.Should().NotBeNull(because: treeIDAlias + ":" + treeID);
 
-                db.From<TreeMeasurment>().Where("TreeID = @p1").Count(treeID).Should().Be(1);
-                db.From<TallyLedger>().Where("TreeID = @p1").Count(treeID).Should().Be(1);
+                db.From<TreeMeasurment>().Where("TreeID = @p1").Count(treeID).Should().Be(1, treeIDAlias + ":" + treeID);
+                db.From<TallyLedger>().Where("TreeID = @p1").Count(treeID).Should().Be(1, treeIDAlias + ":" + treeID);
             }
             trees.Should().HaveCount(table.RowCount);
         }
