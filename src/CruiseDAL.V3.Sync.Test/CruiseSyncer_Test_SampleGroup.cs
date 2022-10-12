@@ -17,7 +17,10 @@ namespace CruiseDAL.V3.Sync
             var fromPath = GetTempFilePathWithExt(".crz3", "SampleGroup_Add_fromFile");
             var toPath = GetTempFilePathWithExt(".crz3", "SampleGroup_Add_toFile");
 
-            var syncOptions = new CruiseSyncOptions();
+            var syncOptions = new TableSyncOptions(SyncOption.Lock)
+            {
+                SampleGroup = SyncOption.Insert,
+            };
 
             var cruiseID = Guid.NewGuid().ToString();
             var saleID = Guid.NewGuid().ToString();
@@ -51,7 +54,10 @@ namespace CruiseDAL.V3.Sync
             var fromPath = GetTempFilePathWithExt(".crz3", "SampleGroup_Update_fromFile");
             var toPath = GetTempFilePathWithExt(".crz3", "SampleGroup_Update_toFile");
 
-            var syncOptions = new CruiseSyncOptions();
+            var syncOptions = new TableSyncOptions(SyncOption.Lock)
+            {
+                SampleGroup = SyncOption.Update,
+            };
 
             var cruiseID = Guid.NewGuid().ToString();
             var saleID = Guid.NewGuid().ToString();
@@ -92,7 +98,10 @@ namespace CruiseDAL.V3.Sync
             var fromPath = GetTempFilePathWithExt(".crz3", "SampleGroup_Update_SGCode_fromFile");
             var toPath = GetTempFilePathWithExt(".crz3", "SampleGroup_Update_SGCode_toFile");
 
-            var syncOptions = new CruiseSyncOptions();
+            var syncOptions = new TableSyncOptions(SyncOption.Lock)
+            {
+                SampleGroup = SyncOption.Update,
+            };
 
             var cruiseID = Guid.NewGuid().ToString();
             var saleID = Guid.NewGuid().ToString();

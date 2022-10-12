@@ -84,8 +84,9 @@ namespace CruiseDAL.TestCommon
 
         public string GetTempFilePath(string fileName)
         {
-            Output.WriteLine("Generated Temp File Path: " + fileName);
-            return Path.Combine(TestTempPath, fileName);
+            var path = Path.Combine(TestTempPath, fileName);
+            Output.WriteLine(path);
+            return path;
         }
 
         public string GetTestFile(string fileName) => InitializeTestFile(fileName);

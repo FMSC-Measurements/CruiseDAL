@@ -96,7 +96,7 @@ namespace CruiseDAL.V3.Sync.Test.Spec.StepDefinitions
         [When(@"sync '([^']*)' into '([^']*)'")]
         public void WhenSyncInto(string source, string dest)
         {
-            var syncOptions = new CruiseSyncOptions();
+            var syncOptions = new TableSyncOptions();
             var syncer = new CruiseSyncer();
 
             var srcDb = GetDatabase(source);

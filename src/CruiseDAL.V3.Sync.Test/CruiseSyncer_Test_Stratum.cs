@@ -17,7 +17,10 @@ namespace CruiseDAL.V3.Sync
             var fromPath = GetTempFilePathWithExt(".crz3", "Stratum_Add_fromFile");
             var toPath = GetTempFilePathWithExt(".crz3", "Stratum_Add_toFile");
 
-            var syncOptions = new CruiseSyncOptions();
+            var syncOptions = new TableSyncOptions(SyncOption.Lock)
+            {
+                Stratum = SyncOption.Insert,
+            };
 
             var cruiseID = Guid.NewGuid().ToString();
             var saleID = Guid.NewGuid().ToString();
@@ -51,7 +54,10 @@ namespace CruiseDAL.V3.Sync
             var fromPath = GetTempFilePathWithExt(".crz3", "Stratum_Updated_fromFile");
             var toPath = GetTempFilePathWithExt(".crz3", "Stratum_Update_toFile");
 
-            var syncOptions = new CruiseSyncOptions();
+            var syncOptions = new TableSyncOptions(SyncOption.Lock)
+            {
+                Stratum = SyncOption.Update,
+            };
 
             var cruiseID = Guid.NewGuid().ToString();
             var saleID = Guid.NewGuid().ToString();
@@ -92,7 +98,10 @@ namespace CruiseDAL.V3.Sync
             var fromPath = GetTempFilePathWithExt(".crz3", "Stratum_Updated_stCode_fromFile");
             var toPath = GetTempFilePathWithExt(".crz3", "Stratum_Update_stCode_toFile");
 
-            var syncOptions = new CruiseSyncOptions();
+            var syncOptions = new TableSyncOptions(SyncOption.Lock)
+            {
+                Stratum = SyncOption.Update,
+            };
 
             var cruiseID = Guid.NewGuid().ToString();
             var saleID = Guid.NewGuid().ToString();

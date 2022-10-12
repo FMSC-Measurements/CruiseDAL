@@ -26,6 +26,9 @@ namespace CruiseDAL.V3.Sync
             var tombstoneTables = db.GetTableNames().Where(x => x.EndsWith("_Tombstone"));
             foreach (var table in tombstoneTables)
             {
+                // TreeFieldValue not setup yet in CreateDatabaseWithAllTables
+                if (table == "TreeFieldValue_Tombstone") continue;
+
                 db.GetRowCount(table, (string)null).Should().BeGreaterThan(0, table);
             }
 

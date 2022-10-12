@@ -17,7 +17,10 @@ namespace CruiseDAL.V3.Sync
             var fromPath = GetTempFilePathWithExt(".crz3", "CuttingUnit_Add_fromFile");
             var toPath = GetTempFilePathWithExt(".crz3", "CuttingUnit_Add_toFile");
 
-            var syncOptions = new CruiseSyncOptions();
+            var syncOptions = new TableSyncOptions(SyncOption.Lock)
+            {
+                CuttingUnit = SyncOption.Insert,
+            };
 
             var cruiseID = Guid.NewGuid().ToString();
             var saleID = Guid.NewGuid().ToString();
@@ -50,7 +53,10 @@ namespace CruiseDAL.V3.Sync
             var fromPath = GetTempFilePathWithExt(".crz3", "CuttingUnit_Updated_fromFile");
             var toPath = GetTempFilePathWithExt(".crz3", "CuttingUnit_Update_toFile");
 
-            var syncOptions = new CruiseSyncOptions();
+            var syncOptions = new TableSyncOptions(SyncOption.Lock)
+            {
+                CuttingUnit = SyncOption.Update,
+            };
 
             var cruiseID = Guid.NewGuid().ToString();
             var saleID = Guid.NewGuid().ToString();
@@ -72,7 +78,7 @@ namespace CruiseDAL.V3.Sync
             using var toDb = new CruiseDatastore_V3(toPath);
 
             // modify cutting unit value and save to source database
-            cuttingUnit.Area = Rand.Int();
+            cuttingUnit.Area = Rand.Int(1);
             cuttingUnit.Description = Rand.Words();
             cuttingUnit.LoggingMethod = "401";
             cuttingUnit.PaymentUnit = Rand.AlphaNumeric(3);
@@ -95,7 +101,10 @@ namespace CruiseDAL.V3.Sync
             var fromPath = GetTempFilePathWithExt(".crz3", "CuttingUnit_Updated_code_fromFile");
             var toPath = GetTempFilePathWithExt(".crz3", "CuttingUnit_Update_code_toFile");
 
-            var syncOptions = new CruiseSyncOptions();
+            var syncOptions = new TableSyncOptions(SyncOption.Lock)
+            {
+                CuttingUnit = SyncOption.Update,
+            };
 
             var cruiseID = Guid.NewGuid().ToString();
             var saleID = Guid.NewGuid().ToString();
