@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace CruiseDAL.V3.Sync
@@ -33,49 +34,81 @@ namespace CruiseDAL.V3.Sync
             Log = log.ToArray();
         }
 
-        public IEnumerable<Conflict> CuttingUnit { get; set; }
+        public bool HasConflicts => GetHasConflicts();
 
-        public IEnumerable<Conflict> Stratum { get; set; }
+        public IEnumerable<Conflict> CuttingUnit 
+        { 
+            get; 
+            protected set; 
+        }
 
-        public IEnumerable<Conflict> SampleGroup { get; set; }
+        public IEnumerable<Conflict> Stratum 
+        { 
+            get; 
+            protected set; 
+        }
 
-        public IEnumerable<Conflict> Plot { get; set; }
+        public IEnumerable<Conflict> SampleGroup 
+        { 
+            get; 
+            protected set; 
+        }
 
-        public IEnumerable<Conflict> Tree { get; set; }
+        public IEnumerable<Conflict> Plot 
+        { 
+            get; 
+            protected set; 
+        }
 
-        public IEnumerable<Conflict> PlotTree { get; set; }
+        public IEnumerable<Conflict> Tree 
+        { 
+            get; 
+            protected set; 
+        }
 
-        public IEnumerable<Conflict> Log { get; set; }
+        public IEnumerable<Conflict> PlotTree 
+        { 
+            get; 
+            protected set; 
+        }
+
+        public IEnumerable<Conflict> Log 
+        { 
+            get; 
+            protected set; 
+        }
+
+        public event EventHandler ResolutionChanged;
 
         public bool AllHasResolutions()
         {
-            var units = ValidateConflicts(CuttingUnit);
-            var strata = ValidateConflicts(Stratum);
-            var sgs = ValidateConflicts(SampleGroup);
-            var plots = ValidateConflicts(Plot);
-            var trees = ValidateConflicts(Tree);
-            var plotTrees = ValidateConflicts(PlotTree);
-            var logs = ValidateConflicts(Log);
+            var units = CheckConflictsHasResolution(CuttingUnit);
+            var strata = CheckConflictsHasResolution(Stratum);
+            var sgs = CheckConflictsHasResolution(SampleGroup);
+            var plots = CheckConflictsHasResolution(Plot);
+            var trees = CheckConflictsHasResolution(Tree);
+            var plotTrees = CheckConflictsHasResolution(PlotTree);
+            var logs = CheckConflictsHasResolution(Log);
 
             return units && strata && sgs && plots && trees && plotTrees && logs;
         }
 
-        bool ValidateConflicts(IEnumerable<Conflict> conflicts)
+        public static bool CheckConflictsHasResolution(IEnumerable<Conflict> conflicts)
         {
             return !conflicts.Any()
                 || conflicts.All(HasValidResolution);
-
-            bool HasValidResolution(Conflict c)
-            {
-                return c.ConflictResolution != ConflictResolutionType.NotSet
-                    && (c.ConflictResolution != ConflictResolutionType.ChoseSourceMergeData 
-                        || c.ConflictResolution != ConflictResolutionType.ChoseDestMergeData)
-                            || ((c.DownstreamConflicts == null || !c.DownstreamConflicts.Any())
-                                || c.DownstreamConflicts.All(x => x.ConflictResolution != ConflictResolutionType.NotSet));
-            }
         }
 
-        public bool HasAny()
+        public static bool HasValidResolution(Conflict c)
+        {
+            return c.ConflictResolution != ConflictResolutionType.NotSet
+                && (c.ConflictResolution != ConflictResolutionType.ChoseSourceMergeData
+                    || c.ConflictResolution != ConflictResolutionType.ChoseDestMergeData)
+                        || ((c.DownstreamConflicts == null || !c.DownstreamConflicts.Any())
+                            || c.DownstreamConflicts.All(x => x.ConflictResolution != ConflictResolutionType.NotSet));
+        }
+
+        public bool GetHasConflicts()
         {
             var units = CuttingUnit.Any();
             var strata = Stratum.Any();
