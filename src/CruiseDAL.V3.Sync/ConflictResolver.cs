@@ -19,6 +19,21 @@ namespace CruiseDAL.V3.Sync
         protected const string MODIFY_TREE_COMMAND = "UPDATE Tree SET TreeNumber = @TreeNumber WHERE TreeID = @TreeID;";
         protected const string MODIFY_LOG_COMMAND = "UPDATE Log SET LogNumber = @LogNumber WHERE LogID = @LogID;";
 
+        public void ResolveConflicts(CruiseDatastore_V3 sourceDb, CruiseDatastore_V3 destDb, ConflictResolutionOptions conflictResolution)
+        {
+            var source = sourceDb.OpenConnection();
+            var dest = destDb.OpenConnection();
+            try
+            {
+                ResolveConflicts(source, dest, conflictResolution);
+            }
+            finally
+            {
+                sourceDb.ReleaseConnection();
+                destDb.ReleaseConnection();
+            }
+        }
+
         public void ResolveConflicts(DbConnection source, DbConnection destination, ConflictResolutionOptions conflictResolution)
         {
             ResolveUnitConflicts(source, destination, conflictResolution.CuttingUnit);

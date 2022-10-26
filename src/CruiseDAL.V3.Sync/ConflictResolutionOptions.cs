@@ -78,8 +78,6 @@ namespace CruiseDAL.V3.Sync
             protected set; 
         }
 
-        public event EventHandler ResolutionChanged;
-
         public bool AllHasResolutions()
         {
             var units = CheckConflictsHasResolution(CuttingUnit);
