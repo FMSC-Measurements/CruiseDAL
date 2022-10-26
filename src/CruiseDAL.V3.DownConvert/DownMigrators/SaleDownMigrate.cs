@@ -33,7 +33,7 @@ SELECT
     c.DefaultUOM,
     '{createdBy}'
 FROM {fromDbName}.Sale AS s
-JOIN Cruise AS c USING (SaleID)
+JOIN Cruise AS c USING (SaleNumber)
 WHERE c.CruiseID = '{cruiseID}';
 ";
         }

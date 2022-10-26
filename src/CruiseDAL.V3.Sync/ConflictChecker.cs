@@ -25,6 +25,21 @@ namespace CruiseDAL.V3.Sync
         //      where we would want to mix tree from two files on a plot. this is sorta using the 'All or Nothing' resolution option
 
 
+        public ConflictResolutionOptions CheckConflicts(CruiseDatastore_V3 sourceDb, CruiseDatastore_V3 destDb, string cruiseID)
+        {
+            var source = sourceDb.OpenConnection();
+            var dest = destDb.OpenConnection();
+            try
+            {
+                return CheckConflicts(source, dest, cruiseID);
+            }
+            finally
+            {
+                sourceDb.ReleaseConnection();
+                destDb.ReleaseConnection();
+            }
+        }
+
         public ConflictResolutionOptions CheckConflicts(DbConnection source, DbConnection destination, string cruiseID)
         {
             return new ConflictResolutionOptions(

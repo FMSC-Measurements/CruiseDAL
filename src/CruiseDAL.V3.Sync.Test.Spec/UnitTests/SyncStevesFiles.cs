@@ -1,9 +1,4 @@
 ﻿using CruiseDAL.TestCommon;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Xunit.Abstractions;
 
 namespace CruiseDAL.V3.Sync.Test.Spec.UnitTests
@@ -76,12 +71,12 @@ namespace CruiseDAL.V3.Sync.Test.Spec.UnitTests
 
 
                 conflicts = ConflictChecker.CheckConflicts(sourceConn, destConn, cruiseID);
-                conflicts.HasAny().Should().BeFalse();
+                conflicts.HasConflicts.Should().BeFalse();
 
                 Syncer.Sync(cruiseID, sourceConn, destConn, Options);
 
                 conflicts = ConflictChecker.CheckConflicts(sourceConn, destConn, cruiseID);
-                conflicts.HasAny().Should().BeFalse();
+                conflicts.HasConflicts.Should().BeFalse();
             }
         }
     }

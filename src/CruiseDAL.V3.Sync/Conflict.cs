@@ -9,6 +9,8 @@ namespace CruiseDAL.V3.Sync
 
     public class Conflict : INPC_Base
     {
+        public event EventHandler ResolutionChanged;
+
         private ConflictResolutionType _conflictResolution = ConflictResolutionType.NotSet;
 
         public string Table { get; set; }
@@ -32,7 +34,11 @@ namespace CruiseDAL.V3.Sync
         public ConflictResolutionType ConflictResolution 
         {
             get => _conflictResolution;
-            set => SetProperty(ref _conflictResolution, value);
+            set
+            {
+                SetProperty(ref _conflictResolution, value);
+                ResolutionChanged?.Invoke(this, EventArgs.Empty);
+            }
         } 
     }
 }
