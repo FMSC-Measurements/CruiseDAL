@@ -1,5 +1,6 @@
 ﻿using CruiseDAL.Schema;
 using CruiseDAL.Schema.Cruise.Lookup;
+using CruiseDAL.Schema.Tables.CrusieLog;
 using CruiseDAL.Schema.Views;
 using FMSC.ORM.Core;
 using FMSC.ORM.Logging;
@@ -84,6 +85,7 @@ namespace CruiseDAL
             // utility
             new MessageLogTableDefinition(),
             new GlobalsTableDefinition(),
+            new CruiseLogTableDefinition_3_6_0(),
         };
 
         public static readonly IEnumerable<IViewDefinition> VIEW_DEFINITIONS =

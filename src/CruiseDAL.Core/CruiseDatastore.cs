@@ -152,7 +152,7 @@ namespace CruiseDAL
             }
         }
 
-        internal static string GetCallingProgram()
+        public static string GetCallingProgram()
         {
 #if !WindowsCE
             try

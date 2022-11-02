@@ -6,7 +6,9 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Data.Common;
 using System.Linq;
+using System.Reflection;
 using System.Runtime.CompilerServices;
+using System.Text;
 using System.Threading.Tasks;
 
 namespace CruiseDAL.V3.Sync
@@ -38,6 +40,8 @@ namespace CruiseDAL.V3.Sync
 
     public class CruiseSyncer
     {
+        protected delegate TableSyncResult SyncAction(string cruiseID, DbConnection source, DbConnection destination, TableSyncOptions options, IExceptionProcessor exceptionProcessor);
+
         private ILogger _logger;
         private ILogger Logger => _logger ??= LoggerProvider.Get();
 
@@ -47,6 +51,68 @@ namespace CruiseDAL.V3.Sync
         protected const string MODIFY_PLOT_COMMAND = "UPDATE Plot SET PlotNumber = @PlotNumber WHERE PlotID = @PlotID;";
         protected const string MODIFY_TREE_COMMAND = "UPDATE Tree SET TreeNumber = @TreeNumber WHERE TreeID = @TreeID;";
         protected const string MODIFY_LOG_COMMAND = "UPDATE Log SET LogNumber = @LogNumber WHERE LogID = @LogID;";
+
+        protected static readonly SyncAction[] SYNC_ACTIONS = new SyncAction[]
+        {
+            //core
+            SyncSale,
+            SyncCruise,
+
+            SyncDevice,
+
+            //design
+            SyncCuttingUnits,
+            SyncStratum,
+            SyncCuttingUnit_Stratum,
+            SyncSampleGroup,
+            SyncSamplerState,
+            SyncSpecies,
+            SyncSubpopulation,
+            SyncFixCNTTallyPopulation,
+
+            // field setup
+            SyncLogFieldSetup,
+            SyncTreeFieldSetup,
+            SyncTreeFieldHeading,
+            SyncLogFieldHeading,
+
+            // validation
+            SyncTreeAuditRule,
+            SyncTreeAuditRuleSelector,
+            SyncTreeAuditResolution,
+            //SyncLogGradeAuditRules,
+
+            // field data
+            SyncPlot,
+            SyncPlotLocation,
+            SyncPlot_Strata,
+            SyncTree,
+            SyncTreeMeasurment,
+            SyncTreeLocation,
+            SyncTreeFieldValue,
+
+            SyncTallyLedger,
+
+            SyncLog,
+            SyncStem,
+
+            // processing
+            SyncBiomassEquation,
+            SyncReport,
+            SyncValueEquation,
+            SyncVolumeEquation,
+
+            // tdv
+            SyncTreeDefaultValues,
+
+            // template
+            SyncStratumTemplates,
+            SyncStratumTemplateTreeFieldSetups,
+            SyncStratumTemplateLogFieldSetups,
+
+            // util
+            SyncCruiseLog,
+        };
 
         public bool CheckContiansCruise(DbConnection db, string cruiseID)
         {
@@ -78,130 +144,58 @@ namespace CruiseDAL.V3.Sync
             }
         }
 
-        public Task<SyncResult> SyncAsync(string cruiseID, DbConnection source, DbConnection destination, TableSyncOptions options, IProgress<double> progress = null)
+        public Task<SyncResult> SyncAsync(string cruiseID, DbConnection source, DbConnection destination, TableSyncOptions options, IProgress<double> progress = null, IExceptionProcessor exceptionProcessor = null)
         {
             return Task.Run(() => Sync(cruiseID, source, destination, options, progress));
         }
 
-        public SyncResult Sync(string cruiseID, DbConnection source, DbConnection destination, TableSyncOptions options, IProgress<double> progress = null)
+        public SyncResult Sync(string cruiseID, DbConnection source, DbConnection destination, TableSyncOptions options, IProgress<double> progress = null, IExceptionProcessor exceptionProcessor = null)
         {
             var syncResults = new SyncResult();
 
-            var steps = 36;
+            var syncActions = SYNC_ACTIONS;
+            var steps = SYNC_ACTIONS.Length;
             double p = 0.0;
             var transaction = destination.BeginTransaction();
             try
             {
-                // core
-                syncResults.Add(SyncSale(cruiseID, source, destination, options));
-                progress?.Report(++p / steps);
-                syncResults.Add(SyncCruise(cruiseID, source, destination, options));
-                progress?.Report(++p / steps);
-
-                syncResults.Add(SyncDevice(cruiseID, source, destination, options));
-                progress?.Report(++p / steps);
-
-                // design
-                syncResults.Add(SyncCuttingUnits(cruiseID, source, destination, options));
-                progress?.Report(++p / steps);
-                syncResults.Add(SyncStratum(cruiseID, source, destination, options));
-                progress?.Report(++p / steps);
-                syncResults.Add(SyncCuttingUnit_Stratum(cruiseID, source, destination, options));
-                progress?.Report(++p / steps);
-                syncResults.Add(SyncSampleGroup(cruiseID, source, destination, options));
-                progress?.Report(++p / steps);
-                syncResults.Add(SyncSamplerState(cruiseID, source, destination, options));
-                progress?.Report(++p / steps);
-                syncResults.Add(SyncSpecies(cruiseID, source, destination, options));
-                progress?.Report(++p / steps);
-                syncResults.Add(SyncSubpopulation(cruiseID, source, destination, options));
-                progress?.Report(++p / steps);
-                syncResults.Add(SyncFixCNTTallyPopulation(cruiseID, source, destination, options));
-                progress?.Report(++p / steps);
-
-                // field setup
-                syncResults.Add(SyncLogFieldSetup(cruiseID, source, destination, options));
-                progress?.Report(++p / steps);
-                syncResults.Add(SyncTreeFieldSetup(cruiseID, source, destination, options));
-                progress?.Report(++p / steps);
-                syncResults.Add(SyncTreeFieldHeading(cruiseID, source, destination, options));
-                progress?.Report(++p / steps);
-                syncResults.Add(SyncLogFieldHeading(cruiseID, source, destination, options));
-                progress?.Report(++p / steps);
-
-                // validation
-                syncResults.Add(SyncTreeAuditRule(cruiseID, source, destination, options));
-                progress?.Report(++p / steps);
-                syncResults.Add(SyncTreeAuditRuleSelector(cruiseID, source, destination, options));
-                progress?.Report(++p / steps);
-                syncResults.Add(SyncTreeAuditResolution(cruiseID, source, destination, options));
-                progress?.Report(++p / steps);
-                //SyncLogGradeAuditRules(cruiseID, source, destination, options);
-                //progress?.Report(++p / steps);
-
-                // field data
-                syncResults.Add(SyncPlot(cruiseID, source, destination, options));
-                progress?.Report(++p / steps);
-                syncResults.Add(SyncPlotLocation(cruiseID, source, destination, options));
-                progress?.Report(++p / steps);
-                syncResults.Add(SyncPlot_Strata(cruiseID, source, destination, options));
-                progress?.Report(++p / steps);
-                syncResults.Add(SyncTree(cruiseID, source, destination, options));
-                progress?.Report(++p / steps);
-                syncResults.Add(SyncTreeMeasurment(cruiseID, source, destination, options));
-                progress?.Report(++p / steps);
-                syncResults.Add(SyncTreeLocation(cruiseID, source, destination, options));
-                progress?.Report(++p / steps);
-                syncResults.Add(SyncTreeFieldValue(cruiseID, source, destination, options));
-                progress?.Report(++p / steps);
-
-                syncResults.Add(SyncTallyLedger(cruiseID, source, destination, options));
-                progress?.Report(++p / steps);
-
-                syncResults.Add(SyncLog(cruiseID, source, destination, options));
-                progress?.Report(++p / steps);
-                syncResults.Add(SyncStem(cruiseID, source, destination, options));
-                progress?.Report(++p / steps);
-
-                //processing
-                syncResults.Add(SyncBiomassEquation(cruiseID, source, destination, options));
-                progress?.Report(++p / steps);
-
-                syncResults.Add(SyncReport(cruiseID, source, destination, options));
-                progress?.Report(++p / steps);
-
-                syncResults.Add(SyncValueEquation(cruiseID, source, destination, options));
-                progress?.Report(++p / steps);
-
-                syncResults.Add(SyncVolumeEquation(cruiseID, source, destination, options));
-                progress?.Report(++p / steps);
-
-                // TreeDefaultValue
-                syncResults.Add(SyncTreeDefaultValues(cruiseID, source, destination, options));
-                progress?.Report(++p / steps);
-
-                // template
-                syncResults.Add(SyncStratumTemplates(cruiseID, source, destination, options));
-                progress?.Report(++p / steps);
-
-                syncResults.Add(SyncStratumTemplateTreeFieldSetups(cruiseID, source, destination, options));
-                progress?.Report(++p / steps);
-
-                syncResults.Add(SyncStratumTemplateLogFieldSetups(cruiseID, source, destination, options));
-                progress?.Report(++p / steps);
+                foreach (var act in SYNC_ACTIONS)
+                {
+                    try
+                    {
+                        var syncResult = act(cruiseID, source, destination, options, exceptionProcessor);
+                        syncResults.Add(syncResult);
+                        Logger.Log(syncResult.ToString(), LogCategory.None, LogLevel.Info);
+                        progress?.Report(++p / steps);
+                    }
+                    catch(Exception e)
+                    {
+                        var actName = act.Method.Name;
+                        Logger.LogException(e);
+                        throw new SyncException($"SyncException: {actName}", e);
+                    }
+                    
+                }
 
                 transaction.Commit();
+                destination.Insert(new CruiseLog
+                {
+                    CruiseID = cruiseID,
+                    Message = $"Cruise Synced:::: " + syncResults.ToString(),
+                    Program = CruiseDatastore.GetCallingProgram(),
+                    Level = "I",
+                });
 
                 return syncResults;
             }
-            catch (Exception e)
+            catch
             {
                 transaction.Rollback();
                 throw;
             }
         }
 
-        private bool ShouldUpdate(DateTime? srcMod, DateTime? desMod, SyncOption syncFlags)
+        private static bool ShouldUpdate(DateTime? srcMod, DateTime? desMod, SyncOption syncFlags)
         {
             if (srcMod.HasValue == false) { return false; }
             else if ((desMod.HasValue == false)
@@ -216,7 +210,7 @@ namespace CruiseDAL.V3.Sync
             }
         }
 
-        private TableSyncResult SyncSale(string cruiseID, DbConnection source, DbConnection destination, TableSyncOptions options)
+        private static TableSyncResult SyncSale(string cruiseID, DbConnection source, DbConnection destination, TableSyncOptions options, IExceptionProcessor exceptionProcessor)
         {
             var syncResult = new TableSyncResult(nameof(Sale));
             var flags = options.Sale;
@@ -239,7 +233,7 @@ namespace CruiseDAL.V3.Sync
             {
                 if (flags.HasFlag(SyncOption.Insert))
                 {
-                    destination.Insert(sourceSale, persistKeyvalue: false);
+                    destination.Insert(sourceSale, persistKeyvalue: false, exceptionProcessor: exceptionProcessor);
                     syncResult.IncrementInserts();
                 }
             }
@@ -251,7 +245,7 @@ namespace CruiseDAL.V3.Sync
 
                 if (ShouldUpdate(srcMod, destMod, flags))
                 {
-                    destination.Update(sourceSale, whereExpression: "SaleNumber = @SaleNumber");
+                    destination.Update(sourceSale, whereExpression: "SaleNumber = @SaleNumber", exceptionProcessor: exceptionProcessor);
                     syncResult.IncrementUpdates();
                 }
             }
@@ -263,14 +257,14 @@ namespace CruiseDAL.V3.Sync
 
                 if (ShouldUpdate(srcMod, destMod, flags))
                 {
-                    destination.Update(sourceSale, whereExpression: "SaleID = @SaleID");
+                    destination.Update(sourceSale, whereExpression: "SaleID = @SaleID", exceptionProcessor: exceptionProcessor);
                     syncResult.IncrementUpdates();
                 }
             }
             return syncResult;
         }
 
-        private TableSyncResult SyncCruise(string cruiseID, DbConnection source, DbConnection destination, TableSyncOptions options)
+        private static TableSyncResult SyncCruise(string cruiseID, DbConnection source, DbConnection destination, TableSyncOptions options, IExceptionProcessor exceptionProcessor)
         {
             var syncResult = new TableSyncResult(nameof(Cruise));
             var flags = options.Cruise;
@@ -290,7 +284,7 @@ namespace CruiseDAL.V3.Sync
 
             if (dCruise == null && flags.HasFlag(SyncOption.Insert))
             {
-                destination.Insert(sCruise, persistKeyvalue: false);
+                destination.Insert(sCruise, persistKeyvalue: false, exceptionProcessor: exceptionProcessor);
                 syncResult.IncrementInserts();
             }
             else if (dCruise != null)
@@ -300,7 +294,7 @@ namespace CruiseDAL.V3.Sync
 
                 if (ShouldUpdate(sMod, dMod, flags))
                 {
-                    destination.Update(sCruise, whereExpression: where);
+                    destination.Update(sCruise, whereExpression: where, exceptionProcessor: exceptionProcessor);
                     syncResult.IncrementUpdates();
                 }
             }
@@ -308,7 +302,7 @@ namespace CruiseDAL.V3.Sync
             return syncResult;
         }
 
-        private TableSyncResult SyncDevice(string cruiseID, DbConnection source, DbConnection destination, TableSyncOptions options)
+        private static TableSyncResult SyncDevice(string cruiseID, DbConnection source, DbConnection destination, TableSyncOptions options, IExceptionProcessor exceptionProcessor)
         {
             var syncResult = new TableSyncResult(nameof(Device));
 
@@ -323,14 +317,14 @@ namespace CruiseDAL.V3.Sync
 
                 if (hasMatch == false && flags.HasFlag(SyncOption.Insert))
                 {
-                    destination.Insert(i, persistKeyvalue: false);
+                    destination.Insert(i, persistKeyvalue: false, exceptionProcessor: exceptionProcessor);
                 }
             }
 
             return syncResult;
         }
 
-        private TableSyncResult SyncCuttingUnits(string cruiseID, DbConnection source, DbConnection destination, TableSyncOptions options)
+        private static TableSyncResult SyncCuttingUnits(string cruiseID, DbConnection source, DbConnection destination, TableSyncOptions options, IExceptionProcessor exceptionProcessor)
         {
             var syncResult = new TableSyncResult(nameof(CuttingUnit));
 
@@ -356,7 +350,7 @@ namespace CruiseDAL.V3.Sync
                     if (flags.HasFlag(SyncOption.ForceInsert)
                         || (hasTombstone == false && flags.HasFlag(SyncOption.Insert)))
                     {
-                        destination.Insert(i, persistKeyvalue: false);
+                        destination.Insert(i, persistKeyvalue: false, exceptionProcessor: exceptionProcessor);
                         syncResult.IncrementInserts();
                     }
                 }
@@ -367,7 +361,7 @@ namespace CruiseDAL.V3.Sync
 
                     if (ShouldUpdate(sMod, matchMod, flags))
                     {
-                        destination.Update(i, whereExpression: where);
+                        destination.Update(i, whereExpression: where, exceptionProcessor: exceptionProcessor);
                         syncResult.IncrementUpdates();
                     }
                 }
@@ -376,7 +370,7 @@ namespace CruiseDAL.V3.Sync
             return syncResult;
         }
 
-        private TableSyncResult SyncCuttingUnit_Stratum(string cruiseID, DbConnection source, DbConnection destination, TableSyncOptions options)
+        private static TableSyncResult SyncCuttingUnit_Stratum(string cruiseID, DbConnection source, DbConnection destination, TableSyncOptions options, IExceptionProcessor exceptionProcessor)
         {
             var syncResult = new TableSyncResult(nameof(CuttingUnit_Stratum));
 
@@ -398,7 +392,7 @@ namespace CruiseDAL.V3.Sync
                     if (flags.HasFlag(SyncOption.ForceInsert)
                         || (hasTombstone == false && flags.HasFlag(SyncOption.Insert)))
                     {
-                        destination.Insert(i, persistKeyvalue: false);
+                        destination.Insert(i, persistKeyvalue: false, exceptionProcessor: exceptionProcessor);
                         syncResult.IncrementInserts();
                     }
                 }
@@ -407,7 +401,7 @@ namespace CruiseDAL.V3.Sync
             return syncResult;
         }
 
-        private TableSyncResult SyncStratum(string cruiseID, DbConnection source, DbConnection destination, TableSyncOptions options)
+        private static TableSyncResult SyncStratum(string cruiseID, DbConnection source, DbConnection destination, TableSyncOptions options, IExceptionProcessor exceptionProcessor)
         {
             var syncResult = new TableSyncResult(nameof(Stratum));
 
@@ -435,7 +429,7 @@ namespace CruiseDAL.V3.Sync
                     if (flags.HasFlag(SyncOption.ForceInsert)
                         || (hasTombstone == false && flags.HasFlag(SyncOption.Insert)))
                     {
-                        destination.Insert(i, persistKeyvalue: false);
+                        destination.Insert(i, persistKeyvalue: false, exceptionProcessor: exceptionProcessor);
                         syncResult.IncrementInserts();
                     }
                 }
@@ -446,7 +440,7 @@ namespace CruiseDAL.V3.Sync
 
                     if (ShouldUpdate(sMod, dMod, flags))
                     {
-                        destination.Update(i, whereExpression: where);
+                        destination.Update(i, whereExpression: where, exceptionProcessor: exceptionProcessor);
                         syncResult.IncrementUpdates();
                     }
                 }
@@ -455,7 +449,7 @@ namespace CruiseDAL.V3.Sync
             return syncResult;
         }
 
-        private TableSyncResult SyncSampleGroup(string cruiseID, DbConnection source, DbConnection destination, TableSyncOptions options)
+        private static TableSyncResult SyncSampleGroup(string cruiseID, DbConnection source, DbConnection destination, TableSyncOptions options, IExceptionProcessor exceptionProcessor)
         {
             var syncResult = new TableSyncResult(nameof(SampleGroup));
 
@@ -488,7 +482,7 @@ namespace CruiseDAL.V3.Sync
                         if (flags.HasFlag(SyncOption.ForceInsert)
                             || (hasTombstone == false && flags.HasFlag(SyncOption.Insert)))
                         {
-                            destination.Insert(sg, persistKeyvalue: false);
+                            destination.Insert(sg, persistKeyvalue: false, exceptionProcessor: exceptionProcessor);
                             syncResult.IncrementInserts();
                         }
                     }
@@ -499,7 +493,7 @@ namespace CruiseDAL.V3.Sync
 
                         if (ShouldUpdate(sMod, dMod, flags))
                         {
-                            destination.Update(sg, whereExpression: where);
+                            destination.Update(sg, whereExpression: where, exceptionProcessor: exceptionProcessor);
                             syncResult.IncrementUpdates();
                         }
                     }
@@ -509,7 +503,7 @@ namespace CruiseDAL.V3.Sync
             return syncResult;
         }
 
-        private TableSyncResult SyncSamplerState(string cruiseID, DbConnection source, DbConnection destination, TableSyncOptions options)
+        private static TableSyncResult SyncSamplerState(string cruiseID, DbConnection source, DbConnection destination, TableSyncOptions options, IExceptionProcessor exceptionProcessor)
         {
             var syncResult = new TableSyncResult(nameof(SamplerState));
 
@@ -538,7 +532,7 @@ namespace CruiseDAL.V3.Sync
                     {
                         if (flags.HasFlag(SyncOption.Insert))
                         {
-                            destination.Insert(i, persistKeyvalue: false);
+                            destination.Insert(i, persistKeyvalue: false, exceptionProcessor: exceptionProcessor);
                             syncResult.IncrementInserts();
                         }
                     }
@@ -549,7 +543,7 @@ namespace CruiseDAL.V3.Sync
 
                         if (ShouldUpdate(sMod, dMod, flags))
                         {
-                            destination.Update(i, whereExpression: where);
+                            destination.Update(i, whereExpression: where, exceptionProcessor: exceptionProcessor);
                             syncResult.IncrementUpdates();
                         }
                     }
@@ -558,7 +552,7 @@ namespace CruiseDAL.V3.Sync
             return syncResult;
         }
 
-        private TableSyncResult SyncSpecies(string cruiseID, DbConnection source, DbConnection desination, TableSyncOptions options)
+        private static TableSyncResult SyncSpecies(string cruiseID, DbConnection source, DbConnection desination, TableSyncOptions options, IExceptionProcessor exceptionProcessor)
         {
             var syncResult = new TableSyncResult(nameof(Species));
 
@@ -572,7 +566,7 @@ namespace CruiseDAL.V3.Sync
 
                 if (hasMatch == false && flags.HasFlag(SyncOption.Insert))
                 {
-                    desination.Insert(i, persistKeyvalue: false);
+                    desination.Insert(i, persistKeyvalue: false, exceptionProcessor: exceptionProcessor);
                     syncResult.IncrementInserts();
                 }
             }
@@ -580,7 +574,7 @@ namespace CruiseDAL.V3.Sync
             return syncResult;
         }
 
-        private TableSyncResult SyncSubpopulation(string cruiseID, DbConnection source, DbConnection destination, TableSyncOptions options)
+        private static TableSyncResult SyncSubpopulation(string cruiseID, DbConnection source, DbConnection destination, TableSyncOptions options, IExceptionProcessor exceptionProcessor)
         {
             var syncResult = new TableSyncResult(nameof(SubPopulation));
 
@@ -613,7 +607,7 @@ namespace CruiseDAL.V3.Sync
                         if (flags.HasFlag(SyncOption.ForceInsert)
                             || (hasTombstone == false && flags.HasFlag(SyncOption.Insert)))
                         {
-                            destination.Insert(i, persistKeyvalue: false);
+                            destination.Insert(i, persistKeyvalue: false, exceptionProcessor: exceptionProcessor);
                             syncResult.IncrementInserts();
                         }
                     }
@@ -623,7 +617,7 @@ namespace CruiseDAL.V3.Sync
             return syncResult;
         }
 
-        private TableSyncResult SyncFixCNTTallyPopulation(string cruiseID, DbConnection source, DbConnection destination, TableSyncOptions options)
+        private static TableSyncResult SyncFixCNTTallyPopulation(string cruiseID, DbConnection source, DbConnection destination, TableSyncOptions options, IExceptionProcessor exceptionProcessor)
         {
             var syncResult = new TableSyncResult(nameof(FixCNTTallyPopulation));
 
@@ -658,7 +652,7 @@ namespace CruiseDAL.V3.Sync
                         {
                             if (flags.HasFlag(SyncOption.Insert))
                             {
-                                destination.Insert(i, persistKeyvalue: false);
+                                destination.Insert(i, persistKeyvalue: false, exceptionProcessor: exceptionProcessor);
                                 syncResult.IncrementInserts();
                             }
                         }
@@ -669,7 +663,7 @@ namespace CruiseDAL.V3.Sync
 
                             if (ShouldUpdate(sMod, dMod, flags))
                             {
-                                destination.Update(i, whereExpression: where);
+                                destination.Update(i, whereExpression: where, exceptionProcessor: exceptionProcessor);
                                 syncResult.IncrementUpdates();
                             }
                         }
@@ -679,7 +673,7 @@ namespace CruiseDAL.V3.Sync
             return syncResult;
         }
 
-        private TableSyncResult SyncPlot(string cruiseID, DbConnection source, DbConnection destination, TableSyncOptions options)
+        private static TableSyncResult SyncPlot(string cruiseID, DbConnection source, DbConnection destination, TableSyncOptions options, IExceptionProcessor exceptionProcessor)
         {
             var syncResult = new TableSyncResult(nameof(Plot));
 
@@ -711,7 +705,7 @@ namespace CruiseDAL.V3.Sync
                         if (flags.HasFlag(SyncOption.ForceInsert)
                             || (hasTombstone == false && flags.HasFlag(SyncOption.Insert)))
                         {
-                            destination.Insert(plot, persistKeyvalue: false);
+                            destination.Insert(plot, persistKeyvalue: false, exceptionProcessor: exceptionProcessor);
                             syncResult.IncrementInserts();
                         }
                     }
@@ -722,7 +716,7 @@ namespace CruiseDAL.V3.Sync
 
                         if (ShouldUpdate(sMod, dMod, flags))
                         {
-                            destination.Update(plot, whereExpression: where);
+                            destination.Update(plot, whereExpression: where, exceptionProcessor: exceptionProcessor);
                             syncResult.IncrementUpdates();
                         }
                     }
@@ -731,7 +725,7 @@ namespace CruiseDAL.V3.Sync
             return syncResult;
         }
 
-        private TableSyncResult SyncPlotLocation(string cruiseID, DbConnection source, DbConnection destination, TableSyncOptions options)
+        private static TableSyncResult SyncPlotLocation(string cruiseID, DbConnection source, DbConnection destination, TableSyncOptions options, IExceptionProcessor exceptionProcessor)
         {
             var syncResult = new TableSyncResult(nameof(PlotLocation));
 
@@ -768,7 +762,7 @@ namespace CruiseDAL.V3.Sync
 
                             if (hasTombstone == false && flags.HasFlag(SyncOption.Insert))
                             {
-                                destination.Insert(item, persistKeyvalue: false);
+                                destination.Insert(item, persistKeyvalue: false, exceptionProcessor: exceptionProcessor);
                                 syncResult.IncrementInserts();
                             }
                         }
@@ -779,7 +773,7 @@ namespace CruiseDAL.V3.Sync
 
                             if (ShouldUpdate(sMod, dMod, flags))
                             {
-                                destination.Update(item, whereExpression: where);
+                                destination.Update(item, whereExpression: where, exceptionProcessor: exceptionProcessor);
                                 syncResult.IncrementUpdates();
                             }
                         }
@@ -789,7 +783,7 @@ namespace CruiseDAL.V3.Sync
             return syncResult;
         }
 
-        private TableSyncResult SyncPlot_Strata(string cruiseID, DbConnection source, DbConnection destination, TableSyncOptions options)
+        private static TableSyncResult SyncPlot_Strata(string cruiseID, DbConnection source, DbConnection destination, TableSyncOptions options, IExceptionProcessor exceptionProcessor)
         {
             var syncResult = new TableSyncResult(nameof(Plot_Stratum));
 
@@ -828,7 +822,7 @@ namespace CruiseDAL.V3.Sync
                             if (flags.HasFlag(SyncOption.ForceInsert)
                                 || (hasTombstone == false && flags.HasFlag(SyncOption.Insert)))
                             {
-                                destination.Insert(i, persistKeyvalue: false);
+                                destination.Insert(i, persistKeyvalue: false, exceptionProcessor: exceptionProcessor);
                                 syncResult.IncrementInserts();
                             }
                         }
@@ -839,7 +833,7 @@ namespace CruiseDAL.V3.Sync
 
                             if (ShouldUpdate(sMod, dMod, flags))
                             {
-                                destination.Update(i, whereExpression: where);
+                                destination.Update(i, whereExpression: where, exceptionProcessor: exceptionProcessor);
                                 syncResult.IncrementUpdates();
                             }
                         }
@@ -855,7 +849,7 @@ namespace CruiseDAL.V3.Sync
                         new object[] { cruiseID, unitCode, plotNumber });
         }
 
-        private TableSyncResult SyncTree(string cruiseID, DbConnection source, DbConnection destination, TableSyncOptions options)
+        private static TableSyncResult SyncTree(string cruiseID, DbConnection source, DbConnection destination, TableSyncOptions options, IExceptionProcessor exceptionProcessor)
         {
             var syncResult = new TableSyncResult(nameof(Tree));
 
@@ -887,7 +881,7 @@ namespace CruiseDAL.V3.Sync
                         if (flags.HasFlag(SyncOption.ForceInsert)
                             || (hasTombstone == false && flags.HasFlag(SyncOption.Insert)))
                         {
-                            destination.Insert(i, persistKeyvalue: false);
+                            destination.Insert(i, persistKeyvalue: false, exceptionProcessor: exceptionProcessor);
                             syncResult.IncrementInserts();
                         }
                     }
@@ -898,7 +892,7 @@ namespace CruiseDAL.V3.Sync
 
                         if (ShouldUpdate(sMod, dMod, flags))
                         {
-                            destination.Update(i, whereExpression: where);
+                            destination.Update(i, whereExpression: where, exceptionProcessor: exceptionProcessor);
                             syncResult.IncrementUpdates();
                         }
                     }
@@ -934,7 +928,7 @@ namespace CruiseDAL.V3.Sync
                         if (flags.HasFlag(SyncOption.ForceInsert)
                                 || (hasTombstone == false && flags.HasFlag(SyncOption.Insert)))
                         {
-                            destination.Insert(tree, persistKeyvalue: false);
+                            destination.Insert(tree, persistKeyvalue: false, exceptionProcessor: exceptionProcessor);
                             syncResult.IncrementInserts();
                         }
                     }
@@ -945,7 +939,7 @@ namespace CruiseDAL.V3.Sync
 
                         if (ShouldUpdate(sMod, dMod, flags))
                         {
-                            destination.Update(match, whereExpression: where);
+                            destination.Update(match, whereExpression: where, exceptionProcessor: exceptionProcessor);
                             syncResult.IncrementUpdates();
                         }
                     }
@@ -956,7 +950,7 @@ namespace CruiseDAL.V3.Sync
             return syncResult;
         }
 
-        private TableSyncResult SyncTreeMeasurment(string cruiseID, DbConnection source, DbConnection destination, TableSyncOptions options)
+        private static TableSyncResult SyncTreeMeasurment(string cruiseID, DbConnection source, DbConnection destination, TableSyncOptions options, IExceptionProcessor exceptionProcessor)
         {
             // not checking the tombstone tables for TreeMeasurment because at this
             // point we should already know that the tree has not be deleted.
@@ -982,7 +976,7 @@ namespace CruiseDAL.V3.Sync
                     {
                         if (flags.HasFlag(SyncOption.Update))
                         {
-                            destination.Update(sourceMeasurmentsRecord, whereExpression: "TreeID =  @TreeID");
+                            destination.Update(sourceMeasurmentsRecord, whereExpression: "TreeID =  @TreeID", exceptionProcessor: exceptionProcessor);
                             syncResult.IncrementUpdates();
                         }
                     }
@@ -990,7 +984,7 @@ namespace CruiseDAL.V3.Sync
                     {
                         if (flags.HasFlag(SyncOption.Insert))
                         {
-                            destination.Insert(sourceMeasurmentsRecord, persistKeyvalue: false);
+                            destination.Insert(sourceMeasurmentsRecord, persistKeyvalue: false, exceptionProcessor: exceptionProcessor);
                             syncResult.IncrementInserts();
                         }
                     }
@@ -999,7 +993,7 @@ namespace CruiseDAL.V3.Sync
             return syncResult;
         }
 
-        private TableSyncResult SyncTreeLocation(string cruiseID, DbConnection source, DbConnection destination, TableSyncOptions options)
+        private static TableSyncResult SyncTreeLocation(string cruiseID, DbConnection source, DbConnection destination, TableSyncOptions options, IExceptionProcessor exceptionProcessor)
         {
             var syncResult = new TableSyncResult(nameof(TreeLocation));
 
@@ -1033,7 +1027,7 @@ namespace CruiseDAL.V3.Sync
                         if (flags.HasFlag(SyncOption.ForceInsert)
                                 || (hasTombstone == false && flags.HasFlag(SyncOption.Insert)))
                         {
-                            destination.Insert(treeLocationRecord, persistKeyvalue: false);
+                            destination.Insert(treeLocationRecord, persistKeyvalue: false, exceptionProcessor: exceptionProcessor);
                             syncResult.IncrementInserts();
                         }
                     }
@@ -1044,7 +1038,7 @@ namespace CruiseDAL.V3.Sync
 
                         if (ShouldUpdate(sMod, dMod, flags))
                         {
-                            destination.Update(treeLocationRecord, whereExpression: "TreeID = @TreeID");
+                            destination.Update(treeLocationRecord, whereExpression: "TreeID = @TreeID", exceptionProcessor: exceptionProcessor);
                             syncResult.IncrementUpdates();
                         }
                     }
@@ -1053,7 +1047,7 @@ namespace CruiseDAL.V3.Sync
             return syncResult;
         }
 
-        private TableSyncResult SyncTreeFieldValue(string cruiseID, DbConnection source, DbConnection destination, TableSyncOptions options)
+        private static TableSyncResult SyncTreeFieldValue(string cruiseID, DbConnection source, DbConnection destination, TableSyncOptions options, IExceptionProcessor exceptionProcessor)
         {
             // not checking the tombstone tables for TreeFieldValue because at this
             // point we should already know that the tree has not be deleted.
@@ -1079,7 +1073,7 @@ namespace CruiseDAL.V3.Sync
                     {
                         if (flags.HasFlag(SyncOption.Update))
                         {
-                            destination.Update(tfv, whereExpression: "TreeID = TreeID AND Field = @Field");
+                            destination.Update(tfv, whereExpression: "TreeID = TreeID AND Field = @Field", exceptionProcessor: exceptionProcessor);
                             syncResult.IncrementUpdates();
                         }
                     }
@@ -1087,7 +1081,7 @@ namespace CruiseDAL.V3.Sync
                     {
                         if (flags.HasFlag(SyncOption.Insert))
                         {
-                            destination.Insert(tfv, persistKeyvalue: false);
+                            destination.Insert(tfv, persistKeyvalue: false, exceptionProcessor: exceptionProcessor);
                             syncResult.IncrementInserts();
                         }
                     }
@@ -1111,7 +1105,7 @@ namespace CruiseDAL.V3.Sync
 );", parameters: new[] { treeID });
         }
 
-        private TableSyncResult SyncLog(string cruiseID, DbConnection source, DbConnection destination, TableSyncOptions options)
+        private static TableSyncResult SyncLog(string cruiseID, DbConnection source, DbConnection destination, TableSyncOptions options, IExceptionProcessor exceptionProcessor)
         {
             var syncResult = new TableSyncResult(nameof(Log));
 
@@ -1145,7 +1139,7 @@ namespace CruiseDAL.V3.Sync
                         if (flags.HasFlag(SyncOption.ForceInsert)
                             || (hasTombstone == false && flags.HasFlag(SyncOption.Insert)))
                         {
-                            destination.Insert(log, persistKeyvalue: false);
+                            destination.Insert(log, persistKeyvalue: false, exceptionProcessor: exceptionProcessor);
                             syncResult.IncrementInserts();
                         }
                     }
@@ -1156,7 +1150,7 @@ namespace CruiseDAL.V3.Sync
 
                         if (ShouldUpdate(sMod, dMod, flags))
                         {
-                            destination.Update(log, whereExpression: where);
+                            destination.Update(log, whereExpression: where, exceptionProcessor: exceptionProcessor);
                             syncResult.IncrementUpdates();
                         }
                     }
@@ -1165,7 +1159,7 @@ namespace CruiseDAL.V3.Sync
             return syncResult;
         }
 
-        private TableSyncResult SyncStem(string cruiseID, DbConnection source, DbConnection destination, TableSyncOptions options)
+        private static TableSyncResult SyncStem(string cruiseID, DbConnection source, DbConnection destination, TableSyncOptions options, IExceptionProcessor exceptionProcessor)
         {
             var syncResult = new TableSyncResult(nameof(Stem));
 
@@ -1201,7 +1195,7 @@ namespace CruiseDAL.V3.Sync
                             if (flags.HasFlag(SyncOption.ForceInsert)
                             || (hasTombstone == false && flags.HasFlag(SyncOption.Insert)))
                             {
-                                destination.Insert(i, persistKeyvalue: false);
+                                destination.Insert(i, persistKeyvalue: false, exceptionProcessor: exceptionProcessor);
                                 syncResult.IncrementInserts();
                             }
                         }
@@ -1212,7 +1206,7 @@ namespace CruiseDAL.V3.Sync
 
                             if (ShouldUpdate(sMod, dMod, flags))
                             {
-                                destination.Update(i, whereExpression: where);
+                                destination.Update(i, whereExpression: where, exceptionProcessor: exceptionProcessor);
                                 syncResult.IncrementUpdates();
                             }
                         }
@@ -1222,7 +1216,7 @@ namespace CruiseDAL.V3.Sync
             return syncResult;
         }
 
-        private TableSyncResult SyncTallyLedger(string cruiseID, DbConnection source, DbConnection destination, TableSyncOptions options)
+        private static TableSyncResult SyncTallyLedger(string cruiseID, DbConnection source, DbConnection destination, TableSyncOptions options, IExceptionProcessor exceptionProcessor)
         {
             var syncResult = new TableSyncResult(nameof(TallyLedger));
 
@@ -1249,7 +1243,7 @@ namespace CruiseDAL.V3.Sync
                         if (flags.HasFlag(SyncOption.ForceInsert)
                                 || (hasTombstone == false && flags.HasFlag(SyncOption.Insert)))
                         {
-                            destination.Insert(i, persistKeyvalue: false);
+                            destination.Insert(i, persistKeyvalue: false, exceptionProcessor: exceptionProcessor);
                             syncResult.IncrementInserts();
                         }
                     }
@@ -1273,7 +1267,7 @@ namespace CruiseDAL.V3.Sync
                         if (flags.HasFlag(SyncOption.ForceInsert)
                                         || (hasTombstone == false && flags.HasFlag(SyncOption.Insert)))
                         {
-                            destination.Insert(tl, persistKeyvalue: false);
+                            destination.Insert(tl, persistKeyvalue: false, exceptionProcessor: exceptionProcessor);
                             syncResult.IncrementInserts();
                         }
                     }
@@ -1284,7 +1278,7 @@ namespace CruiseDAL.V3.Sync
             return syncResult;
         }
 
-        private TableSyncResult SyncLogFieldSetup(string cruiseID, DbConnection source, DbConnection destination, TableSyncOptions options)
+        private static TableSyncResult SyncLogFieldSetup(string cruiseID, DbConnection source, DbConnection destination, TableSyncOptions options, IExceptionProcessor exceptionProcessor)
         {
             var syncResult = new TableSyncResult(nameof(LogFieldSetup));
 
@@ -1315,7 +1309,7 @@ namespace CruiseDAL.V3.Sync
                         if (flags.HasFlag(SyncOption.ForceInsert)
                                 || (hasTombstone == false && flags.HasFlag(SyncOption.Insert)))
                         {
-                            destination.Insert(i, persistKeyvalue: false);
+                            destination.Insert(i, persistKeyvalue: false, exceptionProcessor: exceptionProcessor);
                             syncResult.IncrementInserts();
                         }
                     }
@@ -1324,7 +1318,7 @@ namespace CruiseDAL.V3.Sync
             return syncResult;
         }
 
-        private TableSyncResult SyncTreeFieldSetup(string cruiseID, DbConnection source, DbConnection destination, TableSyncOptions options)
+        private static TableSyncResult SyncTreeFieldSetup(string cruiseID, DbConnection source, DbConnection destination, TableSyncOptions options, IExceptionProcessor exceptionProcessor)
         {
             var syncResult = new TableSyncResult(nameof(TreeFieldSetup));
 
@@ -1349,7 +1343,7 @@ namespace CruiseDAL.V3.Sync
                     if (flags.HasFlag(SyncOption.ForceInsert)
                             || (hasTombstone == false && flags.HasFlag(SyncOption.Insert)))
                     {
-                        destination.Insert(i, persistKeyvalue: false);
+                        destination.Insert(i, persistKeyvalue: false, exceptionProcessor: exceptionProcessor);
                         syncResult.IncrementInserts();
                     }
                 }
@@ -1357,7 +1351,7 @@ namespace CruiseDAL.V3.Sync
             return syncResult;
         }
 
-        private TableSyncResult SyncTreeAuditRule(string cruiseID, DbConnection source, DbConnection destination, TableSyncOptions options)
+        private static TableSyncResult SyncTreeAuditRule(string cruiseID, DbConnection source, DbConnection destination, TableSyncOptions options, IExceptionProcessor exceptionProcessor)
         {
             var syncResult = new TableSyncResult(nameof(TreeAuditRule));
 
@@ -1382,7 +1376,7 @@ namespace CruiseDAL.V3.Sync
                     if (flags.HasFlag(SyncOption.ForceInsert)
                             || (hasTombstone == false && flags.HasFlag(SyncOption.Insert)))
                     {
-                        destination.Insert(i, persistKeyvalue: false);
+                        destination.Insert(i, persistKeyvalue: false, exceptionProcessor: exceptionProcessor);
                         syncResult.IncrementInserts();
                     }
                 }
@@ -1391,7 +1385,7 @@ namespace CruiseDAL.V3.Sync
             return syncResult;
         }
 
-        private TableSyncResult SyncTreeAuditRuleSelector(string cruiseID, DbConnection source, DbConnection destination, TableSyncOptions options)
+        private static TableSyncResult SyncTreeAuditRuleSelector(string cruiseID, DbConnection source, DbConnection destination, TableSyncOptions options, IExceptionProcessor exceptionProcessor)
         {
             var syncResult = new TableSyncResult(nameof(TreeAuditRuleSelector));
 
@@ -1415,7 +1409,7 @@ namespace CruiseDAL.V3.Sync
                     if (flags.HasFlag(SyncOption.ForceInsert)
                             || (hasTombstone == false && flags.HasFlag(SyncOption.Insert)))
                     {
-                        destination.Insert(i, persistKeyvalue: false);
+                        destination.Insert(i, persistKeyvalue: false, exceptionProcessor: exceptionProcessor);
                         syncResult.IncrementInserts();
                     }
                 }
@@ -1424,7 +1418,7 @@ namespace CruiseDAL.V3.Sync
             return syncResult;
         }
 
-        private TableSyncResult SyncTreeAuditResolution(string cruiseID, DbConnection source, DbConnection destination, TableSyncOptions options)
+        private static TableSyncResult SyncTreeAuditResolution(string cruiseID, DbConnection source, DbConnection destination, TableSyncOptions options, IExceptionProcessor exceptionProcessor)
         {
             var syncResult = new TableSyncResult(nameof(TreeAuditResolution));
 
@@ -1450,7 +1444,7 @@ namespace CruiseDAL.V3.Sync
                     if (flags.HasFlag(SyncOption.ForceInsert)
                                 || (hasTombstone == false && flags.HasFlag(SyncOption.Insert)))
                     {
-                        destination.Insert(i, persistKeyvalue: false);
+                        destination.Insert(i, persistKeyvalue: false, exceptionProcessor: exceptionProcessor);
                         syncResult.IncrementInserts();
                     }
                 }
@@ -1484,7 +1478,7 @@ namespace CruiseDAL.V3.Sync
         //    }
         //}
 
-        private TableSyncResult SyncTreeFieldHeading(string cruiseID, DbConnection source, DbConnection destination, TableSyncOptions options)
+        private static TableSyncResult SyncTreeFieldHeading(string cruiseID, DbConnection source, DbConnection destination, TableSyncOptions options, IExceptionProcessor exceptionProcessor)
         {
             var syncResult = new TableSyncResult(nameof(TreeFieldHeading));
 
@@ -1502,20 +1496,20 @@ namespace CruiseDAL.V3.Sync
                 {
                     if (flags.HasFlag(SyncOption.Insert))
                     {
-                        destination.Insert(i, persistKeyvalue: false);
+                        destination.Insert(i, persistKeyvalue: false, exceptionProcessor: exceptionProcessor);
                         syncResult.IncrementInserts();
                     }
                 }
                 else if (ShouldUpdate(i.Modified_TS, match.Modified_TS, flags))
                 {
-                    destination.Update(i, whereExpression: where);
+                    destination.Update(i, whereExpression: where, exceptionProcessor: exceptionProcessor);
                     syncResult.IncrementUpdates();
                 }
             }
             return syncResult;
         }
 
-        private TableSyncResult SyncLogFieldHeading(string cruiseID, DbConnection source, DbConnection destination, TableSyncOptions options)
+        private static TableSyncResult SyncLogFieldHeading(string cruiseID, DbConnection source, DbConnection destination, TableSyncOptions options, IExceptionProcessor exceptionProcessor)
         {
             var syncResult = new TableSyncResult(nameof(LogFieldHeading));
 
@@ -1534,20 +1528,20 @@ namespace CruiseDAL.V3.Sync
                 {
                     if (flags.HasFlag(SyncOption.Insert))
                     {
-                        destination.Insert(i, persistKeyvalue: false);
+                        destination.Insert(i, persistKeyvalue: false, exceptionProcessor: exceptionProcessor);
                         syncResult.IncrementInserts();
                     }
                 }
                 else if (ShouldUpdate(i.Modified_TS, match.Modified_TS, flags))
                 {
-                    destination.Update(i, whereExpression: where);
+                    destination.Update(i, whereExpression: where, exceptionProcessor: exceptionProcessor);
                     syncResult.IncrementUpdates();
                 }
             }
             return syncResult;
         }
 
-        private TableSyncResult SyncBiomassEquation(string cruiseID, DbConnection source, DbConnection destination, TableSyncOptions options)
+        private static TableSyncResult SyncBiomassEquation(string cruiseID, DbConnection source, DbConnection destination, TableSyncOptions options, IExceptionProcessor exceptionProcessor)
         {
             var syncResult = new TableSyncResult(nameof(BiomassEquation));
 
@@ -1567,7 +1561,7 @@ namespace CruiseDAL.V3.Sync
                 {
                     if (flags.HasFlag(SyncOption.Insert))
                     {
-                        destination.Insert(i, persistKeyvalue: false);
+                        destination.Insert(i, persistKeyvalue: false, exceptionProcessor: exceptionProcessor);
                         syncResult.IncrementInserts();
                     }
                 }
@@ -1575,7 +1569,7 @@ namespace CruiseDAL.V3.Sync
                 {
                     if (ShouldUpdate(i.Modified_TS, match.Modified_TS, flags))
                     {
-                        destination.Update(i, whereExpression: where);
+                        destination.Update(i, whereExpression: where, exceptionProcessor: exceptionProcessor);
                         syncResult.IncrementUpdates();
                     }
                 }
@@ -1583,7 +1577,7 @@ namespace CruiseDAL.V3.Sync
             return syncResult;
         }
 
-        private TableSyncResult SyncReport(string cruiseID, DbConnection source, DbConnection destination, TableSyncOptions options)
+        private static TableSyncResult SyncReport(string cruiseID, DbConnection source, DbConnection destination, TableSyncOptions options, IExceptionProcessor exceptionProcessor)
         {
             var syncResult = new TableSyncResult(nameof(Reports));
 
@@ -1603,20 +1597,20 @@ namespace CruiseDAL.V3.Sync
                 {
                     if (flags.HasFlag(SyncOption.Insert))
                     {
-                        destination.Insert(i, persistKeyvalue: false);
+                        destination.Insert(i, persistKeyvalue: false, exceptionProcessor: exceptionProcessor);
                         syncResult.IncrementInserts();
                     }
                 }
                 else if (ShouldUpdate(i.Modified_TS, match.Modified_TS, flags))
                 {
-                    destination.Update(i, whereExpression: where);
+                    destination.Update(i, whereExpression: where, exceptionProcessor: exceptionProcessor);
                     syncResult.IncrementUpdates();
                 }
             }
             return syncResult;
         }
 
-        private TableSyncResult SyncValueEquation(string cruiseID, DbConnection source, DbConnection destination, TableSyncOptions options)
+        private static TableSyncResult SyncValueEquation(string cruiseID, DbConnection source, DbConnection destination, TableSyncOptions options, IExceptionProcessor exceptionProcessor)
         {
             var syncResult = new TableSyncResult(nameof(ValueEquation));
 
@@ -1636,13 +1630,13 @@ namespace CruiseDAL.V3.Sync
                 {
                     if (flags.HasFlag(SyncOption.Insert))
                     {
-                        destination.Insert(i, persistKeyvalue: false);
+                        destination.Insert(i, persistKeyvalue: false, exceptionProcessor: exceptionProcessor);
                         syncResult.IncrementInserts();
                     }
                 }
                 else if (ShouldUpdate(i.Modified_TS, match.Modified_TS, flags))
                 {
-                    destination.Update(i, whereExpression: where);
+                    destination.Update(i, whereExpression: where, exceptionProcessor: exceptionProcessor);
                     syncResult.IncrementUpdates();
                 }
             }
@@ -1650,7 +1644,7 @@ namespace CruiseDAL.V3.Sync
 
         }
 
-        private TableSyncResult SyncVolumeEquation(string cruiseID, DbConnection source, DbConnection destination, TableSyncOptions options)
+        private static TableSyncResult SyncVolumeEquation(string cruiseID, DbConnection source, DbConnection destination, TableSyncOptions options, IExceptionProcessor exceptionProcessor)
         {
             var syncResult = new TableSyncResult(nameof(VolumeEquation));
 
@@ -1669,20 +1663,20 @@ namespace CruiseDAL.V3.Sync
                 {
                     if (flags.HasFlag(SyncOption.Insert))
                     {
-                        destination.Insert(i, persistKeyvalue: false);
+                        destination.Insert(i, persistKeyvalue: false, exceptionProcessor: exceptionProcessor);
                         syncResult.IncrementInserts();
                     }
                 }
                 else if (ShouldUpdate(i.Modified_TS, match.Modified_TS, flags))
                 {
-                    destination.Update(i, whereExpression: where);
+                    destination.Update(i, whereExpression: where, exceptionProcessor: exceptionProcessor);
                     syncResult.IncrementUpdates();
                 }
             }
             return syncResult;
         }
 
-        private TableSyncResult SyncTreeDefaultValues(string cruiseID, DbConnection source, DbConnection destination, TableSyncOptions options)
+        private static TableSyncResult SyncTreeDefaultValues(string cruiseID, DbConnection source, DbConnection destination, TableSyncOptions options, IExceptionProcessor exceptionProcessor)
         {
             var syncResult = new TableSyncResult(nameof(TreeDefaultValue));
 
@@ -1705,7 +1699,7 @@ namespace CruiseDAL.V3.Sync
                     if (flags.HasFlag(SyncOption.ForceInsert)
                                 || (hasTombstone == false && flags.HasFlag(SyncOption.Insert)))
                     {
-                        destination.Insert(i, persistKeyvalue: false);
+                        destination.Insert(i, persistKeyvalue: false, exceptionProcessor: exceptionProcessor);
                         syncResult.IncrementInserts();
                     }
                 }
@@ -1713,7 +1707,7 @@ namespace CruiseDAL.V3.Sync
                 {
                     if (ShouldUpdate(i.Modified_TS, match.Modified_TS, flags))
                     {
-                        destination.Update(i, whereExpression: where);
+                        destination.Update(i, whereExpression: where, exceptionProcessor: exceptionProcessor);
                         syncResult.IncrementUpdates();
                     }
                 }
@@ -1721,7 +1715,7 @@ namespace CruiseDAL.V3.Sync
             return syncResult;
         }
 
-        private TableSyncResult SyncStratumTemplates(string cruiseID, DbConnection source, DbConnection destination, TableSyncOptions options)
+        private static TableSyncResult SyncStratumTemplates(string cruiseID, DbConnection source, DbConnection destination, TableSyncOptions options, IExceptionProcessor exceptionProcessor)
         {
             var syncResult = new TableSyncResult(nameof(StratumTemplate));
 
@@ -1744,20 +1738,20 @@ namespace CruiseDAL.V3.Sync
                     if (flags.HasFlag(SyncOption.ForceInsert)
                                 || (hasTombstone == false && flags.HasFlag(SyncOption.Insert)))
                     {
-                        destination.Insert(i, persistKeyvalue: false);
+                        destination.Insert(i, persistKeyvalue: false, exceptionProcessor: exceptionProcessor);
                         syncResult.IncrementInserts();
                     }
                 }
                 else if (ShouldUpdate(i.Modified_TS, match.Modified_TS, flags))
                 {
-                    destination.Update(i, whereExpression: where);
+                    destination.Update(i, whereExpression: where, exceptionProcessor: exceptionProcessor);
                     syncResult.IncrementUpdates();
                 }
             }
             return syncResult;
         }
 
-        private TableSyncResult SyncStratumTemplateTreeFieldSetups(string cruiseID, DbConnection source, DbConnection destination, TableSyncOptions options)
+        private static TableSyncResult SyncStratumTemplateTreeFieldSetups(string cruiseID, DbConnection source, DbConnection destination, TableSyncOptions options, IExceptionProcessor exceptionProcessor)
         {
             var syncResult = new TableSyncResult(nameof(StratumTemplateTreeFieldSetup));
 
@@ -1780,20 +1774,20 @@ namespace CruiseDAL.V3.Sync
                     if (flags.HasFlag(SyncOption.ForceInsert)
                                 || (hasTombstone == false && flags.HasFlag(SyncOption.Insert)))
                     {
-                        destination.Insert(i, persistKeyvalue: false);
+                        destination.Insert(i, persistKeyvalue: false, exceptionProcessor: exceptionProcessor);
                         syncResult.IncrementInserts();
                     }
                 }
                 else if (ShouldUpdate(i.Modified_TS, match.Modified_TS, flags))
                 {
-                    destination.Update(i, whereExpression: where);
+                    destination.Update(i, whereExpression: where, exceptionProcessor: exceptionProcessor);
                     syncResult.IncrementUpdates();
                 }
             }
             return syncResult;
         }
 
-        private TableSyncResult SyncStratumTemplateLogFieldSetups(string cruiseID, DbConnection source, DbConnection destination, TableSyncOptions options)
+        private static TableSyncResult SyncStratumTemplateLogFieldSetups(string cruiseID, DbConnection source, DbConnection destination, TableSyncOptions options, IExceptionProcessor exceptionProcessor)
         {
             var syncResult = new TableSyncResult(nameof(StratumTemplateLogFieldSetup));
 
@@ -1816,15 +1810,44 @@ namespace CruiseDAL.V3.Sync
                     if (flags.HasFlag(SyncOption.ForceInsert)
                                 || (hasTombstone == false && flags.HasFlag(SyncOption.Insert)))
                     {
-                        destination.Insert(i, persistKeyvalue: false);
+                        destination.Insert(i, persistKeyvalue: false, exceptionProcessor: exceptionProcessor);
                         syncResult.IncrementInserts();
                     }
                 }
                 else if (ShouldUpdate(i.Modified_TS, match.Modified_TS, flags))
                 {
-                    destination.Update(i, whereExpression: where);
+                    destination.Update(i, whereExpression: where, exceptionProcessor: exceptionProcessor);
                     syncResult.IncrementUpdates();
                 }
+            }
+            return syncResult;
+        }
+
+        private static TableSyncResult SyncCruiseLog(string cruiseID, DbConnection source, DbConnection destination, TableSyncOptions options, IExceptionProcessor exceptionProcessor)
+        {
+            var syncResult = new TableSyncResult(nameof(CruiseLog));
+
+            var flags = options.CruiseLog;
+            if (flags == SyncOption.Lock) { return syncResult; }
+
+            var where = "CruiseLogID = @CruiseLogID";
+            var sourceItems = source.From<CruiseLog>()
+                .Where("CruiseID = @p1").Query(cruiseID);
+
+            foreach (var i in sourceItems)
+            {
+                var match = destination.From<CruiseLog>().Where(where).Query2(i).FirstOrDefault();
+
+                if (match == null)
+                {
+
+                    if (flags.HasFlag(SyncOption.Insert))
+                    {
+                        destination.Insert(i, persistKeyvalue: false, exceptionProcessor: exceptionProcessor);
+                        syncResult.IncrementInserts();
+                    }
+                }
+                // no update, because cruise log records are immutable
             }
             return syncResult;
         }
@@ -1860,7 +1883,7 @@ namespace CruiseDAL.V3.Sync
 
     public class SyncResult : IEnumerable<TableSyncResult>
     {
-        Dictionary<string, TableSyncResult> _tableResults = new Dictionary<string, TableSyncResult>();
+        private readonly Dictionary<string, TableSyncResult> _tableResults = new Dictionary<string, TableSyncResult>();
 
         public TableSyncResult this[string table]
         {
@@ -1897,6 +1920,17 @@ namespace CruiseDAL.V3.Sync
         IEnumerator IEnumerable.GetEnumerator()
         {
             return _tableResults.Select(x => x.Value).GetEnumerator();
+        }
+
+        public override string ToString()
+        {
+            var sb = new StringBuilder();
+
+            foreach(var tr in _tableResults)
+            {
+                sb.AppendLine(tr.Value.ToString());
+            }
+            return sb.ToString();
         }
     }
 

@@ -138,6 +138,8 @@ namespace CruiseDAL.V3.Sync
 
         public SyncOption Processing { get; set; }
 
+        public SyncOption CruiseLog { get; set; }
+
 
         public bool LogAllOrNone { get; set; } = false;
 
