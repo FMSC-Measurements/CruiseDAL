@@ -12,7 +12,7 @@ namespace CruiseDAL.Update
     public class UpdateTo_3_6_0 : DbUpdateBase
     {
         public UpdateTo_3_6_0()
-            : base(targetVersion: "3.6.0", sourceVersions: new[] { "3.6.0", })
+            : base(targetVersion: "3.6.0", sourceVersions: new[] { "3.5.6", })
         {
         }
 

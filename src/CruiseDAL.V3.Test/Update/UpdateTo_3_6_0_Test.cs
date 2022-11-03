@@ -1,5 +1,7 @@
 ﻿using CruiseDAL.TestCommon;
 using CruiseDAL.Update;
+using CruiseDAL.V3.Models;
+using FluentAssertions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -27,6 +29,8 @@ namespace CruiseDAL.V3.Test.Update
 
             using var conn = ds.OpenConnection();
             updateTo360.Update(conn);
+
+            ds.CheckTableExists(nameof(CruiseLog)).Should().BeTrue();
         }
     }
 }
