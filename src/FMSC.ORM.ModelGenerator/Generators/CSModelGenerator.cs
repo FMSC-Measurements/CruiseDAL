@@ -68,7 +68,8 @@ namespace FMSC.ORM.ModelGenerator.Generators
             foreach (var fi in tableInfo.Fields)
             {
                 var fieldName = fi.FieldName;
-                var isNonPersisted = nonPersistedColumns.Contains(fieldName, StringComparer.InvariantCultureIgnoreCase);
+                var isNonPersisted = nonPersistedColumns.Contains(fieldName, StringComparer.InvariantCultureIgnoreCase)
+                                        || nonPersistedColumns.Contains(tableInfo.TableName + "." + fieldName, StringComparer.InvariantCultureIgnoreCase);
                 var persistanceFlags = isNonPersisted ? ", PersistanceFlags = PersistanceFlags.Never" : "";
                 var attr = (fi.IsPK) ?
                     $"[{primaryKeyAttr}(\"{fi.FieldName}\"{persistanceFlags})]" 

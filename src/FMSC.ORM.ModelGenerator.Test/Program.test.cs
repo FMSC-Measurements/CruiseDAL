@@ -16,5 +16,12 @@ namespace FMSC.ORM.ModelGenerator.Test
             var datastore = Program.CreateDatastore("FMSC.ORM.dll", "FMSC.ORM.SQLite.SQLiteDatastore", (string[])null);
             datastore.Should().NotBeNull();
         }
+
+
+        [Fact]
+        public void Main()
+        {
+
+        }
     }
 }

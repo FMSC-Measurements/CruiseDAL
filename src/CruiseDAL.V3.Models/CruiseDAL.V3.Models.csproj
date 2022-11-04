@@ -18,7 +18,7 @@
       <ModelGenDatastoreTypeName>CruiseDAL.CruiseDatastore_V3</ModelGenDatastoreTypeName>
       <ModelGenTargetAssembly>$(MSBuildProjectDirectory)\$(OutputPath)CruiseDAL.V3.dll</ModelGenTargetAssembly>
       <ModelGenIgnoreColumns>UseExternalSampler</ModelGenIgnoreColumns>
-      <ModelGenNonPersistedColumns>CreatedBy,Created_TS,ModifiedBy,Modified_TS</ModelGenNonPersistedColumns>
+      <ModelGenNonPersistedColumns>TallyLedger.Modified_TS</ModelGenNonPersistedColumns>
     </PropertyGroup>
   </Target>
   
