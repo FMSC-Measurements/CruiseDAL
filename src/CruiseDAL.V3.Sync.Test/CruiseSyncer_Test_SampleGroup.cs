@@ -40,7 +40,7 @@ namespace CruiseDAL.V3.Sync
             });
             var newSampleGroup = fromDb.From<SampleGroup>().Where("SampleGroupID = @p1").Query(sampleGroupID).Single();
 
-            var syncer = new CruiseSyncer();
+            var syncer = new CruiseDatabaseSyncer();
             syncer.Sync(cruiseID, fromDb, toDb, syncOptions);
 
             var sampleGroupAgain = toDb.From<SampleGroup>().Where("SampleGroupID =  @p1")
@@ -84,7 +84,7 @@ namespace CruiseDAL.V3.Sync
             fromDb.Update(sampleGroup);
 
             // run sync
-            var syncer = new CruiseSyncer();
+            var syncer = new CruiseDatabaseSyncer();
             syncer.Sync(cruiseID, fromDb, toDb, syncOptions);
 
             var sampleGroupAgain = toDb.From<SampleGroup>().Where("SampleGroupID =  @p1")
@@ -128,7 +128,7 @@ namespace CruiseDAL.V3.Sync
             fromDb.Update(sampleGroup);
 
             // run sync
-            var syncer = new CruiseSyncer();
+            var syncer = new CruiseDatabaseSyncer();
             syncer.Sync(cruiseID, fromDb, toDb, syncOptions);
 
             var sampleGroupAgain = toDb.From<SampleGroup>().Where("SampleGroupID =  @p1")

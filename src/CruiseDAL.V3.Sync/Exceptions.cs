@@ -24,6 +24,10 @@ namespace CruiseDAL.V3.Sync
 
     public class SampleGroupSettingMismatchException : SyncException
     {
+        public SampleGroupSettingMismatchException(string message) : base(message)
+        {
+        }
+
         public string CruiseID { get; set; }
         public string StratumCode { get; set; }
         public string SampleGroupCode { get; set; }
@@ -32,6 +36,10 @@ namespace CruiseDAL.V3.Sync
 
     public class StratumSettingMismatchException : SyncException
     {
+        public StratumSettingMismatchException(string message) : base(message)
+        {
+        }
+
         public string CruiseID { get; set; }
         public string StratumCode { get; set; }
     }

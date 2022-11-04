@@ -54,7 +54,7 @@ namespace CruiseDAL.V3.Sync
             newCruise = fromDb.From<Cruise>().Where("CruiseID = @p1")
                 .Query(newCruise.CruiseID).FirstOrDefault();
 
-            var syncer = new CruiseSyncer();
+            var syncer = new CruiseDatabaseSyncer();
             syncer.Sync(newCruise.CruiseID, fromDb, toDb, syncOptions);
 
             var newCruiseAgain = toDb.From<Cruise>()
@@ -98,7 +98,7 @@ namespace CruiseDAL.V3.Sync
             newCruise = fromDb.From<Cruise>().Where("CruiseID = @p1")
                 .Query(newCruise.CruiseID).FirstOrDefault();
 
-            var syncer = new CruiseSyncer();
+            var syncer = new CruiseDatabaseSyncer();
             syncer.Sync(newCruise.CruiseID, fromDb, toDb, syncOptions);
 
             var newCruiseAgain = toDb.From<Cruise>()
@@ -136,7 +136,7 @@ namespace CruiseDAL.V3.Sync
             cruise.Remarks = Rand.Words();
             fromDb.Update(cruise);
 
-            var syncer = new CruiseSyncer();
+            var syncer = new CruiseDatabaseSyncer();
             syncer.Sync(cruiseID, fromDb, toDb, syncOptions);
 
             var cruiseAgain = toDb.From<Cruise>()
@@ -171,7 +171,7 @@ namespace CruiseDAL.V3.Sync
             };
             fromDb.Insert(newDevice);
 
-            var syncer = new CruiseSyncer();
+            var syncer = new CruiseDatabaseSyncer();
             syncer.Sync(cruiseID, fromDb, toDb, syncOptions);
 
             toDb.GetRowCount("Device", "WHERE DeviceID = @p1 AND CruiseID = @p2", newDevice.DeviceID, newDevice.CruiseID)
@@ -204,7 +204,7 @@ namespace CruiseDAL.V3.Sync
             };
             fromDb.Insert(newCUST);
 
-            var syncer = new CruiseSyncer();
+            var syncer = new CruiseDatabaseSyncer();
             syncer.Sync(cruiseID, fromDb, toDb, syncOptions);
 
             toDb.GetRowCount("CuttingUnit_Stratum", "WHERE CuttingUnitCode = @p1 AND StratumCode = @p2", newCUST.CuttingUnitCode, newCUST.StratumCode)
@@ -251,7 +251,7 @@ namespace CruiseDAL.V3.Sync
             };
             fromDb.Insert(newSubpopulation);
 
-            var syncer = new CruiseSyncer();
+            var syncer = new CruiseDatabaseSyncer();
             syncer.Sync(cruiseID, fromDb, toDb, syncOptions);
 
             var subPopulationAgain = toDb.From<SubPopulation>()
@@ -304,7 +304,7 @@ namespace CruiseDAL.V3.Sync
             };
             fromDb.Insert(newPlotStratum);
 
-            var syncer = new CruiseSyncer();
+            var syncer = new CruiseDatabaseSyncer();
             syncer.Sync(cruiseID, fromDb, toDb, syncOptions);
 
             toDb.GetRowCount("Plot", "WHERE PlotID = @p1", newPlot.PlotID)
@@ -354,7 +354,7 @@ namespace CruiseDAL.V3.Sync
             plotStratum.IsEmpty = true;
             toDb.Update(plotStratum);
 
-            var syncer = new CruiseSyncer();
+            var syncer = new CruiseDatabaseSyncer();
             syncer.Sync(cruiseID, fromDb, toDb, syncOptions);
 
             var plotStratumAgain = toDb
@@ -400,7 +400,7 @@ namespace CruiseDAL.V3.Sync
             };
             fromDb.Insert(newPlotLocation);
 
-            var syncer = new CruiseSyncer();
+            var syncer = new CruiseDatabaseSyncer();
             syncer.Sync(cruiseID, fromDb, toDb, syncOptions);
 
             toDb.GetRowCount("Plot", "WHERE PlotID = @p1", newPlot.PlotID)
@@ -447,7 +447,7 @@ namespace CruiseDAL.V3.Sync
             plotLocation.Longitude = Rand.Double();
             fromDb.Update(plotLocation);
 
-            var syncer = new CruiseSyncer();
+            var syncer = new CruiseDatabaseSyncer();
             syncer.Sync(cruiseID, fromDb, toDb, syncOptions);
 
             var plotLocationAgain = toDb.From<PlotLocation>()
@@ -522,7 +522,7 @@ namespace CruiseDAL.V3.Sync
             };
             fromDb.Insert(newTallyLedger);
 
-            var syncer = new CruiseSyncer();
+            var syncer = new CruiseDatabaseSyncer();
             syncer.Sync(cruiseID, fromDb, toDb, syncOptions);
 
             toDb.GetRowCount("TallyLedger", "WHERE TallyLedgerID = @p1", newTallyLedger.TallyLedgerID)
@@ -559,7 +559,7 @@ namespace CruiseDAL.V3.Sync
             };
             fromDb.Insert(newTallyLedger);
 
-            var syncer = new CruiseSyncer();
+            var syncer = new CruiseDatabaseSyncer();
             syncer.Sync(cruiseID, fromDb, toDb, syncOptions);
 
             toDb.GetRowCount("TallyLedger", "WHERE TallyLedgerID = @p1", newTallyLedger.TallyLedgerID)
@@ -606,7 +606,7 @@ namespace CruiseDAL.V3.Sync
             };
             fromDb.Insert(newLog);
 
-            var syncer = new CruiseSyncer();
+            var syncer = new CruiseDatabaseSyncer();
             syncer.Sync(cruiseID, fromDb, toDb, syncOptions);
 
             toDb.GetRowCount("Log", "WHERE LogID = @p1", newLog.LogID)
@@ -642,7 +642,7 @@ namespace CruiseDAL.V3.Sync
             };
             fromDb.Insert(report);
 
-            var syncer = new CruiseSyncer();
+            var syncer = new CruiseDatabaseSyncer();
             syncer.Sync(cruiseID, fromDb, toDb, syncOptions);
 
             toDb.GetRowCount("Reports", "WHERE ReportID = @p1", reportID).Should().Be(1);
@@ -681,7 +681,7 @@ namespace CruiseDAL.V3.Sync
             };
             fromDb.Insert(valueEq);
 
-            var syncer = new CruiseSyncer();
+            var syncer = new CruiseDatabaseSyncer();
             syncer.Sync(cruiseID, fromDb, toDb, syncOptions);
 
             toDb.GetRowCount("ValueEquation", "WHERE ValueEquationNumber = @p1", valueEq.ValueEquationNumber).Should().Be(1);
@@ -716,7 +716,7 @@ namespace CruiseDAL.V3.Sync
             };
             fromDb.Insert(volEq);
 
-            var syncer = new CruiseSyncer();
+            var syncer = new CruiseDatabaseSyncer();
             syncer.Sync(cruiseID, fromDb, toDb, syncOptions);
 
             toDb.GetRowCount("VolumeEquation", "WHERE VolumeEquationNumber = @p1", volEq.VolumeEquationNumber).Should().Be(1);
@@ -752,7 +752,7 @@ namespace CruiseDAL.V3.Sync
             };
             fromDb.Insert(tdv);
 
-            var syncer = new CruiseSyncer();
+            var syncer = new CruiseDatabaseSyncer();
             syncer.Sync(cruiseID, fromDb, toDb, syncOptions);
 
             toDb.From<TreeDefaultValue>().Count().Should().Be(1);
@@ -784,7 +784,7 @@ namespace CruiseDAL.V3.Sync
             };
             fromDb.Insert(st);
 
-            var syncer = new CruiseSyncer();
+            var syncer = new CruiseDatabaseSyncer();
             syncer.Sync(cruiseID, fromDb, toDb, syncOptions);
 
             toDb.From<StratumTemplate>().Count().Should().Be(1);
@@ -824,7 +824,7 @@ namespace CruiseDAL.V3.Sync
             };
             fromDb.Insert(sttfs);
 
-            var syncer = new CruiseSyncer();
+            var syncer = new CruiseDatabaseSyncer();
             syncer.Sync(cruiseID, fromDb, toDb, syncOptions);
 
             toDb.From<StratumTemplateTreeFieldSetup>().Count().Should().Be(1);
@@ -864,7 +864,7 @@ namespace CruiseDAL.V3.Sync
             };
             fromDb.Insert(sttfs);
 
-            var syncer = new CruiseSyncer();
+            var syncer = new CruiseDatabaseSyncer();
             syncer.Sync(cruiseID, fromDb, toDb, syncOptions);
 
             toDb.From<StratumTemplateLogFieldSetup>().Count().Should().Be(1);

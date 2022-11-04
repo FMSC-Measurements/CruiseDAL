@@ -140,6 +140,11 @@ namespace CruiseDAL.V3.Sync
 
         public SyncOption CruiseLog { get; set; }
 
+        public bool AllowCruiseMethodChanges { get; set; }
+
+        public bool AllowStratumSamplingChanges { get; set; }
+
+        public bool AllowSampleGroupSamplingChanges { get; set; }
 
         public bool LogAllOrNone { get; set; } = false;
 

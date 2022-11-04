@@ -34,7 +34,7 @@ namespace CruiseDAL.V3.Sync
 
             using var toDb = new CruiseDatastore_V3(toPath, true);
 
-            var syncer = new CruiseSyncer();
+            var syncer = new CruiseDatabaseSyncer();
             syncer.Sync(cruiseID, fromDb, toDb, syncOptions);
 
             var saleAgain = toDb.From<Sale>().Where("SaleID = @p1").Query(saleID).FirstOrDefault();
@@ -68,7 +68,7 @@ namespace CruiseDAL.V3.Sync
             sale.Remarks = Rand.Words();
             fromDb.Update(sale);
 
-            var syncer = new CruiseSyncer();
+            var syncer = new CruiseDatabaseSyncer();
             syncer.Sync(cruiseID, fromDb, toDb, syncOptions);
 
             var saleAgain = toDb.From<Sale>().Where("SaleID = @p1").Query(saleID).FirstOrDefault();
@@ -106,7 +106,7 @@ namespace CruiseDAL.V3.Sync
 
             var cruise = fromDb.From<Cruise>().Query().FirstOrDefault();
 
-            var syncer = new CruiseSyncer();
+            var syncer = new CruiseDatabaseSyncer();
             syncer.Sync(cruiseID, fromDb, toDb, syncOptions);
 
             var saleAgain = toDb.From<Sale>().Where("SaleID = @p1").Query(saleID).FirstOrDefault();

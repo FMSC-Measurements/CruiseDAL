@@ -39,7 +39,7 @@ namespace CruiseDAL.V3.Sync
             });
             var newCuttingUnit = fromDb.From<CuttingUnit>().Where("CuttingUnitID = @p1").Query(cuttingUnitID).Single();
 
-            var syncer = new CruiseSyncer();
+            var syncer = new CruiseDatabaseSyncer();
             syncer.Sync(cruiseID, fromDb, toDb, syncOptions);
 
             var cuttingUnitAgain = toDb.From<CuttingUnit>().Where("CuttingUnitID =  @p1")
@@ -87,7 +87,7 @@ namespace CruiseDAL.V3.Sync
             fromDb.Update(cuttingUnit);
 
             // run sync
-            var syncer = new CruiseSyncer();
+            var syncer = new CruiseDatabaseSyncer();
             syncer.Sync(cruiseID, fromDb, toDb, syncOptions);
 
             var cuttingUnitAgain = toDb.From<CuttingUnit>().Where("CuttingUnitID =  @p1")
@@ -130,7 +130,7 @@ namespace CruiseDAL.V3.Sync
             fromDb.Update(cuttingUnit);
 
             // run sync
-            var syncer = new CruiseSyncer();
+            var syncer = new CruiseDatabaseSyncer();
             syncer.Sync(cruiseID, fromDb, toDb, syncOptions);
 
             var cuttingUnitAgain = toDb.From<CuttingUnit>().Where("CuttingUnitID =  @p1")

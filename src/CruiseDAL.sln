@@ -76,9 +76,9 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "DbSync", "DbSync", "{89CC4E
 		..\Documentation\V3\DbSync\SyncInternalProcess.md = ..\Documentation\V3\DbSync\SyncInternalProcess.md
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CruiseDAL.V2.Updater", "CruiseDAL.V2.Updater\CruiseDAL.V2.Updater.csproj", "{578FAABD-D2F6-4E43-A3FD-35496F3CC4F9}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CruiseDAL.V2.Updater", "CruiseDAL.V2.Updater\CruiseDAL.V2.Updater.csproj", "{578FAABD-D2F6-4E43-A3FD-35496F3CC4F9}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CruiseDAL.V2.Updater.Test", "CruiseDAL.V2.Updater.Test\CruiseDAL.V2.Updater.Test.csproj", "{457538B2-06A7-4C65-A545-0C69E658C310}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CruiseDAL.V2.Updater.Test", "CruiseDAL.V2.Updater.Test\CruiseDAL.V2.Updater.Test.csproj", "{457538B2-06A7-4C65-A545-0C69E658C310}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -258,6 +258,7 @@ Global
 		CruiseDAL.TestCommon\CruiseDAL.TestCommon.projitems*{00ae3e67-f599-4674-9bee-261a027600f7}*SharedItemsImports = 5
 		CruiseDAL.TestCommon.V3\CruiseDAL.TestCommon.V3.projitems*{1087653e-18da-467c-9071-073332b8b76b}*SharedItemsImports = 5
 		CruiseDAL.TestCommon\CruiseDAL.TestCommon.projitems*{1087653e-18da-467c-9071-073332b8b76b}*SharedItemsImports = 5
+		CruiseDAL.TestCommon.V3\CruiseDAL.TestCommon.V3.projitems*{30ddc6bd-e022-4d00-a5ed-03062b698560}*SharedItemsImports = 5
 		CruiseDAL.TestCommon\CruiseDAL.TestCommon.projitems*{30ddc6bd-e022-4d00-a5ed-03062b698560}*SharedItemsImports = 5
 		CruiseDAL.TestCommon\CruiseDAL.TestCommon.projitems*{457538b2-06a7-4c65-a545-0c69e658c310}*SharedItemsImports = 5
 		CruiseDAL.TestCommon.V3\CruiseDAL.TestCommon.V3.projitems*{73d6bed5-4a9e-4ae8-bead-1cf43eef9be1}*SharedItemsImports = 5

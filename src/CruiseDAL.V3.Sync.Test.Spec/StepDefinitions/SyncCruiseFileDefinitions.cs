@@ -97,7 +97,7 @@ namespace CruiseDAL.V3.Sync.Test.Spec.StepDefinitions
         public void WhenSyncInto(string source, string dest)
         {
             var syncOptions = new TableSyncOptions();
-            var syncer = new CruiseSyncer();
+            var syncer = new CruiseDatabaseSyncer();
 
             var srcDb = GetDatabase(source);
             var destDb = GetDatabase(dest);

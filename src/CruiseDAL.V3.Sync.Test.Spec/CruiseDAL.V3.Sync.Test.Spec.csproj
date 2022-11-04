@@ -34,4 +34,6 @@
 
 	<Import Project="..\CruiseDAL.TestCommon\CruiseDAL.TestCommon.projitems" Label="Shared" />
 
+	<Import Project="..\CruiseDAL.TestCommon.V3\CruiseDAL.TestCommon.V3.projitems" Label="Shared" />
+
 </Project>

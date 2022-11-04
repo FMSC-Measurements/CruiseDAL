@@ -7,13 +7,13 @@ namespace CruiseDAL.V3.Sync.Test.Spec.UnitTests
     {
         public ConflictChecker ConflictChecker { get; protected set; }
         public ConflictResolver ConflictResolver { get; }
-        public CruiseSyncer Syncer { get; protected set; }
+        public CruiseDatabaseSyncer Syncer { get; protected set; }
         public DeleteSysncer DeleteSyncer { get; }
         public TableSyncOptions Options { get; protected set; }
 
         public SyncStevesFiles(ITestOutputHelper output) : base(output)
         {
-            Syncer = new CruiseSyncer();
+            Syncer = new CruiseDatabaseSyncer();
             DeleteSyncer = new DeleteSysncer();
             ConflictChecker = new ConflictChecker();
             ConflictResolver = new ConflictResolver();
@@ -47,6 +47,9 @@ namespace CruiseDAL.V3.Sync.Test.Spec.UnitTests
 
             using var dest = new CruiseDatastore_V3(destPath);
             using var source = new CruiseDatastore_V3(sourcePath);
+
+            Output.WriteLine(dest.DatabaseVersion);
+            Output.WriteLine(source.DatabaseVersion);
 
             var cruiseID = dest.QueryScalar<string>("SELECT CruiseID FROM Cruise;").Single();
 

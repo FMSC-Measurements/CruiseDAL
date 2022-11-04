@@ -39,7 +39,7 @@ namespace CruiseDAL.V3.Sync
             };
             fromDb.Insert(newPlot);
 
-            var syncer = new CruiseSyncer();
+            var syncer = new CruiseDatabaseSyncer();
             syncer.Sync(cruiseID, fromDb, toDb, syncOptions);
 
             toDb.GetRowCount("Plot", "WHERE PlotID = @p1", newPlot.PlotID)
@@ -79,7 +79,7 @@ namespace CruiseDAL.V3.Sync
             plot.PlotNumber = 2;
             fromDb.Update(plot);
 
-            var syncer = new CruiseSyncer();
+            var syncer = new CruiseDatabaseSyncer();
             syncer.Sync(cruiseID, fromDb, toDb, syncOptions);
 
             var plotAgian = toDb
@@ -122,7 +122,7 @@ namespace CruiseDAL.V3.Sync
             plot.PlotNumber = 2;
             fromDb.Update(plot);
 
-            var syncer = new CruiseSyncer();
+            var syncer = new CruiseDatabaseSyncer();
             syncer.Sync(cruiseID, fromDb, toDb, syncOptions);
 
             var plotAgian = toDb

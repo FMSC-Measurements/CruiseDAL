@@ -49,7 +49,7 @@ namespace CruiseDAL.V3.Sync
             using var toDb = new CruiseDatastore_V3(toPath, true);
 
             // run sync
-            var syncer = new CruiseSyncer();
+            var syncer = new CruiseDatabaseSyncer();
             syncer.Sync(cruiseID, fromDb, toDb, syncOptions);
 
             var treeAgain = toDb.From<Tree>().Where("TreeID = @p1").Query(treeID).Single();
@@ -131,7 +131,7 @@ namespace CruiseDAL.V3.Sync
             using var toDb = new CruiseDatastore_V3(toPath, true);
 
             // run sync
-            var syncer = new CruiseSyncer();
+            var syncer = new CruiseDatabaseSyncer();
             syncer.Sync(cruiseID, fromDb, toDb, syncOptions);
 
             var treeAgain = toDb.From<Tree>().Where("TreeID = @p1").Query(treeID).Single();
@@ -197,7 +197,7 @@ namespace CruiseDAL.V3.Sync
             
 
             // run sync
-            var syncer = new CruiseSyncer();
+            var syncer = new CruiseDatabaseSyncer();
             syncer.Sync(cruiseID, fromDb, toDb, syncOptions);
 
             var treeAgain = toDb.From<Tree>().Where("TreeID = @p1").Query(treeID).Single();
@@ -292,7 +292,7 @@ namespace CruiseDAL.V3.Sync
             using var toDb = new CruiseDatastore_V3(toPath, false);
 
             // run sync
-            var syncer = new CruiseSyncer();
+            var syncer = new CruiseDatabaseSyncer();
             syncer.Sync(cruiseID, fromDb, toDb, syncOptions);
 
             var treeAgain = toDb.From<Tree>().Where("TreeID = @p1").Query(treeID).Single();
@@ -325,7 +325,7 @@ namespace CruiseDAL.V3.Sync
             using var toDb = new CruiseDatastore_V3(toPath, true);
 
             // run sync
-            var syncer = new CruiseSyncer();
+            var syncer = new CruiseDatabaseSyncer();
             syncer.Sync(cruiseID, fromDb, toDb, syncOptions);
 
             var treeMeasurments = toDb.From<TreeMeasurment>().Query().ToArray();
