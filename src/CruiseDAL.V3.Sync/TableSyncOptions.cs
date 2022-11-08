@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -11,8 +12,12 @@ namespace CruiseDAL.V3.Sync
         InsertUpdate = Insert | Update, InsertUpdateDelete = Insert | Update | Delete,
         ForceInsert = Insert | Force, ForceUpdate = Update | Force, ForceInsertUpdate = InsertUpdate | Force };
 
+
+
     public class TableSyncOptions
     {
+        private static readonly PropertyInfo[] _properties = typeof(TableSyncOptions).GetProperties(BindingFlags.Public | BindingFlags.Instance);
+
         public TableSyncOptions(SyncOption defaultOption = SyncOption.InsertUpdateDelete)
         {
             Design = defaultOption;
@@ -140,9 +145,7 @@ namespace CruiseDAL.V3.Sync
 
         public SyncOption CruiseLog { get; set; }
 
-        public bool AllowCruiseMethodChanges { get; set; }
-
-        public bool AllowStratumSamplingChanges { get; set; }
+        public bool AllowStratumDesignChanges { get; set; }
 
         public bool AllowSampleGroupSamplingChanges { get; set; }
 
@@ -153,5 +156,17 @@ namespace CruiseDAL.V3.Sync
         public bool PlotTreeAllOrNone { get; set; } = false;
 
         public bool NonPlotTreeAllOrNone { get; set; } = false;
+
+        public override string ToString()
+        {
+            var sb = new StringBuilder();
+
+            foreach(var p in _properties)
+            {
+                sb.AppendLine(p.Name + ": " + p.GetValue(this).ToString());
+            }
+
+            return sb.ToString();
+        }
     }
 }

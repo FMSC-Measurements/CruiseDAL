@@ -112,7 +112,7 @@ namespace CruiseDAL.V3.Sync
             return hasCruise;
         }
 
-        public void Sync(string cruiseID, CruiseDatastore source, CruiseDatastore destination, TableSyncOptions options)
+        public void Sync(string cruiseID, CruiseDatastore source, CruiseDatastore destination, TableSyncOptions options, IProgress<double> progress = null)
         {
             var sourceConn = source.OpenConnection();
             try
@@ -120,7 +120,7 @@ namespace CruiseDAL.V3.Sync
                 var destConn = destination.OpenConnection();
                 try
                 {
-                    Sync(cruiseID, sourceConn, destConn, options);
+                    Sync(cruiseID, sourceConn, destConn, options, progress: progress, exceptionProcessor: source.ExceptionProcessor);
                 }
                 finally
                 {
@@ -168,10 +168,11 @@ namespace CruiseDAL.V3.Sync
                 destination.Insert(new CruiseLog
                 {
                     CruiseID = cruiseID,
-                    Message = $"Cruise Synced:::: " + syncResults.ToString(),
+                    Message = "Cruise Synced:::: " + syncResults.ToString() + Environment.NewLine +
+                                "Sync Options:::: " + options.ToString(),
                     Program = CruiseDatastore.GetCallingProgram(),
                     Level = "I",
-                });
+                }, exceptionProcessor: exceptionProcessor);
 
                 transaction.Commit();
 

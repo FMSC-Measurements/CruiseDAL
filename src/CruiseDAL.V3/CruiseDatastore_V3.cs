@@ -28,6 +28,7 @@ namespace CruiseDAL
             return extension == ".crz3" || extension == ".crz3t" || extension == ".crz3db";
         }
 
+#pragma warning disable S1185 // Overriding members should do more than simply call the same member in the base class
         protected override void OnConnectionOpened(DbConnection connection)
         {
             base.OnConnectionOpened(connection);
@@ -35,6 +36,62 @@ namespace CruiseDAL
 #if SYSTEM_DATA_SQLITE
             connection.ExecuteNonQuery("PRAGMA foreign_keys=on;", exceptionProcessor: ExceptionProcessor);
 #endif
+        }
+#pragma warning restore S1185 // Overriding members should do more than simply call the same member in the base class
+
+        public void LogCruiseLog(string cruiseID, string message, string level, 
+            string cuttingUnitID = null, string stratumID = null, string sampleGroupID = null, 
+            string plotID = null, string treeID = null, string logID = null, string tallyLedgerID = null)
+        {
+            var cruiseLog = new
+                {
+                    CruiseLogID = Guid.NewGuid().ToString(),
+                    CruiseID = cruiseID ?? throw new ArgumentNullException(nameof(cruiseID)),
+                    Message = message ?? throw new ArgumentNullException(nameof(message)),
+                    Program = GetCallingProgram(),
+                    Level = level ?? throw new ArgumentNullException(level),
+
+                    CuttingUnitID = cuttingUnitID,
+                    StratumID = stratumID,
+                    SampleGroupID = sampleGroupID,
+                    PlotID = plotID,
+                    TallyLedgerID = tallyLedgerID,
+                    TreeID = treeID,
+                    LogID = logID,
+                };
+
+            Execute2(
+@"INSERT INTO CruiseLog (
+    CruiseLogID,
+    CruiseID,
+
+    Message,
+    Program,
+    Level,
+
+    CuttingUnitID,
+    StratumID,
+    SampleGroupID,
+    PlotID,
+    TallyLedgerID,
+    TreeID,
+    LogID
+) VALUES (
+    @CruiseLogID,
+    @CruiseID,
+    
+    @Message,
+    @Program,
+    @Level, 
+
+    @CuttingUnitID,
+    @StratumID,
+    @SampleGroupID,
+    @PlotID,
+    @TallyLedgerID,
+    @TreeID,
+    @LogID
+)", cruiseLog);
         }
     }
 }
