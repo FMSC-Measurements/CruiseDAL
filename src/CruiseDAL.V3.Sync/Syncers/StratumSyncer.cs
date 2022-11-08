@@ -1,8 +1,8 @@
 ﻿using CruiseDAL.V3.Models;
 using FMSC.ORM.Core;
+using System.Collections.Generic;
 using System.Data.Common;
 using System.Linq;
-using System.Text.RegularExpressions;
 
 namespace CruiseDAL.V3.Sync.Syncers
 {
@@ -27,16 +27,11 @@ namespace CruiseDAL.V3.Sync.Syncers
 
             foreach (var i in sourceItems)
             {
-                var match = destination.From<Stratum>()
-                    .Where(STRATUM_WHERE_STATMENT)
-                    .Query2(i)
-                    .FirstOrDefault();
+                var match = FindMatch(destination, i);
 
                 if (match == null)
                 {
-                    var hasTombstone = destination.From<Stratum_Tombstone>()
-                        .Where(STRATUM_WHERE_STATMENT)
-                        .Count2(i) > 0;
+                    bool hasTombstone = FindTombstone(destination, i);
 
                     if (flags.HasFlag(SyncOption.ForceInsert)
                         || (hasTombstone == false && flags.HasFlag(SyncOption.Insert)))
@@ -47,16 +42,7 @@ namespace CruiseDAL.V3.Sync.Syncers
                 }
                 else
                 {
-                    if(HasStratumCruiseMethodMatch(destination, options, i, match, out var errorMessage) && !options.AllowCruiseMethodChanges)
-                    {
-                        throw new StratumSettingMismatchException(errorMessage)
-                        {
-                            CruiseID = cruiseID,
-                            StratumCode = i.StratumCode,
-                        };
-                    }
-
-                    if(HasStratumSamplingPrametersMatch(destination, options, i, match, out var samplingParamsErrorMessage) && !options.AllowStratumSamplingChanges)
+                    if (CheckHasStratumDesignMismatch(destination, i, match, out var errorMessage) && !options.AllowStratumDesignChanges)
                     {
                         throw new StratumSettingMismatchException(errorMessage)
                         {
@@ -79,23 +65,60 @@ namespace CruiseDAL.V3.Sync.Syncers
             return syncResult;
         }
 
-        public static bool HasStratumCruiseMethodMatch(DbConnection destination, TableSyncOptions options, Stratum srcStratum, Stratum destStratum, out string message)
+        public static bool CheckHasDesignMismatchErrors(string cruiseID, DbConnection source, DbConnection destination, out string[] errors)
+        {
+            var sourceItems = source.From<Stratum>().Where("CruiseID = @p1").Query(cruiseID);
+            var errorList = new List<string>();
+
+            foreach (var st in sourceItems)
+            {
+                var match = FindMatch(destination, st);
+                if (match == null) { continue; }
+
+                string error;
+                if (CheckHasStratumDesignMismatch(destination, st, match, out error))
+                {
+                    errorList.Add(error);
+                }
+            }
+
+            if (errorList.Count > 0)
+            {
+                errors = errorList.ToArray();
+                return true;
+            }
+            else
+            {
+                errors = null;
+                return false;
+            }
+        }
+
+        protected static bool FindTombstone(DbConnection destination, Stratum st)
+        {
+            return destination.From<Stratum_Tombstone>()
+                                    .Where(STRATUM_WHERE_STATMENT)
+                                    .Count2(st) > 0;
+        }
+
+        protected static Stratum FindMatch(DbConnection destination, Stratum st)
+        {
+            return destination.From<Stratum>()
+                                .Where(STRATUM_WHERE_STATMENT)
+                                .Query2(st)
+                                .FirstOrDefault();
+        }
+
+        protected static bool CheckHasStratumDesignMismatch(DbConnection destination, Stratum srcStratum, Stratum destStratum, out string message)
         {
             message = null;
-            if (srcStratum.Method != destStratum.Method && HasCruiseData(destination, destStratum))
+            var hasCruiseData = HasCruiseData(destination, destStratum);
+
+            if (srcStratum.Method != destStratum.Method && hasCruiseData)
             {
                 message = $"Cruise Method Mismatch: Stratum Code:{srcStratum.StratumCode}";
                 return true;
             }
-            return false;
-        }
-
-        public static bool HasStratumSamplingPrametersMatch(DbConnection destination, TableSyncOptions options, Stratum srcStratum, Stratum destStratum, out string message)
-        {
-            // todo breadk out HasCruiseData into method and fix cruise data check to use StratumID
-
-            message = null;
-            var hasCruiseData = HasCruiseData(destination, destStratum);
 
             if (srcStratum.KZ3PPNT != destStratum.KZ3PPNT && hasCruiseData)
             {
@@ -130,7 +153,7 @@ namespace CruiseDAL.V3.Sync.Syncers
             return false;
         }
 
-        public static bool HasCruiseData(DbConnection db, Stratum st)
+        protected static bool HasCruiseData(DbConnection db, Stratum st)
         {
             return db.From<TallyLedger>().Join("Stratum", "USING (CruiseID, StratumCode)")
                         .Where("StratumID = @StratumID").Count2(st) > 0

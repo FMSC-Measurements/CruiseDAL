@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using System.Data.Common;
 using System.Linq;
 using CruiseDAL.V3.Sync.Util;
-
+using FMSC.ORM.SQLite;
 
 namespace CruiseDAL.V3.Sync
 {
@@ -25,7 +25,7 @@ namespace CruiseDAL.V3.Sync
         //      where we would want to mix tree from two files on a plot. this is sorta using the 'All or Nothing' resolution option
 
 
-        public ConflictResolutionOptions CheckConflicts(CruiseDatastore_V3 sourceDb, CruiseDatastore_V3 destDb, string cruiseID)
+        public ConflictResolutionOptions CheckConflicts(CruiseDatastore sourceDb, CruiseDatastore destDb, string cruiseID)
         {
             var source = sourceDb.OpenConnection();
             var dest = destDb.OpenConnection();

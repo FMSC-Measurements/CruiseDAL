@@ -1,5 +1,6 @@
 ﻿using CruiseDAL.V3.Models;
 using FMSC.ORM.Core;
+using System.Collections.Generic;
 using System.Data.Common;
 using System.Linq;
 
@@ -30,16 +31,11 @@ namespace CruiseDAL.V3.Sync.Syncers
                     .Query(cruiseID, st.StratumCode);
                 foreach (var sg in sampleGroups)
                 {
-                    var match = destination.From<SampleGroup>()
-                        .Where(SAMPLEGROUP_WHERE_STATMENT)
-                        .Query2(sg)
-                        .FirstOrDefault();
+                    SampleGroup match = FindMatch(destination, sg);
 
                     if (match == null)
                     {
-                        var hasTombstone = destination.From<SampleGroup_Tombstone>()
-                            .Where(SAMPLEGROUP_WHERE_STATMENT)
-                            .Count2(sg) > 0;
+                        bool hasTombstone = FindTombstone(destination, sg);
 
                         if (flags.HasFlag(SyncOption.ForceInsert)
                             || (hasTombstone == false && flags.HasFlag(SyncOption.Insert)))
@@ -50,7 +46,7 @@ namespace CruiseDAL.V3.Sync.Syncers
                     }
                     else
                     {
-                        if (HasSampleGroupSampleingParameterChanges(destination, sg, match, out var errorMsg) && !options.AllowSampleGroupSamplingChanges)
+                        if (CheckHasSampleGroupSampleingParameterChanges(destination, sg, match, out var errorMsg) && !options.AllowSampleGroupSamplingChanges)
                         {
                             throw new SampleGroupSettingMismatchException(errorMsg)
                             {
@@ -75,7 +71,51 @@ namespace CruiseDAL.V3.Sync.Syncers
             return syncResult;
         }
 
-        public bool HasSampleGroupSampleingParameterChanges(DbConnection destination, SampleGroup srcSg, SampleGroup destSg, out string message)
+        public static bool CheckHasDesignMismatchErrors(string cruiseID, DbConnection source, DbConnection destination, out string[] errors)
+        {
+            var sourceItems = source.From<SampleGroup>().Where("CruiseID = @p1").Query(cruiseID);
+            var errorList = new List<string>();
+
+            foreach (var sg in sourceItems)
+            {
+                var match = FindMatch(destination, sg);
+                if (match == null) { continue; }
+
+                string error;
+                if (CheckHasSampleGroupSampleingParameterChanges(destination, sg, match, out error))
+                {
+                    errorList.Add(error);
+                }
+            }
+
+            if (errorList.Count > 0)
+            {
+                errors = errorList.ToArray();
+                return true;
+            }
+            else
+            {
+                errors = null;
+                return false;
+            }
+        }
+
+        private static bool FindTombstone(DbConnection destination, SampleGroup sg)
+        {
+            return destination.From<SampleGroup_Tombstone>()
+                                        .Where(SAMPLEGROUP_WHERE_STATMENT)
+                                        .Count2(sg) > 0;
+        }
+
+        private static SampleGroup FindMatch(DbConnection destination, SampleGroup sg)
+        {
+            return destination.From<SampleGroup>()
+                                    .Where(SAMPLEGROUP_WHERE_STATMENT)
+                                    .Query2(sg)
+                                    .FirstOrDefault();
+        }
+
+        public static bool CheckHasSampleGroupSampleingParameterChanges(DbConnection destination, SampleGroup srcSg, SampleGroup destSg, out string message)
         {
             message = null;
 
