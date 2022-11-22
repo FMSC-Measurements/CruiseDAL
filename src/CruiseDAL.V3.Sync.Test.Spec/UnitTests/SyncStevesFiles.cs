@@ -23,9 +23,6 @@ namespace CruiseDAL.V3.Sync.Test.Spec.UnitTests
 
         protected void PrepareFile(CruiseDatastore_V3 dest, CruiseDatastore_V3 source, string cruiseID)
         {
-            DeleteSyncer.Sync(cruiseID, source, dest, Options);
-            DeleteSyncer.Sync(cruiseID, dest, source, Options);
-
             var preCheckSyncOptions = new TableSyncOptions(SyncOption.Update)
             {
                 Processing = SyncOption.Lock,
