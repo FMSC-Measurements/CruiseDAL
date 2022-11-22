@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Reflection;
 using System.Text;
@@ -8,8 +9,9 @@ using System.Threading.Tasks;
 namespace CruiseDAL.V3.Sync
 {
     [Flags]
-    public enum SyncOption { Lock = 0, Insert = 1, Update = 2, Delete = 4, Force = 8,
-        InsertUpdate = Insert | Update, InsertUpdateDelete = Insert | Update | Delete,
+    public enum SyncOption { Lock = 0, Insert = 1, Update = 2, [Browsable(false)] Delete = 4, 
+        [Browsable(false)] Force = 8,
+        InsertUpdate = Insert | Update, //InsertUpdateDelete = Insert | Update | Delete,
         ForceInsert = Insert | Force, ForceUpdate = Update | Force, ForceInsertUpdate = InsertUpdate | Force };
 
 
@@ -18,7 +20,7 @@ namespace CruiseDAL.V3.Sync
     {
         private static readonly PropertyInfo[] _properties = typeof(TableSyncOptions).GetProperties(BindingFlags.Public | BindingFlags.Instance);
 
-        public TableSyncOptions(SyncOption defaultOption = SyncOption.InsertUpdateDelete)
+        public TableSyncOptions(SyncOption defaultOption = SyncOption.InsertUpdate)
         {
             Design = defaultOption;
             Validation = defaultOption;
