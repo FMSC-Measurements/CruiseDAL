@@ -15,6 +15,7 @@ namespace CruiseDAL.V3.Sync
 
         public string Table { get; set; }
 
+        // a user readable string that identifies the record
         public string Identity { get; set; }
 
         public string SourceRecID { get; set; }

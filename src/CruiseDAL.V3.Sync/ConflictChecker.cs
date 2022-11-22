@@ -414,12 +414,14 @@ namespace CruiseDAL.V3.Sync
 
         public IEnumerable<Conflict> CheckLogs(DbConnection source, DbConnection destination, string cruiseID)
         {
-            var sourceItems = source.From<Log>().Where("CruiseID = @p1").Query(cruiseID);
+            // using custom model type LogEx because we want to be able to display unit, plot number and tree number to the user
+            var sourceItems = source.From<LogEx>().Join("Tree", "USING (TreeID)").Where("Log.CruiseID = @p1").Query(cruiseID);
 
             foreach (var item in sourceItems)
             {
-                var conflictItem = destination.From<Log>()
-                    .Where("CruiseID = @CruiseID AND LogNumber = @LogNumber AND TreeID = @TreeID AND LogID != @LogID")
+                var conflictItem = destination.From<LogEx>()
+                    .Join("Tree", "USING (TreeID)")
+                    .Where("Log.CruiseID = @CruiseID AND LogNumber = @LogNumber AND Log.TreeID = @TreeID AND LogID != @LogID")
                     .Query2(item).FirstOrDefault();
 
                 if (conflictItem != null)
@@ -442,14 +444,14 @@ namespace CruiseDAL.V3.Sync
         public IEnumerable<Conflict> CheckLogsByUnitCodeTreeNumber(DbConnection source, DbConnection destination, string cruiseID, string cuttingUnitCode, int treeNumber)
         {
             
-            var sourceItems = source.From<Log>()
+            var sourceItems = source.From<LogEx>()
                 .Join("Tree", "USING (TreeID)")
                 .Where("Log.CruiseID = @p1 AND Tree.CuttingUnitCode = @p2 AND Tree.TreeNumber = @p3 AND Tree.PlotNumber IS NULL")
                 .Query(cruiseID, cuttingUnitCode, treeNumber);
 
             foreach (var item in sourceItems)
             {
-                var conflictItem = destination.From<Log>()
+                var conflictItem = destination.From<LogEx>()
                     .Join("Tree", "USING (TreeID)")
                     .Where("Log.CruiseID = @p1 AND Log.LogNumber = @p2 AND Tree.CuttingUnitCode = @p3 AND Tree.TreeNumber = @p4  AND Log.LogID != @p5")
                     .Query(cruiseID, item.LogNumber, cuttingUnitCode, treeNumber, item.LogID).FirstOrDefault();
@@ -474,14 +476,14 @@ namespace CruiseDAL.V3.Sync
         public IEnumerable<Conflict> CheckLogsByUnitCodePlotTreeNumber(DbConnection source, DbConnection destination, string cruiseID, string cuttingUnitCode, int treeNumber, int plotNumber)
         {
 
-            var sourceItems = source.From<Log>()
+            var sourceItems = source.From<LogEx>()
                 .Join("Tree", "USING (TreeID)")
                 .Where("Log.CruiseID = @p1 AND Tree.CuttingUnitCode = @p2 AND Tree.TreeNumber = @p3 AND Tree.PlotNumber = @p4")
                 .Query(cruiseID, cuttingUnitCode, treeNumber, plotNumber);
 
             foreach (var item in sourceItems)
             {
-                var conflictItem = destination.From<Log>()
+                var conflictItem = destination.From<LogEx>()
                     .Join("Tree", "USING (TreeID)")
                     .Where("Log.CruiseID = @p1 AND Log.LogNumber = @p2 AND Tree.CuttingUnitCode = @p3 AND Tree.TreeNumber = @p4 AND Tree.PlotNumber = @p5  AND Log.LogID != @p6")
                     .Query(cruiseID, item.LogNumber, cuttingUnitCode, treeNumber, plotNumber, item.LogID).FirstOrDefault();
@@ -535,9 +537,10 @@ namespace CruiseDAL.V3.Sync
             }
         }
 
-        protected string Identify(Log l)
+        protected string Identify(LogEx l)
         {
-            return $"Log: {l.LogNumber}";
+            var plotNumber = (l.PlotNumber.HasValue) ? ", Plot #:" + l.PlotNumber.Value : "";
+            return $"Log: {l.LogNumber}, Unit:{l.CuttingUnitCode}{plotNumber}, Tree #:{l.TreeNumber}";
         }
 
 
