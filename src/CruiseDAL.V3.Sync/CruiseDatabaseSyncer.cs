@@ -2,9 +2,11 @@
 using CruiseDAL.V3.Sync.Syncers;
 using FMSC.ORM.Core;
 using FMSC.ORM.Logging;
+using FMSC.ORM.SQLite;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Data;
 using System.Data.Common;
 using System.Linq;
 using System.Text;
@@ -112,7 +114,7 @@ namespace CruiseDAL.V3.Sync
             return hasCruise;
         }
 
-        public void Sync(string cruiseID, CruiseDatastore source, CruiseDatastore destination, TableSyncOptions options, IProgress<double> progress = null)
+        public void Sync(string cruiseID, SQLiteDatastore source, SQLiteDatastore destination, TableSyncOptions options, IProgress<float> progress = null)
         {
             var sourceConn = source.OpenConnection();
             try
@@ -133,56 +135,48 @@ namespace CruiseDAL.V3.Sync
             }
         }
 
-        public Task<SyncResult> SyncAsync(string cruiseID, DbConnection source, DbConnection destination, TableSyncOptions options, IProgress<double> progress = null, IExceptionProcessor exceptionProcessor = null)
+        public Task<SyncResult> SyncAsync(string cruiseID, DbConnection source, DbConnection destination, TableSyncOptions options, IProgress<float> progress = null, IExceptionProcessor exceptionProcessor = null)
         {
             return Task.Run(() => Sync(cruiseID, source, destination, options, progress));
         }
 
-        public SyncResult Sync(string cruiseID, DbConnection source, DbConnection destination, TableSyncOptions options, IProgress<double> progress = null, IExceptionProcessor exceptionProcessor = null)
+        public SyncResult Sync(string cruiseID, DbConnection source, DbConnection destination, TableSyncOptions options, IProgress<float> progress = null, IExceptionProcessor exceptionProcessor = null)
         {
             var syncResults = new SyncResult();
 
             var syncers = SYNCERS;
             var steps = syncers.Length;
-            double p = 0.0;
-            var transaction = destination.BeginTransaction();
-            try
+            float p = 0.0f;
+
+            foreach (var syncer in syncers)
             {
-                foreach (var syncer in syncers)
+                try
                 {
-                    try
-                    {
-                        var syncResult = syncer.SyncRecords(cruiseID, source, destination, options, exceptionProcessor);
-                        syncResults.Add(syncResult);
-                        Logger.Log(syncResult.ToString(), LogCategory.None, LogLevel.Info);
-                        progress?.Report(++p / steps);
-                    }
-                    catch (Exception e)
-                    {
-                        var tableName = syncer.TableName;
-                        Logger.LogException(e);
-                        throw new SyncException($"SyncException: {tableName}", e);
-                    }
+                    var syncResult = syncer.SyncRecords(cruiseID, source, destination, options, exceptionProcessor);
+                    syncResults.Add(syncResult);
+                    Logger.Log(syncResult.ToString(), LogCategory.None, LogLevel.Info);
+                    progress?.Report(++p / steps);
                 }
-
-                destination.Insert(new CruiseLog
+                catch (Exception e)
                 {
-                    CruiseID = cruiseID,
-                    Message = "Cruise Synced:::: " + syncResults.ToString() + Environment.NewLine +
-                                "Sync Options:::: " + options.ToString(),
-                    Program = CruiseDatastore.GetCallingProgram(),
-                    Level = "I",
-                }, exceptionProcessor: exceptionProcessor);
-
-                transaction.Commit();
-
-                return syncResults;
+                    var tableName = syncer.TableName;
+                    Logger.LogException(e);
+                    throw new SyncException($"SyncException: {tableName}", e);
+                }
             }
-            catch
+
+            destination.Insert(new CruiseLog
             {
-                transaction.Rollback();
-                throw;
-            }
+                CruiseID = cruiseID,
+                Message = "Cruise Synced:::: " + syncResults.ToString() + Environment.NewLine +
+                            "Sync Options:::: " + options.ToString(),
+                Program = CruiseDatastore.GetCallingProgram(),
+                Level = "I",
+            }, exceptionProcessor: exceptionProcessor);
+
+
+            return syncResults;
+
         }
 
         //private void SyncLogGradeAuditRules(string cruiseID, DbConnection source, DbConnection destination, CruiseSyncOptions options)
