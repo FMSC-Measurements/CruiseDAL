@@ -59,6 +59,7 @@ namespace CruiseDAL.V3.Sync
             new SampleGroupSyncer(),
             new SamplerStateSyncer(),
             new SpeciesSyncer(),
+            new Species_ProductSyncer(),
             new SubpopulationSyncer(),
             new FixCNTTallyPopulationSyncer(),
 

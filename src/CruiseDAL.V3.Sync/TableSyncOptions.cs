@@ -34,6 +34,7 @@ namespace CruiseDAL.V3.Sync
             SampleGroup = defaultOption;
             Subpopulation = defaultOption;
             Species = defaultOption;
+            Species_Product = defaultOption;
             FixCNTTallyPopulation = defaultOption;
             LogFieldSetup = defaultOption;
             LogFieldHeading = defaultOption;
@@ -88,6 +89,8 @@ namespace CruiseDAL.V3.Sync
         public SyncOption Subpopulation { get; set; }
 
         public SyncOption Species { get; set; }
+
+        public SyncOption Species_Product { get; set; }
 
         public SyncOption FixCNTTallyPopulation { get; set; }
 
@@ -158,6 +161,7 @@ namespace CruiseDAL.V3.Sync
         public bool PlotTreeAllOrNone { get; set; } = false;
 
         public bool NonPlotTreeAllOrNone { get; set; } = false;
+        
 
         public override string ToString()
         {

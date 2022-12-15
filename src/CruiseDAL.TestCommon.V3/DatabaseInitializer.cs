@@ -294,6 +294,8 @@ namespace CruiseDAL.TestCommon
             foreach (var sp in species.OrEmpty())
             {
                 db.Execute($"INSERT INTO Species (CruiseID, SpeciesCode) VALUES ('{cruiseID}', '{sp}');");
+
+                db.Insert(new Species_Product { CruiseID = cruiseID, SpeciesCode = sp, ContractSpecies = sp });
             }
 
             foreach (var tdv in tdvs.OrEmpty())
