@@ -26,6 +26,8 @@ namespace CruiseDAL
             new ErrorLogDownMigrator(),
             new VolumeEquationDownMigrator(),
             new ReportsDownMigrator(),
+            new BiomassEquationDownMigrator(),
+            new ValueEquationDownMigrator(),
         };
 
         public IEnumerable<IDownMigrator> Migrators { get; }
