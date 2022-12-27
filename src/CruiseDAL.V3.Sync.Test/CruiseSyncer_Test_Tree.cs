@@ -28,6 +28,12 @@ namespace CruiseDAL.V3.Sync
             // initialize source database
             using var fromDb = init.CreateDatabaseFile(fromPath);
 
+            fromDb.CopyTo(toPath);
+
+            // create destination db
+            using var toDb = new CruiseDatastore_V3(toPath);
+
+
             var treeID = Guid.NewGuid().ToString();
             var tree = new Tree()
             {
@@ -44,9 +50,6 @@ namespace CruiseDAL.V3.Sync
                 Created_TS = DateTime.Now,
             };
             fromDb.Insert(tree);
-
-            // create destination db
-            using var toDb = new CruiseDatastore_V3(toPath, true);
 
             // run sync
             var syncer = new CruiseDatabaseSyncer();
@@ -75,6 +78,11 @@ namespace CruiseDAL.V3.Sync
 
             // initialize source database
             using var fromDb = init.CreateDatabaseFile(fromPath);
+
+            fromDb.CopyTo(toPath);
+
+            // create destination db
+            using var toDb = new CruiseDatastore_V3(toPath);
 
             var treeID = Guid.NewGuid().ToString();
             var tree = new Tree()
@@ -126,9 +134,6 @@ namespace CruiseDAL.V3.Sync
                 CreatedBy = "me",
             };
             fromDb.Insert(treeMeasurment);
-
-            // create destination db
-            using var toDb = new CruiseDatastore_V3(toPath, true);
 
             // run sync
             var syncer = new CruiseDatabaseSyncer();
@@ -312,6 +317,14 @@ namespace CruiseDAL.V3.Sync
 
             var syncOptions = new TableSyncOptions(SyncOption.Lock)
             {
+                Sale = SyncOption.Insert,
+                Cruise = SyncOption.Insert,
+                CuttingUnit = SyncOption.Insert,
+                Stratum = SyncOption.Insert,
+                SampleGroup = SyncOption.Insert,
+                Species = SyncOption.Insert,
+                Plot = SyncOption.Insert,
+                PlotStratum = SyncOption.Insert,
                 Tree = SyncOption.Insert,
                 TreeMeasurment = SyncOption.Insert,
             };

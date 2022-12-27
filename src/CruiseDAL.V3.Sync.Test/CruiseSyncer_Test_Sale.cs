@@ -20,6 +20,7 @@ namespace CruiseDAL.V3.Sync
             var syncOptions = new TableSyncOptions(SyncOption.Lock)
             {
                 Sale = SyncOption.Insert,
+                Cruise = SyncOption.Insert,
             };
 
             var cruiseID = CruiseID;
