@@ -15,6 +15,7 @@ namespace CruiseDAL.TestCommon
         public Stratum[] Strata { get; set; }
         public CuttingUnit_Stratum[] UnitStrata { get; set; }
         public string[] Species { get; set; }
+        public string[][] SpProds { get; set; }
         public SampleGroup[] SampleGroups { get; set; }
         public TreeDefaultValue[] TreeDefaults { get; set; }
         public SubPopulation[] Subpops { get; set; }
@@ -55,6 +56,12 @@ namespace CruiseDAL.TestCommon
             };
 
             var species = Species = new string[] { "sp1", "sp2", "sp3" };
+
+            var spProds = SpProds = new string[][] { 
+                new[] { "sp1", "sp1" }, 
+                new[] { "sp2", "sp2" }, 
+                new[] { "sp3", "sp3" } 
+            };
 
             var sampleGroups = SampleGroups = new[]
             {
@@ -224,7 +231,15 @@ namespace CruiseDAL.TestCommon
 
             var database = new CruiseDatastore_V3(path, true);
 
-            InitializeDatabase(database, cruiseID, saleID, saleNumber, units, strata, unitStrata, sampleGroups, species, tdvs, subPops);
+            InitializeDatabase(database, cruiseID, saleID, saleNumber, 
+                units, 
+                strata, 
+                unitStrata, 
+                sampleGroups, 
+                species, 
+                tdvs, 
+                subPops, 
+                spProds: SpProds);
 
             return database;
         }
@@ -239,7 +254,8 @@ namespace CruiseDAL.TestCommon
             CruiseDAL.V3.Models.SampleGroup[] sampleGroups,
             string[] species,
             CruiseDAL.V3.Models.TreeDefaultValue[] tdvs,
-            CruiseDAL.V3.Models.SubPopulation[] subPops)
+            CruiseDAL.V3.Models.SubPopulation[] subPops,
+            string[][] spProds = null)
         {
             db.Insert(new Sale()
             {
@@ -294,8 +310,11 @@ namespace CruiseDAL.TestCommon
             foreach (var sp in species.OrEmpty())
             {
                 db.Execute($"INSERT INTO Species (CruiseID, SpeciesCode) VALUES ('{cruiseID}', '{sp}');");
+            }
 
-                db.Insert(new Species_Product { CruiseID = cruiseID, SpeciesCode = sp, ContractSpecies = sp });
+            foreach (var spProd in spProds.OrEmpty())
+            {
+                db.Insert(new Species_Product { CruiseID = cruiseID, SpeciesCode = spProd[0], ContractSpecies = spProd[1] });
             }
 
             foreach (var tdv in tdvs.OrEmpty())
@@ -322,7 +341,8 @@ namespace CruiseDAL.TestCommon
             CruiseDAL.V3.Models.SampleGroup[] sampleGroups,
             string[] species,
             CruiseDAL.V3.Models.TreeDefaultValue[] tdvs,
-            CruiseDAL.V3.Models.SubPopulation[] subPops)
+            CruiseDAL.V3.Models.SubPopulation[] subPops,
+            string[][] spProds = null)
         {
             InitializeDatabase(db,
                 cruiseID,
@@ -334,7 +354,8 @@ namespace CruiseDAL.TestCommon
                 sampleGroups,
                 species,
                 tdvs,
-                subPops);
+                subPops,
+                spProds);
 
             foreach(var st in strata)
             {

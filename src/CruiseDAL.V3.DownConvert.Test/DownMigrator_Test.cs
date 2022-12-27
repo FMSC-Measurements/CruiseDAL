@@ -1,5 +1,3 @@
-﻿using CruiseDAL.DataObjects;
-using CruiseDAL.DownMigrators;
 using CruiseDAL.TestCommon;
 using CruiseDAL.UpConvert;
 using CruiseDAL.V3.Models;
@@ -7,12 +5,10 @@ using FluentAssertions;
 using System;
 using System.IO;
 using System.Linq;
-using System.Reflection;
-using System.Runtime.CompilerServices;
 using Xunit;
 using Xunit.Abstractions;
 
-namespace CruiseDAL.V3.Test
+namespace CruiseDAL.V3.DownConvert.Test
 {
     public class DownMigrator_Test : TestBase
     {
@@ -34,7 +30,6 @@ namespace CruiseDAL.V3.Test
             downMigrator.MigrateFromV3ToV2(initializer.CruiseID, fromDb, toDb);
 
             ValidateMigration(fromDb, toDb);
-
         }
 
         [Fact]
@@ -89,7 +84,6 @@ namespace CruiseDAL.V3.Test
             };
             fromDb.Insert(tm);
 
-
             using var toDb = new DAL(toPath, true);
 
             var downMigrator = new DownMigrator();
@@ -101,10 +95,9 @@ namespace CruiseDAL.V3.Test
             treeAgain.DRC.Should().Be(13.0);
 
             ValidateMigration(fromDb, toDb);
-
         }
 
-        void ValidateMigration(CruiseDatastore v3db, CruiseDatastore v2db)
+        private void ValidateMigration(CruiseDatastore v3db, CruiseDatastore v2db)
         {
             var units = v3db.From<V3.Models.CuttingUnit>().Query();
             var strata = v3db.From<V3.Models.Stratum>().Query().ToArray();
@@ -149,14 +142,14 @@ namespace CruiseDAL.V3.Test
                 var plots = v2db.From<V2.Models.Plot>().Query();
                 var trees = v2db.From<V2.Models.Tree>().Query();
                 //                var countTrees = v2db.Query<TreeCNTTotals>(
-                //@"SELECT CuttingUnit_CN, SampleGroup_CN, ifnull(TreeDefaultValue_CN, 0) AS TreeDefaultValue_CN, Sum(TreeCount) AS TreeCount, sum(SumKPI) AS SumKPI FROM CountTree 
+                //@"SELECT CuttingUnit_CN, SampleGroup_CN, ifnull(TreeDefaultValue_CN, 0) AS TreeDefaultValue_CN, Sum(TreeCount) AS TreeCount, sum(SumKPI) AS SumKPI FROM CountTree
                 //GROUP BY CuttingUnit_CN, SampleGroup_CN, ifnull(TreeDefaultValue_CN, 0);").ToArray();
 
                 var treeCounts = v2db.Query<TreeCNTTotals>(
-@"SELECT cnt.CuttingUnit_CN, cnt.SampleGroup_CN, cnt.TreeDefaultValue_CN, cnt.TreeCount + sum(TreeCNTTotal) AS TreeCNT, cnt.SumKPI 
+@"SELECT cnt.CuttingUnit_CN, cnt.SampleGroup_CN, cnt.TreeDefaultValue_CN, cnt.TreeCount + sum(TreeCNTTotal) AS TreeCNT, cnt.SumKPI
  FROM CountTree AS cnt
  JOIN (SELECT CuttingUnit_CN, SampleGroup_CN, TreeDefaultValue_CN, Sum(TreeCount) as TreeCNTTotal
-    FROM Tree 
+    FROM Tree
     GROUP BY CuttingUnit_CN, SampleGroup_CN, ifnull(TreeDefaultValue_CN, 0)) AS tcnt on tcnt.CuttingUnit_CN = cnt.CuttingUnit_CN
                         AND tcnt.SampleGroup_CN = cnt.SampleGroup_CN
                         AND (cnt.TreeDefaultValue_CN IS NULL OR ifnull(tcnt.TreeDefaultValue_CN, 0) = ifnull(cnt.TreeDefaultValue_CN, 0))
@@ -175,18 +168,17 @@ ORDER BY cnt.CuttingUnit_CN, cnt.SampleGroup_CN, cnt.TreeDefaultValue_CN;").ToAr
                     downMigrator.MigrateFromV3ToV2(cruiseID, v3Database, v2again, "test");
 
                     //                    var countTreesAgain = v2again.Query<TreeCNTTotals>(
-                    //@"SELECT CuttingUnit_CN, SampleGroup_CN, ifnull(TreeDefaultValue_CN, 0) AS TreeDefaultValue_CN, Sum(TreeCount) AS TreeCount, sum(SumKPI) AS SumKPI FROM CountTree 
+                    //@"SELECT CuttingUnit_CN, SampleGroup_CN, ifnull(TreeDefaultValue_CN, 0) AS TreeDefaultValue_CN, Sum(TreeCount) AS TreeCount, sum(SumKPI) AS SumKPI FROM CountTree
                     //GROUP BY CuttingUnit_CN, SampleGroup_CN, ifnull(TreeDefaultValue_CN, 0);").ToArray();
-
 
                     //                    var countTreeDiff = countTreesAgain.Except(countTrees).ToArray();
                     //                    countTreesAgain.Should().BeEquivalentTo(countTrees);
 
                     var treeCountsAgain = v2again.Query<TreeCNTTotals>(
-@"SELECT cnt.CuttingUnit_CN, cnt.SampleGroup_CN, cnt.TreeDefaultValue_CN, cnt.TreeCount + sum(TreeCNTTotal) AS TreeCNT, cnt.SumKPI 
+@"SELECT cnt.CuttingUnit_CN, cnt.SampleGroup_CN, cnt.TreeDefaultValue_CN, cnt.TreeCount + sum(TreeCNTTotal) AS TreeCNT, cnt.SumKPI
  FROM CountTree AS cnt
  JOIN (SELECT CuttingUnit_CN, SampleGroup_CN, TreeDefaultValue_CN, Sum(TreeCount) as TreeCNTTotal
-    FROM Tree 
+    FROM Tree
     GROUP BY CuttingUnit_CN, SampleGroup_CN, ifnull(TreeDefaultValue_CN, 0)) AS tcnt on tcnt.CuttingUnit_CN = cnt.CuttingUnit_CN
                         AND tcnt.SampleGroup_CN = cnt.SampleGroup_CN
                         AND (cnt.TreeDefaultValue_CN IS NULL OR ifnull(tcnt.TreeDefaultValue_CN, 0) = ifnull(cnt.TreeDefaultValue_CN, 0))
@@ -307,132 +299,6 @@ ORDER BY cnt.CuttingUnit_CN, cnt.SampleGroup_CN, cnt.TreeDefaultValue_CN;").ToAr
             }
         }
 
-
-
-        [Theory]
-        [InlineData("7Wolf.cruise")]
-        [InlineData("0432 C53East TS.cruise")]
-        public void CuttingUnits_Test(string fileName)
-        {
-            var (orgFile, crz3File, origAgain) = SetUpTestFile(fileName);
-
-            using (var dbv2 = new CruiseDatastore(orgFile))
-            using (var dbv2Again = new CruiseDatastore(origAgain))
-            {
-                var cuttingUnitsV2Again = dbv2Again.From<V2.Models.CuttingUnit>()
-                    .Query();
-
-                var cuttingUnitsv2 = dbv2.From<V2.Models.CuttingUnit>()
-                    .Query();
-
-                cuttingUnitsV2Again.Should().BeEquivalentTo(cuttingUnitsv2,
-                    config => config
-                    .Using<string>(x => x.Subject.Should().Be(x.Expectation?.Trim())).WhenTypeIs<string>()// ignore whitespace when type is string
-                    .Excluding(y => y.TallyHistory));
-            }
-        }
-
-        [Theory]
-        [InlineData("7Wolf.cruise")]
-        [InlineData("0432 C53East TS.cruise")]
-        public void Stratum_Test(string fileName)
-        {
-            var (orgFile, crz3File, origAgain) = SetUpTestFile(fileName);
-
-            using (var dbv2 = new CruiseDatastore(orgFile))
-            using (var dbv2Again = new CruiseDatastore(origAgain))
-            {
-                var stratav2Again = dbv2Again.From<V2.Models.Stratum>()
-                    .Query();
-
-                var stratav2 = dbv2.From<V2.Models.Stratum>()
-                    .Query();
-
-                stratav2Again.Should().BeEquivalentTo(stratav2,
-                    config => config
-                    .Excluding(x => x.VolumeFactor)
-                    .Excluding(x => x.Month)
-                    .Excluding(x => x.Year));
-            }
-        }
-
-        [Theory]
-        [InlineData("7Wolf.cruise")]
-        [InlineData("0432 C53East TS.cruise")]
-        public void SampleGroup_Test(string fileName)
-        {
-            var (orgFile, crz3File, origAgain) = SetUpTestFile(fileName);
-
-            using (var dbv2 = new CruiseDatastore(orgFile))
-            using (var dbv2Again = new CruiseDatastore(origAgain))
-            {
-                var sgv2Again = dbv2Again.From<V2.Models.SampleGroup>()
-                    .Query();
-
-                var sgv2 = dbv2.From<V2.Models.SampleGroup>()
-                    .Query();
-
-                sgv2Again.Should().BeEquivalentTo(sgv2, x =>
-                    x.Excluding(y => y.SampleSelectorState)
-                    .Excluding(y => y.SampleSelectorType)
-                    .Excluding(y => y.TallyMethod));
-            }
-        }
-
-
-
-        [Theory]
-        [InlineData("7Wolf.cruise")]
-        [InlineData("0432 C53East TS.cruise")]
-        public void Tree_Test(string fileName)
-        {
-            var (orgFile, crz3File, origAgain) = SetUpTestFile(fileName);
-
-            using (var dbv2 = new CruiseDatastore(orgFile))
-            using (var dbv2Arain = new CruiseDatastore(origAgain))
-            {
-                var treev2Again = dbv2Arain.From<V2.Models.Tree>()
-                    .Query().ToArray();
-                treev2Again.Should().NotBeEmpty();
-
-                var treev2 = dbv2.From<V2.Models.Tree>()
-                    .Query().ToArray();
-                treev2.Should().NotBeEmpty();
-
-                treev2Again.Should().HaveSameCount(treev2);
-                treev2Again.Should().BeEquivalentTo(treev2,
-                    config => config
-                    .Excluding(y => y.TreeDefaultValue_CN)
-                    .Excluding(y => y.TreeFactor)
-                    .Excluding(y => y.PointFactor)
-                    .Excluding(y => y.ExpansionFactor)
-                    .Excluding(y => y.Tree_GUID));
-            }
-        }
-
-        [Theory]
-        [InlineData("R2_Test.cruise")]
-        public void Reports_Test(string fileName)
-        {
-            var (orgFile, crz3File, origAgain) = SetUpTestFile(fileName);
-
-            using (var dbv2 = new CruiseDatastore(orgFile))
-            using (var dbv2Again = new CruiseDatastore(origAgain))
-            {
-                var reportsV2Again = dbv2Again.From<V2.Models.Reports>()
-                    .Query().ToArray();
-                reportsV2Again.Should().NotBeEmpty();
-
-                var reportsV2 = dbv2.From<V2.Models.Reports>()
-                    .Query().ToArray();
-                reportsV2.Should().NotBeEmpty();
-
-                reportsV2Again.Should().HaveSameCount(reportsV2);
-                reportsV2Again.Should().BeEquivalentTo(reportsV2);
-
-            }
-        }
-
         [Fact]
         public void EnsureCanMigrate_CheckAllSubPopsHaveTDV_HasTDVs()
         {
@@ -465,7 +331,6 @@ ORDER BY cnt.CuttingUnit_CN, cnt.SampleGroup_CN, cnt.TreeDefaultValue_CN;").ToAr
             result.Should().NotBeEmpty();
 
             var downmigrator = new DownMigrator();
-
 
             // demonstrate that this file has trees with out TDVs
             v3db.From<CruiseDAL.V3.Models.Tree>().Where("SpeciesCode IS NULL OR LiveDead IS NULL").Query().Should().BeEmpty();
@@ -504,36 +369,6 @@ ORDER BY cnt.CuttingUnit_CN, cnt.SampleGroup_CN, cnt.TreeDefaultValue_CN;").ToAr
 
             foundMigratorTypes.Should().HaveCount(migrators.Count);
             foundMigratorTypes.IsSubsetOf(migrators).Should().BeTrue();
-        }
-
-
-        private (string, string, string) SetUpTestFile(string fileName, [CallerMemberName] string caller = null)
-        {
-            var filePath = Path.Combine(TestFilesDirectory, fileName);
-
-            var baseFileName = Path.GetFileName(fileName);
-            var orgFile = Path.Combine(TestTempPath, fileName);
-            var crz3File = (string)null;
-
-            // create copy of base file
-            if (File.Exists(orgFile) == false)
-            {
-                File.Copy(filePath, orgFile);
-            }
-            crz3File = new Migrator().MigrateFromV2ToV3(orgFile, true);
-
-
-            var v2againPath = Path.Combine(TestTempPath, caller + "_again_" + fileName);
-            using (var v2again = new DAL(v2againPath, true))
-            using (var v3db = new CruiseDatastore_V3(crz3File))
-            {
-                var cruiseID = v3db.ExecuteScalar<string>("SELECT CruiseID FROM Cruise;");
-                var downMigrator = new DownMigrator();
-                downMigrator.MigrateFromV3ToV2(cruiseID, v3db, v2again);
-
-            }
-
-            return (orgFile, crz3File, v2againPath);
         }
 
         protected record TreeCNTTotals
