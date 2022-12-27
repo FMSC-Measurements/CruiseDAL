@@ -1,3 +1,4 @@
+using CruiseDAL.DownMigrators;
 using CruiseDAL.TestCommon;
 using CruiseDAL.UpConvert;
 using CruiseDAL.V3.Models;
@@ -5,6 +6,7 @@ using FluentAssertions;
 using System;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using Xunit;
 using Xunit.Abstractions;
 
