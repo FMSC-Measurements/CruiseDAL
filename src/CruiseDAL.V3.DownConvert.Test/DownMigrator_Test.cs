@@ -1,10 +1,12 @@
-﻿using CruiseDAL.TestCommon;
+using CruiseDAL.DownMigrators;
+using CruiseDAL.TestCommon;
 using CruiseDAL.UpConvert;
 using CruiseDAL.V3.Models;
 using FluentAssertions;
 using System;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using Xunit;
 using Xunit.Abstractions;
 
@@ -354,6 +356,21 @@ ORDER BY cnt.CuttingUnit_CN, cnt.SampleGroup_CN, cnt.TreeDefaultValue_CN;").ToAr
 
             var result = DownMigrator.CheckAllSubPopsHaveTDV(init.CruiseID, v3db);
             result.Should().NotBeNullOrEmpty();
+        }
+
+        [Fact]
+        public void DOWN_MIGRATORS_Contains_All_Migrators()
+        {
+            var assembly = Assembly.GetAssembly(typeof(DownMigrator));
+            var foundMigratorTypes = assembly.GetTypes()
+                .Where(x => typeof(IDownMigrator).IsAssignableFrom(x) && x.IsClass)
+                .ToHashSet();
+
+            var migrators = DownMigrator.DOWN_MIGRATORS
+                .Select(x => x.GetType()).ToHashSet();
+
+            foundMigratorTypes.Should().HaveCount(migrators.Count);
+            foundMigratorTypes.IsSubsetOf(migrators).Should().BeTrue();
         }
 
         protected record TreeCNTTotals
