@@ -41,69 +41,59 @@ namespace CruiseDAL.V3.Sync
         {
             var steps = 19;
             float p = 0.0f;
-            var transaction = destination.BeginTransaction();
-            try
-            {
-                // field data
-                SyncTallyLedger(cruiseID, source, destination, options);
-                progress?.Report(p++ / steps);
 
-                SyncLog(cruiseID, source, destination, options);
-                progress?.Report(p++ / steps);
-                SyncStem(cruiseID, source, destination, options);
-                progress?.Report(p++ / steps);
-                SyncTree(cruiseID, source, destination, options);
-                progress?.Report(p++ / steps);
+            // field data
+            SyncTallyLedger(cruiseID, source, destination, options);
+            progress?.Report(p++ / steps);
 
-                SyncPlotLocation(cruiseID, source, destination, options);
-                progress?.Report(p++ / steps);
-                SyncPlot_Strata(cruiseID, source, destination, options);
-                progress?.Report(p++ / steps);
-                SyncPlots(cruiseID, source, destination, options);
-                progress?.Report(p++ / steps);
+            SyncLog(cruiseID, source, destination, options);
+            progress?.Report(p++ / steps);
+            SyncStem(cruiseID, source, destination, options);
+            progress?.Report(p++ / steps);
+            SyncTree(cruiseID, source, destination, options);
+            progress?.Report(p++ / steps);
 
-                //design
-                SyncSubPopulation(cruiseID, source, destination, options);
-                progress?.Report(p++ / steps);
-                SyncSampleGroup(cruiseID, source, destination, options);
-                progress?.Report(p++ / steps);
-                SyncCuttingUnit_Stratum(cruiseID, source, destination, options);
-                progress?.Report(p++ / steps);
-                SyncCuttingUnits(cruiseID, source, destination, options);
-                progress?.Report(p++ / steps);
-                SyncStrata(cruiseID, source, destination, options);
-                progress?.Report(p++ / steps);
+            SyncPlotLocation(cruiseID, source, destination, options);
+            progress?.Report(p++ / steps);
+            SyncPlot_Strata(cruiseID, source, destination, options);
+            progress?.Report(p++ / steps);
+            SyncPlots(cruiseID, source, destination, options);
+            progress?.Report(p++ / steps);
 
-                // field setup
-                SyncLogFieldSetup(cruiseID, source, destination, options);
-                progress?.Report(p++ / steps);
-                SyncTreeFieldSetup(cruiseID, source, destination, options);
-                progress?.Report(p++ / steps);
+            //design
+            SyncSubPopulation(cruiseID, source, destination, options);
+            progress?.Report(p++ / steps);
+            SyncSampleGroup(cruiseID, source, destination, options);
+            progress?.Report(p++ / steps);
+            SyncCuttingUnit_Stratum(cruiseID, source, destination, options);
+            progress?.Report(p++ / steps);
+            SyncCuttingUnits(cruiseID, source, destination, options);
+            progress?.Report(p++ / steps);
+            SyncStrata(cruiseID, source, destination, options);
+            progress?.Report(p++ / steps);
 
-                // validation
-                SyncTreeAuditRule(cruiseID, source, destination, options);
-                progress?.Report(p++ / steps);
-                SyncTreeAuditRuleSelector(cruiseID, source, destination, options);
-                progress?.Report(p++ / steps);
-                SyncTreeAuditResolution(cruiseID, source, destination, options);
-                progress?.Report(p++ / steps);
+            // field setup
+            SyncLogFieldSetup(cruiseID, source, destination, options);
+            progress?.Report(p++ / steps);
+            SyncTreeFieldSetup(cruiseID, source, destination, options);
+            progress?.Report(p++ / steps);
 
-                //processing
-                SyncVolumeEquations(cruiseID, source, destination, options);
-                progress?.Report(p++ / steps);
-                SyncReports(cruiseID, source, destination, options);
-                progress?.Report(p++ / steps);
+            // validation
+            SyncTreeAuditRule(cruiseID, source, destination, options);
+            progress?.Report(p++ / steps);
+            SyncTreeAuditRuleSelector(cruiseID, source, destination, options);
+            progress?.Report(p++ / steps);
+            SyncTreeAuditResolution(cruiseID, source, destination, options);
+            progress?.Report(p++ / steps);
 
-                transaction.Commit();
-            }
-            catch (Exception e)
-            {
-                transaction.Rollback();
-                throw;
-            }
+            //processing
+            SyncVolumeEquations(cruiseID, source, destination, options);
+            progress?.Report(p++ / steps);
+            SyncReports(cruiseID, source, destination, options);
+            progress?.Report(p++ / steps);
         }
 
-        
+
 
         private void SyncCuttingUnits(string cruiseID, DbConnection source, DbConnection destination, TableSyncOptions options)
         {
@@ -113,13 +103,13 @@ namespace CruiseDAL.V3.Sync
                 .Where("CruiseID = @p1")
                 .Query(cruiseID);
 
-            foreach(var i in deletedItems)
+            foreach (var i in deletedItems)
             {
                 var match = destination.From<CuttingUnit>()
                     .Where("CuttingUnitID = @CuttingUnitID")
                     .Query2(new { i.CuttingUnitID }).FirstOrDefault();
 
-                if(match != null)
+                if (match != null)
                 {
                     var x = destination.ExecuteNonQuery2("DELETE FROM CuttingUnit WHERE CuttingUnitID = @CuttingUnitID;", new { i.CuttingUnitID });
                 }
@@ -138,13 +128,13 @@ namespace CruiseDAL.V3.Sync
                 .Where("CruiseID = @p1")
                 .Query(cruiseID);
 
-            foreach(var i in deletedItems)
+            foreach (var i in deletedItems)
             {
                 var match = destination.From<Stratum>()
                     .Where("StratumID = @StratumID")
                     .Query2(new { i.StratumID }).FirstOrDefault();
 
-                if(match != null)
+                if (match != null)
                 {
                     var x = destination.ExecuteNonQuery2("DELETE FROM Stratum WHERE StratumID = @StratumID;", new { i.StratumID });
                 }
@@ -252,7 +242,7 @@ namespace CruiseDAL.V3.Sync
 
                 if (match != null)
                 {
-                    var x = destination.ExecuteNonQuery2("DELETE FROM LogFieldSetup WHERE CruiseID = @CruiseID AND StratumCode = @StratumCode AND Field = @Field;", 
+                    var x = destination.ExecuteNonQuery2("DELETE FROM LogFieldSetup WHERE CruiseID = @CruiseID AND StratumCode = @StratumCode AND Field = @Field;",
                         new { i.CruiseID, i.StratumCode, i.Field });
                 }
                 else
@@ -479,7 +469,7 @@ namespace CruiseDAL.V3.Sync
                 .Where("CruiseID = @p1")
                 .Query(cruiseID);
 
-            foreach(var i in deletedItems)
+            foreach (var i in deletedItems)
             {
                 var match = destination.From<TallyLedger>()
                     .Where("TallyLedgerID = @TallyLedgerID")
@@ -506,14 +496,14 @@ namespace CruiseDAL.V3.Sync
                 .Where("CruiseID = @p1")
                 .Query(cruiseid);
 
-            foreach(var i in deletedItems)
+            foreach (var i in deletedItems)
             {
                 var match = destination.From<Log>()
                     .Where("LogID = @LogID")
                     .Query2(new { i.LogID })
                     .FirstOrDefault();
 
-                if(match != null)
+                if (match != null)
                 {
                     var x = destination.ExecuteNonQuery2("DELETE FROM Log WHERE LogID = @LogID;", new { i.LogID });
                 }
@@ -532,14 +522,14 @@ namespace CruiseDAL.V3.Sync
                 .Where("CruiseID = @p1")
                 .Query(cruiseID);
 
-            foreach(var i in deletedItems)
+            foreach (var i in deletedItems)
             {
                 var match = destination.From<Stem>()
                     .Where("Stem = @StemID")
                     .Query2(new { i.StemID })
                     .FirstOrDefault();
 
-                if(match != null)
+                if (match != null)
                 {
                     var x = destination.ExecuteNonQuery2("DELETE FROM Stem WHERE StemID = @StemID;", new { i.StemID });
                 }
@@ -558,14 +548,14 @@ namespace CruiseDAL.V3.Sync
                 .Where("CruiseID = @p1")
                 .Query(cruiseID);
 
-            foreach(var i in deletedItems)
+            foreach (var i in deletedItems)
             {
                 var match = destination.From<VolumeEquation>()
                     .Where("CruiseID = @CruiseID AND Species = @Species AND PrimaryProduct = @PrimaryProduct AND VolumeEquationNumber = @VolumeEquationNumber")
-                    .Query2( new { i.CruiseID, i.Species, i.PrimaryProduct, i.VolumeEquationNumber })
+                    .Query2(new { i.CruiseID, i.Species, i.PrimaryProduct, i.VolumeEquationNumber })
                     .FirstOrDefault();
 
-                if(match != null)
+                if (match != null)
                 {
                     var x = destination.ExecuteNonQuery2("DELETE FROM VolumeEquation WHERE CruiseID = @CruiseID AND Species = @Species AND PrimaryProduct = @PrimaryProduct AND VolumeEquationNumber = @VolumeEquationNumber", new { i.CruiseID, i.Species, i.PrimaryProduct, i.VolumeEquationNumber });
                 }
@@ -584,14 +574,14 @@ namespace CruiseDAL.V3.Sync
                 .Where("CruiseID = @p1")
                 .Query(cruiseID);
 
-            foreach(var i in deletedItems)
+            foreach (var i in deletedItems)
             {
                 var match = destination.From<Reports>()
                     .Where("CruiseID = @CruiseID AND ReportID = @ReportID")
                     .Query2(new { i.CruiseID, i.ReportID })
                     .FirstOrDefault();
 
-                if(match != null)
+                if (match != null)
                 {
                     var x = destination.ExecuteNonQuery2("DELETE FROM Reports WHERE CruiseID = @CruiseID AND ReportID = @ReportID;",
                         new { i.CruiseID, i.ReportID });

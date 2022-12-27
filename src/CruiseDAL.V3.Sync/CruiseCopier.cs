@@ -83,6 +83,8 @@ namespace CruiseDAL.V3.Sync
 
             //Tree Tombstone
             var treetmb = source.From<Tree_Tombstone>().Where("CruiseID = @p1;").Query(cruiseID);
+            // because TreeMeasurment, TreeFieldValue, and TreeLocation don't have a CruiseID field, we need to copy over tombstones for each deleated tree
+            // we are working on the assumption that those records are only deleted when a tree is deleted. There is no other way to delete those record types.
             foreach (var ttmb in treetmb)
             {
                 destination.Insert(ttmb);
@@ -157,6 +159,9 @@ namespace CruiseDAL.V3.Sync
 
             CopyTable<StratumTemplateLogFieldSetup>(source, destination, cruiseID);
             CopyTable<StratumTemplateLogFieldSetup_Tombstone>(source, destination, cruiseID);
+
+            // util
+            CopyTable<CruiseLog>(source, destination, cruiseID);
         }
 
         public void CopyTable<TTable>(DbConnection source, DbConnection destination, string cruiseID) where TTable : class, new()

@@ -22,7 +22,7 @@ namespace CruiseDAL.V3.DownConvert.Test.DownMigrators
         }
 
         [Theory]
-        [InlineData("7Wolf.cruise", Skip = "plot count records have positive count values")]
+        //[InlineData("7Wolf.cruise", Skip = "plot count records have positive count values")]
         [InlineData("0432 C53East TS.cruise")]
         // test that all positive counts are the same after round trip conversion
         // we only test positive counts because additional 0 count records can be

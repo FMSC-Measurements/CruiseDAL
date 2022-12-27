@@ -1,19 +1,26 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace CruiseDAL.V3.Sync
 {
     [Flags]
-    public enum SyncOption { Lock = 0, Insert = 1, Update = 2, Delete = 4, Force = 8,
-        InsertUpdate = Insert | Update, InsertUpdateDelete = Insert | Update | Delete,
+    public enum SyncOption { Lock = 0, Insert = 1, Update = 2, [Browsable(false)] Delete = 4, 
+        [Browsable(false)] Force = 8,
+        InsertUpdate = Insert | Update, //InsertUpdateDelete = Insert | Update | Delete,
         ForceInsert = Insert | Force, ForceUpdate = Update | Force, ForceInsertUpdate = InsertUpdate | Force };
+
+
 
     public class TableSyncOptions
     {
-        public TableSyncOptions(SyncOption defaultOption = SyncOption.InsertUpdateDelete)
+        private static readonly PropertyInfo[] _properties = typeof(TableSyncOptions).GetProperties(BindingFlags.Public | BindingFlags.Instance);
+
+        public TableSyncOptions(SyncOption defaultOption = SyncOption.InsertUpdate)
         {
             Design = defaultOption;
             Validation = defaultOption;
@@ -27,6 +34,7 @@ namespace CruiseDAL.V3.Sync
             SampleGroup = defaultOption;
             Subpopulation = defaultOption;
             Species = defaultOption;
+            Species_Product = defaultOption;
             FixCNTTallyPopulation = defaultOption;
             LogFieldSetup = defaultOption;
             LogFieldHeading = defaultOption;
@@ -81,6 +89,8 @@ namespace CruiseDAL.V3.Sync
         public SyncOption Subpopulation { get; set; }
 
         public SyncOption Species { get; set; }
+
+        public SyncOption Species_Product { get; set; }
 
         public SyncOption FixCNTTallyPopulation { get; set; }
 
@@ -138,6 +148,11 @@ namespace CruiseDAL.V3.Sync
 
         public SyncOption Processing { get; set; }
 
+        public SyncOption CruiseLog { get; set; }
+
+        public bool AllowStratumDesignChanges { get; set; }
+
+        public bool AllowSampleGroupSamplingChanges { get; set; }
 
         public bool LogAllOrNone { get; set; } = false;
 
@@ -146,5 +161,18 @@ namespace CruiseDAL.V3.Sync
         public bool PlotTreeAllOrNone { get; set; } = false;
 
         public bool NonPlotTreeAllOrNone { get; set; } = false;
+        
+
+        public override string ToString()
+        {
+            var sb = new StringBuilder();
+
+            foreach(var p in _properties)
+            {
+                sb.AppendLine(p.Name + ": " + p.GetValue(this).ToString());
+            }
+
+            return sb.ToString();
+        }
     }
 }

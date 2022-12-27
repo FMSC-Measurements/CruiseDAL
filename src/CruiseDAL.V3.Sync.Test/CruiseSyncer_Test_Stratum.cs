@@ -40,7 +40,7 @@ namespace CruiseDAL.V3.Sync
             });
             var newStratum = fromDb.From<Stratum>().Where("StratumID = @p1").Query(stratumID).Single();
 
-            var syncer = new CruiseSyncer();
+            var syncer = new CruiseDatabaseSyncer();
             syncer.Sync(cruiseID, fromDb, toDb, syncOptions);
 
             var stratumAgain = toDb.From<Stratum>().Where("StratumID =  @p1")
@@ -84,7 +84,7 @@ namespace CruiseDAL.V3.Sync
             fromDb.Update(stratum);
 
             // run sync
-            var syncer = new CruiseSyncer();
+            var syncer = new CruiseDatabaseSyncer();
             syncer.Sync(cruiseID, fromDb, toDb, syncOptions);
 
             var stratumAgain = toDb.From<Stratum>().Where("StratumID =  @p1")
@@ -128,7 +128,7 @@ namespace CruiseDAL.V3.Sync
             fromDb.Update(stratum);
 
             // run sync
-            var syncer = new CruiseSyncer();
+            var syncer = new CruiseDatabaseSyncer();
             syncer.Sync(cruiseID, fromDb, toDb, syncOptions);
 
             var stratumAgain = toDb.From<Stratum>().Where("StratumID =  @p1")

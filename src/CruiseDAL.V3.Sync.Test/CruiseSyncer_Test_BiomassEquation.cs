@@ -40,7 +40,7 @@ namespace CruiseDAL.V3.Sync
             };
             fromDb.Insert(newBiomassEquation);
 
-            var syncer = new CruiseSyncer();
+            var syncer = new CruiseDatabaseSyncer();
             syncer.Sync(cruiseID, fromDb, toDb, syncOptions);
 
             toDb.From<BiomassEquation>().Count().Should().Be(1);

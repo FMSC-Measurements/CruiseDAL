@@ -38,6 +38,26 @@ classDiagram
         - Modified_TS : DATETIME
     }
 
+    class CruiseLog {
+    * CruiseLog_CN
+    -----
+        - CruiseLogID : TEXT
+        - CruiseID : TEXT <<FK>>
+        - CuttingUnitID : TEXT
+        - StratumID : TEXT
+        - SampleGroupID : TEXT
+        - PlotID : TEXT
+        - TallyLedgerID : TEXT
+        - TreeID : TEXT
+        - LogID : TEXT
+        - Message : TEXT
+        - TableName : TEXT
+        - Field : TEXT
+        - Program : TEXT
+        - TimeStamp : DATETIME
+        - Level : TEXT
+    }
+
     class CuttingUnit {
     * CuttingUnit_CN
     -----
@@ -1475,6 +1495,8 @@ classDiagram
     LK_Purpose <|-- Cruise
     LK_UOM <|-- Cruise
     Sale <|-- Cruise
+
+    Cruise <|-- CruiseLog
 
     Cruise <|-- CuttingUnit
     LK_LoggingMethod <|-- CuttingUnit

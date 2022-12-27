@@ -1,5 +1,6 @@
 ﻿using CruiseDAL.Schema;
 using CruiseDAL.Schema.Cruise.Lookup;
+using CruiseDAL.Schema.Tables.CrusieLog;
 using CruiseDAL.Schema.Views;
 using FMSC.ORM.Core;
 using FMSC.ORM.Logging;
@@ -11,7 +12,7 @@ namespace CruiseDAL
 {
     public class CruiseDatastoreBuilder_V3 : IDatastoreBuilder
     {
-        public static readonly Version DATABASE_VERSION = new Version("3.5.6");
+        public static readonly Version DATABASE_VERSION = new Version("3.6.1");
 
         public static readonly IEnumerable<ITableDefinition> TABLE_DEFINITIONS =
         new ITableDefinition[]
@@ -41,7 +42,7 @@ namespace CruiseDAL
             new Plot_StratumTableDefinition_3_5_5(),
             new PlotLocationTableDefinition(),
             new SampleGroupTableDefinition_3_5_5(),
-            new SpeciesTableDefinition(),
+            new SpeciesTableDefinition361(),
             new Species_ProductTableDefinition(),
             new TreeDefaultValueTableDefinition_3_5_6(),
             new TreeFieldSetupTableDefinition(),
@@ -84,6 +85,7 @@ namespace CruiseDAL
             // utility
             new MessageLogTableDefinition(),
             new GlobalsTableDefinition(),
+            new CruiseLogTableDefinition_3_6_0(),
         };
 
         public static readonly IEnumerable<IViewDefinition> VIEW_DEFINITIONS =

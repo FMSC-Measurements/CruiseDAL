@@ -1,0 +1,2194 @@
+CRUISE REPORT HEADER & CERTIFICATION
+CRUISE#: 00000      SALE#: 00000
+SALENAME: Girard
+RUN DATE & TIME: 9/22/2022 07:13:52
+ 
+Year: 0    Region: 05   Forest: 14   District: 62
+Remarks:  
+FILENAME: D:\QCG\LandExchangeCheckCruises\Girard\CheckInfo\CruiseRun\00000Girard\00000 Girard Checkupd.cruise
+REPORTS: A01 A02 A03 A04 A05 A07 A14 R401 R402 R501 ST1 ST2 ST3 TC58 TC60 TC62 UC1 UC5 VSM1 VSM2 
+         VSM3 
+
+
+
+
+
+
+                            **************************** CRUISE CERTIFICATION ****************************
+
+                                I certify that the timber for the Girard timber sale
+                                has been designated and cruised by the procedures and standards in
+                                FSH 2409.12, Timber Cruising Handbook.  Records of checks are on file
+                                at the District Ranger Office,
+
+
+
+                                ___________________                 ___________________________________
+                                RANGER DISTRICT                     (name of headquarters town)
+
+
+                                ___________________                 ______________
+                                DISTRICT RANGER                     DATE
+
+                            *****************************************************************************
+
+
+
+
+
+
+
+
+Developed and Maintained By:
+USDA FOREST SERVICE                                                                                             VERSION: 06.01.2022
+WASHINGTON OFFICE TIMBER MANAGEMENT                                                              VOLUME LIBRARY VERSION: 05.03.2022
+FORT COLLINS, COLORADO (970)295-5776                                                             NATIONAL CRUISE PROCESSING PROGRAM
+
+VOLUME EQUATION TABLE                                                                                                       PAGE 2
+CRUISE#: 00000      SALE#: 00000
+SALENAME: Girard                                                                                                 VERSION: 06.01.2022
+RUN DATE & TIME: 9/22/2022 07:13:52                                                             VOLUME LIBRARY VERSION: 05.03.2022
+
+
+                                                               PRIMARY                     SECONDARY
+                                                       ******* PRODUCT ********      ****** PRODUCT ******
+                                            TOTAL       MIN                             MIN
+                     VOLUME       STUMP     CUBIC       TOP                             TOP
+     SPECIES  PROD   EQUATION     HEIGHT    VOLUME      DIB   BDFT  CUFT  CORDS         DIB   BDFT  CUFT  CORDS   BIOMASS
+____________________________________________________________________________________________________________________________________
+     DF        01    500WO2W202    1.0        NO        6.0   YES   YES   NO            1.0   YES   YES   NO       NO     
+     IC        01    500WO2W081    1.0        NO        6.0   YES   YES   NO            1.0   YES   YES   NO       NO     
+     PP        01    500WO2W122    1.0        NO        6.0   YES   YES   NO            1.0   YES   YES   NO       NO     
+     SP        01    500WO2W117    1.0        NO        6.0   YES   YES   NO            1.0   YES   YES   NO       NO     
+     WF        01    500WO2W015    1.0        NO        6.0   YES   YES   NO            1.0   YES   YES   NO       NO     
+
+A01: STRATA, UNIT, PAYMENT UNIT AND SAMPLE GROUP REPORT (A1)                                                                PAGE 3
+CRUISE#: 00000      SALE#: 00000
+SALENAME: Girard                                                                                                 VERSION: 06.01.2022
+RUN DATE & TIME: 9/22/2022 07:13:52                                                             VOLUME LIBRARY VERSION: 05.03.2022
+
+
+     CRUISE   STRATA   CRUISE   STRATA          PLOT  NO. OF STRATA                     DATE
+     NO.      NO.      METHOD   ACRES   BAF     SIZE  PLOTS  DESCRIPTION                MMYYYY
+____________________________________________________________________________________________________________________________________
+     00000      01     PNT       17.10    33.61     0    0   Light                       72022
+     00000      02     PNT       58.70    40.00     0    1   Light                       72022
+     00000      03     PNT       43.80    20.00     0    0   Moderate                    72022
+     00000      04     PNT       11.90    27.78     0    0   Moderate                    72022
+     00000      05     PNT      446.50    33.61     0   17   Moderate                    72022
+     00000      06     PNT      192.50    40.00     0    6   Moderate                    72022
+     00000      07     PNT       54.80    40.00     0    2   Heavy                       72022
+
+A01: STRATA, UNIT, PAYMENT UNIT AND SAMPLE GROUP REPORT (A1)                                                                PAGE 4
+CRUISE#: 00000      SALE#: 00000
+SALENAME: Girard                                                                                                 VERSION: 06.01.2022
+RUN DATE & TIME: 9/22/2022 07:13:52                                                             VOLUME LIBRARY VERSION: 05.03.2022
+
+
+                              CUTTING   CUTTING
+     CRUISE       CUTTING     UNIT      UNIT                        LOG      PAYMENT
+     NO.          UNIT NO.    ACRES     DESCRIPTION                 METHOD   UNIT NO.
+____________________________________________________________________________________________________________________________________
+     00000            533       26.30   Moderate                                 
+     00000            550       11.90   Moderate                                 
+     00000            555      100.80   Moderate                                 
+     00000            556      102.70   Moderate                                 
+     00000            557       43.70   Heavy                                    
+     00000            558       43.40   Moderate                                 
+     00000            559       17.10   Light                                    
+     00000            560       40.20   Moderate                                 
+     00000            563       52.90   Moderate                                 
+     00000            564       43.80   Moderate                                 
+     00000            566       25.90   Moderate                                 
+     00000            568       11.40   Moderate                                 
+     00000            973       19.80   Moderate                                 
+     00000            975       51.40   Moderate                                 
+     00000            977       31.40   Light                                    
+     00000            978       27.30   Light                                    
+     00000            979       24.30   Moderate                                 
+     00000            980       60.10   Moderate                                 
+     00000            982       32.70   Moderate                                 
+     00000            983       19.00   Moderate                                 
+     00000            985       28.10   Moderate                                 
+     00000            986       11.10   Heavy                                    
+
+        TOTAL SALE ACRES:      825.30
+
+A01: STRATA, UNIT, PAYMENT UNIT AND SAMPLE GROUP REPORT (A1)                                                                PAGE 5
+CRUISE#: 00000      SALE#: 00000
+SALENAME: Girard                                                                                                 VERSION: 06.01.2022
+RUN DATE & TIME: 9/22/2022 07:13:52                                                             VOLUME LIBRARY VERSION: 05.03.2022
+
+
+     CRUISE     CUTTING             PAYMENT
+     NO.        UNIT     STRATUM    UNIT
+____________________________________________________________________________________________________________________________________
+     00000        533      06           
+     00000        550      04           
+     00000        555      05           
+     00000        556      05           
+     00000        557      07           
+     00000        558      06           
+     00000        559      01           
+     00000        560      06           
+     00000        563      05           
+     00000        564      03           
+     00000        566      05           
+     00000        568      06           
+     00000        973      06           
+     00000        975      06           
+     00000        977      02           
+     00000        978      02           
+     00000        979      05           
+     00000        980      05           
+     00000        982      05           
+     00000        983      05           
+     00000        985      05           
+     00000        986      07           
+
+A01: STRATA, UNIT, PAYMENT UNIT AND SAMPLE GROUP REPORT (A1)                                                                PAGE 6
+CRUISE#: 00000      SALE#: 00000
+SALENAME: Girard                                                                                                 VERSION: 06.01.2022
+RUN DATE & TIME: 9/22/2022 07:13:52                                                             VOLUME LIBRARY VERSION: 05.03.2022
+
+
+          SAMPLE                 BIG   SMALL
+ STRATUM  GROUP    FREQ   KZ     BAF   FPS      DESCRIPTION
+____________________________________________________________________________________________________________________________________
+  01        AS        0      0      0          Light                    
+  02        AS        0      0      0          Light                    
+  03        AS        0      0      0          Moderate                 
+  04        AS        0      0      0          Moderate                 
+  05        AS        0      0      0          Moderate                 
+  06        AS        0      0      0          Moderate                 
+  07        AS        0      0      0          Heavy                    
+
+A02: PLOT INFORMATION REPORT (A1)                                                                                           PAGE 7
+CRUISE#: 00000      SALE#: 00000
+SALENAME: Girard                                                                                                 VERSION: 06.01.2022
+RUN DATE & TIME: 9/22/2022 07:13:52                                                             VOLUME LIBRARY VERSION: 05.03.2022
+
+
+     CRUISE   PLOT     CUTTING  STRATA    SLOPE           PLOT   NULL
+     NO.      NO.      UNIT NO. NO.         %     ASPECT  KPI    PLOT?
+____________________________________________________________________________________________________________________________________
+     00000      17       978       02         0     0          0    
+     00000      71       555       05         0     0          0    
+     00000     106       555       05         0     0          0    
+     00000     131       555       05         0     0          0    
+          REMARKS >>   TREES ARE OUT OF OREDR
+     00000     154       555       05         0     0          0    
+     00000     156       555       05         0     0          0    
+     00000      47       556       05         0     0          0    
+     00000      52       556       05         0     0          0    
+     00000      81       556       05         0     0          0    
+     00000     109       556       05         0     0          0    
+     00000     112       556       05         0     0          0    
+     00000     262       563       05         0     0          0    
+     00000     196       566       05         0     0          0    
+          REMARKS >>   NO PIN OR PLOT CENTER FOUND, JUST MEASURED TREES, CRUISED 12/6/2021 ON HANGING FLAG
+     00000     201       979       05         0     0          0    
+     00000     184       980       05         0     0          0    
+     00000     241       982       05         0     0          0    
+          REMARKS >>   NO PIN OR PLOT CENTER FOUND, JUST MEASURED TREES, CRUISED 12/7/2021 ON HANGING FLAG
+     00000     223       983       05         0     0          0    
+     00000      67       985       05         0     0          0    
+     00000      26       533       06         0     0          0    
+     00000     190       558       06         0     0          0    
+     00000     205       560       06         0     0          0    
+     00000     180       568       06         0     0          0    
+          REMARKS >>   NO PIN OR PLOT CENTER FOUND, JUST MEASURED TREES, CRUISED 12/7/2021 ON HANGING FLAG
+     00000      21       973       06         0     0          0    
+     00000      31       975       06         0     0          0    
+     00000     269       557       07         0     0          0    
+     00000     298       986       07         0     0          0    
+
+A03: LISTING OF TREE MEASUREMENTS AND CHARACTERISTICS (A2)                                                                  PAGE 8
+CRUISE#: 00000      SALE#: 00000
+SALENAME: Girard                                                                                                 VERSION: 06.01.2022
+RUN DATE & TIME: 9/22/2022 07:13:52                                                             VOLUME LIBRARY VERSION: 05.03.2022
+
+
+                                      T                   T             T    
+                                  C   R       U  P      L R           M D    
+                         P  P     U C E              Y  I E           R I    
+                  S      R  R  S  T N E       O  H   L  V E           H B    
+S                 P      O  O  M  / T         F  I   D  E   D     T   T      
+T                 E      D  D  P  L / C          D      / G B     O     P    
+R  U    P    T    C               E M O       M      C  D R H     T   T R    
+A  N    L    R    I      P  S  G  A E U       E  D   O  E A -         Y      
+T  I    O    E    E      R  E  R  V A N       A  E   M  A D O     H   P P    
+A  T    T    E    S      I  C  P  E S T       S  F   P  D E B     T   E D    
+____________________________________________________________________________________________________________________________________
+02 978   17    1 DF     01 08 AS  C M       1 01   2 CL L 1  20.2  75 F  8.0 
+     REMARKS: PISTOL BUTT, FOMES 4-8', LESS THAN 3"
+02 978   17    2 DF     01 08 AS  C M       1 01   1 CL L 1  14.2  67 F  7.0 
+     REMARKS: OBTNL @ 31, 34 W/ NO MERCH ABOVE
+02 978   17    3 DF     01 08 AS  C M       1 01   2 CL L 1  23.4  90 F  9.0 
+02 978   17    4 PP     01 08 AS  C M       1 01   4 CL L 1  17.1  75 F  8.0 
+     REMARKS: CK @ 12.5
+05 555   71    1 DF     01 08 AS  C M       1 01   2 CL L 1  19.4  96 F  8.0 
+     REMARKS: DSL@22
+05 555   71    2 SP     01 08 AS  C M       1 01   4 CL L 1  24.9  93 F  9.0 
+     REMARKS: CK@14-17, STARTING TO FADE
+05 555   71    3 DF     01 08 AS  C M       1 01   0 CL L 1  12.3  60 F  6.0 
+05 555   71    4 DF     01 08 AS  C M       1 01   1 CL L 1  15.9  94 F  7.0 
+05 555   71    5 DF     01 08 AS  C M       1 01   4 CL L 1  32.2 130 F 12.0 
+     REMARKS: SWP 50-60
+05 555   71    6 DF     01 08 AS  C M       1 01   2 CL L 1  18.0 100 F  8.0 
+05 555   71    7 DF     01 08 AS  C M       1 01   0 CL L 1  12.2  86 F  6.0 
+05 555   71    8 DF     01 08 AS  C M       1 01   2 CL L 1  24.0 110 F  9.0 
+05 555  106    1 DF     01 08 AS  C M       1 01   2 CL L 1  18.0 105 F  8.0 
+05 555  106    2 DF     01 08 AS  C M       1 01   1 CL L 1  15.4  95 F  7.0 
+05 555  106    3 DF     01 08 AS  C M       1 01   2 CL L 1  17.7  86 F  8.0 
+05 555  106    4 DF     01 08 AS  C M       1 01   2 CL L 1  18.7  86 F  8.0 
+     REMARKS: DSL @ 12, 14
+05 555  131    1 DF     01 08 AS  C M       1 01   1 CL L 1  13.2  85 F  7.0 
+     REMARKS: DSL@3', # 2 IN CRUISERS DATA
+05 555  131    2 DF     01 08 AS  C M       1 01   3 CL L 1  27.0 135 F 11.0 
+05 555  131    3 DF     01 08 AS  C M       1 01   2 CL L 1  21.1 110 F  9.0 
+     REMARKS: # 3 IN CRUISERS DATA
+05 555  131    4 DF     01 08 AS  C M       1 01   1 CL L 1  13.9  92 F  7.0 
+     REMARKS: # 1 IN CRUISERS DATA 
+05 555  154    1 DF     01 08 AS  C M       1 01   6 CL L 1  38.3 128 F 14.0 
+
+A03: LISTING OF TREE MEASUREMENTS AND CHARACTERISTICS (A2)                                                                  PAGE 9
+CRUISE#: 00000      SALE#: 00000
+SALENAME: Girard                                                                                                 VERSION: 06.01.2022
+RUN DATE & TIME: 9/22/2022 07:13:52                                                             VOLUME LIBRARY VERSION: 05.03.2022
+
+
+                                      T                   T             T    
+                                  C   R       U  P      L R           M D    
+                         P  P     U C E              Y  I E           R I    
+                  S      R  R  S  T N E       O  H   L  V E           H B    
+S                 P      O  O  M  / T         F  I   D  E   D     T   T      
+T                 E      D  D  P  L / C          D      / G B     O     P    
+R  U    P    T    C               E M O       M      C  D R H     T   T R    
+A  N    L    R    I      P  S  G  A E U       E  D   O  E A -         Y      
+T  I    O    E    E      R  E  R  V A N       A  E   M  A D O     H   P P    
+A  T    T    E    S      I  C  P  E S T       S  F   P  D E B     T   E D    
+____________________________________________________________________________________________________________________________________
+05 555  154    2 DF     01 08 AS  C M       1 01   2 CL L 1  22.3  92 F  9.0 
+     REMARKS: # 1 IN CRUISERS DATA, ALSO I BELIEVE THE CRUISERS HTS ARE REVERSED
+05 555  156    1 SP     01 08 AS  C M       1 01   6 CL L 1  49.5 160 F 17.0 
+05 555  156    2 DF     01 08 AS  C M       1 01   6 CL L 1  40.3 145 F 14.0 
+05 555  156    3 DF     01 08 AS  C M       1 01   0 CL L 1  10.3  78 F  6.0 
+05 555  156    4 DF     01 08 AS  C M       1 01   2 CL L 1  17.4 111 F  8.0 
+     REMARKS: FK @ 100 AMUTD
+05 555  156    5 DF     01 08 AS  C M       1 01   2 CL L 1  21.6 125 F  9.0 
+05 555  156    6 DF     01 08 AS  C M       1 01   1 CL L 1  15.2 100 F  7.0 
+05 556   47    1 DF     01 08 AS  C M       1 01   0 CL L 1  10.3  75 F  6.0 
+05 556   47    2 DF     01 08 AS  C M       1 01   2 CL L 1  18.7 105 F  8.0 
+05 556   47    3 DF     01 08 AS  C M       1 01   1 CL L 1  14.4  88 F  7.0 
+05 556   47    4 DF     01 08 AS  C M       1 01   1 CL L 1  16.6  91 F  7.0 
+05 556   52    1 DF     01 08 AS  C M       1 01   2 CL L 1  18.7  83 F  8.0 
+     REMARKS: # 2 IN CRUISERS DATA
+05 556   52    2 DF     01 08 AS  C M       1 01   2 CL L 1  21.0 118 F  9.0 
+05 556   52    3 DF     01 08 AS  C M       1 01   0 CL L 1  12.8 103 F  6.0 
+05 556   81    1 SP     01 08 AS  C M       1 01   3 CL L 1  14.2  65 F  7.0 
+05 556   81    2 DF     01 08 AS  C M       1 01   2 CL L 1  19.7  96 F  8.0 
+05 556   81    3 DF     01 08 AS  C M       1 01   1 CL L 1  15.3  70 F  7.0 
+05 556  109    1 DF     01 08 AS  C M       1 01   0 CL L 1  10.2  75 F  6.0 
+05 556  109    2 DF     01 08 AS  C M       1 01   2 CL L 1  21.7 107 F  9.0 
+     REMARKS: FOMES 0-12 3"+
+05 556  109    3 DF     01 08 AS  C M       1 01   0 CL L 1  11.8  70 F  6.0 
+05 556  109    4 DF     01 08 AS  C M       1 01   0 CL L 1  10.9  70 F  6.0 
+     REMARKS: OBTNL SS @ 15'
+05 556  109    5 DF     01 08 AS  C M       1 01   2 CL L 1  18.0 106 F  8.0 
+05 556  112    1 DF     01 08 AS  C M       1 01   3 CL L 1  25.5 120 F 10.0 
+     REMARKS: PISTOL BUTT
+05 556  112    2 DF     01 08 AS  C M       1 01   3 CL L 1  28.5 125 F 11.0 
+05 556  112    3 DF     01 08 AS  C M       1 01   1 CL L 1  16.9 100 F  7.0 
+
+A03: LISTING OF TREE MEASUREMENTS AND CHARACTERISTICS (A2)                                                                  PAGE 10
+CRUISE#: 00000      SALE#: 00000
+SALENAME: Girard                                                                                                 VERSION: 06.01.2022
+RUN DATE & TIME: 9/22/2022 07:13:52                                                             VOLUME LIBRARY VERSION: 05.03.2022
+
+
+                                      T                   T             T    
+                                  C   R       U  P      L R           M D    
+                         P  P     U C E              Y  I E           R I    
+                  S      R  R  S  T N E       O  H   L  V E           H B    
+S                 P      O  O  M  / T         F  I   D  E   D     T   T      
+T                 E      D  D  P  L / C          D      / G B     O     P    
+R  U    P    T    C               E M O       M      C  D R H     T   T R    
+A  N    L    R    I      P  S  G  A E U       E  D   O  E A -         Y      
+T  I    O    E    E      R  E  R  V A N       A  E   M  A D O     H   P P    
+A  T    T    E    S      I  C  P  E S T       S  F   P  D E B     T   E D    
+____________________________________________________________________________________________________________________________________
+05 556  112    4 DF     01 08 AS  C M       1 01   4 CL L 1  30.2 140 F 12.0 
+05 563  262    1 DF     01 08 AS  C M       1 01   2 CL L 1  19.3 118 F  8.0 
+     REMARKS: DSL@ 66
+05 563  262    2 DF     01 08 AS  C M       1 01   2 CL L 1  24.3 130 F  9.0 
+05 563  262    3 DF     01 08 AS  C M       1 01   0 CL L 1  10.1  96 F  6.0 
+05 563  262    4 DF     01 08 AS  C M       1 01   2 CL L 1  17.2 105 F  8.0 
+05 563  262    5 DF     01 08 AS  C M       1 01   2 CL L 1  23.8 130 F  9.0 
+05 563  262    6 DF     01 08 AS  C M       1 01   2 CL L 1  23.8 140 F  9.0 
+05 566  196    1 DF     01 08 AS  C M       1 01   3 CL L 1  26.0 118 F 10.0 
+     REMARKS: SWP 0-12
+05 566  196    2 DF     01 08 AS  C M       1 01   3 CL L 1  27.7 126 F 11.0 
+05 566  196    3 DF     01 08 AS  C M       1 01   3 CL L 1  28.8 113 F 11.0 
+05 979  201    1 DF     01 08 AS  C M       1 01   0 CL L 1  12.0  60 F  6.0 
+05 979  201    2 SP     01 08 AS  C M       1 01   3 CL L 1  14.0  45 F  7.0 
+     REMARKS: TS 0-4 
+05 979  201    3 DF     01 08 AS  C M       1 01   1 CL L 1  16.3  66 F  7.0 
+05 980  184    1 WF     01 08 AS  C M       1 01   0 CL L 1  10.1  60 F  6.0 
+05 980  184    2 DF     01 08 AS  C M       1 01   5 CL L 1  36.9 150 F 13.0 
+     REMARKS: OBTNL NOT SS, NO COMPARISON TREES AROUND, USE CRUISERS DATA SET FOR AVE HT, I SAY AD 50-60', DATA AVE = 150
+05 980  184    3 DF     01 08 AS  C M       1 01   2 CL L 1  18.0  85 F  8.0 
+05 980  184    4 DF     01 08 AS  C M       1 01   1 CL L 1  15.0  82 F  7.0 
+     REMARKS: dead sucker limb at 42'
+05 982  241    1 IC     01 08 AS  C M       1 01   0 CL L 1  15.3  72 F  7.0 
+05 982  241    2 DF     01 08 AS  C M       1 01   3 CL L 1  25.6 107 F 10.0 
+     REMARKS: SWP 25-50
+05 982  241    3 DF     01 08 AS  C M       1 01   2 CL L 1  23.2 108 F  9.0 
+05 982  241    4 DF     01 08 AS  C M       1 01   7 CL L 1  43.8 117 F 14.0 
+05 983  223    1 DF     01 08 AS  C M       1 01   3 CL L 1  25.4 110 F 10.0 
+     REMARKS: DSL @ 37
+05 983  223    2 DF     01 08 AS  C M       1 01   2 CL L 1  20.1  95 F  8.0 
+     REMARKS: SLIGHT SWP NO D
+
+A03: LISTING OF TREE MEASUREMENTS AND CHARACTERISTICS (A2)                                                                  PAGE 11
+CRUISE#: 00000      SALE#: 00000
+SALENAME: Girard                                                                                                 VERSION: 06.01.2022
+RUN DATE & TIME: 9/22/2022 07:13:52                                                             VOLUME LIBRARY VERSION: 05.03.2022
+
+
+                                      T                   T             T    
+                                  C   R       U  P      L R           M D    
+                         P  P     U C E              Y  I E           R I    
+                  S      R  R  S  T N E       O  H   L  V E           H B    
+S                 P      O  O  M  / T         F  I   D  E   D     T   T      
+T                 E      D  D  P  L / C          D      / G B     O     P    
+R  U    P    T    C               E M O       M      C  D R H     T   T R    
+A  N    L    R    I      P  S  G  A E U       E  D   O  E A -         Y      
+T  I    O    E    E      R  E  R  V A N       A  E   M  A D O     H   P P    
+A  T    T    E    S      I  C  P  E S T       S  F   P  D E B     T   E D    
+____________________________________________________________________________________________________________________________________
+05 983  223    3 DF     01 08 AS  C M       1 01   2 CL L 1  18.6  84 F  8.0 
+05 985   67    1 DF     01 08 AS  C M       1 01   2 CL L 1  18.6 100 F  8.0 
+05 985   67    2 DF     01 08 AS  C M       1 01   1 CL L 1  16.5 106 F  7.0 
+05 985   67    3 DF     01 08 AS  C M       1 01   2 CL L 1  21.4 110 F  9.0 
+06 533   26    1 DF     01 08 AS  C M       1 01   2 CL L 1  17.9 100 F  8.0 
+06 533   26    2 DF     01 08 AS  C M       1 01   1 CL L 1  13.1  80 F  7.0 
+06 533   26    3 DF     01 08 AS  C M       1 01   5 CL L 1  33.2 130 F 12.0 
+     REMARKS: LITTLE SWP 0-20
+06 533   26    4 IC     01 08 AS  C M       1 01  11 CL L 1  32.1  70 F 11.0 
+     REMARKS: CK 2 42, OBTNL SS @ 52
+06 533   26    5 DF     01 08 AS  C M       1 01   2 CL L 1  20.3 120 F  8.0 
+06 533   26    6 DF     01 08 AS  C M       1 01   1 CL L 1  14.4  92 F  7.0 
+06 533   26    7 DF     01 08 AS  C M       1 01   0 CL L 1  11.9  80 F  6.0 
+06 533   26    8 DF     01 08 AS  C M       1 01   1 CL L 1  14.8 100 F  7.0 
+     REMARKS: SLIGHT SWP 0-16
+06 558  190    1 DF     01 08 AS  C M       1 01   4 CL L 1  30.4 105 F 12.0 
+     REMARKS: TREE AGAINT THIS ONE, TOOK HALF DBH OF 15.2', SWP 0-16
+06 560  205    1 DF     01 08 AS  C M       1 01   1 CL L 1  16.7  92 F  7.0 
+06 560  205    2 DF     01 08 AS  C M       1 01   2 CL L 1  22.0 100 F  9.0 
+06 560  205    3 DF     01 08 AS  C M       1 01   2 CL L 1  18.5  99 F  8.0 
+06 560  205    4 DF     01 08 AS  C M       1 01   2 CL L 1  23.0 120 F  9.0 
+06 560  205    5 SP     01 08 AS  C M       1 01   4 CL L 1  18.2 122 F  8.0 
+     REMARKS: SWP 0-25
+06 560  205    6 DF     01 08 AS  C M       1 01   4 CL L 1  32.4 153 F 12.0 
+06 560  205    7 DF     01 08 AS  C M       1 01   3 CL L 1  28.0 137 F 11.0 
+06 568  180    1 DF     01 08 AS  C M       1 01   2 CL L 1  22.8  98 F  9.0 
+06 568  180    2 PP     01 08 AS  C M       1 01   4 CL L 1  24.7  91 F  9.0 
+     REMARKS: SWP 0-16, OBTNL@54, ADD 10' TO HT OF 81'
+06 568  180    3 DF     01 08 AS  C M       1 01   0 CL L 1  11.2  62 F  6.0 
+06 568  180    4 PP     01 08 AS  C M       1 01   4 CL L 1  21.0  96 F  9.0 
+     REMARKS: DSL@34
+
+A03: LISTING OF TREE MEASUREMENTS AND CHARACTERISTICS (A2)                                                                  PAGE 12
+CRUISE#: 00000      SALE#: 00000
+SALENAME: Girard                                                                                                 VERSION: 06.01.2022
+RUN DATE & TIME: 9/22/2022 07:13:52                                                             VOLUME LIBRARY VERSION: 05.03.2022
+
+
+                                      T                   T             T    
+                                  C   R       U  P      L R           M D    
+                         P  P     U C E              Y  I E           R I    
+                  S      R  R  S  T N E       O  H   L  V E           H B    
+S                 P      O  O  M  / T         F  I   D  E   D     T   T      
+T                 E      D  D  P  L / C          D      / G B     O     P    
+R  U    P    T    C               E M O       M      C  D R H     T   T R    
+A  N    L    R    I      P  S  G  A E U       E  D   O  E A -         Y      
+T  I    O    E    E      R  E  R  V A N       A  E   M  A D O     H   P P    
+A  T    T    E    S      I  C  P  E S T       S  F   P  D E B     T   E D    
+____________________________________________________________________________________________________________________________________
+06 568  180    5 DF     01 08 AS  C M       1 01   2 CL L 1  20.6 110 F  8.0 
+06 568  180    6 DF     01 08 AS  C M       1 01   1 CL L 1  15.1  89 F  7.0 
+06 973   21    1 DF     01 08 AS  C M       1 01   2 CL L 1  17.6  91 F  8.0 
+06 973   21    2 PP     01 08 AS  C M       1 01   4 CL D 1  27.0  80 F 11.0 
+     REMARKS: TREE IS DEAD AT LEAST TWO YEARS?
+06 973   21    3 DF     01 08 AS  C M       1 01   1 CL L 1  14.6  85 F  7.0 
+06 973   21    4 DF     01 08 AS  C M       1 01   1 CL L 1  16.6  93 F  7.0 
+06 975   31    1 DF     01 08 AS  C M       1 01   6 CL L 1  38.1 140 F 14.0 
+     REMARKS: SWP 0-20, CK@43
+06 975   31    2 DF     01 08 AS  C M       1 01   5 CL L 1  35.9 150 F 13.0 
+06 975   31    3 DF     01 08 AS  C M       1 01   7 CL L 1  42.8 134 F 14.0 
+     REMARKS: DSL/CK @ 48
+06 975   31    4 DF     01 08 AS  C M       1 01   1 CL L 1  15.1  74 F  7.0 
+07 557  269    1 DF     01 08 AS  C M       1 01   1 CL L 1  15.0  81 F  7.0 
+     REMARKS: SWP 0-6
+07 557  269    2 WF     01 08 AS  C M       1 01   1 CL L 1  15.2  86 F  7.0 
+     REMARKS: CREW CALLED GF, NO GF IN THIS AREA
+07 986  298    1 IC     01 08 AS  C M       1 01  13 CL L 1  33.2 100 F 12.0 
+     REMARKS: CK @ 25
+07 986  298    2 DF     01 08 AS  C M       1 01   4 CL L 1  30.7 138 F 12.0 
+07 986  298    3 DF     01 08 AS  C M       1 01   4 CL L 1  32.8 133 F 12.0 
+
+>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+A04 >>>> No data for report in Count table
+>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+
+A05: CUBIC FOOT                                                                                                             PAGE 13
+ PRIMARY AND SECONDARY PRODUCT
+ VOLUME INFORMATION (A5)
+CRUISE#: 00000      SALE#: 00000
+SALENAME: Girard                                                                                                 VERSION: 06.01.2022
+RUN DATE & TIME: 9/22/2022 07:13:52                                                             VOLUME LIBRARY VERSION: 05.03.2022
+
+
+                                    
+                                    
+                                    
+                  S            T    
+  S               P       D    O    
+  T               E       B    T    
+  R  U    P   T   C       H            ************ PER TREE ************                           ***** PER ACRE/PER STRATA *****
+  A  N    L   R   I       -    H       *** PRIMARY ***    ** SECONDARY **                           ** PRIMARY **   ** SECONDARY **
+  T  I    O   E   E       O    G        GROSS    NET      GROSS   NET      TREE    CHAR      EXP     GROSS   NET      GROSS    NET
+  A  T    T   E   S       B    T        CUFT     CUFT     CUFT    CUFT      FAC     FAC      FAC     CUFT    CUFT     CUFT     CUFT
+____________________________________________________________________________________________________________________________________
+ 02 978   17    1 DF      20.2  75        48.8    25.9      3.1     3.1   17.974   0.000   17.974    877.1    465.5     55.7    55.7
+ 02 978   17    2 DF      14.2  67        20.8    14.1      2.6     2.6   36.372   0.000   36.372    756.5    512.8     94.6    94.6
+ 02 978   17    3 DF      23.4  90        78.6    77.0      4.2     4.2   13.394   0.000   13.394   1052.8   1031.3     56.3    56.3
+ 02 978   17    4 PP      17.1  75        35.4    31.9      3.8     3.8   25.081   0.000   25.081    887.9    800.1     95.3    95.3
+ 05 555   71    1 DF      19.4  96        59.0    55.6      4.3     4.3   16.374   0.000    0.963     56.8     53.5      4.1     4.1
+ 05 555   71    2 SP      24.9  93        91.8    83.5      4.4     4.4    9.939   0.000    0.585     53.7     48.8      2.6     2.6
+ 05 555   71    3 DF      12.3  60        13.7    13.7      1.8     1.8   40.733   0.000    2.396     32.8     32.8      4.3     4.3
+ 05 555   71    4 DF      15.9  94        38.0    37.7      3.1     3.1   24.376   0.000    1.434     54.5     54.1      4.4     4.4
+ 05 555   71    5 DF      32.2 130       209.0   193.4     11.7    11.7    5.943   0.000    0.350     73.2     67.7      4.1     4.1
+ 05 555   71    6 DF      18.0 100        51.0    50.0      4.9     4.9   19.020   0.000    1.119     57.1     55.9      5.5     5.5
+ 05 555   71    7 DF      12.2  86        19.2    19.2      2.6     2.6   41.403   0.000    2.435     46.8     46.8      6.3     6.3
+ 05 555   71    8 DF      24.0 110        98.2    96.2      5.0     5.0   10.699   0.000    0.629     61.8     60.5      3.1     3.1
+ 05 555  106    1 DF      18.0 105        53.5    52.4      5.0     5.0   19.020   0.000    1.119     59.9     58.6      5.6     5.6
+ 05 555  106    2 DF      15.4  95        36.2    35.9      3.8     3.8   25.984   0.000    1.528     55.3     54.9      5.8     5.8
+ 05 555  106    3 DF      17.7  86        41.6    40.8      4.3     4.3   19.670   0.000    1.157     48.1     47.2      5.0     5.0
+ 05 555  106    4 DF      18.7  86        46.6    41.1      3.8     3.8   17.623   0.000    1.037     48.3     42.6      3.9     3.9
+ 05 555  131    1 DF      13.2  85        22.5    21.1      4.3     4.3   35.368   0.000    2.080     46.8     43.9      8.9     8.9
+ 05 555  131    2 DF      27.0 135       148.6   144.0     11.2    11.2    8.453   0.000    0.497     73.9     71.6      5.6     5.6
+ 05 555  131    3 DF      21.1 110        77.0    75.5      6.7     6.7   13.842   0.000    0.814     62.7     61.5      5.5     5.5
+ 05 555  131    4 DF      13.9  92        26.5    26.3      4.3     4.3   31.895   0.000    1.876     49.7     49.3      8.1     8.1
+ 05 555  154    1 DF      38.3 128       290.3   272.9     15.6    15.6    4.201   0.000    0.247     71.7     67.4      3.9     3.9
+ 05 555  154    2 DF      22.3  92        73.8    72.4      4.4     4.4   12.392   0.000    0.729     53.8     52.8      3.2     3.2
+ 05 555  156    1 SP      49.5 160       666.4   626.4     26.8    26.8    2.515   0.000    0.148     98.6     92.7      4.0     4.0
+ 05 555  156    2 DF      40.3 145       356.5   335.0     16.3    16.3    3.794   0.000    0.223     79.5     74.7      3.6     3.6
+ 05 555  156    3 DF      10.3  78        11.6    11.6      3.0     3.0   58.087   0.000    3.417     39.6     39.6     10.3    10.3
+ 05 555  156    4 DF      17.4 111        50.7    49.7      5.8     5.8   20.354   0.000    1.197     60.7     59.5      6.9     6.9
+ 05 555  156    5 DF      21.6 125        92.9    91.1      6.9     6.9   13.208   0.000    0.777     72.2     70.8      5.4     5.4
+ 05 555  156    6 DF      15.2 100        37.2    36.9      3.4     3.4   26.673   0.000    1.569     58.4     57.9      5.3     5.3
+ 05 556   47    1 DF      10.3  75        11.0    11.0      3.0     3.0   58.087   0.000    3.417     37.6     37.6     10.3    10.3
+ 05 556   47    2 DF      18.7 105        57.5    56.3      4.9     4.9   17.623   0.000    1.037     59.6     58.4      5.1     5.1
+
+A05: CUBIC FOOT                                                                                                             PAGE 14
+ PRIMARY AND SECONDARY PRODUCT
+ VOLUME INFORMATION (A5)
+CRUISE#: 00000      SALE#: 00000
+SALENAME: Girard                                                                                                 VERSION: 06.01.2022
+RUN DATE & TIME: 9/22/2022 07:13:52                                                             VOLUME LIBRARY VERSION: 05.03.2022
+
+
+                                    
+                                    
+                                    
+                  S            T    
+  S               P       D    O    
+  T               E       B    T    
+  R  U    P   T   C       H            ************ PER TREE ************                           ***** PER ACRE/PER STRATA *****
+  A  N    L   R   I       -    H       *** PRIMARY ***    ** SECONDARY **                           ** PRIMARY **   ** SECONDARY **
+  T  I    O   E   E       O    G        GROSS    NET      GROSS   NET      TREE    CHAR      EXP     GROSS   NET      GROSS    NET
+  A  T    T   E   S       B    T        CUFT     CUFT     CUFT    CUFT      FAC     FAC      FAC     CUFT    CUFT     CUFT     CUFT
+____________________________________________________________________________________________________________________________________
+ 05 556   47    3 DF      14.4  88        27.5    27.3      3.4     3.4   29.719   0.000    1.748     48.1     47.7      5.9     5.9
+ 05 556   47    4 DF      16.6  91        41.3    40.9      3.3     3.3   22.363   0.000    1.315     54.3     53.8      4.3     4.3
+ 05 556   52    1 DF      18.7  83        45.7    44.7      3.6     3.6   17.623   0.000    1.037     47.4     46.4      3.7     3.7
+ 05 556   52    2 DF      21.0 118        80.8    79.2      6.5     6.5   13.974   0.000    0.822     66.4     65.1      5.3     5.3
+ 05 556   52    3 DF      12.8 103        28.2    28.2      3.0     3.0   37.613   0.000    2.213     62.4     62.4      6.6     6.6
+ 05 556   81    1 SP      14.2  65        17.6    17.1      2.7     2.7   30.562   0.000    1.798     31.6     30.7      4.9     4.9
+ 05 556   81    2 DF      19.7  96        59.0    57.8      4.3     4.3   15.879   0.000    0.934     55.1     54.0      4.0     4.0
+ 05 556   81    3 DF      15.3  70        25.4    25.2      2.7     2.7   26.325   0.000    1.549     39.3     39.0      4.2     4.2
+ 05 556  109    1 DF      10.2  75        11.0    11.0      3.0     3.0   59.232   0.000    3.484     38.3     38.3     10.5    10.5
+ 05 556  109    2 DF      21.7 107        81.3    50.7      5.6     5.6   13.087   0.000    0.770     62.6     39.0      4.3     4.3
+ 05 556  109    3 DF      11.8  70        15.0    15.0      2.3     2.3   44.258   0.000    2.603     39.0     39.0      6.0     6.0
+ 05 556  109    4 DF      10.9  70        11.7    10.1      2.6     2.6   51.868   0.000    3.051     35.7     30.8      7.9     7.9
+ 05 556  109    5 DF      18.0 106        53.5    52.4      5.0     5.0   19.020   0.000    1.119     59.9     58.6      5.6     5.6
+ 05 556  112    1 DF      25.5 120       123.8   115.4      7.5     7.5    9.477   0.000    0.557     69.0     64.3      4.2     4.2
+ 05 556  112    2 DF      28.5 125       159.1   154.4      9.6     9.6    7.587   0.000    0.446     71.0     68.9      4.3     4.3
+ 05 556  112    3 DF      16.9 100        45.2    44.8      3.1     3.1   21.576   0.000    1.269     57.4     56.9      3.9     3.9
+ 05 556  112    4 DF      30.2 140       201.1   193.0     12.9    12.9    6.757   0.000    0.397     79.8     76.6      5.1     5.1
+ 05 563  262    1 DF      19.3 118        71.1    68.3      5.0     5.0   16.544   0.000    0.973     69.2     66.5      4.9     4.9
+ 05 563  262    2 DF      24.3 130       118.9   116.6      6.7     6.7   10.436   0.000    0.614     73.0     71.6      4.1     4.1
+ 05 563  262    3 DF      10.1  96        13.1    13.1      4.4     4.4   60.410   0.000    3.554     46.6     46.6     15.6    15.6
+ 05 563  262    4 DF      17.2 105        47.4    46.5      5.0     5.0   20.830   0.000    1.225     58.1     57.0      6.1     6.1
+ 05 563  262    5 DF      23.8 130       118.9   116.6      6.7     6.7   10.879   0.000    0.640     76.1     74.6      4.3     4.3
+ 05 563  262    6 DF      23.8 140       129.7   127.0      7.0     7.0   10.879   0.000    0.640     83.0     81.3      4.5     4.5
+ 05 566  196    1 DF      26.0 118       125.7   117.0      7.5     7.5    9.116   0.000    0.536     67.4     62.7      4.0     4.0
+ 05 566  196    2 DF      27.7 126       153.9   149.3      9.6     9.6    8.031   0.000    0.472     72.6     70.5      4.5     4.5
+ 05 566  196    3 DF      28.8 113       145.6   141.1      8.3     8.3    7.430   0.000    0.437     63.6     61.7      3.6     3.6
+ 05 979  201    1 DF      12.0  60        13.3    13.3      1.9     1.9   42.795   0.000    2.517     33.5     33.5      4.8     4.8
+ 05 979  201    2 SP      14.0  45        12.1    10.8      2.2     2.2   31.441   0.000    1.849     22.4     20.0      4.1     4.1
+ 05 979  201    3 DF      16.3  66        27.9    27.7      2.2     2.2   23.194   0.000    1.364     38.1     37.8      3.0     3.0
+ 05 980  184    1 WF      10.1  60         9.3     9.3      2.6     2.6   60.410   0.000    3.554     33.1     33.1      9.2     9.2
+
+A05: CUBIC FOOT                                                                                                             PAGE 15
+ PRIMARY AND SECONDARY PRODUCT
+ VOLUME INFORMATION (A5)
+CRUISE#: 00000      SALE#: 00000
+SALENAME: Girard                                                                                                 VERSION: 06.01.2022
+RUN DATE & TIME: 9/22/2022 07:13:52                                                             VOLUME LIBRARY VERSION: 05.03.2022
+
+
+                                    
+                                    
+                                    
+                  S            T    
+  S               P       D    O    
+  T               E       B    T    
+  R  U    P   T   C       H            ************ PER TREE ************                           ***** PER ACRE/PER STRATA *****
+  A  N    L   R   I       -    H       *** PRIMARY ***    ** SECONDARY **                           ** PRIMARY **   ** SECONDARY **
+  T  I    O   E   E       O    G        GROSS    NET      GROSS   NET      TREE    CHAR      EXP     GROSS   NET      GROSS    NET
+  A  T    T   E   S       B    T        CUFT     CUFT     CUFT    CUFT      FAC     FAC      FAC     CUFT    CUFT     CUFT     CUFT
+____________________________________________________________________________________________________________________________________
+ 05 980  184    2 DF      36.9 150       314.7   281.3     15.1    15.1    4.526   0.000    0.266     83.7     74.8      4.0     4.0
+ 05 980  184    3 DF      18.0  85        43.4    42.5      3.8     3.8   19.020   0.000    1.119     48.6     47.6      4.3     4.3
+ 05 980  184    4 DF      15.0  82        28.2    27.4      3.1     3.1   27.389   0.000    1.611     45.4     44.1      5.0     5.0
+ 05 982  241    1 IC      15.3  72        20.1    20.1      3.4     3.4   26.325   0.000    1.549     31.1     31.1      5.3     5.3
+ 05 982  241    2 DF      25.6 107       110.9   100.9      6.6     6.6    9.403   0.000    0.553     61.3     55.8      3.6     3.6
+ 05 982  241    3 DF      23.2 108        93.6    91.8      5.0     5.0   11.449   0.000    0.673     63.0     61.8      3.4     3.4
+ 05 982  241    4 DF      43.8 117       343.5   319.4     12.0    12.0    3.212   0.000    0.189     64.9     60.4      2.3     2.3
+ 05 983  223    1 DF      25.4 110       111.3   105.2      7.3     7.3    9.552   0.000    0.562     62.6     59.1      4.1     4.1
+ 05 983  223    2 DF      20.1  95        60.4    59.2      3.8     3.8   15.253   0.000    0.897     54.2     53.1      3.4     3.4
+ 05 983  223    3 DF      18.6  84        45.7    44.7      3.8     3.8   17.813   0.000    1.048     47.9     46.8      4.0     4.0
+ 05 985   67    1 DF      18.6 100        55.1    53.9      4.9     4.9   17.813   0.000    1.048     57.7     56.5      5.1     5.1
+ 05 985   67    2 DF      16.5 106        46.7    46.2      3.8     3.8   22.635   0.000    1.331     62.2     61.5      5.1     5.1
+ 05 985   67    3 DF      21.4 110        79.6    78.1      5.6     5.6   13.456   0.000    0.792     63.0     61.9      4.4     4.4
+ 06 533   26    1 DF      17.9 100        51.0    50.0      4.9     4.9   22.890   0.000    3.815    194.6    190.8     18.7    18.7
+ 06 533   26    2 DF      13.1  80        20.2    20.0      3.4     3.4   42.737   0.000    7.123    143.9    142.5     24.2    24.2
+ 06 533   26    3 DF      33.2 130       225.1   206.0     10.6    10.6    6.654   0.000    1.109    249.6    228.5     11.8    11.8
+ 06 533   26    4 IC      32.1  70        95.9    79.0      6.0     6.0    7.118   0.000    1.186    113.7     93.7      7.1     7.1
+ 06 533   26    5 DF      20.3 120        80.8    79.1      4.9     4.9   17.797   0.000    2.966    239.7    234.6     14.5    14.5
+ 06 533   26    6 DF      14.4  92        29.7    29.4      4.2     4.2   35.369   0.000    5.895    175.1    173.3     24.8    24.8
+ 06 533   26    7 DF      11.9  80        18.0    18.0      2.6     2.6   51.791   0.000    8.632    155.4    155.4     22.4    22.4
+ 06 533   26    8 DF      14.8 100        34.1    32.3      3.4     3.4   33.483   0.000    5.580    190.3    180.2     19.0    19.0
+ 06 558  190    1 DF      30.4 105       146.2   128.3      9.3     9.3    7.936   0.000    1.323    193.4    169.7     12.3    12.3
+ 06 560  205    1 DF      16.7  92        42.4    42.0      2.7     2.7   26.297   0.000    4.383    185.8    184.1     11.8    11.8
+ 06 560  205    2 DF      22.0 100        76.8    75.4      5.0     5.0   15.153   0.000    2.526    194.0    190.5     12.6    12.6
+ 06 560  205    3 DF      18.5  99        51.0    50.0      4.4     4.4   21.429   0.000    3.571    182.1    178.6     15.7    15.7
+ 06 560  205    4 DF      23.0 120       100.3    98.3      5.6     5.6   13.864   0.000    2.311    231.8    227.2     12.9    12.9
+ 06 560  205    5 SP      18.2 122        61.5    54.2      6.4     6.4   22.141   0.000    3.690    226.9    200.0     23.6    23.6
+ 06 560  205    6 DF      32.4 153       252.0   241.8     12.9    12.9    6.986   0.000    1.164    293.3    281.5     15.0    15.0
+ 06 560  205    7 DF      28.0 137       169.1   164.0     10.1    10.1    9.355   0.000    1.559    263.6    255.7     15.7    15.7
+ 06 568  180    1 DF      22.8  98        80.3    78.7      4.9     4.9   14.108   0.000    2.351    188.8    185.0     11.5    11.5
+
+A05: CUBIC FOOT                                                                                                             PAGE 16
+ PRIMARY AND SECONDARY PRODUCT
+ VOLUME INFORMATION (A5)
+CRUISE#: 00000      SALE#: 00000
+SALENAME: Girard                                                                                                 VERSION: 06.01.2022
+RUN DATE & TIME: 9/22/2022 07:13:52                                                             VOLUME LIBRARY VERSION: 05.03.2022
+
+
+                                    
+                                    
+                                    
+                  S            T    
+  S               P       D    O    
+  T               E       B    T    
+  R  U    P   T   C       H            ************ PER TREE ************                           ***** PER ACRE/PER STRATA *****
+  A  N    L   R   I       -    H       *** PRIMARY ***    ** SECONDARY **                           ** PRIMARY **   ** SECONDARY **
+  T  I    O   E   E       O    G        GROSS    NET      GROSS   NET      TREE    CHAR      EXP     GROSS   NET      GROSS    NET
+  A  T    T   E   S       B    T        CUFT     CUFT     CUFT    CUFT      FAC     FAC      FAC     CUFT    CUFT     CUFT     CUFT
+____________________________________________________________________________________________________________________________________
+ 06 568  180    2 PP      24.7  91        96.3    65.7      4.2     4.2   12.021   0.000    2.004    193.0    131.7      8.4     8.4
+ 06 568  180    3 DF      11.2  62        11.3    11.3      2.2     2.2   58.467   0.000    9.744    110.1    110.1     21.4    21.4
+ 06 568  180    4 PP      21.0  96        69.5    64.1      5.0     5.0   16.631   0.000    2.772    192.7    177.7     13.9    13.9
+ 06 568  180    5 DF      20.6 110        73.9    72.4      4.3     4.3   17.283   0.000    2.880    212.8    208.5     12.4    12.4
+ 06 568  180    6 DF      15.1  89        30.6    30.3      3.8     3.8   32.166   0.000    5.361    164.0    162.4     20.4    20.4
+ 06 973   21    1 DF      17.6  91        44.3    43.4      4.4     4.4   23.677   0.000    3.946    174.8    171.3     17.4    17.4
+ 06 973   21    2 PP      27.0  80        96.0     0.0      6.1     6.1   10.060   0.000    1.677    161.0      0.0     10.2    10.2
+ 06 973   21    3 DF      14.6  85        26.9    26.7      3.8     3.8   34.406   0.000    5.734    154.2    153.1     21.8    21.8
+ 06 973   21    4 DF      16.6  93        42.4    42.0      2.7     2.7   26.615   0.000    4.436    188.1    186.3     12.0    12.0
+ 06 975   31    1 DF      38.1 140       309.7   273.8     17.7    17.7    5.052   0.000    0.842    260.8    230.5     14.9    14.9
+ 06 975   31    2 DF      35.9 150       298.3   283.4     15.3    15.3    5.691   0.000    0.948    282.8    268.7     14.5    14.5
+ 06 975   31    3 DF      42.8 134       376.9   334.0     14.1    14.1    4.004   0.000    0.667    251.4    222.8      9.4     9.4
+ 06 975   31    4 DF      15.1  74        25.4    25.2      2.6     2.6   32.166   0.000    5.361    136.2    135.1     13.9    13.9
+ 07 557  269    1 DF      15.0  81        26.9    25.2      3.3     3.3   32.596   0.000   16.298    438.4    410.7     53.8    53.8
+ 07 557  269    2 WF      15.2  86        32.7    32.5      3.1     3.1   31.744   0.000   15.872    519.0    515.8     49.2    49.2
+ 07 986  298    1 IC      33.2 100       148.0   123.9     10.3    10.3    6.654   0.000    3.327    492.4    412.2     34.3    34.3
+ 07 986  298    2 DF      30.7 138       201.1   193.0     12.7    12.7    7.782   0.000    3.891    782.5    751.0     49.4    49.4
+ 07 986  298    3 DF      32.8 133       224.7   215.7     10.6    10.6    6.817   0.000    3.409    766.0    735.3     36.1    36.1
+
+A07: BOARD FOOT                                                                                                             PAGE 17
+ PRIMARY AND SECONDARY PRODUCT
+ VOLUME INFORMATION (A7)
+CRUISE#: 00000      SALE#: 00000
+SALENAME: Girard                                                                                                 VERSION: 06.01.2022
+RUN DATE & TIME: 9/22/2022 07:13:52                                                             VOLUME LIBRARY VERSION: 05.03.2022
+
+
+                                    
+                                    
+                                    
+                  S            T    
+  S               P       D    O    
+  T               E       B    T    
+  R  U    P   T   C       H            ************ PER TREE ************                           ***** PER ACRE/PER STRATA *****
+  A  N    L   R   I       -    H       *** PRIMARY ***    ** SECONDARY **                           ** PRIMARY **   ** SECONDARY **
+  T  I    O   E   E       O    G        GROSS    NET      GROSS   NET      TREE    CHAR      EXP     GROSS   NET      GROSS    NET
+  A  T    T   E   S       B    T        BDFT     BDFT     BDFT    BDFT      FAC     FAC      FAC     BDFT    BDFT     BDFT     BDFT
+____________________________________________________________________________________________________________________________________
+ 02 978   17    1 DF      20.2  75       260.0   117.0     10.0    10.0   17.974   0.000   17.974   4673.2   2103.0    179.7   179.7
+ 02 978   17    2 DF      14.2  67       110.0    77.0     10.0    10.0   36.372   0.000   36.372   4000.9   2800.6    363.7   363.7
+ 02 978   17    3 DF      23.4  90       460.0   450.0     10.0    10.0   13.394   0.000   13.394   6161.2   6027.3    133.9   133.9
+ 02 978   17    4 PP      17.1  75       170.0   151.0     10.0    10.0   25.081   0.000   25.081   4263.8   3787.2    250.8   250.8
+ 05 555   71    1 DF      19.4  96       340.0   320.0     10.0    10.0   16.374   0.000    0.963    327.4    308.2      9.6     9.6
+ 05 555   71    2 SP      24.9  93       530.0   479.0     10.0    10.0    9.939   0.000    0.585    310.0    280.2      5.8     5.8
+ 05 555   71    3 DF      12.3  60        60.0    60.0     10.0    10.0   40.733   0.000    2.396    143.8    143.8     24.0    24.0
+ 05 555   71    4 DF      15.9  94       200.0   198.0     10.0    10.0   24.376   0.000    1.434    286.8    283.9     14.3    14.3
+ 05 555   71    5 DF      32.2 130      1470.0  1370.0     40.0    40.0    5.943   0.000    0.350    514.5    479.5     14.0    14.0
+ 05 555   71    6 DF      18.0 100       280.0   274.0     20.0    20.0   19.020   0.000    1.119    313.3    306.6     22.4    22.4
+ 05 555   71    7 DF      12.2  86        90.0    90.0     10.0    10.0   41.403   0.000    2.435    219.1    219.1     24.3    24.3
+ 05 555   71    8 DF      24.0 110       580.0   569.0     10.0    10.0   10.699   0.000    0.629    364.8    357.9      6.3     6.3
+ 05 555  106    1 DF      18.0 105       300.0   294.0     20.0    20.0   19.020   0.000    1.119    335.7    329.0     22.4    22.4
+ 05 555  106    2 DF      15.4  95       190.0   188.0     10.0    10.0   25.984   0.000    1.528    290.3    287.3     15.3    15.3
+ 05 555  106    3 DF      17.7  86       220.0   216.0     10.0    10.0   19.670   0.000    1.157    254.5    249.9     11.6    11.6
+ 05 555  106    4 DF      18.7  86       240.0   208.0     10.0    10.0   17.623   0.000    1.037    248.9    215.7     10.4    10.4
+ 05 555  131    1 DF      13.2  85       120.0   112.0     20.0    20.0   35.368   0.000    2.080    249.6    233.0     41.6    41.6
+ 05 555  131    2 DF      27.0 135       970.0   942.0     40.0    40.0    8.453   0.000    0.497    482.1    468.2     19.9    19.9
+ 05 555  131    3 DF      21.1 110       470.0   460.0     20.0    20.0   13.842   0.000    0.814    382.6    374.4     16.3    16.3
+ 05 555  131    4 DF      13.9  92       140.0   139.0     20.0    20.0   31.895   0.000    1.876    262.6    260.8     37.5    37.5
+ 05 555  154    1 DF      38.3 128      2100.0  1974.0     50.0    50.0    4.201   0.000    0.247    518.7    487.6     12.3    12.3
+ 05 555  154    2 DF      22.3  92       430.0   420.0     10.0    10.0   12.392   0.000    0.729    313.5    306.2      7.3     7.3
+ 05 555  156    1 SP      49.5 160      4990.0  4690.0    100.0   100.0    2.515   0.000    0.148    738.5    694.1     14.8    14.8
+ 05 555  156    2 DF      40.3 145      2630.0  2472.0     50.0    50.0    3.794   0.000    0.223    586.5    551.3     11.2    11.2
+ 05 555  156    3 DF      10.3  78        60.0    60.0     10.0    10.0   58.087   0.000    3.417    205.0    205.0     34.2    34.2
+ 05 555  156    4 DF      17.4 111       300.0   294.0     20.0    20.0   20.354   0.000    1.197    359.1    351.9     23.9    23.9
+ 05 555  156    5 DF      21.6 125       560.0   548.0     30.0    30.0   13.208   0.000    0.777    435.1    425.8     23.3    23.3
+ 05 555  156    6 DF      15.2 100       200.0   198.0     10.0    10.0   26.673   0.000    1.569    313.8    310.7     15.7    15.7
+ 05 556   47    1 DF      10.3  75        50.0    50.0     10.0    10.0   58.087   0.000    3.417    170.9    170.9     34.2    34.2
+ 05 556   47    2 DF      18.7 105       330.0   324.0     20.0    20.0   17.623   0.000    1.037    342.2    336.0     20.7    20.7
+
+A07: BOARD FOOT                                                                                                             PAGE 18
+ PRIMARY AND SECONDARY PRODUCT
+ VOLUME INFORMATION (A7)
+CRUISE#: 00000      SALE#: 00000
+SALENAME: Girard                                                                                                 VERSION: 06.01.2022
+RUN DATE & TIME: 9/22/2022 07:13:52                                                             VOLUME LIBRARY VERSION: 05.03.2022
+
+
+                                    
+                                    
+                                    
+                  S            T    
+  S               P       D    O    
+  T               E       B    T    
+  R  U    P   T   C       H            ************ PER TREE ************                           ***** PER ACRE/PER STRATA *****
+  A  N    L   R   I       -    H       *** PRIMARY ***    ** SECONDARY **                           ** PRIMARY **   ** SECONDARY **
+  T  I    O   E   E       O    G        GROSS    NET      GROSS   NET      TREE    CHAR      EXP     GROSS   NET      GROSS    NET
+  A  T    T   E   S       B    T        BDFT     BDFT     BDFT    BDFT      FAC     FAC      FAC     BDFT    BDFT     BDFT     BDFT
+____________________________________________________________________________________________________________________________________
+ 05 556   47    3 DF      14.4  88       140.0   139.0     10.0    10.0   29.719   0.000    1.748    244.7    243.0     17.5    17.5
+ 05 556   47    4 DF      16.6  91       220.0   218.0     10.0    10.0   22.363   0.000    1.315    289.3    286.7     13.2    13.2
+ 05 556   52    1 DF      18.7  83       240.0   235.0     10.0    10.0   17.623   0.000    1.037    248.9    243.7     10.4    10.4
+ 05 556   52    2 DF      21.0 118       480.0   470.0     20.0    20.0   13.974   0.000    0.822    394.6    386.3     16.4    16.4
+ 05 556   52    3 DF      12.8 103       150.0   150.0     10.0    10.0   37.613   0.000    2.213    332.0    332.0     22.1    22.1
+ 05 556   81    1 SP      14.2  65        90.0    87.0     10.0    10.0   30.562   0.000    1.798    161.8    156.4     18.0    18.0
+ 05 556   81    2 DF      19.7  96       340.0   333.0     10.0    10.0   15.879   0.000    0.934    317.6    311.0      9.3     9.3
+ 05 556   81    3 DF      15.3  70       120.0   119.0     10.0    10.0   26.325   0.000    1.549    185.9    184.3     15.5    15.5
+ 05 556  109    1 DF      10.2  75        50.0    50.0     10.0    10.0   59.232   0.000    3.484    174.2    174.2     34.8    34.8
+ 05 556  109    2 DF      21.7 107       490.0   285.0     20.0    20.0   13.087   0.000    0.770    377.3    219.4     15.4    15.4
+ 05 556  109    3 DF      11.8  70        70.0    70.0     10.0    10.0   44.258   0.000    2.603    182.2    182.2     26.0    26.0
+ 05 556  109    4 DF      10.9  70        50.0    43.0     10.0    10.0   51.868   0.000    3.051    152.6    131.2     30.5    30.5
+ 05 556  109    5 DF      18.0 106       300.0   294.0     20.0    20.0   19.020   0.000    1.119    335.7    329.0     22.4    22.4
+ 05 556  112    1 DF      25.5 120       810.0   750.0     20.0    20.0    9.477   0.000    0.557    451.2    417.7     11.1    11.1
+ 05 556  112    2 DF      28.5 125      1060.0  1029.0     40.0    40.0    7.587   0.000    0.446    472.8    458.9     17.8    17.8
+ 05 556  112    3 DF      16.9 100       260.0   257.0     10.0    10.0   21.576   0.000    1.269    329.9    326.1     12.7    12.7
+ 05 556  112    4 DF      30.2 140      1380.0  1325.0     40.0    40.0    6.757   0.000    0.397    547.9    526.0     15.9    15.9
+ 05 563  262    1 DF      19.3 118       410.0   394.0     20.0    20.0   16.544   0.000    0.973    398.9    383.4     19.5    19.5
+ 05 563  262    2 DF      24.3 130       740.0   724.0     20.0    20.0   10.436   0.000    0.614    454.4    444.5     12.3    12.3
+ 05 563  262    3 DF      10.1  96        60.0    60.0     30.0    30.0   60.410   0.000    3.554    213.2    213.2    106.6   106.6
+ 05 563  262    4 DF      17.2 105       270.0   264.0     20.0    20.0   20.830   0.000    1.225    330.8    323.4     24.5    24.5
+ 05 563  262    5 DF      23.8 130       740.0   724.0     20.0    20.0   10.879   0.000    0.640    473.6    463.4     12.8    12.8
+ 05 563  262    6 DF      23.8 140       810.0   793.0     30.0    30.0   10.879   0.000    0.640    518.4    507.5     19.2    19.2
+ 05 566  196    1 DF      26.0 118       810.0   750.0     20.0    20.0    9.116   0.000    0.536    434.2    402.0     10.7    10.7
+ 05 566  196    2 DF      27.7 126      1030.0  1000.0     40.0    40.0    8.031   0.000    0.472    486.2    472.0     18.9    18.9
+ 05 566  196    3 DF      28.8 113       940.0   913.0     20.0    20.0    7.430   0.000    0.437    410.8    399.0      8.7     8.7
+ 05 979  201    1 DF      12.0  60        60.0    60.0     10.0    10.0   42.795   0.000    2.517    151.0    151.0     25.2    25.2
+ 05 979  201    2 SP      14.0  45        40.0    35.0     10.0    10.0   31.441   0.000    1.849     74.0     64.7     18.5    18.5
+ 05 979  201    3 DF      16.3  66       140.0   139.0     10.0    10.0   23.194   0.000    1.364    191.0    189.6     13.6    13.6
+ 05 980  184    1 WF      10.1  60        30.0    30.0     10.0    10.0   60.410   0.000    3.554    106.6    106.6     35.5    35.5
+
+A07: BOARD FOOT                                                                                                             PAGE 19
+ PRIMARY AND SECONDARY PRODUCT
+ VOLUME INFORMATION (A7)
+CRUISE#: 00000      SALE#: 00000
+SALENAME: Girard                                                                                                 VERSION: 06.01.2022
+RUN DATE & TIME: 9/22/2022 07:13:52                                                             VOLUME LIBRARY VERSION: 05.03.2022
+
+
+                                    
+                                    
+                                    
+                  S            T    
+  S               P       D    O    
+  T               E       B    T    
+  R  U    P   T   C       H            ************ PER TREE ************                           ***** PER ACRE/PER STRATA *****
+  A  N    L   R   I       -    H       *** PRIMARY ***    ** SECONDARY **                           ** PRIMARY **   ** SECONDARY **
+  T  I    O   E   E       O    G        GROSS    NET      GROSS   NET      TREE    CHAR      EXP     GROSS   NET      GROSS    NET
+  A  T    T   E   S       B    T        BDFT     BDFT     BDFT    BDFT      FAC     FAC      FAC     BDFT    BDFT     BDFT     BDFT
+____________________________________________________________________________________________________________________________________
+ 05 980  184    2 DF      36.9 150      2260.0  2054.0     50.0    50.0    4.526   0.000    0.266    601.2    546.4     13.3    13.3
+ 05 980  184    3 DF      18.0  85       230.0   225.0     10.0    10.0   19.020   0.000    1.119    257.4    251.8     11.2    11.2
+ 05 980  184    4 DF      15.0  82       160.0   155.0     10.0    10.0   27.389   0.000    1.611    257.8    249.7     16.1    16.1
+ 05 982  241    1 IC      15.3  72       100.0   100.0     10.0    10.0   26.325   0.000    1.549    154.9    154.9     15.5    15.5
+ 05 982  241    2 DF      25.6 107       700.0   639.0     10.0    10.0    9.403   0.000    0.553    387.1    353.4      5.5     5.5
+ 05 982  241    3 DF      23.2 108       560.0   549.0     10.0    10.0   11.449   0.000    0.673    376.9    369.5      6.7     6.7
+ 05 982  241    4 DF      43.8 117      2440.0  2269.0     20.0    20.0    3.212   0.000    0.189    461.2    428.8      3.8     3.8
+ 05 983  223    1 DF      25.4 110       700.0   662.0     20.0    20.0    9.552   0.000    0.562    393.4    372.0     11.2    11.2
+ 05 983  223    2 DF      20.1  95       340.0   333.0     10.0    10.0   15.253   0.000    0.897    305.0    298.7      9.0     9.0
+ 05 983  223    3 DF      18.6  84       240.0   235.0     10.0    10.0   17.813   0.000    1.048    251.5    246.3     10.5    10.5
+ 05 985   67    1 DF      18.6 100       310.0   304.0     20.0    20.0   17.813   0.000    1.048    324.9    318.6     21.0    21.0
+ 05 985   67    2 DF      16.5 106       260.0   257.0     10.0    10.0   22.635   0.000    1.331    346.1    342.1     13.3    13.3
+ 05 985   67    3 DF      21.4 110       470.0   460.0     20.0    20.0   13.456   0.000    0.792    372.2    364.3     15.8    15.8
+ 06 533   26    1 DF      17.9 100       280.0   274.0     20.0    20.0   22.890   0.000    3.815   1068.2   1045.3     76.3    76.3
+ 06 533   26    2 DF      13.1  80       100.0    99.0     10.0    10.0   42.737   0.000    7.123    712.3    705.2     71.2    71.2
+ 06 533   26    3 DF      33.2 130      1570.0  1430.0     30.0    30.0    6.654   0.000    1.109   1741.1   1585.9     33.3    33.3
+ 06 533   26    4 IC      32.1  70       510.0   431.0     10.0    10.0    7.118   0.000    1.186    604.9    511.2     11.9    11.9
+ 06 533   26    5 DF      20.3 120       480.0   471.0     20.0    20.0   17.797   0.000    2.966   1423.7   1397.0     59.3    59.3
+ 06 533   26    6 DF      14.4  92       160.0   158.0     20.0    20.0   35.369   0.000    5.895    943.2    931.4    117.9   117.9
+ 06 533   26    7 DF      11.9  80        80.0    80.0     10.0    10.0   51.791   0.000    8.632    690.6    690.6     86.3    86.3
+ 06 533   26    8 DF      14.8 100       190.0   179.0     10.0    10.0   33.483   0.000    5.580   1060.2    998.8     55.8    55.8
+ 06 558  190    1 DF      30.4 105       980.0   850.0     20.0    20.0    7.936   0.000    1.323   1296.5   1124.5     26.5    26.5
+ 06 560  205    1 DF      16.7  92       230.0   228.0     10.0    10.0   26.297   0.000    4.383   1008.1    999.3     43.8    43.8
+ 06 560  205    2 DF      22.0 100       460.0   450.0     10.0    10.0   15.153   0.000    2.526   1162.0   1136.7     25.3    25.3
+ 06 560  205    3 DF      18.5  99       280.0   274.0     10.0    10.0   21.429   0.000    3.571    999.9    978.5     35.7    35.7
+ 06 560  205    4 DF      23.0 120       610.0   598.0     20.0    20.0   13.864   0.000    2.311   1409.7   1382.0     46.2    46.2
+ 06 560  205    5 SP      18.2 122       360.0   316.0     30.0    30.0   22.141   0.000    3.690   1328.4   1166.0    110.7   110.7
+ 06 560  205    6 DF      32.4 153      1780.0  1710.0     40.0    40.0    6.986   0.000    1.164   2071.9   1990.4     46.6    46.6
+ 06 560  205    7 DF      28.0 137      1130.0  1097.0     40.0    40.0    9.355   0.000    1.559   1761.7   1710.2     62.4    62.4
+ 06 568  180    1 DF      22.8  98       480.0   470.0     10.0    10.0   14.108   0.000    2.351   1128.5   1105.0     23.5    23.5
+
+A07: BOARD FOOT                                                                                                             PAGE 20
+ PRIMARY AND SECONDARY PRODUCT
+ VOLUME INFORMATION (A7)
+CRUISE#: 00000      SALE#: 00000
+SALENAME: Girard                                                                                                 VERSION: 06.01.2022
+RUN DATE & TIME: 9/22/2022 07:13:52                                                             VOLUME LIBRARY VERSION: 05.03.2022
+
+
+                                    
+                                    
+                                    
+                  S            T    
+  S               P       D    O    
+  T               E       B    T    
+  R  U    P   T   C       H            ************ PER TREE ************                           ***** PER ACRE/PER STRATA *****
+  A  N    L   R   I       -    H       *** PRIMARY ***    ** SECONDARY **                           ** PRIMARY **   ** SECONDARY **
+  T  I    O   E   E       O    G        GROSS    NET      GROSS   NET      TREE    CHAR      EXP     GROSS   NET      GROSS    NET
+  A  T    T   E   S       B    T        BDFT     BDFT     BDFT    BDFT      FAC     FAC      FAC     BDFT    BDFT     BDFT     BDFT
+____________________________________________________________________________________________________________________________________
+ 06 568  180    2 PP      24.7  91       590.0   403.0     10.0    10.0   12.021   0.000    2.004   1182.4    807.6     20.0    20.0
+ 06 568  180    3 DF      11.2  62        50.0    50.0     10.0    10.0   58.467   0.000    9.744    487.2    487.2     97.4    97.4
+ 06 568  180    4 PP      21.0  96       390.0   361.0     10.0    10.0   16.631   0.000    2.772   1081.1   1000.7     27.7    27.7
+ 06 568  180    5 DF      20.6 110       410.0   402.0     10.0    10.0   17.283   0.000    2.880   1180.8   1157.8     28.8    28.8
+ 06 568  180    6 DF      15.1  89       170.0   168.0     10.0    10.0   32.166   0.000    5.361    911.4    900.6     53.6    53.6
+ 06 973   21    1 DF      17.6  91       230.0   225.0     10.0    10.0   23.677   0.000    3.946    907.6    887.9     39.5    39.5
+ 06 973   21    2 PP      27.0  80       590.0     0.0     10.0    10.0   10.060   0.000    1.677    989.4      0.0     16.8    16.8
+ 06 973   21    3 DF      14.6  85       140.0   139.0     10.0    10.0   34.406   0.000    5.734    802.8    797.0     57.3    57.3
+ 06 973   21    4 DF      16.6  93       230.0   228.0     10.0    10.0   26.615   0.000    4.436   1020.3   1011.4     44.4    44.4
+ 06 975   31    1 DF      38.1 140      2220.0  1957.0     70.0    70.0    5.052   0.000    0.842   1869.2   1647.8     58.9    58.9
+ 06 975   31    2 DF      35.9 150      2160.0  2053.0     50.0    50.0    5.691   0.000    0.948   2047.7   1946.2     47.4    47.4
+ 06 975   31    3 DF      42.8 134      2720.0  2401.0     30.0    30.0    4.004   0.000    0.667   1814.2   1601.5     20.0    20.0
+ 06 975   31    4 DF      15.1  74       130.0   129.0     10.0    10.0   32.166   0.000    5.361    696.9    691.6     53.6    53.6
+ 07 557  269    1 DF      15.0  81       140.0   130.0     10.0    10.0   32.596   0.000   16.298   2281.7   2118.7    163.0   163.0
+ 07 557  269    2 WF      15.2  86       180.0   178.0     10.0    10.0   31.744   0.000   15.872   2857.0   2825.2    158.7   158.7
+ 07 986  298    1 IC      33.2 100       920.0   769.0     30.0    30.0    6.654   0.000    3.327   3060.8   2558.5     99.8    99.8
+ 07 986  298    2 DF      30.7 138      1380.0  1325.0     40.0    40.0    7.782   0.000    3.891   5369.6   5155.6    155.6   155.6
+ 07 986  298    3 DF      32.8 133      1580.0  1517.0     40.0    40.0    6.817   0.000    3.409   5386.2   5171.5    136.4   136.4
+
+A14: SUMMARY OF SPECIES BASED ON UNIT LEVEL DATA                                                                            PAGE 21
+FOR CUT TREES ONLY
+FOR PRIMARY PRODUCT ONLY
+CRUISE#: 00000      SALE#: 00000
+SALENAME: Girard                                                                                                 VERSION: 06.01.2022
+RUN DATE & TIME: 9/22/2022 07:13:52                                                             VOLUME LIBRARY VERSION: 05.03.2022
+
+
+            S    S 
+       S    M    P
+       T    P    E            AVG    EST        NO 
+  U    R         C     P 
+  N    A    G    I     R      BA/    NO OF      SAMP
+  I    T    R    E     O 
+  T    A    P    S     D      ACRE   TREES      TREES
+____________________________________________________________________________________________________________________________________
+                              AREA BASED CUTTING UNITS
+ 533   06   AS  DF      01    280         
+ 533   06   AS  IC      01     40         
+ 555   05   AS  DF      01    148         
+ 555   05   AS  SP      01     13         
+ 556   05   AS  DF      01    121         
+ 556   05   AS  SP      01      7         
+ 557   07   AS  DF      01     40         
+ 557   07   AS  WF      01     40         
+ 558   06   AS  DF      01     40         
+ 560   06   AS  DF      01    240         
+ 560   06   AS  SP      01     40         
+ 563   05   AS  DF      01    202         
+ 566   05   AS  DF      01    101         
+ 568   06   AS  DF      01    160         
+ 568   06   AS  PP      01     80         
+ 973   06   AS  DF      01    120         
+ 973   06   AS  PP      01     40         
+ 975   06   AS  DF      01    160         
+ 978   02   AS  DF      01    120         
+ 978   02   AS  PP      01     40         
+ 979   05   AS  DF      01     67         
+ 979   05   AS  SP      01     34         
+ 980   05   AS  DF      01    101         
+ 980   05   AS  WF      01     34         
+ 982   05   AS  DF      01    101         
+ 982   05   AS  IC      01     34         
+ 983   05   AS  DF      01    101         
+ 985   05   AS  DF      01    101         
+ 986   07   AS  DF      01     80         
+ 986   07   AS  IC      01     40         
+_____________________________________________________________________________________
+
+R401: SALE APPRAISAL SUMMARY BY SPECIES-BDFT                                                                                PAGE 22
+-- BOARD FOOT --
+FOR CUT TREES ONLY -- PRIMARY PRODUCT ONLY
+CRUISE#: 00000      SALE#: 00000
+SALENAME: Girard                                                                                                 VERSION: 06.01.2022
+RUN DATE & TIME: 9/22/2022 07:13:52                                                             VOLUME LIBRARY VERSION: 05.03.2022
+
+
+   S     P
+   P     R
+   E     O
+   C     D                                                                                                                  NET LOG
+   I     U                                                  GROSS      NET                QUAD              NET   16'LOGS/  SCALE
+   E     C      GROSS     TOTAL        NET       ESTIM      BF/        BF/     TREES/     MEAN     MEAN     BF/   GROSS     VALUE/
+   S     T      BF        DEF%         BF        TREES      ACRE       ACRE    ACRE       DBH      HT1      TREE  MBF       MBF
+____________________________________________________________________________________________________________________________________
+ DF      01   16936487     5.3    16044217       58424      20522     19440      70.8    17.5     90.8      275    13.7  
+ IC      01     353332    12.9      307766        1102        428       373       1.3    23.3     76.2      279     9.9  
+ PP      01     876461    34.9      570409        2714       1062       691       3.3    20.5     82.0      210    10.7  
+ SP      01     829179     8.6      758243        2666       1005       919       3.2    18.2     79.1      284    11.0  
+ WF      01     204167     0.9      202428        2457        247       245       3.0    12.2     69.2       82    32.6  
+____________________________________________________________________________________________________________________________________
+ TOTALS/AVE   19199627     6.9    17883063       67363      23264     21669      81.6    17.6     89.0      265    13.6     N/A  
+
+R402: SALE APPRAISAL SUMMARY BY SPECIES-CUFT                                                                                PAGE 23
+-- CUBIC FOOT --
+FOR CUT TREES ONLY -- PRIMARY PRODUCT ONLY
+CRUISE#: 00000      SALE#: 00000
+SALENAME: Girard                                                                                                 VERSION: 06.01.2022
+RUN DATE & TIME: 9/22/2022 07:13:52                                                             VOLUME LIBRARY VERSION: 05.03.2022
+
+
+   S     P
+   P     R
+   E     O
+   C     D                                                                                                                  NET LOG
+   I     U                                                  GROSS      NET                QUAD              NET   16'LOGS/  SCALE
+   E     C      GROSS     TOTAL        NET       ESTIM      CF/        CF/     TREES/     MEAN     MEAN     CF/   GROSS     VALUE/
+   S     T      CF        DEF%         CF        TREES      ACRE       ACRE    ACRE       DBH      HT1      TREE  CCF       CCF
+____________________________________________________________________________________________________________________________________
+ DF      01    2858403     4.9     2717005       58424       3463      3292      70.8    17.5     90.8       47     8.1  
+ IC      01      62779    13.1       54527        1102         76        66       1.3    23.3     76.2       49     5.6  
+ PP      01     157344    32.3      106514        2714        191       129       3.3    20.5     82.0       39     6.0  
+ SP      01     135819     8.4      124348        2666        165       151       3.2    18.2     79.1       47     6.7  
+ WF      01      43200     0.4       43026        2457         52        52       3.0    12.2     69.2       18    15.4  
+____________________________________________________________________________________________________________________________________
+ TOTALS/AVE    3257546     6.5     3045421       67363       3947      3690      81.6    17.6     89.0       45     8.0     N/A  
+
+R501: LOG STOCK TABLE BY SPECIES AND PRODUCT                                                                                PAGE 24
+FOR CUT TREES ONLY
+CRUISE#: 00000      SALE#: 00000
+SALENAME: Girard                                                                                                 VERSION: 06.01.2022
+RUN DATE & TIME: 9/22/2022 07:13:52                                                             VOLUME LIBRARY VERSION: 05.03.2022
+
+
+ TABLE 1 -  REPORT FOR SPECIES: DF    
+                       PRODUCT: 01
+ 
+     LOG             #
+     DIB            OF            GROSS             NET           GROSS             NET
+   CLASS          LOGS             BDFT            BDFT            CUFT            CUFT
+____________________________________________________________________________________________________________________________________
+       6       16524.7         175128.3        175128.3         42949.0         42949.0
+       7       33686.6         501110.4        458409.7        128532.5        119351.8
+       8       33135.3         809980.6        794102.9        183156.5        178867.2
+       9       29711.3        1038300.3       1006608.5        219693.7        212530.2
+      10       22458.8        1144935.2       1113608.9        209594.6        204892.9
+      11       22538.8        1464318.2       1424073.9        260666.2        254146.7
+      12       15964.5        1246552.5       1216745.6        230164.2        225537.4
+      13       13160.8        1274754.8       1237542.4        212903.7        206509.0
+      14        9799.0        1054449.5       1019253.8        182077.1        175522.8
+      15        9605.6        1312083.2       1119901.6        208843.6        178416.8
+      16        4428.3         703781.8        685238.7        108076.1        105031.6
+      17        5161.7         918723.8        820226.4        145221.3        130145.8
+      18        3747.7         780273.8        757591.9        116476.4        112931.7
+      19        1519.6         364708.4        353109.3         52956.4         51208.6
+      20        2802.7         784759.4        741372.0        107988.2        101970.9
+      21        1169.9         350981.6        334331.8         50579.9         48160.4
+      22        1519.7         501491.9        484451.5         69288.0         66904.3
+      23        1039.2         394901.8        352946.6         54053.9         48396.5
+      24        1188.2         475274.7        444937.6         64422.6         60246.1
+      25         380.3         174958.7        168112.5         22478.4         21565.6
+      26         766.7         383371.9        350559.7         49072.5         44848.5
+      27         519.5         285745.3        252236.4         36630.3         32294.7
+      28         182.5         105844.2        100552.0         13413.0         12737.8
+      29         218.3         133186.5        125939.3         17161.4         16230.2
+      30         485.2         320203.3        286553.5         41348.9         37019.6
+      31          99.6          70694.3         66412.9          8901.5          8363.8
+      33         212.8         165973.1        154269.8         21753.0         20225.3
+____________________________________________________________________________________________________________________________________
+  TOTALS      232027.6       16936487.6      16044217.5       2858402.9       2717005.4
+
+R501: LOG STOCK TABLE BY SPECIES AND PRODUCT                                                                                PAGE 25
+FOR CUT TREES ONLY
+CRUISE#: 00000      SALE#: 00000
+SALENAME: Girard                                                                                                 VERSION: 06.01.2022
+RUN DATE & TIME: 9/22/2022 07:13:52                                                             VOLUME LIBRARY VERSION: 05.03.2022
+
+
+ TABLE 2 -  REPORT FOR SPECIES: IC    
+                       PRODUCT: 01
+ 
+     LOG             #
+     DIB            OF            GROSS             NET           GROSS             NET
+   CLASS          LOGS             BDFT            BDFT            CUFT            CUFT
+____________________________________________________________________________________________________________________________________
+       7         691.6           6916.3          6916.3          2420.7          2420.7
+       9         691.6          20748.9         20748.9          3389.0          3389.0
+      10         691.6          41497.7         41497.7          8092.1          8092.1
+      11         228.3          11415.2          5022.7          3287.6          1461.2
+      12         182.3          14585.6         12762.4          3190.6          2771.3
+      16         410.6          65699.9         57761.7         12154.8         10726.8
+      20         182.3          51049.5         38651.8          7766.8          5870.7
+      21         228.3          68491.5         60957.4         11666.4         10387.9
+      24         182.3          72927.8         63447.2         10811.6          9407.7
+____________________________________________________________________________________________________________________________________
+  TOTALS        3489.1         353332.4        307766.1         62779.5         54527.2
+
+R501: LOG STOCK TABLE BY SPECIES AND PRODUCT                                                                                PAGE 26
+FOR CUT TREES ONLY
+CRUISE#: 00000      SALE#: 00000
+SALENAME: Girard                                                                                                 VERSION: 06.01.2022
+RUN DATE & TIME: 9/22/2022 07:13:52                                                             VOLUME LIBRARY VERSION: 05.03.2022
+
+
+ TABLE 3 -  REPORT FOR SPECIES: PP    
+                       PRODUCT: 01
+ 
+     LOG             #
+     DIB            OF            GROSS             NET           GROSS             NET
+   CLASS          LOGS             BDFT            BDFT            CUFT            CUFT
+____________________________________________________________________________________________________________________________________
+       8        1472.3          29445.1         27972.8         10453.0         10011.3
+       9         919.4          27581.4         15474.7          8253.9          4429.0
+      11        1795.1          86525.6         70668.2         19118.3         15753.1
+      12         533.6          37352.7         35751.9          6936.9          6670.1
+      13        1858.0         185802.5        160703.3         33038.2         28607.2
+      14         856.4          81294.7         49092.1         15573.8          9444.9
+      17        1242.2         223596.5        159052.7         36157.1         24809.2
+      20         385.8         108015.6         51693.2         14157.8          6789.6
+      21         322.8          96846.8             0.0         13655.4             0.0
+____________________________________________________________________________________________________________________________________
+  TOTALS        9385.6         876460.8        570409.0        157344.3        106514.4
+
+R501: LOG STOCK TABLE BY SPECIES AND PRODUCT                                                                                PAGE 27
+FOR CUT TREES ONLY
+CRUISE#: 00000      SALE#: 00000
+SALENAME: Girard                                                                                                 VERSION: 06.01.2022
+RUN DATE & TIME: 9/22/2022 07:13:52                                                             VOLUME LIBRARY VERSION: 05.03.2022
+
+
+ TABLE 4 -  REPORT FOR SPECIES: SP    
+                       PRODUCT: 01
+ 
+     LOG             #
+     DIB            OF            GROSS             NET           GROSS             NET
+   CLASS          LOGS             BDFT            BDFT            CUFT            CUFT
+____________________________________________________________________________________________________________________________________
+       7        1628.4          16283.9         16283.9          5391.9          5229.1
+       8        1513.1          30262.6         28749.5          6453.9          6231.6
+       9         971.5          29145.8         28174.3          7169.6          6852.0
+      10        1628.4          72935.8         67202.3         15114.4         13882.8
+      11         710.3          49722.8         47591.8          9021.1          8666.0
+      13         971.5          97152.8         84742.7         17049.8         14878.1
+      15         710.3          99445.5         83108.0         14916.8         12430.7
+      16         261.2          41792.4         40225.2          7026.3          6739.0
+      17          66.1          11894.8         11167.9          2227.0          2094.8
+      19         261.2          62688.6         52240.5          9638.4          8045.0
+      22          66.1          21807.1         20485.4          3495.7          3284.3
+      27          66.1          36345.1         34164.4          4870.2          4579.5
+      31          66.1          46918.2         44076.7          6304.2          5927.6
+      35          66.1          58152.2         54649.8          7698.6          7236.0
+      38          66.1          70707.7         66478.5          9013.6          8471.7
+      41          66.1          83924.1         78901.9         10427.7          9800.0
+____________________________________________________________________________________________________________________________________
+  TOTALS        9118.6         829179.3        758242.7        135819.3        124348.0
+
+R501: LOG STOCK TABLE BY SPECIES AND PRODUCT                                                                                PAGE 28
+FOR CUT TREES ONLY
+CRUISE#: 00000      SALE#: 00000
+SALENAME: Girard                                                                                                 VERSION: 06.01.2022
+RUN DATE & TIME: 9/22/2022 07:13:52                                                             VOLUME LIBRARY VERSION: 05.03.2022
+
+
+ TABLE 5 -  REPORT FOR SPECIES: WF    
+                       PRODUCT: 01
+ 
+     LOG             #
+     DIB            OF            GROSS             NET           GROSS             NET
+   CLASS          LOGS             BDFT            BDFT            CUFT            CUFT
+____________________________________________________________________________________________________________________________________
+       6        1586.9          15868.6         15868.6          6030.1          6030.1
+       7         869.8           8697.9          8697.9          3044.2          3044.2
+       8        1586.9          31737.2         31737.2          8727.7          8727.7
+       9         869.8          26093.6         26093.6          4261.9          4261.9
+      10         869.8          52187.1         51317.4          9219.7          9132.7
+      12         869.8          69582.9         68713.1         11916.1         11829.1
+____________________________________________________________________________________________________________________________________
+  TOTALS        6652.9         204167.2        202427.7         43199.8         43025.8
+
+ST1: NET VOLUME STATISTICS FOR SAMPLE GROUP (DP1)                                                                           PAGE 29
+FOR CUT TREES ONLY
+CRUISE#: 00000      SALE#: 00000
+SALENAME: Girard                                                                                                 VERSION: 06.01.2022
+RUN DATE & TIME: 9/22/2022 07:13:52                                                             VOLUME LIBRARY VERSION: 05.03.2022
+
+
+                  S
+                  T
+    P      S      G   *************************************PRIMARY PRODUCT NET VOLUME *****************************************
+ S  R  U   A
+ T  O      M      S   NO                                     SUM          SUM                     COEFF                     COMBINED
+ R  D  O          A
+ A  U  F   G   S  M   SAM   BIG  SMALL   t      MEAN         OF           OF          STANDARD     OF     STANDARD SAMPLING SAMPLING
+ T  C      R   T
+ A  T  M   P   M 1/2 TREES   N     N*  VALUE     X            X         (X * X)       DEVIATION VARIATION  ERROR    ERROR    ERROR
+____________________________________________________________________________________________________________________________________
+ 02 01 01  AS  N  1     4     0     1   0.000  14718.2    14718.23   216626420.09      0.0000    0.0000    0.000    0.0000     0.000
+
+
+
+ 05 01 01  AS  N  1    69     0    17   2.120  21964.4   373395.38  9929135352.84  10391.4536   47.3104 2520.298   24.3258    24.326
+
+ 06 01 01  AS  N  1    30     0     6   2.571  32397.5   194384.89  8012037278.15  18517.3224   57.1567 7559.665   59.9920    59.992
+
+ 07 01 01  AS  N  1     5     0     2  12.706  17828.3    35656.68   761802605.25  11229.5629   62.9871 7940.500  565.9079   565.908
+
+  * CANNOT CALCULATE SAMPLING ERROR IF SMALL N EQUALS 1.
+
+ST1: NET VOLUME STATISTICS FOR SAMPLE GROUP (DP1)                                                                           PAGE 30
+FOR CUT TREES ONLY
+CRUISE#: 00000      SALE#: 00000
+SALENAME: Girard                                                                                                 VERSION: 06.01.2022
+RUN DATE & TIME: 9/22/2022 07:13:52                                                             VOLUME LIBRARY VERSION: 05.03.2022
+
+
+                  S
+                  T
+    P      S      G   *************************************SECONDARY PRODUCT NET VOLUME *****************************************
+ S  R  U   A
+ T  O      M      S   NO                                     SUM          SUM                     COEFF                     COMBINED
+ R  D  O          A
+ A  U  F   G   S  M   SAM   BIG  SMALL   t      MEAN         OF           OF          STANDARD     OF     STANDARD SAMPLING SAMPLING
+ T  C      R   T
+ A  T  M   P   M 1/2 TREES   N     N*  VALUE     X            X         (X * X)       DEVIATION VARIATION  ERROR    ERROR    ERROR
+____________________________________________________________________________________________________________________________________
+ 02 08 01  AS  N  1     4     0     1   0.000    928.2      928.22      861583.28      0.0000    0.0000    0.000    0.0000     0.000
+
+
+
+ 05 08 01  AS  N  1    69     0    17   2.120   1281.4    21784.15    37997293.98    793.8292   61.9492  192.532   31.8527    31.853
+
+ 06 08 01  AS  N  1    30     0     6   2.571   1498.2     8988.97    18742910.16   1027.2260   68.5657  419.363   71.9670    71.967
+
+ 07 08 01  AS  N  1     5     0     2  12.706    713.5     1426.95     1027923.21     99.1107   13.8912   70.082  124.8056   124.806
+
+  * CANNOT CALCULATE SAMPLING ERROR IF SMALL N EQUALS 1.
+
+ST2: GROSS VOLUME STATISTICS FOR SAMPLE GROUP (DP2)                                                                         PAGE 31
+FOR CUT TREES ONLY
+CRUISE#: 00000      SALE#: 00000
+SALENAME: Girard                                                                                                 VERSION: 06.01.2022
+RUN DATE & TIME: 9/22/2022 07:13:52                                                             VOLUME LIBRARY VERSION: 05.03.2022
+
+
+                  S
+                  T
+    P      S      G   *************************************PRIMARY PRODUCT GROSS VOLUME *****************************************
+ S  R  U   A
+ T  O      M      S   NO                                     SUM          SUM                     COEFF                     COMBINED
+ R  D  O          A
+ A  U  F   G   S  M   SAM   BIG  SMALL   t      MEAN         OF           OF          STANDARD     OF     STANDARD SAMPLING SAMPLING
+ T  C      R   T
+ A  T  M   P   M 1/2 TREES   N     N*  VALUE     X            X         (X * X)       DEVIATION VARIATION  ERROR    ERROR    ERROR
+____________________________________________________________________________________________________________________________________
+ 02 01 01  AS  N  1     4     0     1   0.000  19099.3    19099.27   364782027.12      0.0000    0.0000    0.000    0.0000     0.000
+
+
+
+ 05 01 01  AS  N  1    69     0    17   2.120  22902.8   389347.83 10766540809.97  10751.1043   46.9423 2607.526   24.1366    24.137
+
+ 06 01 01  AS  N  1    30     0     6   2.571  35403.9   212423.34  9194326261.98  18295.9750   51.6779 7469.301   54.2414    54.241
+
+ 07 01 01  AS  N  1     5     0     2  12.706  18954.2    37908.31   869096176.88  12270.9456   64.7401 8676.869  581.6576   581.658
+
+  * CANNOT CALCULATE SAMPLING ERROR IF SMALL N EQUALS 1.
+
+ST2: GROSS VOLUME STATISTICS FOR SAMPLE GROUP (DP2)                                                                         PAGE 32
+FOR CUT TREES ONLY
+CRUISE#: 00000      SALE#: 00000
+SALENAME: Girard                                                                                                 VERSION: 06.01.2022
+RUN DATE & TIME: 9/22/2022 07:13:52                                                             VOLUME LIBRARY VERSION: 05.03.2022
+
+
+                  S
+                  T
+    P      S      G   *************************************SECONDARY PRODUCT GROSS VOLUME *****************************************
+ S  R  U   A
+ T  O      M      S   NO                                     SUM          SUM                     COEFF                     COMBINED
+ R  D  O          A
+ A  U  F   G   S  M   SAM   BIG  SMALL   t      MEAN         OF           OF          STANDARD     OF     STANDARD SAMPLING SAMPLING
+ T  C      R   T
+ A  T  M   P   M 1/2 TREES   N     N*  VALUE     X            X         (X * X)       DEVIATION VARIATION  ERROR    ERROR    ERROR
+____________________________________________________________________________________________________________________________________
+ 02 08 01  AS  N  1     4     0     1   0.000    928.2      928.22      861583.28      0.0000    0.0000    0.000    0.0000     0.000
+
+
+
+ 05 08 01  AS  N  1    69     0    17   2.120   1281.4    21784.15    37997293.98    793.8292   61.9492  192.532   31.8527    31.853
+
+ 06 08 01  AS  N  1    30     0     6   2.571   1498.2     8988.97    18742910.16   1027.2260   68.5657  419.363   71.9670    71.967
+
+ 07 08 01  AS  N  1     5     0     2  12.706    713.5     1426.95     1027923.21     99.1107   13.8912   70.082  124.8056   124.806
+
+  * CANNOT CALCULATE SAMPLING ERROR IF SMALL N EQUALS 1.
+
+ST3: ERROR TERM, VOLUME AND CONFIDENCE INTERVAL (DS1)                                                                       PAGE 33
+PRIMARY PRODUCT VOLUME
+FOR CUT TREES ONLY
+CRUISE#: 00000      SALE#: 00000
+SALENAME: Girard                                                                                                 VERSION: 06.01.2022
+RUN DATE & TIME: 9/22/2022 07:13:52                                                             VOLUME LIBRARY VERSION: 05.03.2022
+
+
+     P         ******** PRIMARY PRODUCT GROSS VOLUME **********       ******* PRIMARY PRODUCT NET VOLUME ********
+  S  R   U
+  T  O                            ****** 95% CONFIDENCE *****                        ****** 95% CONFIDENCE ******
+  R  D   O
+  A  U   F                                    INTERVAL                                           INTERVAL
+  T  C
+  A  T   M      VOLUME*     ERROR       FROM            TO                VOLUME*   ERROR      FROM            TO
+____________________________________________________________________________________________________________________________________
+ 02   01  01   1121121.2      0.00       1121121        1121121           863954.4     0.00       863954        863954
+ 05   01  01  10224921.0     24.14       7756975       12692867          9805969.3    24.33      7420586      12191353
+ 06   01  01   6814833.0     54.24       3118371       10511295          6236085.3    59.99      2494933       9977238
+ 07   01  01   1038751.6    581.66      -5003226        7080729           977053.7   565.91     -4552171       6506278
+
+                                       ------------  AGGREGATED BY PRODUCT  ------------
+      01  01  19199626.8     39.07      11698955       26700299         17883062.7    39.64     10793733      24972393
+
+                                       --------  AGGREGATED BY UNIT OF MEASURE  --------
+          01  19199626.8     39.07      11698955       26700299         17883062.7    39.64     10793733      24972393
+
+                                       ------------  AGGREGATED BY STRATA   ------------
+ 02       01   1121121.2      0.00       1121121        1121121           863954.4     0.00       863954        863954
+ 05       01  10224921.0     24.14       7756975       12692867          9805969.3    24.33      7420586      12191353
+ 06       01   6814833.0     54.24       3118371       10511295          6236085.3    59.99      2494933       9977238
+ 07       01   1038751.6    581.66      -5003226        7080729           977053.7   565.91     -4552171       6506278
+
+* UOM DETERMINES VALUES USED IN CALCULATION UNDER VOLUME
+
+ST3: ERROR TERM, VOLUME AND CONFIDENCE INTERVAL (DS1)                                                                       PAGE 34
+SECONDARY PRODUCT VOLUME
+FOR CUT TREES ONLY
+CRUISE#: 00000      SALE#: 00000
+SALENAME: Girard                                                                                                 VERSION: 06.01.2022
+RUN DATE & TIME: 9/22/2022 07:13:52                                                             VOLUME LIBRARY VERSION: 05.03.2022
+
+
+     P         ******** SECONDARY PRODUCT GROSS VOLUME **********       ******* SECONDARY PRODUCT NET VOLUME ********
+  S  R   U
+  T  O                            ****** 95% CONFIDENCE *****                        ****** 95% CONFIDENCE ******
+  R  D   O
+  A  U   F                                    INTERVAL                                           INTERVAL
+  T  C
+  A  T   M      VOLUME*     ERROR       FROM            TO                VOLUME*   ERROR      FROM            TO
+____________________________________________________________________________________________________________________________________
+ 02   08  01     54485.9      0.00         54486          54486            54485.9     0.00        54486         54486
+ 05   08  01    572122.8     31.85        389886         754360           572122.8    31.85       389886        754360
+ 06   08  01    288386.2     71.97         80843         495929           288386.2    71.97        80843        495929
+ 07   08  01     39100.4    124.81         -9699          87900            39100.4   124.81        -9699         87900
+
+                                       ------------  AGGREGATED BY PRODUCT  ------------
+      08  01    954095.2     29.40        673621        1234569           954095.2    29.40       673621       1234569
+
+                                       --------  AGGREGATED BY UNIT OF MEASURE  --------
+          01    954095.2     29.40        673621        1234569           954095.2    29.40       673621       1234569
+
+                                       ------------  AGGREGATED BY STRATA   ------------
+ 02       01     54485.9      0.00         54486          54486            54485.9     0.00        54486         54486
+ 05       01    572122.8     31.85        389886         754360           572122.8    31.85       389886        754360
+ 06       01    288386.2     71.97         80843         495929           288386.2    71.97        80843        495929
+ 07       01     39100.4    124.81         -9699          87900            39100.4   124.81        -9699         87900
+
+* UOM DETERMINES VALUES USED IN CALCULATION UNDER VOLUME
+
+ST3: ERROR TERM, VOLUME AND CONFIDENCE INTERVAL (DS1)                                                                       PAGE 35
+TOTAL VOLUME
+FOR CUT TREES ONLY
+CRUISE#: 00000      SALE#: 00000
+SALENAME: Girard                                                                                                 VERSION: 06.01.2022
+RUN DATE & TIME: 9/22/2022 07:13:52                                                             VOLUME LIBRARY VERSION: 05.03.2022
+
+
+     P         ******** ******* TOTAL GROSS VOLUME **********       ******* ******* TOTAL NET VOLUME ********
+  S  R   U
+  T  O                            ****** 95% CONFIDENCE *****                        ****** 95% CONFIDENCE ******
+  R  D   O
+  A  U   F                                    INTERVAL                                           INTERVAL
+  T  C
+  A  T   M      VOLUME*     ERROR       FROM            TO                VOLUME*   ERROR      FROM            TO
+____________________________________________________________________________________________________________________________________
+
+                                       ------------  AGGREGATED BY PRODUCT  ------------
+      01  01  19199626.8     39.07      11698955       26700299         17883062.7    39.64     10793733      24972393
+      08  01    954095.2     29.40        673621        1234569           954095.2    29.40       673621       1234569
+
+                                       --------  AGGREGATED BY UNIT OF MEASURE  --------
+          01  20153722.0     37.24      12647808       27659636         18837157.9    37.66     11742282      25932034
+
+                                       ------------  AGGREGATED BY STRATA   ------------
+ 02       01   1175607.2      0.00       1175607        1175607           918440.3     0.00       918440        918440
+ 05       01  10797043.8     22.92       8322379       13271709         10378092.0    23.05      7985757      12770427
+ 06       01   7103219.1     52.12       3400935       10805503          6524471.5    57.43      2777566      10271376
+ 07       01   1077851.9    560.58      -4964323        7120027          1016154.1   544.15     -4513286       6545594
+
+* UOM DETERMINES VALUES USED IN CALCULATION UNDER VOLUME
+
+TC58: STAND TABLE FOR SALE 00000 -- NET BDFT VOLUME                                                                         PAGE 36
+FOR PRIMARY PRODUCT ONLY - BY 1" DIAMETER CLASS
+ (5-inch class = 4.6 - 5.5 inches; 9-inch class = 8.6 - 9.5 inches, and so on.)
+CRUISE#: 00000      SALE#: 00000
+SALENAME: Girard                                                                                                 VERSION: 06.01.2022
+RUN DATE & TIME: 9/22/2022 07:13:52                                                             VOLUME LIBRARY VERSION: 05.03.2022
+
+
+ SPEC   |   DF    |   IC    |   PP    |   SP    |   WF    |   
+ PROD   |   01    |   01    |   01    |   01    |   01    |   
+ U OF M |   01    |   01    |   01    |   01    |   01    |   TOTALS
+____________________________________________________________________________________________________________________________________
+  1-3   |       0 |       0 |       0 |       0 |       0 |        0
+    4   |       0 |       0 |       0 |       0 |       0 |        0
+    5   |       0 |       0 |       0 |       0 |       0 |        0
+    6   |       0 |       0 |       0 |       0 |       0 |        0
+    7   |       0 |       0 |       0 |       0 |       0 |        0
+    8   |       0 |       0 |       0 |       0 |       0 |        0
+    9   |       0 |       0 |       0 |       0 |       0 |        0
+   10   |  340818 |       0 |       0 |       0 |   47606 |   388424
+   11   |  152364 |       0 |       0 |       0 |       0 |   152364
+   12   |  443759 |       0 |       0 |       0 |       0 |   443759
+   13   |  387979 |       0 |       0 |       0 |       0 |   387979
+   14   |  568612 |       0 |       0 |   98739 |       0 |   667352
+   15   | 1229080 |   69163 |       0 |       0 |  154822 |  1453065
+   16   |  364163 |       0 |       0 |       0 |       0 |   364163
+   17   |  962212 |       0 |  222310 |       0 |       0 |  1184522
+   18   | 1215173 |       0 |       0 |  224463 |       0 |  1439636
+   19   |  916117 |       0 |       0 |       0 |       0 |   916117
+   20   |  664605 |       0 |       0 |       0 |       0 |   664605
+   21   |  725226 |       0 |  192633 |       0 |       0 |   917859
+   22   |  643626 |       0 |       0 |       0 |       0 |   643626
+   23   |  997511 |       0 |       0 |       0 |       0 |   997511
+   24   |  791786 |       0 |       0 |       0 |       0 |   791786
+   25   |  352643 |       0 |  155465 |  125116 |       0 |   633224
+   26   |  337271 |       0 |       0 |       0 |       0 |   337271
+   27   |  209040 |       0 |       0 |       0 |       0 |   209040
+   28   |  744880 |       0 |       0 |       0 |       0 |   744880
+   29   |  178145 |       0 |       0 |       0 |       0 |   178145
+   30   |  451346 |       0 |       0 |       0 |       0 |   451346
+   31   |  282526 |       0 |       0 |       0 |       0 |   282526
+   32   |  597256 |   98399 |       0 |       0 |       0 |   695656
+   33   |  588676 |  140204 |       0 |       0 |       0 |   728879
+   34   |       0 |       0 |       0 |       0 |       0 |        0
+   35   |       0 |       0 |       0 |       0 |       0 |        0
+   36   |  374652 |       0 |       0 |       0 |       0 |   374652
+   37   |  243952 |       0 |       0 |       0 |       0 |   243952
+   38   |  534904 |       0 |       0 |       0 |       0 |   534904
+   39   |       0 |       0 |       0 |       0 |       0 |        0
+   40   |  246136 |       0 |       0 |       0 |       0 |   246136
+
+TC58: STAND TABLE FOR SALE 00000 -- NET BDFT VOLUME                                                                         PAGE 37
+FOR PRIMARY PRODUCT ONLY - BY 1" DIAMETER CLASS
+ (5-inch class = 4.6 - 5.5 inches; 9-inch class = 8.6 - 9.5 inches, and so on.)
+CRUISE#: 00000      SALE#: 00000
+SALENAME: Girard                                                                                                 VERSION: 06.01.2022
+RUN DATE & TIME: 9/22/2022 07:13:52                                                             VOLUME LIBRARY VERSION: 05.03.2022
+
+
+ SPEC   |   DF    |   IC    |   PP    |   SP    |   WF    |   
+ PROD   |   01    |   01    |   01    |   01    |   01    |   
+ U OF M |   01    |   01    |   01    |   01    |   01    |   TOTALS
+____________________________________________________________________________________________________________________________________
+   41   |       0 |       0 |       0 |       0 |       0 |        0
+   42   |       0 |       0 |       0 |       0 |       0 |        0
+   43   |  308282 |       0 |       0 |       0 |       0 |   308282
+   44   |  191478 |       0 |       0 |       0 |       0 |   191478
+   45   |       0 |       0 |       0 |       0 |       0 |        0
+   46   |       0 |       0 |       0 |       0 |       0 |        0
+   47   |       0 |       0 |       0 |       0 |       0 |        0
+   48   |       0 |       0 |       0 |       0 |       0 |        0
+   49   |       0 |       0 |       0 |  309925 |       0 |   309925
+   50   |       0 |       0 |       0 |       0 |       0 |        0
+ TOTALS |16044218 |  307766 |  570409 |  758243 |  202428 | 17883063
+
+TC60: STAND TABLE FOR SALE 00000 -- NET CUFT VOLUME                                                                         PAGE 38
+FOR PRIMARY PRODUCT ONLY - BY 1" DIAMETER CLASS
+ (5-inch class = 4.6 - 5.5 inches; 9-inch class = 8.6 - 9.5 inches, and so on.)
+CRUISE#: 00000      SALE#: 00000
+SALENAME: Girard                                                                                                 VERSION: 06.01.2022
+RUN DATE & TIME: 9/22/2022 07:13:52                                                             VOLUME LIBRARY VERSION: 05.03.2022
+
+
+ SPEC   |   DF    |   IC    |   PP    |   SP    |   WF    |   
+ PROD   |   01    |   01    |   01    |   01    |   01    |   
+ U OF M |   01    |   01    |   01    |   01    |   01    |   TOTALS
+____________________________________________________________________________________________________________________________________
+  1-3   |       0 |       0 |       0 |       0 |       0 |        0
+    4   |       0 |       0 |       0 |       0 |       0 |        0
+    5   |       0 |       0 |       0 |       0 |       0 |        0
+    6   |       0 |       0 |       0 |       0 |       0 |        0
+    7   |       0 |       0 |       0 |       0 |       0 |        0
+    8   |       0 |       0 |       0 |       0 |       0 |        0
+    9   |       0 |       0 |       0 |       0 |       0 |        0
+   10   |   72380 |       0 |       0 |       0 |   14758 |    87138
+   11   |   34955 |       0 |       0 |       0 |       0 |    34955
+   12   |   97822 |       0 |       0 |       0 |       0 |    97822
+   13   |   74884 |       0 |       0 |       0 |       0 |    74884
+   14   |  106804 |       0 |       0 |   22644 |       0 |   129448
+   15   |  231430 |   13902 |       0 |       0 |   28268 |   273600
+   16   |   68465 |       0 |       0 |       0 |       0 |    68465
+   17   |  172696 |       0 |   46965 |       0 |       0 |   219661
+   18   |  223712 |       0 |       0 |   38500 |       0 |   262212
+   19   |  165513 |       0 |       0 |       0 |       0 |   165513
+   20   |  120304 |       0 |       0 |       0 |       0 |   120304
+   21   |  124266 |       0 |   34204 |       0 |       0 |   158470
+   22   |  109266 |       0 |       0 |       0 |       0 |   109266
+   23   |  167472 |       0 |       0 |       0 |       0 |   167472
+   24   |  128595 |       0 |       0 |       0 |       0 |   128595
+   25   |   55098 |       0 |   25345 |   21810 |       0 |   102254
+   26   |   52915 |       0 |       0 |       0 |       0 |    52915
+   27   |   31955 |       0 |       0 |       0 |       0 |    31955
+   28   |  111429 |       0 |       0 |       0 |       0 |   111429
+   29   |   27532 |       0 |       0 |       0 |       0 |    27532
+   30   |   66886 |       0 |       0 |       0 |       0 |    66886
+   31   |   41153 |       0 |       0 |       0 |       0 |    41153
+   32   |   84404 |   18036 |       0 |       0 |       0 |   102440
+   33   |   84273 |   22589 |       0 |       0 |       0 |   106862
+   34   |       0 |       0 |       0 |       0 |       0 |        0
+   35   |       0 |       0 |       0 |       0 |       0 |        0
+   36   |   51718 |       0 |       0 |       0 |       0 |    51718
+   37   |   33410 |       0 |       0 |       0 |       0 |    33410
+   38   |   74476 |       0 |       0 |       0 |       0 |    74476
+   39   |       0 |       0 |       0 |       0 |       0 |        0
+   40   |   33356 |       0 |       0 |       0 |       0 |    33356
+
+TC60: STAND TABLE FOR SALE 00000 -- NET CUFT VOLUME                                                                         PAGE 39
+FOR PRIMARY PRODUCT ONLY - BY 1" DIAMETER CLASS
+ (5-inch class = 4.6 - 5.5 inches; 9-inch class = 8.6 - 9.5 inches, and so on.)
+CRUISE#: 00000      SALE#: 00000
+SALENAME: Girard                                                                                                 VERSION: 06.01.2022
+RUN DATE & TIME: 9/22/2022 07:13:52                                                             VOLUME LIBRARY VERSION: 05.03.2022
+
+
+ SPEC   |   DF    |   IC    |   PP    |   SP    |   WF    |   
+ PROD   |   01    |   01    |   01    |   01    |   01    |   
+ U OF M |   01    |   01    |   01    |   01    |   01    |   TOTALS
+____________________________________________________________________________________________________________________________________
+   41   |       0 |       0 |       0 |       0 |       0 |        0
+   42   |       0 |       0 |       0 |       0 |       0 |        0
+   43   |   42885 |       0 |       0 |       0 |       0 |    42885
+   44   |   26954 |       0 |       0 |       0 |       0 |    26954
+   45   |       0 |       0 |       0 |       0 |       0 |        0
+   46   |       0 |       0 |       0 |       0 |       0 |        0
+   47   |       0 |       0 |       0 |       0 |       0 |        0
+   48   |       0 |       0 |       0 |       0 |       0 |        0
+   49   |       0 |       0 |       0 |   41394 |       0 |    41394
+   50   |       0 |       0 |       0 |       0 |       0 |        0
+ TOTALS | 2717005 |   54527 |  106514 |  124348 |   43026 |  3045421
+
+TC62: STAND TABLE FOR SALE 00000 -- ESTIMATED NUMBER OF TREES                                                               PAGE 40
+BY 1" DIAMETER CLASS
+ (5-inch class = 4.6 - 5.5 inches; 9-inch class = 8.6 - 9.5 inches, and so on.)
+CRUISE#: 00000      SALE#: 00000
+SALENAME: Girard                                                                                                 VERSION: 06.01.2022
+RUN DATE & TIME: 9/22/2022 07:13:52                                                             VOLUME LIBRARY VERSION: 05.03.2022
+
+
+ SPEC   |   DF    |   IC    |   PP    |   SP    |   WF    |   
+ PROD   |   01    |   01    |   01    |   01    |   01    |   
+ U OF M |   01    |   01    |   01    |   01    |   01    |   TOTALS
+____________________________________________________________________________________________________________________________________
+  1-3   |       0 |       0 |       0 |       0 |       0 |        0
+    4   |       0 |       0 |       0 |       0 |       0 |        0
+    5   |       0 |       0 |       0 |       0 |       0 |        0
+    6   |       0 |       0 |       0 |       0 |       0 |        0
+    7   |       0 |       0 |       0 |       0 |       0 |        0
+    8   |       0 |       0 |       0 |       0 |       0 |        0
+    9   |       0 |       0 |       0 |       0 |       0 |        0
+   10   |    6194 |       0 |       0 |       0 |    1587 |     7781
+   11   |    3238 |       0 |       0 |       0 |       0 |     3238
+   12   |    6105 |       0 |       0 |       0 |       0 |     6105
+   13   |    3288 |       0 |       0 |       0 |       0 |     3288
+   14   |    4888 |       0 |       0 |    1628 |       0 |     6516
+   15   |    7929 |     692 |       0 |       0 |     870 |     9490
+   16   |    1844 |       0 |       0 |       0 |       0 |     1844
+   17   |    3933 |       0 |    1472 |       0 |       0 |     5405
+   18   |    4697 |       0 |       0 |     710 |       0 |     5407
+   19   |    3189 |       0 |       0 |       0 |       0 |     3189
+   20   |    2444 |       0 |       0 |       0 |       0 |     2444
+   21   |    1639 |       0 |     534 |       0 |       0 |     2172
+   22   |    1502 |       0 |       0 |       0 |       0 |     1502
+   23   |    1984 |       0 |       0 |       0 |       0 |     1984
+   24   |    1127 |       0 |       0 |       0 |       0 |     1127
+   25   |     500 |       0 |     386 |     261 |       0 |     1147
+   26   |     486 |       0 |       0 |       0 |       0 |      486
+   27   |     222 |       0 |     323 |       0 |       0 |      545
+   28   |     710 |       0 |       0 |       0 |       0 |      710
+   29   |     195 |       0 |       0 |       0 |       0 |      195
+   30   |     432 |       0 |       0 |       0 |       0 |      432
+   31   |     213 |       0 |       0 |       0 |       0 |      213
+   32   |     380 |     228 |       0 |       0 |       0 |      609
+   33   |     400 |     182 |       0 |       0 |       0 |      583
+   34   |       0 |       0 |       0 |       0 |       0 |        0
+   35   |       0 |       0 |       0 |       0 |       0 |        0
+   36   |     182 |       0 |       0 |       0 |       0 |      182
+   37   |     119 |       0 |       0 |       0 |       0 |      119
+   38   |     272 |       0 |       0 |       0 |       0 |      272
+   39   |       0 |       0 |       0 |       0 |       0 |        0
+   40   |     100 |       0 |       0 |       0 |       0 |      100
+
+TC62: STAND TABLE FOR SALE 00000 -- ESTIMATED NUMBER OF TREES                                                               PAGE 41
+BY 1" DIAMETER CLASS
+ (5-inch class = 4.6 - 5.5 inches; 9-inch class = 8.6 - 9.5 inches, and so on.)
+CRUISE#: 00000      SALE#: 00000
+SALENAME: Girard                                                                                                 VERSION: 06.01.2022
+RUN DATE & TIME: 9/22/2022 07:13:52                                                             VOLUME LIBRARY VERSION: 05.03.2022
+
+
+ SPEC   |   DF    |   IC    |   PP    |   SP    |   WF    |   
+ PROD   |   01    |   01    |   01    |   01    |   01    |   
+ U OF M |   01    |   01    |   01    |   01    |   01    |   TOTALS
+____________________________________________________________________________________________________________________________________
+   41   |       0 |       0 |       0 |       0 |       0 |        0
+   42   |       0 |       0 |       0 |       0 |       0 |        0
+   43   |     128 |       0 |       0 |       0 |       0 |      128
+   44   |      84 |       0 |       0 |       0 |       0 |       84
+   45   |       0 |       0 |       0 |       0 |       0 |        0
+   46   |       0 |       0 |       0 |       0 |       0 |        0
+   47   |       0 |       0 |       0 |       0 |       0 |        0
+   48   |       0 |       0 |       0 |       0 |       0 |        0
+   49   |       0 |       0 |       0 |      66 |       0 |       66
+   50   |       0 |       0 |       0 |       0 |       0 |        0
+ TOTALS |   58424 |    1102 |    2714 |    2666 |    2457 |    67363
+
+UC1: VOLUME BY SPECIES WITHIN CUTTING UNIT FOR EACH STRATUM-SAWTIMBER                                                       PAGE 42
+FOR CUT TREES ONLY
+CRUISE#: 00000      SALE#: 00000
+SALENAME: Girard                                                                                                 VERSION: 06.01.2022
+RUN DATE & TIME: 9/22/2022 07:13:52                                                             VOLUME LIBRARY VERSION: 05.03.2022
+
+
+                               ***************************************** PRIMARY PRODUCT ******************************************
+                                 AVGDEF
+         S                                      GROSS      NET
+  S      P         U            %       %                             ************************ STRATA LEVEL ***********************
+  T      E                                      BDFT       BDFT       EST.
+  R   U  C      P  O            B       C
+  A   N  I      R  F            D       U       CUFT       CUFT       NO OF      ** GROSS VOLUME **     ** NET VOLUME **
+  T   I  E      O               F       F
+  A   T  S      D  M            T       T       RATIO      RATIO      TREES       BDFT        CUFT       BDFT      CUFT      CORDS
+____________________________________________________________________________________________________________________________________
+ 01 559   0      0 0.0000      0.0000         0        0          0        0          0   
+              __________________________________________________________________________________________________________________
+              UNIT 559  TOTAL   0       0      0.0000     0.0000          0          0           0          0         0        0.00
+ 
+              __________________________________________________________________________________________________________________
+             STRATA 01  TOTAL   0       0      0.0000     0.0000          0          0           0          0         0        0.00
+ 
+____________________________________________________________________________________________________________________________________
+____________________________________________________________________________________________________________________________________
+ 02 977 DF     01 01           26      25      5.5223     5.4390       2127     465832       84354     343230     63105  
+ 02 977 PP     01 01           11       9      4.8023     4.7335        788     133882       27879     118919     25123  
+              __________________________________________________________________________________________________________________
+              UNIT 977  TOTAL  22      21      5.3435     5.2382       2915     599714      112233     462149     88228        0.00
+ 
+ 02 978 DF     01 01           26      25      5.5223     5.4390       1849     405006       73340     298414     54865  
+ 02 978 PP     01 01           11       9      4.8023     4.7335        685     116401       24239     103391     21842  
+              __________________________________________________________________________________________________________________
+              UNIT 978  TOTAL  22      21      5.3435     5.2382       2534     521407       97579     401805     76707        0.00
+ 
+              __________________________________________________________________________________________________________________
+             STRATA 02  TOTAL  22      21      5.3435     5.2382       5449    1121121      209812     863954    164935        0.00
+ 
+____________________________________________________________________________________________________________________________________
+____________________________________________________________________________________________________________________________________
+ 03 564   0      0 0.0000      0.0000         0        0          0        0          0   
+              __________________________________________________________________________________________________________________
+              UNIT 564  TOTAL   0       0      0.0000     0.0000          0          0           0          0         0        0.00
+ 
+              __________________________________________________________________________________________________________________
+             STRATA 03  TOTAL   0       0      0.0000     0.0000          0          0           0          0         0        0.00
+ 
+____________________________________________________________________________________________________________________________________
+____________________________________________________________________________________________________________________________________
+ 04 550   0      0 0.0000      0.0000         0        0          0        0          0   
+              __________________________________________________________________________________________________________________
+              UNIT 550  TOTAL   0       0      0.0000     0.0000          0          0           0          0         0        0.00
+ 
+
+UC1: VOLUME BY SPECIES WITHIN CUTTING UNIT FOR EACH STRATUM-SAWTIMBER                                                       PAGE 43
+FOR CUT TREES ONLY
+CRUISE#: 00000      SALE#: 00000
+SALENAME: Girard                                                                                                 VERSION: 06.01.2022
+RUN DATE & TIME: 9/22/2022 07:13:52                                                             VOLUME LIBRARY VERSION: 05.03.2022
+
+
+                               ***************************************** PRIMARY PRODUCT ******************************************
+                                 AVGDEF
+         S                                      GROSS      NET
+  S      P         U            %       %                             ************************ STRATA LEVEL ***********************
+  T      E                                      BDFT       BDFT       EST.
+  R   U  C      P  O            B       C
+  A   N  I      R  F            D       U       CUFT       CUFT       NO OF      ** GROSS VOLUME **     ** NET VOLUME **
+  T   I  E      O               F       F
+  A   T  S      D  M            T       T       RATIO      RATIO      TREES       BDFT        CUFT       BDFT      CUFT      CORDS
+____________________________________________________________________________________________________________________________________
+              __________________________________________________________________________________________________________________
+             STRATA 04  TOTAL   0       0      0.0000     0.0000          0          0           0          0         0        0.00
+ 
+____________________________________________________________________________________________________________________________________
+____________________________________________________________________________________________________________________________________
+ 05 555 DF     01 01            3       3      5.8634     5.8462       7905    2152512      367107    2066890    353544  
+ 05 555 IC     01 01            0       0      4.9751     4.9751        156      15614        3138      15614      3138  
+ 05 555 SP     01 01            6       6      6.2242     6.2177        442     129462       20800     120504     19381  
+ 05 555 WF     01 01            0       0      3.2258     3.2258        358      10747        3332      10747      3332  
+              __________________________________________________________________________________________________________________
+              UNIT 555  TOTAL   4       3      5.8531     5.8350       8861    2308336      394377    2213755    379394        0.00
+ 
+ 05 556 DF     01 01            3       3      5.8634     5.8462       8054    2193085      374027    2105849    360208  
+ 05 556 IC     01 01            0       0      4.9751     4.9751        159      15908        3198      15908      3198  
+ 05 556 SP     01 01            6       6      6.2242     6.2177        450     131903       21192     122775     19746  
+ 05 556 WF     01 01            0       0      3.2258     3.2258        365      10950        3394      10950      3394  
+              __________________________________________________________________________________________________________________
+              UNIT 556  TOTAL   4       3      5.8531     5.8350       9028    2351846      401811    2255483    386546        0.00
+ 
+ 05 563 DF     01 01            3       3      5.8634     5.8462       4149    1129642      192659    1084707    185540  
+ 05 563 IC     01 01            0       0      4.9751     4.9751         82       8194        1647       8194      1647  
+ 05 563 SP     01 01            6       6      6.2242     6.2177        232      67942       10916      63241     10171  
+ 05 563 WF     01 01            0       0      3.2258     3.2258        188       5640        1748       5640      1748  
+              __________________________________________________________________________________________________________________
+              UNIT 563  TOTAL   4       3      5.8531     5.8350       4650    1211418      206970    1161782    199107        0.00
+ 
+ 05 566 DF     01 01            3       3      5.8634     5.8462       2031     553076       94326     531076     90841  
+ 05 566 IC     01 01            0       0      4.9751     4.9751         40       4012         806       4012       806  
+ 05 566 SP     01 01            6       6      6.2242     6.2177        113      33265        5344      30963      4980  
+ 05 566 WF     01 01            0       0      3.2258     3.2258         92       2761         856       2761       856  
+              __________________________________________________________________________________________________________________
+              UNIT 566  TOTAL   4       3      5.8531     5.8350       2277     593114      101333     568812     97483        0.00
+ 
+ 05 979 DF     01 01            3       3      5.8634     5.8462       1906     518909       88499     498268     85229  
+ 05 979 IC     01 01            0       0      4.9751     4.9751         38       3764         757       3764       757  
+ 05 979 SP     01 01            6       6      6.2242     6.2177        106      31210        5014      29050      4672  
+ 05 979 WF     01 01            0       0      3.2258     3.2258         86       2591         803       2591       803  
+              __________________________________________________________________________________________________________________
+              UNIT 979  TOTAL   4       3      5.8531     5.8350       2136     556474       95073     533673     91461        0.00
+ 
+
+UC1: VOLUME BY SPECIES WITHIN CUTTING UNIT FOR EACH STRATUM-SAWTIMBER                                                       PAGE 44
+FOR CUT TREES ONLY
+CRUISE#: 00000      SALE#: 00000
+SALENAME: Girard                                                                                                 VERSION: 06.01.2022
+RUN DATE & TIME: 9/22/2022 07:13:52                                                             VOLUME LIBRARY VERSION: 05.03.2022
+
+
+                               ***************************************** PRIMARY PRODUCT ******************************************
+                                 AVGDEF
+         S                                      GROSS      NET
+  S      P         U            %       %                             ************************ STRATA LEVEL ***********************
+  T      E                                      BDFT       BDFT       EST.
+  R   U  C      P  O            B       C
+  A   N  I      R  F            D       U       CUFT       CUFT       NO OF      ** GROSS VOLUME **     ** NET VOLUME **
+  T   I  E      O               F       F
+  A   T  S      D  M            T       T       RATIO      RATIO      TREES       BDFT        CUFT       BDFT      CUFT      CORDS
+____________________________________________________________________________________________________________________________________
+ 05 980 DF     01 01            3       3      5.8634     5.8462       4713    1283393      218881    1232342    210793  
+ 05 980 IC     01 01            0       0      4.9751     4.9751         93       9309        1871       9309      1871  
+ 05 980 SP     01 01            6       6      6.2242     6.2177        263      77189       12402      71848     11555  
+ 05 980 WF     01 01            0       0      3.2258     3.2258        214       6408        1986       6408      1986  
+              __________________________________________________________________________________________________________________
+              UNIT 980  TOTAL   4       3      5.8531     5.8350       5283    1376300      235140    1319908    226206        0.00
+ 
+ 05 982 DF     01 01            3       3      5.8634     5.8462       2564     698285      119091     670509    114691  
+ 05 982 IC     01 01            0       0      4.9751     4.9751         51       5065        1018       5065      1018  
+ 05 982 SP     01 01            6       6      6.2242     6.2177        143      41998        6748      39092      6287  
+ 05 982 WF     01 01            0       0      3.2258     3.2258        116       3486        1081       3486      1081  
+              __________________________________________________________________________________________________________________
+              UNIT 982  TOTAL   4       3      5.8531     5.8350       2874     748835      127938     718153    123077        0.00
+ 
+ 05 983 DF     01 01            3       3      5.8634     5.8462       1490     405731       69197     389592     66640  
+ 05 983 IC     01 01            0       0      4.9751     4.9751         29       2943         592       2943       592  
+ 05 983 SP     01 01            6       6      6.2242     6.2177         83      24403        3921      22714      3653  
+ 05 983 WF     01 01            0       0      3.2258     3.2258         68       2026         628       2026       628  
+              __________________________________________________________________________________________________________________
+              UNIT 983  TOTAL   4       3      5.8531     5.8350       1670     435103       74337     417275     71513        0.00
+ 
+ 05 985 DF     01 01            3       3      5.8634     5.8462       2204     600056      102338     576187     98557  
+ 05 985 IC     01 01            0       0      4.9751     4.9751         44       4353         875       4353       875  
+ 05 985 SP     01 01            6       6      6.2242     6.2177        123      36090        5798      33593      5403  
+ 05 985 WF     01 01            0       0      3.2258     3.2258        100       2996         929       2996       929  
+              __________________________________________________________________________________________________________________
+              UNIT 985  TOTAL   4       3      5.8531     5.8350       2470     643494      109941     617128    105764        0.00
+ 
+              __________________________________________________________________________________________________________________
+             STRATA 05  TOTAL   4       3      5.8531     5.8350      39250   10224921     1746920    9805969   1680552        0.00
+ 
+____________________________________________________________________________________________________________________________________
+____________________________________________________________________________________________________________________________________
+ 06 533 DF     01 01            4       3      6.0231     5.9902       2478     794670      131937     760326    126928  
+ 06 533 IC     01 01           15      17      5.3180     5.4557         31      15908        2991      13444      2464  
+ 06 533 PP     01 01           44      43      5.9508     5.8455        170      85550       14376      47558      8136  
+
+UC1: VOLUME BY SPECIES WITHIN CUTTING UNIT FOR EACH STRATUM-SAWTIMBER                                                       PAGE 45
+FOR CUT TREES ONLY
+CRUISE#: 00000      SALE#: 00000
+SALENAME: Girard                                                                                                 VERSION: 06.01.2022
+RUN DATE & TIME: 9/22/2022 07:13:52                                                             VOLUME LIBRARY VERSION: 05.03.2022
+
+
+                               ***************************************** PRIMARY PRODUCT ******************************************
+                                 AVGDEF
+         S                                      GROSS      NET
+  S      P         U            %       %                             ************************ STRATA LEVEL ***********************
+  T      E                                      BDFT       BDFT       EST.
+  R   U  C      P  O            B       C
+  A   N  I      R  F            D       U       CUFT       CUFT       NO OF      ** GROSS VOLUME **     ** NET VOLUME **
+  T   I  E      O               F       F
+  A   T  S      D  M            T       T       RATIO      RATIO      TREES       BDFT        CUFT       BDFT      CUFT      CORDS
+____________________________________________________________________________________________________________________________________
+ 06 533 SP     01 01           12      11      5.8537     5.8303         97      34937        5968      30667      5260  
+              __________________________________________________________________________________________________________________
+              UNIT 533  TOTAL   8       8      5.9963     5.9669       2776     931065      155273     851995    142788        0.00
+ 
+ 06 558 DF     01 01            4       3      6.0231     5.9902       4089    1311357      217722    1254683    209455  
+ 06 558 IC     01 01           15      17      5.3180     5.4557         51      26251        4936      22185      4066  
+ 06 558 PP     01 01           44      43      5.9508     5.8455        280     141175       23724      78480     13426  
+ 06 558 SP     01 01           12      11      5.8537     5.8303        160      57653        9849      50606      8680  
+              __________________________________________________________________________________________________________________
+              UNIT 558  TOTAL   8       8      5.9963     5.9669       4581    1536435      256231    1405954    235627        0.00
+ 
+ 06 560 DF     01 01            4       3      6.0231     5.9902       3788    1214667      201668    1162172    194012  
+ 06 560 IC     01 01           15      17      5.3180     5.4557         48      24315        4572      20549      3766  
+ 06 560 PP     01 01           44      43      5.9508     5.8455        259     130765       21975      72694     12436  
+ 06 560 SP     01 01           12      11      5.8537     5.8303        148      53402        9123      46875      8040  
+              __________________________________________________________________________________________________________________
+              UNIT 560  TOTAL   8       8      5.9963     5.9669       4243    1423150      237338    1302289    218254        0.00
+ 
+ 06 568 DF     01 01            4       3      6.0231     5.9902       1074     344458       57190     329571     55018  
+ 06 568 IC     01 01           15      17      5.3180     5.4557         14       6895        1297       5827      1068  
+ 06 568 PP     01 01           44      43      5.9508     5.8455         74      37083        6232      20615      3527  
+ 06 568 SP     01 01           12      11      5.8537     5.8303         42      15144        2587      13293      2280  
+              __________________________________________________________________________________________________________________
+              UNIT 568  TOTAL   8       8      5.9963     5.9669       1203     403580       67305     369306     61893        0.00
+ 
+ 06 973 DF     01 01            4       3      6.0231     5.9902       1866     598269       99329     572413     95558  
+ 06 973 IC     01 01           15      17      5.3180     5.4557         23      11976        2252      10121      1855  
+ 06 973 PP     01 01           44      43      5.9508     5.8455        128      64407       10823      35804      6125  
+ 06 973 SP     01 01           12      11      5.8537     5.8303         73      26302        4493      23088      3960  
+              __________________________________________________________________________________________________________________
+              UNIT 973  TOTAL   8       8      5.9963     5.9669       2090     700954      116898     641426    107498        0.00
+ 
+ 06 975 DF     01 01            4       3      6.0231     5.9902       4843    1553082      257855    1485961    248065  
+ 06 975 IC     01 01           15      17      5.3180     5.4557         61      31090        5846      26274      4816  
+ 06 975 PP     01 01           44      43      5.9508     5.8455        332     167198       28097      92947     15900  
+ 06 975 SP     01 01           12      11      5.8537     5.8303        190      68280       11664      59934     10280  
+
+UC1: VOLUME BY SPECIES WITHIN CUTTING UNIT FOR EACH STRATUM-SAWTIMBER                                                       PAGE 46
+FOR CUT TREES ONLY
+CRUISE#: 00000      SALE#: 00000
+SALENAME: Girard                                                                                                 VERSION: 06.01.2022
+RUN DATE & TIME: 9/22/2022 07:13:52                                                             VOLUME LIBRARY VERSION: 05.03.2022
+
+
+                               ***************************************** PRIMARY PRODUCT ******************************************
+                                 AVGDEF
+         S                                      GROSS      NET
+  S      P         U            %       %                             ************************ STRATA LEVEL ***********************
+  T      E                                      BDFT       BDFT       EST.
+  R   U  C      P  O            B       C
+  A   N  I      R  F            D       U       CUFT       CUFT       NO OF      ** GROSS VOLUME **     ** NET VOLUME **
+  T   I  E      O               F       F
+  A   T  S      D  M            T       T       RATIO      RATIO      TREES       BDFT        CUFT       BDFT      CUFT      CORDS
+____________________________________________________________________________________________________________________________________
+              __________________________________________________________________________________________________________________
+              UNIT 975  TOTAL   8       8      5.9963     5.9669       5426    1819649      303462    1665116    279061        0.00
+ 
+              __________________________________________________________________________________________________________________
+             STRATA 06  TOTAL   8       8      5.9963     5.9669      20320    6814833     1136507    6236085   1045122        0.00
+ 
+____________________________________________________________________________________________________________________________________
+____________________________________________________________________________________________________________________________________
+ 07 557 DF     01 01            4       4      6.5617     6.5608       1031     569740       86827     543880     82899  
+ 07 557 IC     01 01           16      16      6.2162     6.2066        145     133759       21518     111805     18014  
+ 07 557 WF     01 01            1       0      5.5046     5.4769        694     124849       22681     123462     22542  
+              __________________________________________________________________________________________________________________
+              UNIT 557  TOTAL   5       5      6.3220     6.3112       1870     828347      131026     779147    123455        0.00
+ 
+ 07 986 DF     01 01            4       4      6.5617     6.5608        262     144716       22055     138148     21057  
+ 07 986 IC     01 01           16      16      6.2162     6.2066         37      33975        5466      28399      4576  
+ 07 986 WF     01 01            1       0      5.5046     5.4769        176      31712        5761      31360      5726  
+              __________________________________________________________________________________________________________________
+              UNIT 986  TOTAL   5       5      6.3220     6.3112        475     210404       33281     197907     31358        0.00
+ 
+              __________________________________________________________________________________________________________________
+             STRATA 07  TOTAL   5       5      6.3220     6.3112       2345    1038752      164307     977054    154813        0.00
+ 
+____________________________________________________________________________________________________________________________________
+____________________________________________________________________________________________________________________________________
+
+
+                        TOTALS ------    EST. NO        ***** GROSS VOLUME *****      ****** NET VOLUME ******
+                                         OF TREES          BDFT           CUFT           BDFT           CUFT          CORDS
+                                        ________________________________________________________________________________________
+                                            67363      19199627        3257546       17883063        3045421           0.00
+                                        ________________________________________________________________________________________
+
+
+
+* FOR TREE-BASED SAMPLES, THE CUTTING UNIT VOLUME IS BASED ON THE # OF TREES TALLIED OR THE SUM OF KPIS THAT FALL WITHIN
+THE CUTTING UNIT.  FOR AREA-BASED SAMPLES, THE CUTTING UNIT VOLUME IS BASED ON AN AVERAGE VOLUME PER ACRE AT THE STRATA
+LEVEL TIMES THE NUMBER OF ACRES IN THE CUTTING UNIT.
+*R = RECOVERED VOLUME ADDED TO NET SECONDARY VOLUME.
+*FOR CRUISE METHOD 3P ONLY, THE COLUMN Est. # of Trees for sawtimber WILL SHOW ZERO INSTEAD OF ACTUAL TALLY.
+
+UC5: VOLUME BY SPECIES WITHIN CUTTING UNIT ACROSS ALL STRATA                                                                PAGE 47
+FOR CUT TREES ONLY
+CRUISE#: 00000      SALE#: 00000
+SALENAME: Girard                                                                                                 VERSION: 06.01.2022
+RUN DATE & TIME: 9/22/2022 07:13:52                                                             VOLUME LIBRARY VERSION: 05.03.2022
+
+
+      S             TOTAL    ******************* SAWTIMBER *******************     ***************** NON-SAWTIMBER ****************
+      P                                  (PROD = 01   UM = 01, 03)                         (PROD NOT = 01   UM = 01, 02, 03)
+      E             EST.     EST.                                                   (AND ALL SECONDARY & RECOVERED PRODUCT VOLUMES)
+  U   C             
+  N   I             # OF     # OF    ** GROSS VOLUME **      ** NET VOLUME **      ***   GROSS    ***   ***   NET    ***
+  I   E             
+  T   S             TREES    TREES      BDFT       CUFT       BDFT       CUFT        BDFT      CUFT       BDFT      CUFT      CORDS
+____________________________________________________________________________________________________________________________________
+ 533 DF              2478     2478     794670    131937     760326     126928       34480     10550      34480     10550       0.00
+ 533 SP                97       97      34937      5968      30667       5260        2911       621       2911       621       0.00
+ 533 PP               170      126      85550     14376      47558       8136        1697       855       1697       855       0.00
+ 533 IC                31       31      15908      2991      13444       2464         312       187        312       187       0.00
+                  __________________________________________________________________________________________________________________
+  UNIT 533 TOTAL     2776     2732     931065    155273     851995     142788       39400     12213      39400     12213       0.00
+ 
+ 555 DF              7905     7905    2152512    367107    2066890     353544      118259     33097     118259     33097       0.00
+ 555 SP               442      442     129462     20800     120504      19381        5758      1559       5758      1559       0.00
+ 555 IC               156      156      15614      3138      15614       3138        1561       531       1561       531       0.00
+ 555 WF               358      358      10747      3332      10747       3332        3582       931       3582       931       0.00
+                  __________________________________________________________________________________________________________________
+  UNIT 555 TOTAL     8861     8861    2308336    394377    2213755     379394      129160     36118     129160     36118       0.00
+ 
+ 556 DF              8054     8054    2193085    374027    2105849     360208      120488     33721     120488     33721       0.00
+ 556 SP               450      450     131903     21192     122775      19746        5866      1588       5866      1588       0.00
+ 556 IC               159      159      15908      3198      15908       3198        1591       541       1591       541       0.00
+ 556 WF               365      365      10950      3394      10950       3394        3650       949       3650       949       0.00
+                  __________________________________________________________________________________________________________________
+  UNIT 556 TOTAL     9028     9028    2351846    401811    2255483     386546      131595     36799     131595     36799       0.00
+ 
+ 557 DF              1031     1031     569740     86827     543880      82899       19883      6089      19883      6089       0.00
+ 557 IC               145      145     133759     21518     111805      18014        4362      1498       4362      1498       0.00
+ 557 WF               694      694     124849     22681     123462      22542        6936      2150       6936      2150       0.00
+                  __________________________________________________________________________________________________________________
+  UNIT 557 TOTAL     1870     1870     828347    131026     779147     123455       31180      9737      31180      9737       0.00
+ 
+ 558 DF              4089     4089    1311357    217722    1254683     209455       56898     17410      56898     17410       0.00
+ 558 SP               160      160      57653      9849      50606       8680        4804      1025       4804      1025       0.00
+ 558 PP               280      207     141175     23724      78480      13426        2801      1411       2801      1411       0.00
+ 558 IC                51       51      26251      4936      22185       4066         515       309        515       309       0.00
+                  __________________________________________________________________________________________________________________
+  UNIT 558 TOTAL     4581     4508    1536435    256231    1405954     235627       65018     20154      65018     20154       0.00
+ 
+ 560 DF              3788     3788    1214667    201668    1162172     194012       52703     16126      52703     16126       0.00
+ 560 SP               148      148      53402      9123      46875       8040        4450       949       4450       949       0.00
+ 560 PP               259      192     130765     21975      72694      12436        2594      1307       2594      1307       0.00
+ 560 IC                48       48      24315      4572      20549       3766         477       286        477       286       0.00
+
+UC5: VOLUME BY SPECIES WITHIN CUTTING UNIT ACROSS ALL STRATA                                                                PAGE 48
+FOR CUT TREES ONLY
+CRUISE#: 00000      SALE#: 00000
+SALENAME: Girard                                                                                                 VERSION: 06.01.2022
+RUN DATE & TIME: 9/22/2022 07:13:52                                                             VOLUME LIBRARY VERSION: 05.03.2022
+
+
+      S             TOTAL    ******************* SAWTIMBER *******************     ***************** NON-SAWTIMBER ****************
+      P                                  (PROD = 01   UM = 01, 03)                         (PROD NOT = 01   UM = 01, 02, 03)
+      E             EST.     EST.                                                   (AND ALL SECONDARY & RECOVERED PRODUCT VOLUMES)
+  U   C             
+  N   I             # OF     # OF    ** GROSS VOLUME **      ** NET VOLUME **      ***   GROSS    ***   ***   NET    ***
+  I   E             
+  T   S             TREES    TREES      BDFT       CUFT       BDFT       CUFT        BDFT      CUFT       BDFT      CUFT      CORDS
+____________________________________________________________________________________________________________________________________
+                  __________________________________________________________________________________________________________________
+  UNIT 560 TOTAL     4243     4176    1423150    237338    1302289     218254       60224     18668      60224     18668       0.00
+ 
+ 563 DF              4149     4149    1129642    192659    1084707     185540       62062     17370      62062     17370       0.00
+ 563 SP               232      232      67942     10916      63241      10171        3022       818       3022       818       0.00
+ 563 IC                82       82       8194      1647       8194       1647         819       279        819       279       0.00
+ 563 WF               188      188       5640      1748       5640       1748        1880       489       1880       489       0.00
+                  __________________________________________________________________________________________________________________
+  UNIT 563 TOTAL     4650     4650    1211418    206970    1161782     199107       67783     18955      67783     18955       0.00
+ 
+ 566 DF              2031     2031     553076     94326     531076      90841       30386      8504      30386      8504       0.00
+ 566 SP               113      113      33265      5344      30963       4980        1479       400       1479       400       0.00
+ 566 IC                40       40       4012       806       4012        806         401       136        401       136       0.00
+ 566 WF                92       92       2761       856       2761        856         920       239        920       239       0.00
+                  __________________________________________________________________________________________________________________
+  UNIT 566 TOTAL     2277     2277     593114    101333     568812      97483       33187      9280      33187      9280       0.00
+ 
+ 568 DF              1074     1074     344458     57190     329571      55018       14946      4573      14946      4573       0.00
+ 568 SP                42       42      15144      2587      13293       2280        1262       269       1262       269       0.00
+ 568 PP                74       54      37083      6232      20615       3527         736       371        736       371       0.00
+ 568 IC                14       14       6895      1297       5827       1068         135        81        135        81       0.00
+                  __________________________________________________________________________________________________________________
+  UNIT 568 TOTAL     1203     1184     403580     67305     369306      61893       17078      5294      17078      5294       0.00
+ 
+ 973 DF              1866     1866     598269     99329     572413      95558       25958      7943      25958      7943       0.00
+ 973 SP                73       73      26302      4493      23088       3960        2192       468       2192       468       0.00
+ 973 PP               128       95      64407     10823      35804       6125        1278       644       1278       644       0.00
+ 973 IC                23       23      11976      2252      10121       1855         235       141        235       141       0.00
+                  __________________________________________________________________________________________________________________
+  UNIT 973 TOTAL     2090     2057     700954    116898     641426     107498       29663      9195      29663      9195       0.00
+ 
+ 975 DF              4843     4843    1553082    257855    1485961     248065       67386     20619      67386     20619       0.00
+ 975 SP               190      190      68280     11664      59934      10280        5690      1214       5690      1214       0.00
+ 975 PP               332      245     167198     28097      92947      15900        3317      1671       3317      1671       0.00
+ 975 IC                61       61      31090      5846      26274       4816         610       366        610       366       0.00
+                  __________________________________________________________________________________________________________________
+  UNIT 975 TOTAL     5426     5339    1819649    303462    1665116     279061       77003     23870      77003     23870       0.00
+ 
+ 977 DF              2127     2127     465832     84354     343230      63105       21270      6485      21270      6485       0.00
+ 977 PP               788      788     133882     27879     118919      25123        7875      2993       7875      2993       0.00
+
+UC5: VOLUME BY SPECIES WITHIN CUTTING UNIT ACROSS ALL STRATA                                                                PAGE 49
+FOR CUT TREES ONLY
+CRUISE#: 00000      SALE#: 00000
+SALENAME: Girard                                                                                                 VERSION: 06.01.2022
+RUN DATE & TIME: 9/22/2022 07:13:52                                                             VOLUME LIBRARY VERSION: 05.03.2022
+
+
+      S             TOTAL    ******************* SAWTIMBER *******************     ***************** NON-SAWTIMBER ****************
+      P                                  (PROD = 01   UM = 01, 03)                         (PROD NOT = 01   UM = 01, 02, 03)
+      E             EST.     EST.                                                   (AND ALL SECONDARY & RECOVERED PRODUCT VOLUMES)
+  U   C             
+  N   I             # OF     # OF    ** GROSS VOLUME **      ** NET VOLUME **      ***   GROSS    ***   ***   NET    ***
+  I   E             
+  T   S             TREES    TREES      BDFT       CUFT       BDFT       CUFT        BDFT      CUFT       BDFT      CUFT      CORDS
+____________________________________________________________________________________________________________________________________
+                  __________________________________________________________________________________________________________________
+  UNIT 977 TOTAL     2915     2915     599714    112233     462149      88228       29146      9478      29146      9478       0.00
+ 
+ 978 DF              1849     1849     405006     73340     298414      54865       18493      5639      18493      5639       0.00
+ 978 PP               685      685     116401     24239     103391      21842        6847      2602       6847      2602       0.00
+                  __________________________________________________________________________________________________________________
+  UNIT 978 TOTAL     2534     2534     521407     97579     401805      76707       25340      8240      25340      8240       0.00
+ 
+ 979 DF              1906     1906     518909     88499     498268      85229       28509      7979      28509      7979       0.00
+ 979 SP               106      106      31210      5014      29050       4672        1388       376       1388       376       0.00
+ 979 IC                38       38       3764       757       3764        757         376       128        376       128       0.00
+ 979 WF                86       86       2591       803       2591        803         864       225        864       225       0.00
+                  __________________________________________________________________________________________________________________
+  UNIT 979 TOTAL     2136     2136     556474     95073     533673      91461       31137      8707      31137      8707       0.00
+ 
+ 980 DF              4713     4713    1283393    218881    1232342     210793       70509     19734      70509     19734       0.00
+ 980 SP               263      263      77189     12402      71848      11555        3433       929       3433       929       0.00
+ 980 IC                93       93       9309      1871       9309       1871         931       317        931       317       0.00
+ 980 WF               214      214       6408      1986       6408       1986        2136       555       2136       555       0.00
+                  __________________________________________________________________________________________________________________
+  UNIT 980 TOTAL     5283     5283    1376300    235140    1319908     226206       77009     21535      77009     21535       0.00
+ 
+ 982 DF              2564     2564     698285    119091     670509     114691       38364     10737      38364     10737       0.00
+ 982 SP               143      143      41998      6748      39092       6287        1868       506       1868       506       0.00
+ 982 IC                51       51       5065      1018       5065       1018         507       172        507       172       0.00
+ 982 WF               116      116       3486      1081       3486       1081        1162       302       1162       302       0.00
+                  __________________________________________________________________________________________________________________
+  UNIT 982 TOTAL     2874     2874     748835    127938     718153     123077       41900     11717      41900     11717       0.00
+ 
+ 983 DF              1490     1490     405731     69197     389592      66640       22291      6239      22291      6239       0.00
+ 983 SP                83       83      24403      3921      22714       3653        1085       294       1085       294       0.00
+ 983 IC                29       29       2943       592       2943        592         294       100        294       100       0.00
+ 983 WF                68       68       2026       628       2026        628         675       176        675       176       0.00
+                  __________________________________________________________________________________________________________________
+  UNIT 983 TOTAL     1670     1670     435103     74337     417275      71513       24346      6808      24346      6808       0.00
+ 
+ 985 DF              2204     2204     600056    102338     576187      98557       32967      9227      32967      9227       0.00
+ 985 SP               123      123      36090      5798      33593       5403        1605       435       1605       435       0.00
+ 985 IC                44       44       4353       875       4353        875         435       148        435       148       0.00
+ 985 WF               100      100       2996       929       2996        929         999       260        999       260       0.00
+
+UC5: VOLUME BY SPECIES WITHIN CUTTING UNIT ACROSS ALL STRATA                                                                PAGE 50
+FOR CUT TREES ONLY
+CRUISE#: 00000      SALE#: 00000
+SALENAME: Girard                                                                                                 VERSION: 06.01.2022
+RUN DATE & TIME: 9/22/2022 07:13:52                                                             VOLUME LIBRARY VERSION: 05.03.2022
+
+
+      S             TOTAL    ******************* SAWTIMBER *******************     ***************** NON-SAWTIMBER ****************
+      P                                  (PROD = 01   UM = 01, 03)                         (PROD NOT = 01   UM = 01, 02, 03)
+      E             EST.     EST.                                                   (AND ALL SECONDARY & RECOVERED PRODUCT VOLUMES)
+  U   C             
+  N   I             # OF     # OF    ** GROSS VOLUME **      ** NET VOLUME **      ***   GROSS    ***   ***   NET    ***
+  I   E             
+  T   S             TREES    TREES      BDFT       CUFT       BDFT       CUFT        BDFT      CUFT       BDFT      CUFT      CORDS
+____________________________________________________________________________________________________________________________________
+                  __________________________________________________________________________________________________________________
+  UNIT 985 TOTAL     2470     2470     643494    109941     617128     105764       36006     10069      36006     10069       0.00
+ 
+ 986 DF               262      262     144716     22055     138148      21057        5050      1547       5050      1547       0.00
+ 986 IC                37       37      33975      5466      28399       4576        1108       380       1108       380       0.00
+ 986 WF               176      176      31712      5761      31360       5726        1762       546       1762       546       0.00
+                  __________________________________________________________________________________________________________________
+  UNIT 986 TOTAL      475      475     210404     33281     197907      31358        7920      2473       7920      2473       0.00
+ 
+                  _________________________________________________________________________________________________________________
+
+
+ S U B T O T A L S    ************************SAWTIMBER***********************      ****************NON-SAWTIMBER****************
+                   TOT EST   EST
+                    # OF     # OF     ** GROSS VOLUME **     ** NET VOLUME **       GROSS     GROSS      NET       NET
+          SPECIES   TREES    TREES      BDFT       CUFT       BDFT      CUFT        BDFT      CUFT       BDFT      CUFT     CORDS
+          DF        58424    58424   16936487    2858403   16044217    2717005      840901    243588     840901    243588       0.00
+          SP         2666     2666     829179     135819     758243     124348       46814     11450      46814     11450       0.00
+          PP         2714     2392     876461     157344     570409     106514       27145     11852      27145     11852       0.00
+          IC         1102     1102     353332      62779     307766      54527       14669      5599      14669      5599       0.00
+          WF         2457     2457     204167      43200     202428      43026       24566      6822      24566      6822       0.00
+____________________________________________________________________________________________________________________________________
+____________________________________________________________________________________________________________________________________
+
+
+ OVERALL TOTALS--   67363    67040   19199627    3257546   17883063    3045421      954095    279311     954095    279311       0.00
+
+
+* FOR TREE-BASED SAMPLES, THE CUTTING UNIT VOLUME IS BASED ON THE # OF TREES TALLIED OR THE SUM OF KPIS THAT FALL WITHIN
+THE CUTTING UNIT.  FOR AREA-BASED SAMPLES, THE CUTTING UNIT VOLUME IS BASED ON AN AVERAGE VOLUME PER ACRE AT THE STRATA
+LEVEL TIMES THE NUMBER OF ACRES IN THE CUTTING UNIT.
+*R = RECOVERED VOLUME ADDED TO NET SECONDARY VOLUME.
+*FOR CRUISE METHOD 3P ONLY, THE COLUMN Est. # of Trees for sawtimber WILL SHOW ZERO INSTEAD OF ACTUAL TALLY.
+
+VSM1: LOW LEVEL VOLUME SUMMARY (B1)                                                                                         PAGE 51
+FOR CUT AND LEAVE TREES
+CRUISE#: 00000      SALE#: 00000
+SALENAME: Girard                                                                                                 VERSION: 06.01.2022
+RUN DATE & TIME: 9/22/2022 07:13:52                                                             VOLUME LIBRARY VERSION: 05.03.2022
+
+
+                                                                        
+                                                                        
+                                                        M               
+              P                                         E               
+              R                  C                      A               
+              O                  O                      N               
+              D        Y       T N                 M                AVG
+      S    P           L  S    R T                 E    T           DEFT   GROSS NET
+ S    P    R  S U      D  A    E R                 A    O           %   %               **************** STRATA LEVEL ****************
+ T    E    O  O      L    M    E      # OF   QUAD  N    T                  BDFT  BDFT   EST.
+ R    C    D  U O  L E C         S                                  B   C                        ********** VOLUME ************
+ A    I    U  R F  I A O  G  S G P    MEAS   MEAN  D    H           D   U  CUFT  CUFT   # OF
+ T    E    C  C    V V M  R  T R E                 B    G           F   F                        *** GROSS ***    **** NET ****
+ A    S    T  E M  E E P  P  M D C    TREES  DBH   H    T           T   T  RATIO RATIO  TREES    BDFT     CUFT    BDFT     CUFT  CORDS
+____________________________________________________________________________________________________________________________________
+ 02 DF     01 P 01 L C CL AS N 1          3  18.0 17.6  73.7        26  25 5.522 5.439   3976   870838  157694   641644  117970    0.0 
+ 02 DF     08 S 01 L C CL AS N 1                                                                 39763   12124    39763   12124    0.0 
+ 02 PP     01 P 01 L C CL AS N 1          1  17.1 17.1  75.0        11   9 4.802 4.734   1472   250283   52118   222310   46965    0.0 
+ 02 PP     08 S 01 L C CL AS N 1                                                                 14723    5595    14723    5595    0.0 
+____________________________________________________________________________________________________________________________________
+ 05 DF     01 P 01 L C CL AS N 1         63  17.1 16.2  91.8         3   3 5.863 5.846  35015  9534690 1626126  9155421 1566044    0.0 
+ 05 DF     08 S 01 L C CL AS N 1                                                                523834  146607   523834  146607    0.0 
+ 05 IC     01 P 01 L C CL AS N 1          1  15.3 15.3  72.0         0   0 4.975 4.975    692    69163   13902    69163   13902    0.0 
+ 05 IC     08 S 01 L C CL AS N 1                                                                  6916    2352     6916    2352    0.0 
+ 05 SP     01 P 01 L C CL AS N 1          4  18.2 16.7  63.5         6   6 6.224 6.218   1956   573462   92134   533780   85848    0.0 
+ 05 SP     08 S 01 L C CL AS N 1                                                                 25504    6904    25504    6904    0.0 
+ 05 WF     01 P 01 L C CL AS N 1          1  10.1 10.1  60.0         0   0 3.226 3.226   1587    47606   14758    47606   14758    0.0 
+ 05 WF     08 S 01 L C CL AS N 1                                                                 15869    4126    15869    4126    0.0 
+____________________________________________________________________________________________________________________________________
+ 06 DF     01 P 01 L C CL AS N 1         25  18.0 17.0  92.3         4   3 6.023 5.990  18139  5816503  965701  5565125  929036    0.0 
+ 06 DF     08 S 01 L C CL AS N 1                                                                252371   77221   252371   77221    0.0 
+ 06 IC     01 P 01 L C CL AS N 1          1  32.1 32.1  70.0        15  17 5.318 5.456    228   116436   21894    98399   18036    0.0 
+ 06 IC     08 S 01 L C CL AS N 1                                                                  2283    1370     2283    1370    0.0 
+ 06 PP     01 P 01 D C CL AS N 1          1  27.0 27.0  80.0       100 100 6.146 0.000    323   190465   30991        0       0    0.0 
+ 06 PP     08 S 01 D C CL AS N 1                                                                  3228    1969     3228    1969    0.0 
+ 06 PP     01 P 01 L C CL AS N 1          2  22.6 22.6  93.9        20  19 5.869 5.846    919   435712   74236   348099   59549    0.0 
+ 06 PP     08 S 01 L C CL AS N 1                                                                  9194    4288     9194    4288    0.0 
+ 06 SP     01 P 01 L C CL AS N 1          1  18.2 18.2 122.0        12  11 5.854 5.830    710   255717   43685   224463   38500    0.0 
+ 06 SP     08 S 01 L C CL AS N 1                                                                 21310    4546    21310    4546    0.0 
+____________________________________________________________________________________________________________________________________
+ 07 DF     01 P 01 L C CL AS N 1          3  21.6 20.2  97.9         4   4 6.562 6.561   1293   714456  108882   682028  103955    0.0 
+
+VSM1: LOW LEVEL VOLUME SUMMARY (B1)                                                                                         PAGE 52
+FOR CUT AND LEAVE TREES
+CRUISE#: 00000      SALE#: 00000
+SALENAME: Girard                                                                                                 VERSION: 06.01.2022
+RUN DATE & TIME: 9/22/2022 07:13:52                                                             VOLUME LIBRARY VERSION: 05.03.2022
+
+
+                                                                        
+                                                                        
+                                                        M               
+              P                                         E               
+              R                  C                      A               
+              O                  O                      N               
+              D        Y       T N                 M                AVG
+      S    P           L  S    R T                 E    T           DEFT   GROSS NET
+ S    P    R  S U      D  A    E R                 A    O           %   %               **************** STRATA LEVEL ****************
+ T    E    O  O      L    M    E      # OF   QUAD  N    T                  BDFT  BDFT   EST.
+ R    C    D  U O  L E C         S                                  B   C                        ********** VOLUME ************
+ A    I    U  R F  I A O  G  S G P    MEAS   MEAN  D    H           D   U  CUFT  CUFT   # OF
+ T    E    C  C    V V M  R  T R E                 B    G           F   F                        *** GROSS ***    **** NET ****
+ A    S    T  E M  E E P  P  M D C    TREES  DBH   H    T           T   T  RATIO RATIO  TREES    BDFT     CUFT    BDFT     CUFT  CORDS
+____________________________________________________________________________________________________________________________________
+ 07 DF     08 S 01 L C CL AS N 1                                                                 24933    7636    24933    7636    0.0 
+ 07 IC     01 P 01 L C CL AS N 1          1  33.2 33.2 100.0        16  16 6.216 6.207    182   167734   26983   140204   22589    0.0 
+ 07 IC     08 S 01 L C CL AS N 1                                                                  5470    1878     5470    1878    0.0 
+ 07 WF     01 P 01 L C CL AS N 1          1  15.2 15.2  86.0         1   0 5.505 5.477    870   156561   28442   154822   28268    0.0 
+ 07 WF     08 S 01 L C CL AS N 1                                                                  8698    2696     8698    2696    0.0 
+____________________________________________________________________________________________________________________________________
+ TOTALS ---          PRODUCT     EST. NO                   *** GROSS VOLUME ***          *** NET VOLUME ***
+            PRODUCT  SOURCE      OF TREES                  BDFT            CUFT          BDFT          CUFT           CORDS
+____________________________________________________________________________________________________________________________________
+              01        P             67363            19199627         3257546      17883063       3045421             0.0 
+              08        S                                954095          279311        954095        279311             0.0 
+____________________________________________________________________________________________________________________________________
+                                      67363            20153722         3536857      18837158       3324732             0.0 
+____________________________________________________________________________________________________________________________________
+
+PRODUCT SOURCE KEY: 
+
+P = PRIMARY PRODUCT
+S = SECONDARY PRODUCT
+R = RECOVERABLE PRODUCT
+
+The following items are not reported and/or calculated for secondary or recovered
+products but are shown here as blank so the associated volumes can be reported:
+Number of measured trees, Quad mean DBH, Mean DBH, Mean height(s), Average defect,
+any Ratio, Estimated number of trees.
+
+VSM2: VOLUME SUMMARY FOR SAMPLE GROUP (CP1)                                                                                 PAGE 53
+FOR CUT TREES ONLY
+CRUISE#: 00000      SALE#: 00000
+SALENAME: Girard                                                                                                 VERSION: 06.01.2022
+RUN DATE & TIME: 9/22/2022 07:13:52                                                             VOLUME LIBRARY VERSION: 05.03.2022
+
+
+                                                          
+                                                          
+                                          M               
+       P                                  E               
+       R              # OF                A               
+       O              TREES               N               
+       D              M              M                AVG
+    P        S        E     T        E    T           DEFT   GROSS NET
+ S  R  S U   A        A     A        A    O           %   %               **************** STRATA LEVEL ****************
+ T  O  O     M        S     L  QUAD  N    T                  BDFT  BDFT   EST.
+ R  D  U O            U     L                         B   C                        ********** VOLUME ************
+ A  U  R F   G  S     R     I  MEAN  D    H           D   U  CUFT  CUFT   # OF
+ T  C  C     R  T     E     E        B    G           F   F                        *** GROSS ***    **** NET ****
+ A  T  E M   P  M     D     D  DBH   H    T           T   T  RATIO RATIO  TREES    BDFT     CUFT    BDFT     CUFT  CORDS
+____________________________________________________________________________________________________________________________________
+ 02 01 P 01 AS  N     4     4  17.8 17.5   74.0       22  21 5.343 5.238   5449  1121121  209812   863954  164935    0.0 
+ 02 08 S 01 AS  N                                                                  54486   17719    54486   17719    0.0 
+____________________________________________________________________________________________________________________________________
+ 05 01 P 01 AS  N    69    69  16.9 15.9   88.8        4   3 5.853 5.835  39250 10224921 1746920  9805969 1680552    0.0 
+ 05 08 S 01 AS  N                                                                 572123  159988   572123  159988    0.0 
+____________________________________________________________________________________________________________________________________
+ 06 01 P 01 AS  N    30    30  18.6 17.6   92.9        8   8 5.996 5.967  20320  6814833 1136507  6236085 1045122    0.0 
+ 06 08 S 01 AS  N                                                                 288386   89395   288386   89395    0.0 
+____________________________________________________________________________________________________________________________________
+ 07 01 P 01 AS  N     5     5  20.7 19.3   93.7        5   5 6.322 6.311   2345  1038752  164307   977054  154813    0.0 
+ 07 08 S 01 AS  N                                                                  39100   12210    39100   12210    0.0 
+____________________________________________________________________________________________________________________________________
+  TOTALS ------
+                        QUAD                                         EST.         ************** VOLUME ***************
+           PRODUCT      MEAN      MEAN    MEAN                       # OF         **** GROSS ****       ***** NET *****
+  PRODUCT  SOURCE       DBH       DBH     TOT HGT                    TREES        BDFT      CUFT        BDFT       CUFT     CORDS
+____________________________________________________________________________________________________________________________________
+    01        P         17.6      16.7      89.0                     67363    19199627   3257546    17883063    3045421       0.0
+    08        S                                                                 954095    279311      954095     279311       0.0
+____________________________________________________________________________________________________________________________________
+                        17.6      16.7      89.0                     67363    20153722   3536857    18837158    3324732       0.0
+____________________________________________________________________________________________________________________________________
+
+PRODUCT SOURCE KEY: 
+
+P = PRIMARY PRODUCT
+S = SECONDARY PRODUCT
+R = RECOVERABLE PRODUCT
+
+The following items are not reported and/or calculated for secondary or recovered
+products but are shown here as blank so the associated volumes can be reported:
+Number of measured trees, Quad mean DBH, Mean DBH, Mean height(s), Average defect,
+any Ratio, Estimated number of trees.
+The current report VSM3 is not complete.  Stratum 01 has no data,
+ 02 01 P  01     4     4     17.8 17.5  74.0        22  21 5.343 5.238   5449  1121121  209812   863954  164935    0.0 
+ 02 08 S  01                                                                     54486   17719    54486   17719    0.0 
+____________________________________________________________________________________________________________________________________
+The current report VSM3 is not complete.  Stratum 03 has no data,
+The current report VSM3 is not complete.  Stratum 04 has no data,
+ 05 01 P  01    69    69     16.9 15.9  88.8         4   3 5.853 5.835  39250 10224921 1746920  9805969 1680552    0.0 
+ 05 08 S  01                                                                    572123  159988   572123  159988    0.0 
+____________________________________________________________________________________________________________________________________
+ 06 01 P  01    30    30     18.6 17.6  92.9         8   8 5.996 5.967  20320  6814833 1136507  6236085 1045122    0.0 
+ 06 08 S  01                                                                    288386   89395   288386   89395    0.0 
+____________________________________________________________________________________________________________________________________
+ 07 01 P  01     5     5     20.7 19.3  93.7         5   5 6.322 6.311   2345  1038752  164307   977054  154813    0.0 
+ 07 08 S  01                                                                     39100   12210    39100   12210    0.0 
+____________________________________________________________________________________________________________________________________
+  TOTALS ------
+                   QUAD                             GROSS     NET       EST.      ************** VOLUME  ***************
+           PRODUCT MEAN  MEAN   MEAN                BF/CF     BF/CF     # OF      ***** GROSS *****     *****  NET *****
+  PRODUCT  SOURCE  DBH   DBH   TOT HGT              RATIO     RATIO     TREES     BDFT         CUFT     BDFT        CUFT     CORDS
+____________________________________________________________________________________________________________________________________
+    01       P     17.6  16.7    89.0               5.8939    5.8721    67363  19199627     3257546   17883063   3045421       0.0 
+    08       S                                                                   954095      279311     954095    279311       0.0 
+____________________________________________________________________________________________________________________________________
+                   17.6  16.7    89.0               5.6982    5.6658    67363  20153722     3536857   18837158   3324732       0.0 
+____________________________________________________________________________________________________________________________________
+
+PRODUCT SOURCE KEY: 
+
+P = PRIMARY PRODUCT
+S = SECONDARY PRODUCT
+R = RECOVERABLE PRODUCT
+
+The following items are not reported and/or calculated for secondary or recovered
+products but are shown here as blank so the associated volumes can be reported:
+Number of measured trees, Quad mean DBH, Mean DBH, Mean height(s), Average defect,
+any Ratio, Estimated number of trees.

@@ -84,6 +84,7 @@ namespace CruiseDAL.V3.Test.DownMigrators
                     new TreeDefaultValue {SpeciesCode = null, PrimaryProduct = null, Recoverable = 1.4,},
                 },
                 Subpops = new SubPopulation[] { },
+                SpProds = null,
             };
 
             using var fromDb = init.CreateDatabaseFile(fromPath);
@@ -124,6 +125,7 @@ namespace CruiseDAL.V3.Test.DownMigrators
                     new TreeDefaultValue {SpeciesCode = null, PrimaryProduct = null, Recoverable = 1.4,},
                 },
                 Subpops = new SubPopulation[] { },
+                SpProds = null,
             };
 
             using var fromDb = init.CreateDatabaseFile(fromPath);

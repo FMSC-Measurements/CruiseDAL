@@ -39,7 +39,7 @@ namespace FMSC.ORM.ModelGenerator
 
         static void Main(string[] args)
         {
-            //Console.WriteLine($"Args: {String.Join(", ", args)}");
+            Console.WriteLine($"Args: {String.Join(", ", args)}");
 
             Parser.Default.ParseArguments<Options>(args)
                 .WithParsed(o =>
@@ -55,7 +55,7 @@ namespace FMSC.ORM.ModelGenerator
                                 : (string[])null;
 
                             var nonPersistedColumns = (string.IsNullOrWhiteSpace(o.NonPersistedColumns) == false) ?
-                                o.IgnoreColumns.Split(',')
+                                o.NonPersistedColumns.Split(',')
                                 : (string[])null;
 
                             var schemaProvider = new SqliteDatastoreSchemaInfoProvider(datastore, ignoreColmns);

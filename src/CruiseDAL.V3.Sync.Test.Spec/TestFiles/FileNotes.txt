@@ -1,3 +1,9 @@
 # 17901_Light_TS_202208040240_GalaxyTabS3-15CRZ ComponentX.crz3 
 these files were created by Steve to emulate a real world cruise using component files.
 They were causing an exception during sync due to not syncing deletion of untallied trees
+
+# 12345_Girard Combine Test_Check Files
+These are some files created by Daniel Dushey to test combining files.
+He also provided a V2 cruise and processing output as reference.
+The file from the DxDQCG device contains a single plot conflict on plot 196 unit 566
+The were sent to me on 11/10/2022
