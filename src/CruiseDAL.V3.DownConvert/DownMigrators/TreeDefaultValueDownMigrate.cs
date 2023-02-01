@@ -29,21 +29,25 @@ tdvExpandSpecies AS (
                 AND PrimaryProduct IS NULL OR PrimaryProduct = tdv.PrimaryProduct
                 ORDER BY PrimaryProduct DESC -- nulls and empty strings last
                 LIMIT 1 ) AS ContractSpecies,
+
         sp.FIACode,
         tdv.CullPrimary,
         tdv.CullPrimaryDead,
         tdv.HiddenPrimary,
         tdv.HiddenPrimaryDead,
+
         tdv.TreeGrade,
         tdv.TreeGradeDead,
         tdv.CullSecondary,
         tdv.HiddenSecondary,
         tdv.Recoverable,
+
         tdv.MerchHeightLogLength,
         tdv.MerchHeightType,
         tdv.FormClass,
         tdv.BarkThicknessRatio,
         tdv.AverageZ,
+
         tdv.ReferenceHeightPercent
     FROM {fromDbName}.TreeDefaultValue AS tdv
     JOIN {fromDbName}.Species AS sp USING (CruiseID)
@@ -62,21 +66,25 @@ tdvExpandProduct AS (
                 AND PrimaryProduct IS NULL OR PrimaryProduct = prod.Product
                 ORDER BY PrimaryProduct DESC -- nulls and empty strings last
                 LIMIT 1 ) AS ContractSpecies,
+
         sp.FIACode,
         tdv.CullPrimary,
         tdv.CullPrimaryDead,
         tdv.HiddenPrimary,
         tdv.HiddenPrimaryDead,
+
         tdv.TreeGrade,
         tdv.TreeGradeDead,
         tdv.CullSecondary,
         tdv.HiddenSecondary,
         tdv.Recoverable,
+
         tdv.MerchHeightLogLength,
         tdv.MerchHeightType,
         tdv.FormClass,
         tdv.BarkThicknessRatio,
         tdv.AverageZ,
+
         tdv.ReferenceHeightPercent
     FROM {fromDbName}.TreeDefaultValue AS tdv
     JOIN {fromDbName}.Species AS sp USING (CruiseID, SpeciesCode)
@@ -96,21 +104,25 @@ tdvExpandProdAndSp AS (
                 AND PrimaryProduct IS NULL OR PrimaryProduct = prod.Product
                 ORDER BY PrimaryProduct DESC -- nulls and empty strings last
                 LIMIT 1 ) AS ContractSpecies,
+
         sp.FIACode,
         tdv.CullPrimary,
         tdv.CullPrimaryDead,
         tdv.HiddenPrimary,
         tdv.HiddenPrimaryDead,
+
         tdv.TreeGrade,
         tdv.TreeGradeDead,
         tdv.CullSecondary,
         tdv.HiddenSecondary,
         tdv.Recoverable,
+
         tdv.MerchHeightLogLength,
         tdv.MerchHeightType,
         tdv.FormClass,
         tdv.BarkThicknessRatio,
         tdv.AverageZ,
+
         tdv.ReferenceHeightPercent
     FROM {fromDbName}.TreeDefaultValue AS tdv
     JOIN {fromDbName}.LK_Product AS prod
@@ -130,21 +142,25 @@ tdvProdAndSpDefined AS (
                 AND PrimaryProduct IS NULL OR PrimaryProduct = tdv.PrimaryProduct
                 ORDER BY PrimaryProduct DESC -- nulls and empty strings last
                 LIMIT 1 ) AS ContractSpecies,
+
         sp.FIACode,
         tdv.CullPrimary,
         tdv.CullPrimaryDead,
         tdv.HiddenPrimary,
         tdv.HiddenPrimaryDead,
+
         tdv.TreeGrade,
         tdv.TreeGradeDead,
         tdv.CullSecondary,
         tdv.HiddenSecondary,
         tdv.Recoverable,
+
         tdv.MerchHeightLogLength,
         tdv.MerchHeightType,
         tdv.FormClass,
         tdv.BarkThicknessRatio,
         tdv.AverageZ,
+
         tdv.ReferenceHeightPercent
     FROM {fromDbName}.TreeDefaultValue AS tdv
     JOIN {fromDbName}.Species AS sp USING (CruiseID, SpeciesCode)
@@ -166,45 +182,51 @@ tdvLiveDeadExpanded AS (
     SELECT 
         CruiseID,
         TreeDefaultValue_CN,
-        'L' AS LiveDead,
         PrimaryProduct,
         SpeciesCode,
         ContractSpecies,
+
         FIACode,
         CullPrimary,
         HiddenPrimary,
-        CullSecondary,
-        HiddenSecondary,
         TreeGrade,
+        CullSecondary,
+
+        HiddenSecondary,
         Recoverable,
         MerchHeightLogLength,
         MerchHeightType,
         FormClass,
+
         BarkThicknessRatio,
         AverageZ,
-        ReferenceHeightPercent
+        ReferenceHeightPercent,
+        'L' AS LiveDead
     FROM tdvExpanded
     UNION ALL
     SELECT 
         CruiseID,
         TreeDefaultValue_CN,
-        'D' AS LiveDead,
         PrimaryProduct,
         SpeciesCode,
         ContractSpecies,
+
         FIACode,
         CullPrimaryDead AS CullPrimary,
         HiddenPrimaryDead AS HiddenPrimary,
         TreeGradeDead AS TreeGrade,
         CullSecondary,
+
         HiddenSecondary,
         Recoverable,
         MerchHeightLogLength,
         MerchHeightType,
         FormClass,
+
         BarkThicknessRatio,
         AverageZ,
-        ReferenceHeightPercent
+        ReferenceHeightPercent,
+        'D' AS LiveDead
     FROM tdvExpanded
 )
         
@@ -214,16 +236,19 @@ INSERT INTO {toDbName}.TreeDefaultValue (
 	LiveDead,
 	FIAcode,
 	CullPrimary,
+
 	HiddenPrimary,
 	CullSecondary,
 	HiddenSecondary,
 	Recoverable,
 	ContractSpecies,
+
 	TreeGrade,
 	MerchHeightLogLength,
 	MerchHeightType,
 	FormClass,
 	BarkThicknessRatio,
+
 	AverageZ,
 	ReferenceHeightPercent,
 	CreatedBy
@@ -234,16 +259,19 @@ SELECT
 	LiveDead,
 	FIAcode,
 	ifnull(CullPrimary, 0.0) AS CullPrimary,
+
 	ifnull(HiddenPrimary, 0.0) AS HiddenPrimary,
 	ifnull(CullSecondary, 0.0) AS CullSecondary,
 	ifnull(HiddenSecondary, 0.0) AS HiddenSecondary,
 	ifnull(Recoverable, 0.0) AS Recoverable,
 	ContractSpecies,
+
 	ifnull(TreeGrade, '0') AS TreeGrade,
 	ifnull(MerchHeightLogLength, 0) AS MerchHeightLogLength,
 	ifnull(MerchHeightType, 'F') AS MerchHeightType,
 	ifnull(FormClass, 0.0) AS FormClass,
 	ifnull(BarkThicknessRatio, 0.0) AS BarkThicknessRatio,
+
 	ifnull(AverageZ, 0.0) AS AverageZ,
 	ifnull(ReferenceHeightPercent, 0.0) AS ReferenceHeightPercent,
 	'{createdBy}' AS CreatedBy
