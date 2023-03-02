@@ -18,7 +18,7 @@ namespace CruiseDAL.Update
             conn.ExecuteNonQuery("DROP VIEW TreeAuditError",
                 transaction: transaction, exceptionProcessor: exceptionProcessor);
 
-            conn.ExecuteNonQuery(Tree_TreeDefaultValue.CREATE_VIEW_3_5_1,
+            conn.ExecuteNonQuery(Tree_TreeDefaultValueViewDefinition.CREATE_VIEW_3_5_1,
                 transaction: transaction, exceptionProcessor: exceptionProcessor);
             conn.ExecuteNonQuery(TreeAuditErrorViewDefinition.CREATE_VIEW_3_5_1,
                 transaction: transaction, exceptionProcessor: exceptionProcessor);

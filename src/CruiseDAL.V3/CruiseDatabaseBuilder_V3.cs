@@ -105,8 +105,8 @@ namespace CruiseDAL
                 new StratumDefaultViewDefinition(),
                 new TreeFieldSetupDefaultViewDefinition(),
                 new LogFieldSetupDefaultViewDefinition(),
-                new Tree_TreeDefaultValue(),
-                new TreeMeasurment_DefaultResolved(),
+                new Tree_TreeDefaultValueViewDefinition(),
+                new TreeMeasurment_DefaultResolvedViewDefinition(),
             };
 
         private ILogger Logger { get; } = LoggerProvider.Get();

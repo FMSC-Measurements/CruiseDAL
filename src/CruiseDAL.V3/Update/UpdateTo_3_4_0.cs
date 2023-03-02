@@ -35,10 +35,10 @@ namespace CruiseDAL.Update
 
             conn.ExecuteNonQuery("CREATE INDEX NIX_TreeDefaultValue_PrimaryProduct ON TreeDefaultValue ('PrimaryProduct');", transaction: transaction, exceptionProcessor: exceptionProcessor);
 
-            var tree_tdvViewDef = new Tree_TreeDefaultValue();
+            var tree_tdvViewDef = new Tree_TreeDefaultValueViewDefinition();
             conn.ExecuteNonQuery(tree_tdvViewDef.CreateView, transaction: transaction, exceptionProcessor: exceptionProcessor);
 
-            var tm_defViewDef = new TreeMeasurment_DefaultResolved();
+            var tm_defViewDef = new TreeMeasurment_DefaultResolvedViewDefinition();
             conn.ExecuteNonQuery(tm_defViewDef.CreateView, transaction: transaction, exceptionProcessor: exceptionProcessor);
         }
 

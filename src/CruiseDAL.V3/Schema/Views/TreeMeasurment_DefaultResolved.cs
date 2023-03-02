@@ -5,7 +5,7 @@ using System.Text;
 
 namespace CruiseDAL.Schema
 {
-    public class TreeMeasurment_DefaultResolved : IViewDefinition
+    public class TreeMeasurment_DefaultResolvedViewDefinition : IViewDefinition
     {
         public string ViewName => "TreeMeasurment_DefaultResolved";
 
