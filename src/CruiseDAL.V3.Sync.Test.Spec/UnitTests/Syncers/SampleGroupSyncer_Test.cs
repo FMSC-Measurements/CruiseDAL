@@ -4,7 +4,7 @@ using CruiseDAL.V3.Sync.Syncers;
 using FMSC.ORM.Core;
 using Xunit.Abstractions;
 
-namespace CruiseDAL.V3.Sync.Test.Spec.UnitTests.Syncers
+namespace CruiseDAL.V3.Sync.Test.UnitTests.Syncers
 {
     public class SampleGroupSyncer_Test : TestBase
     {

@@ -10,7 +10,7 @@
 // ------------------------------------------------------------------------------
 #region Designer generated code
 #pragma warning disable
-namespace CruiseDAL.V3.Sync.Test.Spec.Features
+namespace CruiseDAL.V3.Sync.Test.Features
 {
     using TechTalk.SpecFlow;
     using System;
@@ -31,7 +31,7 @@ namespace CruiseDAL.V3.Sync.Test.Spec.Features
 #line 1 "SyncTrees.feature"
 #line hidden
         
-        public SyncTreesWithNoLogsFeature(SyncTreesWithNoLogsFeature.FixtureData fixtureData, CruiseDAL_V3_Sync_Test_Spec_XUnitAssemblyFixture assemblyFixture, Xunit.Abstractions.ITestOutputHelper testOutputHelper)
+        public SyncTreesWithNoLogsFeature(SyncTreesWithNoLogsFeature.FixtureData fixtureData, CruiseDAL_V3_Sync_Test_XUnitAssemblyFixture assemblyFixture, Xunit.Abstractions.ITestOutputHelper testOutputHelper)
         {
             this._testOutputHelper = testOutputHelper;
             this.TestInitialize();
@@ -79,80 +79,80 @@ namespace CruiseDAL.V3.Sync.Test.Spec.Features
         {
 #line 4
 #line hidden
-            TechTalk.SpecFlow.Table table189 = new TechTalk.SpecFlow.Table(new string[] {
+            TechTalk.SpecFlow.Table table197 = new TechTalk.SpecFlow.Table(new string[] {
                         "FileAlias"});
-            table189.AddRow(new string[] {
+            table197.AddRow(new string[] {
                         "source"});
-            table189.AddRow(new string[] {
+            table197.AddRow(new string[] {
                         "dest"});
 #line 5
- testRunner.Given("the following cruise files exist:", ((string)(null)), table189, "Given ");
+ testRunner.Given("the following cruise files exist:", ((string)(null)), table197, "Given ");
 #line hidden
-            TechTalk.SpecFlow.Table table190 = new TechTalk.SpecFlow.Table(new string[] {
+            TechTalk.SpecFlow.Table table198 = new TechTalk.SpecFlow.Table(new string[] {
                         "CuttingUnitCode"});
-            table190.AddRow(new string[] {
+            table198.AddRow(new string[] {
                         "u1"});
-            table190.AddRow(new string[] {
+            table198.AddRow(new string[] {
                         "u2"});
 #line 10
- testRunner.And("in \'source, dest\' the following units exist:", ((string)(null)), table190, "* ");
+ testRunner.And("in \'source, dest\' the following units exist:", ((string)(null)), table198, "* ");
 #line hidden
-            TechTalk.SpecFlow.Table table191 = new TechTalk.SpecFlow.Table(new string[] {
+            TechTalk.SpecFlow.Table table199 = new TechTalk.SpecFlow.Table(new string[] {
                         "StratumCode"});
-            table191.AddRow(new string[] {
+            table199.AddRow(new string[] {
                         "st1"});
-            table191.AddRow(new string[] {
+            table199.AddRow(new string[] {
                         "st2"});
 #line 15
- testRunner.And("in \'source, dest\' the following strata exist:", ((string)(null)), table191, "* ");
+ testRunner.And("in \'source, dest\' the following strata exist:", ((string)(null)), table199, "* ");
 #line hidden
-            TechTalk.SpecFlow.Table table192 = new TechTalk.SpecFlow.Table(new string[] {
+            TechTalk.SpecFlow.Table table200 = new TechTalk.SpecFlow.Table(new string[] {
                         "SampleGroupCode",
                         "StratumCode"});
-            table192.AddRow(new string[] {
+            table200.AddRow(new string[] {
                         "sg1",
                         "st1"});
-            table192.AddRow(new string[] {
+            table200.AddRow(new string[] {
                         "sg2",
                         "st1"});
-            table192.AddRow(new string[] {
+            table200.AddRow(new string[] {
                         "sg1",
                         "st2"});
-            table192.AddRow(new string[] {
+            table200.AddRow(new string[] {
                         "sg2",
                         "st2"});
 #line 20
- testRunner.And("in \'source, dest\' file the following sample groups exist:", ((string)(null)), table192, "* ");
+ testRunner.And("in \'source, dest\' file the following sample groups exist:", ((string)(null)), table200, "* ");
 #line hidden
-            TechTalk.SpecFlow.Table table193 = new TechTalk.SpecFlow.Table(new string[] {
+            TechTalk.SpecFlow.Table table201 = new TechTalk.SpecFlow.Table(new string[] {
                         "SpeciesCode"});
-            table193.AddRow(new string[] {
+            table201.AddRow(new string[] {
                         "sp1"});
 #line 27
- testRunner.And("in \'source, dest\' the following species exist:", ((string)(null)), table193, "* ");
+ testRunner.And("in \'source, dest\' the following species exist:", ((string)(null)), table201, "* ");
 #line hidden
-            TechTalk.SpecFlow.Table table194 = new TechTalk.SpecFlow.Table(new string[] {
+            TechTalk.SpecFlow.Table table202 = new TechTalk.SpecFlow.Table(new string[] {
                         "CuttingUnitCode",
                         "StratumCode",
                         "SampleGroupCode",
                         "SpeciesCode",
                         "TreeNumber",
                         "TreeID"});
-            table194.AddRow(new string[] {
+            table202.AddRow(new string[] {
                         "u1",
                         "st1",
                         "sg1",
                         "sp1",
                         "1",
                         "tree1"});
-            table194.AddRow(new string[] {
+            table202.AddRow(new string[] {
                         "u1",
                         "st1",
                         "sg1",
                         "sp1",
                         "2",
                         "tree2d"});
-            table194.AddRow(new string[] {
+            table202.AddRow(new string[] {
                         "u1",
                         "st1",
                         "sg1",
@@ -160,30 +160,30 @@ namespace CruiseDAL.V3.Sync.Test.Spec.Features
                         "3",
                         "tree3"});
 #line 31
- testRunner.And("in \'dest\' the following trees exist:", ((string)(null)), table194, "* ");
+ testRunner.And("in \'dest\' the following trees exist:", ((string)(null)), table202, "* ");
 #line hidden
-            TechTalk.SpecFlow.Table table195 = new TechTalk.SpecFlow.Table(new string[] {
+            TechTalk.SpecFlow.Table table203 = new TechTalk.SpecFlow.Table(new string[] {
                         "CuttingUnitCode",
                         "StratumCode",
                         "SampleGroupCode",
                         "SpeciesCode",
                         "TreeNumber",
                         "TreeID"});
-            table195.AddRow(new string[] {
+            table203.AddRow(new string[] {
                         "u1",
                         "st1",
                         "sg1",
                         "sp1",
                         "1",
                         "tree1"});
-            table195.AddRow(new string[] {
+            table203.AddRow(new string[] {
                         "u1",
                         "st1",
                         "sg1",
                         "sp1",
                         "2",
                         "tree2s"});
-            table195.AddRow(new string[] {
+            table203.AddRow(new string[] {
                         "u1",
                         "st1",
                         "sg1",
@@ -191,29 +191,29 @@ namespace CruiseDAL.V3.Sync.Test.Spec.Features
                         "4",
                         "tree4"});
 #line 37
- testRunner.And("in \'source\' the following trees exist:", ((string)(null)), table195, "* ");
+ testRunner.And("in \'source\' the following trees exist:", ((string)(null)), table203, "* ");
 #line hidden
-            TechTalk.SpecFlow.Table table196 = new TechTalk.SpecFlow.Table(new string[] {
+            TechTalk.SpecFlow.Table table204 = new TechTalk.SpecFlow.Table(new string[] {
                         "TreeID",
                         "LogNumber",
                         "LogID"});
-            table196.AddRow(new string[] {
+            table204.AddRow(new string[] {
                         "tree1",
                         "1",
                         "log1_t1"});
 #line 43
- testRunner.And("in \'dest\' the following logs exist:", ((string)(null)), table196, "* ");
+ testRunner.And("in \'dest\' the following logs exist:", ((string)(null)), table204, "* ");
 #line hidden
-            TechTalk.SpecFlow.Table table197 = new TechTalk.SpecFlow.Table(new string[] {
+            TechTalk.SpecFlow.Table table205 = new TechTalk.SpecFlow.Table(new string[] {
                         "TreeID",
                         "LogNumber",
                         "LogID"});
-            table197.AddRow(new string[] {
+            table205.AddRow(new string[] {
                         "tree1",
                         "1",
                         "log1_t1"});
 #line 47
- testRunner.And("in \'source\' the following logs exist:", ((string)(null)), table197, "* ");
+ testRunner.And("in \'source\' the following logs exist:", ((string)(null)), table205, "* ");
 #line hidden
         }
         
@@ -265,14 +265,14 @@ this.FeatureBackground();
 #line 56
  testRunner.And("Log Conflict List has 0 conflict(s)", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line hidden
-                TechTalk.SpecFlow.Table table198 = new TechTalk.SpecFlow.Table(new string[] {
+                TechTalk.SpecFlow.Table table206 = new TechTalk.SpecFlow.Table(new string[] {
                             "SourceRecID",
                             "DestRecID"});
-                table198.AddRow(new string[] {
+                table206.AddRow(new string[] {
                             "tree2s",
                             "tree2d"});
 #line 57
- testRunner.And("TreeConflicts records has:", ((string)(null)), table198, "And ");
+ testRunner.And("TreeConflicts records has:", ((string)(null)), table206, "And ");
 #line hidden
             }
             this.ScenarioCleanup();
@@ -321,18 +321,18 @@ this.FeatureBackground();
 #line 65
  testRunner.And("sync \'source\' into \'dest\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line hidden
-                TechTalk.SpecFlow.Table table199 = new TechTalk.SpecFlow.Table(new string[] {
+                TechTalk.SpecFlow.Table table207 = new TechTalk.SpecFlow.Table(new string[] {
                             "TreeID"});
-                table199.AddRow(new string[] {
+                table207.AddRow(new string[] {
                             "tree1"});
-                table199.AddRow(new string[] {
+                table207.AddRow(new string[] {
                             "tree2d"});
-                table199.AddRow(new string[] {
+                table207.AddRow(new string[] {
                             "tree3"});
-                table199.AddRow(new string[] {
+                table207.AddRow(new string[] {
                             "tree4"});
 #line 66
- testRunner.Then("\'dest\' contains trees:", ((string)(null)), table199, "Then ");
+ testRunner.Then("\'dest\' contains trees:", ((string)(null)), table207, "Then ");
 #line hidden
             }
             this.ScenarioCleanup();
@@ -381,18 +381,18 @@ this.FeatureBackground();
 #line 77
  testRunner.And("sync \'source\' into \'dest\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line hidden
-                TechTalk.SpecFlow.Table table200 = new TechTalk.SpecFlow.Table(new string[] {
+                TechTalk.SpecFlow.Table table208 = new TechTalk.SpecFlow.Table(new string[] {
                             "TreeID"});
-                table200.AddRow(new string[] {
+                table208.AddRow(new string[] {
                             "tree1"});
-                table200.AddRow(new string[] {
+                table208.AddRow(new string[] {
                             "tree2s"});
-                table200.AddRow(new string[] {
+                table208.AddRow(new string[] {
                             "tree3"});
-                table200.AddRow(new string[] {
+                table208.AddRow(new string[] {
                             "tree4"});
 #line 78
- testRunner.Then("\'dest\' contains trees:", ((string)(null)), table200, "Then ");
+ testRunner.Then("\'dest\' contains trees:", ((string)(null)), table208, "Then ");
 #line hidden
             }
             this.ScenarioCleanup();
@@ -432,14 +432,14 @@ this.FeatureBackground();
 #line 86
  testRunner.When("I conflict check \'source\' file against \'dest\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
 #line hidden
-                TechTalk.SpecFlow.Table table201 = new TechTalk.SpecFlow.Table(new string[] {
+                TechTalk.SpecFlow.Table table209 = new TechTalk.SpecFlow.Table(new string[] {
                             "DestRecID",
                             "TreeNumber"});
-                table201.AddRow(new string[] {
+                table209.AddRow(new string[] {
                             "tree2d",
                             "5"});
 #line 87
- testRunner.And("I resolve tree conflicts with ModifyDest using:", ((string)(null)), table201, "And ");
+ testRunner.And("I resolve tree conflicts with ModifyDest using:", ((string)(null)), table209, "And ");
 #line hidden
 #line 90
  testRunner.And("I run conflict resolution of \'source\' file against \'dest\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
@@ -447,26 +447,26 @@ this.FeatureBackground();
 #line 91
  testRunner.And("sync \'source\' into \'dest\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line hidden
-                TechTalk.SpecFlow.Table table202 = new TechTalk.SpecFlow.Table(new string[] {
+                TechTalk.SpecFlow.Table table210 = new TechTalk.SpecFlow.Table(new string[] {
                             "TreeID",
                             "TreeNumber"});
-                table202.AddRow(new string[] {
+                table210.AddRow(new string[] {
                             "tree1",
                             "1"});
-                table202.AddRow(new string[] {
+                table210.AddRow(new string[] {
                             "tree2d",
                             "5"});
-                table202.AddRow(new string[] {
+                table210.AddRow(new string[] {
                             "tree2s",
                             "2"});
-                table202.AddRow(new string[] {
+                table210.AddRow(new string[] {
                             "tree3",
                             "3"});
-                table202.AddRow(new string[] {
+                table210.AddRow(new string[] {
                             "tree4",
                             "4"});
 #line 92
- testRunner.Then("\'dest\' contains trees:", ((string)(null)), table202, "Then ");
+ testRunner.Then("\'dest\' contains trees:", ((string)(null)), table210, "Then ");
 #line hidden
             }
             this.ScenarioCleanup();
@@ -506,14 +506,14 @@ this.FeatureBackground();
 #line 101
  testRunner.When("I conflict check \'source\' file against \'dest\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
 #line hidden
-                TechTalk.SpecFlow.Table table203 = new TechTalk.SpecFlow.Table(new string[] {
+                TechTalk.SpecFlow.Table table211 = new TechTalk.SpecFlow.Table(new string[] {
                             "SourceRecID",
                             "TreeNumber"});
-                table203.AddRow(new string[] {
+                table211.AddRow(new string[] {
                             "tree2s",
                             "5"});
 #line 102
- testRunner.And("I resolve tree conflicts with ModifySource using:", ((string)(null)), table203, "And ");
+ testRunner.And("I resolve tree conflicts with ModifySource using:", ((string)(null)), table211, "And ");
 #line hidden
 #line 105
  testRunner.And("I run conflict resolution of \'source\' file against \'dest\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
@@ -521,26 +521,26 @@ this.FeatureBackground();
 #line 106
  testRunner.And("sync \'source\' into \'dest\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line hidden
-                TechTalk.SpecFlow.Table table204 = new TechTalk.SpecFlow.Table(new string[] {
+                TechTalk.SpecFlow.Table table212 = new TechTalk.SpecFlow.Table(new string[] {
                             "TreeID",
                             "TreeNumber"});
-                table204.AddRow(new string[] {
+                table212.AddRow(new string[] {
                             "tree1",
                             "1"});
-                table204.AddRow(new string[] {
+                table212.AddRow(new string[] {
                             "tree2d",
                             "2"});
-                table204.AddRow(new string[] {
+                table212.AddRow(new string[] {
                             "tree2s",
                             "5"});
-                table204.AddRow(new string[] {
+                table212.AddRow(new string[] {
                             "tree3",
                             "3"});
-                table204.AddRow(new string[] {
+                table212.AddRow(new string[] {
                             "tree4",
                             "4"});
 #line 107
- testRunner.Then("\'dest\' contains trees:", ((string)(null)), table204, "Then ");
+ testRunner.Then("\'dest\' contains trees:", ((string)(null)), table212, "Then ");
 #line hidden
             }
             this.ScenarioCleanup();

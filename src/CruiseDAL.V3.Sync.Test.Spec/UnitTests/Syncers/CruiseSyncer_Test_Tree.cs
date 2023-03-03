@@ -6,7 +6,7 @@ using System;
 using System.Linq;
 using Xunit;
 
-namespace CruiseDAL.V3.Sync
+namespace CruiseDAL.V3.Sync.Test.UnitTests.Syncers
 {
     public partial class CruiseSyncer_Test
     {

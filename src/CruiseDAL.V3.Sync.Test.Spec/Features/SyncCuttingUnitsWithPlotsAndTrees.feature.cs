@@ -10,7 +10,7 @@
 // ------------------------------------------------------------------------------
 #region Designer generated code
 #pragma warning disable
-namespace CruiseDAL.V3.Sync.Test.Spec.Features
+namespace CruiseDAL.V3.Sync.Test.Features
 {
     using TechTalk.SpecFlow;
     using System;
@@ -31,7 +31,7 @@ namespace CruiseDAL.V3.Sync.Test.Spec.Features
 #line 1 "SyncCuttingUnitsWithPlotsAndTrees.feature"
 #line hidden
         
-        public SyncCuttingUnitsWithPlotsAndTreesFeature(SyncCuttingUnitsWithPlotsAndTreesFeature.FixtureData fixtureData, CruiseDAL_V3_Sync_Test_Spec_XUnitAssemblyFixture assemblyFixture, Xunit.Abstractions.ITestOutputHelper testOutputHelper)
+        public SyncCuttingUnitsWithPlotsAndTreesFeature(SyncCuttingUnitsWithPlotsAndTreesFeature.FixtureData fixtureData, CruiseDAL_V3_Sync_Test_XUnitAssemblyFixture assemblyFixture, Xunit.Abstractions.ITestOutputHelper testOutputHelper)
         {
             this._testOutputHelper = testOutputHelper;
             this.TestInitialize();
