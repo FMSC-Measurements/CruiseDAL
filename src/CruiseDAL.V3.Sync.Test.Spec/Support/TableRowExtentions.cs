@@ -21,7 +21,10 @@ namespace CruiseDAL.V3.Sync.Test.Support
                 
                 var underlyingType = Nullable.GetUnderlyingType(type);
                 //var isNullable = underlyingType!= null;
-                type ??= underlyingType;
+                if(underlyingType != null)
+                {
+                    type = underlyingType;
+                }
 
                 return (T)Convert.ChangeType(strValue, type);
             }

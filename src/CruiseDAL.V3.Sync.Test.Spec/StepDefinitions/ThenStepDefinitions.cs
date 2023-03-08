@@ -68,6 +68,8 @@ namespace CruiseDAL.V3.Sync.Test.StepDefinitions
                 var error = row.GetString("error");
                 errorMessages.Should().Contain(error);
             }
+
+            errorMessages.Should().HaveCount(table.RowCount);
         }
 
         #endregion Design Errors
