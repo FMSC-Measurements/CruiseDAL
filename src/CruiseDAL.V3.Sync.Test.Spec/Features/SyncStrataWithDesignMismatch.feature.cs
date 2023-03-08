@@ -79,77 +79,77 @@ namespace CruiseDAL.V3.Sync.Test.Features
         {
 #line 3
 #line hidden
-            TechTalk.SpecFlow.Table table177 = new TechTalk.SpecFlow.Table(new string[] {
+            TechTalk.SpecFlow.Table table201 = new TechTalk.SpecFlow.Table(new string[] {
                         "FileAlias"});
-            table177.AddRow(new string[] {
+            table201.AddRow(new string[] {
                         "source"});
-            table177.AddRow(new string[] {
+            table201.AddRow(new string[] {
                         "dest"});
 #line 4
- testRunner.Given("the following cruise files exist:", ((string)(null)), table177, "Given ");
+ testRunner.Given("the following cruise files exist:", ((string)(null)), table201, "Given ");
 #line hidden
-            TechTalk.SpecFlow.Table table178 = new TechTalk.SpecFlow.Table(new string[] {
+            TechTalk.SpecFlow.Table table202 = new TechTalk.SpecFlow.Table(new string[] {
                         "CuttingUnitCode",
                         "CuttingUnitID"});
-            table178.AddRow(new string[] {
+            table202.AddRow(new string[] {
                         "u1",
                         "unit1"});
 #line 9
- testRunner.And("in \'source, dest\' the following units exist:", ((string)(null)), table178, "* ");
+ testRunner.And("in \'source, dest\' the following units exist:", ((string)(null)), table202, "* ");
 #line hidden
-            TechTalk.SpecFlow.Table table179 = new TechTalk.SpecFlow.Table(new string[] {
+            TechTalk.SpecFlow.Table table203 = new TechTalk.SpecFlow.Table(new string[] {
                         "StratumCode",
                         "Units",
                         "StratumID",
                         "Method"});
-            table179.AddRow(new string[] {
+            table203.AddRow(new string[] {
                         "st1",
                         "u1",
                         "stratum1",
                         "STR"});
 #line 13
- testRunner.And("in \'source\' the following strata exist:", ((string)(null)), table179, "* ");
+ testRunner.And("in \'source\' the following strata exist:", ((string)(null)), table203, "* ");
 #line hidden
-            TechTalk.SpecFlow.Table table180 = new TechTalk.SpecFlow.Table(new string[] {
+            TechTalk.SpecFlow.Table table204 = new TechTalk.SpecFlow.Table(new string[] {
                         "StratumCode",
                         "Units",
                         "StratumID",
                         "Method"});
-            table180.AddRow(new string[] {
+            table204.AddRow(new string[] {
                         "st1",
                         "u1",
                         "stratum1",
                         "100"});
 #line 17
- testRunner.And("in \'dest\' the following strata exist:", ((string)(null)), table180, "* ");
+ testRunner.And("in \'dest\' the following strata exist:", ((string)(null)), table204, "* ");
 #line hidden
-            TechTalk.SpecFlow.Table table181 = new TechTalk.SpecFlow.Table(new string[] {
+            TechTalk.SpecFlow.Table table205 = new TechTalk.SpecFlow.Table(new string[] {
                         "SampleGroupCode",
                         "StratumCode"});
-            table181.AddRow(new string[] {
+            table205.AddRow(new string[] {
                         "sg1",
                         "st1"});
-            table181.AddRow(new string[] {
+            table205.AddRow(new string[] {
                         "sg2",
                         "st1"});
 #line 23
- testRunner.And("in \'source, dest\' file the following sample groups exist:", ((string)(null)), table181, "* ");
+ testRunner.And("in \'source, dest\' file the following sample groups exist:", ((string)(null)), table205, "* ");
 #line hidden
-            TechTalk.SpecFlow.Table table182 = new TechTalk.SpecFlow.Table(new string[] {
+            TechTalk.SpecFlow.Table table206 = new TechTalk.SpecFlow.Table(new string[] {
                         "SpeciesCode"});
-            table182.AddRow(new string[] {
+            table206.AddRow(new string[] {
                         "sp1"});
 #line 27
- testRunner.And("in \'source, dest\' the following species exist:", ((string)(null)), table182, "* ");
+ testRunner.And("in \'source, dest\' the following species exist:", ((string)(null)), table206, "* ");
 #line hidden
-            TechTalk.SpecFlow.Table table183 = new TechTalk.SpecFlow.Table(new string[] {
+            TechTalk.SpecFlow.Table table207 = new TechTalk.SpecFlow.Table(new string[] {
                         "CuttingUnitCode",
                         "StratumCode",
                         "SampleGroupCode",
                         "SpeciesCode",
                         "TreeNumber",
                         "TreeID"});
-            table183.AddRow(new string[] {
+            table207.AddRow(new string[] {
                         "u1",
                         "st1",
                         "sg1",
@@ -157,7 +157,7 @@ namespace CruiseDAL.V3.Sync.Test.Features
                         "1",
                         "tree1"});
 #line 31
- testRunner.And("in \'source, dest\' the following trees exist:", ((string)(null)), table183, "* ");
+ testRunner.And("in \'source, dest\' the following trees exist:", ((string)(null)), table207, "* ");
 #line hidden
         }
         
@@ -241,12 +241,12 @@ this.FeatureBackground();
 #line 40
  testRunner.When("I check \'source\' for Design Mismatch errors against \'dest\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
 #line hidden
-                TechTalk.SpecFlow.Table table184 = new TechTalk.SpecFlow.Table(new string[] {
+                TechTalk.SpecFlow.Table table208 = new TechTalk.SpecFlow.Table(new string[] {
                             "error"});
-                table184.AddRow(new string[] {
+                table208.AddRow(new string[] {
                             "Cruise Method Mismatch: Stratum Code:st1"});
 #line 41
- testRunner.Then("Design Errors Has:", ((string)(null)), table184, "Then ");
+ testRunner.Then("Design Errors Has:", ((string)(null)), table208, "Then ");
 #line hidden
             }
             this.ScenarioCleanup();
