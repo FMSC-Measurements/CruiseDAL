@@ -48,7 +48,7 @@ namespace CruiseDAL.V3.Models
   public Int32? KZ { get; set; }
 
   [Field("BigBAF")]
-  public Int32? BigBAF { get; set; }
+  public Double? BigBAF { get; set; }
 
   [Field("TallyBySubPop")]
   public Boolean? TallyBySubPop { get; set; }
