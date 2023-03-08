@@ -154,38 +154,38 @@ namespace CruiseDAL.V3.Test.DownMigrators
             tdvs.Where(x => x.PrimaryProduct != specifProd).Should().OnlyContain(x => x.ContractSpecies == null);
         }
 
-        //[Fact]
-        //public void NoContractSpecies()
-        //{
-        //    var fromPath = GetTempFilePath(" TreeDefaultValueDownMigrator_MigrateFromV3ToV2.crz3");
-        //    var toPath = GetTempFilePath(" TreeDefaultValueDownMigrator_MigrateFromV3ToV2.cruise");
+        [Fact]
+        public void NoContractSpecies()
+        {
+            var fromPath = GetTempFilePath(" TreeDefaultValueDownMigrator_MigrateFromV3ToV2.crz3");
+            var toPath = GetTempFilePath(" TreeDefaultValueDownMigrator_MigrateFromV3ToV2.cruise");
 
-        //    var initializer = new DatabaseInitializer()
-        //    {
-        //        Species = new[] { "sp1", "sp2", "sp3" },
-        //        TreeDefaults = new[]
-        //        {
-        //            new TreeDefaultValue {SpeciesCode = "sp1", PrimaryProduct = "01", Recoverable = 1.1,},
-        //            new TreeDefaultValue {SpeciesCode = null, PrimaryProduct = "01", Recoverable = 1.2,},
-        //            new TreeDefaultValue {SpeciesCode = "sp1", PrimaryProduct = null, Recoverable = 1.3,},
-        //            new TreeDefaultValue {SpeciesCode = null, PrimaryProduct = null, Recoverable = 1.4,},
-        //        },
-        //        Subpops = new SubPopulation[] { },
-        //    };
+            var initializer = new DatabaseInitializer()
+            {
+                Species = new[] { "sp1", "sp2", "sp3" },
+                TreeDefaults = new[]
+                {
+                    new TreeDefaultValue {SpeciesCode = "sp1", PrimaryProduct = "01", Recoverable = 1.1,},
+                    new TreeDefaultValue {SpeciesCode = null, PrimaryProduct = "01", Recoverable = 1.2,},
+                    new TreeDefaultValue {SpeciesCode = "sp1", PrimaryProduct = null, Recoverable = 1.3,},
+                    new TreeDefaultValue {SpeciesCode = null, PrimaryProduct = null, Recoverable = 1.4,},
+                },
+                Subpops = new SubPopulation[] { },
+            };
 
-        //    using var fromDb = initializer.CreateDatabaseFile(fromPath);
+            using var fromDb = initializer.CreateDatabaseFile(fromPath);
 
-        //    fromDb.Execute("UPDATE Species SET ContractSpecies = ''");
+            fromDb.Execute("UPDATE Species SET ContractSpecies = ''");
 
-        //    using var toDb = new DAL(toPath, true);
+            using var toDb = new DAL(toPath, true);
 
-        //    var downMigrator = new DownMigrator(new[] { new TreeDefaultValueDownMigrate(), });
-        //    downMigrator.MigrateFromV3ToV2(initializer.CruiseID, fromDb, toDb);
+            var downMigrator = new DownMigrator(new[] { new TreeDefaultValueDownMigrate(), });
+            downMigrator.MigrateFromV3ToV2(initializer.CruiseID, fromDb, toDb);
 
-        //    // from the one TDV with explicitly set species and prod we should get two TDVs (one live one dead
-        //    var tdvs = toDb.From<V2.Models.TreeDefaultValue>().Query().ToArray();
+            // from the one TDV with explicitly set species and prod we should get two TDVs (one live one dead
+            var tdvs = toDb.From<V2.Models.TreeDefaultValue>().Query().ToArray();
 
-        //    tdvs.Should().OnlyContain(x => x.ContractSpecies == "");
-        //}
+            tdvs.Should().OnlyContain(x => x.ContractSpecies == "");
+        }
     }
 }
