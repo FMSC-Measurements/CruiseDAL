@@ -1,4 +1,5 @@
 using CruiseDAL.V3.Models;
+using CruiseDAL.V3.Sync.Test.Support;
 using TechTalk.SpecFlow.Infrastructure;
 
 namespace CruiseDAL.V3.Sync.Test.Spec.StepDefinitions
@@ -34,12 +35,14 @@ namespace CruiseDAL.V3.Sync.Test.Spec.StepDefinitions
 
                 var sgCode = row["SampleGroupCode"];
                 var stCode = row["StratumCode"];
+                var samplingFreq = row.GetValueOrDefault<int>(nameof(SampleGroup.SamplingFrequency));
                 var sg = new SampleGroup
                 {
                     CruiseID = cruiseID,
                     SampleGroupID = sampleGroupID,
                     SampleGroupCode = sgCode,
                     StratumCode = stCode,
+                    SamplingFrequency = samplingFreq,
                 };
 
                 foreach (var db in databases)

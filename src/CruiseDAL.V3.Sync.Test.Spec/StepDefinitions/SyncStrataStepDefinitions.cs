@@ -70,31 +70,31 @@ namespace CruiseDAL.V3.Sync.Test.Spec.StepDefinitions
             }
         }
 
-        [Then(@"Strata Conflicts Has:")]
-        public void ThenStrataConflictsHas(Table table)
-        {
-            var conflictResults = ConflictResults;
-            var strataConflicts = conflictResults.Stratum;
+        //[Then(@"Strata Conflicts Has:")]
+        //public void ThenStrataConflictsHas(Table table)
+        //{
+        //    var conflictResults = ConflictResults;
+        //    var strataConflicts = conflictResults.Stratum;
 
-            foreach (var row in table.Rows)
-            {
-                var srcRecID = GetRedordID(row[nameof(Conflict.SourceRecID)]);
-                var destRecID = GetRedordID(row[nameof(Conflict.DestRecID)]);
+        //    foreach (var row in table.Rows)
+        //    {
+        //        var srcRecID = GetRedordID(row[nameof(Conflict.SourceRecID)]);
+        //        var destRecID = GetRedordID(row[nameof(Conflict.DestRecID)]);
 
-                var stratumConflict = strataConflicts.Single(x => x.SourceRecID == srcRecID && x.DestRecID == destRecID);
-                //treeConflict.Should().NotBeNull();
+        //        var stratumConflict = strataConflicts.Single(x => x.SourceRecID == srcRecID && x.DestRecID == destRecID);
+        //        //treeConflict.Should().NotBeNull();
 
-                if (row.TryGetValue("DownstreamConflictCount", out var downstreamConfCountStr))
-                {
-                    var downstreamConfCount = int.Parse(downstreamConfCountStr);
-                    if (downstreamConfCount > 0)
-                    {
-                        stratumConflict.DownstreamConflicts.Should().NotBeNull();
-                        stratumConflict.DownstreamConflicts.Count().Should().Be(downstreamConfCount);
-                    }
-                }
-            }
-        }
+        //        if (row.TryGetValue("DownstreamConflictCount", out var downstreamConfCountStr))
+        //        {
+        //            var downstreamConfCount = int.Parse(downstreamConfCountStr);
+        //            if (downstreamConfCount > 0)
+        //            {
+        //                stratumConflict.DownstreamConflicts.Should().NotBeNull();
+        //                stratumConflict.DownstreamConflicts.Count().Should().Be(downstreamConfCount);
+        //            }
+        //        }
+        //    }
+        //}
 
         [When(@"I resolve all Strata conflicts with '([^']*)'")]
         public void WhenIResolveAllStrataConflictsWith(string resolutionOptionStr)

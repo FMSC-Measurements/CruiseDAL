@@ -19,7 +19,7 @@ namespace CruiseDAL.V3.Sync.Test.Features
     
     [System.CodeDom.Compiler.GeneratedCodeAttribute("TechTalk.SpecFlow", "3.9.0.0")]
     [System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-    public partial class SyncStrataWithDesignMismatchFeature : object, Xunit.IClassFixture<SyncStrataWithDesignMismatchFeature.FixtureData>, System.IDisposable
+    public partial class SyncSampleGroupsWithDesignMismatchFeature : object, Xunit.IClassFixture<SyncSampleGroupsWithDesignMismatchFeature.FixtureData>, System.IDisposable
     {
         
         private static TechTalk.SpecFlow.ITestRunner testRunner;
@@ -28,10 +28,10 @@ namespace CruiseDAL.V3.Sync.Test.Features
         
         private Xunit.Abstractions.ITestOutputHelper _testOutputHelper;
         
-#line 1 "SyncStrataWithDesignMismatch.feature"
+#line 1 "SyncSampleGroupsWithDesignMismatch.feature"
 #line hidden
         
-        public SyncStrataWithDesignMismatchFeature(SyncStrataWithDesignMismatchFeature.FixtureData fixtureData, CruiseDAL_V3_Sync_Test_XUnitAssemblyFixture assemblyFixture, Xunit.Abstractions.ITestOutputHelper testOutputHelper)
+        public SyncSampleGroupsWithDesignMismatchFeature(SyncSampleGroupsWithDesignMismatchFeature.FixtureData fixtureData, CruiseDAL_V3_Sync_Test_XUnitAssemblyFixture assemblyFixture, Xunit.Abstractions.ITestOutputHelper testOutputHelper)
         {
             this._testOutputHelper = testOutputHelper;
             this.TestInitialize();
@@ -40,7 +40,7 @@ namespace CruiseDAL.V3.Sync.Test.Features
         public static void FeatureSetup()
         {
             testRunner = TechTalk.SpecFlow.TestRunnerManager.GetTestRunner();
-            TechTalk.SpecFlow.FeatureInfo featureInfo = new TechTalk.SpecFlow.FeatureInfo(new System.Globalization.CultureInfo("en-US"), "Features", "Sync Strata With Design Mismatch", null, ProgrammingLanguage.CSharp, ((string[])(null)));
+            TechTalk.SpecFlow.FeatureInfo featureInfo = new TechTalk.SpecFlow.FeatureInfo(new System.Globalization.CultureInfo("en-US"), "Features", "Sync Sample Groups With Design Mismatch", null, ProgrammingLanguage.CSharp, ((string[])(null)));
             testRunner.OnFeatureStart(featureInfo);
         }
         
@@ -79,85 +79,99 @@ namespace CruiseDAL.V3.Sync.Test.Features
         {
 #line 3
 #line hidden
-            TechTalk.SpecFlow.Table table177 = new TechTalk.SpecFlow.Table(new string[] {
+            TechTalk.SpecFlow.Table table159 = new TechTalk.SpecFlow.Table(new string[] {
                         "FileAlias"});
-            table177.AddRow(new string[] {
+            table159.AddRow(new string[] {
                         "source"});
-            table177.AddRow(new string[] {
+            table159.AddRow(new string[] {
                         "dest"});
 #line 4
- testRunner.Given("the following cruise files exist:", ((string)(null)), table177, "Given ");
+ testRunner.Given("the following cruise files exist:", ((string)(null)), table159, "Given ");
 #line hidden
-            TechTalk.SpecFlow.Table table178 = new TechTalk.SpecFlow.Table(new string[] {
+            TechTalk.SpecFlow.Table table160 = new TechTalk.SpecFlow.Table(new string[] {
                         "CuttingUnitCode",
                         "CuttingUnitID"});
-            table178.AddRow(new string[] {
+            table160.AddRow(new string[] {
                         "u1",
                         "unit1"});
 #line 9
- testRunner.And("in \'source, dest\' the following units exist:", ((string)(null)), table178, "* ");
+ testRunner.And("in \'source, dest\' the following units exist:", ((string)(null)), table160, "* ");
 #line hidden
-            TechTalk.SpecFlow.Table table179 = new TechTalk.SpecFlow.Table(new string[] {
+            TechTalk.SpecFlow.Table table161 = new TechTalk.SpecFlow.Table(new string[] {
                         "StratumCode",
                         "Units",
                         "StratumID",
                         "Method"});
-            table179.AddRow(new string[] {
+            table161.AddRow(new string[] {
                         "st1",
                         "u1",
                         "stratum1",
                         "STR"});
 #line 13
- testRunner.And("in \'source\' the following strata exist:", ((string)(null)), table179, "* ");
+ testRunner.And("in \'source\' the following strata exist:", ((string)(null)), table161, "* ");
 #line hidden
-            TechTalk.SpecFlow.Table table180 = new TechTalk.SpecFlow.Table(new string[] {
+            TechTalk.SpecFlow.Table table162 = new TechTalk.SpecFlow.Table(new string[] {
                         "StratumCode",
                         "Units",
                         "StratumID",
                         "Method"});
-            table180.AddRow(new string[] {
+            table162.AddRow(new string[] {
                         "st1",
                         "u1",
                         "stratum1",
                         "100"});
 #line 17
- testRunner.And("in \'dest\' the following strata exist:", ((string)(null)), table180, "* ");
+ testRunner.And("in \'dest\' the following strata exist:", ((string)(null)), table162, "* ");
 #line hidden
-            TechTalk.SpecFlow.Table table181 = new TechTalk.SpecFlow.Table(new string[] {
+            TechTalk.SpecFlow.Table table163 = new TechTalk.SpecFlow.Table(new string[] {
                         "SampleGroupCode",
-                        "StratumCode"});
-            table181.AddRow(new string[] {
+                        "StratumCode",
+                        "SampleGroupID",
+                        "SamplingFrequency"});
+            table163.AddRow(new string[] {
                         "sg1",
-                        "st1"});
-            table181.AddRow(new string[] {
-                        "sg2",
-                        "st1"});
-#line 23
- testRunner.And("in \'source, dest\' file the following sample groups exist:", ((string)(null)), table181, "* ");
+                        "st1",
+                        "sg1_st1",
+                        "5"});
+#line 21
+ testRunner.And("in \'source\' file the following sample groups exist:", ((string)(null)), table163, "* ");
 #line hidden
-            TechTalk.SpecFlow.Table table182 = new TechTalk.SpecFlow.Table(new string[] {
+            TechTalk.SpecFlow.Table table164 = new TechTalk.SpecFlow.Table(new string[] {
+                        "SampleGroupCode",
+                        "StratumCode",
+                        "SampleGroupID",
+                        "SamplingFrequency"});
+            table164.AddRow(new string[] {
+                        "sg1",
+                        "st1",
+                        "sg1_st1",
+                        "6"});
+#line 25
+ testRunner.And("in \'dest\' file the following sample groups exist:", ((string)(null)), table164, "* ");
+#line hidden
+            TechTalk.SpecFlow.Table table165 = new TechTalk.SpecFlow.Table(new string[] {
                         "SpeciesCode"});
-            table182.AddRow(new string[] {
+            table165.AddRow(new string[] {
                         "sp1"});
-#line 27
- testRunner.And("in \'source, dest\' the following species exist:", ((string)(null)), table182, "* ");
+#line 32
+ testRunner.And("in \'source, dest\' the following species exist:", ((string)(null)), table165, "* ");
 #line hidden
-            TechTalk.SpecFlow.Table table183 = new TechTalk.SpecFlow.Table(new string[] {
+            TechTalk.SpecFlow.Table table166 = new TechTalk.SpecFlow.Table(new string[] {
                         "CuttingUnitCode",
                         "StratumCode",
                         "SampleGroupCode",
                         "SpeciesCode",
                         "TreeNumber",
                         "TreeID"});
-            table183.AddRow(new string[] {
+            table166.AddRow(new string[] {
                         "u1",
                         "st1",
                         "sg1",
                         "sp1",
                         "1",
                         "tree1"});
-#line 31
- testRunner.And("in \'source, dest\' the following trees exist:", ((string)(null)), table183, "* ");
+#line 36
+ testRunner.And("in \'source, dest\' the following trees exist:", ((string)(null)), table166, "* ");
 #line hidden
         }
         
@@ -167,14 +181,14 @@ namespace CruiseDAL.V3.Sync.Test.Features
         }
         
         [Xunit.SkippableFactAttribute(DisplayName="Check For Conflicts")]
-        [Xunit.TraitAttribute("FeatureTitle", "Sync Strata With Design Mismatch")]
+        [Xunit.TraitAttribute("FeatureTitle", "Sync Sample Groups With Design Mismatch")]
         [Xunit.TraitAttribute("Description", "Check For Conflicts")]
         public virtual void CheckForConflicts()
         {
             string[] tagsOfScenario = ((string[])(null));
             System.Collections.Specialized.OrderedDictionary argumentsOfScenario = new System.Collections.Specialized.OrderedDictionary();
             TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("Check For Conflicts", null, tagsOfScenario, argumentsOfScenario, this._featureTags);
-#line 35
+#line 40
 this.ScenarioInitialize(scenarioInfo);
 #line hidden
             bool isScenarioIgnored = default(bool);
@@ -197,10 +211,10 @@ this.ScenarioInitialize(scenarioInfo);
 #line 3
 this.FeatureBackground();
 #line hidden
-#line 36
+#line 41
  testRunner.When("I conflict check \'source\' file against \'dest\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
 #line hidden
-#line 37
+#line 42
  testRunner.Then("Has No Conflicts", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line hidden
             }
@@ -208,14 +222,14 @@ this.FeatureBackground();
         }
         
         [Xunit.SkippableFactAttribute(DisplayName="Check For Design Mismatch")]
-        [Xunit.TraitAttribute("FeatureTitle", "Sync Strata With Design Mismatch")]
+        [Xunit.TraitAttribute("FeatureTitle", "Sync Sample Groups With Design Mismatch")]
         [Xunit.TraitAttribute("Description", "Check For Design Mismatch")]
         public virtual void CheckForDesignMismatch()
         {
             string[] tagsOfScenario = ((string[])(null));
             System.Collections.Specialized.OrderedDictionary argumentsOfScenario = new System.Collections.Specialized.OrderedDictionary();
             TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("Check For Design Mismatch", null, tagsOfScenario, argumentsOfScenario, this._featureTags);
-#line 39
+#line 44
 this.ScenarioInitialize(scenarioInfo);
 #line hidden
             bool isScenarioIgnored = default(bool);
@@ -238,15 +252,15 @@ this.ScenarioInitialize(scenarioInfo);
 #line 3
 this.FeatureBackground();
 #line hidden
-#line 40
+#line 45
  testRunner.When("I check \'source\' for Design Mismatch errors against \'dest\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
 #line hidden
-                TechTalk.SpecFlow.Table table184 = new TechTalk.SpecFlow.Table(new string[] {
+                TechTalk.SpecFlow.Table table167 = new TechTalk.SpecFlow.Table(new string[] {
                             "error"});
-                table184.AddRow(new string[] {
-                            "Cruise Method Mismatch: Stratum Code:st1"});
-#line 41
- testRunner.Then("Design Errors Has:", ((string)(null)), table184, "Then ");
+                table167.AddRow(new string[] {
+                            "Sample Group Sampling Frequency Mismatch:::: Sg Code:sg1 Stratum Code:st1"});
+#line 46
+ testRunner.Then("Design Errors Has:", ((string)(null)), table167, "Then ");
 #line hidden
             }
             this.ScenarioCleanup();
@@ -259,12 +273,12 @@ this.FeatureBackground();
             
             public FixtureData()
             {
-                SyncStrataWithDesignMismatchFeature.FeatureSetup();
+                SyncSampleGroupsWithDesignMismatchFeature.FeatureSetup();
             }
             
             void System.IDisposable.Dispose()
             {
-                SyncStrataWithDesignMismatchFeature.FeatureTearDown();
+                SyncSampleGroupsWithDesignMismatchFeature.FeatureTearDown();
             }
         }
     }
