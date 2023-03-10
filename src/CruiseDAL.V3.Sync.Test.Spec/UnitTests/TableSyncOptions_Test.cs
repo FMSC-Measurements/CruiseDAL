@@ -6,7 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Xunit.Abstractions;
 
-namespace CruiseDAL.V3.Sync.Test.Spec.UnitTests
+namespace CruiseDAL.V3.Sync.Test.UnitTests
 {
     public class TableSyncOptions_Test : TestBase
     {

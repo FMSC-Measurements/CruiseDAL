@@ -4,6 +4,7 @@
 		<TargetFramework>net6.0</TargetFramework>
 		<Nullable>enable</Nullable>
 		<ImplicitUsings>enable</ImplicitUsings>
+		<RootNamespace>CruiseDAL.V3.Sync.Test</RootNamespace>
 	</PropertyGroup>
 
 	<ItemGroup>
@@ -30,6 +31,20 @@
 		<Content Include="TestFiles\*">
 			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
 		</Content>
+	</ItemGroup>
+
+	<ItemGroup>
+	  <None Remove="TestFiles\Issue_CantExportIfCruiseSaleIDDoesntMatch.crz3db" />
+	  <None Remove="TestFiles\Issue_ReconTreeMeasurmentsDontImport.crz3" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <Content Update="TestFiles\Issue_CantExportIfCruiseSaleIDDoesntMatch.crz3db">
+	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+	  </Content>
+	  <Content Update="TestFiles\Issue_ReconTreeMeasurmentsDontImport.crz3">
+	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+	  </Content>
 	</ItemGroup>
 
 	<Import Project="..\CruiseDAL.TestCommon\CruiseDAL.TestCommon.projitems" Label="Shared" />

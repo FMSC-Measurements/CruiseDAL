@@ -7,7 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Xunit.Abstractions;
 
-namespace CruiseDAL.V3.Sync.Test.Spec.UnitTests
+namespace CruiseDAL.V3.Sync.Test.UnitTests.FileTests
 {
     public class Sync_12345_Girard : SyncTestBase
     {
@@ -20,7 +20,7 @@ namespace CruiseDAL.V3.Sync.Test.Spec.UnitTests
             var destPath = GetTestFile("12345_Girard Combine Test_Check_202211081037_QualityControlGroupDxD-12KPE.crz3");
             using var dest = new CruiseDatastore_V3(destPath);
             Output.WriteLine("Dest: " + destPath);
-            
+
             var cruiseID = dest.QueryScalar<string>("SELECT CruiseID FROM Cruise;").Single();
 
             using var destConn = dest.OpenConnection();
@@ -29,7 +29,7 @@ namespace CruiseDAL.V3.Sync.Test.Spec.UnitTests
             var sourcePath = GetTestFile("12345_Girard Combine Test_Check_202211100145_DxDQCG-MUQ.crz3");
             Output.WriteLine("Src: " + sourcePath);
             using var source = new CruiseDatastore_V3(sourcePath);
-            
+
             PrepareFile(dest, source, cruiseID);
             using var sourceConn = source.OpenConnection();
 

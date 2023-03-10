@@ -30,10 +30,10 @@ WITH sp_fia AS (
     ON sp.SpeciesCode = tdv.Species
 )
                 
-UPDATE {toDbName}.Species SET 
-    FIACode = (SELECT FIACode FROM sp_fia  WHERE sp_fia.SpeciesCode = SpeciesCode)
+UPDATE {toDbName}.Species as toSp SET 
+    FIACode = (SELECT FIACode FROM sp_fia  WHERE sp_fia.SpeciesCode = toSp.SpeciesCode)
 WHERE 
-    SpeciesCode IN (SELECT SpeciesCode FROM sp_fia);
+    EXISTS (SELECT SpeciesCode FROM sp_fia WHERE sp_fia.SpeciesCode = toSp.SpeciesCode);
 ";
         }
     }

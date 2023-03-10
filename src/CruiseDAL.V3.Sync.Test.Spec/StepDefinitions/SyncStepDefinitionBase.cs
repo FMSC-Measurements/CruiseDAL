@@ -39,6 +39,12 @@ namespace CruiseDAL.V3.Sync.Test.Spec.StepDefinitions
             set => SenarioContext.Set(value, nameof(ConflictResults));
         }
 
+        protected IEnumerable<string> DesignErrors
+        {
+            get => SenarioContext.Get<IEnumerable<string>>(nameof(DesignErrors));
+            set => SenarioContext.Set(value, nameof(DesignErrors));
+        }
+
         protected Cruise DefaultCruise
         {
             get => SenarioContext.Get<Cruise>(nameof(DefaultCruise));

@@ -1,7 +1,7 @@
 ﻿using CruiseDAL.TestCommon;
 using Xunit.Abstractions;
 
-namespace CruiseDAL.V3.Sync.Test.Spec.UnitTests
+namespace CruiseDAL.V3.Sync.Test.UnitTests.FileTests
 {
     public class SyncStevesFiles : TestBase
     {

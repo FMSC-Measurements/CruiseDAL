@@ -489,7 +489,7 @@ classDiagram
         - SamplingFrequency : INTEGER
         - InsuranceFrequency : INTEGER
         - KZ : INTEGER
-        - BigBAF : INTEGER
+        - BigBAF : REAL
         - TallyBySubPop : BOOLEAN
         - SampleSelectorType : TEXT
         - Description : TEXT

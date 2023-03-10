@@ -10,7 +10,7 @@
 // ------------------------------------------------------------------------------
 #region Designer generated code
 #pragma warning disable
-namespace CruiseDAL.V3.Sync.Test.Spec.Features
+namespace CruiseDAL.V3.Sync.Test.Features
 {
     using TechTalk.SpecFlow;
     using System;
@@ -31,7 +31,7 @@ namespace CruiseDAL.V3.Sync.Test.Spec.Features
 #line 1 "SyncStrataWithSampleGroups.feature"
 #line hidden
         
-        public SyncStrataWithSampleGroupsFeature(SyncStrataWithSampleGroupsFeature.FixtureData fixtureData, CruiseDAL_V3_Sync_Test_Spec_XUnitAssemblyFixture assemblyFixture, Xunit.Abstractions.ITestOutputHelper testOutputHelper)
+        public SyncStrataWithSampleGroupsFeature(SyncStrataWithSampleGroupsFeature.FixtureData fixtureData, CruiseDAL_V3_Sync_Test_XUnitAssemblyFixture assemblyFixture, Xunit.Abstractions.ITestOutputHelper testOutputHelper)
         {
             this._testOutputHelper = testOutputHelper;
             this.TestInitialize();
@@ -79,75 +79,75 @@ namespace CruiseDAL.V3.Sync.Test.Spec.Features
         {
 #line 3
 #line hidden
-            TechTalk.SpecFlow.Table table168 = new TechTalk.SpecFlow.Table(new string[] {
+            TechTalk.SpecFlow.Table table209 = new TechTalk.SpecFlow.Table(new string[] {
                         "FileAlias"});
-            table168.AddRow(new string[] {
+            table209.AddRow(new string[] {
                         "source"});
-            table168.AddRow(new string[] {
+            table209.AddRow(new string[] {
                         "dest"});
 #line 4
- testRunner.Given("the following cruise files exist:", ((string)(null)), table168, "Given ");
+ testRunner.Given("the following cruise files exist:", ((string)(null)), table209, "Given ");
 #line hidden
-            TechTalk.SpecFlow.Table table169 = new TechTalk.SpecFlow.Table(new string[] {
+            TechTalk.SpecFlow.Table table210 = new TechTalk.SpecFlow.Table(new string[] {
                         "CuttingUnitCode",
                         "CuttingUnitID"});
-            table169.AddRow(new string[] {
+            table210.AddRow(new string[] {
                         "u1",
                         "unit1"});
 #line 9
- testRunner.And("in \'source, dest\' the following units exist:", ((string)(null)), table169, "* ");
+ testRunner.And("in \'source, dest\' the following units exist:", ((string)(null)), table210, "* ");
 #line hidden
-            TechTalk.SpecFlow.Table table170 = new TechTalk.SpecFlow.Table(new string[] {
+            TechTalk.SpecFlow.Table table211 = new TechTalk.SpecFlow.Table(new string[] {
                         "StratumCode",
                         "Units",
                         "StratumID"});
-            table170.AddRow(new string[] {
+            table211.AddRow(new string[] {
                         "st1",
                         "u1",
                         "stratum1s"});
 #line 13
- testRunner.And("in \'source\' the following strata exist:", ((string)(null)), table170, "* ");
+ testRunner.And("in \'source\' the following strata exist:", ((string)(null)), table211, "* ");
 #line hidden
-            TechTalk.SpecFlow.Table table171 = new TechTalk.SpecFlow.Table(new string[] {
+            TechTalk.SpecFlow.Table table212 = new TechTalk.SpecFlow.Table(new string[] {
                         "StratumCode",
                         "Units",
                         "StratumID"});
-            table171.AddRow(new string[] {
+            table212.AddRow(new string[] {
                         "st1",
                         "u1",
                         "stratum1d"});
 #line 17
- testRunner.And("in \'dest\' the following strata exist:", ((string)(null)), table171, "* ");
+ testRunner.And("in \'dest\' the following strata exist:", ((string)(null)), table212, "* ");
 #line hidden
-            TechTalk.SpecFlow.Table table172 = new TechTalk.SpecFlow.Table(new string[] {
+            TechTalk.SpecFlow.Table table213 = new TechTalk.SpecFlow.Table(new string[] {
                         "SampleGroupCode",
                         "StratumCode",
                         "SampleGroupID"});
-            table172.AddRow(new string[] {
+            table213.AddRow(new string[] {
                         "sg1",
                         "st1",
                         "sg1_st1s"});
-            table172.AddRow(new string[] {
+            table213.AddRow(new string[] {
                         "sg2",
                         "st1",
                         "sg2_st1s"});
 #line 22
- testRunner.And("in \'source\' file the following sample groups exist:", ((string)(null)), table172, "* ");
+ testRunner.And("in \'source\' file the following sample groups exist:", ((string)(null)), table213, "* ");
 #line hidden
-            TechTalk.SpecFlow.Table table173 = new TechTalk.SpecFlow.Table(new string[] {
+            TechTalk.SpecFlow.Table table214 = new TechTalk.SpecFlow.Table(new string[] {
                         "SampleGroupCode",
                         "StratumCode",
                         "SampleGroupID"});
-            table173.AddRow(new string[] {
+            table214.AddRow(new string[] {
                         "sg1",
                         "st1",
                         "sg1_st1d"});
-            table173.AddRow(new string[] {
+            table214.AddRow(new string[] {
                         "sg3",
                         "st1",
                         "sg3_st1d"});
 #line 27
- testRunner.And("in \'dest\' file the following sample groups exist:", ((string)(null)), table173, "* ");
+ testRunner.And("in \'dest\' file the following sample groups exist:", ((string)(null)), table214, "* ");
 #line hidden
         }
         
@@ -190,16 +190,16 @@ this.FeatureBackground();
 #line 34
  testRunner.When("I conflict check \'source\' file against \'dest\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
 #line hidden
-                TechTalk.SpecFlow.Table table174 = new TechTalk.SpecFlow.Table(new string[] {
+                TechTalk.SpecFlow.Table table215 = new TechTalk.SpecFlow.Table(new string[] {
                             "SourceRecID",
                             "DestRecID",
                             "DownstreamConflictCount"});
-                table174.AddRow(new string[] {
+                table215.AddRow(new string[] {
                             "stratum1s",
                             "stratum1d",
                             "1"});
 #line 35
- testRunner.Then("Strata Conflicts Has:", ((string)(null)), table174, "Then ");
+ testRunner.Then("Strata Conflicts Has:", ((string)(null)), table215, "Then ");
 #line hidden
 #line 38
  testRunner.And("Sample Group Conflicts Has 0 Conflict(s)", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
@@ -330,14 +330,14 @@ this.FeatureBackground();
 #line 52
  testRunner.When("I conflict check \'source\' file against \'dest\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
 #line hidden
-                TechTalk.SpecFlow.Table table175 = new TechTalk.SpecFlow.Table(new string[] {
+                TechTalk.SpecFlow.Table table216 = new TechTalk.SpecFlow.Table(new string[] {
                             "DestRecID",
                             "StratumCode"});
-                table175.AddRow(new string[] {
+                table216.AddRow(new string[] {
                             "stratum1d",
                             "st3"});
 #line 53
- testRunner.And("I resolve Stratum Conflicts with ModifyDest using:", ((string)(null)), table175, "And ");
+ testRunner.And("I resolve Stratum Conflicts with ModifyDest using:", ((string)(null)), table216, "And ");
 #line hidden
 #line 56
  testRunner.And("I run conflict resolution of \'source\' file against \'dest\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
@@ -345,40 +345,40 @@ this.FeatureBackground();
 #line 57
  testRunner.And("sync \'source\' into \'dest\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line hidden
-                TechTalk.SpecFlow.Table table176 = new TechTalk.SpecFlow.Table(new string[] {
+                TechTalk.SpecFlow.Table table217 = new TechTalk.SpecFlow.Table(new string[] {
                             "StratumID",
                             "StratumCode"});
-                table176.AddRow(new string[] {
+                table217.AddRow(new string[] {
                             "stratum1s",
                             "st1"});
-                table176.AddRow(new string[] {
+                table217.AddRow(new string[] {
                             "stratum1d",
                             "st3"});
 #line 58
- testRunner.Then("\'dest\' contains strata:", ((string)(null)), table176, "Then ");
+ testRunner.Then("\'dest\' contains strata:", ((string)(null)), table217, "Then ");
 #line hidden
-                TechTalk.SpecFlow.Table table177 = new TechTalk.SpecFlow.Table(new string[] {
+                TechTalk.SpecFlow.Table table218 = new TechTalk.SpecFlow.Table(new string[] {
                             "SampleGroupID",
                             "SampleGroupCode",
                             "StratumCode"});
-                table177.AddRow(new string[] {
+                table218.AddRow(new string[] {
                             "sg1_st1s",
                             "sg1",
                             "st1"});
-                table177.AddRow(new string[] {
+                table218.AddRow(new string[] {
                             "sg2_st1s",
                             "sg2",
                             "st1"});
-                table177.AddRow(new string[] {
+                table218.AddRow(new string[] {
                             "sg1_st1d",
                             "sg1",
                             "st3"});
-                table177.AddRow(new string[] {
+                table218.AddRow(new string[] {
                             "sg3_st1d",
                             "sg3",
                             "st3"});
 #line 62
- testRunner.And("\'dest\' contains sample groups:", ((string)(null)), table177, "* ");
+ testRunner.And("\'dest\' contains sample groups:", ((string)(null)), table218, "* ");
 #line hidden
             }
             this.ScenarioCleanup();
@@ -418,14 +418,14 @@ this.FeatureBackground();
 #line 70
  testRunner.When("I conflict check \'source\' file against \'dest\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
 #line hidden
-                TechTalk.SpecFlow.Table table178 = new TechTalk.SpecFlow.Table(new string[] {
+                TechTalk.SpecFlow.Table table219 = new TechTalk.SpecFlow.Table(new string[] {
                             "SourceRecID",
                             "StratumCode"});
-                table178.AddRow(new string[] {
+                table219.AddRow(new string[] {
                             "stratum1s",
                             "st3"});
 #line 71
- testRunner.And("I resolve Stratum Conflicts with ModifySource using:", ((string)(null)), table178, "And ");
+ testRunner.And("I resolve Stratum Conflicts with ModifySource using:", ((string)(null)), table219, "And ");
 #line hidden
 #line 74
  testRunner.And("I run conflict resolution of \'source\' file against \'dest\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
@@ -433,40 +433,40 @@ this.FeatureBackground();
 #line 75
  testRunner.And("sync \'source\' into \'dest\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line hidden
-                TechTalk.SpecFlow.Table table179 = new TechTalk.SpecFlow.Table(new string[] {
+                TechTalk.SpecFlow.Table table220 = new TechTalk.SpecFlow.Table(new string[] {
                             "StratumID",
                             "StratumCode"});
-                table179.AddRow(new string[] {
+                table220.AddRow(new string[] {
                             "stratum1s",
                             "st3"});
-                table179.AddRow(new string[] {
+                table220.AddRow(new string[] {
                             "stratum1d",
                             "st1"});
 #line 76
- testRunner.Then("\'dest\' contains strata:", ((string)(null)), table179, "Then ");
+ testRunner.Then("\'dest\' contains strata:", ((string)(null)), table220, "Then ");
 #line hidden
-                TechTalk.SpecFlow.Table table180 = new TechTalk.SpecFlow.Table(new string[] {
+                TechTalk.SpecFlow.Table table221 = new TechTalk.SpecFlow.Table(new string[] {
                             "SampleGroupID",
                             "SampleGroupCode",
                             "StratumCode"});
-                table180.AddRow(new string[] {
+                table221.AddRow(new string[] {
                             "sg1_st1s",
                             "sg1",
                             "st3"});
-                table180.AddRow(new string[] {
+                table221.AddRow(new string[] {
                             "sg2_st1s",
                             "sg2",
                             "st3"});
-                table180.AddRow(new string[] {
+                table221.AddRow(new string[] {
                             "sg1_st1d",
                             "sg1",
                             "st1"});
-                table180.AddRow(new string[] {
+                table221.AddRow(new string[] {
                             "sg3_st1d",
                             "sg3",
                             "st1"});
 #line 80
- testRunner.And("\'dest\' contains sample groups:", ((string)(null)), table180, "* ");
+ testRunner.And("\'dest\' contains sample groups:", ((string)(null)), table221, "* ");
 #line hidden
             }
             this.ScenarioCleanup();
@@ -516,33 +516,33 @@ this.FeatureBackground();
 #line 91
  testRunner.And("sync \'source\' into \'dest\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line hidden
-                TechTalk.SpecFlow.Table table181 = new TechTalk.SpecFlow.Table(new string[] {
+                TechTalk.SpecFlow.Table table222 = new TechTalk.SpecFlow.Table(new string[] {
                             "StratumID",
                             "StratumCode"});
-                table181.AddRow(new string[] {
+                table222.AddRow(new string[] {
                             "stratum1s",
                             "st1"});
 #line 92
- testRunner.Then("\'dest\' contains strata:", ((string)(null)), table181, "Then ");
+ testRunner.Then("\'dest\' contains strata:", ((string)(null)), table222, "Then ");
 #line hidden
-                TechTalk.SpecFlow.Table table182 = new TechTalk.SpecFlow.Table(new string[] {
+                TechTalk.SpecFlow.Table table223 = new TechTalk.SpecFlow.Table(new string[] {
                             "SampleGroupID",
                             "SampleGroupCode",
                             "StratumCode"});
-                table182.AddRow(new string[] {
+                table223.AddRow(new string[] {
                             "sg1_st1s",
                             "sg1",
                             "st1"});
-                table182.AddRow(new string[] {
+                table223.AddRow(new string[] {
                             "sg2_st1s",
                             "sg2",
                             "st1"});
-                table182.AddRow(new string[] {
+                table223.AddRow(new string[] {
                             "sg3_st1d",
                             "sg3",
                             "st1"});
 #line 95
- testRunner.And("\'dest\' contains sample groups:", ((string)(null)), table182, "* ");
+ testRunner.And("\'dest\' contains sample groups:", ((string)(null)), table223, "* ");
 #line hidden
             }
             this.ScenarioCleanup();
@@ -592,33 +592,33 @@ this.FeatureBackground();
 #line 106
  testRunner.And("sync \'source\' into \'dest\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line hidden
-                TechTalk.SpecFlow.Table table183 = new TechTalk.SpecFlow.Table(new string[] {
+                TechTalk.SpecFlow.Table table224 = new TechTalk.SpecFlow.Table(new string[] {
                             "StratumID",
                             "StratumCode"});
-                table183.AddRow(new string[] {
+                table224.AddRow(new string[] {
                             "stratum1s",
                             "st1"});
 #line 107
- testRunner.Then("\'dest\' contains strata:", ((string)(null)), table183, "Then ");
+ testRunner.Then("\'dest\' contains strata:", ((string)(null)), table224, "Then ");
 #line hidden
-                TechTalk.SpecFlow.Table table184 = new TechTalk.SpecFlow.Table(new string[] {
+                TechTalk.SpecFlow.Table table225 = new TechTalk.SpecFlow.Table(new string[] {
                             "SampleGroupID",
                             "SampleGroupCode",
                             "StratumCode"});
-                table184.AddRow(new string[] {
+                table225.AddRow(new string[] {
                             "sg1_st1d",
                             "sg1",
                             "st1"});
-                table184.AddRow(new string[] {
+                table225.AddRow(new string[] {
                             "sg2_st1s",
                             "sg2",
                             "st1"});
-                table184.AddRow(new string[] {
+                table225.AddRow(new string[] {
                             "sg3_st1d",
                             "sg3",
                             "st1"});
 #line 110
- testRunner.And("\'dest\' contains sample groups:", ((string)(null)), table184, "* ");
+ testRunner.And("\'dest\' contains sample groups:", ((string)(null)), table225, "* ");
 #line hidden
             }
             this.ScenarioCleanup();
@@ -668,33 +668,33 @@ this.FeatureBackground();
 #line 121
  testRunner.And("sync \'source\' into \'dest\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line hidden
-                TechTalk.SpecFlow.Table table185 = new TechTalk.SpecFlow.Table(new string[] {
+                TechTalk.SpecFlow.Table table226 = new TechTalk.SpecFlow.Table(new string[] {
                             "StratumID",
                             "StratumCode"});
-                table185.AddRow(new string[] {
+                table226.AddRow(new string[] {
                             "stratum1d",
                             "st1"});
 #line 122
- testRunner.Then("\'dest\' contains strata:", ((string)(null)), table185, "Then ");
+ testRunner.Then("\'dest\' contains strata:", ((string)(null)), table226, "Then ");
 #line hidden
-                TechTalk.SpecFlow.Table table186 = new TechTalk.SpecFlow.Table(new string[] {
+                TechTalk.SpecFlow.Table table227 = new TechTalk.SpecFlow.Table(new string[] {
                             "SampleGroupID",
                             "SampleGroupCode",
                             "StratumCode"});
-                table186.AddRow(new string[] {
+                table227.AddRow(new string[] {
                             "sg1_st1d",
                             "sg1",
                             "st1"});
-                table186.AddRow(new string[] {
+                table227.AddRow(new string[] {
                             "sg2_st1s",
                             "sg2",
                             "st1"});
-                table186.AddRow(new string[] {
+                table227.AddRow(new string[] {
                             "sg3_st1d",
                             "sg3",
                             "st1"});
 #line 125
- testRunner.And("\'dest\' contains sample groups:", ((string)(null)), table186, "* ");
+ testRunner.And("\'dest\' contains sample groups:", ((string)(null)), table227, "* ");
 #line hidden
             }
             this.ScenarioCleanup();
@@ -747,33 +747,33 @@ this.FeatureBackground();
 #line 136
  testRunner.And("sync \'source\' into \'dest\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line hidden
-                TechTalk.SpecFlow.Table table187 = new TechTalk.SpecFlow.Table(new string[] {
+                TechTalk.SpecFlow.Table table228 = new TechTalk.SpecFlow.Table(new string[] {
                             "StratumID",
                             "StratumCode"});
-                table187.AddRow(new string[] {
+                table228.AddRow(new string[] {
                             "stratum1d",
                             "st1"});
 #line 137
- testRunner.Then("\'dest\' contains strata:", ((string)(null)), table187, "Then ");
+ testRunner.Then("\'dest\' contains strata:", ((string)(null)), table228, "Then ");
 #line hidden
-                TechTalk.SpecFlow.Table table188 = new TechTalk.SpecFlow.Table(new string[] {
+                TechTalk.SpecFlow.Table table229 = new TechTalk.SpecFlow.Table(new string[] {
                             "SampleGroupID",
                             "SampleGroupCode",
                             "StratumCode"});
-                table188.AddRow(new string[] {
+                table229.AddRow(new string[] {
                             "sg1_st1s",
                             "sg1",
                             "st1"});
-                table188.AddRow(new string[] {
+                table229.AddRow(new string[] {
                             "sg2_st1s",
                             "sg2",
                             "st1"});
-                table188.AddRow(new string[] {
+                table229.AddRow(new string[] {
                             "sg3_st1d",
                             "sg3",
                             "st1"});
 #line 140
- testRunner.And("\'dest\' contains sample groups:", ((string)(null)), table188, "* ");
+ testRunner.And("\'dest\' contains sample groups:", ((string)(null)), table229, "* ");
 #line hidden
             }
             this.ScenarioCleanup();

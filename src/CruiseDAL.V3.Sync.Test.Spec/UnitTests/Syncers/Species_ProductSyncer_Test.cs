@@ -9,7 +9,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Xunit.Abstractions;
 
-namespace CruiseDAL.V3.Sync.Test.Spec.UnitTests.Syncers
+namespace CruiseDAL.V3.Sync.Test.UnitTests.Syncers
 {
     public class Species_ProductSyncer_Test : SyncTestBase
     {

@@ -66,6 +66,15 @@ namespace CruiseDAL.V3.UpConvert.Test.Migrators
             };
             v2Db.Insert(tdv2);
 
+            var tdv3 = new CruiseDAL.V2.Models.TreeDefaultValue()
+            {
+                Species = "sp2",
+                FIAcode = 102,
+                PrimaryProduct = "02",
+                LiveDead = "L",
+            };
+            v2Db.Insert(tdv3);
+
 
             var v3Db = new CruiseDatastore_V3(v3Path, true);
 
@@ -74,8 +83,10 @@ namespace CruiseDAL.V3.UpConvert.Test.Migrators
 
 
             var species = v3Db.From<Models.Species>().Query().ToArray();
-            species.Should().HaveCount(1);
-            species.Single().FIACode.Should().Be("101");
+            species.Should().HaveCount(2);
+            species.Single(x => x.SpeciesCode == "sp1").FIACode.Should().Be("101");
+            species.Single(x => x.SpeciesCode == "sp2").FIACode.Should().Be("102");
+
         }
 
 

@@ -1295,7 +1295,7 @@ CREATE TABLE SampleGroup (
     SamplingFrequency INTEGER Default 0,
     InsuranceFrequency INTEGER Default 0,
     KZ INTEGER Default 0,
-    BigBAF INTEGER Default 0,
+    BigBAF REAL Default 0.0,
     TallyBySubPop BOOLEAN DEFAULT 0,
     UseExternalSampler BOOLEAN DEFAULT 0, -- depreciated, decided to implement using SampleSelectorType
     SampleSelectorType TEXT COLLATE NOCASE,
@@ -1569,7 +1569,7 @@ AFTER UPDATE OF ContractSpecies
 ON Species
 FOR EACH ROW
 BEGIN
-    INSERT OR REPLACE INTO Species_Product (
+    INSERT INTO Species_Product (
         CruiseID, 
         SpeciesCode, 
         PrimaryProduct, 
@@ -1579,7 +1579,11 @@ BEGIN
         NEW.SpeciesCode,
         NULL,
         NEW.ContractSpecies
-    );
+    )
+    ON CONFLICT (CruiseID, SpeciesCode, ifnull(PrimaryProduct, '')) DO
+        UPDATE SET
+            ContractSpecies = NEW.ContractSpecies
+        WHERE CruiseID = NEW.CruiseID AND SpeciesCode = NEW.SpeciesCode AND ifnull(PrimaryProduct, '') = '';
 END
 
 

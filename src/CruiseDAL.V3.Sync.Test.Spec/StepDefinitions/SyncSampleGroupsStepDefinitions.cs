@@ -1,4 +1,5 @@
 using CruiseDAL.V3.Models;
+using CruiseDAL.V3.Sync.Test.Support;
 using TechTalk.SpecFlow.Infrastructure;
 
 namespace CruiseDAL.V3.Sync.Test.Spec.StepDefinitions
@@ -34,12 +35,25 @@ namespace CruiseDAL.V3.Sync.Test.Spec.StepDefinitions
 
                 var sgCode = row["SampleGroupCode"];
                 var stCode = row["StratumCode"];
+                var samplingFreq = row.GetValueOrDefault<int?>(nameof(SampleGroup.SamplingFrequency));
+                var kz = row.GetValueOrDefault<int?>(nameof(SampleGroup.KZ));
+                var iFreq = row.GetValueOrDefault<int?>(nameof(SampleGroup.InsuranceFrequency));
+                var bigBAF = row.GetValueOrDefault<double?>(nameof(SampleGroup.BigBAF));
+                var smallFPS = row.GetValueOrDefault<double?>(nameof(SampleGroup.SmallFPS));
+                var tallyBySubPop = row.GetValueOrDefault<bool?>(nameof(SampleGroup.TallyBySubPop));
+
                 var sg = new SampleGroup
                 {
                     CruiseID = cruiseID,
                     SampleGroupID = sampleGroupID,
                     SampleGroupCode = sgCode,
                     StratumCode = stCode,
+                    SamplingFrequency = samplingFreq,
+                    KZ = kz,
+                    BigBAF = bigBAF,
+                    SmallFPS = smallFPS,
+                    InsuranceFrequency = iFreq,
+                    TallyBySubPop = tallyBySubPop,
                 };
 
                 foreach (var db in databases)

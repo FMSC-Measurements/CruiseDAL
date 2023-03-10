@@ -1,6 +1,6 @@
 ﻿namespace CruiseDAL.Schema
 {
-    public class Tree_TreeDefaultValue : IViewDefinition
+    public class Tree_TreeDefaultValueViewDefinition : IViewDefinition
     {
         public string ViewName => "Tree_TreeDefaultValue";
 
