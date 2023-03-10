@@ -12,7 +12,7 @@
 
 		<CruiseDALv2SchemaVersion>2.7.4</CruiseDALv2SchemaVersion>
 		<CruiseDALv3SchemaVersion>3.6.2</CruiseDALv3SchemaVersion>
-		<CruiseDALIncrementalVersion>116</CruiseDALIncrementalVersion>
+		<CruiseDALIncrementalVersion>117</CruiseDALIncrementalVersion>
 		<CruiseDALCoreVersion>3.1.0.$(CruiseDALIncrementalVersion)</CruiseDALCoreVersion>
 		<CruiseDALV2Version>$(CruiseDALv2SchemaVersion).$(CruiseDALIncrementalVersion)</CruiseDALV2Version>
 		<CruiseDALV3Version>$(CruiseDALv3SchemaVersion).$(CruiseDALIncrementalVersion)</CruiseDALV3Version>
