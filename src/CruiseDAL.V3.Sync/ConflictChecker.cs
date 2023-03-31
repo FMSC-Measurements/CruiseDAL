@@ -25,6 +25,8 @@ namespace CruiseDAL.V3.Sync
         //      where we would want to mix tree from two files on a plot. this is sorta using the 'All or Nothing' resolution option
 
 
+        protected Dictionary<string, string> DeviceNameLookup { get; set; }
+
         public ConflictResolutionOptions CheckConflicts(SQLiteDatastore sourceDb, SQLiteDatastore destDb, string cruiseID)
         {
             var source = sourceDb.OpenConnection();
@@ -42,6 +44,8 @@ namespace CruiseDAL.V3.Sync
 
         public ConflictResolutionOptions CheckConflicts(DbConnection source, DbConnection destination, string cruiseID)
         {
+            InitDeviceLookup(source, destination, cruiseID);
+
             return new ConflictResolutionOptions(
                 CheckCuttingUnits(source, destination, cruiseID),
                 CheckStrata(source, destination, cruiseID),
@@ -50,6 +54,20 @@ namespace CruiseDAL.V3.Sync
                 CheckTrees(source, destination, cruiseID),
                 CheckPlotTrees(source, destination, cruiseID),
                 CheckLogs(source, destination, cruiseID));
+        }
+
+        void InitDeviceLookup(DbConnection source, DbConnection destination, string cruiseID)
+        {
+            var deviceNameLookup = new Dictionary<string, string>();
+            var srcDevices = source.From<CruiseDAL.V3.Models.Device>().Where("CruiseID = @p1").Query(cruiseID);
+            var destDevices = destination.From<CruiseDAL.V3.Models.Device>().Where("CruiseID = @p1").Query(cruiseID);
+            foreach (var d in srcDevices.Concat(destDevices))
+            {
+                if (deviceNameLookup.ContainsKey(d.DeviceID)) { continue; }
+                deviceNameLookup.Add(d.DeviceID, d.Name);
+            }
+
+            DeviceNameLookup = deviceNameLookup;
         }
 
         public IEnumerable<Conflict> CheckCuttingUnits(DbConnection source, DbConnection destination, string cruiseID)
@@ -69,8 +87,6 @@ namespace CruiseDAL.V3.Sync
                     var plotConflicts = CheckPlotsByUnitCode(source, destination, cruiseID, unitCode).ToArray();
                     var downstreamConflicts = treeConflicts.Concat(plotConflicts).ToArray();
 
-
-
                     yield return new Conflict
                     {
                         Table = nameof(CuttingUnit),
@@ -82,6 +98,8 @@ namespace CruiseDAL.V3.Sync
                         DownstreamConflicts = downstreamConflicts,
                         SourceMod = DateMath.Max(item.Created_TS.Value, item.Modified_TS),
                         DestMod = DateMath.Max(conflictItem.Created_TS.Value, conflictItem.Modified_TS),
+                        SrcDeviceName = DeviceNameLookup.GetValueOrDefault(item.CreatedBy),
+                        DestDeviceName = DeviceNameLookup.GetValueOrDefault(conflictItem.CreatedBy),
                     };
                 }
             }
@@ -112,6 +130,8 @@ namespace CruiseDAL.V3.Sync
                         SourceMod = DateMath.Max(item.Created_TS.Value, item.Modified_TS),
                         DestMod = DateMath.Max(conflictItem.Created_TS.Value, conflictItem.Modified_TS),
                         DownstreamConflicts = sgConflicts,
+                        SrcDeviceName = DeviceNameLookup.GetValueOrDefault(item.CreatedBy),
+                        DestDeviceName = DeviceNameLookup.GetValueOrDefault(conflictItem.CreatedBy),
                     };
                 }
             }
@@ -144,6 +164,8 @@ namespace CruiseDAL.V3.Sync
                         DestRec = conflictItem,
                         SourceMod = DateMath.Max(sg.Created_TS.Value, sg.Modified_TS),
                         DestMod = DateMath.Max(conflictItem.Created_TS.Value, conflictItem.Modified_TS),
+                        SrcDeviceName = DeviceNameLookup.GetValueOrDefault(sg.CreatedBy),
+                        DestDeviceName = DeviceNameLookup.GetValueOrDefault(conflictItem.CreatedBy),
                     };
                 }
             }
@@ -174,6 +196,8 @@ namespace CruiseDAL.V3.Sync
                         DestRec = conflictItem,
                         SourceMod = DateMath.Max(sg.Created_TS.Value, sg.Modified_TS),
                         DestMod = DateMath.Max(conflictItem.Created_TS.Value, conflictItem.Modified_TS),
+                        SrcDeviceName = DeviceNameLookup.GetValueOrDefault(sg.CreatedBy),
+                        DestDeviceName = DeviceNameLookup.GetValueOrDefault(conflictItem.CreatedBy),
                     };
                 }
             }
@@ -211,6 +235,8 @@ namespace CruiseDAL.V3.Sync
                         DownstreamConflicts = treeConflicts,
                         SourceMod = DateMath.Max(plot.Created_TS.Value, plot.Modified_TS),
                         DestMod = DateMath.Max(conflictItem.Created_TS.Value, conflictItem.Modified_TS),
+                        SrcDeviceName = DeviceNameLookup.GetValueOrDefault(plot.CreatedBy),
+                        DestDeviceName = DeviceNameLookup.GetValueOrDefault(conflictItem.CreatedBy),
                     };
                 }
             }
@@ -243,6 +269,8 @@ namespace CruiseDAL.V3.Sync
                         DestRec = conflictItem,
                         SourceMod = DateMath.Max(plot.Created_TS.Value, plot.Modified_TS),
                         DestMod = DateMath.Max(conflictItem.Created_TS.Value, conflictItem.Modified_TS),
+                        SrcDeviceName = DeviceNameLookup.GetValueOrDefault(plot.CreatedBy),
+                        DestDeviceName = DeviceNameLookup.GetValueOrDefault(conflictItem.CreatedBy),
                     };
                 }
             }
@@ -281,6 +309,8 @@ namespace CruiseDAL.V3.Sync
                         DestRec = conflictItem,
                         SourceMod = DateMath.Max(tree.Created_TS.Value, tree.Modified_TS),
                         DestMod = DateMath.Max(conflictItem.Created_TS.Value, conflictItem.Modified_TS),
+                        SrcDeviceName = DeviceNameLookup.GetValueOrDefault(tree.CreatedBy),
+                        DestDeviceName = DeviceNameLookup.GetValueOrDefault(conflictItem.CreatedBy),
                     };
                 }
             }
@@ -313,6 +343,8 @@ namespace CruiseDAL.V3.Sync
                         DestRec = conflictItem,
                         SourceMod = DateMath.Max(tree.Created_TS.Value, tree.Modified_TS),
                         DestMod = DateMath.Max(conflictItem.Created_TS.Value, conflictItem.Modified_TS),
+                        SrcDeviceName = DeviceNameLookup.GetValueOrDefault(tree.CreatedBy),
+                        DestDeviceName = DeviceNameLookup.GetValueOrDefault(conflictItem.CreatedBy),
                     };
                 }
             }
@@ -343,6 +375,8 @@ namespace CruiseDAL.V3.Sync
                         DestRec = conflictItem,
                         SourceMod = DateMath.Max(tree.Created_TS.Value, tree.Modified_TS),
                         DestMod = DateMath.Max(conflictItem.Created_TS.Value, conflictItem.Modified_TS),
+                        SrcDeviceName = DeviceNameLookup.GetValueOrDefault(tree.CreatedBy),
+                        DestDeviceName = DeviceNameLookup.GetValueOrDefault(conflictItem.CreatedBy),
                     };
                 }
             }
@@ -373,6 +407,8 @@ namespace CruiseDAL.V3.Sync
                         DestRec = conflictItem,
                         SourceMod = DateMath.Max(tree.Created_TS.Value, tree.Modified_TS),
                         DestMod = DateMath.Max(conflictItem.Created_TS.Value, conflictItem.Modified_TS),
+                        SrcDeviceName = DeviceNameLookup.GetValueOrDefault(tree.CreatedBy),
+                        DestDeviceName = DeviceNameLookup.GetValueOrDefault(conflictItem.CreatedBy),
                     };
                 }
             }
@@ -407,6 +443,8 @@ namespace CruiseDAL.V3.Sync
                         DestRec = conflictItem,
                         SourceMod = tree.Created_TS.Value.Max(tree.Modified_TS),
                         DestMod = conflictItem.Created_TS.Value.Max(conflictItem.Modified_TS),
+                        SrcDeviceName = DeviceNameLookup.GetValueOrDefault(tree.CreatedBy),
+                        DestDeviceName = DeviceNameLookup.GetValueOrDefault(conflictItem.CreatedBy),
                     };
                 }
             }
@@ -436,6 +474,8 @@ namespace CruiseDAL.V3.Sync
                         DestRec = conflictItem,
                         SourceMod = DateMath.Max(item.Created_TS.Value, item.Modified_TS),
                         DestMod = DateMath.Max(conflictItem.Created_TS.Value, conflictItem.Modified_TS),
+                        SrcDeviceName = DeviceNameLookup.GetValueOrDefault(item.CreatedBy),
+                        DestDeviceName = DeviceNameLookup.GetValueOrDefault(conflictItem.CreatedBy),
                     };
                 }
             }
@@ -468,6 +508,8 @@ namespace CruiseDAL.V3.Sync
                         DestRecID = conflictItem.LogID,
                         SourceMod = DateMath.Max(item.Created_TS.Value, item.Modified_TS),
                         DestMod = DateMath.Max(conflictItem.Created_TS.Value, conflictItem.Modified_TS),
+                        SrcDeviceName = DeviceNameLookup.GetValueOrDefault(item.CreatedBy),
+                        DestDeviceName = DeviceNameLookup.GetValueOrDefault(conflictItem.CreatedBy),
                     };
                 }
             }
@@ -500,6 +542,8 @@ namespace CruiseDAL.V3.Sync
                         DestRec = conflictItem,
                         SourceMod = DateMath.Max(item.Created_TS.Value, item.Modified_TS),
                         DestMod = DateMath.Max(conflictItem.Created_TS.Value, conflictItem.Modified_TS),
+                        SrcDeviceName = DeviceNameLookup.GetValueOrDefault(item.CreatedBy),
+                        DestDeviceName = DeviceNameLookup.GetValueOrDefault(conflictItem.CreatedBy),
                     };
                 }
             }
