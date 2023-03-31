@@ -35,7 +35,7 @@ WITH
         t.TreeID,
         t.CruiseID,
         'e' AS Level,
-        'Aleast One Height Parameter Must Be Greater Than 0' AS Message,
+        'At Least One Height Parameter Must Be Greater Than 0' AS Message,
         'heights' AS Field
     FROM Tree AS t
     LEFT JOIN TreeMeasurment AS tm USING (TreeID)
