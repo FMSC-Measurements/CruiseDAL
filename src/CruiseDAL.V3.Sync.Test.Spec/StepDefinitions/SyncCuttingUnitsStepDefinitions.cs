@@ -1,5 +1,7 @@
 using CruiseDAL.V3.Models;
+using CruiseDAL.V3.Sync.Test.Support;
 using TechTalk.SpecFlow.Infrastructure;
+using CruiseDAL.TestCommon.Util;
 
 namespace CruiseDAL.V3.Sync.Test.Spec.StepDefinitions
 {
@@ -22,6 +24,7 @@ namespace CruiseDAL.V3.Sync.Test.Spec.StepDefinitions
             foreach (var row in table.Rows)
             {
                 var unitCode = row["CuttingUnitCode"];
+                var createdByDevice = GetDevice(row.GetValueOrDefault<string>("CreatedBy"));
 
                 string unitID;
                 if (row.TryGetValue(nameof(CuttingUnit.CuttingUnitID), out var unitIDAlias))
@@ -36,6 +39,7 @@ namespace CruiseDAL.V3.Sync.Test.Spec.StepDefinitions
                     CruiseID = cruiseID,
                     CuttingUnitID = unitID,
                     CuttingUnitCode = unitCode,
+                    CreatedBy = createdByDevice?.DeviceID,
                 };
                 //SrcDatabase.Insert(cuttingUnit);
                 //DestDatabase.Insert(cuttingUnit);
@@ -53,6 +57,7 @@ namespace CruiseDAL.V3.Sync.Test.Spec.StepDefinitions
                         {
                             CuttingUnitCode = unitCode,
                             StratumCode = stCode,
+                            CreatedBy = createdByDevice?.DeviceID,
                         };
 
                         foreach (var db in databases)
@@ -75,8 +80,14 @@ namespace CruiseDAL.V3.Sync.Test.Spec.StepDefinitions
                 var srcRecID = GetRedordID(row[nameof(Conflict.SourceRecID)]);
                 var destRecID = GetRedordID(row[nameof(Conflict.DestRecID)]);
 
+                var srcDevice = GetDevice(row.GetValueOrDefault<string>("SrcDevice"));
+                var destDevice = GetDevice(row.GetValueOrDefault<string>("DestDevice"));
+
                 var unitConflict = unitConflicts.Single(x => x.SourceRecID == srcRecID && x.DestRecID == destRecID);
                 //treeConflict.Should().NotBeNull();
+
+                if (srcDevice != null) { unitConflict.SrcDeviceName.Should().Be(srcDevice.Name); }
+                if (destDevice != null) { unitConflict.DestDeviceName.Should().Be(destDevice.Name); }
 
                 if (row.TryGetValue("DownstreamConflictCount", out var downstreamConfCountStr))
                 {
@@ -85,6 +96,8 @@ namespace CruiseDAL.V3.Sync.Test.Spec.StepDefinitions
                     {
                         unitConflict.DownstreamConflicts.Should().NotBeNull();
                         unitConflict.DownstreamConflicts.Count().Should().Be(downstreamConfCount);
+
+                        
                     }
                 }
             }
@@ -94,17 +107,20 @@ namespace CruiseDAL.V3.Sync.Test.Spec.StepDefinitions
         public void ThenContainsCuttingUnits(string dbAlias, Table table)
         {
             var db = GetDatabase(dbAlias);
+            
 
             var cuttingUnits = db.From<CuttingUnit>().Query().ToArray();
             foreach (var row in table.Rows)
             {
                 var cuttingUnitIDAlias = row[nameof(CuttingUnit.CuttingUnitID)];
                 var cuttingUnitID = GetRedordID(cuttingUnitIDAlias);
+                var createdByDevice = GetDevice(row.GetValueOrDefault<string>("CreatedBy"));
 
                 row.TryGetValue(nameof(CuttingUnit.CuttingUnitCode), out var cuttingUnitCode);
                 cuttingUnits.Should().Contain(
                     x => x.CuttingUnitID == cuttingUnitID
                         && (cuttingUnitCode == null || x.CuttingUnitCode == cuttingUnitCode)
+                        && (createdByDevice == null || x.CreatedBy == createdByDevice.DeviceID)
                     , because: cuttingUnitIDAlias);
             }
             cuttingUnits.Should().HaveCount(table.RowCount);

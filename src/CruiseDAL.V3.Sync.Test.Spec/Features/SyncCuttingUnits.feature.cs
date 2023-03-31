@@ -80,38 +80,47 @@ namespace CruiseDAL.V3.Sync.Test.Features
 #line 4
 #line hidden
             TechTalk.SpecFlow.Table table1 = new TechTalk.SpecFlow.Table(new string[] {
-                        "FileAlias"});
+                        "FileAlias",
+                        "DeviceAlias"});
             table1.AddRow(new string[] {
-                        "source"});
+                        "source",
+                        "srcDevice"});
             table1.AddRow(new string[] {
-                        "dest"});
+                        "dest",
+                        "destDevice"});
 #line 5
  testRunner.Given("the following cruise files exist:", ((string)(null)), table1, "Given ");
 #line hidden
             TechTalk.SpecFlow.Table table2 = new TechTalk.SpecFlow.Table(new string[] {
                         "CuttingUnitCode",
-                        "CuttingUnitID"});
+                        "CuttingUnitID",
+                        "CreatedBy"});
             table2.AddRow(new string[] {
                         "u1",
-                        "unit1"});
+                        "unit1",
+                        "destDevice"});
 #line 10
  testRunner.And("in \'source, dest\' the following units exist:", ((string)(null)), table2, "* ");
 #line hidden
             TechTalk.SpecFlow.Table table3 = new TechTalk.SpecFlow.Table(new string[] {
                         "CuttingUnitCode",
-                        "CuttingUnitID"});
+                        "CuttingUnitID",
+                        "CreatedBy"});
             table3.AddRow(new string[] {
                         "u2",
-                        "unit2s"});
+                        "unit2s",
+                        "srcDevice"});
 #line 15
  testRunner.And("in \'source\' the following units exist:", ((string)(null)), table3, "* ");
 #line hidden
             TechTalk.SpecFlow.Table table4 = new TechTalk.SpecFlow.Table(new string[] {
                         "CuttingUnitCode",
-                        "CuttingUnitID"});
+                        "CuttingUnitID",
+                        "CreatedBy"});
             table4.AddRow(new string[] {
                         "u2",
-                        "unit2d"});
+                        "unit2d",
+                        "destDevice"});
 #line 19
  testRunner.And("in \'dest\' the following units exist:", ((string)(null)), table4, "* ");
 #line hidden
@@ -158,10 +167,14 @@ this.FeatureBackground();
 #line hidden
                 TechTalk.SpecFlow.Table table5 = new TechTalk.SpecFlow.Table(new string[] {
                             "SourceRecID",
-                            "DestRecID"});
+                            "DestRecID",
+                            "SrcDevice",
+                            "DestDevice"});
                 table5.AddRow(new string[] {
                             "unit2s",
-                            "unit2d"});
+                            "unit2d",
+                            "srcDevice",
+                            "destDevice"});
 #line 25
  testRunner.Then("Cutting Unit Conflicts Has:", ((string)(null)), table5, "Then ");
 #line hidden
@@ -213,11 +226,14 @@ this.FeatureBackground();
  testRunner.And("sync \'source\' into \'dest\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line hidden
                 TechTalk.SpecFlow.Table table6 = new TechTalk.SpecFlow.Table(new string[] {
-                            "CuttingUnitID"});
+                            "CuttingUnitID",
+                            "CreatedBy"});
                 table6.AddRow(new string[] {
-                            "unit1"});
+                            "unit1",
+                            "destDevice"});
                 table6.AddRow(new string[] {
-                            "unit2d"});
+                            "unit2d",
+                            "destDevice"});
 #line 34
  testRunner.Then("\'dest\' contains cutting units:", ((string)(null)), table6, "Then ");
 #line hidden
@@ -270,13 +286,16 @@ this.FeatureBackground();
 #line hidden
                 TechTalk.SpecFlow.Table table7 = new TechTalk.SpecFlow.Table(new string[] {
                             "CuttingUnitID",
-                            "CuttingUnitCode"});
+                            "CuttingUnitCode",
+                            "CreatedBy"});
                 table7.AddRow(new string[] {
                             "unit1",
-                            "u1"});
+                            "u1",
+                            "destDevice"});
                 table7.AddRow(new string[] {
                             "unit2s",
-                            "u2"});
+                            "u2",
+                            "srcDevice"});
 #line 44
  testRunner.Then("\'dest\' contains cutting units:", ((string)(null)), table7, "Then ");
 #line hidden
@@ -335,16 +354,20 @@ this.FeatureBackground();
 #line hidden
                 TechTalk.SpecFlow.Table table9 = new TechTalk.SpecFlow.Table(new string[] {
                             "CuttingUnitID",
-                            "CuttingUnitCode"});
+                            "CuttingUnitCode",
+                            "CreatedBy"});
                 table9.AddRow(new string[] {
                             "unit1",
-                            "u1"});
+                            "u1",
+                            "destDevice"});
                 table9.AddRow(new string[] {
                             "unit2s",
-                            "u2"});
+                            "u2",
+                            "srcDevice"});
                 table9.AddRow(new string[] {
                             "unit2d",
-                            "u3"});
+                            "u3",
+                            "destDevice"});
 #line 57
  testRunner.Then("\'dest\' contains cutting units:", ((string)(null)), table9, "Then ");
 #line hidden
@@ -403,16 +426,20 @@ this.FeatureBackground();
 #line hidden
                 TechTalk.SpecFlow.Table table11 = new TechTalk.SpecFlow.Table(new string[] {
                             "CuttingUnitID",
-                            "CuttingUnitCode"});
+                            "CuttingUnitCode",
+                            "CreatedBy"});
                 table11.AddRow(new string[] {
                             "unit1",
-                            "u1"});
+                            "u1",
+                            "destDevice"});
                 table11.AddRow(new string[] {
                             "unit2d",
-                            "u2"});
+                            "u2",
+                            "destDevice"});
                 table11.AddRow(new string[] {
                             "unit2s",
-                            "u3"});
+                            "u3",
+                            "srcDevice"});
 #line 71
  testRunner.Then("\'dest\' contains cutting units:", ((string)(null)), table11, "Then ");
 #line hidden

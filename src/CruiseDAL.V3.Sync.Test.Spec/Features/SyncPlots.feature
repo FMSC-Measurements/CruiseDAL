@@ -1,9 +1,9 @@
 ﻿Feature: Sync Plots
 Background:
 	Given the following cruise files exist:
-		| FileAlias |
-		| source    |
-		| dest      |
+		| FileAlias | DeviceAlias |
+		| source    | srcDevice   |
+		| dest      | destDevice  |
 	
 	* in 'source, dest' the following units exist:
 		| CuttingUnitCode |

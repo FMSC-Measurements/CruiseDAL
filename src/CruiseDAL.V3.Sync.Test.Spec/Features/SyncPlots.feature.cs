@@ -80,11 +80,14 @@ namespace CruiseDAL.V3.Sync.Test.Features
 #line 2
 #line hidden
             TechTalk.SpecFlow.Table table110 = new TechTalk.SpecFlow.Table(new string[] {
-                        "FileAlias"});
+                        "FileAlias",
+                        "DeviceAlias"});
             table110.AddRow(new string[] {
-                        "source"});
+                        "source",
+                        "srcDevice"});
             table110.AddRow(new string[] {
-                        "dest"});
+                        "dest",
+                        "destDevice"});
 #line 3
  testRunner.Given("the following cruise files exist:", ((string)(null)), table110, "Given ");
 #line hidden

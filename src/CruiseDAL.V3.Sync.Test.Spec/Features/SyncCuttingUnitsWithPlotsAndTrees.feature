@@ -4,9 +4,9 @@
 Background: Unit with plots and trees
 
 	Given the following cruise files exist:
-		| FileAlias |
-		| source    |
-		| dest      |
+		| FileAlias | DeviceAlias |
+		| source    | srcDevice   |
+		| dest      | destDevice  |
 	
 	* in 'source, dest' the following strata exist:
 		| StratumCode |

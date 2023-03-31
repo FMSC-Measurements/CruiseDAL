@@ -1,4 +1,5 @@
-﻿using CruiseDAL.V3.Models;
+﻿using CruiseDAL.TestCommon.Util;
+using CruiseDAL.V3.Models;
 using System.Reflection;
 using TechTalk.SpecFlow.Infrastructure;
 
@@ -25,6 +26,12 @@ namespace CruiseDAL.V3.Sync.Test.Spec.StepDefinitions
         {
             get => SenarioContext.Get<IDictionary<string, CruiseDatastore_V3>>(nameof(DatabaseLookup));
             set => SenarioContext.Set(value, nameof(DatabaseLookup));
+        }
+
+        protected IDictionary<string, CruiseDAL.V3.Models.Device> DeviceLookup
+        {
+            get => SenarioContext.Get<IDictionary<string, CruiseDAL.V3.Models.Device>>(nameof(DeviceLookup));
+            set => SenarioContext.Set(value, nameof(DeviceLookup));
         }
 
         protected string CruiseID
@@ -145,6 +152,12 @@ namespace CruiseDAL.V3.Sync.Test.Spec.StepDefinitions
         protected string GetRedordID(string alias)
         {
             return IDLookup[alias];
+        }
+
+        protected CruiseDAL.V3.Models.Device GetDevice(string alias)
+        {
+            if (string.IsNullOrEmpty(alias)) { return null; }
+            return DeviceLookup[alias];
         }
     }
 }

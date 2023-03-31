@@ -19,6 +19,7 @@ namespace CruiseDAL.V3.Sync.Test.Spec.StepDefinitions
 
             IDLookup = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
             DatabaseLookup = new Dictionary<string, CruiseDatastore_V3>(StringComparer.OrdinalIgnoreCase);
+            DeviceLookup = new Dictionary<string, CruiseDAL.V3.Models.Device>(StringComparer.OrdinalIgnoreCase);
 
             // setup Scenario Artifact Directory
             var featureName = FeatureContext.FeatureInfo.Title.Replace(" ", "");

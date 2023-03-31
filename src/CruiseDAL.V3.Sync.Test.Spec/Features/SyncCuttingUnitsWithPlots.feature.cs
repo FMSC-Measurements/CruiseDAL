@@ -80,68 +80,83 @@ namespace CruiseDAL.V3.Sync.Test.Features
 #line 4
 #line hidden
             TechTalk.SpecFlow.Table table12 = new TechTalk.SpecFlow.Table(new string[] {
-                        "FileAlias"});
+                        "FileAlias",
+                        "DeviceAlias"});
             table12.AddRow(new string[] {
-                        "source"});
+                        "source",
+                        "srcDevice"});
             table12.AddRow(new string[] {
-                        "dest"});
+                        "dest",
+                        "destDevice"});
 #line 5
  testRunner.Given("the following cruise files exist:", ((string)(null)), table12, "Given ");
 #line hidden
             TechTalk.SpecFlow.Table table13 = new TechTalk.SpecFlow.Table(new string[] {
                         "CuttingUnitCode",
-                        "CuttingUnitID"});
+                        "CuttingUnitID",
+                        "CreatedBy"});
             table13.AddRow(new string[] {
                         "u1",
-                        "unit1"});
+                        "unit1",
+                        "destDevice"});
 #line 10
  testRunner.And("in \'source, dest\' the following units exist:", ((string)(null)), table13, "* ");
 #line hidden
             TechTalk.SpecFlow.Table table14 = new TechTalk.SpecFlow.Table(new string[] {
                         "CuttingUnitCode",
-                        "CuttingUnitID"});
+                        "CuttingUnitID",
+                        "CreatedBy"});
             table14.AddRow(new string[] {
                         "u2",
-                        "unit2s"});
+                        "unit2s",
+                        "srcDevice"});
 #line 14
  testRunner.And("in \'source\' the following units exist:", ((string)(null)), table14, "* ");
 #line hidden
             TechTalk.SpecFlow.Table table15 = new TechTalk.SpecFlow.Table(new string[] {
                         "CuttingUnitCode",
-                        "CuttingUnitID"});
+                        "CuttingUnitID",
+                        "CreatedBy"});
             table15.AddRow(new string[] {
                         "u2",
-                        "unit2d"});
+                        "unit2d",
+                        "destDevice"});
 #line 18
  testRunner.And("in \'dest\' the following units exist:", ((string)(null)), table15, "* ");
 #line hidden
             TechTalk.SpecFlow.Table table16 = new TechTalk.SpecFlow.Table(new string[] {
                         "PlotNumber",
                         "CuttingUnitCode",
-                        "PlotID"});
+                        "PlotID",
+                        "CreatedBy"});
             table16.AddRow(new string[] {
                         "1",
                         "u2",
-                        "plot1_u2s"});
+                        "plot1_u2s",
+                        "srcDevice"});
             table16.AddRow(new string[] {
                         "2",
                         "u2",
-                        "plot2_u2s"});
+                        "plot2_u2s",
+                        "srcDevice"});
 #line 23
  testRunner.And("in \'source\' the following plots exist:", ((string)(null)), table16, "* ");
 #line hidden
             TechTalk.SpecFlow.Table table17 = new TechTalk.SpecFlow.Table(new string[] {
                         "PlotNumber",
                         "CuttingUnitCode",
-                        "PlotID"});
+                        "PlotID",
+                        "CreatedBy"});
             table17.AddRow(new string[] {
                         "1",
                         "u2",
-                        "plot1_u2d"});
+                        "plot1_u2d",
+                        "destDevice"});
             table17.AddRow(new string[] {
                         "3",
                         "u2",
-                        "plot3_u2d"});
+                        "plot3_u2d",
+                        "destDevice"});
 #line 28
  testRunner.And("in \'dest\' the following plots exist:", ((string)(null)), table17, "* ");
 #line hidden
@@ -189,11 +204,15 @@ this.FeatureBackground();
                 TechTalk.SpecFlow.Table table18 = new TechTalk.SpecFlow.Table(new string[] {
                             "SourceRecID",
                             "DestRecID",
-                            "DownstreamConflictCount"});
+                            "DownstreamConflictCount",
+                            "SrcDevice",
+                            "DestDevice"});
                 table18.AddRow(new string[] {
                             "unit2s",
                             "unit2d",
-                            "1"});
+                            "1",
+                            "srcDevice",
+                            "destDevice"});
 #line 35
  testRunner.Then("Cutting Unit Conflicts Has:", ((string)(null)), table18, "Then ");
 #line hidden

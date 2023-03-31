@@ -2,9 +2,9 @@
 
 Background: Single Tree Three Logs: One Shared, One In Conflict and One Unique
 	Given the following cruise files exist:
-		| FileAlias |
-		| source    |
-		| dest      |
+		| FileAlias | DeviceAlias |
+		| source    | srcDevice   |
+		| dest      | destDevice  |
 	
 	* in 'source, dest' the following units exist:
 		| CuttingUnitCode |

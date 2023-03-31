@@ -14,6 +14,7 @@ namespace CruiseDAL.V3.Sync.Test.Spec.StepDefinitions
         public void GivenTheFollowingCruiseFilesExist(Table table)
         {
             var databaseLookup = DatabaseLookup;
+            var deviceLookup = DeviceLookup;
             foreach (var row in table.Rows)
             {
                 var alias = row["FileAlias"];
@@ -22,12 +23,36 @@ namespace CruiseDAL.V3.Sync.Test.Spec.StepDefinitions
                 var filePath = base.GetTempFilePath(alias + ".crz3");
 
                 var database = new CruiseDatastore_V3(filePath, true);
+
+                
+                
+
                 Output.WriteLine("Created Database: " + alias);
                 Output.AddAttachment(filePath);
                 databaseLookup.Add(alias, database);
 
                 database.Insert(DefaultSale);
                 database.Insert(DefaultCruise);
+
+                var deviceAlias = row["DeviceAlias"];
+                // we might want to setup multiple files with the same device
+                // so allow look up of existing devices alias
+                if (deviceLookup.ContainsKey(deviceAlias))
+                {
+                    database.Insert(deviceLookup[deviceAlias]);
+                }
+                else
+                {
+                    var device = new CruiseDAL.V3.Models.Device
+                    {
+                        CruiseID = CruiseID,
+                        DeviceID = Guid.NewGuid().ToString(),
+                        Name = deviceAlias,
+                    };
+
+                    database.Insert(device);
+                    deviceLookup.Add(deviceAlias, device);
+                }
             }
         }
 
