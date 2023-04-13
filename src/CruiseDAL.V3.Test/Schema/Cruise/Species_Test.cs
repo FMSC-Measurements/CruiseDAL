@@ -27,8 +27,15 @@ namespace CruiseDAL.V3.Test.Schema.Cruise
             var spCode = init.Species.First();
 
             var spRec = db.From<Species>().Where("SpeciesCode = @p1").Query(spCode).Single();
-            var spProdRec = db.From<Species_Product>().Where("SpeciesCode = @p1").Query(spCode).Single();
 
+            var spProdRec = new Species_Product
+            {
+                CruiseID = init.CruiseID,
+                SpeciesCode = spCode,
+                ContractSpecies = "something",
+            };
+            db.Insert(spProdRec);
+            spProdRec = db.From<Species_Product>().Where("SpeciesCode = @p1").Query(spCode).Single();
 
             spRec.ContractSpecies = "somethingElse";
             db.Update(spRec);
@@ -55,7 +62,14 @@ namespace CruiseDAL.V3.Test.Schema.Cruise
             var spCode = init.Species.First();
 
             var spRec = db.From<Species>().Where("SpeciesCode = @p1").Query(spCode).Single();
-            var spProdRec = db.From<Species_Product>().Where("SpeciesCode = @p1").Query(spCode).Single();
+            var spProdRec = new Species_Product
+            {
+                CruiseID = init.CruiseID,
+                SpeciesCode = spCode,
+                ContractSpecies = "something",
+            };
+            db.Insert(spProdRec);
+            spProdRec = db.From<Species_Product>().Where("SpeciesCode = @p1").Query(spCode).Single();
 
 
             spRec.ContractSpecies = "somethingElse";
