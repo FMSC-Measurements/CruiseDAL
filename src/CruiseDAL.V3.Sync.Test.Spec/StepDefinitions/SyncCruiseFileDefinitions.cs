@@ -1,4 +1,6 @@
-﻿using TechTalk.SpecFlow.Infrastructure;
+﻿using CruiseDAL.TestCommon.Util;
+using TechTalk.SpecFlow;
+using TechTalk.SpecFlow.Infrastructure;
 
 namespace CruiseDAL.V3.Sync.Test.Spec.StepDefinitions
 {
@@ -67,6 +69,13 @@ namespace CruiseDAL.V3.Sync.Test.Spec.StepDefinitions
         [When(@"I conflict check '([^']*)' file against '([^']*)'")]
         public void WhenIConflictCheckFileAgainst(string source, string dest)
         {
+            WhenIConflictCheckFileAgainstWithOptions(source, dest, null);
+        }
+
+        [When(@"I conflict check '([^']*)' file against '([^']*)'")]
+        [When(@"I conflict check '([^']*)' file against '([^']*)' with options")]
+        public void WhenIConflictCheckFileAgainstWithOptions(string source, string dest, Table? table)
+        {
             var conflictChecker = new ConflictChecker();
 
             var srcDb = GetDatabase(source);
@@ -75,7 +84,29 @@ namespace CruiseDAL.V3.Sync.Test.Spec.StepDefinitions
             var destConn = destDb.OpenConnection();
             try
             {
-                ConflictResults = conflictChecker.CheckConflicts(srcConn, destConn, CruiseID);
+                var conflictResolutionOptions = new ConflictCheckOptions();
+                if(table != null)
+                {
+                    foreach(var row in table.Rows)
+                    {
+                        var option = row["Option"];
+                        var valueStr = row["Value"];
+                        switch(option)
+                        {
+                            case nameof(ConflictCheckOptions.AllowDuplicateTreeNumberForNestedStrata):
+                                {
+                                    conflictResolutionOptions.AllowDuplicateTreeNumberForNestedStrata = bool.Parse(valueStr);
+                                    break;
+                                }
+                            default:
+                                {
+                                    throw new InvalidOperationException("Invalid Conflict Option Name: " + option);
+                                }
+                        }
+                    }
+                }
+
+                ConflictResults = conflictChecker.CheckConflicts(srcConn, destConn, CruiseID, conflictResolutionOptions);
             }
             finally
             {
@@ -83,6 +114,7 @@ namespace CruiseDAL.V3.Sync.Test.Spec.StepDefinitions
                 destDb.ReleaseConnection();
             }
         }
+
 
         [When(@"I resolve all tree conflicts with '([^']*)'")]
         public void WhenIResolveAllTreeConflictsWith(string resolutionOptionStr)

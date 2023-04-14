@@ -1,11 +1,11 @@
 ﻿using CruiseDAL.V3.Models;
+using CruiseDAL.V3.Sync.Util;
 using FMSC.ORM.Core;
+using FMSC.ORM.SQLite;
 using System;
 using System.Collections.Generic;
 using System.Data.Common;
 using System.Linq;
-using CruiseDAL.V3.Sync.Util;
-using FMSC.ORM.SQLite;
 
 namespace CruiseDAL.V3.Sync
 {
@@ -14,26 +14,25 @@ namespace CruiseDAL.V3.Sync
         // downstream conflicts:
         // downstream conflicts are conflicts that will need to be resolved if a conflict is resolved using the
         // chose resolution option. The chose resolution option may require additional conflict resolution
-        // if child data has conflicting natural keys. 
+        // if child data has conflicting natural keys.
 
         // we don't need to worry about more one level down from a parent record with downstream conflicts
-        // at least with cruise data when we go more than 
+        // at least with cruise data when we go more than
         // e.g. trees with-in plots or logs with-in trees
         // if there is a nested conflict on a plot. we don't need to worry about conflicts on the trees within the plot
         // if the user resolves with a modify resolution, then the trees wont be in conflict
         // if the user resolves with a chose resolution, then we want to take all the trees from the chosen file. I can't think of any situation
         //      where we would want to mix tree from two files on a plot. this is sorta using the 'All or Nothing' resolution option
 
-
         protected Dictionary<string, string> DeviceNameLookup { get; set; }
 
-        public ConflictResolutionOptions CheckConflicts(SQLiteDatastore sourceDb, SQLiteDatastore destDb, string cruiseID)
+        public ConflictResolutionOptions CheckConflicts(SQLiteDatastore sourceDb, SQLiteDatastore destDb, string cruiseID, ConflictCheckOptions options)
         {
             var source = sourceDb.OpenConnection();
             var dest = destDb.OpenConnection();
             try
             {
-                return CheckConflicts(source, dest, cruiseID);
+                return CheckConflicts(source, dest, cruiseID, options);
             }
             finally
             {
@@ -42,7 +41,7 @@ namespace CruiseDAL.V3.Sync
             }
         }
 
-        public ConflictResolutionOptions CheckConflicts(DbConnection source, DbConnection destination, string cruiseID)
+        public ConflictResolutionOptions CheckConflicts(DbConnection source, DbConnection destination, string cruiseID, ConflictCheckOptions options)
         {
             InitDeviceLookup(source, destination, cruiseID);
 
@@ -52,11 +51,15 @@ namespace CruiseDAL.V3.Sync
                 CheckSampleGroups(source, destination, cruiseID),
                 CheckPlots(source, destination, cruiseID),
                 CheckTrees(source, destination, cruiseID),
-                CheckPlotTrees(source, destination, cruiseID),
+                CheckPlotTrees(source, destination, cruiseID, options),
                 CheckLogs(source, destination, cruiseID));
         }
 
-        void InitDeviceLookup(DbConnection source, DbConnection destination, string cruiseID)
+        // create look up that can be used to translate device ids to device name
+        // This makes it so we don't need to join with device table when running queries
+        // TODO: need to look at how FScruiser behaves when user changes device name
+        // how do we handle changing device name... do we need a modified_TS on the device table?
+        private void InitDeviceLookup(DbConnection source, DbConnection destination, string cruiseID)
         {
             var deviceNameLookup = new Dictionary<string, string>();
             var srcDevices = source.From<CruiseDAL.V3.Models.Device>().Where("CruiseID = @p1").Query(cruiseID);
@@ -294,12 +297,10 @@ namespace CruiseDAL.V3.Sync
 
                 if (conflictItem != null)
                 {
-                    
-
-                    // We aren't checking trees for downstream log, because 
+                    // We aren't checking trees for downstream log, because
                     //      logs are linked to trees by TreeID
 
-    yield return new Conflict
+                    yield return new Conflict
                     {
                         Table = nameof(Tree),
                         Identity = Identify(tree),
@@ -315,7 +316,6 @@ namespace CruiseDAL.V3.Sync
                 }
             }
         }
-
 
         // only check non-plot trees
         protected IEnumerable<Conflict> CheckTreesByUnitCode(DbConnection source, DbConnection destination, string cruiseID, string cuttingUnitCode)
@@ -414,22 +414,36 @@ namespace CruiseDAL.V3.Sync
             }
         }
 
-        public IEnumerable<Conflict> CheckPlotTrees(DbConnection source, DbConnection destination, string cruiseID)
+        public IEnumerable<Conflict> CheckPlotTrees(DbConnection source, DbConnection destination, string cruiseID, ConflictCheckOptions options)
         {
             //var sourceItems = source.From<Tree>().Where("CruiseID = @p1").Query(cruiseID);
             var sourceItems = source.Query<Tree, UnitPlotKey>(
-                "SELECT t.*, cu.CuttingUnitID FROM Tree AS t " +
+                "SELECT t.*, cu.CuttingUnitID, p.PlotID FROM Tree AS t " +
                 "JOIN CuttingUnit AS cu USING (CruiseID, CuttingUnitCode) " +
                 "JOIN Plot AS p USING (CruiseID, PlotNumber) " +
                 "WHERE CruiseID = @p1" +
                 "   AND PlotNumber IS NOT NULL;", paramaters: new[] { cruiseID }).ToArray();
 
+            // when users are doing nested plots where each stratum numbers tree independently
+            // we need to allow for multiple trees with the same tree number in separate strata
+            //
+            var conflictWhereOption = (options.AllowDuplicateTreeNumberForNestedStrata) ?
+                "CruiseID = @CruiseID AND TreeNumber = @TreeNumber AND StratumCode = @StratumCode AND p.PlotID = @PlotID AND TreeID != @TreeID" :
+                "CruiseID = @CruiseID AND TreeNumber = @TreeNumber AND p.PlotID = @PlotID AND TreeID != @TreeID";
+
             foreach (var (tree, unitPlot) in sourceItems)
             {
                 var conflictItem = destination.From<Tree>()
-                    .Join("Plot AS p", "USING (CruiseID, PlotNumber)")
-                    .Where("CruiseID = @p1 AND TreeNumber = @p2 AND p.PlotID = @p3 AND TreeID != @p4")
-                    .Query(cruiseID, tree.TreeNumber, unitPlot.PlotID, tree.TreeID).FirstOrDefault();
+                    .Join("Plot AS p", "USING (CruiseID, CuttingUnitCode, PlotNumber)")
+                    .Where(conflictWhereOption)
+                    .Query2(new
+                    {
+                        CruiseID = cruiseID,
+                        tree.TreeNumber,
+                        tree.TreeID,
+                        tree.StratumCode,
+                        unitPlot.PlotID,
+                    }).FirstOrDefault();
 
                 if (conflictItem != null)
                 {
@@ -483,7 +497,6 @@ namespace CruiseDAL.V3.Sync
 
         public IEnumerable<Conflict> CheckLogsByUnitCodeTreeNumber(DbConnection source, DbConnection destination, string cruiseID, string cuttingUnitCode, int treeNumber)
         {
-            
             var sourceItems = source.From<LogEx>()
                 .Join("Tree", "USING (TreeID)")
                 .Where("Log.CruiseID = @p1 AND Tree.CuttingUnitCode = @p2 AND Tree.TreeNumber = @p3 AND Tree.PlotNumber IS NULL")
@@ -517,7 +530,6 @@ namespace CruiseDAL.V3.Sync
 
         public IEnumerable<Conflict> CheckLogsByUnitCodePlotTreeNumber(DbConnection source, DbConnection destination, string cruiseID, string cuttingUnitCode, int treeNumber, int plotNumber)
         {
-
             var sourceItems = source.From<LogEx>()
                 .Join("Tree", "USING (TreeID)")
                 .Where("Log.CruiseID = @p1 AND Tree.CuttingUnitCode = @p2 AND Tree.TreeNumber = @p3 AND Tree.PlotNumber = @p4")
@@ -586,7 +598,6 @@ namespace CruiseDAL.V3.Sync
             var plotNumber = (l.PlotNumber.HasValue) ? ", Plot #:" + l.PlotNumber.Value : "";
             return $"Log: {l.LogNumber}, Unit:{l.CuttingUnitCode}{plotNumber}, Tree #:{l.TreeNumber}";
         }
-
 
         private class CuttingUnitKey
         {
