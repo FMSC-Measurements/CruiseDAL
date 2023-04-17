@@ -56,7 +56,7 @@ namespace CruiseDAL.V3.Sync.Test.UnitTests.FileTests
             using (var sourceConn = source.OpenConnection())
             using (var destConn = dest.OpenConnection())
             {
-                var conflicts = ConflictChecker.CheckConflicts(sourceConn, destConn, cruiseID);
+                var conflicts = ConflictChecker.CheckConflicts(sourceConn, destConn, cruiseID, new ConflictCheckOptions());
 
                 conflicts.CuttingUnit.Should().HaveCount(1);
                 conflicts.Tree.Should().HaveCount(1);
@@ -70,12 +70,12 @@ namespace CruiseDAL.V3.Sync.Test.UnitTests.FileTests
                 ConflictResolver.ResolveConflicts(sourceConn, destConn, conflicts);
 
 
-                conflicts = ConflictChecker.CheckConflicts(sourceConn, destConn, cruiseID);
+                conflicts = ConflictChecker.CheckConflicts(sourceConn, destConn, cruiseID, new ConflictCheckOptions());
                 conflicts.HasConflicts.Should().BeFalse();
 
                 Syncer.Sync(cruiseID, sourceConn, destConn, Options);
 
-                conflicts = ConflictChecker.CheckConflicts(sourceConn, destConn, cruiseID);
+                conflicts = ConflictChecker.CheckConflicts(sourceConn, destConn, cruiseID, new ConflictCheckOptions());
                 conflicts.HasConflicts.Should().BeFalse();
             }
         }

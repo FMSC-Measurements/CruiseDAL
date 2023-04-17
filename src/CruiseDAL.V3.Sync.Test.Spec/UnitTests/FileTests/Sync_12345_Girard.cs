@@ -34,7 +34,7 @@ namespace CruiseDAL.V3.Sync.Test.UnitTests.FileTests
             using var sourceConn = source.OpenConnection();
 
             // check that file has conflict we expect
-            var conflicts = ConflictChecker.CheckConflicts(sourceConn, destConn, cruiseID);
+            var conflicts = ConflictChecker.CheckConflicts(sourceConn, destConn, cruiseID, new ConflictCheckOptions());
             conflicts.HasConflicts.Should().BeTrue();
             conflicts.Plot.Count().Should().Be(1);
 
@@ -47,7 +47,7 @@ namespace CruiseDAL.V3.Sync.Test.UnitTests.FileTests
             plotConflict.ConflictResolution = ConflictResolutionType.ChoseDest;
             ConflictResolver.ResolveConflicts(sourceConn, destConn, conflicts);
 
-            var conflictsAgain = ConflictChecker.CheckConflicts(sourceConn, destConn, cruiseID);
+            var conflictsAgain = ConflictChecker.CheckConflicts(sourceConn, destConn, cruiseID, new ConflictCheckOptions());
             conflictsAgain.HasConflicts.Should().BeFalse();
 
             //DeleteSyncer.Sync(cruiseID, sourceConn, destConn, Options);
@@ -62,7 +62,7 @@ namespace CruiseDAL.V3.Sync.Test.UnitTests.FileTests
             using var sourceConn2 = source2.OpenConnection();
 
             // check that file has conflict we expect
-            var conflicts2 = ConflictChecker.CheckConflicts(sourceConn2, destConn, cruiseID);
+            var conflicts2 = ConflictChecker.CheckConflicts(sourceConn2, destConn, cruiseID, new ConflictCheckOptions());
             conflicts2.HasConflicts.Should().BeTrue();
 
             var plotConflict2 = conflicts2.Plot.Single();
@@ -93,7 +93,7 @@ namespace CruiseDAL.V3.Sync.Test.UnitTests.FileTests
             using var destConn = dest.OpenConnection();
 
             // check that file has conflict we expect
-            var conflicts = ConflictChecker.CheckConflicts(sourceConn, destConn, cruiseID);
+            var conflicts = ConflictChecker.CheckConflicts(sourceConn, destConn, cruiseID, new ConflictCheckOptions());
             conflicts.HasConflicts.Should().BeTrue();
             conflicts.Plot.Count().Should().Be(1);
 
@@ -106,7 +106,7 @@ namespace CruiseDAL.V3.Sync.Test.UnitTests.FileTests
             plotConflict.ConflictResolution = ConflictResolutionType.ChoseDest;
             ConflictResolver.ResolveConflicts(sourceConn, destConn, conflicts);
 
-            var conflictsAgain = ConflictChecker.CheckConflicts(sourceConn, destConn, cruiseID);
+            var conflictsAgain = ConflictChecker.CheckConflicts(sourceConn, destConn, cruiseID, new ConflictCheckOptions());
             conflictsAgain.HasConflicts.Should().BeFalse();
 
             DeleteSyncer.Sync(cruiseID, sourceConn, destConn, Options);
@@ -132,7 +132,7 @@ namespace CruiseDAL.V3.Sync.Test.UnitTests.FileTests
             using var sourceConn = source.OpenConnection();
             using var destConn = dest.OpenConnection();
 
-            var conflicts = ConflictChecker.CheckConflicts(sourceConn, destConn, cruiseID);
+            var conflicts = ConflictChecker.CheckConflicts(sourceConn, destConn, cruiseID, new ConflictCheckOptions());
 
             conflicts.HasConflicts.Should().BeTrue();
 
@@ -165,7 +165,7 @@ namespace CruiseDAL.V3.Sync.Test.UnitTests.FileTests
             using var sourceConn = source.OpenConnection();
             using var destConn = dest.OpenConnection();
 
-            var conflicts = ConflictChecker.CheckConflicts(sourceConn, destConn, cruiseID);
+            var conflicts = ConflictChecker.CheckConflicts(sourceConn, destConn, cruiseID, new ConflictCheckOptions());
 
             conflicts.HasConflicts.Should().BeFalse();
         }
@@ -189,7 +189,7 @@ namespace CruiseDAL.V3.Sync.Test.UnitTests.FileTests
             using var sourceConn = source.OpenConnection();
             using var destConn = dest.OpenConnection();
 
-            var conflicts = ConflictChecker.CheckConflicts(sourceConn, destConn, cruiseID);
+            var conflicts = ConflictChecker.CheckConflicts(sourceConn, destConn, cruiseID, new ConflictCheckOptions());
 
             conflicts.HasConflicts.Should().BeFalse();
 
