@@ -191,14 +191,12 @@ namespace CruiseDAL.V3.Sync.Test.UnitTests.FileTests
 
             var conflicts = ConflictChecker.CheckConflicts(sourceConn, destConn, cruiseID, new ConflictCheckOptions());
 
-            conflicts.HasConflicts.Should().BeFalse();
+            conflicts.Plot.Count().Should().Be(1);
 
-            //conflicts.Plot.Count().Should().Be(1);
-
-            //var plotConflict = conflicts.Plot.Single();
-            //var srcPlot = plotConflict.SourceRec.As<Plot>();
-            //srcPlot.PlotNumber.Should().Be(196);
-            //srcPlot.CuttingUnitCode.Should().Be("566");
+            var plotConflict = conflicts.Plot.Single();
+            var srcPlot = plotConflict.SourceRec.As<Plot>();
+            srcPlot.PlotNumber.Should().Be(17);
+            srcPlot.CuttingUnitCode.Should().Be("978");
         }
 
     }

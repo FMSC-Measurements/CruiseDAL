@@ -6,6 +6,7 @@ They were causing an exception during sync due to not syncing deletion of untall
 These are some files created by Daniel Dushey to test combining files.
 He also provided a V2 cruise and processing output as reference.
 The file from the DxDQCG device contains a single plot conflict on plot 196 unit 566
+Ricksgalaxytablet and DxDQCG has a conflict on plot 17 unit 978
 The were sent to me on 11/10/2022
 
 # Issue_ReconTreeMeasurmentsDontImport.crz3
