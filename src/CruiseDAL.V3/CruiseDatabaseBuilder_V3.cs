@@ -42,7 +42,7 @@ namespace CruiseDAL
             new Plot_StratumTableDefinition_3_5_5(),
             new PlotLocationTableDefinition(),
             new SampleGroupTableDefinition_3_6_2(),
-            new SpeciesTableDefinition361(),
+            new SpeciesTableDefinition363(),
             new Species_ProductTableDefinition_363(),
             new TreeDefaultValueTableDefinition_3_5_6(),
             new TreeFieldSetupTableDefinition(),

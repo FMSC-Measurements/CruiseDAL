@@ -27,7 +27,7 @@ namespace CruiseDAL.Update
 
             RebuildTable(conn, transaction, exceptionProcessor, new Species_ProductTableDefinition_363());
 
-            conn.ExecuteNonQuery(SpeciesTableDefinition361.CREATE_TRIGGER_Species_OnUpdate_ContractSpecies);
+            conn.ExecuteNonQuery(SpeciesTableDefinition363.CREATE_TRIGGER_Species_OnUpdate_ContractSpecies);
         }
     }
 }

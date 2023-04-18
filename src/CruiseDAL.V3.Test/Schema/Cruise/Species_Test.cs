@@ -17,8 +17,12 @@ namespace CruiseDAL.V3.Test.Schema.Cruise
         {
         }
 
-        [Fact]
-        public void UpdateContractSpecies()
+        // Since NatCruise v3.1.5 all update to ContractSpecies is done through the Species_Product table
+        // support for Species.ContractSpecies is now just for backwards compatibility
+        [Theory]
+        [InlineData("somethingElse")]
+        [InlineData("")]
+        public void UpdateContractSpecies_Legacy_Way(string value)
         {
             var init = new DatabaseInitializer();
             using var db = init.CreateDatabase();
@@ -27,24 +31,21 @@ namespace CruiseDAL.V3.Test.Schema.Cruise
             var spCode = init.Species.First();
 
             var spRec = db.From<Species>().Where("SpeciesCode = @p1").Query(spCode).Single();
-
-            var spProdRec = new Species_Product
-            {
-                CruiseID = init.CruiseID,
-                SpeciesCode = spCode,
-                ContractSpecies = "something",
-            };
-            db.Insert(spProdRec);
-            spProdRec = db.From<Species_Product>().Where("SpeciesCode = @p1").Query(spCode).Single();
-
-            spRec.ContractSpecies = "somethingElse";
+            spRec.ContractSpecies = value;
             db.Update(spRec);
 
             var spRecAgain = db.From<Species>().Where("SpeciesCode = @p1").Query(spCode).Single();
-            var spProdRecAgain = db.From<Species_Product>().Where("SpeciesCode = @p1").Query(spCode).Single();
-
             spRecAgain.ContractSpecies.Should().Be(spRec.ContractSpecies);
-            spProdRecAgain.ContractSpecies.Should().Be(spRec.ContractSpecies);
+
+            if (value != "")
+            {
+                var spProdRecAgain = db.From<Species_Product>().Where("SpeciesCode = @p1").Query(spCode).Single();
+                spProdRecAgain.ContractSpecies.Should().Be(spRec.ContractSpecies);
+            }
+            else
+            {
+                db.From<Species_Product>().Where("SpeciesCode = @p1").Query(spCode).Should().BeEmpty();
+            }
         }
 
 
@@ -53,7 +54,7 @@ namespace CruiseDAL.V3.Test.Schema.Cruise
         // that of the parent standard INSERT. See https://sqlite.org/forum/info/8c8de6ff91cb602b3d636d391b9bfb58ccb275e2623df00305d5c3ee648a9f1a
 
         [Fact]
-        public void UpdateContractSpecies_LikeNatCruiseDoes()
+        public void UpdateContractSpecies_Legacy_LikeNatCruiseDoes()
         {
             var init = new DatabaseInitializer();
             using var db = init.CreateDatabase();
