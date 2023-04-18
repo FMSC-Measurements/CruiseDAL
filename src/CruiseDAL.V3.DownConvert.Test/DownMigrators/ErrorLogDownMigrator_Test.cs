@@ -94,7 +94,7 @@ namespace CruiseDAL.V3.DownConvert.Test.DownMigrators
             errorLogs.Should().HaveCount(4);
             errorLogs.Should().Contain(x => x.Message == "Species Code Is Missing");
             errorLogs.Should().Contain(x => x.Message == "Live/Dead Value Is Missing");
-            errorLogs.Should().Contain(x => x.Message == "Aleast One Height Parameter Must Be Greater Than 0");
+            errorLogs.Should().Contain(x => x.Message == "At Least One Height Parameter Must Be Greater Than 0");
             errorLogs.Should().Contain(x => x.Message == "DBH or DRC must be greater than 0");
         }
 

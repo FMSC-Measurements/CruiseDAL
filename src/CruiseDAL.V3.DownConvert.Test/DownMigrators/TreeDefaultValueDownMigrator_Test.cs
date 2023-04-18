@@ -175,7 +175,7 @@ namespace CruiseDAL.V3.Test.DownMigrators
 
             using var fromDb = initializer.CreateDatabaseFile(fromPath);
 
-            fromDb.Execute("UPDATE Species SET ContractSpecies = ''");
+            fromDb.Execute("DELETE FROM Species_Product;");
 
             using var toDb = new DAL(toPath, true);
 
@@ -185,7 +185,7 @@ namespace CruiseDAL.V3.Test.DownMigrators
             // from the one TDV with explicitly set species and prod we should get two TDVs (one live one dead
             var tdvs = toDb.From<V2.Models.TreeDefaultValue>().Query().ToArray();
 
-            tdvs.Should().OnlyContain(x => x.ContractSpecies == "");
+            tdvs.Should().OnlyContain(x => x.ContractSpecies == null);
         }
     }
 }

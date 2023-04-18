@@ -30,6 +30,10 @@ namespace CruiseDAL.V3.Sync
 
         public DateTime DestMod { get; set; }
 
+        public string SrcDeviceName { get; set; }
+
+        public string DestDeviceName { get; set; }
+
         public IEnumerable<Conflict> DownstreamConflicts { get; set; }
 
         public ConflictResolutionType ConflictResolution 

@@ -12,7 +12,7 @@ namespace CruiseDAL
 {
     public class CruiseDatastoreBuilder_V3 : IDatastoreBuilder
     {
-        public static readonly Version DATABASE_VERSION = new Version("3.6.2");
+        public static readonly Version DATABASE_VERSION = new Version("3.6.3");
 
         public static readonly IEnumerable<ITableDefinition> TABLE_DEFINITIONS =
         new ITableDefinition[]
@@ -42,8 +42,8 @@ namespace CruiseDAL
             new Plot_StratumTableDefinition_3_5_5(),
             new PlotLocationTableDefinition(),
             new SampleGroupTableDefinition_3_6_2(),
-            new SpeciesTableDefinition361(),
-            new Species_ProductTableDefinition(),
+            new SpeciesTableDefinition363(),
+            new Species_ProductTableDefinition_363(),
             new TreeDefaultValueTableDefinition_3_5_6(),
             new TreeFieldSetupTableDefinition(),
             new TreeFieldHeading(),

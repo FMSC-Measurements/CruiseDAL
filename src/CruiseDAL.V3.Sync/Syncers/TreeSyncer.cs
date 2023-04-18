@@ -11,6 +11,8 @@ namespace CruiseDAL.V3.Sync.Syncers
         {
         }
 
+        private static string WHERE = "CruiseID = @CruiseID AND TreeID = @TreeID";
+
         public override TableSyncResult SyncRecords(string cruiseID, DbConnection source, DbConnection destination, TableSyncOptions options, IExceptionProcessor exceptionProcessor)
         {
             var syncResult = new TableSyncResult(nameof(Tree));
@@ -18,11 +20,18 @@ namespace CruiseDAL.V3.Sync.Syncers
             var flags = options.Tree;
             if (flags == SyncOption.Lock) { return syncResult; }
 
-            var where = "CruiseID = @CruiseID AND TreeID = @TreeID";
+            SyncUnitTrees(cruiseID, source, destination, exceptionProcessor, syncResult, flags);
 
+            SyncPlotTrees(cruiseID, source, destination, exceptionProcessor, syncResult, flags);
+
+            return syncResult;
+        }
+
+        private static void SyncUnitTrees(string cruiseID, DbConnection source, DbConnection destination, IExceptionProcessor exceptionProcessor, TableSyncResult syncResult, SyncOption flags)
+        {
             var cuttingUnits = destination.From<CuttingUnit>()
-                .Where("CruiseID = @p1")
-                .Query(cruiseID).ToArray();
+                            .Where("CruiseID = @p1")
+                            .Query(cruiseID).ToArray();
             foreach (var cu in cuttingUnits)
             {
                 var sourceTrees = source.From<Tree>().Where("CruiseID = @p1 AND CuttingUnitCode = @p2 AND PlotNumber IS NULL")
@@ -30,14 +39,14 @@ namespace CruiseDAL.V3.Sync.Syncers
                 foreach (var i in sourceTrees)
                 {
                     var match = destination.From<Tree>()
-                        .Where(where)
+                        .Where(WHERE)
                         .Query2(i)
                         .FirstOrDefault();
 
                     if (match == null)
                     {
                         var hasTombstone = destination.From<Tree_Tombstone>()
-                            .Where(where)
+                            .Where(WHERE)
                             .Count2(i) > 0;
 
                         if (flags.HasFlag(SyncOption.ForceInsert)
@@ -54,13 +63,16 @@ namespace CruiseDAL.V3.Sync.Syncers
 
                         if (ShouldUpdate(sMod, dMod, flags))
                         {
-                            destination.Update(i, whereExpression: where, exceptionProcessor: exceptionProcessor);
+                            destination.Update(i, whereExpression: WHERE, exceptionProcessor: exceptionProcessor);
                             syncResult.IncrementUpdates();
                         }
                     }
                 }
             }
+        }
 
+        private static void SyncPlotTrees(string cruiseID, DbConnection source, DbConnection destination, IExceptionProcessor exceptionProcessor, TableSyncResult syncResult, SyncOption flags)
+        {
             var plots = destination.From<Plot>().Where("CruiseID = @p1").Query(cruiseID);
             foreach (var plot in plots)
             {
@@ -71,7 +83,7 @@ namespace CruiseDAL.V3.Sync.Syncers
                 foreach (var tree in sourceTrees)
                 {
                     var match = destination.From<Tree>()
-                        .Where(where)
+                        .Where(WHERE)
                         .Query2(tree)
                         .FirstOrDefault();
 
@@ -84,7 +96,7 @@ namespace CruiseDAL.V3.Sync.Syncers
                         // keep the original tombstone around to retain the records history.
 
                         var hasTombstone = destination.From<Tree_Tombstone>()
-                            .Where(where)
+                            .Where(WHERE)
                             .Count2(tree) > 0;
 
                         if (flags.HasFlag(SyncOption.ForceInsert)
@@ -101,14 +113,12 @@ namespace CruiseDAL.V3.Sync.Syncers
 
                         if (ShouldUpdate(sMod, dMod, flags))
                         {
-                            destination.Update(match, whereExpression: where, exceptionProcessor: exceptionProcessor);
+                            destination.Update(match, whereExpression: WHERE, exceptionProcessor: exceptionProcessor);
                             syncResult.IncrementUpdates();
                         }
                     }
                 }
             }
-
-            return syncResult;
         }
     }
 }

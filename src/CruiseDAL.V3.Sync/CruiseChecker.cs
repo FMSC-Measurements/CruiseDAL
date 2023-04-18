@@ -147,7 +147,7 @@ $@"SELECT
     destS.SaleID AS DestSaleID,
     srcS.SaleID AS SrcSaleID
 FROM {sourceAlias}.Sale AS srcS
-JOIN {sourceAlias}.Cruise AS srcCr USING (SaleID)
+JOIN {sourceAlias}.Cruise AS srcCr USING (SaleNumber)
 JOIN main.Sale AS destS USING (SaleNumber)
 WHERE srcCr.CruiseID = @p1 AND srcS.SaleID != destS.SaleID;
 ", cruiseID).ToArray();
