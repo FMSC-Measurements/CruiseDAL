@@ -14,10 +14,9 @@ namespace CruiseDAL.Migrators
             return
 $@"INSERT INTO {toDbName}.Species ( 
     SpeciesCode,
-    CruiseID,
-    ContractSpecies
+    CruiseID
 ) 
-SELECT Species,  '{cruiseID}', ContractSpecies FROM {fromDbName}.TreeDefaultValue GROUP BY Species;
+SELECT Species,  '{cruiseID}' FROM {fromDbName}.TreeDefaultValue GROUP BY Species;
 
 
 WITH sp_fia AS (

@@ -24,6 +24,7 @@ namespace CruiseDAL.UpConvert
             new CuttingUnit_StratumMigrator(),
             new SampleGroupMigrator(),
             new SpeciesMigrator(),
+            new Species_ProductMigrator(),
             new SubPopulationMigrator(),
             new TreeDefaultValueMigrator(),
             new FixCNTTallyPopulationMigrator(),
