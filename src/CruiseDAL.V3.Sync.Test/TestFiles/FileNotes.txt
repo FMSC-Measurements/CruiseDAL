@@ -13,3 +13,6 @@ The were sent to me on 11/10/2022
 File contains recon cruise data added to the file by Cruise Design
 Because this data has no modifid_ts it was causing an issue when checking timestamps wile 
 importing TreeMeasurment records. 
+
+# 1_Lost Mule Recon_Recon
+Issues with conflict checking on Plot Trees
