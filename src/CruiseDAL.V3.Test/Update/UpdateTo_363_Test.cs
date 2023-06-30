@@ -21,7 +21,7 @@ namespace CruiseDAL.V3.Test.Update
         [Fact]
         public void UpdateFrom362()
         {
-            var filePath = InitializeTestFile("361_AllTables.crz3");
+            var filePath = InitializeTestFile("362_AllTables.crz3");
 
             using var db = new CruiseDatastore(filePath);
             var cruise = db.From<Cruise>().Query().Single();

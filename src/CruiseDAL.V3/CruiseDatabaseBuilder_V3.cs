@@ -12,7 +12,7 @@ namespace CruiseDAL
 {
     public class CruiseDatastoreBuilder_V3 : IDatastoreBuilder
     {
-        public static readonly Version DATABASE_VERSION = new Version("3.6.3");
+        public static readonly Version DATABASE_VERSION = new Version("3.6.4");
 
         public static readonly IEnumerable<ITableDefinition> TABLE_DEFINITIONS =
         new ITableDefinition[]
@@ -98,7 +98,7 @@ namespace CruiseDAL
                 new TreeErrorViewDefinition(),
                 new LogGradeErrorViewDefinition(),
                 new PlotErrorViewDefinition(),
-                new TreeAuditErrorViewDefinition(),
+                new TreeAuditErrorViewDefinition_364(),
                 new TreeFieldValue_AllViewDefinition(),
                 new TreeFieldValue_TreeMeasurmentViewDefinition(),
                 new TreeFieldValue_TreeMeasurment_FilteredViewDefinition(),

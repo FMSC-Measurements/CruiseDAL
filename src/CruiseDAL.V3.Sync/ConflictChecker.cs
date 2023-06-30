@@ -419,8 +419,8 @@ namespace CruiseDAL.V3.Sync
             //var sourceItems = source.From<Tree>().Where("CruiseID = @p1").Query(cruiseID);
             var sourceItems = source.Query<Tree, UnitPlotKey>(
                 "SELECT t.*, cu.CuttingUnitID, p.PlotID FROM Tree AS t " +
+                "JOIN Plot AS p USING (CruiseID, PlotNumber, CuttingUnitCode) " +
                 "JOIN CuttingUnit AS cu USING (CruiseID, CuttingUnitCode) " +
-                "JOIN Plot AS p USING (CruiseID, PlotNumber) " +
                 "WHERE CruiseID = @p1" +
                 "   AND PlotNumber IS NOT NULL;", paramaters: new[] { cruiseID }).ToArray();
 
