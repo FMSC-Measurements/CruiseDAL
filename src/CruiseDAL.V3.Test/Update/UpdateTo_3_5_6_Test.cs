@@ -18,10 +18,12 @@ namespace CruiseDAL.V3.Test.Update
         {
         }
 
-        [Fact]
-        public void UpdateFrom354()
+        [Theory]
+        [InlineData("3.5.4.crz3")]
+        [InlineData("44149_Little Nolan_TS_202307101240_GalaxyTabActive3-KT8D723.crz3")]
+        public void UpdateFrom354(string fileName)
         {
-            var filePath = InitializeTestFile("3.5.4.crz3");
+            var filePath = InitializeTestFile(fileName);
 
             using var ds = new CruiseDatastore(filePath);
 
