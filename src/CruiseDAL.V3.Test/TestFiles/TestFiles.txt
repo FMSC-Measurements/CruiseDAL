@@ -1,1 +1,7 @@
-UpdateFrom340_To_342.crz3 - when updating from 340 to 341, fields added to Plot_Stratum_Tombstone were not added. This caused OnDeletePlot_Stratum triggers to fail when deleting plot_strata. This test file is a file that was initialy created as 340 and updated to 341. This file allows us to test the update to 342 to ensure that those missing fields are added to plot_stratum_tombstone
+UpdateFrom340_To_342.crz3 - when updating from 340 to 341, fields added to Plot_Stratum_Tombstone were not added. 
+This caused OnDeletePlot_Stratum triggers to fail when deleting plot_strata. 
+This test file is a file that was initialy created as 340 and updated to 341. 
+This file allows us to test the update to 342 to ensure that those missing fields are added to plot_stratum_tombstone
+
+44149_Little Nolan_TS_202307101240_GalaxyTabActive3-KT8D723.crz3 - this file has a '' (blank) value for Tree Grade Dead.
+This caused a error when updating from 3.5.4 to 3.5.6
