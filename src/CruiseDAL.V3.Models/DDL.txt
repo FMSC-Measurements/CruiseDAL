@@ -100,8 +100,11 @@ CREATE TABLE CruiseLog (
     Field TEXT COLLATE NOCASE,
 
     Program TEXT COLLATE NOCASE,
-    TimeStamp DATETIME NOT NULL DEFAULT (CURRENT_TIMESTAMP),
+    TimeStamp DATETIME , -- depreciated use crated_ts instead
     Level TEXT COLLATE NOCASE DEFAULT 'N',
+
+    CreatedBy TEXT DEFAULT 'none',
+    Created_TS DATETIME DEFAULT (CURRENT_TIMESTAMP),
 
     UNIQUE (CruiseLogID), 
 
@@ -114,7 +117,7 @@ CREATE TABLE CruiseLog (
 
 CREATE INDEX NIX_CruiseLog_CruiseID ON CruiseLog (CruiseID)
 
-CREATE INDEX NIX_CruiseLog_TimeStamp ON CruiseLog (TimeStamp)
+CREATE INDEX NIX_CruiseLog_Created_TS ON CruiseLog (Created_TS)
 
 
 -- ************** CuttingUnit **************
