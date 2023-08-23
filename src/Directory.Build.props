@@ -21,7 +21,7 @@
 		<CruiseDALV2ModelsVersion>$(CruiseDALv2SchemaVersion).$(CruiseDALIncrementalVersion)</CruiseDALV2ModelsVersion>
 
 		<!--  -->
-		<CruiseDALUpconvertVersion>$(CruiseDALv3SchemaVersion).$(CruiseDALIncrementalVersion)01</CruiseDALUpconvertVersion>
+		<CruiseDALUpconvertVersion>$(CruiseDALv3SchemaVersion).$(CruiseDALIncrementalVersion)02</CruiseDALUpconvertVersion>
 		<CruiseDALDownconvertVersion>$(CruiseDALv3SchemaVersion).$(CruiseDALIncrementalVersion)00</CruiseDALDownconvertVersion>
 	</PropertyGroup>
 
