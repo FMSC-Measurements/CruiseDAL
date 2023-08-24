@@ -25,7 +25,10 @@ $@"INSERT INTO {toDbName}.TallyLedger (
     CreatedBy
 )
 SELECT
-    'initFromCountTree-' || cu.Code || ',' || st.Code || ',' || sg.Code || ',' || ifnull(tdv.Species, 'null') || ',' || ifnull(tdv.LiveDead, 'null') || ',' || ifnull(Component_CN, 'master'),
+    (hex( randomblob(4)) || '-' || hex( randomblob(2)) 
+                    || '-' || '4' || substr(hex(randomblob(2)), 2) || '-' 
+                    || substr('AB89', 1 + (abs(random()) % 4), 1) || 
+                    substr(hex(randomblob(2)), 2) || '-' || hex(randomblob(6))) AS TallyLedgerID,
     '{cruiseID}',
     cu.Code AS CuttingUnitCode,
     st.Code AS StratumCode,
@@ -69,7 +72,10 @@ $@"INSERT INTO {toDbName}.TallyLedger(
    CreatedBy
 )
 SELECT
-    'migrateFromTree-' || t.Tree_CN,
+    (hex( randomblob(4)) || '-' || hex( randomblob(2)) 
+                    || '-' || '4' || substr(hex(randomblob(2)), 2) || '-' 
+                    || substr('AB89', 1 + (abs(random()) % 4), 1) || 
+                    substr(hex(randomblob(2)), 2) || '-' || hex(randomblob(6))) AS TallyLedgerID,
     '{cruiseID}',
     t3.TreeID,
     cu.Code AS CuttingUnitCode,

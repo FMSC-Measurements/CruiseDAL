@@ -48,10 +48,16 @@ namespace CruiseDAL.V3.Models
   public String Program { get; set; }
 
   [Field("TimeStamp")]
-  public DateTime TimeStamp { get; set; }
+  public DateTime? TimeStamp { get; set; }
 
   [Field("Level")]
   public String Level { get; set; }
+
+  [Field("CreatedBy")]
+  public String CreatedBy { get; set; }
+
+  [Field("Created_TS")]
+  public DateTime? Created_TS { get; set; }
 
  }
 

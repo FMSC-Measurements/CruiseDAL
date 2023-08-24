@@ -12,7 +12,7 @@ namespace CruiseDAL
 {
     public class CruiseDatastoreBuilder_V3 : IDatastoreBuilder
     {
-        public static readonly Version DATABASE_VERSION = new Version("3.6.4");
+        public static readonly Version DATABASE_VERSION = new Version("3.6.5");
 
         public static readonly IEnumerable<ITableDefinition> TABLE_DEFINITIONS =
         new ITableDefinition[]
@@ -85,7 +85,7 @@ namespace CruiseDAL
             // utility
             new MessageLogTableDefinition(),
             new GlobalsTableDefinition(),
-            new CruiseLogTableDefinition_3_6_0(),
+            new CruiseLogTableDefinition_365(),
         };
 
         public static readonly IEnumerable<IViewDefinition> VIEW_DEFINITIONS =
