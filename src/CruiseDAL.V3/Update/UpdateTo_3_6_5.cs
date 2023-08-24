@@ -30,6 +30,22 @@ namespace CruiseDAL.Update
                     new KeyValuePair<string, string>("CreatedBy", "'updater'"),
                     new KeyValuePair<string, string>("Created_TS", "TimeStamp")
                 });
+
+            // in older versions of CruiseDAL.V3.Upconvert TallyLedger would be initialized with TallyLedgerIDs that weren't globally unique 
+            // this would cause issues when importing cruises into FScruiser. To mitigate this issue we can include add the cruise ID to the
+            // tallyLedgerID making it at least unique to the cruise. 
+            foreach(var cruiseID in conn.QueryScalar<string>("SELECT DISTINCT CruiseID FROM TallyLedger WHERE TallyLedgerID LIKE 'migrateFromTree-%' OR TallyLedgerID LIKE 'initFromCountTree-%';"))
+            {
+                conn.ExecuteNonQuery($"UPDATE TallyLedger SET TallyLedgerID = '{cruiseID}' || '-' || TallyLedgerID WHERE TallyLedgerID LIKE 'migrateFromTree-%' OR TallyLedgerID LIKE 'initFromCountTree-%';");
+                conn.ExecuteNonQuery("INSERT INTO CruiseLog (CruiseID, Message) VALUES (@p1, @p2);", 
+                    new[] { cruiseID, "Applied update 3.6.5 Fix to TallyLedgerIDs" });
+            }
+
+
+            //if(conn.ExecuteScalar<bool>("SELECT count(1) > 0 FROM TallyLedger WHERE TallyLedgerID LIKE 'migrateFromTree-%' OR TallyLedgerID LIKE 'initFromCountTree-%';"))
+            //{
+            //    conn.ExecuteNonQuery("UPDATE TallyLedger SET TallyLedgerID = CruiseID || '-' || TallyLedgerID WHERE TallyLedgerID LIKE 'migrateFromTree-%' OR TallyLedgerID LIKE 'initFromCountTree-%';");
+            //}
         }
     }
 }
