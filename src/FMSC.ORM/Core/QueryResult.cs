@@ -5,6 +5,24 @@ using System.Data.Common;
 
 namespace FMSC.ORM.Core
 {
+    public class QueryResult : QueryResult<object>
+    {
+        public Type Type { get; }
+
+        public QueryResult(Type type, DbConnection connection, DbCommand command, DbTransaction transaction = null, IExceptionProcessor exceptionProcessor = null) 
+            : base(connection, command, transaction, exceptionProcessor)
+        {
+            Type = type ?? throw new ArgumentNullException(nameof(type));
+        }
+
+        public override IEnumerator<object> GetEnumerator()
+        {
+            var exceptionProcessor = ExceptionProcessor;
+            var reader = Connection.ExecuteReader(Command, Transaction, exceptionProcessor);
+            return new QueryEnumerator(Type, reader, exceptionProcessor);
+        }
+    }
+
     public class QueryResult<TResult> : IEnumerable<TResult> where TResult : new()
     {
         public DbCommand Command { get; }
@@ -20,7 +38,7 @@ namespace FMSC.ORM.Core
             ExceptionProcessor = exceptionProcessor;
         }
 
-        public IEnumerator<TResult> GetEnumerator()
+        public virtual IEnumerator<TResult> GetEnumerator()
         {
             var exceptionProcessor = ExceptionProcessor;
             var reader = Connection.ExecuteReader(Command, Transaction, exceptionProcessor);

@@ -8,6 +8,22 @@ using System.Data.Common;
 
 namespace FMSC.ORM.Core
 {
+    public class QueryEnumerator : QueryEnumerator<object>
+    {
+        public QueryEnumerator(Type type, DbDataReader reader, IExceptionProcessor exceptionProcessor)
+            : base(reader, GlobalEntityDescriptionLookup.Instance.LookUpEntityByType(type), exceptionProcessor)
+        {
+            Type = type ?? throw new ArgumentNullException(nameof(type));
+        }
+
+        public Type Type { get; }
+
+        protected override object MakeNew()
+        {
+            return Activator.CreateInstance(Type);
+        }
+    }
+
     public class QueryEnumerator<TResult> : IEnumerator<TResult> where TResult : new()
     {
         private TResult _current = default(TResult);
@@ -24,12 +40,26 @@ namespace FMSC.ORM.Core
         {
             Reader = reader ?? throw new ArgumentNullException(nameof(reader));
             Inflator = InflatorLookup.Instance.GetEntityInflator(reader);
+            ExceptionProcessor = exceptionProcessor;
             Description = GlobalEntityDescriptionLookup.Instance.LookUpEntityByType(typeof(TResult));
+        }
+
+        internal QueryEnumerator(DbDataReader reader, EntityDescription entityDescription, IExceptionProcessor exceptionProcessor)
+        {
+            Reader = reader ?? throw new ArgumentNullException(nameof(reader));
+            Inflator = InflatorLookup.Instance.GetEntityInflator(reader);
+            ExceptionProcessor = exceptionProcessor;
+            Description = entityDescription ?? throw new ArgumentNullException(nameof(entityDescription));
         }
 
         public void Dispose()
         {
             Reader.Dispose();
+        }
+
+        protected virtual TResult MakeNew()
+        {
+            return new TResult();
         }
 
         public bool MoveNext()
@@ -38,7 +68,7 @@ namespace FMSC.ORM.Core
             var inflator = Inflator;
             if (reader.Read())
             {
-                TResult newDO = new TResult();
+                TResult newDO = MakeNew();
                 if (newDO is ISupportInitializeFromDatastore)
                 {
                     throw new NotSupportedException();
