@@ -58,7 +58,8 @@ namespace FMSC.ORM.Sql
                                 IFieldInfoCollection fields,
                                 OnConflictOption option = OnConflictOption.Default,
                                 object keyValue = null,
-                                bool persistKeyvalue = true)
+                                bool persistKeyvalue = true,
+                                IDictionary<string, object> valueOverrides = null)
         {
             if (command is null) { throw new ArgumentNullException(nameof(command)); }
             if (data is null) { throw new ArgumentNullException(nameof(data)); }
@@ -73,7 +74,16 @@ namespace FMSC.ORM.Sql
                 && (pkField.PersistanceFlags & PersistanceFlags.OnInsert) == PersistanceFlags.OnInsert 
                 && keyValue == null)
             {
-                keyValue = pkField.GetFieldValueOrDefault(data);
+                if(valueOverrides != null && valueOverrides.ContainsKey(pkField.Name))
+                {
+                    keyValue = valueOverrides[pkField.Name];
+                }
+                else
+                {
+                    keyValue = pkField.GetFieldValueOrDefault(data);
+                }
+
+                
             }
 
             if (persistKeyvalue && keyValue != null)
@@ -95,7 +105,16 @@ namespace FMSC.ORM.Sql
                 if ((field.PersistanceFlags & PersistanceFlags.OnInsert) == PersistanceFlags.OnInsert
                     && field.IsKeyField == false)
                 {
-                    object value = field.GetFieldValueOrDefault(data);
+                    object value = null;
+                    if(valueOverrides != null && valueOverrides.ContainsKey(field.Name))
+                    {
+                        value = valueOverrides[field.Name];
+                    }
+                    else
+                    {
+                        value = field.GetFieldValueOrDefault(data);
+                    }
+
                     if(value == null) { continue; }
 
                     var param = MakeParameter(command, field, value);

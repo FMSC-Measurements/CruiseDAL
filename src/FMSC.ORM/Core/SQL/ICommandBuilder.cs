@@ -1,5 +1,6 @@
 ﻿using Backpack.SqlBuilder;
 using FMSC.ORM.EntityModel.Support;
+using System.Collections.Generic;
 using System.Data;
 
 namespace FMSC.ORM.Sql
@@ -14,7 +15,8 @@ namespace FMSC.ORM.Sql
                         IFieldInfoCollection fields,
                         OnConflictOption option = OnConflictOption.Default,
                         object keyValue = null,
-                        bool persistKeyvalue = true);
+                        bool persistKeyvalue = true,
+                        IDictionary<string, object> valueOverrides = null);
 
         void BuildUpdate(IDbCommand command,
                          object data,
