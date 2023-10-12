@@ -43,4 +43,19 @@ namespace CruiseDAL.V3.Sync
         public string CruiseID { get; set; }
         public string StratumCode { get; set; }
     }
+
+    public class DatabaseCopyException : Exception
+    {
+        public DatabaseCopyException(string message, string tableName, string sourceCruiseID, string destinationCruiseID, Exception innerException = null)
+            : base(message, innerException)
+        {
+            TableName = tableName;
+            SourceCruiseID = sourceCruiseID;
+            DestinationCruiseID = destinationCruiseID;
+        }
+
+        public string TableName { get; set; }
+        public string SourceCruiseID { get; set; }
+        public string DestinationCruiseID { get; set; }
+    }
 }
