@@ -9,10 +9,7 @@ namespace CruiseDAL.V3.Sync
             Tables = new[]
             {
                 // field setup
-                new CopyTableConfig(typeof(TreeFieldSetup)),
                 new CopyTableConfig(typeof(TreeFieldHeading)),
-
-                new CopyTableConfig(typeof(LogFieldSetup)),
                 new CopyTableConfig(typeof(LogFieldHeading)),
 
                 // design templates
