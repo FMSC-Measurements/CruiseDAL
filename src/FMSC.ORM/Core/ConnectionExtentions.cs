@@ -480,7 +480,8 @@ namespace FMSC.ORM.Core
                 commandBuilder: commandBuilder,
                 exceptionProcessor: exceptionProcessor,
                 keyValue: keyValue,
-                persistKeyvalue: persistKeyvalue);
+                persistKeyvalue: persistKeyvalue,
+                valueOverrides: valueOverrides);
         }
 
         private static object Insert(this DbConnection connection, object data, string tableName,
