@@ -80,6 +80,37 @@ namespace CruiseDAL
             }
         }
 
+        public void Copy(CruiseDatastore_V3 source, CruiseDatastore_V3 destination, string cruiseID, string destinationCruiseID = null)
+        {
+            var srcConn = source.OpenConnection();
+            try
+            {
+                var destConn = destination.OpenConnection();
+                try
+                {
+                    destination.BeginTransaction();
+                    try
+                    {
+                        Copy(srcConn, destConn, cruiseID, destinationCruiseID);
+                        destination.CommitTransaction();
+                    }
+                    catch
+                    {
+                        destination.RollbackTransaction();
+                        throw;
+                    }
+                }
+                finally
+                {
+                    destination.ReleaseConnection();
+                }
+            }
+            finally
+            {
+                source.ReleaseConnection();
+            }
+        }
+
         //public void CopyTable<TTable>(DbConnection source, DbConnection destination, string cruiseID, string destinatinCruiseID = null, OnConflictOption option = OnConflictOption.Default) where TTable : class, new()
         //{
         //    IDictionary<string, object> valueOverrides = null;
