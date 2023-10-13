@@ -38,9 +38,11 @@ namespace CruiseDAL
                 OnConflictOption = onConflict;
             }
 
-            public CopyTableConfig(string tableName, Func<QueryBuilder, QueryBuilder> configRead, IEnumerable<string> dependsOn = null, OnConflictOption onConflict = OnConflictOption.Default)
+            public CopyTableConfig(Type tableType, Action<QueryBuilder> configRead, IEnumerable<string> dependsOn = null, OnConflictOption onConflict = OnConflictOption.Default)
             {
-                TableName = !string.IsNullOrEmpty(tableName) ? tableName : throw new ArgumentException($"'{nameof(tableName)}' cannot be null or empty.", nameof(tableName));
+                var description = GlobalEntityDescriptionLookup.Instance.LookUpEntityByType(tableType);
+                TableName = description.SourceName;
+                TableType = tableType;
                 ConfigRead = configRead ?? throw new ArgumentNullException(nameof(configRead));
                 DependsOn = dependsOn;
                 OnConflictOption = onConflict;
@@ -57,7 +59,7 @@ namespace CruiseDAL
 
             public Action<DbConnection, DbConnection, CopyTableConfig, string, string> Action { get; set; }
 
-            public Func<QueryBuilder, QueryBuilder> ConfigRead { get; set; }
+            public Action<QueryBuilder> ConfigRead { get; set; }
         }
 
         ILogger Logger { get; set; }
@@ -68,7 +70,16 @@ namespace CruiseDAL
         {
             foreach (var table in Tables)
             {
-                
+                if (table.CopyTable is false)
+                {
+                    Logger.Log($"Skipped Copying Table {table.TableName}", "DatabaseCopier", LogLevel.Info);
+                    continue;
+                }
+                else
+                {
+                    Logger.Log($"Copying Table {table.TableName}", "DatabaseCopier", LogLevel.Info);
+                }
+
                 if (table.Action == null)
                 {
                     CopyTable(source, destination, table, cruiseID, destinationCruiseID);
@@ -134,19 +145,19 @@ namespace CruiseDAL
             var tables = Tables.ToArray();
             var tablesLookup = tables.ToDictionary(x => x.TableName);
 
-            foreach(var table in tables)
+            foreach (var table in tables)
             {
-                if(table.CopyTable is false) continue;
+                if (table.CopyTable is false) continue;
 
                 var dependsOn = table.DependsOn;
-                if(dependsOn != null && dependsOn.Any())
+                if (dependsOn != null && dependsOn.Any())
                 {
-                    foreach(var depend in dependsOn)
+                    foreach (var depend in dependsOn)
                     {
-                        if(tablesLookup.ContainsKey(depend))
+                        if (tablesLookup.ContainsKey(depend))
                         {
                             var dependsTable = tablesLookup[depend];
-                            if(dependsTable.CopyTable is false && table.OnConflictOption != OnConflictOption.Ignore)
+                            if (dependsTable.CopyTable is false && table.OnConflictOption != OnConflictOption.Ignore)
                             {
                                 errorsList.Add($"{table.TableName} Depends On {depend} but could experience errors with missing records");
                             }
@@ -159,7 +170,7 @@ namespace CruiseDAL
                 }
             }
 
-            if ( errorsList.Count > 0 )
+            if (errorsList.Count > 0)
             {
                 errors = errorsList.ToArray();
                 return false;
@@ -169,26 +180,12 @@ namespace CruiseDAL
 
         public void CopyTable(DbConnection source, DbConnection destination, CopyTableConfig tableConfig, string cruiseID, string destinatinCruiseID = null, OnConflictOption option = OnConflictOption.Default)
         {
-            if(tableConfig.CopyTable is false) 
-            {
-                Logger.Log($"Skipped Copying Table {tableConfig.TableName}", "DatabaseCopier", LogLevel.Info);
-                return; 
-            }
-
-            Logger.Log($"Copying Table {tableConfig.TableName}", "DatabaseCopier", LogLevel.Info);
-            IDictionary<string, object> valueOverrides = null;
-            if (destinatinCruiseID != null)
-            {
-                valueOverrides = new Dictionary<string, object>
-                {
-                    { "CruiseID", destinatinCruiseID }
-                };
-            }
+            IDictionary<string, object> valueOverrides = GetValueOverrides(destinatinCruiseID);
 
             var query = source.From(tableConfig.TableType);
             if (tableConfig.ConfigRead != null)
             {
-                query = tableConfig.ConfigRead(query);
+                tableConfig.ConfigRead(query);
             }
             else
             {
@@ -198,7 +195,6 @@ namespace CruiseDAL
             var sourceRecs = query.Query(cruiseID);
             try
             {
-
                 foreach (var rec in sourceRecs)
                 {
                     destination.Insert(rec, option: option, valueOverrides: valueOverrides);
@@ -208,6 +204,18 @@ namespace CruiseDAL
             {
                 throw new DatabaseCopyException($"Error Inserting Into {tableConfig.TableName}", tableConfig.TableName, cruiseID, destinatinCruiseID, ex);
             }
+        }
+
+        protected IDictionary<string, object> GetValueOverrides(string destinatinCruiseID)
+        {
+            if (destinatinCruiseID != null)
+            {
+                return new Dictionary<string, object>
+                {
+                    { "CruiseID", destinatinCruiseID }
+                };
+            }
+            return null;
         }
     }
 }
