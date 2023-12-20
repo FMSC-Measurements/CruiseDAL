@@ -55,7 +55,7 @@ SELECT
     -- -1 * (((pe.Plot_Stratum_CN << 4) << 4) + 3) AS RowID,
     'Plot' AS TableName,
     ifnull(pe.Plot_Stratum_CN, 0) AS CN_Number, -- need to put in 0 if null because in V2 CN_Number is required, but if error is due to missing Plot_Stratum CN is null
-    pe.Field AS ColumnName,
+    ifnull(pe.Field, 'none') AS ColumnName,
     pe.Level,
     pe.Message,
     'FScruiser' AS Program,

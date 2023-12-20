@@ -168,7 +168,7 @@ namespace CruiseDAL.V3.DownConvert.Test.DownMigrators
                 TreeID = tree.TreeID,
                 DBH = 101,
                 // we need to set height, otherwise we will get an error on the tree and we are just testing warnings
-                TotalHeight = 1, 
+                TotalHeight = 1,
             };
             db.Insert(tm);
 
@@ -240,7 +240,39 @@ namespace CruiseDAL.V3.DownConvert.Test.DownMigrators
 
             var error = errors.Single();
             error.Suppress.Should().Be(false);
+        }
 
+        //for some plot errors the error applies to the whole plot
+        // so it doesn't make sence for the field column to have a
+        // this can be an issue in V2 so needs to be handled in conversion
+        [Fact]
+        public void MigratePlotErrors_blankPlotField()
+        {
+            var toPath = GetTempFilePath("MigratePlotErrors_blankPlotField.cruise");
+            var fromPath = GetTempFilePath("MigratePlotErrors_blankPlotField.crz3");
+
+            var init = new DatabaseInitializer();
+            var cruiseID = init.CruiseID;
+            using var db = init.CreateDatabaseFile(fromPath);
+
+            var plot = new Plot
+            {
+                CruiseID = cruiseID,
+                PlotID = Guid.NewGuid().ToString(),
+                PlotNumber = 1,
+                CuttingUnitCode = "u1",
+            };
+
+            db.Insert(plot);
+
+            using var toDb = new DAL(toPath, true);
+
+            var downMigrator = new DownMigrator();
+            downMigrator.MigrateFromV3ToV2(cruiseID, db, toDb);
+
+            var errorLogs = toDb.From<CruiseDAL.V2.Models.ErrorLog>().Query().ToArray();
+
+            errorLogs.Should().Contain(x => x.Message.EndsWith("no strata in plot"));
         }
     }
 }

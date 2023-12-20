@@ -69,7 +69,7 @@ WITH
         p.PlotNumber,
         ps.StratumCode,
         ps.Plot_Stratum_CN,
-        'Unit:' || p.CuttingUnitCode || ' Plot:' || p.PlotNumber ||  ' no strata in plot ' AS Message,
+        'Unit:' || p.CuttingUnitCode || ' Plot:' || p.PlotNumber ||  ' no strata in plot' AS Message,
         NULL AS Field,
         'E' AS Level,
         0 AS IsResolved,
