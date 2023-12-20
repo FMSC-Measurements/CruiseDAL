@@ -5,3 +5,5 @@ This file allows us to test the update to 342 to ensure that those missing field
 
 44149_Little Nolan_TS_202307101240_GalaxyTabActive3-KT8D723.crz3 - this file has a '' (blank) value for Tree Grade Dead.
 This caused a error when updating from 3.5.4 to 3.5.6
+
+22301_Ojito IRTC_TS.crz3 - this is an example of a file created using Cruise Design where there is an issue with the TallyLedgerIDs. See NatCruise issue #120
