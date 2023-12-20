@@ -1,13 +1,7 @@
 ﻿using CruiseDAL.TestCommon;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Xunit.Abstractions;
-using FMSC.ORM.Core;
-using CruiseDAL.V3.Models;
 using CruiseDAL.TestCommon.V3;
+using CruiseDAL.V3.Models;
+using Xunit.Abstractions;
 
 namespace CruiseDAL.V3.Sync.Test.UnitTests
 {
@@ -51,11 +45,40 @@ namespace CruiseDAL.V3.Sync.Test.UnitTests
             using var templateDb = init.CreateDatabase();
 
             var templateCopier = new TemplateCopier();
+            templateCopier.CheckIsTableConfigValid(out var errors).Should().BeTrue();
 
             var cruiseID = init.CruiseID;
             destTemplateDb.Insert(new Sale { SaleID = init.SaleID, SaleNumber = "1234" });
             destTemplateDb.Insert(new Cruise { CruiseID = cruiseID, SaleID = init.SaleID, CruiseNumber = "1234", SaleNumber = "1234" });
 
+            templateCopier.Copy(templateDb, destTemplateDb, cruiseID);
+        }
+
+        [Fact]
+        public void Copy_WithExisting()
+        {
+            var destTemplatePath = GetTempFilePath("DestTemplate.crz3t");
+
+            var init = new TemplateDatabaseInitializer();
+            using var templateDb = init.CreateDatabase();
+
+            using var destTemplateDb = new CruiseDatastore_V3(destTemplatePath, true);
+            var cruiseID = init.CruiseID;
+            destTemplateDb.Insert(new Sale { SaleID = init.SaleID, SaleNumber = "1234" });
+            destTemplateDb.Insert(new Cruise { CruiseID = cruiseID, SaleID = init.SaleID, CruiseNumber = "1234", SaleNumber = "1234" });
+
+            // add some pre existing records, this is to test copied data isn't creating conflicts on RowID values
+            // note some tables have other unique constraints,  
+            //destTemplateDb.Insert(new TreeFieldHeading { CruiseID = init.CruiseID, Field = nameof(TreeMeasurment.DBH), Heading = "something" });
+            //destTemplateDb.Insert(new LogFieldHeading { CruiseID = init.CruiseID, Field = nameof(Log.Grade), Heading = "something" });
+            destTemplateDb.Insert(new StratumTemplate { CruiseID = init.CruiseID, StratumTemplateName = "something" });
+            destTemplateDb.Insert(new Species { CruiseID = init.CruiseID, SpeciesCode = "something" });
+            destTemplateDb.Insert(new Species_Product { CruiseID = init.CruiseID, SpeciesCode = "something", ContractSpecies = "something" });
+            destTemplateDb.Insert(new TreeDefaultValue { CruiseID = init.CruiseID, SpeciesCode = "something", PrimaryProduct = "something" });
+
+
+            var templateCopier = new TemplateCopier();
+            templateCopier.CheckIsTableConfigValid(out var errors).Should().BeTrue();
             templateCopier.Copy(templateDb, destTemplateDb, cruiseID);
         }
 

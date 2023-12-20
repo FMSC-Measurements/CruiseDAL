@@ -1,4 +1,5 @@
-﻿using CruiseDAL.V3.Models;
+﻿using Backpack.SqlBuilder;
+using CruiseDAL.V3.Models;
 using FMSC.ORM.Core;
 using System;
 using System.Collections.Generic;
@@ -93,7 +94,7 @@ namespace CruiseDAL.V3.Sync
 
         }
 
-        private void CopyTreeLocation_Tombstone(DbConnection source, DbConnection dest, CopyTableConfig config, string srcCruiseID, string destCruiseID)
+        private void CopyTreeLocation_Tombstone(DbConnection source, DbConnection dest, string srcCruiseID, string destCruiseID, OnConflictOption option)
         {
             var valueOverrides = GetValueOverrides(destCruiseID);
 
@@ -101,11 +102,11 @@ namespace CruiseDAL.V3.Sync
             foreach (var ttmb in treetmb)
             {
                 var tltmb = source.From<TreeLocation_Tombstone>().Where("TreeID = @p1;").Query(ttmb.TreeID).FirstOrDefault();
-                if (tltmb != null) { dest.Insert(tltmb, valueOverrides: valueOverrides); }
+                if (tltmb != null) { dest.Insert(tltmb, valueOverrides: valueOverrides, option: option); }
             }
         }
 
-        private void CopyTreeFieldValue_Tombstone(DbConnection source, DbConnection dest, CopyTableConfig config, string srcCruiseID, string destCruiseID)
+        private void CopyTreeFieldValue_Tombstone(DbConnection source, DbConnection dest, string srcCruiseID, string destCruiseID, OnConflictOption option)
         {
             var valueOverrides = GetValueOverrides(destCruiseID);
 
@@ -115,12 +116,12 @@ namespace CruiseDAL.V3.Sync
                 var treeFieldValuestmb = source.From<TreeFieldValue_Tombstone>().Where("TreeID = @p1;").Query(ttmb.TreeID);
                 foreach (var tfvtmb in treeFieldValuestmb)
                 {
-                    dest.Insert(tfvtmb, valueOverrides: valueOverrides);
+                    dest.Insert(tfvtmb, valueOverrides: valueOverrides, option: option);
                 }
             }
         }
 
-        private void CopyTreeMeasurment_Tombstones(DbConnection source, DbConnection dest, CopyTableConfig config, string srcCruiseID, string destCruiseID)
+        private void CopyTreeMeasurment_Tombstones(DbConnection source, DbConnection dest, string srcCruiseID, string destCruiseID, OnConflictOption option)
         {
             var valueOverrides = GetValueOverrides(destCruiseID);
 
@@ -128,11 +129,11 @@ namespace CruiseDAL.V3.Sync
             foreach (var ttmb in treetmb)
             {
                 var tmtmb = source.From<TreeMeasurment_Tombstone>().Where("TreeID = @p1;").Query(ttmb.TreeID).FirstOrDefault();
-                if (tmtmb != null) { dest.Insert(tmtmb, valueOverrides: valueOverrides); }
+                if (tmtmb != null) { dest.Insert(tmtmb, valueOverrides: valueOverrides, option: option); }
             }
         }
 
-        private void CopySale(DbConnection source, DbConnection destination, CopyTableConfig config, string srcCruiseID, string destCruiseID)
+        private void CopySale(DbConnection source, DbConnection destination, string srcCruiseID, string destCruiseID, OnConflictOption option)
         {
             var valueOverrides = GetValueOverrides(destCruiseID);
             var cruiseID = destCruiseID ?? srcCruiseID;
@@ -144,19 +145,19 @@ namespace CruiseDAL.V3.Sync
                     .Join("Cruise AS cr", "USING (SaleNumber)")
                     .Where("CruiseID = @p1")
                     .Query(srcCruiseID).FirstOrDefault();
-                destination.Insert(sale, valueOverrides: valueOverrides);
+                destination.Insert(sale, valueOverrides: valueOverrides, option: option);
             }
         }
 
-        private void CopyCruise(DbConnection source, DbConnection dest, CopyTableConfig config, string srcCruiseID, string destCruiseID)
+        private void CopyCruise(DbConnection source, DbConnection dest, string srcCruiseID, string destCruiseID, OnConflictOption option)
         {
             var valueOverrides = GetValueOverrides(destCruiseID);
 
             var cruise = source.From<Cruise>().Where("CruiseID = @p1;").Query(srcCruiseID).FirstOrDefault();
-            dest.Insert(cruise, valueOverrides: valueOverrides);
+            dest.Insert(cruise, valueOverrides: valueOverrides, option: option);
         }
 
-        private static void CopySale(DbConnection source, DbConnection destination, string cruiseID)
+        private static void CopySale(DbConnection source, DbConnection destination, string cruiseID, OnConflictOption option)
         {
             if (destination.ExecuteScalar<int>("SELECT count(*) FROM Sale JOIN Cruise USING (SaleNumber) WHERE CruiseID = @p1;", new[] { cruiseID }) == 0)
             {
@@ -164,7 +165,7 @@ namespace CruiseDAL.V3.Sync
                     .Join("Cruise AS cr", "USING (SaleNumber)")
                     .Where("CruiseID = @p1")
                     .Query(cruiseID).FirstOrDefault();
-                destination.Insert(sale);
+                destination.Insert(sale, option: option);
             }
         }
     }

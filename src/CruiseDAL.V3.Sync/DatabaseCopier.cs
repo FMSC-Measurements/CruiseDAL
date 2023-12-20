@@ -12,6 +12,49 @@ using System.Linq;
 
 namespace CruiseDAL
 {
+    public class CopyTableConfig
+    {
+        public CopyTableConfig(Type tableType, IEnumerable<string> dependsOn = null, OnConflictOption onConflict = OnConflictOption.Default)
+        {
+            var description = GlobalEntityDescriptionLookup.Instance.LookUpEntityByType(tableType);
+            TableName = description.SourceName;
+            TableType = tableType;
+            DependsOn = dependsOn;
+            OnConflictOption = onConflict;
+        }
+
+        public CopyTableConfig(string tableName, Action<DbConnection, DbConnection, string, string, OnConflictOption> action, IEnumerable<string> dependsOn = null, OnConflictOption onConflict = OnConflictOption.Default)
+        {
+            TableName = !string.IsNullOrEmpty(tableName) ? tableName : throw new ArgumentException($"'{nameof(tableName)}' cannot be null or empty.", nameof(tableName));
+            Action = action ?? throw new ArgumentNullException(nameof(action));
+            DependsOn = dependsOn;
+            OnConflictOption = onConflict;
+        }
+
+        public CopyTableConfig(Type tableType, Action<QueryBuilder> configRead, IEnumerable<string> dependsOn = null, OnConflictOption onConflict = OnConflictOption.Default)
+        {
+            var description = GlobalEntityDescriptionLookup.Instance.LookUpEntityByType(tableType);
+            TableName = description.SourceName;
+            TableType = tableType;
+            ConfigRead = configRead ?? throw new ArgumentNullException(nameof(configRead));
+            DependsOn = dependsOn;
+            OnConflictOption = onConflict;
+        }
+
+        public bool CopyTable { get; set; } = true;
+
+        public string TableName { get; set; }
+        public OnConflictOption OnConflictOption { get; set; } = OnConflictOption.Default;
+
+        public Type TableType { get; set; }
+
+        public IEnumerable<string> DependsOn { get; set; }
+
+        public Action<DbConnection, DbConnection, string, string, OnConflictOption> Action { get; set; }
+
+        public Action<QueryBuilder> ConfigRead { get; set; }
+    }
+
     public class DatabaseCopier
     {
         public DatabaseCopier()
@@ -19,50 +62,9 @@ namespace CruiseDAL
             Logger = LoggerProvider.Get();
         }
 
-        public class CopyTableConfig
-        {
-            public CopyTableConfig(Type tableType, IEnumerable<string> dependsOn = null, OnConflictOption onConflict = OnConflictOption.Default)
-            {
-                var description = GlobalEntityDescriptionLookup.Instance.LookUpEntityByType(tableType);
-                TableName = description.SourceName;
-                TableType = tableType;
-                DependsOn = dependsOn;
-                OnConflictOption = onConflict;
-            }
+        private ILogger Logger { get; set; }
 
-            public CopyTableConfig(string tableName, Action<DbConnection, DbConnection, CopyTableConfig, string, string> action, IEnumerable<string> dependsOn = null, OnConflictOption onConflict = OnConflictOption.Default)
-            {
-                TableName = !string.IsNullOrEmpty(tableName) ? tableName : throw new ArgumentException($"'{nameof(tableName)}' cannot be null or empty.", nameof(tableName));
-                Action = action ?? throw new ArgumentNullException(nameof(action));
-                DependsOn = dependsOn;
-                OnConflictOption = onConflict;
-            }
-
-            public CopyTableConfig(Type tableType, Action<QueryBuilder> configRead, IEnumerable<string> dependsOn = null, OnConflictOption onConflict = OnConflictOption.Default)
-            {
-                var description = GlobalEntityDescriptionLookup.Instance.LookUpEntityByType(tableType);
-                TableName = description.SourceName;
-                TableType = tableType;
-                ConfigRead = configRead ?? throw new ArgumentNullException(nameof(configRead));
-                DependsOn = dependsOn;
-                OnConflictOption = onConflict;
-            }
-
-            public bool CopyTable { get; set; } = true;
-
-            public string TableName { get; set; }
-            public OnConflictOption OnConflictOption { get; set; } = OnConflictOption.Default;
-
-            public Type TableType { get; set; }
-
-            public IEnumerable<string> DependsOn { get; set; }
-
-            public Action<DbConnection, DbConnection, CopyTableConfig, string, string> Action { get; set; }
-
-            public Action<QueryBuilder> ConfigRead { get; set; }
-        }
-
-        ILogger Logger { get; set; }
+        public OnConflictOption DefaultOnConflictOption { get; set; }
 
         public IEnumerable<CopyTableConfig> Tables { get; protected set; }
 
@@ -75,19 +77,8 @@ namespace CruiseDAL
                     Logger.Log($"Skipped Copying Table {table.TableName}", "DatabaseCopier", LogLevel.Info);
                     continue;
                 }
-                else
-                {
-                    Logger.Log($"Copying Table {table.TableName}", "DatabaseCopier", LogLevel.Info);
-                }
 
-                if (table.Action == null)
-                {
-                    CopyTable(source, destination, table, cruiseID, destinationCruiseID);
-                }
-                else
-                {
-                    table.Action(source, destination, table, cruiseID, destinationCruiseID);
-                }
+                CopyTable(table, source, destination, cruiseID, destinationCruiseID);
             }
         }
 
@@ -122,23 +113,7 @@ namespace CruiseDAL
             }
         }
 
-        //public void CopyTable<TTable>(DbConnection source, DbConnection destination, string cruiseID, string destinatinCruiseID = null, OnConflictOption option = OnConflictOption.Default) where TTable : class, new()
-        //{
-        //    IDictionary<string, object> valueOverrides = null;
-        //    if(destinatinCruiseID != null)
-        //    {
-        //        valueOverrides = new Dictionary<string, object>();
-        //        valueOverrides.Add("CruiseID", destinatinCruiseID);
-        //    }
-
-        //    var sourceRecs = source.From<TTable>().Where("CruiseID = @p1;").Query(cruiseID);
-        //    foreach (var rec in sourceRecs)
-        //    {
-        //        destination.Insert(rec, option: option, valueOverrides: valueOverrides);
-        //    }
-        //}
-
-        public bool ValidateTables(out IEnumerable<string> errors)
+        public bool CheckIsTableConfigValid(out IEnumerable<string> errors)
         {
             errors = null;
             var errorsList = new List<string>();
@@ -178,14 +153,36 @@ namespace CruiseDAL
             return true;
         }
 
-        public void CopyTable(DbConnection source, DbConnection destination, CopyTableConfig tableConfig, string cruiseID, string destinatinCruiseID = null, OnConflictOption option = OnConflictOption.Default)
+        public void CopyTable(CopyTableConfig tableConfig, DbConnection source, DbConnection destination, string cruiseID, string destinatinCruiseID = null)
+        {
+            Logger.Log($"Copying Table {tableConfig.TableName}", "DatabaseCopier", LogLevel.Info);
+
+            var conflictOption = (tableConfig.OnConflictOption == OnConflictOption.Default) ? DefaultOnConflictOption : tableConfig.OnConflictOption;
+            try
+            {
+                if (tableConfig.Action != null)
+                {
+                    tableConfig.Action(source, destination, cruiseID, destinatinCruiseID, conflictOption);
+                }
+                else
+                {
+                    CopyTable(tableConfig.TableType, source, destination, cruiseID, destinatinCruiseID, conflictOption);
+                }
+            }
+            catch (SqliteException ex)
+            {
+                throw new DatabaseCopyException($"Error Inserting Into {tableConfig.TableName}", tableConfig.TableName, cruiseID, destinatinCruiseID, ex);
+            }
+        }
+
+        protected void CopyTable(Type tableType, DbConnection source, DbConnection destination, string cruiseID, string destinatinCruiseID = null, OnConflictOption option = OnConflictOption.Default, Action<QueryBuilder> configRead = null)
         {
             IDictionary<string, object> valueOverrides = GetValueOverrides(destinatinCruiseID);
 
-            var query = source.From(tableConfig.TableType);
-            if (tableConfig.ConfigRead != null)
+            var query = source.From(tableType);
+            if (configRead != null)
             {
-                tableConfig.ConfigRead(query);
+                configRead(query);
             }
             else
             {
@@ -193,16 +190,13 @@ namespace CruiseDAL
             }
 
             var sourceRecs = query.Query(cruiseID);
-            try
+
+            foreach (var rec in sourceRecs)
             {
-                foreach (var rec in sourceRecs)
-                {
-                    destination.Insert(rec, option: option, valueOverrides: valueOverrides);
-                }
-            }
-            catch (SqliteException ex)
-            {
-                throw new DatabaseCopyException($"Error Inserting Into {tableConfig.TableName}", tableConfig.TableName, cruiseID, destinatinCruiseID, ex);
+                destination.Insert(rec,
+                    option: option,
+                    valueOverrides: valueOverrides,
+                    persistKeyvalue: false); // using persisKeyValue = false, generally primary keys are RowID fields and are not used for fKeys
             }
         }
 
