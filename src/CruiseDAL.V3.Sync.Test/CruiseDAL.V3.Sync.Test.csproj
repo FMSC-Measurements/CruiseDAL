@@ -5,6 +5,7 @@
 		<Nullable>enable</Nullable>
 		<ImplicitUsings>enable</ImplicitUsings>
 		<RootNamespace>CruiseDAL.V3.Sync.Test</RootNamespace>
+		<IsTestProject>true</IsTestProject>
 	</PropertyGroup>
 
 	<ItemGroup>
@@ -28,7 +29,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<Content Include="TestFiles\*">
+		<Content Include="TestFiles\**\*" LinkBase="TestFiles">
 			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
 		</Content>
 	</ItemGroup>

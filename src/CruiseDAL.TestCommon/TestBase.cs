@@ -97,6 +97,11 @@ namespace CruiseDAL.TestCommon
             if (File.Exists(sourcePath) == false) { throw new FileNotFoundException(sourcePath); }
 
             var targetPath = Path.Combine(TestTempPath, fileName);
+            var targetDir = Path.GetDirectoryName(targetPath);
+            if (!Directory.Exists(targetDir))
+            {
+                Directory.CreateDirectory(targetDir);
+            }
 
             RegesterFileForCleanUp(targetPath);
             File.Copy(sourcePath, targetPath, true);
