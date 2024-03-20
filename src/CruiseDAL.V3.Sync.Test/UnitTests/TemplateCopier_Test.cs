@@ -80,6 +80,12 @@ namespace CruiseDAL.V3.Sync.Test.UnitTests
             var templateCopier = new TemplateCopier();
             templateCopier.CheckIsTableConfigValid(out var errors).Should().BeTrue();
             templateCopier.Copy(templateDb, destTemplateDb, cruiseID);
+
+            var tarCount = templateDb.From<TreeAuditRule>().Count();
+            var tarSelCount = templateDb.From<TreeAuditRuleSelector>().Count();
+
+            destTemplateDb.From<TreeAuditRule>().Count().Should().Be(tarCount);
+            destTemplateDb.From<TreeAuditRuleSelector>().Count().Should().Be(tarSelCount);
         }
 
         [Fact]
@@ -100,6 +106,12 @@ namespace CruiseDAL.V3.Sync.Test.UnitTests
             destTemplateDb.Insert(new Cruise { CruiseID = destCruiseID, SaleID = destSaleID, CruiseNumber = "1234", SaleNumber = "1234" });
 
             templateCopier.Copy(templateDb, destTemplateDb, init.CruiseID, destCruiseID);
+
+            var tarCount = templateDb.From<TreeAuditRule>().Count();
+            var tarSelCount = templateDb.From<TreeAuditRuleSelector>().Count();
+
+            destTemplateDb.From<TreeAuditRule>().Count().Should().Be(tarCount);
+            destTemplateDb.From<TreeAuditRuleSelector>().Count().Should().Be(tarSelCount);
         }
     }
 }
