@@ -47,6 +47,9 @@ namespace CruiseDAL.V3.Sync
 
         private Dictionary<string, string> TreeAuditRuleIDMaps { get; set; }
 
+
+        // when copying tree audit rules from a template to a cruise file, we need to change the treeAuditRuleID values so that 
+        // cruises created by this template can co-exist with other cruises in the save database.
         public void CopyTreeAuditRules(DbConnection source, DbConnection destination, string cruiseID, string destCruiseID, OnConflictOption conflictOption)
         {
             TreeAuditRuleMaskBytes = new Guid().ToByteArray();

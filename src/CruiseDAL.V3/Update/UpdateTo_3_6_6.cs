@@ -29,6 +29,16 @@ namespace CruiseDAL.Update
 
         protected override void DoUpdate(DbConnection conn, DbTransaction transaction, IExceptionProcessor exceptionProcessor)
         {
+            // When importing cruises into FScruiser and TreeAuditRuleID is used to determin if a TreeAuditRule already exists.
+            // becuase when creating a cruise using a V3 template file this value gets copied to the new cruise with out being changed
+            // it won't be imported if another cruise was created with the same template. 
+
+            // to fix this, we are going to update all TreeAuditRuleIDs by XORing them with the cruiseID. this will create a 
+            // new TreeAuditRuleID that is uniqe based on the cruiseID value. So that given a original TreeAuditRuleID and CruiseID
+            // we will get a new TreeAuditRuleID. Any updated database will have the same new TreeAuditRuleID if the CruiseID is the same. 
+
+            // logic for copying data from templates will also be updated so that new cruises will not have the same TreeAuditRuleIDs
+
             var tarMaps = conn.Query<TreeAuditRuleIDMapping>("SELECT CruiseID, TreeAuditRuleID FROM TreeAuditRule;")
                 .ToArray();
 
