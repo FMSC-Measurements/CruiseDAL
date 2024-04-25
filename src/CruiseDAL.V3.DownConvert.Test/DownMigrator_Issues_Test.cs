@@ -33,5 +33,22 @@ namespace CruiseDAL.V3.DownConvert.Test
             var toSale = toDb.From<V2.Models.Sale>().Query().SingleOrDefault();
             toSale.Should().NotBeNull();
         }
+
+        [Fact]
+        public void DublinTSRecon()
+        {
+            var fromPath = GetTestFile("40483_DublinTS_ Recon.crz3");
+            var fromDb = new CruiseDatastore_V3(fromPath);
+            var cruiseID = fromDb.From<Cruise>().Query().Single().CruiseID;
+
+            var toPath = GetTempFilePathWithExt(".cruise");
+            var toDb = new DAL(toPath, true);
+
+            var downMigrator = new DownMigrator();
+            downMigrator.MigrateFromV3ToV2(cruiseID, fromDb, toDb);
+
+            //var toSale = toDb.From<V2.Models.Sale>().Query().SingleOrDefault();
+            //toSale.Should().NotBeNull();
+        }
     }
 }
