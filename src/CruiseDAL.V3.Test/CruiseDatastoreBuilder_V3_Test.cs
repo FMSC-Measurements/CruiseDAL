@@ -111,8 +111,14 @@ namespace CruiseDAL.V3.Test
         [Fact]
         public void ContainsAllViewDefinitions()
         {
+            var excludedFiles = new[]
+            {
+                nameof(TreeAuditErrorViewDefinition), // replaced by TreeAuditErrorViewDefinition_364
+            };
+
             var tableTypes = Assembly.GetAssembly(typeof(CruiseDatastoreBuilder_V3)).GetTypes()
-                .Where(x => typeof(IViewDefinition).IsAssignableFrom(x) && x != typeof(IViewDefinition))
+                .Where(x => typeof(IViewDefinition).IsAssignableFrom(x) && x != typeof(IViewDefinition)
+                && !excludedFiles.Contains(x.Name) )
                 .ToArray();
 
             CruiseDatastoreBuilder_V3.VIEW_DEFINITIONS.Select(x => x.GetType()).Should().Contain(tableTypes);

@@ -229,20 +229,37 @@ namespace FMSC.ORM.Core
             return new QueryBuilder<TResult>(connection, builder);
         }
 
+        public static QueryBuilder From(this DbConnection connection, Type dataType, TableOrSubQuery source = null, ICommandBuilder commandBuilder = null)
+        {
+            commandBuilder = commandBuilder ?? DefaultCommandBuilder;
+            var discription = GlobalEntityDescriptionLookup.Instance.LookUpEntityByType(dataType);
+            SqlSelectBuilder builder = commandBuilder.BuildSelect(source ?? discription.Source, discription.Fields);
+
+            return new QueryBuilder(dataType, connection, builder);
+        }
+
         #endregion From
 
         #region Query
 
         public static IEnumerable<TResult> Query<TResult>(this DbConnection connection, string commandText, object[] paramaters = null, DbTransaction transaction = null, IExceptionProcessor exceptionProcessor = null) where TResult : new()
         {
-            var discription = GlobalEntityDescriptionLookup.Instance.LookUpEntityByType(typeof(TResult));
-
             var command = connection.CreateCommand();
             command.CommandText = commandText;
             command.SetParams(paramaters);
 
             return new QueryResult<TResult>(connection, command, transaction, exceptionProcessor);
             
+        }
+
+        public static IEnumerable<object> Query(this DbConnection connection, Type type, string commandText, object[] paramaters = null, DbTransaction transaction = null, IExceptionProcessor exceptionProcessor = null)
+        {
+            var command = connection.CreateCommand();
+            command.CommandText = commandText;
+            command.SetParams(paramaters);
+
+            return new QueryResult(type, connection, command, transaction, exceptionProcessor);
+
         }
 
 #if !NET35_CF
@@ -269,6 +286,17 @@ namespace FMSC.ORM.Core
             command.AddParams(paramaters);
 
             return new QueryResult<TResult>(connection, command, transaction, exceptionProcessor);
+        }
+
+        public static IEnumerable<object> Query2(this DbConnection connection, Type type, string commandText, object paramaters = null, DbTransaction transaction = null, IExceptionProcessor exceptionProcessor = null)
+        {
+            var discription = GlobalEntityDescriptionLookup.Instance.LookUpEntityByType(type);
+
+            var command = connection.CreateCommand();
+            command.CommandText = commandText;
+            command.AddParams(paramaters);
+
+            return new QueryResult(type, connection, command, transaction, exceptionProcessor);
         }
 
 #if !NET35_CF
@@ -438,7 +466,8 @@ namespace FMSC.ORM.Core
                                     OnConflictOption option = OnConflictOption.Default,
                                     ICommandBuilder commandBuilder = null, IExceptionProcessor exceptionProcessor = null,
                                     object keyValue = null,
-                                    bool persistKeyvalue = true)
+                                    bool persistKeyvalue = true,
+                                    IDictionary<string, object> valueOverrides = null)
         {
             if (data is null) { throw new ArgumentNullException(nameof(data)); }
 
@@ -451,7 +480,8 @@ namespace FMSC.ORM.Core
                 commandBuilder: commandBuilder,
                 exceptionProcessor: exceptionProcessor,
                 keyValue: keyValue,
-                persistKeyvalue: persistKeyvalue);
+                persistKeyvalue: persistKeyvalue,
+                valueOverrides: valueOverrides);
         }
 
         private static object Insert(this DbConnection connection, object data, string tableName,
@@ -460,7 +490,8 @@ namespace FMSC.ORM.Core
                                       ICommandBuilder commandBuilder = null,
                                       IExceptionProcessor exceptionProcessor = null, 
                                       object keyValue = null,
-                                      bool persistKeyvalue = true)
+                                      bool persistKeyvalue = true,
+                                      IDictionary<string,object> valueOverrides = null)
         {
             if (data == null) { throw new ArgumentNullException("data"); }
 
@@ -471,7 +502,8 @@ namespace FMSC.ORM.Core
                 commandBuilder.BuildInsert(command, data, tableName, fields,
                     option: option,
                     keyValue: keyValue,
-                    persistKeyvalue: persistKeyvalue);
+                    persistKeyvalue: persistKeyvalue,
+                    valueOverrides: valueOverrides);
 
                 try
                 {

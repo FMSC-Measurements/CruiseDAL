@@ -5,6 +5,7 @@ using FMSC.ORM.EntityModel.Support;
 using FMSC.ORM.Logging;
 using FMSC.ORM.Sql;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data.Common;
@@ -134,6 +135,22 @@ namespace FMSC.ORM.Core
         #endregion Abstract Members
 
         #region fluent interface
+
+        public QueryBuilder From(Type dataType, TableOrSubQuery source = null)
+        {
+            if (dataType is null) { throw new ArgumentNullException(nameof(dataType)); }
+
+            var ed = EntityDescriptionLookup.LookUpEntityByType(dataType);
+            SqlSelectBuilder builder = CommandBuilder.BuildSelect(source ?? ed.Source, ed.Fields);
+
+            return new QueryBuilder(dataType, this, builder);
+        }
+
+        public QueryBuilder From(Type dataType, SqlSelectBuilder selectCMD)
+        {
+            var source = new TableOrSubQuery(selectCMD, null);
+            return From(dataType, source);
+        }
 
         public QueryBuilder<T> From<T>(SqlSelectBuilder selectCMD) where T : class, new()
         {
@@ -413,36 +430,43 @@ namespace FMSC.ORM.Core
                             while (reader.Read())
                             {
                                 TResult newDO = new TResult();
-                                if (newDO is ISupportInitializeFromDatastore)
-                                {
-                                    ((ISupportInitializeFromDatastore)newDO).Initialize(this);
-                                }
-                                if (newDO is ISupportInitialize)
-                                {
-                                    ((ISupportInitialize)newDO).BeginInit();// allow dataobject to suspend property changed notifications or whatever
-                                }
-                                try
-                                {
-                                    inflator.ReadData(reader, newDO, discription);
-                                }
-                                catch (Exception e)
-                                {
-                                    if (exceptionProcessor != null)
-                                    {
-                                        throw exceptionProcessor.ProcessException(e, connection, commandText, CurrentTransaction);
-                                    }
-                                    else
-                                    {
-                                        throw;
-                                    }
-                                }
-                                finally
-                                {
-                                    if (newDO is ISupportInitialize)
-                                    {
-                                        ((ISupportInitialize)newDO).EndInit();
-                                    }
-                                }
+                                Inflate(commandText, connection, discription, exceptionProcessor, reader, inflator, newDO);
+
+                                yield return newDO;
+                            }
+                        }
+                    }
+                }
+                finally
+                {
+                    ReleaseConnection();
+                }
+            }
+        }
+
+        public IEnumerable<object> Query(Type type, string commandText, params object[] paramaters)
+        {
+            lock (PersistentConnectionSyncLock)
+            {
+                var connection = OpenConnection();
+                try
+                {
+                    var discription = GlobalEntityDescriptionLookup.Instance.LookUpEntityByType(type);
+
+                    using (var command = CreateCommand())
+                    {
+                        command.CommandText = commandText;
+                        command.SetParams(paramaters);
+
+                        var exceptionProcessor = ExceptionProcessor;
+                        using (var reader = connection.ExecuteReader(command, CurrentTransaction, exceptionProcessor: exceptionProcessor))
+                        {
+                            var inflator = InflatorLookup.Instance.GetEntityInflator(reader);
+
+                            while (reader.Read())
+                            {
+                                object newDO = Activator.CreateInstance(type);
+                                Inflate(commandText, connection, discription, exceptionProcessor, reader, inflator, newDO);
 
                                 yield return newDO;
                             }
@@ -478,36 +502,7 @@ namespace FMSC.ORM.Core
                             while (reader.Read())
                             {
                                 TResult newDO = new TResult();
-                                if (newDO is ISupportInitializeFromDatastore)
-                                {
-                                    ((ISupportInitializeFromDatastore)newDO).Initialize(this);
-                                }
-                                if (newDO is ISupportInitialize)
-                                {
-                                    ((ISupportInitialize)newDO).BeginInit();// allow dataobject to suspend property changed notifications or whatever
-                                }
-                                try
-                                {
-                                    inflator.ReadData(reader, newDO, discription);
-                                }
-                                catch (Exception e)
-                                {
-                                    if (exceptionProcessor != null)
-                                    {
-                                        throw exceptionProcessor.ProcessException(e, connection, commandText, CurrentTransaction);
-                                    }
-                                    else
-                                    {
-                                        throw;
-                                    }
-                                }
-                                finally
-                                {
-                                    if (newDO is ISupportInitialize)
-                                    {
-                                        ((ISupportInitialize)newDO).EndInit();
-                                    }
-                                }
+                                Inflate(commandText, connection, discription, exceptionProcessor, reader, inflator, newDO);
 
                                 yield return newDO;
                             }
@@ -517,6 +512,76 @@ namespace FMSC.ORM.Core
                 finally
                 {
                     ReleaseConnection();
+                }
+            }
+        }
+
+        public IEnumerable<object> Query2(Type type, string commandText, object paramaters)
+        {
+            lock (PersistentConnectionSyncLock)
+            {
+                var connection = OpenConnection();
+                try
+                {
+                    var discription = GlobalEntityDescriptionLookup.Instance.LookUpEntityByType(type);
+
+                    using (var command = CreateCommand())
+                    {
+                        command.CommandText = commandText;
+                        command.AddParams(paramaters);
+
+                        var exceptionProcessor = ExceptionProcessor;
+                        using (var reader = connection.ExecuteReader(command, CurrentTransaction, exceptionProcessor: exceptionProcessor))
+                        {
+                            var inflator = InflatorLookup.Instance.GetEntityInflator(reader);
+
+                            while (reader.Read())
+                            {
+                                object newDO = Activator.CreateInstance(type);
+                                Inflate(commandText, connection, discription, exceptionProcessor, reader, inflator, newDO);
+
+                                yield return newDO;
+                            }
+                        }
+                    }
+                }
+                finally
+                {
+                    ReleaseConnection();
+                }
+            }
+        }
+
+        private void Inflate(string commandText, DbConnection connection, EntityDescription discription, IExceptionProcessor exceptionProcessor, DbDataReader reader, EntityInflator inflator, object newDO)
+        {
+            if (newDO is ISupportInitializeFromDatastore)
+            {
+                ((ISupportInitializeFromDatastore)newDO).Initialize(this);
+            }
+            if (newDO is ISupportInitialize)
+            {
+                ((ISupportInitialize)newDO).BeginInit();// allow dataobject to suspend property changed notifications or whatever
+            }
+            try
+            {
+                inflator.ReadData(reader, newDO, discription);
+            }
+            catch (Exception e)
+            {
+                if (exceptionProcessor != null)
+                {
+                    throw exceptionProcessor.ProcessException(e, connection, commandText, CurrentTransaction);
+                }
+                else
+                {
+                    throw;
+                }
+            }
+            finally
+            {
+                if (newDO is ISupportInitialize)
+                {
+                    ((ISupportInitialize)newDO).EndInit();
                 }
             }
         }

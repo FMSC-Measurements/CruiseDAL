@@ -54,8 +54,8 @@ UNION ALL
 SELECT
     -- -1 * (((pe.Plot_Stratum_CN << 4) << 4) + 3) AS RowID,
     'Plot' AS TableName,
-    ifnull(pe.Plot_Stratum_CN, 0) AS CN_Number, -- need to put in 0 if null because in V2 CN_Number is required, but if error is due to missing Plot_Stratum CN is null
-    pe.Field AS ColumnName,
+    ifnull(pe.Plot_Stratum_CN, 0) AS CN_Number, -- need to put in something if null because in V2 CN_Number is required, but if error is due to missing Plot_Stratum CN is null
+    ifnull(pe.Field, pe.CuttingUnitCode || pe.PlotNumber || pe.Message) AS ColumnName, -- if Plot_Stratum is null, i.e. missing stratum error, we also need message to be unique, so we include unit and plotnumber just incase message isn't unique
     pe.Level,
     pe.Message,
     'FScruiser' AS Program,

@@ -12,5 +12,6 @@
     <Compile Include="$(MSBuildThisFileDirectory)DatabaseInitializer.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)TableDefinitionsTestDataProvider.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)TableNamesTestDataProvider.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)TemplateDatabaseInitializer.cs" />
   </ItemGroup>
 </Project>

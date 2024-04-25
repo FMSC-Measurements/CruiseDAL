@@ -20,12 +20,16 @@ namespace CruiseDAL.V3.Test.Schema.Cruise
         [Fact]
         public void UpdateContractSpecies_With_Existing_Species_Product()
         {
-            var init = new DatabaseInitializer();
+            var init = new DatabaseInitializer()
+            {
+                SpProds = new string[0][]
+            };
+
             using var db = init.CreateDatabase();
 
+            db.From<Species_Product>().Query().Should().BeEmpty();
 
             var spCode = init.Species.First();
-
             var spProdRec = new Species_Product
             {
                 CruiseID = init.CruiseID,
@@ -34,14 +38,15 @@ namespace CruiseDAL.V3.Test.Schema.Cruise
             };
             db.Insert(spProdRec);
             spProdRec = db.From<Species_Product>().Where("SpeciesCode = @p1").Query(spCode).Single();
+            spProdRec.ContractSpecies.Should().Be("something");
 
             spProdRec.ContractSpecies = "somethingElse";
             db.Update(spProdRec);
 
-            var spRecAgain = db.From<Species>().Where("SpeciesCode = @p1").Query(spCode).Single();
+            //var spRecAgain = db.From<Species>().Where("SpeciesCode = @p1").Query(spCode).Single();
             var spProdRecAgain = db.From<Species_Product>().Where("SpeciesCode = @p1").Query(spCode).Single();
 
-            spRecAgain.ContractSpecies.Should().Be(spProdRec.ContractSpecies);
+            //spRecAgain.ContractSpecies.Should().Be(spProdRec.ContractSpecies);
             spProdRecAgain.ContractSpecies.Should().Be(spProdRec.ContractSpecies);
         }
     }

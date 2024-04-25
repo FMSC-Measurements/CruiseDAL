@@ -3,12 +3,13 @@ using System.Collections.Generic;
 
 namespace FMSC.ORM.Core.SQL.QueryBuilder
 {
-    public interface IQueryBuilder<T> where T : new()
+    public interface IQueryBuilder<T>
     {
         IEnumerable<T> Query(params Object[] selectionArgs);
 
         IEnumerable<T> Query2(object parameters);
 
+        [Obsolete]
         IEnumerable<T> Read(params Object[] selectionArgs);
 
         long Count(params Object[] selectionArgs);
@@ -16,31 +17,31 @@ namespace FMSC.ORM.Core.SQL.QueryBuilder
         long Count2(object parameters);
     }
 
-    public interface IQuerryAcceptsLimit<T> : IQueryBuilder<T> where T : new()
+    public interface IQuerryAcceptsLimit<T> : IQueryBuilder<T>
     {
         IQueryBuilder<T> Limit(int limit, int offset);
     }
 
-    public interface IQuerryAcceptsOrderBy<T> : IQuerryAcceptsLimit<T> where T : new()
+    public interface IQuerryAcceptsOrderBy<T> : IQuerryAcceptsLimit<T>
     {
         IQuerryAcceptsLimit<T> OrderBy(IEnumerable<string> terms);
 
         IQuerryAcceptsLimit<T> OrderBy(params String[] termsArgs);
     }
 
-    public interface IQuerryAcceptsGroupBy<T> : IQuerryAcceptsOrderBy<T> where T : new()
+    public interface IQuerryAcceptsGroupBy<T> : IQuerryAcceptsOrderBy<T>
     {
         IQuerryAcceptsOrderBy<T> GroupBy(IEnumerable<string> terms);
 
         IQuerryAcceptsOrderBy<T> GroupBy(params String[] termsArgs);
     }
 
-    public interface IQuerryAcceptsWhere<T> : IQuerryAcceptsGroupBy<T> where T : new()
+    public interface IQuerryAcceptsWhere<T> : IQuerryAcceptsGroupBy<T>
     {
         IQuerryAcceptsGroupBy<T> Where(string expression);
     }
 
-    public interface IQuerryAcceptsJoin<T> : IQuerryAcceptsWhere<T> where T : new()
+    public interface IQuerryAcceptsJoin<T> : IQuerryAcceptsWhere<T>
     {
         IQuerryAcceptsJoin<T> Join(string table, string joinContraint);
 

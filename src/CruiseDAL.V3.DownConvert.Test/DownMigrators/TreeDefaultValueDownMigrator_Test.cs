@@ -1,5 +1,6 @@
 ﻿using CruiseDAL.DownMigrators;
 using CruiseDAL.TestCommon;
+using CruiseDAL.UpConvert;
 using CruiseDAL.V3.Models;
 using FluentAssertions;
 using System.Linq;
@@ -186,6 +187,71 @@ namespace CruiseDAL.V3.Test.DownMigrators
             var tdvs = toDb.From<V2.Models.TreeDefaultValue>().Query().ToArray();
 
             tdvs.Should().OnlyContain(x => x.ContractSpecies == null);
+        }
+
+        [Fact]
+        public void RoundTripContractSpecies()
+        {
+            var v3Path = GetTempFilePath("RoundTripContractSpecies.crz3");
+            var v2Path = GetTempFilePath("RoundTripContractSpecies.cruise");
+            var v3AgainPath = GetTempFilePath("RoundTripContractSpecies_v3Again.crz3");
+
+            var specifProd = "01";
+
+            var init = new DatabaseInitializer()
+            {
+                Species = new[] { "sp1", "sp2" },
+                TreeDefaults = new[]
+                {
+                    new TreeDefaultValue {SpeciesCode = "sp1", PrimaryProduct = specifProd, },
+                    new TreeDefaultValue {SpeciesCode = null, PrimaryProduct = specifProd, },
+                    new TreeDefaultValue {SpeciesCode = "sp1", PrimaryProduct = null, },
+                    new TreeDefaultValue {SpeciesCode = null, PrimaryProduct = null, },
+
+                    new TreeDefaultValue {SpeciesCode = "sp2", PrimaryProduct = specifProd, },
+                    new TreeDefaultValue {SpeciesCode = "sp2", PrimaryProduct = null, },
+                },
+                Subpops = new SubPopulation[] { },
+                SpProds = null,
+            };
+
+            using var v3Db = init.CreateDatabaseFile(v3Path);
+            using var v2Db = new DAL(v2Path, true);
+
+            var spProds = new[]
+            {
+                new Species_Product
+                {
+                    CruiseID = init.CruiseID,
+                    SpeciesCode = "sp1",
+                    ContractSpecies = "something",
+                    
+                },
+                new Species_Product
+                {
+                    CruiseID = init.CruiseID,
+                    SpeciesCode = "sp2",
+                    ContractSpecies = "something2",
+                    PrimaryProduct = specifProd,
+                },
+            };
+
+            foreach (var spProd in spProds)
+            {
+                v3Db.Insert(spProd);
+            }
+            
+
+
+            var downMigrator = new DownMigrator();
+            downMigrator.MigrateFromV3ToV2(init.CruiseID, v3Db, v2Db);
+
+            var v3AgainDb = new CruiseDatastore_V3(v3AgainPath, true);
+            var upconverter = new Migrator();
+            upconverter.MigrateFromV2ToV3(v2Db, v3AgainDb);
+
+            var spProdsAgain = v3AgainDb.From<V3.Models.Species_Product>().Query().ToArray();
+            spProdsAgain.Should().HaveCount(spProds.Length);
         }
     }
 }

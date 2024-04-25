@@ -1,3 +1,6 @@
 # 52203_Goshen Blueberry_TS_202210201203_GalaxyTabActivePro-8PC5.crz3
 Recieved file from Tony on 2022.10.24. User created TS from Recon cruise. When processed CP crashes. 
 Converted V2 file dosn't contain a sale record...
+
+# 40483_DublinTS_ Recon.crz3
+fails convert because of errors on plot records
