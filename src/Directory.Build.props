@@ -11,12 +11,12 @@
 		<FMSCORMversion>2.6.14.0</FMSCORMversion>
 
 		<CruiseDALv2SchemaVersion>2.7.4</CruiseDALv2SchemaVersion>
-		<CruiseDALv3SchemaVersion>3.6.6</CruiseDALv3SchemaVersion>
+		<CruiseDALv3SchemaVersion>3.6.7</CruiseDALv3SchemaVersion>
 		<CruiseDALIncrementalVersion>124</CruiseDALIncrementalVersion>
 		<CruiseDALCoreVersion>3.1.0.$(CruiseDALIncrementalVersion)</CruiseDALCoreVersion>
 		<CruiseDALV2Version>$(CruiseDALv2SchemaVersion).$(CruiseDALIncrementalVersion)</CruiseDALV2Version>
 		<CruiseDALV3Version>$(CruiseDALv3SchemaVersion).$(CruiseDALIncrementalVersion)</CruiseDALV3Version>
-		<CruiseDALV3SyncVersion>$(CruiseDALv3SchemaVersion).$(CruiseDALIncrementalVersion)00</CruiseDALV3SyncVersion>
+		<CruiseDALV3SyncVersion>$(CruiseDALv3SchemaVersion).$(CruiseDALIncrementalVersion)01</CruiseDALV3SyncVersion>
 		<CruiseDALV3ModelsVersion>$(CruiseDALv3SchemaVersion).$(CruiseDALIncrementalVersion)</CruiseDALV3ModelsVersion>
 		<CruiseDALV2ModelsVersion>$(CruiseDALv2SchemaVersion).$(CruiseDALIncrementalVersion)</CruiseDALV2ModelsVersion>
 

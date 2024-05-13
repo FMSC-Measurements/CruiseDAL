@@ -18,7 +18,7 @@ namespace CruiseDAL.V3.Sync.Syncers
             var flags = options.TreeAuditResolution;
             if (flags == SyncOption.Lock) { return syncResult; }
 
-            var where = "TreeAuditRuleID = @TreeAuditRuleID AND TreeID = @TreeID";
+            var where = "TreeAuditRuleID = @TreeAuditRuleID AND TreeID = @TreeID AND CruiseID = @CruiseID";
 
             var sourceItems = source.From<TreeAuditResolution>().Where("CruiseID = @p1").Query(cruiseID);
             foreach (var i in sourceItems)

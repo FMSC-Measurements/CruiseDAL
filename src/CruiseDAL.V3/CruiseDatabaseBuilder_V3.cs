@@ -1,6 +1,9 @@
 ﻿using CruiseDAL.Schema;
 using CruiseDAL.Schema.Cruise.Lookup;
 using CruiseDAL.Schema.Tables.CrusieLog;
+using CruiseDAL.Schema.Tables.TreeAuditResolution;
+using CruiseDAL.Schema.Tables.TreeAuditRule;
+using CruiseDAL.Schema.Tables.TreeAuditRuleSelector;
 using CruiseDAL.Schema.Views;
 using FMSC.ORM.Core;
 using FMSC.ORM.Logging;
@@ -12,7 +15,7 @@ namespace CruiseDAL
 {
     public class CruiseDatastoreBuilder_V3 : IDatastoreBuilder
     {
-        public static readonly Version DATABASE_VERSION = new Version("3.6.6");
+        public static readonly Version DATABASE_VERSION = new Version("3.6.7");
 
         public static readonly IEnumerable<ITableDefinition> TABLE_DEFINITIONS =
         new ITableDefinition[]
@@ -65,9 +68,9 @@ namespace CruiseDAL
             new TallyLedgerTableDefinition_3_5_6(),
 
             // validation
-            new TreeAuditRuleTableDefinition(),
-            new TreeAuditRuleSelectorTableDefinition_3_5_5(),
-            new TreeAuditResolutionTableDefinition(),
+            new TreeAuditRuleTableDefinition_367(),
+            new TreeAuditRuleSelectorTableDefinition_367(),
+            new TreeAuditResolutionTableDefinition_367(),
             new LogGradeAuditRuleTableDefinition(),
 
             // processing

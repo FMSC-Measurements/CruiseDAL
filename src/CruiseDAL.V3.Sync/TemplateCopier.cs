@@ -52,41 +52,47 @@ namespace CruiseDAL.V3.Sync
         // cruises created by this template can co-exist with other cruises in the save database.
         public void CopyTreeAuditRules(DbConnection source, DbConnection destination, string cruiseID, string destCruiseID, OnConflictOption conflictOption)
         {
-            TreeAuditRuleMaskBytes = new Guid().ToByteArray();
             var tarIDMaps =  new Dictionary<string, string>();
+            bool remapTarIDs = destCruiseID != null && destCruiseID != cruiseID;
             
 
             var tars = source.From<TreeAuditRule>().Where("CruiseID = @p1").Query(cruiseID);
             foreach(var tar in tars)
             {
-                var tarIDBytes = new Guid(tar.TreeAuditRuleID).ToByteArray();
-                var newTarIBytes = tarIDBytes.Zip(TreeAuditRuleMaskBytes, (x, y) => (byte)(x ^ y)).ToArray();
-                var newTarID = new Guid(newTarIBytes).ToString();
-
-                tarIDMaps.Add(tar.TreeAuditRuleID, newTarID);
-
-                tar.TreeAuditRuleID = newTarID;
-                if (destCruiseID != null)
+                if (remapTarIDs)
                 {
+                    var newTarID = GetNewTreeAuditRuleID(tar.TreeAuditRuleID, destCruiseID);
+
+                    tarIDMaps.Add(tar.TreeAuditRuleID, newTarID);
+
+                    tar.TreeAuditRuleID = newTarID;
                     tar.CruiseID = destCruiseID;
                 }
 
                 destination.Insert(tar, persistKeyvalue: false, option: conflictOption);
             }
 
-            TreeAuditRuleIDMaps = tarIDMaps;
+            TreeAuditRuleIDMaps = (remapTarIDs) ? tarIDMaps : null;
+        }
+
+        public static string GetNewTreeAuditRuleID(string tarID, string cruiseID)
+        {
+            var cruiseIDmask = new Guid(cruiseID).ToByteArray();
+            var tarIDBytes = new Guid(tarID).ToByteArray();
+            var newTarIBytes = tarIDBytes.Zip(cruiseIDmask, (x, y) => (byte)(x ^ y)).ToArray();
+            return new Guid(newTarIBytes).ToString();
         }
 
         public void CopyTreeAuditRuleSelector(DbConnection source, DbConnection destination, string cruiseID, string destCruiseID, OnConflictOption conflictOption)
         {
-            var tarIDMaps = TreeAuditRuleIDMaps ?? throw new NullReferenceException(nameof(TreeAuditRuleIDMaps));
+            var tarIDMaps = TreeAuditRuleIDMaps;
 
             var tarSels = source.From<TreeAuditRuleSelector>().Where("CruiseID = @p1").Query(cruiseID);
             foreach(var tarSel in  tarSels)
             {
-                tarSel.TreeAuditRuleID = tarIDMaps[tarSel.TreeAuditRuleID];
-                if (destCruiseID != null)
+                if (tarIDMaps != null)
                 {
+                    tarSel.TreeAuditRuleID = tarIDMaps[tarSel.TreeAuditRuleID];
                     tarSel.CruiseID = destCruiseID;
                 }
 

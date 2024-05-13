@@ -18,7 +18,7 @@ namespace CruiseDAL.V3.Sync.Syncers
             var flags = options.TreeAuditRuleSelector;
             if (flags == SyncOption.Lock) { return syncResult; }
 
-            var where = "TreeAuditRuleID = @TreeAuditRuleID AND ifnull(SpeciesCode, '') = ifnull(@SpeciesCode, '') AND ifnull(LiveDead, '') = ifnull(@LiveDead, '') AND ifnull(PrimaryProduct, '') = ifnull(@PrimaryProduct, '')";
+            var where = "CruiseID = @CruiseID AND TreeAuditRuleID = @TreeAuditRuleID AND ifnull(SpeciesCode, '') = ifnull(@SpeciesCode, '') AND ifnull(LiveDead, '') = ifnull(@LiveDead, '') AND ifnull(PrimaryProduct, '') = ifnull(@PrimaryProduct, '')";
 
             var sourceItems = source.From<TreeAuditRuleSelector>().Where("CruiseID = @p1").Query(cruiseID);
             foreach (var i in sourceItems)

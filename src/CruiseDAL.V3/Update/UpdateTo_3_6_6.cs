@@ -17,18 +17,21 @@ namespace CruiseDAL.Update
         {
         }
 
-        protected override void BeforeBegin(DbConnection conn, IExceptionProcessor exceptionProcessor)
-        {
-            conn.ExecuteNonQuery("PRAGMA foreign_keys=OFF;", exceptionProcessor: exceptionProcessor);
-        }
+        //protected override void BeforeBegin(DbConnection conn, IExceptionProcessor exceptionProcessor)
+        //{
+        //    conn.ExecuteNonQuery("PRAGMA foreign_keys=OFF;", exceptionProcessor: exceptionProcessor);
+        //}
 
-        protected override void AfterCommit(DbConnection conn, IExceptionProcessor exceptionProcessor)
-        {
-            conn.ExecuteNonQuery("PRAGMA foreign_keys=ON;", exceptionProcessor: exceptionProcessor);
-        }
+        //protected override void AfterCommit(DbConnection conn, IExceptionProcessor exceptionProcessor)
+        //{
+        //    conn.ExecuteNonQuery("PRAGMA foreign_keys=ON;", exceptionProcessor: exceptionProcessor);
+        //}
 
         protected override void DoUpdate(DbConnection conn, DbTransaction transaction, IExceptionProcessor exceptionProcessor)
         {
+            // automatically turned back off when the transaction commits
+            conn.ExecuteNonQuery("PRAGMA defer_foreign_keys=ON;");
+
             // When importing cruises into FScruiser and TreeAuditRuleID is used to determin if a TreeAuditRule already exists.
             // becuase when creating a cruise using a V3 template file this value gets copied to the new cruise with out being changed
             // it won't be imported if another cruise was created with the same template. 
@@ -65,16 +68,18 @@ namespace CruiseDAL.Update
                 if(tarIDLookup.ContainsKey(map.NewTreeAuditRuleID))
                 {
                     var match = tarIDLookup[map.NewTreeAuditRuleID];
-                    match.Cull = true;
-                    map.Cull = true;
+                    match.Ignore = true;
+                    map.Ignore = true;
                 }
             }
 
             foreach(var map in tarMaps)
             {
-                if (map.Cull) { continue; }
-                conn.ExecuteNonQuery("UPDATE TreeAuditRule SET TreeAuditRuleID = @p1 WHERE TreeAuditRuleID = @p2", new[] { map.NewTreeAuditRuleID, map.TreeAuditRuleID }, transaction, exceptionProcessor);
-                conn.ExecuteNonQuery("UPDATE TreeAuditRuleSelector SET TreeAuditRuleID = @p1 WHERE TreeAuditRuleID = @p2", new[] { map.NewTreeAuditRuleID, map.TreeAuditRuleID }, transaction, exceptionProcessor);
+                if (map.Ignore) { continue; }
+                conn.ExecuteNonQuery("UPDATE TreeAuditRule SET TreeAuditRuleID = @p1 WHERE TreeAuditRuleID = @p2;"
+                    + "UPDATE TreeAuditRuleSelector SET TreeAuditRuleID = @p1 WHERE TreeAuditRuleID = @p2;" 
+                    + "UPDATE TreeAuditResolution SET TreeAuditRuleID = @p1 WHERE TreeAuditRuleID = @p2;"
+                    , new[] { map.NewTreeAuditRuleID, map.TreeAuditRuleID }, transaction, exceptionProcessor);
             }
         }
 
@@ -88,7 +93,7 @@ namespace CruiseDAL.Update
             public string NewTreeAuditRuleID { get; set; }
 
             [IgnoreField]
-            public bool Cull {  get; set; }
+            public bool Ignore {  get; set; }
         }
     }
 }

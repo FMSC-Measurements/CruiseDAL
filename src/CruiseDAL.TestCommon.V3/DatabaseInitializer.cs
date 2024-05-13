@@ -22,30 +22,33 @@ namespace CruiseDAL.TestCommon
         public Stratum[] PlotStrata { get; set; }
         public Stratum[] NonPlotStrata { get; set; }
 
-        public DatabaseInitializer()
+        public DatabaseInitializer(bool includeDesign = true)
         {
             CruiseID = Guid.NewGuid().ToString();
             var saleID = SaleID = Guid.NewGuid().ToString();
             SaleNumber = (saleID.GetHashCode() % 10000).ToString();
 
-            var units = Units = new string[] { "u1", "u2" };
-
-            var plotStrata = PlotStrata = new[]
+            if (includeDesign)
             {
+
+                var units = Units = new string[] { "u1", "u2" };
+
+                var plotStrata = PlotStrata = new[]
+                {
                 new Stratum{ StratumCode = "st1", Method = "PNT" },
                 new Stratum{ StratumCode = "st2", Method = "PCM" },
-            };
+                };
 
-            var nonPlotStrata = NonPlotStrata = new[]
-            {
+                var nonPlotStrata = NonPlotStrata = new[]
+                {
                 new Stratum{ StratumCode = "st3", Method = "STR" },
                 new Stratum{ StratumCode = "st4", Method = "STR" },
-            };
+                };
 
-            var strata = Strata = plotStrata.Concat(nonPlotStrata).ToArray();
+                var strata = Strata = plotStrata.Concat(nonPlotStrata).ToArray();
 
-            UnitStrata = new[]
-            {
+                UnitStrata = new[]
+                {
                 new CuttingUnit_Stratum {CuttingUnitCode = units[0], StratumCode = plotStrata[0].StratumCode },
                 new CuttingUnit_Stratum {CuttingUnitCode = units[0], StratumCode = plotStrata[1].StratumCode},
                 new CuttingUnit_Stratum {CuttingUnitCode = units[1], StratumCode = plotStrata[1].StratumCode},
@@ -53,163 +56,119 @@ namespace CruiseDAL.TestCommon
                 new CuttingUnit_Stratum {CuttingUnitCode = units[0], StratumCode = nonPlotStrata[0].StratumCode },
                 new CuttingUnit_Stratum {CuttingUnitCode = units[0], StratumCode = nonPlotStrata[1].StratumCode},
                 new CuttingUnit_Stratum {CuttingUnitCode = units[1], StratumCode = nonPlotStrata[1].StratumCode},
-            };
+                };
 
-            var species = Species = new string[] { "sp1", "sp2", "sp3" };
+                var species = Species = new string[] { "sp1", "sp2", "sp3" };
 
-            var spProds = SpProds = new string[][] { 
-                new[] { "sp1", "sp1" }, 
-                new[] { "sp2", "sp2" }, 
-                new[] { "sp3", "sp3" } 
-            };
+                var spProds = SpProds = new string[][] {
+                new[] { "sp1", "sp1" },
+                new[] { "sp2", "sp2" },
+                new[] { "sp3", "sp3" }
+                };
 
-            var sampleGroups = SampleGroups = new[]
-            {
+                var sampleGroups = SampleGroups = new[]
+                {
                 new SampleGroup {SampleGroupCode = "sg1", StratumCode = plotStrata[0].StratumCode, SamplingFrequency = 101, TallyBySubPop = true},
                 new SampleGroup {SampleGroupCode = "sg2", StratumCode = plotStrata[1].StratumCode, SamplingFrequency = 102, TallyBySubPop = false},
 
                 new SampleGroup {SampleGroupCode = "sg1", StratumCode = nonPlotStrata[0].StratumCode, SamplingFrequency = 101, TallyBySubPop = true},
                 new SampleGroup {SampleGroupCode = "sg2", StratumCode = nonPlotStrata[1].StratumCode, SamplingFrequency = 102, TallyBySubPop = false},
-            };
+                };
 
-            TreeDefaults = new[]
-            {
+                TreeDefaults = new[]
+                {
                 new TreeDefaultValue {SpeciesCode = species[0], PrimaryProduct = "01"},
                 new TreeDefaultValue {SpeciesCode = species[1], PrimaryProduct = "01"},
                 new TreeDefaultValue {SpeciesCode = species[2], PrimaryProduct = "01"},
-            };
+                };
 
-            Subpops = new[]
-            {
-                new SubPopulation {
-                    StratumCode = sampleGroups[0].StratumCode,
-                    SampleGroupCode = sampleGroups[0].SampleGroupCode,
-                    SpeciesCode = species[0],
-                    LiveDead = "L",
-                },
-                new SubPopulation {
-                    StratumCode = sampleGroups[0].StratumCode,
-                    SampleGroupCode = sampleGroups[0].SampleGroupCode,
-                    SpeciesCode = species[0],
-                    LiveDead = "D",
-                },
-                new SubPopulation {
-                    StratumCode = sampleGroups[0].StratumCode,
-                    SampleGroupCode = sampleGroups[0].SampleGroupCode,
-                    SpeciesCode = species[1],
-                    LiveDead = "L",
-                },
-                new SubPopulation {
-                    StratumCode = sampleGroups[0].StratumCode,
-                    SampleGroupCode = sampleGroups[0].SampleGroupCode,
-                    SpeciesCode = species[2],
-                    LiveDead = "L",
-                },
+                Subpops = new[]
+                {
+                    new SubPopulation {
+                        StratumCode = sampleGroups[0].StratumCode,
+                        SampleGroupCode = sampleGroups[0].SampleGroupCode,
+                        SpeciesCode = species[0],
+                        LiveDead = "L",
+                    },
+                    new SubPopulation {
+                        StratumCode = sampleGroups[0].StratumCode,
+                        SampleGroupCode = sampleGroups[0].SampleGroupCode,
+                        SpeciesCode = species[0],
+                        LiveDead = "D",
+                    },
+                    new SubPopulation {
+                        StratumCode = sampleGroups[0].StratumCode,
+                        SampleGroupCode = sampleGroups[0].SampleGroupCode,
+                        SpeciesCode = species[1],
+                        LiveDead = "L",
+                    },
+                    new SubPopulation {
+                        StratumCode = sampleGroups[0].StratumCode,
+                        SampleGroupCode = sampleGroups[0].SampleGroupCode,
+                        SpeciesCode = species[2],
+                        LiveDead = "L",
+                    },
 
-                // plot strata
-                new SubPopulation {
-                    StratumCode = sampleGroups[2].StratumCode,
-                    SampleGroupCode = sampleGroups[2].SampleGroupCode,
-                    SpeciesCode = species[0],
-                    LiveDead = "L",
-                },
-                new SubPopulation {
-                    StratumCode = sampleGroups[2].StratumCode,
-                    SampleGroupCode = sampleGroups[2].SampleGroupCode,
-                    SpeciesCode = species[1],
-                    LiveDead = "L",
-                },
-                new SubPopulation {
-                    StratumCode = sampleGroups[2].StratumCode,
-                    SampleGroupCode = sampleGroups[2].SampleGroupCode,
-                    SpeciesCode = species[2],
-                    LiveDead = "L",
-                },
-            };
+                    // plot strata
+                    new SubPopulation {
+                        StratumCode = sampleGroups[2].StratumCode,
+                        SampleGroupCode = sampleGroups[2].SampleGroupCode,
+                        SpeciesCode = species[0],
+                        LiveDead = "L",
+                    },
+                    new SubPopulation {
+                        StratumCode = sampleGroups[2].StratumCode,
+                        SampleGroupCode = sampleGroups[2].SampleGroupCode,
+                        SpeciesCode = species[1],
+                        LiveDead = "L",
+                    },
+                    new SubPopulation {
+                        StratumCode = sampleGroups[2].StratumCode,
+                        SampleGroupCode = sampleGroups[2].SampleGroupCode,
+                        SpeciesCode = species[2],
+                        LiveDead = "L",
+                    },
+                };
+            }
         }
 
         public CruiseDatastore_V3 CreateDatabase(string cruiseID = null, string saleID = null, string saleNumber = null)
         {
-            cruiseID = cruiseID ?? CruiseID;
-            saleID = saleID ?? SaleID;
-            saleNumber = saleNumber ?? SaleNumber;
-
-            var units = Units;
-
-            var strata = Strata;
-
-            var unitStrata = UnitStrata;
-
-            var sampleGroups = SampleGroups;
-
-            var species = Species;
-
-            var tdvs = TreeDefaults;
-
-            var subPops = Subpops;
-
             var database = new CruiseDatastore_V3();
 
-            InitializeDatabase(database, cruiseID, saleID, saleNumber, units, strata, unitStrata, sampleGroups, species, tdvs, subPops);
+            PopulateDatabase(database, cruiseID, saleID, saleNumber);
 
             return database;
         }
 
         public CruiseDatastore_V3 CreateDatabaseWithAllTables(string cruiseID = null, string saleID = null, string saleNumber = null)
         {
-            cruiseID = cruiseID ?? CruiseID;
-            saleID = saleID ?? SaleID;
-            saleNumber = saleNumber ?? SaleNumber;
-
-            var units = Units;
-
-            var strata = Strata;
-
-            var unitStrata = UnitStrata;
-
-            var sampleGroups = SampleGroups;
-
-            var species = Species;
-
-            var tdvs = TreeDefaults;
-
-            var subPops = Subpops;
-
             var database = new CruiseDatastore_V3();
 
-            InitializeDatabaseAllTables(database, cruiseID, saleID, saleNumber, units, strata, unitStrata, sampleGroups, species, tdvs, subPops);
+            PopulateDatabaseWithAllTables(database, cruiseID, saleID, saleNumber);
 
             return database;
         }
 
         public CruiseDatastore_V3 CreateDatabaseFileWithAllTables(string path, string cruiseID = null, string saleID = null, string saleNumber = null)
         {
-            cruiseID = cruiseID ?? CruiseID;
-            saleID = saleID ?? SaleID;
-            saleNumber = saleNumber ?? SaleNumber;
-
-            var units = Units;
-
-            var strata = Strata;
-
-            var unitStrata = UnitStrata;
-
-            var sampleGroups = SampleGroups;
-
-            var species = Species;
-
-            var tdvs = TreeDefaults;
-
-            var subPops = Subpops;
-
             var database = new CruiseDatastore_V3(path, true);
 
-            InitializeDatabaseAllTables(database, cruiseID, saleID, saleNumber, units, strata, unitStrata, sampleGroups, species, tdvs, subPops);
+            PopulateDatabaseWithAllTables(database, cruiseID, saleID, saleNumber);
 
             return database;
         }
 
         public CruiseDatastore_V3 CreateDatabaseFile(string path, string cruiseID = null, string saleID = null, string saleNumber = null)
+        {
+            var database = new CruiseDatastore_V3(path, true);
+
+            PopulateDatabase(database, cruiseID, saleID, saleNumber);
+
+            return database;
+        }
+
+        public void PopulateDatabase(CruiseDatastore database, string cruiseID = null, string saleID = null, string saleNumber = null)
         {
             cruiseID = cruiseID ?? CruiseID;
             saleID = saleID ?? SaleID;
@@ -229,19 +188,30 @@ namespace CruiseDAL.TestCommon
 
             var subPops = Subpops;
 
-            var database = new CruiseDatastore_V3(path, true);
+            InitializeDatabase(database, cruiseID, saleID, saleNumber, units, strata, unitStrata, sampleGroups, species, tdvs, subPops);
+        }
 
-            InitializeDatabase(database, cruiseID, saleID, saleNumber, 
-                units, 
-                strata, 
-                unitStrata, 
-                sampleGroups, 
-                species, 
-                tdvs, 
-                subPops, 
-                spProds: SpProds);
+        public void PopulateDatabaseWithAllTables(CruiseDatastore database, string cruiseID = null, string saleID = null, string saleNumber = null)
+        {
+            cruiseID = cruiseID ?? CruiseID;
+            saleID = saleID ?? SaleID;
+            saleNumber = saleNumber ?? SaleNumber;
 
-            return database;
+            var units = Units;
+
+            var strata = Strata;
+
+            var unitStrata = UnitStrata;
+
+            var sampleGroups = SampleGroups;
+
+            var species = Species;
+
+            var tdvs = TreeDefaults;
+
+            var subPops = Subpops;
+
+            InitializeDatabaseAllTables(database, cruiseID, saleID, saleNumber, units, strata, unitStrata, sampleGroups, species, tdvs, subPops);
         }
 
         public static void InitializeDatabase(CruiseDatastore db,
@@ -261,6 +231,7 @@ namespace CruiseDAL.TestCommon
             {
                 SaleID = saleID,
                 SaleNumber = saleNumber,
+                Region = "01",
             });
 
             db.Insert(new Cruise()
@@ -357,7 +328,7 @@ namespace CruiseDAL.TestCommon
                 subPops,
                 spProds);
 
-            foreach(var st in strata)
+            foreach (var st in strata)
             {
                 var treeFieldSetup = new TreeFieldSetup()
                 {
@@ -445,8 +416,8 @@ namespace CruiseDAL.TestCommon
                 StratumCode = stratumCode,
                 SampleGroupCode = "sg1",
                 SpeciesCode = "sp1",
-                
-                
+
+
             };
             db.Insert(plotTree);
 
@@ -488,7 +459,7 @@ namespace CruiseDAL.TestCommon
             var treeMeasurment = new TreeMeasurment()
             {
                 TreeID = tree.TreeID,
-                
+
             };
             db.Insert(treeMeasurment);
 
