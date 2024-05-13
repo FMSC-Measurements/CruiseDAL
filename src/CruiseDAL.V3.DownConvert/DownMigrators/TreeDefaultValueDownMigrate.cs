@@ -26,7 +26,7 @@ tdvExpandSpecies AS (
         (SELECT ContractSpecies FROM {fromDbName}.Species_Product 
             WHERE CruiseID = tdv.CruiseID 
                 AND SpeciesCode = sp.SpeciesCode 
-                AND PrimaryProduct IS NULL OR PrimaryProduct = tdv.PrimaryProduct
+                AND (PrimaryProduct IS NULL OR PrimaryProduct = tdv.PrimaryProduct)
                 ORDER BY PrimaryProduct DESC -- nulls and empty strings last
                 LIMIT 1 ) AS ContractSpecies,
 
@@ -63,7 +63,7 @@ tdvExpandProduct AS (
         (SELECT ContractSpecies FROM {fromDbName}.Species_Product 
             WHERE CruiseID = tdv.CruiseID 
                 AND SpeciesCode = tdv.SpeciesCode 
-                AND PrimaryProduct IS NULL OR PrimaryProduct = prod.Product
+                AND (PrimaryProduct IS NULL OR PrimaryProduct = prod.Product)
                 ORDER BY PrimaryProduct DESC -- nulls and empty strings last
                 LIMIT 1 ) AS ContractSpecies,
 
@@ -101,7 +101,7 @@ tdvExpandProdAndSp AS (
         (SELECT ContractSpecies FROM {fromDbName}.Species_Product 
             WHERE CruiseID = tdv.CruiseID 
                 AND SpeciesCode = sp.SpeciesCode 
-                AND PrimaryProduct IS NULL OR PrimaryProduct = prod.Product
+                AND (PrimaryProduct IS NULL OR PrimaryProduct = prod.Product)
                 ORDER BY PrimaryProduct DESC -- nulls and empty strings last
                 LIMIT 1 ) AS ContractSpecies,
 
@@ -139,7 +139,7 @@ tdvProdAndSpDefined AS (
         (SELECT ContractSpecies FROM {fromDbName}.Species_Product 
             WHERE CruiseID = tdv.CruiseID 
                 AND SpeciesCode = tdv.SpeciesCode 
-                AND PrimaryProduct IS NULL OR PrimaryProduct = tdv.PrimaryProduct
+                AND (PrimaryProduct IS NULL OR PrimaryProduct = tdv.PrimaryProduct)
                 ORDER BY PrimaryProduct DESC -- nulls and empty strings last
                 LIMIT 1 ) AS ContractSpecies,
 

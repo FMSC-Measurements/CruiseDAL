@@ -77,15 +77,19 @@ namespace CruiseDAL.V3.Test.DownMigrators
             var fromPath = GetTempFilePath("ExpandContractSpecies_AllProd.crz3");
             var toPath = GetTempFilePath("ExpandContractSpecies_AllProd.cruise");
 
+            var sp1ConSp = "something";
+            var sp2ConSp = "somethingElse";
+
             var init = new DatabaseInitializer()
             {
-                Species = new[] { "sp1", },
+                Species = new[] { "sp1", "sp2" },
                 TreeDefaults = new[]
                 {
                     new TreeDefaultValue {SpeciesCode = "sp1", PrimaryProduct = "01", Recoverable = 1.1,},
                     new TreeDefaultValue {SpeciesCode = null, PrimaryProduct = "01", Recoverable = 1.2,},
                     new TreeDefaultValue {SpeciesCode = "sp1", PrimaryProduct = null, Recoverable = 1.3,},
                     new TreeDefaultValue {SpeciesCode = null, PrimaryProduct = null, Recoverable = 1.4,},
+                    new TreeDefaultValue {SpeciesCode = "sp2", PrimaryProduct = "01", Recoverable = 1.5,},
                 },
                 Subpops = new SubPopulation[] { },
                 SpProds = null,
@@ -94,13 +98,25 @@ namespace CruiseDAL.V3.Test.DownMigrators
             using var fromDb = init.CreateDatabaseFile(fromPath);
             using var toDb = new DAL(toPath, true);
 
-            var spProd = new Species_Product
-            {
-                CruiseID = init.CruiseID,
-                SpeciesCode = "sp1",
-                ContractSpecies = "something",
+            var spProds = new[] {
+                new Species_Product
+                {
+                    CruiseID = init.CruiseID,
+                    SpeciesCode = "sp1",
+                    ContractSpecies = sp1ConSp,
+                },
+                new Species_Product
+                {
+                    CruiseID = init.CruiseID,
+                    SpeciesCode = "sp2",
+                    ContractSpecies = sp2ConSp,
+                }
             };
-            fromDb.Insert(spProd);
+
+            foreach (var spProd in spProds)
+            {
+                fromDb.Insert(spProd);
+            }
 
 
             var downMigrator = new DownMigrator(new[] { new TreeDefaultValueDownMigrate(), });
@@ -108,6 +124,9 @@ namespace CruiseDAL.V3.Test.DownMigrators
 
             var tdvs = toDb.From<V2.Models.TreeDefaultValue>().Query().ToArray();
             tdvs.Should().OnlyContain(x => x.ContractSpecies != null);
+
+            tdvs.Where(x => x.Species == "sp1").Should().OnlyContain(x => x.ContractSpecies == sp1ConSp);
+            tdvs.Where(x => x.Species == "sp2").Should().OnlyContain(x => x.ContractSpecies == sp2ConSp);
         }
 
         [Fact]
@@ -117,16 +136,20 @@ namespace CruiseDAL.V3.Test.DownMigrators
             var toPath = GetTempFilePath("ExpandContractSpecies_SpecificProd.cruise");
 
             var specifProd = "01";
+            var sp1ConSp = "something";
+            var sp2ConSp = "somethingElse";
 
             var init = new DatabaseInitializer()
             {
-                Species = new[] { "sp1", },
+                Species = new[] { "sp1", "sp2" },
                 TreeDefaults = new[]
                 {
                     new TreeDefaultValue {SpeciesCode = "sp1", PrimaryProduct = specifProd, Recoverable = 1.1,},
                     new TreeDefaultValue {SpeciesCode = null, PrimaryProduct = specifProd, Recoverable = 1.2,},
                     new TreeDefaultValue {SpeciesCode = "sp1", PrimaryProduct = null, Recoverable = 1.3,},
                     new TreeDefaultValue {SpeciesCode = null, PrimaryProduct = null, Recoverable = 1.4,},
+                    new TreeDefaultValue {SpeciesCode = "sp2", PrimaryProduct = specifProd, Recoverable = 1.5,},
+                    new TreeDefaultValue {SpeciesCode = "sp2", PrimaryProduct = null, Recoverable = 1.6,},
                 },
                 Subpops = new SubPopulation[] { },
                 SpProds = null,
@@ -135,14 +158,27 @@ namespace CruiseDAL.V3.Test.DownMigrators
             using var fromDb = init.CreateDatabaseFile(fromPath);
             using var toDb = new DAL(toPath, true);
 
-            var spProd = new Species_Product
-            {
-                CruiseID = init.CruiseID,
-                SpeciesCode = "sp1",
-                ContractSpecies = "something",
-                PrimaryProduct = specifProd,
+            var spProds = new[] { 
+                new Species_Product
+                {
+                    CruiseID = init.CruiseID,
+                    SpeciesCode = "sp1",
+                    ContractSpecies = sp1ConSp,
+                    PrimaryProduct = specifProd,
+                },
+                new Species_Product
+                {
+                    CruiseID = init.CruiseID,
+                    SpeciesCode = "sp2",
+                    ContractSpecies = sp2ConSp,
+                    PrimaryProduct = specifProd,
+                }
             };
-            fromDb.Insert(spProd);
+
+            foreach (var spProd in spProds)
+            {
+                fromDb.Insert(spProd);
+            }
 
 
             var downMigrator = new DownMigrator(new[] { new TreeDefaultValueDownMigrate(), });
@@ -150,7 +186,8 @@ namespace CruiseDAL.V3.Test.DownMigrators
 
             var tdvs = toDb.From<V2.Models.TreeDefaultValue>().Query().ToArray();
             // all TDVs with our specified product code should have a contract species
-            tdvs.Where(x => x.PrimaryProduct == specifProd).Should().OnlyContain(x => x.ContractSpecies != null);
+            tdvs.Where(x => x.PrimaryProduct == specifProd && x.Species == "sp1").Should().OnlyContain(x => x.ContractSpecies == sp1ConSp);
+            tdvs.Where(x => x.PrimaryProduct == specifProd && x.Species == "sp2").Should().OnlyContain(x => x.ContractSpecies == sp2ConSp);
             // no TDVs without our specified product code should have a contract species
             tdvs.Where(x => x.PrimaryProduct != specifProd).Should().OnlyContain(x => x.ContractSpecies == null);
         }
@@ -225,13 +262,13 @@ namespace CruiseDAL.V3.Test.DownMigrators
                     CruiseID = init.CruiseID,
                     SpeciesCode = "sp1",
                     ContractSpecies = "something",
-                    
+
                 },
                 new Species_Product
                 {
                     CruiseID = init.CruiseID,
                     SpeciesCode = "sp2",
-                    ContractSpecies = "something2",
+                    ContractSpecies = "somethingElse",
                     PrimaryProduct = specifProd,
                 },
             };
@@ -240,7 +277,7 @@ namespace CruiseDAL.V3.Test.DownMigrators
             {
                 v3Db.Insert(spProd);
             }
-            
+
 
 
             var downMigrator = new DownMigrator();
